@@ -9,6 +9,9 @@ class Units extends StatefulWidget {
 }
 
 class _UnitsState extends State<Units> {
+  final _formkey=GlobalKey<FormState>();
+  TextEditingController unitName = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,28 +43,32 @@ class _UnitsState extends State<Units> {
                   return AlertDialog(
 
                     title: Text("Add Unit"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Enter Unit Measurement',
-                            filled: true,
-                            fillColor: Colors.white,
+                    content: Form(
+                      key: _formkey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: unitName,
+                            decoration: InputDecoration(
+                              hintText: 'Enter Unit Measurement',
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20,),
-                        Container(
-                          width: 200,
-                          child: ElevatedButton(
-                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
-                            onPressed: () {
-                              // Add login functionality
-                            },
-                            child: Text('Add',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
+                          SizedBox(height: 20,),
+                          Container(
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
+                              onPressed: () {
+                                // Add login functionality
+                              },
+                              child: Text('Add',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 });

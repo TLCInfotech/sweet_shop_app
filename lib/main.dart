@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/screens/Login.dart';
+import 'package:sweet_shop_app/screens/Splash.dart';
 import 'package:sweet_shop_app/screens/Units.dart';
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Units()
+      home: Splash()
     );
   }
 }
