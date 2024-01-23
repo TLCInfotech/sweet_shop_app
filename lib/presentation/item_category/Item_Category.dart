@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class UnitsActivity extends StatefulWidget {
-  const UnitsActivity({super.key});
+class ItemCategoryActivity extends StatefulWidget {
+  const ItemCategoryActivity({super.key});
 
   @override
-  State<UnitsActivity> createState() => _UnitsActivityState();
+  State<ItemCategoryActivity> createState() => _ItemCategoryActivityState();
 }
 
-class _UnitsActivityState extends State<UnitsActivity> {
+class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   final _formkey=GlobalKey<FormState>();
-  TextEditingController unitName = TextEditingController();
+  TextEditingController categoryName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             },
           ),
           title: Text(
-            "Measuring Units Activity",
+            "Item Category Activity",
             style: TextStyle(color: Colors.black87),
           ),
         ),
@@ -44,16 +44,16 @@ class _UnitsActivityState extends State<UnitsActivity> {
                 builder:(BuildContext context){
                   return AlertDialog(
 
-                    title: Text("Add Unit"),
+                    title: Text("Add Item Category"),
                     content: Form(
                       key: _formkey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
-                            controller: unitName,
+                            controller: categoryName,
                             decoration: InputDecoration(
-                              hintText: 'Enter Unit Measurement',
+                              hintText: 'Enter Item Category',
                               filled: true,
                               fillColor: Colors.white,
                             ),
@@ -83,7 +83,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Mesuring Units Activity ",
+              "Item Category Activity ",
               style: TextStyle(
                   color: Colors.black87,
                   fontSize: 16,
@@ -94,25 +94,25 @@ class _UnitsActivityState extends State<UnitsActivity> {
             ),
             Expanded(
                 child: ListView.separated(
-              itemCount: [1, 2, 3, 4, 5, 6].length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  tileColor: Colors.white,
-                  title: Text("Kg"),
-                  leading: FaIcon(FontAwesomeIcons.weightHanging),
-                  trailing: FaIcon(
-                    FontAwesomeIcons.trash,
-                    size: 18,
-                    color: Colors.redAccent,
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 5,
-                );
-              },
-            ))
+                  itemCount: [1, 2, 3, 4, 5, 6].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      tileColor: Colors.white,
+                      title: Text("Oil"),
+                      leading: FaIcon(FontAwesomeIcons.list),
+                      trailing: FaIcon(
+                        FontAwesomeIcons.trash,
+                        size: 18,
+                        color: Colors.redAccent,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: 5,
+                    );
+                  },
+                ))
 
           ],
         ),

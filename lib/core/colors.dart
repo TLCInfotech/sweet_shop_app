@@ -4,7 +4,7 @@ class CommonColor{
 
   static const WHITE_COLOR = const Color(0xFFFFFFFF);
   static const BLACK_COLOR = const Color(0xFF191919);
-  static const THEME_COLOR = const Color(0xFFF37435);
+  static const THEME_COLOR = const Color(0xFFFBE404);
   static const ONEBOARDING_HEADING = const Color(0xFF0B121F);
   static const ONEBOARDING_SUBHEADING = const Color(0xFF9FA3A9);
   static const FULL_NAME = const Color(0xFF161F3D);

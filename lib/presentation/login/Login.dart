@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
 
 class LoginActivity extends StatefulWidget {
@@ -99,9 +100,9 @@ class _LoginActivityState extends State<LoginActivity> {
   return Container(
     width: 200,
     child: ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
       onPressed: () {
-     Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+     Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCategoryActivity()));
       },
       child:  Text(StringEn.LOG_IN,
         style: TextStyle(

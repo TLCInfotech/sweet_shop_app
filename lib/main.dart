@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
+        '/category': (BuildContext context) =>   ItemCategoryActivity(),
         '/unit': (BuildContext context) =>   UnitsActivity(),
         '/loginActivity': (BuildContext context) =>   LoginActivity(),
       },
@@ -44,8 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     startTimer();
   }
-
-
 
 
 
@@ -85,6 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void navigateUnit() {
     Navigator.of(context).pushReplacementNamed('/unit');
+  }
+
+
+  void navigateItemCategory() {
+    Navigator.of(context).pushReplacementNamed('/category');
   }
 
 
