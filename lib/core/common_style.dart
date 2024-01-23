@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
+
+const big_title_style=TextStyle(
+  fontSize: 24.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
+  fontFamily: "Inter_Bold_Font"
+);
+
+const subHeading_withBold=TextStyle(
+  fontSize: 15.0,
+  color: Colors.white,
+  fontFamily: "Inter_Medium_Font"
+);
+
+var button_text_style=TextStyle(
+    color: Colors.black87,
+    fontSize: SizeConfig.blockSizeHorizontal* 4.5,
+    fontWeight: FontWeight.w500,
+    fontFamily: "Inter_Medium_Font"
+);
+
+const textfield_label_style=TextStyle(
+    fontSize: 18.0,
+    color: Colors.white,
+    fontFamily: "Inter_Medium_Font"
+
+);
+
+const hint_textfield_Style = TextStyle(
+    fontFamily: 'Inter_Regular_Font',
+    color:Colors.grey,
+    fontSize: 15
+);
+
+const textfield_decoration = InputDecoration(
+  hintText: '',
+  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+  labelStyle: textfield_label_style,
+  fillColor:  Colors.white,
+  filled: true,
+  hintStyle: hint_textfield_Style,
+  floatingLabelStyle: TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),
+);
+
+const appbar_text_style=TextStyle(
+    fontSize: 22.0,
+    color: Colors.black87,
+    fontFamily: "Inter_SemiBold_Font"
+);
+
+const page_heading_textStyle=TextStyle(
+    fontSize: 16.0,
+    color: Colors.black87,
+    fontFamily: "Inter_SemiBold_Font"
+);
+
+
+const item_heading_textStyle=TextStyle(
+    fontSize: 15.0,
+    color: Colors.black87,
+    fontFamily: "Inter_Medium_Font"
+);
+
+
+const item_regular_textStyle=TextStyle(
+    fontSize: 14.0,
+    color: Colors.black87,
+    fontFamily: "Inter_Light_Font"
+);
+

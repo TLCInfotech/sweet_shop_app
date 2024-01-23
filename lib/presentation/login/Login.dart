@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
+import 'package:sweet_shop_app/presentation/items/items.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
 
 class LoginActivity extends StatefulWidget {
@@ -41,20 +43,12 @@ class _LoginActivityState extends State<LoginActivity> {
                   children: [
                     const Text(
                      StringEn.SIGN_IN,
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: big_title_style
                     ),
                     SizedBox(height: 5.0),
                     const Text(
                       StringEn.LOGIN_SUB_TEXT,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: subHeading_withBold
                     ),
                     SizedBox(height: 40.0),
                     getUserNameLayout(),
@@ -76,10 +70,8 @@ class _LoginActivityState extends State<LoginActivity> {
   Widget getUserNameLayout(){
   return TextFormField(
       controller: username,
-      decoration: const InputDecoration(
-        hintText: 'Username',
-        filled: true,
-        fillColor: Colors.white,
+      decoration: textfield_decoration.copyWith(
+        hintText: 'UserName',
       ),
     );
   }
@@ -88,11 +80,9 @@ class _LoginActivityState extends State<LoginActivity> {
   return  TextFormField(
     controller: password,
     obscureText: true,
-    decoration: const InputDecoration(
+    decoration: textfield_decoration.copyWith(
       hintText: 'Password',
-      filled: true,
-      fillColor: Colors.white,
-    ),
+     ),
   );
   }
   /* widget for button layout */
@@ -102,14 +92,10 @@ class _LoginActivityState extends State<LoginActivity> {
     child: ElevatedButton(
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
       onPressed: () {
-     Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCategoryActivity()));
+     Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
       },
       child:  Text(StringEn.LOG_IN,
-        style: TextStyle(
-          color: CommonColor.BLACK_COLOR,
-          fontSize: SizeConfig.blockSizeHorizontal* 4.5,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'Inter_Medium_Font',),),
+        style: button_text_style),
     ),
   );
   }

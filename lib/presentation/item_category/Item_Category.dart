@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
+
+import '../../core/common_style.dart';
 
 class ItemCategoryActivity extends StatefulWidget {
   const ItemCategoryActivity({super.key});
@@ -15,6 +18,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
         child: AppBar(
@@ -94,16 +98,45 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
             ),
             Expanded(
                 child: ListView.separated(
-                  itemCount: [1, 2, 3, 4, 5, 6].length,
+                  itemCount: [1, 2, 3, 4, 5, 6,7].length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      tileColor: Colors.white,
-                      title: Text("Oil"),
-                      leading: FaIcon(FontAwesomeIcons.list),
-                      trailing: FaIcon(
-                        FontAwesomeIcons.trash,
-                        size: 18,
-                        color: Colors.redAccent,
+                    return  Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 10),
+                            width:60,
+                            height: 40,
+                            decoration:  BoxDecoration(
+                                color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
+                                borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                            alignment: Alignment.center,
+                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: TextStyle(),),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                    child: Text("Item Category",style: item_heading_textStyle,),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){},
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
                       ),
                     );
                   },

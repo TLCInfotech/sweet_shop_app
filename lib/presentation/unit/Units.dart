@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../core/common_style.dart';
+
 class UnitsActivity extends StatefulWidget {
   const UnitsActivity({super.key});
 
@@ -94,25 +96,54 @@ class _UnitsActivityState extends State<UnitsActivity> {
             ),
             Expanded(
                 child: ListView.separated(
-              itemCount: [1, 2, 3, 4, 5, 6].length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  tileColor: Colors.white,
-                  title: Text("Kg"),
-                  leading: FaIcon(FontAwesomeIcons.weightHanging),
-                  trailing: FaIcon(
-                    FontAwesomeIcons.trash,
-                    size: 18,
-                    color: Colors.redAccent,
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                  height: 5,
-                );
-              },
-            ))
+                  itemCount: [1, 2, 3, 4, 5, 6,7].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return  Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 10),
+                            width:60,
+                            height: 40,
+                            decoration:  BoxDecoration(
+                                color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
+                                borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                            alignment: Alignment.center,
+                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: TextStyle(),),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                    child: Text("Measuring Unit",style: item_heading_textStyle,),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){},
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: 5,
+                    );
+                  },
+                ))
 
           ],
         ),

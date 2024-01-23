@@ -14,6 +14,7 @@ class SizeConfig {
   static double safeAreaVertical=0.0;
   static double safeBlockHorizontal=0.0;
   static double safeBlockVertical=0.0;
+  static double imageBlockFromCardWidth=0.0;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -30,8 +31,7 @@ class SizeConfig {
     safeAreaVertical = _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
     safeBlockHorizontal = (screenWidth - safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - safeAreaVertical) / 100;
-
-
+    imageBlockFromCardWidth=screenWidth * 0.3;
 
   }
 }
