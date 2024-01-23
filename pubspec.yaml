@@ -12,6 +12,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.6.0
+  image_picker:
+  keyboard_actions:
+
 
 dev_dependencies:
   flutter_test:

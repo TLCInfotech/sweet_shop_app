@@ -4,6 +4,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dialog/exit_app_dialog.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 class CommonWidget {
@@ -64,7 +66,39 @@ class CommonWidget {
     );
   }
 
+  static isLoader(bool isLoaderShows)  {
+    return Visibility(
+      visible: isLoaderShows,
+      child:  Container(
+        height: SizeConfig.safeUsedHeight,
+        width: SizeConfig.screenWidth,
+        color: Colors.transparent,
+        child:const Padding(
+          padding: EdgeInsets.all(160.0),
+          child: Image(
+            image: AssetImage("assets/images/rounded_blocks.gif"),
+            // color: CommonColor.THEME_COLOR,
+          ),
+        ),
+      ),
+    );
+  }
 
 
+  static showExitDialog(BuildContext context, String message, isDialogType) {
+    if (context != null) {
+      showCupertinoDialog(
+        context: context,
+        useRootNavigator: true,
+        barrierDismissible: true,
+        builder: (context) {
+          return ExitAppDialog(
+            // message: message,
+            isDialogType: isDialogType,
+          );
+        },
+      );
+    }
+  }
 
 }

@@ -3,6 +3,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/items/items.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
@@ -92,7 +93,7 @@ class _LoginActivityState extends State<LoginActivity> {
     child: ElevatedButton(
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
       onPressed: () {
-     Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
       },
       child:  Text(StringEn.LOG_IN,
         style: button_text_style),

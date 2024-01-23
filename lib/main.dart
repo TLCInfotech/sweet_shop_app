@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/category': (BuildContext context) =>   ItemCategoryActivity(),
         '/unit': (BuildContext context) =>   UnitsActivity(),
-        '/loginActivity': (BuildContext context) =>   LoginActivity(),
+        '/loginActivity': (BuildContext context) =>   const LoginActivity(),
+        '/dashboard': (BuildContext context) =>   DashboardActivity(),
       },
     );
   }
