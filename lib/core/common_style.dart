@@ -9,7 +9,7 @@ const big_title_style=TextStyle(
 );
 
 const subHeading_withBold=TextStyle(
-  fontSize: 15.0,
+  fontSize: 16.0,
   color: Colors.white,
   fontFamily: "Inter_Medium_Font"
 );
@@ -31,7 +31,7 @@ const textfield_label_style=TextStyle(
 const hint_textfield_Style = TextStyle(
     fontFamily: 'Inter_Regular_Font',
     color:Colors.grey,
-    fontSize: 15
+    fontSize: 18
 );
 
 const textfield_decoration = InputDecoration(
@@ -42,6 +42,25 @@ const textfield_decoration = InputDecoration(
   filled: true,
   hintStyle: hint_textfield_Style,
   floatingLabelStyle: TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),
+
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey,width: 0.5),
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderSide:
+    BorderSide(color: Colors.black87,width: 1),
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+  ),
+  focusedErrorBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey),
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+  ),
+  errorBorder:  OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey),
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+  ),
+
 );
 
 const appbar_text_style=TextStyle(
@@ -51,21 +70,21 @@ const appbar_text_style=TextStyle(
 );
 
 const page_heading_textStyle=TextStyle(
-    fontSize: 16.0,
+    fontSize: 20.0,
     color: Colors.black87,
     fontFamily: "Inter_SemiBold_Font"
 );
 
 
 const item_heading_textStyle=TextStyle(
-    fontSize: 15.0,
+    fontSize: 18.0,
     color: Colors.black87,
     fontFamily: "Inter_Medium_Font"
 );
 
 
 const item_regular_textStyle=TextStyle(
-    fontSize: 14.0,
+    fontSize: 16.0,
     color: Colors.black87,
     fontFamily: "Inter_Light_Font"
 );
