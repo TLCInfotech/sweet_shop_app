@@ -1,8 +1,11 @@
-import 'package:dropdown_search/dropdown_search.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+
+import '../../core/string_en.dart';
 
 class ItemsActivity extends StatefulWidget {
   const ItemsActivity({super.key});
@@ -54,19 +57,28 @@ class _ItemsActivityState extends State<ItemsActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFfffff5),
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
-        child: AppBar(
-          backgroundColor: Color(0xFFFBE404),
-          leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.arrowLeft),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(
-            "Item Activity",
-            style: appbar_text_style,
+        child: SafeArea(
+          child:  Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25)
+            ),
+            color: Colors.transparent,
+            // color: Colors.red,
+            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+            child: AppBar(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)
+              ),
+
+              backgroundColor: Colors.white,
+              title: Text(
+                StringEn.ITEM_TITLE,
+                style: appbar_text_style,),
+            ),
           ),
         ),
       ),
@@ -78,21 +90,21 @@ class _ItemsActivityState extends State<ItemsActivity> {
             color: Colors.black87,
           ),
           onPressed: () {
-            getAddItemLayout(context);
+            add_item_layout(context);
           }),
       body: Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Item Activity ",
+              StringEn.ITEM_TITLE,
               style: page_heading_textStyle,
             ),
             SizedBox(
               height: 10,
             ),
-            getItemListLayout()
+            get_items_list_layout()
 
           ],
         ),
@@ -100,12 +112,13 @@ class _ItemsActivityState extends State<ItemsActivity> {
     );
   }
 
-  Future<dynamic> getAddItemLayout(BuildContext context) {
-    return showDialog(
+  Future<dynamic> add_item_layout(BuildContext context) {
+    return
+      showDialog(
               context: context,
               builder:(BuildContext context){
                 return AlertDialog(
-                  title: Text("Add Item"),
+                  title: Text(StringEn.ADD_ITEM,style: appbar_text_style,),
                   content: Form(
                     key: _formkey,
                     child: Column(
@@ -168,12 +181,20 @@ class _ItemsActivityState extends State<ItemsActivity> {
               });
   }
 
-  Expanded getItemListLayout() {
+  Expanded get_items_list_layout() {
     return Expanded(
-              child: ListView.separated(
-                itemCount: [1, 2, 3, 4, 5, 6].length,
-                itemBuilder: (BuildContext context, int index) {
-                  return  Card(
+        child: ListView.separated(
+          itemCount: [1, 2, 3, 4, 5, 6,7,8,9].length,
+          itemBuilder: (BuildContext context, int index) {
+            return  AnimationConfiguration.staggeredList(
+              position: index,
+              duration:
+              const Duration(milliseconds: 500),
+              child: SlideAnimation(
+                verticalOffset: -44.0,
+                child: FadeInAnimation(
+                  delay: Duration(microseconds: 1500),
+                  child: Card(
                     child: Row(
                       children: [
                         Container(
@@ -181,15 +202,15 @@ class _ItemsActivityState extends State<ItemsActivity> {
                           width:SizeConfig.imageBlockFromCardWidth,
                           height: 80,
                           decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                              fit: BoxFit.cover,
-                            ),
-                            // borderRadius: BorderRadius.only(
-                            //   bottomLeft: Radius.circular(10),
-                            //   topLeft: Radius.circular(10)
-                            // )
-                            borderRadius: BorderRadius.all(Radius.circular(10))
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                                fit: BoxFit.cover,
+                              ),
+                              // borderRadius: BorderRadius.only(
+                              //   bottomLeft: Radius.circular(10),
+                              //   topLeft: Radius.circular(10)
+                              // )
+                              borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
                         ),
                         Expanded(
@@ -212,27 +233,30 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     top: 0,
                                     right: 0,
                                     child:IconButton(
-                                  icon:  FaIcon(
-                                    FontAwesomeIcons.trash,
-                                    size: 18,
-                                    color: Colors.redAccent,
-                                  ),
-                                  onPressed: (){},
-                                ) )
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.trash,
+                                        size: 18,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: (){},
+                                    ) )
                               ],
                             )
 
                         )
                       ],
                     ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 5,
-                  );
-                },
-              ));
+                  ),
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              height: 5,
+            );
+          },
+        ));
   }
 
 

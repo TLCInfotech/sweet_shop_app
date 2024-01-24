@@ -24,6 +24,13 @@ class MyApp extends StatelessWidget {
       title: 'SWEETSHOP',
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+
+        return MediaQuery(
+          child: child!,
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 0.7),
+        );
+      },
       routes: <String, WidgetBuilder>{
         '/category': (BuildContext context) =>   ItemCategoryActivity(),
         '/unit': (BuildContext context) =>   UnitsActivity(),

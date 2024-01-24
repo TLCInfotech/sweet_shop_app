@@ -15,6 +15,8 @@ class SizeConfig {
   static double safeBlockHorizontal=0.0;
   static double safeBlockVertical=0.0;
   static double imageBlockFromCardWidth=0.0;
+  static double halfscreenWidth=0.0;
+
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -33,5 +35,6 @@ class SizeConfig {
     safeBlockVertical = (screenHeight - safeAreaVertical) / 100;
     imageBlockFromCardWidth=screenWidth * 0.3;
 
+    halfscreenWidth=(screenWidth*0.85)/2;
   }
 }

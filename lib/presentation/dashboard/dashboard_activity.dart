@@ -338,8 +338,5 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   }
 
 
-
-
-
 }
 

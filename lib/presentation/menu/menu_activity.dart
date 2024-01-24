@@ -5,8 +5,8 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
+import 'package:sweet_shop_app/presentation/franchisee/franchisee.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
-import 'package:sweet_shop_app/presentation/item_category/item_create_activity.dart';
 import 'package:sweet_shop_app/presentation/master/master_list_activity.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
 
@@ -116,6 +116,7 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
         getAddMasterLayout(parentHeight,parentWidth),
         getAddReportLayout(parentHeight,parentWidth),
         getAddTransactionLayout(parentHeight,parentWidth),
+        getAddFranchiseeLayout(parentHeight,parentWidth),
         getAddLogoutLayout(parentHeight,parentWidth),
       ],
     );
@@ -201,6 +202,40 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
         ),
         child: Text(
           StringEn.REPORT,
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
+            fontWeight: FontWeight.w500,
+            fontFamily: "Inter_SemiBold_Font",
+          ),
+        ),
+      ),
+    );
+  }
+
+  //Widget for add franchisee
+  Widget getAddFranchiseeLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+        showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AddFranchiseeActivity(mListener: this,);
+            }
+        );
+      },
+      onDoubleTap: (){},
+      child: Container(
+        alignment: Alignment.center,
+        height: parentHeight*.06,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+          ),
+        ),
+        child: Text(
+          "Franchisee",
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal* 4.2,
