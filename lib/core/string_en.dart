@@ -56,4 +56,11 @@ class StringEn{
 
   // static const ADD_F
 
+  static const POST = "Post";
+  static const NAME = "Name";
+  static const FRANCHISEE = "Franchisee";
+  static const ADDRESS = "Address";
+  static const DISTRICTCITY = "DistrictCity:";
+  static const CONTACT_NO = "Contact No:";
+
 }

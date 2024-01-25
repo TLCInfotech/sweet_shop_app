@@ -75,6 +75,12 @@ const page_heading_textStyle=TextStyle(
     fontFamily: "Inter_SemiBold_Font"
 );
 
+const text_field_textStyle=TextStyle(
+    fontSize: 18,
+    color: Colors.black87,
+    fontFamily: "Inter_SemiBold_Font"
+);
+
 
 const item_heading_textStyle=TextStyle(
     fontSize: 18.0,

@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/item_category/item_create_activity.dart';
 
 import '../../core/string_en.dart';
 
@@ -90,7 +91,8 @@ class _ItemsActivityState extends State<ItemsActivity> {
             color: Colors.black87,
           ),
           onPressed: () {
-            add_item_layout(context);
+         //   add_item_layout(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItem()));
           }),
       body: Container(
         margin: EdgeInsets.all(15),

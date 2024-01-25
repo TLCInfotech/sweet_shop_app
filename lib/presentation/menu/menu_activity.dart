@@ -2,18 +2,17 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/franchisee/franchisee.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
-import 'package:sweet_shop_app/presentation/master/master_list_activity.dart';
+import 'package:sweet_shop_app/presentation/items/items.dart';
 import 'package:sweet_shop_app/presentation/unit/Units.dart';
-
 
 class MenuActivity extends StatefulWidget {
   final MenuActivityInterface mListener;
-
 
   const MenuActivity({super.key, required this.mListener});
 
@@ -21,8 +20,8 @@ class MenuActivity extends StatefulWidget {
   State<MenuActivity> createState() => _MenuActivityState();
 }
 
-class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
-
+class _MenuActivityState extends State<MenuActivity>
+    with LogOutDialogInterface {
   String firstName = "";
   String lastName = "";
   String email = "";
@@ -31,14 +30,12 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
   String serverUrl = '';
   String appVersion = '';
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    print("hkhjghjkgjgh  $openDropDown");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +43,7 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
     return Material(
       color: Colors.white,
       child: Container(
-        width: SizeConfig.screenWidth*.8,
+        width: SizeConfig.screenWidth * .8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -56,10 +53,12 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
                   height: SizeConfig.screenHeight * .05,
                 ),
                 getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                getAddBottomBarLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                getAddBottomBarLayout(
+                    SizeConfig.screenHeight, SizeConfig.screenWidth),
               ],
             ),
-            getAddAppVersionLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            getAddAppVersionLayout(
+                SizeConfig.screenHeight, SizeConfig.screenWidth),
           ],
         ),
       ),
@@ -81,22 +80,22 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
         ],
       ),
       child: Padding(
-        padding:  EdgeInsets.only(right: parentWidth*.03),
+        padding: EdgeInsets.only(right: parentWidth * .03),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
-              onDoubleTap: (){},
+              onDoubleTap: () {},
               child: Container(
                 color: Colors.transparent,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Icon(
                     Icons.clear,
-                    size: parentHeight*.035,
+                    size: parentHeight * .035,
                     color: CommonColor.BLACK_COLOR,
                   ),
                 ),
@@ -108,110 +107,273 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
     );
   }
 
-
   /* Widget for Bottom Bar Layout */
-  Widget getAddBottomBarLayout(double parentHeight, double parentWidth){
+  Widget getAddBottomBarLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
-        getAddMasterLayout(parentHeight,parentWidth),
-        getAddReportLayout(parentHeight,parentWidth),
-        getAddTransactionLayout(parentHeight,parentWidth),
-        getAddFranchiseeLayout(parentHeight,parentWidth),
-        getAddLogoutLayout(parentHeight,parentWidth),
+        getAddTransactionLayout(parentHeight, parentWidth),
+        getAddReportLayout(parentHeight, parentWidth),
+        openDropDown == false
+            ? getAddMasterLayout(parentHeight, parentWidth)
+            : getAddMasterSubLayout(parentHeight, parentWidth),
+        getAddFranchiseeLayout(parentHeight, parentWidth),
+        getAddLogoutLayout(parentHeight, parentWidth),
       ],
     );
   }
 
-
   /* Widget for Logout Layout */
-  Widget getAddLogoutLayout(double parentHeight, double parentWidth){
+  Widget getAddLogoutLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         showCupertinoDialog(
             context: context,
-            builder: (BuildContext context){
-              return LogOutDialog(mListener: this,);
-            }
-        );
+            builder: (BuildContext context) {
+              return LogOutDialog(
+                mListener: this,
+              );
+            });
       },
-      onDoubleTap: (){},
+      onDoubleTap: () {},
       child: Container(
-        alignment: Alignment.center,
-        height: parentHeight*.06,
+        alignment: Alignment.centerLeft,
+        height: parentHeight * .06,
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+            bottom: BorderSide(
+                width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
           ),
         ),
-        child: Text(
-          StringEn.LOGOUT,
-          style: TextStyle(
-            color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
-            fontWeight: FontWeight.w500,
-            fontFamily: "Inter_SemiBold_Font",
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          child: const Text(
+            StringEn.LOGOUT,
+            style: page_heading_textStyle,
           ),
         ),
       ),
     );
   }
-  
+
+  bool openDropDown = false;
+
   /* Widget for Master Layout */
-  Widget getAddMasterLayout(double parentHeight, double parentWidth){
+  Widget getAddMasterLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MasterActivity()));
-
+      onTap: () {
+        setState(() {
+          openDropDown = true;
+        });
       },
-      onDoubleTap: (){},
+      onDoubleTap: () {},
       child: Container(
-        alignment: Alignment.center,
-        height: parentHeight*.06,
+        alignment: Alignment.centerLeft,
+        height: parentHeight * .06,
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+            bottom: BorderSide(
+                width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
           ),
         ),
-        child: Text(
-          StringEn.MASTER,
-          style: TextStyle(
-            color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
-            fontWeight: FontWeight.w500,
-            fontFamily: "Inter_SemiBold_Font",
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                StringEn.MASTER,
+                style:page_heading_textStyle,
+              ),
+              Icon(
+                Icons.arrow_drop_down_sharp,
+                size: 30,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
+  /* Widget for Master Layout */
+  Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: parentHeight * .2,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+        ),
+      ),
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05,top: parentHeight*.01),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  openDropDown = false;
+                });
+              },
+              onDoubleTap: () {},
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    StringEn.MASTER,
+                    style: page_heading_textStyle,
+                  ),
+                  Icon(
+                    Icons.arrow_drop_up,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
+            getUnitLayout(parentHeight,parentWidth),
+            getCategoryLayout(parentHeight,parentWidth),
+            getItemLayout(parentHeight,parentWidth),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getUnitLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.UNIT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getCategoryLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCategoryActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.CATEGORY,
+              style:  page_heading_textStyle,
+              textAlign: TextAlign.center,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getItemLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ItemsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.ITEM,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
   /* Widget for report Layout */
-  Widget getAddReportLayout(double parentHeight, double parentWidth){
+  Widget getAddReportLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
-      onTap: (){
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItem()));
-
+      onTap: () {
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyCreate()));
       },
-      onDoubleTap: (){},
+      onDoubleTap: () {},
       child: Container(
-        alignment: Alignment.center,
-        height: parentHeight*.06,
+        alignment: Alignment.centerLeft,
+        height: parentHeight * .06,
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+            bottom: BorderSide(
+                width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
           ),
         ),
-        child: Text(
-          StringEn.REPORT,
-          style: TextStyle(
-            color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
-            fontWeight: FontWeight.w500,
-            fontFamily: "Inter_SemiBold_Font",
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          child: const Text(
+            StringEn.REPORT,
+            style: page_heading_textStyle
           ),
         ),
       ),
     );
   }
+
+  /* Widget for transaction Layout */
+  Widget getAddTransactionLayout(double parentHeight, double parentWidth) {
+    return GestureDetector(
+      onTap: () {},
+      onDoubleTap: () {},
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: parentHeight * .06,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+                width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+          ),
+        ),
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          child: const Text(
+            StringEn.TRANSACTION,
+            style: page_heading_textStyle
+          ),
+        ),
+      ),
+    );
+  }
+
+
 
   //Widget for add franchisee
   Widget getAddFranchiseeLayout(double parentHeight, double parentWidth){
@@ -227,48 +389,18 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
       },
       onDoubleTap: (){},
       child: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         height: parentHeight*.06,
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
           ),
         ),
-        child: Text(
-          "Franchisee",
-          style: TextStyle(
-            color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
-            fontWeight: FontWeight.w500,
-            fontFamily: "Inter_SemiBold_Font",
-          ),
-        ),
-      ),
-    );
-  }
-
-  /* Widget for transaction Layout */
-  Widget getAddTransactionLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: (){
-
-      },
-      onDoubleTap: (){},
-      child: Container(
-        alignment: Alignment.center,
-        height: parentHeight*.06,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
-          ),
-        ),
-        child: Text(
-          StringEn.TRANSACTION,
-          style: TextStyle(
-            color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 4.2,
-            fontWeight: FontWeight.w500,
-            fontFamily: "Inter_SemiBold_Font",
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          child: const Text(
+           StringEn.FRANCHISEE,
+            style:page_heading_textStyle,
           ),
         ),
       ),
@@ -276,17 +408,17 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
   }
 
   /* Widget for AppVersion Layout */
-  Widget getAddAppVersionLayout(double parentHeight, double parentWidth){
-    return  Padding(
-      padding: EdgeInsets.only(bottom: parentHeight*.02),
+  Widget getAddAppVersionLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: parentHeight * .02),
       child: Container(
         alignment: Alignment.center,
-        height: parentHeight*.06,
+        height: parentHeight * .06,
         child: Text(
           "App Version $appVersion",
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
-            fontSize: SizeConfig.blockSizeHorizontal* 3.5,
+            fontSize: SizeConfig.blockSizeHorizontal * 3.5,
             fontWeight: FontWeight.w500,
             fontFamily: "Inter_SemiBold_Font",
           ),
@@ -299,10 +431,9 @@ class _MenuActivityState extends State<MenuActivity>with LogOutDialogInterface{
   isShowLoader(bool isShowLoader) {
     // TODO: implement isShowLoader
   }
-
-
-
 }
-abstract class MenuActivityInterface{
+
+abstract class MenuActivityInterface {
   addHomePage(String screenName);
 }
+

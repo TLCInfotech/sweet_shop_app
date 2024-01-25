@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CommonColor{
 
   static const WHITE_COLOR = const Color(0xFFFFFFFF);
+  static const BACKGROUND_COLOR = const Color(0xFFfffff5);
   static const BLACK_COLOR = const Color(0xFF191919);
   static const THEME_COLOR = const Color(0xFFFBE404);
   static const ONEBOARDING_HEADING = const Color(0xFF0B121F);
