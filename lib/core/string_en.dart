@@ -14,7 +14,7 @@ class StringEn{
   static const UNIT = "Unit";
 
   // Category
-  static const CATEGORY_TITLE="Item Category Activity";
+  static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
   static const ADD_CATEGORY = "Add Category";
   static const CATEGORY_NAME="Enter Item Category";
@@ -56,13 +56,35 @@ class StringEn{
   static const FRANCHISEE_SELECT_STATE="Select State";
 
 
-  // static const ADD_F
+// static const ADD_F
 
   static const POST = "Post";
-  static const NAME = "Name";
+  static const NAME = "Name:";
+  static const BRAND_NAME = "Brand Name:";
   static const FRANCHISEE = "Franchisee";
   static const ADDRESS = "Address";
-  static const DISTRICTCITY = "DistrictCity:";
+  static const SAVE = "Save";
+  static const DISTRICTCITY = "District/City:";
   static const CONTACT_NO = "Contact No:";
+  static const JURISDICTION = "Jurisdiction:";
+  static const CITY = "City:";
+  static const EMAIL = "E-Mail:";
+  static const PIN_CODE = "Pin Code:";
+  static const PAN_NO = "PAN No:";
+  static const STATE = "State No:";
+  static const GST_NO = "GST No:";
+  static const COUNTRY = "Country:";
+  static const CIN_NO = "CIN No:";
+  static const ADDRESS_TWO = "Address 2:";
+  static const DEFAULT_BANK = "Default Bank:";
+  static const EXT_NAME = "Ext. Name:";
+  static const INVOICE_DECLERATION = "Invoice Declaration:";
+  static const FRANCHISE_SALE_RATE = "Franchisee Sale Rate";
+  static const FRANCHISE_PURCHASE_RATE = "Franchisee Purchase Rate";
+  static const FRANCHISE = "Franchisee";
+  static const MEASURING_UNIT = "Measuring Unit";
+  static const EXPENSE = "Expense";
+  static const EXPENSE_GROUP = "Expense Group";
+  static const COMPANY_INFO = "Comapny Info";
 
 }

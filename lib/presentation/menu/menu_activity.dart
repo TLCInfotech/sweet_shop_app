@@ -5,6 +5,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/company/company_activity.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/franchisee/franchisee.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
@@ -116,7 +117,6 @@ class _MenuActivityState extends State<MenuActivity>
         openDropDown == false
             ? getAddMasterLayout(parentHeight, parentWidth)
             : getAddMasterSubLayout(parentHeight, parentWidth),
-        getAddFranchiseeLayout(parentHeight, parentWidth),
         getAddLogoutLayout(parentHeight, parentWidth),
       ],
     );
@@ -176,7 +176,7 @@ class _MenuActivityState extends State<MenuActivity>
           ),
         ),
         child: Padding(
-          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -199,7 +199,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .2,
+      height: parentHeight * .53,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -207,7 +207,7 @@ class _MenuActivityState extends State<MenuActivity>
         ),
       ),
       child: Padding(
-        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05,top: parentHeight*.01),
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
         child: Column(
           children: [
             GestureDetector(
@@ -231,16 +231,26 @@ class _MenuActivityState extends State<MenuActivity>
                 ],
               ),
             ),
-            getUnitLayout(parentHeight,parentWidth),
-            getCategoryLayout(parentHeight,parentWidth),
+            getFranchiseeSaleRateLayout(parentHeight,parentWidth),
+            getFranchiseePurchaseRateLayout(parentHeight,parentWidth),
+            getUserLayout(parentHeight,parentWidth),
+            getFranchiseeLayout(parentHeight,parentWidth),
             getItemLayout(parentHeight,parentWidth),
+            getCategoryLayout(parentHeight,parentWidth),
+            getMeasuringUnitLayout(parentHeight,parentWidth),
+            getExpenseLayout(parentHeight,parentWidth),
+            getExpensceGroupLayout(parentHeight,parentWidth),
+            getCompanyInfoLayout(parentHeight,parentWidth),
+
           ],
         ),
       ),
     );
   }
 
-  Widget getUnitLayout(double parentHeight, double parentWidth){
+
+
+  Widget getFranchiseeSaleRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
@@ -256,7 +266,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.UNIT,
+              StringEn.FRANCHISE_SALE_RATE,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -266,6 +276,199 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  Widget getFranchiseePurchaseRateLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.FRANCHISE_PURCHASE_RATE,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getFranchiseeLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+        showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AddFranchiseeActivity(mListener: this,);
+            }
+        );
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.FRANCHISE,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getUserLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.USER,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.MEASURING_UNIT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getExpenseLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.EXPENSE,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getExpensceGroupLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.EXPENSE_GROUP,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getCompanyInfoLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyCreate()));
+        },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.COMPANY_INFO,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget getCategoryLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -325,7 +528,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getAddReportLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyCreate()));
+
       },
       onDoubleTap: () {},
       child: Container(
@@ -374,38 +577,6 @@ class _MenuActivityState extends State<MenuActivity>
   }
 
 
-
-  //Widget for add franchisee
-  Widget getAddFranchiseeLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: (){
-        Navigator.pop(context);
-        showCupertinoDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AddFranchiseeActivity(mListener: this,);
-            }
-        );
-      },
-      onDoubleTap: (){},
-      child: Container(
-        alignment: Alignment.centerLeft,
-        height: parentHeight*.06,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1,color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
-          ),
-        ),
-        child: Padding(
-          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
-          child: const Text(
-           StringEn.FRANCHISEE,
-            style:page_heading_textStyle,
-          ),
-        ),
-      ),
-    );
-  }
 
   /* Widget for AppVersion Layout */
   Widget getAddAppVersionLayout(double parentHeight, double parentWidth) {

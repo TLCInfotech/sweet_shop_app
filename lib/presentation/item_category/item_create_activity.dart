@@ -122,22 +122,32 @@ class _CreateItemState extends State<CreateItem> with CategoryDialogInterface,Si
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        backgroundColor: CommonColor.MAIN_BG,
+        backgroundColor: CommonColor.BACKGROUND_COLOR,
         resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight * .12,
-              decoration: const BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(20.78),
-                  bottomLeft: Radius.circular(20.78),
+        appBar: PreferredSize(
+          preferredSize: AppBar().preferredSize,
+          child: SafeArea(
+            child: Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              color: Colors.transparent,
+              // color: Colors.red,
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: AppBar(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                backgroundColor: Colors.white,
+                title: const Text(
+                  "Create Item",
+                  style: appbar_text_style,
                 ),
               ),
-              child: getAddTopBarLayout(
-                  SizeConfig.screenHeight, SizeConfig.screenWidth),
             ),
+          ),
+        ),
+        body: Column(
+          children: [
             Expanded(
               child: KeyboardAvoider(
                 autoScroll: true,

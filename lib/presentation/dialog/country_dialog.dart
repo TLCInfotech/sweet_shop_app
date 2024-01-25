@@ -4,28 +4,29 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
-class StateDialog extends StatefulWidget {
-  final StateDialogInterface mListener;
+class CountryDialog extends StatefulWidget {
+  final CountryDialogInterface mListener;
 
-  const StateDialog({super.key, required this.mListener});
+  const CountryDialog({super.key, required this.mListener});
 
   @override
-  State<StateDialog> createState() => _StateDialogState();
+  State<CountryDialog> createState() => _CountryDialogState();
 }
 
-class _StateDialogState extends State<StateDialog>{
+class _CountryDialogState extends State<CountryDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
-  List state_list= ['Maharashtra', 'Karnataka', 'MP','UP'];
+
+  List state_list= ['United Kingdom', 'India', 'China','Australia','Germany','South Africa','Brazil'];
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +163,7 @@ class _StateDialogState extends State<StateDialog>{
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectState(index.toString(),state_list.elementAt(index));
+                    widget.mListener.selectCountry(index.toString(),state_list.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -230,6 +231,6 @@ class _StateDialogState extends State<StateDialog>{
 }
 
 
-abstract class StateDialogInterface{
-  selectState(String id,String name);
+abstract class CountryDialogInterface{
+  selectCountry(String id,String name);
 }
