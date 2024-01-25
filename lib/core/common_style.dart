@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 
 const big_title_style=TextStyle(
@@ -38,7 +39,7 @@ const textfield_decoration = InputDecoration(
   hintText: '',
   contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
   labelStyle: textfield_label_style,
-  fillColor:  Colors.white,
+  fillColor:  CommonColor.TexField_COLOR,
   filled: true,
   hintStyle: hint_textfield_Style,
   floatingLabelStyle: TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),

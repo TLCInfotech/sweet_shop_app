@@ -106,5 +106,7 @@ class CommonColor{
   static const NEW_SPLASH_TWO = const Color(0xFFffb958);
   static const BUTTON_COLOR = const Color(0xFF004A99);
 
+  static const TexField_COLOR = const Color(0xFFfafafa);//f7f7f7
+
 
 }

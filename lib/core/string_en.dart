@@ -47,11 +47,13 @@ class StringEn{
   static const FRANCHISEE_NAME="Franchisee Name";
   static const FRANCHISEE_CONTACT_PERSON="Contact Person";
   static const FRANCHISEE_ADDRESS="Address";
-  static const FRANCHISEE_CITY="Choose City";
-  static const FRANCHISEE_STATE="Choose State";
+  static const FRANCHISEE_CITY="City";
+  static const FRANCHISEE_STATE="State";
   static const FRANCHISEE_MOBILENO="Mobile No";
   static const FRANCHISEE_CONTACTNO="Contact No";
   static const FRANCHISEE_EMAIL="Email Address";
+  static const FRANCHISEE_SELECT_CITY="Select City";
+  static const FRANCHISEE_SELECT_STATE="Select State";
 
 
   // static const ADD_F

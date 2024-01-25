@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 class Util {
   /*Function for validate email*/
   static bool isEmailValid(String email) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex =   RegExp(pattern.toString());
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = RegExp(pattern.toString());
     if (email.length > 200) {
       return false;
-    } else if (!regex.hasMatch(email)) {
+    } else if (regex.hasMatch(email)) {
       return false;
     } else if (email.isEmpty) {
       return false;
@@ -22,7 +21,7 @@ class Util {
     RegExp regex = new RegExp(pattern.toString());
     if (email.length > 200) {
       return false;
-    } else if (!regex.hasMatch(email)) {
+    } else if (regex.hasMatch(email)) {
       return false;
     } else if (email.isEmpty) {
       return false;
@@ -94,13 +93,16 @@ class Util {
 
   /*Here, We have set 10 digits validation on mobile number.*/
   static bool isMobileValid(String value) {
-    String pattern = r'(^[0-9]*$)';
+    // String pattern =r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String pattern =r'^[6-9]\d{9}$';
     RegExp regExp = new RegExp(pattern);
+    print(regExp.hasMatch(value));
     if (value.isEmpty) {
       return false;
     } else if (value.length < 10 || value.length > 13) {
       return false;
-    } else if (!regExp.hasMatch(value)) {
+    } else
+      if (regExp.hasMatch(value)) {
       return false;
     }
     return true;

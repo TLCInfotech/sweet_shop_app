@@ -290,8 +290,7 @@ class _CreateItemState extends State<CreateItem> with CategoryDialogInterface,Si
                 showGeneralDialog(
                     barrierColor: Colors.black.withOpacity(0.5),
                     transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue =
-                          Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
                       return Transform(
                         transform:
                         Matrix4.translationValues(0.0, curvedValue * 200, 0.0),

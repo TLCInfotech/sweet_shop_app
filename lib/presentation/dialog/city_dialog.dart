@@ -4,16 +4,16 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
-class CategoryDialog extends StatefulWidget {
-  final CategoryDialogInterface mListener;
+class CityDialog extends StatefulWidget {
+  final CityDialogInterface mListener;
 
-  const CategoryDialog({super.key, required this.mListener});
+  const CityDialog({super.key, required this.mListener});
 
   @override
-  State<CategoryDialog> createState() => _CategoryDialogState();
+  State<CityDialog> createState() => _CityDialogState();
 }
 
-class _CategoryDialogState extends State<CategoryDialog>{
+class _CityDialogState extends State<CityDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -44,7 +44,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
   }
-  List sweets=["Ladu","Bundi","Balushayi","Cake","bun pav",];
+  List city_list= ['Kolhapur', 'Mumbai', 'Pune','Bengluru'];
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +71,8 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                        "Select Category",
-                        style: TextStyle(
-                          fontFamily: "Montserrat_Bold",
-                          fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        StringEn.FRANCHISEE_SELECT_CITY,
+                        style: page_heading_textStyle
                       ),
                     ),
                   ),
@@ -147,7 +142,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                 // onChanged: _onChangeHandler,
+                  // onChanged: _onChangeHandler,
                 ),
               ),
               Visibility(
@@ -179,14 +174,14 @@ class _CategoryDialogState extends State<CategoryDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: sweets.length,
+          itemCount: city_list.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(index.toString(),sweets.elementAt(index));
+                    widget.mListener.selectCity(index.toString(),city_list.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -205,7 +200,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        sweets.elementAt(index),
+                        city_list.elementAt(index),
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -254,6 +249,6 @@ class _CategoryDialogState extends State<CategoryDialog>{
 }
 
 
-abstract class CategoryDialogInterface{
-  selectCategory(String id,String name);
+abstract class CityDialogInterface{
+  selectCity(String id,String name);
 }
