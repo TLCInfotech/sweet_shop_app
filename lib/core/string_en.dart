@@ -23,10 +23,22 @@ class StringEn{
   static const UPDATE="UPDATE";
 
   //Item
-  static const ITEM_TITLE="Item  Activity";
+  static const ITEM_TITLE="Create Item";
   static const ITEM = "Item";
   static const ADD_ITEM = "Add Item";
   static const ITEM_NAME = "Item Name";
+  static const ITEM_CATEGORY = "Item Category";
+  static const UNIT_TWO = "Unit 2";
+  static const UNIT_THREE = "Unit 3";
+  static const RATE = "Rate";
+  static const PACK_SIZE = "Pack Size";
+  static const HSN_NO = "HSN No";
+  static const stock_calculation = "Stock Calculation";
+  static const requisition_requIRED = "Requisition Required";
+  static const RATE_CHANGE_ON = "Rate Change on";
+  static const DEFAULT_STORE = "Default Store";
+  static const MIN_STOCK = "Min Stock";
+  static const MAX_STOCK = "Max Stock";
   static const ENTER_VALID_ITEM_NAME = "Enter valid item name";
   static const ENTER_VALID_DESCRIPTION = "Enter valid description";
   static const ENTER_ITEM_NAME = "Enter item name";
@@ -94,5 +106,8 @@ class StringEn{
   static const EXPENSE = "Expense";
   static const EXPENSE_GROUP = "Expense Group";
   static const COMPANY_INFO = "Comapny Info";
+  static const WRKING_DAYS = "Working Days";
+  static const RESET_PASSWORD = "Reset Password ";
+  static const ACTIVE = "Active";
 
 }

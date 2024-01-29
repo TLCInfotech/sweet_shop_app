@@ -92,7 +92,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
           ),
           onPressed: () {
          //   add_item_layout(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItem()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCreateActivity()));
           }),
       body: Container(
         margin: EdgeInsets.all(15),
