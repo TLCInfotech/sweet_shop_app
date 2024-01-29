@@ -1,6 +1,35 @@
 import 'package:flutter/material.dart';
 
 class Util {
+
+
+  /*Function for validate pan*/
+  static bool isPanValid(String pan) {
+    Pattern pattern = r'^([A-Z]){5}([0-9]){4}([A-Z]){1}$';
+    RegExp regex = RegExp(pattern.toString());
+    print(regex.hasMatch(pan));
+    if (regex.hasMatch(pan)) {
+      return false;
+    } else if (pan.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  /*Function for validate aadhar*/
+  static bool isAadharValid(String aadhar) {
+    Pattern pattern = r'^[2-9][0-9]{3} [0-9]{4} [0-9]{4}$';
+    RegExp regex = RegExp(pattern.toString());
+    print(regex.hasMatch(aadhar));
+    if (regex.hasMatch(aadhar)) {
+      return false;
+    } else if (aadhar.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+
   /*Function for validate email*/
   static bool isEmailValid(String email) {
     Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';

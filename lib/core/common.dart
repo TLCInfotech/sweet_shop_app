@@ -1,6 +1,11 @@
 
 
 
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -98,6 +103,45 @@ class CommonWidget {
           );
         },
       );
+    }
+  }
+
+ static pickDocumentFromfile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      withData: true,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'pdf', 'png'],
+    );
+
+    if (result != null) {
+      print(result.files.first.name);
+      PlatformFile file = result.files.first;
+      Uint8List? fileBytes = result.files.first.bytes;
+
+      final bytes = fileBytes?.length;
+      print(" BYTES : $bytes");
+
+      final kb = bytes! / 1024;
+
+      final mb = kb! / 1024;
+
+      if(mb<= 10){
+
+        String fileName = result.files.first.name;
+
+        print("FILENAE: $fileName");
+
+        String bs4str = base64.encode(fileBytes!);
+
+        File _file = File((result.files.single.path)as String);
+
+        return _file;
+      }
+      else
+      {
+        // Fluttertoast.showToast(msg: "File Should be of size <= 10MB",toastLength: Toast.LENGTH_SHORT);
+        return null;
+      }
     }
   }
 

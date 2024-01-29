@@ -1,5 +1,12 @@
+
+
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
@@ -9,6 +16,7 @@ import '../../core/common_style.dart';
 import '../../core/size_config.dart';
 import '../../core/string_en.dart';
 import '../dialog/category_dialog.dart';
+import 'package:file_picker/file_picker.dart';
 
 class CreateFranchisee extends StatefulWidget {
   @override
@@ -25,12 +33,28 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
   TextEditingController franchiseeContactNo= TextEditingController();
   TextEditingController franchiseeEmail = TextEditingController();
 
+  TextEditingController franchiseeAadharNo = TextEditingController();
+  TextEditingController franchiseeGSTNO = TextEditingController();
+  TextEditingController franchiseePanNo = TextEditingController();
+
+  TextEditingController franchiseePaymentDays = TextEditingController();
 
 
   String selectedState = ""; // Initial dummy data
 
   String selectedCity = ""; // Initial dummy data
 
+
+
+  File? aadharCardFile ;
+
+  File? panCardFile ;
+
+  File? gstCardFile ;
+
+  List<int> LimitData = [1, 2, 3,4];
+
+  int  ?selectedLimit=null;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +138,17 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                     getMobileNoLayout(),
                     getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
                     getEmailLayout(),
+
+                    getFieldTitleLayout(StringEn.FRANCHISEE_AADHAR_NO),
+                    getAdharNoLayout(),
+                    SizedBox(height: 5,),
+                    getPANNoLayout(),
+                    SizedBox(height: 5,),
+                    getGSTNoLayout(),
+                    getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
+                    getOutstandingLimit(),
+                    getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
+                    getPaymentDaysLayout(),
                     SizedBox(height: 20.0),
                     getButtonLayout()
 
@@ -154,6 +189,237 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
         child:  Text(StringEn.ADD,
             style: button_text_style),
       ),
+    );
+  }
+
+
+  /* widget for franchisee payment days layout */
+  Widget getPaymentDaysLayout(){
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      controller: franchiseePaymentDays,
+      decoration: textfield_decoration.copyWith(
+        hintText: StringEn.FRANCHISEE_PAYMENT_DAYS,
+      ),
+      validator: (value){
+        if(value!.isEmpty){
+          return "Enter Payment Days";
+        }
+        return null;
+      },
+    );
+  }
+
+
+  /* widget for franchisee outstanding limit layout */
+  Widget getOutstandingLimit(){
+    return Container(
+      padding: EdgeInsets.only(left: 10,right: 10),
+      // width: SizeConfig.halfscreenWidth,
+      decoration: BoxDecoration(
+          color: CommonColor.TexField_COLOR,
+          border:Border.all(color: Colors.grey.withOpacity(0.5))
+      ),
+      child: DropdownButton<dynamic>(
+        hint: Text(StringEn.FRANCHISEE_OUTSTANDING_LIMIT,style: hint_textfield_Style,),
+        underline: SizedBox(),
+        isExpanded: true,
+        value: selectedLimit,
+        onChanged: (newValue) {
+          setState(() {
+            selectedLimit = newValue!;
+          });
+        },
+        items: LimitData.map((dynamic limit) {
+          return DropdownMenuItem<dynamic>(
+            value: limit,
+            child: Text(limit.toString(),style: item_regular_textStyle),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+
+  /* widget for franchisee gst no layout */
+  Widget getGSTNoLayout(){
+    return Column(
+      children: [
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth-110,
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                controller: franchiseeGSTNO,
+                maxLength: 12,
+                decoration: textfield_decoration.copyWith(
+                  hintText: StringEn.FRANCHISEE_GST_NO,
+                ),
+                validator: (value){
+                  if(value!.isEmpty){
+                    return "Enter GST No";
+                  }
+                  else if(!Util.isGSTValid(value)){
+                    return "Enter Valid GST No";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(width: 10,),
+            GestureDetector(
+              onTap: (){
+                getPanCardFile();
+              },
+              child: Container(
+                  height: 50,
+                  width: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                      Text("Upload",style: subHeading_withBold)
+                    ],
+                  )
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        gstCardFile!=null?
+        getFileLayout(gstCardFile!):Container()
+      ],
+    );
+  }
+
+
+  /* widget for franchisee pan no layout */
+  Widget getPANNoLayout(){
+    return Column(
+      children: [
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth-110,
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                controller: franchiseePanNo,
+                maxLength: 12,
+                decoration: textfield_decoration.copyWith(
+                  hintText: StringEn.FRANCHISEE_PAN_NO,
+                ),
+                validator: (value){
+                  if(value!.isEmpty){
+                    return "Enter PAN No";
+                  }
+                  else if(Util.isPanValid(value)){
+                    return "Enter Valid PAN";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(width: 10,),
+            GestureDetector(
+              onTap: (){
+                getPanCardFile();
+              },
+              child: Container(
+                  height: 50,
+                  width: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                      Text("Upload",style: subHeading_withBold)
+                    ],
+                  )
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        panCardFile!=null?
+        getFileLayout(panCardFile!):Container()
+      ],
+    );
+  }
+
+  /* widget for franchisee aadhar no layout */
+  Widget getAdharNoLayout(){
+    return Column(
+      children: [
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth-110,
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                controller: franchiseeAadharNo,
+                maxLength: 12,
+                decoration: textfield_decoration.copyWith(
+                  hintText: StringEn.FRANCHISEE_AADHAR_NO,
+                ),
+                validator: (value){
+                  if(value!.isEmpty){
+                    return "Enter Aadhar No";
+                  }
+                  else if(Util.isAadharValid(value)){
+                    return "Enter Valid Aadhar";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(width: 10,),
+            GestureDetector(
+              onTap: (){
+                getAadharCardFile();
+
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                  borderRadius: BorderRadius.circular(5)
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                    Text("Upload",style: subHeading_withBold)
+                  ],
+                )
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        aadharCardFile!=null?
+        getFileLayout(aadharCardFile!):Container()
+      ],
     );
   }
 
@@ -359,6 +625,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
     );
   }
 
+  //interface function to get city
   @override
   selectCity(String id, String name) {
     // TODO: implement selectCategory
@@ -370,6 +637,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
     }
   }
 
+  //interface functionn to get state
   @override
   selectState(String id, String name) {
     // TODO: implement selectState
@@ -380,5 +648,89 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
       });
     }
   }
+
+
+  // method to pick gst document
+  getGstCardFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      gstCardFile=file;
+    });
+  }
+
+  // method to pick pan document
+  getPanCardFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      panCardFile=file;
+    });
+  }
+
+  // method to pick aadhar document
+  getAadharCardFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      aadharCardFile=file;
+    });
+  }
+
+  //common widget to display file
+  Stack getFileLayout(File FileName) {
+    return Stack(
+      children: [
+        FileName!.uri.toString().contains(".pdf")?
+        Container(
+            height: 100,
+            width: SizeConfig.screenWidth,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.withOpacity(0.6),),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FaIcon(FontAwesomeIcons.filePdf,color: Colors.redAccent,),
+                Text(FileName!.uri.toString().split('/').last,style: item_heading_textStyle,),
+              ],
+            )
+        ): Container(
+          height: 100,
+          margin: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.withOpacity(0.6),),
+              image: DecorationImage(
+                image: FileImage(FileName!),
+                fit: BoxFit.cover,
+              )
+          ),
+
+        ),
+        Positioned(
+            right: 15,
+            top: 15,
+            child: IconButton(
+                onPressed: (){
+                  if(FileName==aadharCardFile){
+                    setState(() {
+                      aadharCardFile=null;
+                    });
+                  }
+                  else if(FileName==panCardFile){
+                    setState(() {
+                      panCardFile=null;
+                    });
+                  }
+                  else if(FileName==gstCardFile){
+                    setState(() {
+                      gstCardFile=null;
+                    });
+                  }
+                },
+                icon: Icon(Icons.remove_circle_sharp,color: Colors.red,)))
+      ],
+    );
+  }
+
 }
 

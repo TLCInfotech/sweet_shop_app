@@ -54,6 +54,14 @@ class StringEn{
   static const FRANCHISEE_EMAIL="Email Address";
   static const FRANCHISEE_SELECT_CITY="Select City";
   static const FRANCHISEE_SELECT_STATE="Select State";
+  static const FRANCHISEE_UPLOAD_AADHAR_NO="Upload Aadhar No.";
+  static const FRANCHISEE_UPLOAD_GST_NO="Upload GST No.";
+  static const FRANCHISEE_UPLOAD_PAN_NO="Upload PAN No.";
+  static const FRANCHISEE_AADHAR_NO="Aadhar Number";
+  static const FRANCHISEE_GST_NO="GST Number";
+  static const FRANCHISEE_PAN_NO="PAN Number";
+  static const FRANCHISEE_OUTSTANDING_LIMIT="Outstanding Limit";
+  static const FRANCHISEE_PAYMENT_DAYS="Payment Days";
 
 
 // static const ADD_F
