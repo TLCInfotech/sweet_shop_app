@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sweet_shop_app/presentation/franchisee/franchisee_create_activity.dart';
-
-import '../../core/colors.dart';
-import '../../core/common_style.dart';
-import '../../core/size_config.dart';
-import '../../core/string_en.dart';
+import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 
 
-
-class AddFranchiseeActivity extends StatefulWidget {
-  const AddFranchiseeActivity({super.key, required mListener});
+class UnitsActivity extends StatefulWidget {
+  const UnitsActivity({super.key});
 
   @override
-  State<AddFranchiseeActivity> createState() => _AddFranchiseeActivityState();
+  State<UnitsActivity> createState() => _UnitsActivityState();
 }
 
-class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
+class _UnitsActivityState extends State<UnitsActivity> {
+  final _formkey=GlobalKey<FormState>();
+  TextEditingController unitName = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.white.withOpacity(0.95),
       backgroundColor: Color(0xFFfffff5),
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
@@ -40,7 +39,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.FRANCHISEE_TITLE,
+                StringEn.UNIT_TITLE,
                 style: appbar_text_style,),
             ),
           ),
@@ -54,7 +53,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateFranchisee()));
+            add_unit_layout(context);
           }),
       body: Container(
         margin: EdgeInsets.all(15),
@@ -62,20 +61,21 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringEn.FRANCHISEE_TITLE,
+              StringEn.UNIT_TITLE,
               style: page_heading_textStyle,
             ),
             SizedBox(
               height: 10,
             ),
-            get_franchisee_list_layout()
+            get_unit_list_layout()
+
           ],
         ),
       ),
     );
   }
 
-  Expanded get_franchisee_list_layout() {
+  Expanded get_unit_list_layout() {
     return Expanded(
         child: ListView.separated(
           itemCount: [1, 2, 3, 4, 5, 6].length,
@@ -85,55 +85,29 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
               duration:
               const Duration(milliseconds: 500),
               child: SlideAnimation(
-                  verticalOffset: -44.0,
+                verticalOffset: -44.0,
                 child: FadeInAnimation(
                   delay: Duration(microseconds: 1500),
                   child: Card(
                     child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundColor: (index)%2==0?Colors.green:Colors.blueAccent,
-                            child:  FaIcon(
-                              FontAwesomeIcons.user,
-                              color: Colors.white,
-                            )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          width:60,
+                          height: 40,
+                          decoration:  BoxDecoration(
+                              color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
+                              borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
+                          alignment: Alignment.center,
+                          child: Text("${(index+1).toString().padLeft(2, '0')}",style: TextStyle(),),
                         ),
                         Expanded(
                             child: Stack(
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.phone,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("9876543455",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.locationDot,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("Jarag Nagar Road , Kolhapur, Mahaarastra - 416012",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                
-                                    ],
-                                  ),
+                                  margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                  child: Text("Measuring Unit",style: item_heading_textStyle,),
                                 ),
                                 Positioned(
                                     top: 0,
@@ -148,7 +122,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                                     ) )
                               ],
                             )
-                
+
                         )
                       ],
                     ),
@@ -163,5 +137,46 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             );
           },
         ));
+
+
+  }
+
+  Future<dynamic> add_unit_layout(BuildContext context) {
+    return showDialog(
+              context: context,
+              builder:(BuildContext context){
+                return AlertDialog(
+
+                  title: Text(StringEn.ADD_UNIT,style: appbar_text_style,),
+                  content: Form(
+                    key: _formkey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: unitName,
+                          decoration: InputDecoration(
+                            hintText: StringEn.UNIT_NAME,
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Container(
+                          width: 200,
+                          child: ElevatedButton(
+                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
+                            onPressed: () {
+                              // Add login functionality
+                              Navigator.pop(context);
+                            },
+                            child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
   }
 }

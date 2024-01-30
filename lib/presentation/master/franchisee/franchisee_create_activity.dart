@@ -7,22 +7,19 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
+import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
+import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
+import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
-import '../../core/colors.dart';
-import '../../core/common_style.dart';
-import '../../core/imagePicker/image_picker_dialog.dart';
-import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
-import '../../core/imagePicker/image_picker_handler.dart';
-import '../../core/size_config.dart';
-import '../../core/string_en.dart';
-import '../dialog/category_dialog.dart';
-import 'package:file_picker/file_picker.dart';
-
-import '../dialog/country_dialog.dart';
 
 class CreateFranchisee extends StatefulWidget {
   @override
