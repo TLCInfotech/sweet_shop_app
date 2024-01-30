@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/size_config.dart';
+
 
 class UnitsActivity extends StatefulWidget {
   const UnitsActivity({super.key});
@@ -142,41 +144,111 @@ class _UnitsActivityState extends State<UnitsActivity> {
   }
 
   Future<dynamic> add_unit_layout(BuildContext context) {
-    return showDialog(
-              context: context,
-              builder:(BuildContext context){
-                return AlertDialog(
+    return  showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: Material(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                      child: Container(
+                        height: SizeConfig.screenHeight*0.3,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFfffff5),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                          ),
+                        ),
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: SizeConfig.screenHeight*.08,
+                              child: Center(
+                                child: Text(
+                                    StringEn.ADD_UNIT,
+                                    style: page_heading_textStyle
+                                ),
+                              ),
+                            ),
 
-                  title: Text(StringEn.ADD_UNIT,style: appbar_text_style,),
-                  content: Form(
-                    key: _formkey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          controller: unitName,
-                          decoration: InputDecoration(
-                            hintText: StringEn.UNIT_NAME,
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
+                            TextFormField(
+                              controller: unitName,
+                              decoration: textfield_decoration.copyWith(
+                                hintText: StringEn.UNIT_NAME,
+                                filled: true,
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            Container(
+                              width: 200,
+                              child: ElevatedButton(
+                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
+                                onPressed: () {
+                                  // Add login functionality
+                                  Navigator.pop(context);
+                                },
+                                child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
+                              ),
+                            ),
+
+                          ],
                         ),
-                        SizedBox(height: 20,),
-                        Container(
-                          width: 200,
-                          child: ElevatedButton(
-                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
-                            onPressed: () {
-                              // Add login functionality
-                              Navigator.pop(context);
-                            },
-                            child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-              });
+                    getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
+  }
+  Widget getCloseButton(double parentHeight, double parentWidth){
+    return Padding(
+      padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
+      child: GestureDetector(
+        onTap: (){
+          Navigator.pop(context);
+          // Scaffold.of(context).openDrawer();
+        },
+        child: Container(
+          height: parentHeight*.065,
+          decoration: const BoxDecoration(
+            color: Colors.deepOrange,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(7),
+              bottomRight: Radius.circular(7),
+            ),
+          ),
+          child:const Center(
+            child: Text(
+              StringEn.CLOSE,
+              textAlign: TextAlign.center,
+              style: text_field_textStyle,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

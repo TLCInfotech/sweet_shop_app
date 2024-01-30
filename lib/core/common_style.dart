@@ -39,7 +39,7 @@ const textfield_decoration = InputDecoration(
   hintText: '',
   contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
   labelStyle: textfield_label_style,
-  fillColor:  CommonColor.TexField_COLOR,
+  fillColor:  Colors.white,
   filled: true,
   hintStyle: hint_textfield_Style,
   floatingLabelStyle: TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),

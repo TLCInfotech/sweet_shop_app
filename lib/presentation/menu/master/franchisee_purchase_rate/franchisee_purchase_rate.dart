@@ -11,18 +11,18 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/franchisee_dialog.dart';
 import 'package:intl/intl.dart';
-import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
+import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 
-import 'copy_sale_rate_product_of_franchisee.dart';
+import 'copy_purchase_rate_product_of_franchisee.dart';
 
-class FranchiseeSaleRate extends StatefulWidget {
-  const FranchiseeSaleRate({super.key});
+class FranchiseePurchaseRate extends StatefulWidget {
+  const FranchiseePurchaseRate({super.key});
 
   @override
-  State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
+  State<FranchiseePurchaseRate> createState() => _FranchiseePurchaseRateState();
 }
 
-class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProductSaleRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopySaleRateProductOfFranchiseeInterface{
+class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with AddProductPurchaseRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopyPurchaseRateProductOfFranchiseeInterface{
 
 
   String selectedFranchiseeName="";
@@ -68,7 +68,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.FRANCHISE_SALE_RATE,
+                StringEn.FRANCHISE_PURCHASE_RATE,
                 style: appbar_text_style,),
             ),
           ),
@@ -117,7 +117,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
               ),
 
               getFieldTitleLayout(StringEn.COPY_FROM_FRANCHISEE),
-              CopySaleRateProductOfFranchisee(mListener: this,),
+              CopyPurchaseRateProductOfFranchisee(mListener: this,),
 
               product_list.length>0?getFieldTitleLayout(StringEn.PRODUCTS):Container(),
 
@@ -192,7 +192,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                 child: Opacity(
                   opacity: a1.value,
-                  child: AddProductSaleRate(
+                  child: AddProductPurchaseRate(
                     mListener: this,
                     editproduct:product,
                   ),
@@ -238,7 +238,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                       width:SizeConfig.screenWidth/4,
 
                       child: Text(
-                        "Sale Rate",
+                        "Purchase Rate",
                       ),
                     ),
                     numeric: true,
@@ -508,7 +508,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   }
 
   @override
-  selectedFranchiseeToCopySaleRateProduct(String id, String name) {
+  selectedFranchiseeToCopyPurchaseRateProduct(String id, String name) {
     // TODO: implement selectedFranchiseeToCopyProduct
     setState(() {
       selectedCopyFranchiseeName=name;
@@ -518,7 +518,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
 
   @override
-  addProductSaleRateDetail( dynamic item) {
+  addProductPurchaseRateDetail( dynamic item) {
     // TODO: implement addProductDetail
     print(item);
     var productList=product_list;

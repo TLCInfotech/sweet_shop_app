@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee.dart';
+import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/franchisee_purchase_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/franchisee_sale_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
@@ -282,6 +283,8 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getFranchiseePurchaseRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseePurchaseRate()));
       },
       onDoubleTap: (){},
       child: Padding(

@@ -16,6 +16,7 @@ class StringEn{
   // Category
   static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
+  static const PARENT_CATEGORY = "Parent Category";
   static const ADD_CATEGORY = "Add Category";
   static const CATEGORY_NAME="Enter Item Category";
   static const CLOSE = "Close";
@@ -113,7 +114,15 @@ class StringEn{
 
 
   //sale rate
+  static const APPLICABLE_FROM="Applicable From";
   static const COPY_FROM_FRANCHISEE = "Copy From Franchisee";
+  static const PRODUCTS="Products :";
+  static const ADDPRODUCT="Add Product";
+  static const GST="GST";
+  static const NET="Net";
+  static const SALE_RATE="Sale Rate";
+  static const PURCHASE_RATE="Purchase Rate";
+
 
 
 }
