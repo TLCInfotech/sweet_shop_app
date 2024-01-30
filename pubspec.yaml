@@ -16,6 +16,8 @@ dependencies:
   keyboard_actions:
   flutter_staggered_animations:
   file_picker: ^6.1.1
+  intl: ^0.18.1
+  syncfusion_flutter_calendar: ^20.3.56
 
 
 dev_dependencies:
