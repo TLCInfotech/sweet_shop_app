@@ -5,7 +5,8 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/company/company_activity.dart';
+import 'package:sweet_shop_app/presentation/company_user/company_activity.dart';
+import 'package:sweet_shop_app/presentation/company_user/create_user.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/franchisee/franchisee.dart';
 import 'package:sweet_shop_app/presentation/item_category/Item_Category.dart';
@@ -339,7 +340,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UserCreate()));
       },
       onDoubleTap: (){},
       child: Padding(
