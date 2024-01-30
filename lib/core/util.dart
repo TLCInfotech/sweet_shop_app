@@ -20,12 +20,23 @@ class Util {
   static bool isAadharValid(String aadhar) {
     Pattern pattern = r'^[2-9][0-9]{3} [0-9]{4} [0-9]{4}$';
     RegExp regex = RegExp(pattern.toString());
-    print(regex.hasMatch(aadhar));
-    if (regex.hasMatch(aadhar)) {
-      return false;
-    } else if (aadhar.isEmpty) {
+    StringBuffer result = StringBuffer();
+
+    for (int i = 0; i < aadhar.length; i++) {
+      result.write(aadhar[i]);
+
+      if ((i + 1) % 4 == 0 && i != aadhar.length - 1) {
+        result.write(' ');
+      }
+    }
+    print(result.toString());
+    print(regex.hasMatch("5890 0464 7395"));
+    if (regex.hasMatch(result.toString())) {
       return false;
     }
+    //  else if (aadhar.isEmpty) {
+    //   return false;
+    // }
     return true;
   }
 

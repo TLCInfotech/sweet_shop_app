@@ -53,6 +53,7 @@ class StringEn{
   static const FRANCHISEE_CONTACTNO="Contact No";
   static const FRANCHISEE_EMAIL="Email Address";
   static const FRANCHISEE_SELECT_CITY="Select City";
+  static const FRANCHISEE_COUNTRY="Country";
   static const FRANCHISEE_SELECT_STATE="Select State";
   static const FRANCHISEE_UPLOAD_AADHAR_NO="Upload Aadhar No.";
   static const FRANCHISEE_UPLOAD_GST_NO="Upload GST No.";
@@ -94,5 +95,10 @@ class StringEn{
   static const EXPENSE = "Expense";
   static const EXPENSE_GROUP = "Expense Group";
   static const COMPANY_INFO = "Comapny Info";
+
+
+  //sale rate
+  static const COPY_FROM_FRANCHISEE = "Copy From Franchisee";
+
 
 }
