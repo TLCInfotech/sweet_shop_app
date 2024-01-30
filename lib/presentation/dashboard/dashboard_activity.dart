@@ -8,7 +8,7 @@ import 'package:sweet_shop_app/core/constant.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/home/home_fragment.dart';
-import 'package:sweet_shop_app/presentation/master/user/user_fragment.dart';
+import 'package:sweet_shop_app/presentation/menu/master/user/user_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
 
 class DashboardActivity extends StatefulWidget {

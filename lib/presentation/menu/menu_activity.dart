@@ -6,13 +6,13 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
-import 'package:sweet_shop_app/presentation/master/company_user/company_activity.dart';
-import 'package:sweet_shop_app/presentation/master/company_user/create_user.dart';
-import 'package:sweet_shop_app/presentation/master/franchisee/franchisee.dart';
-import 'package:sweet_shop_app/presentation/master/franchisee_sale_rate/franchisee_sale_rate.dart';
-import 'package:sweet_shop_app/presentation/master/item_category/Item_Category.dart';
-import 'package:sweet_shop_app/presentation/master/items/items.dart';
-import 'package:sweet_shop_app/presentation/master/unit/Units.dart';
+import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
+import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee.dart';
+import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/franchisee_sale_rate.dart';
+import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
+import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
+import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 
 class MenuActivity extends StatefulWidget {
   final MenuActivityInterface mListener;

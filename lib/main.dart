@@ -4,8 +4,9 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
-import 'presentation/master/item_category/Item_Category.dart';
-import 'presentation/master/unit/Units.dart';
+
+import 'presentation/menu/master/item_category/Item_Category.dart';
+import 'presentation/menu/master/unit/Units.dart';
 
 
 Future<void> main() async {
