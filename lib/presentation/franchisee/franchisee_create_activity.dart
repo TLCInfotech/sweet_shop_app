@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -13,30 +14,44 @@ import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
 import '../../core/colors.dart';
 import '../../core/common_style.dart';
+import '../../core/imagePicker/image_picker_dialog.dart';
+import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
+import '../../core/imagePicker/image_picker_handler.dart';
 import '../../core/size_config.dart';
 import '../../core/string_en.dart';
 import '../dialog/category_dialog.dart';
 import 'package:file_picker/file_picker.dart';
+
+import '../dialog/country_dialog.dart';
 
 class CreateFranchisee extends StatefulWidget {
   @override
   _CreateFranchiseeState createState() => _CreateFranchiseeState();
 }
 
-class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInterface,StateDialogInterface {
+class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerProviderStateMixin,CityDialogInterface,StateDialogInterface,
+    ImagePickerDialogPostInterface,
+    ImagePickerListener,CountryDialogInterface,
+    ImagePickerDialogInterface {
 
-  final _formkey=GlobalKey<FormState>();
+  final _formkey = GlobalKey<FormState>();
+
+  late ImagePickerHandler imagePicker;
+  late AnimationController _Controller;
+  File? picImage;
+
   TextEditingController franchiseeName = TextEditingController();
   TextEditingController franchiseeContactPerson = TextEditingController();
   TextEditingController franchiseeAddress = TextEditingController();
   TextEditingController franchiseeMobileNo = TextEditingController();
-  TextEditingController franchiseeContactNo= TextEditingController();
+  TextEditingController franchiseeContactNo = TextEditingController();
   TextEditingController franchiseeEmail = TextEditingController();
 
   TextEditingController franchiseeAadharNo = TextEditingController();
   TextEditingController franchiseeGSTNO = TextEditingController();
   TextEditingController franchiseePanNo = TextEditingController();
 
+  TextEditingController franchiseeOutstandingLimit = TextEditingController();
   TextEditingController franchiseePaymentDays = TextEditingController();
 
 
@@ -44,17 +59,31 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
   String selectedCity = ""; // Initial dummy data
 
+  String selectedCountry = "";
 
+  File? aadharCardFile;
 
-  File? aadharCardFile ;
+  File? panCardFile;
 
-  File? panCardFile ;
+  File? gstCardFile;
 
-  File? gstCardFile ;
+  List<String> LimitDataUnit = ["Cr","Dr"];
 
-  List<int> LimitData = [1, 2, 3,4];
+  String ?selectedLimitUnit = null;
 
-  int  ?selectedLimit=null;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _Controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    imagePicker = ImagePickerHandler(this, _Controller);
+    imagePicker.setListener(this);
+    imagePicker.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +97,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color:  Color(0xFFfffff5),
+        color: Color(0xFFfffff5),
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
@@ -76,14 +105,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
-            child:  Card(
+            child: Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
               ),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)
@@ -106,7 +135,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
+                    getImageLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_NAME),
                     getFranchiseeNameLayout(),
                     getFieldTitleLayout(StringEn.FRANCHISEE_CONTACT_PERSON),
@@ -134,6 +164,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                         ),
                       ],
                     ),
+                    getFieldTitleLayout(StringEn.FRANCHISEE_COUNTRY),
+                    getCountryayout(),
                     getFieldTitleLayout(StringEn.FRANCHISEE_MOBILENO),
                     getMobileNoLayout(),
                     getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
@@ -163,11 +195,111 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
     );
   }
 
+  /* widget for image layout */
+  Widget getImageLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            picImage == null
+                ? Container(
+              height: parentHeight * .15,
+              width: parentHeight * .15,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                image: const DecorationImage(
+                  image: AssetImage(
+                      'assets/images/placeholder.png'),
+                  // Replace with your image asset path
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(7),
+              ),
+            )
+                : Container(
+              height: parentHeight * .25,
+              width: parentHeight * .25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  image: DecorationImage(
+                    image: FileImage(picImage!),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (mounted) {
+                  setState(() {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    showCupertinoDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) {
+                        return AnimatedOpacity(
+                          opacity: 1.0,
+                          duration: const Duration(seconds: 2),
+                          child: ImagePickerDialogPost(
+                            imagePicker,
+                            _Controller,
+                            context,
+                            this,
+                            isOpenFrom: '',
+                          ),
+                        );
+                      },
+                    );
+                  });
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: parentWidth * .08),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: parentHeight * .05,
+                      width: parentHeight * .05,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors
+                            .white, // Change the color to your desired fill color
+                      ),
+                      /*     decoration: BoxDecoration(
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/edit_post.png'), // Replace with your image asset path
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(7),
+                      ),*/
+                    ),
+                    Container(
+                        height: parentHeight * .03,
+                        width: parentHeight * .03,
+                        child: const Image(
+                          image: AssetImage("assets/images/edit_post.png"),
+                          fit: BoxFit.contain,
+                        ))
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
   /* widget for button layout */
-  Widget getFieldTitleLayout(String title){
-    return  Container(
+  Widget getFieldTitleLayout(String title) {
+    return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10,bottom: 10,),
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
         "$title",
         style: item_heading_textStyle,
@@ -177,16 +309,17 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for button layout */
-  Widget getButtonLayout(){
+  Widget getButtonLayout() {
     return Container(
       width: 200,
       child: ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
+            CommonColor.THEME_COLOR)),
         onPressed: () {
-            _formkey.currentState?.validate();
+          _formkey.currentState?.validate();
           // Navigator.pop(context);
         },
-        child:  Text(StringEn.ADD,
+        child: Text(StringEn.ADD,
             style: button_text_style),
       ),
     );
@@ -194,15 +327,15 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for franchisee payment days layout */
-  Widget getPaymentDaysLayout(){
+  Widget getPaymentDaysLayout() {
     return TextFormField(
       keyboardType: TextInputType.number,
       controller: franchiseePaymentDays,
       decoration: textfield_decoration.copyWith(
         hintText: StringEn.FRANCHISEE_PAYMENT_DAYS,
       ),
-      validator: (value){
-        if(value!.isEmpty){
+      validator: (value) {
+        if (value!.isEmpty) {
           return "Enter Payment Days";
         }
         return null;
@@ -212,37 +345,64 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for franchisee outstanding limit layout */
-  Widget getOutstandingLimit(){
-    return Container(
-      padding: EdgeInsets.only(left: 10,right: 10),
-      // width: SizeConfig.halfscreenWidth,
-      decoration: BoxDecoration(
-          color: CommonColor.TexField_COLOR,
-          border:Border.all(color: Colors.grey.withOpacity(0.5))
-      ),
-      child: DropdownButton<dynamic>(
-        hint: Text(StringEn.FRANCHISEE_OUTSTANDING_LIMIT,style: hint_textfield_Style,),
-        underline: SizedBox(),
-        isExpanded: true,
-        value: selectedLimit,
-        onChanged: (newValue) {
-          setState(() {
-            selectedLimit = newValue!;
-          });
-        },
-        items: LimitData.map((dynamic limit) {
-          return DropdownMenuItem<dynamic>(
-            value: limit,
-            child: Text(limit.toString(),style: item_regular_textStyle),
-          );
-        }).toList(),
-      ),
+  Widget getOutstandingLimit() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: TextFormField(
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+            ),
+            controller: franchiseeOutstandingLimit,
+            decoration: textfield_decoration.copyWith(
+              hintText: StringEn.FRANCHISEE_OUTSTANDING_LIMIT,
+            ),
+            onFieldSubmitted: (v) => franchiseeOutstandingLimit.text = double.parse(franchiseeOutstandingLimit.text).toString(),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Email Address";
+              }
+              return null;
+            },
+          ),
+        ),
+        Container(
+          height: 50,
+          width: 100,
+          margin: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.TexField_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: DropdownButton<dynamic>(
+            hint: Text(
+              StringEn.UNIT, style: hint_textfield_Style,),
+            underline: SizedBox(),
+            isExpanded: true,
+            value: selectedLimitUnit,
+            onChanged: (newValue) {
+              setState(() {
+                selectedLimitUnit = newValue!;
+              });
+            },
+            items: LimitDataUnit.map((dynamic limit) {
+              return DropdownMenuItem<dynamic>(
+                value: limit,
+                child: Text(limit.toString(), style: item_regular_textStyle),
+              );
+            }).toList(),
+          ),
+        )
+      ],
     );
   }
 
 
   /* widget for franchisee gst no layout */
-  Widget getGSTNoLayout(){
+  Widget getGSTNoLayout() {
     return Column(
       children: [
 
@@ -251,19 +411,22 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: SizeConfig.screenWidth-110,
+              width: SizeConfig.screenWidth - 110,
               child: TextFormField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 controller: franchiseeGSTNO,
-                maxLength: 12,
+                maxLength: 15,
                 decoration: textfield_decoration.copyWith(
                   hintText: StringEn.FRANCHISEE_GST_NO,
                 ),
-                validator: (value){
-                  if(value!.isEmpty){
+                onChanged:(value){
+                  franchiseeGSTNO.text=value.toUpperCase();
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Enter GST No";
                   }
-                  else if(!Util.isGSTValid(value)){
+                  else if (!Util.isGSTValid(value)) {
                     return "Enter Valid GST No";
                   }
                   return null;
@@ -272,7 +435,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
             ),
             SizedBox(width: 10,),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 getPanCardFile();
               },
               child: Container(
@@ -286,8 +449,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                      Text("Upload",style: subHeading_withBold)
+                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
+                        size: 20,),
+                      Text("Upload", style: subHeading_withBold)
                     ],
                   )
               ),
@@ -295,15 +459,15 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
           ],
         ),
         SizedBox(height: 5,),
-        gstCardFile!=null?
-        getFileLayout(gstCardFile!):Container()
+        gstCardFile != null ?
+        getFileLayout(gstCardFile!) : Container()
       ],
     );
   }
 
 
   /* widget for franchisee pan no layout */
-  Widget getPANNoLayout(){
+  Widget getPANNoLayout() {
     return Column(
       children: [
 
@@ -312,19 +476,22 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: SizeConfig.screenWidth-110,
+              width: SizeConfig.screenWidth - 110,
               child: TextFormField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 controller: franchiseePanNo,
                 maxLength: 12,
                 decoration: textfield_decoration.copyWith(
                   hintText: StringEn.FRANCHISEE_PAN_NO,
                 ),
-                validator: (value){
-                  if(value!.isEmpty){
+                onChanged:(value){
+                  franchiseePanNo.text=value.toUpperCase();
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Enter PAN No";
                   }
-                  else if(Util.isPanValid(value)){
+                  else if (Util.isPanValid(value)) {
                     return "Enter Valid PAN";
                   }
                   return null;
@@ -333,7 +500,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
             ),
             SizedBox(width: 10,),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 getPanCardFile();
               },
               child: Container(
@@ -347,8 +514,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                      Text("Upload",style: subHeading_withBold)
+                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
+                        size: 20,),
+                      Text("Upload", style: subHeading_withBold)
                     ],
                   )
               ),
@@ -356,14 +524,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
           ],
         ),
         SizedBox(height: 5,),
-        panCardFile!=null?
-        getFileLayout(panCardFile!):Container()
+        panCardFile != null ?
+        getFileLayout(panCardFile!) : Container()
       ],
     );
   }
 
   /* widget for franchisee aadhar no layout */
-  Widget getAdharNoLayout(){
+  Widget getAdharNoLayout() {
     return Column(
       children: [
 
@@ -372,7 +540,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: SizeConfig.screenWidth-110,
+              width: SizeConfig.screenWidth - 110,
               child: TextFormField(
                 keyboardType: TextInputType.number,
                 controller: franchiseeAadharNo,
@@ -380,11 +548,11 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
                 decoration: textfield_decoration.copyWith(
                   hintText: StringEn.FRANCHISEE_AADHAR_NO,
                 ),
-                validator: (value){
-                  if(value!.isEmpty){
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Enter Aadhar No";
                   }
-                  else if(Util.isAadharValid(value)){
+                  else if (Util.isAadharValid(value)) {
                     return "Enter Valid Aadhar";
                   }
                   return null;
@@ -393,49 +561,49 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
             ),
             SizedBox(width: 10,),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 getAadharCardFile();
-
               },
               child: Container(
-                height: 50,
-                width: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                  borderRadius: BorderRadius.circular(5)
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                    Text("Upload",style: subHeading_withBold)
-                  ],
-                )
+                  height: 50,
+                  width: 50,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
+                        size: 20,),
+                      Text("Upload", style: subHeading_withBold)
+                    ],
+                  )
               ),
             )
           ],
         ),
         SizedBox(height: 5,),
-        aadharCardFile!=null?
-        getFileLayout(aadharCardFile!):Container()
+        aadharCardFile != null ?
+        getFileLayout(aadharCardFile!) : Container()
       ],
     );
   }
 
   /* widget for franchisee email layout */
-  Widget getEmailLayout(){
+  Widget getEmailLayout() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       controller: franchiseeEmail,
       decoration: textfield_decoration.copyWith(
         hintText: StringEn.FRANCHISEE_EMAIL,
       ),
-      validator: (value){
-        if(value!.isEmpty){
+      validator: (value) {
+        if (value!.isEmpty) {
           return "Enter Email Address";
         }
-        else if(Util.isEmailValid(value)){
+        else if (Util.isEmailValid(value)) {
           return "Enter Valid Email";
         }
         return null;
@@ -445,7 +613,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for franchisee mobile layout */
-  Widget getMobileNoLayout(){
+  Widget getMobileNoLayout() {
     return TextFormField(
       keyboardType: TextInputType.phone,
       controller: franchiseeMobileNo,
@@ -453,14 +621,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
       decoration: textfield_decoration.copyWith(
         hintText: StringEn.FRANCHISEE_MOBILENO,
       ),
-      validator: (value){
+      validator: (value) {
         // String pattern =r'^[6-9]\d{9}$';
         // RegExp regExp = new RegExp(pattern);
         // print(Util.isMobileValid(value!));
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Enter Mobile No.";
         }
-        else if(Util.isMobileValid(value)){
+        else if (Util.isMobileValid(value)) {
           return "Enter Valid Mobile No.";
         }
 
@@ -469,22 +637,23 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
     );
   }
 
-  /* widget for franchisee state layout */
-  Widget getStateayout(){
+  /* widget for franchisee country layout */
+  Widget getCountryayout() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
           showGeneralDialog(
               barrierColor: Colors.black.withOpacity(0.5),
               transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                    1.0;
                 return Transform(
                   transform:
                   Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                   child: Opacity(
                     opacity: a1.value,
-                    child:  StateDialog(
+                    child: CountryDialog(
                       mListener: this,
                     ),
                   ),
@@ -501,39 +670,43 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
       },
       child: Container(
           height: 50,
-          padding: EdgeInsets.only(left: 10,right: 10),
-          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
               color: CommonColor.TexField_COLOR,
-              border:Border.all(color: Colors.grey.withOpacity(0.5))
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-          child:Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(selectedState==""?"Choose State":selectedState,style:item_regular_textStyle ,),
-              FaIcon(FontAwesomeIcons.caretDown,color: Colors.black87.withOpacity(0.8),size: 16,)
+              Text(selectedCountry == "" ? "Choose Country" : selectedCountry,
+                style: item_regular_textStyle,),
+              FaIcon(FontAwesomeIcons.caretDown,
+                color: Colors.black87.withOpacity(0.8), size: 16,)
             ],
           )
       ),
     );
   }
 
-  /* widget for franchisee city layout */
-  Widget getCityLayout(){
+
+  /* widget for franchisee state layout */
+  Widget getStateayout() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
           showGeneralDialog(
               barrierColor: Colors.black.withOpacity(0.5),
               transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                    1.0;
                 return Transform(
                   transform:
                   Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                   child: Opacity(
                     opacity: a1.value,
-                    child:  CityDialog(
+                    child: StateDialog(
                       mListener: this,
                     ),
                   ),
@@ -549,35 +722,89 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
         }
       },
       child: Container(
-        height: 50,
-        padding: EdgeInsets.only(left: 10,right: 10),
-        width: SizeConfig.halfscreenWidth,
-        decoration: BoxDecoration(
-            color: CommonColor.TexField_COLOR,
-            border:Border.all(color: Colors.grey.withOpacity(0.5))
-        ),
-        child:Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(selectedCity==""?"Choose City":selectedCity,style:item_regular_textStyle ,),
-            FaIcon(FontAwesomeIcons.caretDown,color: Colors.black87.withOpacity(0.8),size: 16,)
-          ],
-        )
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          width: SizeConfig.halfscreenWidth,
+          decoration: BoxDecoration(
+              color: CommonColor.TexField_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(selectedState == "" ? "Choose State" : selectedState,
+                style: item_regular_textStyle,),
+              FaIcon(FontAwesomeIcons.caretDown,
+                color: Colors.black87.withOpacity(0.8), size: 16,)
+            ],
+          )
+      ),
+    );
+  }
+
+  /* widget for franchisee city layout */
+  Widget getCityLayout() {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          showGeneralDialog(
+              barrierColor: Colors.black.withOpacity(0.5),
+              transitionBuilder: (context, a1, a2, widget) {
+                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                    1.0;
+                return Transform(
+                  transform:
+                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                  child: Opacity(
+                    opacity: a1.value,
+                    child: CityDialog(
+                      mListener: this,
+                    ),
+                  ),
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierDismissible: true,
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation2, animation1) {
+                throw Exception('No widget to return in pageBuilder');
+              });
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          width: SizeConfig.halfscreenWidth,
+          decoration: BoxDecoration(
+              color: CommonColor.TexField_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(selectedCity == "" ? "Choose City" : selectedCity,
+                style: item_regular_textStyle,),
+              FaIcon(FontAwesomeIcons.caretDown,
+                color: Colors.black87.withOpacity(0.8), size: 16,)
+            ],
+          )
       ),
     );
   }
 
 
   /* widget for Contact Person layout */
-  Widget getContactPersonLayout(){
+  Widget getContactPersonLayout() {
     return TextFormField(
       keyboardType: TextInputType.text,
       controller: franchiseeContactPerson,
       decoration: textfield_decoration.copyWith(
-        hintText:StringEn.FRANCHISEE_CONTACT_PERSON,
+        hintText: StringEn.FRANCHISEE_CONTACT_PERSON,
       ),
-      validator: (value){
-        if(value!.isEmpty){
+      validator: (value) {
+        if (value!.isEmpty) {
           return "Enter Contact Person";
         }
         return null;
@@ -587,7 +814,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for Address layout */
-  Widget getAddressLayout(){
+  Widget getAddressLayout() {
     return TextFormField(
       maxLines: 4,
       keyboardType: TextInputType.streetAddress,
@@ -595,13 +822,13 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
       decoration: textfield_decoration.copyWith(
         hintText: StringEn.FRANCHISEE_ADDRESS,
       ),
-      validator: (value){
-        if(value!.isEmpty){
+      validator: (value) {
+        if (value!.isEmpty) {
           return "Enter Address";
         }
-        else if(Util.isAddressValid(value)){
-          return "Enter Valid Address";
-        }
+        // else if (Util.isAddressValid(value)) {
+        //   return "Enter Valid Address";
+        // }
         return null;
       },
     );
@@ -609,7 +836,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   /* widget for Franchisee name layout */
-  Widget getFranchiseeNameLayout(){
+  Widget getFranchiseeNameLayout() {
     return TextFormField(
       keyboardType: TextInputType.text,
       controller: franchiseeName,
@@ -617,7 +844,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
         hintText: StringEn.FRANCHISEE_NAME,
       ),
       validator: ((value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Enter Franchisee Name";
         }
         return null;
@@ -629,9 +856,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
   @override
   selectCity(String id, String name) {
     // TODO: implement selectCategory
-    if(mounted){
+    if (mounted) {
       setState(() {
-        selectedCity=name;
+        selectedCity = name;
         print("jnkgjngtjngjt  $id $name");
       });
     }
@@ -641,9 +868,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
   @override
   selectState(String id, String name) {
     // TODO: implement selectState
-    if(mounted){
+    if (mounted) {
       setState(() {
-        selectedState=name;
+        selectedState = name;
         print("jnkgjngtjngjt  $id $name");
       });
     }
@@ -651,26 +878,26 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
 
 
   // method to pick gst document
-  getGstCardFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
+  getGstCardFile() async {
+    File file = await CommonWidget.pickDocumentFromfile();
     setState(() {
-      gstCardFile=file;
+      gstCardFile = file;
     });
   }
 
   // method to pick pan document
-  getPanCardFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
+  getPanCardFile() async {
+    File file = await CommonWidget.pickDocumentFromfile();
     setState(() {
-      panCardFile=file;
+      panCardFile = file;
     });
   }
 
   // method to pick aadhar document
-  getAadharCardFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
+  getAadharCardFile() async {
+    File file = await CommonWidget.pickDocumentFromfile();
     setState(() {
-      aadharCardFile=file;
+      aadharCardFile = file;
     });
   }
 
@@ -678,25 +905,29 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
   Stack getFileLayout(File FileName) {
     return Stack(
       children: [
-        FileName!.uri.toString().contains(".pdf")?
+        FileName!.uri.toString().contains(".pdf") ?
         Container(
             height: 100,
             width: SizeConfig.screenWidth,
             alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.withOpacity(0.6),),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FaIcon(FontAwesomeIcons.filePdf,color: Colors.redAccent,),
-                Text(FileName!.uri.toString().split('/').last,style: item_heading_textStyle,),
+                FaIcon(FontAwesomeIcons.filePdf, color: Colors.redAccent,),
+                Text(FileName!
+                    .uri
+                    .toString()
+                    .split('/')
+                    .last, style: item_heading_textStyle,),
               ],
             )
-        ): Container(
+        ) : Container(
           height: 100,
-          margin: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.withOpacity(0.6),),
               image: DecorationImage(
@@ -710,26 +941,42 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with CityDialogInte
             right: 15,
             top: 15,
             child: IconButton(
-                onPressed: (){
-                  if(FileName==aadharCardFile){
+                onPressed: () {
+                  if (FileName == aadharCardFile) {
                     setState(() {
-                      aadharCardFile=null;
+                      aadharCardFile = null;
                     });
                   }
-                  else if(FileName==panCardFile){
+                  else if (FileName == panCardFile) {
                     setState(() {
-                      panCardFile=null;
+                      panCardFile = null;
                     });
                   }
-                  else if(FileName==gstCardFile){
+                  else if (FileName == gstCardFile) {
                     setState(() {
-                      gstCardFile=null;
+                      gstCardFile = null;
                     });
                   }
                 },
-                icon: Icon(Icons.remove_circle_sharp,color: Colors.red,)))
+                icon: Icon(Icons.remove_circle_sharp, color: Colors.red,)))
       ],
     );
+  }
+
+  @override
+  selectCountry(String id, String name) {
+    // TODO: implement selectCountry
+    setState(() {
+      selectedCountry = name;
+    });
+  }
+
+  @override
+  userImage(File image, String comeFrom) {
+    // TODO: implement userImage
+    setState(() {
+      picImage = image;
+    });
   }
 
 }
