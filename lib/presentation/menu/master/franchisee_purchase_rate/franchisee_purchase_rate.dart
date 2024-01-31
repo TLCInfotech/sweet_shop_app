@@ -359,7 +359,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           height: 50,
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
+              color: Colors.white,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
           child: Row(
@@ -410,7 +410,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           height: 50,
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
+              color: Colors.white,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
           child: Row(
@@ -461,7 +461,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           height: 50,
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
+              color: Colors.white,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
           child: Row(

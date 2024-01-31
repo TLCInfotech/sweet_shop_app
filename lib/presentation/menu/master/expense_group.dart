@@ -8,16 +8,16 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
 
 
-class ItemsActivity extends StatefulWidget {
-  const ItemsActivity({super.key});
+class ExpenseGroup extends StatefulWidget {
+  const ExpenseGroup({super.key});
 
   @override
-  State<ItemsActivity> createState() => _ItemsActivityState();
+  State<ExpenseGroup> createState() => _ExpenseGroupState();
 }
 
-class _ItemsActivityState extends State<ItemsActivity> {
+class _ExpenseGroupState extends State<ExpenseGroup> {
 
-  List<dynamic> item_category=[
+  List<dynamic> expense_group=[
     {
       "name":"Category 1",
       "id":123
@@ -32,23 +32,6 @@ class _ItemsActivityState extends State<ItemsActivity> {
     },
   ];
 
-  String? selectedCategory="choose";
-
-
-  List<dynamic> measuring_unit=[
-    {
-      "name":"kg",
-      "id":123
-    },
-    {
-      "name":"Ltr",
-      "id":123
-    },
-    {
-      "name":"Gram",
-      "id":123
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,36 +55,26 @@ class _ItemsActivityState extends State<ItemsActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.ITEM_TITLE,
+                StringEn.EXPENSE_GROUP,
                 style: appbar_text_style,),
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-         //   add_item_layout(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCreateActivity()));
-          }),
+
       body: Container(
         margin: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              StringEn.ITEM_TITLE,
+              StringEn.EXPENSE_GROUP,
               style: page_heading_textStyle,
             ),
             SizedBox(
               height: 10,
             ),
-            get_items_list_layout()
+            get_expense_group_list_layout()
 
           ],
         ),
@@ -109,7 +82,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
     );
   }
 
-  Expanded get_items_list_layout() {
+  Expanded get_expense_group_list_layout() {
     return Expanded(
         child: ListView.separated(
           itemCount: [1, 2, 3, 4, 5, 6,7,8,9].length,
@@ -127,19 +100,14 @@ class _ItemsActivityState extends State<ItemsActivity> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(left: 10),
-                          width:SizeConfig.imageBlockFromCardWidth,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                                fit: BoxFit.cover,
-                              ),
-                              // borderRadius: BorderRadius.only(
-                              //   bottomLeft: Radius.circular(10),
-                              //   topLeft: Radius.circular(10)
-                              // )
+                          width:80,
+                          height: 70,
+                          decoration:  BoxDecoration(
+                              color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
                               borderRadius: BorderRadius.all(Radius.circular(10))
                           ),
+                          alignment: Alignment.center,
+                          child: FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
                         ),
                         Expanded(
                             child: Stack(
@@ -150,9 +118,9 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Sweet Item 1 sjhdfjas",style: item_heading_textStyle,),
-                                      Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                      Text("500.00 per/kg",style: item_heading_textStyle,),
+                                      Text("Group Name",style: item_heading_textStyle,),
+                                      Text("Parent Group - Seq No",style: item_regular_textStyle,),
+                                      Text("Group Nature",style: item_regular_textStyle,),
 
                                     ],
                                   ),

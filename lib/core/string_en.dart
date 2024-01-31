@@ -124,5 +124,8 @@ class StringEn{
   static const PURCHASE_RATE="Purchase Rate";
 
 
+  //expense group
+
+
 
 }

@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
-
         return MediaQuery(
           child: child!,
           data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),
@@ -84,9 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
-
-
-
+  
 
   void navigateLogin() {
     Navigator.of(context).pushReplacementNamed('/loginActivity');
