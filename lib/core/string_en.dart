@@ -58,8 +58,8 @@ class StringEn{
   //Add franchisee
   static const ADD_FRANCHISEE_TITLE="Franchisee Details";
   static const FRANCHISEE_NAME="Franchisee Name";
-  static const FRANCHISEE_CONTACT_PERSON="Contact Person";
-  static const FRANCHISEE_ADDRESS="Address";
+  static const FRANCHISEE_CONTACT_PERSON="Contact Person:";
+  static const FRANCHISEE_ADDRESS="Address:";
   static const FRANCHISEE_CITY="City";
   static const FRANCHISEE_STATE="State";
   static const FRANCHISEE_MOBILENO="Mobile No";
@@ -84,7 +84,7 @@ class StringEn{
   static const NAME = "Name:";
   static const BRAND_NAME = "Brand Name:";
   static const FRANCHISEE = "Franchisee";
-  static const ADDRESS = "Address";
+  static const ADDRESS = "Address:";
   static const SAVE = "Save";
   static const DISTRICTCITY = "District/City:";
   static const CONTACT_NO = "Contact No:";
@@ -93,7 +93,7 @@ class StringEn{
   static const EMAIL = "E-Mail:";
   static const PIN_CODE = "Pin Code:";
   static const PAN_NO = "PAN No:";
-  static const STATE = "State No:";
+  static const STATE = "State:";
   static const GST_NO = "GST No:";
   static const COUNTRY = "Country:";
   static const CIN_NO = "CIN No:";
@@ -123,9 +123,31 @@ class StringEn{
   static const SALE_RATE="Sale Rate";
   static const PURCHASE_RATE="Purchase Rate";
 
+//expense
 
-  //expense group
-
-
+  static const LEADER_GROUP = "Leader Group:";
+  static const REG_TYPE = "Reg Type:";
+  static const OUTSTANDING_LIMIT = "Outstanding Limit:";
+  static const VENDOR_CODE = "Vendor Code:";
+  static const PAYMENT_DAYS = "Payment Days:";
+  static const TAXES = "Taxes";
+  static const TAX_TYPE = "Tax Type:";
+  static const TAX_CATEGORY= "Tax Category:";
+  static const TAX_RATE = "Tax Rate %:";
+  static const SGST = "SGST %:";
+  static const CGST = "CGST %:";
+  static const CESS = "Cess %:";
+  static const ADD_CESS = "Add Cess %:";
+  static const TCS_TDS_APPLICABLE = "TCS/TDS Applicable:";
+  static const BANK_NAME = "Bank Name:";
+  static const ACCOUNT_INFO = "Account Info";
+  static const BANT_BRACH = "Bank Branch:";
+  static const IFSC_CODE = "IFSC Code:";
+  static const ACCOUNT_HOLDER_NAME = "A/C Holder Name:";
+  static const ACCOUNT_NO = "Account No:";
+  static const BRANCH_NAME = "Branch Name:";
+  static const GROUP_NAME = "Group Name";
+  static const SEQUENSE_NO = "Sequence No";
+  static const SEQUENSE_NATURE = "Sequence Nature";
 
 }

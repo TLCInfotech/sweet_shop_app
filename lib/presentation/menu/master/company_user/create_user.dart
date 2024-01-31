@@ -662,7 +662,7 @@ class _UserCreateState extends State<UserCreate>
   }
 
 
-  /*Widget for Terms and privacy Layout*/
+  /*Widget for active Layout*/
   Widget getActiveLayout(
       double parentHeight, double parentWidth) {
     return Padding(

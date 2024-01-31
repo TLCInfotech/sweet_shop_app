@@ -45,12 +45,12 @@ const textfield_decoration = InputDecoration(
   floatingLabelStyle: TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),
 
   enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey,width: 0.5),
+    borderSide: BorderSide(color: Colors.transparent,width: 0.5),
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),
   focusedBorder: OutlineInputBorder(
     borderSide:
-    BorderSide(color: Colors.black87,width: 1),
+    BorderSide(color: Colors.transparent,width: 1),
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),
   focusedErrorBorder: OutlineInputBorder(
@@ -63,6 +63,19 @@ const textfield_decoration = InputDecoration(
   ),
 
 );
+
+var box_decoration=BoxDecoration(
+  color: CommonColor.WHITE_COLOR,
+  borderRadius: BorderRadius.circular(4),
+  boxShadow: [
+    BoxShadow(
+      offset: Offset(0, 1),
+      blurRadius: 5,
+      color: Colors.black.withOpacity(0.1),
+    ),
+  ],
+);
+
 
 const appbar_text_style=TextStyle(
     fontSize: 22.0,

@@ -8,7 +8,8 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
-import 'package:sweet_shop_app/presentation/menu/master/expense_group.dart';
+import 'package:sweet_shop_app/presentation/menu/master/expense/expense_listing_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/expense/expense_group.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/franchisee_purchase_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/franchisee_sale_rate.dart';
@@ -399,7 +400,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getExpenseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseListingActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
