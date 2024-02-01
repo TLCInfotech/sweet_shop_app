@@ -35,12 +35,13 @@ class _MenuActivityState extends State<MenuActivity>
   File imageFile = File('');
   String serverUrl = '';
   String appVersion = '';
-
+  bool openMasterDropDown = false;
+  bool openTransactionDropDown = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("hkhjghjkgjgh  $openDropDown");
+    print("hkhjghjkgjgh  $openMasterDropDown");
   }
 
   @override
@@ -117,9 +118,10 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getAddBottomBarLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
-        getAddTransactionLayout(parentHeight, parentWidth),
+        openTransactionDropDown==false?getAddTransactionLayout(parentHeight, parentWidth):
+        getTransactionSubLayout(parentHeight, parentWidth),
         getAddReportLayout(parentHeight, parentWidth),
-        openDropDown == false
+        openMasterDropDown == false
             ? getAddMasterLayout(parentHeight, parentWidth)
             : getAddMasterSubLayout(parentHeight, parentWidth),
         getAddLogoutLayout(parentHeight, parentWidth),
@@ -160,14 +162,14 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  bool openDropDown = false;
+
 
   /* Widget for Master Layout */
   Widget getAddMasterLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          openDropDown = true;
+          openMasterDropDown = true;
         });
       },
       onDoubleTap: () {},
@@ -218,7 +220,7 @@ class _MenuActivityState extends State<MenuActivity>
             GestureDetector(
               onTap: () {
                 setState(() {
-                  openDropDown = false;
+                  openMasterDropDown = false;
                 });
               },
               onDoubleTap: () {},
@@ -561,7 +563,11 @@ class _MenuActivityState extends State<MenuActivity>
   /* Widget for transaction Layout */
   Widget getAddTransactionLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        setState(() {
+          openTransactionDropDown = true;
+        });
+      },
       onDoubleTap: () {},
       child: Container(
         alignment: Alignment.centerLeft,
@@ -573,16 +579,205 @@ class _MenuActivityState extends State<MenuActivity>
           ),
         ),
         child: Padding(
-          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
-          child: const Text(
-            StringEn.TRANSACTION,
-            style: page_heading_textStyle
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                StringEn.TRANSACTION,
+                style:page_heading_textStyle,
+              ),
+              Icon(
+                Icons.arrow_drop_down_sharp,
+                size: 30,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  /* Widget for Master Layout */
+  Widget getTransactionSubLayout(double parentHeight, double parentWidth) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: parentHeight * .3,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+        ),
+      ),
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  openTransactionDropDown = false;
+                });
+              },
+              onDoubleTap: () {},
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    StringEn.TRANSACTION,
+                    style: page_heading_textStyle,
+                  ),
+                  Icon(
+                    Icons.arrow_drop_up,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
+            getSellLayout(parentHeight,parentWidth),
+            getPuerchaseLayout(parentHeight,parentWidth),
+            getExpensseLayout(parentHeight,parentWidth),
+            getPaymentLayout(parentHeight,parentWidth),
+            getReceptLayout(parentHeight,parentWidth),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
+  Widget getSellLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.SELL,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getPuerchaseLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.PURCHASE,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getPaymentLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.PAYMENT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getReceptLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.RECEIPT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getExpensseLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.EXPENSE,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 
   /* Widget for AppVersion Layout */

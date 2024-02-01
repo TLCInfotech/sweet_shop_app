@@ -150,4 +150,11 @@ class StringEn{
   static const SEQUENSE_NO = "Sequence No";
   static const SEQUENSE_NATURE = "Sequence Nature";
 
+  static const SELL = "Sell";
+  static const PURCHASE = "Purchase";
+  static const PAYMENT = "Payment";
+  static const RECEIPT = "Receipt";
+
+
+
 }

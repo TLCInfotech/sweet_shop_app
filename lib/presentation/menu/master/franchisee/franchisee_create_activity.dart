@@ -33,6 +33,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   final _formkey = GlobalKey<FormState>();
 
+  final _panNoFocus = FocusNode();
+  final panNoController = TextEditingController();
+  final _gstNoFocus = FocusNode();
+  final gstNoController = TextEditingController();
+  final _cinNoFocus = FocusNode();
+  final cinNoController = TextEditingController();
+  final _adharoFocus = FocusNode();
+  final adharNoController = TextEditingController();
   late ImagePickerHandler imagePicker;
   late AnimationController _Controller;
   File? picImage;
@@ -50,7 +58,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   TextEditingController franchiseeOutstandingLimit = TextEditingController();
   TextEditingController franchiseePaymentDays = TextEditingController();
-
+String countryName="";
+String stateName="";
 
   String selectedState = ""; // Initial dummy data
 
@@ -67,6 +76,30 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   List<String> LimitDataUnit = ["Cr","Dr"];
 
   String ?selectedLimitUnit = null;
+  File? adharFile ;
+  File? panFile ;
+  File? gstFile ;
+  // method to pick adhar document
+  getAadharFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      adharFile=file;
+    });
+  }
+  // method to pick pan document
+  getPanFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      panFile=file;
+    });
+  }
+  // method to pick gst document
+  getGstFile()async{
+    File file=await CommonWidget.pickDocumentFromfile();
+    setState(() {
+      gstFile=file;
+    });
+  }
 
   @override
   void initState() {
@@ -135,49 +168,32 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                     getImageLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_NAME),
-                    getFranchiseeNameLayout(),
+                    getFranchiseeNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_CONTACT_PERSON),
-                    getContactPersonLayout(),
+                    getContactPersonLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_ADDRESS),
-                    getAddressLayout(),
-                    Row(
+                    getAddressLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getFieldTitleLayout(StringEn.FRANCHISEE_CITY),
-                            getCityLayout(),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getFieldTitleLayout(StringEn.FRANCHISEE_STATE),
-                            getStateayout(),
-                          ],
-                        ),
+                        getCityLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                        getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                       ],
                     ),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_COUNTRY),
-                    getCountryayout(),
+                    getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_MOBILENO),
-                    getMobileNoLayout(),
+                    getMobileNoLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
-                    getEmailLayout(),
-
-                    getFieldTitleLayout(StringEn.FRANCHISEE_AADHAR_NO),
-                    getAdharNoLayout(),
+                    getEmailLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    getAdharLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(height: 5,),
-                    getPANNoLayout(),
+                    getPanLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(height: 5,),
-                    getGSTNoLayout(),
+                    getGstLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
-                    getOutstandingLimit(),
+                    getOutstandingLimit(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
-                    getPaymentDaysLayout(),
+                    getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(height: 20.0),
                     getButtonLayout()
 
@@ -187,6 +203,185 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             ),
 
           ),
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for country text from field layout */
+  Widget getCountryLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.COUNTRY,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Container(
+                height: parentHeight * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child:  GestureDetector(
+                  onTap: (){
+                    showGeneralDialog(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionBuilder: (context, a1, a2, widget) {
+                          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                          return Transform(
+                            transform:
+                            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                            child: Opacity(
+                              opacity: a1.value,
+                              child:CountryDialog(
+                                mListener: this,
+                              ),
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation2, animation1) {
+                          throw Exception('No widget to return in pageBuilder');
+                        });
+                  },
+                  onDoubleTap: (){},
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          countryName == "" ? "Select country" : countryName,
+                          style: countryName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+    );
+  }
+
+
+  /* Widget for state text from field layout */
+  Widget getStateLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .43,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.STATE,
+              style: page_heading_textStyle,
+            ),
+            GestureDetector(
+              onTap: (){
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      return Transform(
+                        transform:
+                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: StateDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception('No widget to return in pageBuilder');
+                    });
+              },
+              onDoubleTap: (){},
+              child: Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Container(
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          stateName == "" ? "Select state" : stateName,
+                          style: stateName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -299,7 +494,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
         "$title",
-        style: item_heading_textStyle,
+        style: page_heading_textStyle,
       ),
     );
   }
@@ -324,55 +519,93 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
 
   /* widget for franchisee payment days layout */
-  Widget getPaymentDaysLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: franchiseePaymentDays,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_PAYMENT_DAYS,
+  Widget getPaymentDaysLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Enter Payment Days";
-        }
-        return null;
-      },
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        controller: franchiseePaymentDays,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_PAYMENT_DAYS,
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Enter Payment Days";
+          }
+          return null;
+        },
+      ),
     );
   }
 
 
   /* widget for franchisee outstanding limit layout */
-  Widget getOutstandingLimit() {
+  Widget getOutstandingLimit(double parentHeight, double parentWidth) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(
-          child: TextFormField(
-            keyboardType: TextInputType.numberWithOptions(
-              decimal: true,
+          child: Container(
+            height: parentHeight * .055,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
             ),
-            controller: franchiseeOutstandingLimit,
-            decoration: textfield_decoration.copyWith(
-              hintText: StringEn.FRANCHISEE_OUTSTANDING_LIMIT,
+            child: TextFormField(
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              controller: franchiseeOutstandingLimit,
+              decoration: textfield_decoration.copyWith(
+                hintText: StringEn.FRANCHISEE_OUTSTANDING_LIMIT,
+              ),
+              onFieldSubmitted: (v) => franchiseeOutstandingLimit.text = double.parse(franchiseeOutstandingLimit.text).toString(),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter Email Address";
+                }
+                return null;
+              },
             ),
-            onFieldSubmitted: (v) => franchiseeOutstandingLimit.text = double.parse(franchiseeOutstandingLimit.text).toString(),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "Enter Email Address";
-              }
-              return null;
-            },
           ),
         ),
         Container(
-          height: 50,
+          height: parentHeight * .055,
           width: 100,
           margin: EdgeInsets.only(left: 10),
           padding: EdgeInsets.only(left: 10, right: 10),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
+            color: CommonColor.WHITE_COLOR,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
+              ),
+            ],
           ),
           child: DropdownButton<dynamic>(
             hint: Text(
@@ -399,7 +632,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
 
   /* widget for franchisee gst no layout */
-  Widget getGSTNoLayout() {
+  Widget getGSTNoLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
 
@@ -409,6 +642,19 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
           children: [
             Container(
               width: SizeConfig.screenWidth - 110,
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 controller: franchiseeGSTNO,
@@ -464,16 +710,28 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
 
   /* widget for franchisee pan no layout */
-  Widget getPANNoLayout() {
+  Widget getPANNoLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: SizeConfig.screenWidth - 110,
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 controller: franchiseePanNo,
@@ -528,7 +786,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
 
   /* widget for franchisee aadhar no layout */
-  Widget getAdharNoLayout() {
+  Widget getAdharNoLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
 
@@ -538,6 +796,19 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
           children: [
             Container(
               width: SizeConfig.screenWidth - 110,
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
               child: TextFormField(
                 keyboardType: TextInputType.number,
                 controller: franchiseeAadharNo,
@@ -589,263 +860,565 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
 
   /* widget for franchisee email layout */
-  Widget getEmailLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      controller: franchiseeEmail,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_EMAIL,
+  Widget getEmailLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Enter Email Address";
-        }
-        else if (Util.isEmailValid(value)) {
-          return "Enter Valid Email";
-        }
-        return null;
-      },
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        controller: franchiseeEmail,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_EMAIL,
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Enter Email Address";
+          }
+          else if (Util.isEmailValid(value)) {
+            return "Enter Valid Email";
+          }
+          return null;
+        },
+      ),
     );
   }
 
 
+  /* Widget for branch name text from field layout */
+  Widget getPanLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        StringEn.PAN_NO,
+                        style: page_heading_textStyle,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight * .005),
+                    child: Container(
+                      height: parentHeight * .055,
+                      width: parentWidth*.7,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: CommonColor.WHITE_COLOR,
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 5,
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: _panNoFocus,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        cursorColor: CommonColor.BLACK_COLOR,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: parentWidth * .04, right: parentWidth * .02),
+                          border: InputBorder.none,
+                          counterText: '',
+                          isDense: true,
+                          hintText: "Enter a pan no.",
+                          hintStyle: hint_textfield_Style,
+                        ),
+                        controller: panNoController,
+                        onEditingComplete: () {
+                          _panNoFocus.unfocus();
+                        },
+                        style: text_field_textStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: (){
+                  getPanFile();
+                },
+                child: Padding(
+                  padding:  EdgeInsets.only(right: parentWidth*.0),
+                  child: Container(
+                      height: 50,
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                          Text("Upload",style: subHeading_withBold)
+                        ],
+                      )
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 5,),
+          panFile!=null?
+          getFileLayout(panFile!):Container()
+        ],
+      ),
+    );
+  }
+  /* Widget for branch name text from field layout */
+  Widget getAdharLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        StringEn.FRANCHISEE_AADHAR_NO,
+                        style: page_heading_textStyle,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight * .005),
+                    child: Container(
+                      height: parentHeight * .055,
+                      width: parentWidth*.7,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: CommonColor.WHITE_COLOR,
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 5,
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: _adharoFocus,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        cursorColor: CommonColor.BLACK_COLOR,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: parentWidth * .04, right: parentWidth * .02),
+                          border: InputBorder.none,
+                          counterText: '',
+                          isDense: true,
+                          hintText: "Enter a adhar no.",
+                          hintStyle: hint_textfield_Style,
+                        ),
+                        controller: adharNoController,
+                        onEditingComplete: () {
+                          _adharoFocus.unfocus();
+                        },
+                        style: text_field_textStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: (){
+                  getAadharFile();
+                },
+                child: Padding(
+                  padding:  EdgeInsets.only(right: parentWidth*.0),
+                  child: Container(
+                      height: 50,
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                          Text("Upload",style: subHeading_withBold)
+                        ],
+                      )
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 5,),
+          adharFile!=null?
+          getFileLayout(adharFile!):Container()
+        ],
+      ),
+    );
+  }
+  /* Widget for branch name text from field layout */
+  Widget getGstLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        StringEn.GST_NO,
+                        style: page_heading_textStyle,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight * .005),
+                    child: Container(
+                      height: parentHeight * .055,
+                      width: parentWidth*.7,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: CommonColor.WHITE_COLOR,
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 5,
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                        ],
+                      ),
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: _gstNoFocus,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        cursorColor: CommonColor.BLACK_COLOR,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              left: parentWidth * .04, right: parentWidth * .02),
+                          border: InputBorder.none,
+                          counterText: '',
+                          isDense: true,
+                          hintText: "Enter a gst no",
+                          hintStyle: hint_textfield_Style,
+                        ),
+                        controller:gstNoController,
+                        onEditingComplete: () {
+                          _gstNoFocus.unfocus();
+                        },
+                        style: text_field_textStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: (){
+                  getGstFile();
+                },
+                child: Padding(
+                  padding:  EdgeInsets.only(right: parentWidth*.0),
+                  child: Container(
+                      height: 50,
+                      width: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                          Text("Upload",style: subHeading_withBold)
+                        ],
+                      )
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 5,),
+          gstFile!=null?
+          getFileLayout(gstFile!):Container()
+        ],
+      ),
+    );
+  }
   /* widget for franchisee mobile layout */
-  Widget getMobileNoLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.phone,
-      controller: franchiseeMobileNo,
-      maxLength: 10,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_MOBILENO,
+  Widget getMobileNoLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: (value) {
-        // String pattern =r'^[6-9]\d{9}$';
-        // RegExp regExp = new RegExp(pattern);
-        // print(Util.isMobileValid(value!));
-        if (value!.isEmpty) {
-          return "Enter Mobile No.";
-        }
-        else if (Util.isMobileValid(value)) {
-          return "Enter Valid Mobile No.";
-        }
+      child: TextFormField(
+        keyboardType: TextInputType.phone,
+        controller: franchiseeMobileNo,
+        maxLength: 10,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_MOBILENO,
+        ),
+        validator: (value) {
+          // String pattern =r'^[6-9]\d{9}$';
+          // RegExp regExp = new RegExp(pattern);
+          // print(Util.isMobileValid(value!));
+          if (value!.isEmpty) {
+            return "Enter Mobile No.";
+          }
+          else if (Util.isMobileValid(value)) {
+            return "Enter Valid Mobile No.";
+          }
 
-        return null;
-      },
+          return null;
+        },
+      ),
     );
   }
 
-  /* widget for franchisee country layout */
-  Widget getCountryayout() {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                    1.0;
-                return Transform(
-                  transform:
-                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: CountryDialog(
-                      mListener: this,
+  /* Widget for city text from field layout */
+  Widget getCityLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth*.43,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.FRANCHISEE_CITY,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Container(
+                height: parentHeight * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child:  GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      showGeneralDialog(
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          transitionBuilder: (context, a1, a2, widget) {
+                            final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                                1.0;
+                            return Transform(
+                              transform:
+                              Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                              child: Opacity(
+                                opacity: a1.value,
+                                child: CityDialog(
+                                  mListener: this,
+                                ),
+                              ),
+                            );
+                          },
+                          transitionDuration: Duration(milliseconds: 200),
+                          barrierDismissible: true,
+                          barrierLabel: '',
+                          context: context,
+                          pageBuilder: (context, animation2, animation1) {
+                            throw Exception('No widget to return in pageBuilder');
+                          });
+                    }
+                  },
+                  onDoubleTap: (){},
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedCity == "" ? "Select city" : selectedCity,
+                          style: selectedCity == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception('No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          width: SizeConfig.screenWidth,
-          decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedCountry == "" ? "Choose Country" : selectedCountry,
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8), size: 16,)
-            ],
-          )
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-
-  /* widget for franchisee state layout */
-  Widget getStateayout() {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                    1.0;
-                return Transform(
-                  transform:
-                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: StateDialog(
-                      mListener: this,
-                    ),
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception('No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          width: SizeConfig.halfscreenWidth,
-          decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedState == "" ? "Choose State" : selectedState,
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8), size: 16,)
-            ],
-          )
-      ),
-    );
-  }
-
-  /* widget for franchisee city layout */
-  Widget getCityLayout() {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                    1.0;
-                return Transform(
-                  transform:
-                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: CityDialog(
-                      mListener: this,
-                    ),
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception('No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          width: SizeConfig.halfscreenWidth,
-          decoration: BoxDecoration(
-              color: CommonColor.TexField_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedCity == "" ? "Choose City" : selectedCity,
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8), size: 16,)
-            ],
-          )
-      ),
-    );
-  }
-
 
   /* widget for Contact Person layout */
-  Widget getContactPersonLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      controller: franchiseeContactPerson,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_CONTACT_PERSON,
+  Widget getContactPersonLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Enter Contact Person";
-        }
-        return null;
-      },
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        controller: franchiseeContactPerson,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_CONTACT_PERSON,
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Enter Contact Person";
+          }
+          return null;
+        },
+      ),
     );
   }
 
 
   /* widget for Address layout */
-  Widget getAddressLayout() {
-    return TextFormField(
-      maxLines: 4,
-      keyboardType: TextInputType.streetAddress,
-      controller: franchiseeAddress,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_ADDRESS,
+  Widget getAddressLayout(double parentHeight, double parentWidth) {
+    return Container(
+     // height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Enter Address";
-        }
-        // else if (Util.isAddressValid(value)) {
-        //   return "Enter Valid Address";
-        // }
-        return null;
-      },
+      child: TextFormField(
+        maxLines: 4,
+        keyboardType: TextInputType.streetAddress,
+        controller: franchiseeAddress,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_ADDRESS,
+        ),
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Enter Address";
+          }
+          // else if (Util.isAddressValid(value)) {
+          //   return "Enter Valid Address";
+          // }
+          return null;
+        },
+      ),
     );
   }
 
 
   /* widget for Franchisee name layout */
-  Widget getFranchiseeNameLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      controller: franchiseeName,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.FRANCHISEE_NAME,
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: ((value) {
-        if (value!.isEmpty) {
-          return "Enter Franchisee Name";
-        }
-        return null;
-      }),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        controller: franchiseeName,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.FRANCHISEE_NAME,
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Enter Franchisee Name";
+          }
+          return null;
+        }),
+      ),
     );
   }
 

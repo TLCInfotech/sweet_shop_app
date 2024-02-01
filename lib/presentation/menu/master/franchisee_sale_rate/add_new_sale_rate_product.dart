@@ -74,7 +74,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           Padding(
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
-              height: SizeConfig.screenHeight*0.8,
+              height: SizeConfig.screenHeight*0.7,
               decoration: BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
@@ -98,24 +98,26 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.SALE_RATE),
-                  getProductRateLayout(),
+                  getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.GST),
-                  getProductGSTLayout(),
+                  getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.NET),
-                  getProductNetLayout(),
+                  getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  SizedBox(height: 20,),
-                  getButtonLayout()
+               /*   SizedBox(height: 20,),
+                  getButtonLayout()*/
 
 
                 ],
               ),
             ),
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
+          Padding(
+            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+            child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          ),        ],
       ),
     );
   }
@@ -158,7 +160,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
           // Navigator.pop(context);
         },
-        child: Text(StringEn.ADD,
+        child: Text(StringEn.SAVE,
             style: button_text_style),
       ),
     );
@@ -166,87 +168,147 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
 
   /* widget for product net layout */
-  Widget getProductNetLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: net,
-      readOnly: true,
-      decoration: textfield_decoration.copyWith(
-          hintText: StringEn.NET,
-        fillColor:  CommonColor.TexField_COLOR,
-
+  Widget getProductNetLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: ((value) {
-        if (value!.isEmpty) {
-          return "Net Amt.";
-        }
-        return null;
-      }),
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        controller: net,
+        readOnly: true,
+        decoration: textfield_decoration.copyWith(
+            hintText: StringEn.NET,
+          fillColor:  CommonColor.TexField_COLOR,
+
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Net Amt.";
+          }
+          return null;
+        }),
+      ),
     );
   }
 
 
   /* widget for product gst layout */
-  Widget getProductGSTLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: gst,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.RATE,
-        suffix: Text("%")
+  Widget getProductGSTLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: ((value) {
-        if (value!.isEmpty) {
-          return "Enter Product GST";
-        }
-        return null;
-      }),
-      onChanged: (value){
-        calculateNetAmt();
-      },
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        controller: gst,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.RATE,
+          suffix: Text("%")
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Enter Product GST";
+          }
+          return null;
+        }),
+        onChanged: (value){
+          calculateNetAmt();
+        },
+      ),
     );
   }
   
   /* widget for product rate layout */
-  Widget getProductRateLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.numberWithOptions(
-        decimal: true
+  Widget getProductRateLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      controller: rate,
-      decoration: textfield_decoration.copyWith(
-        hintText: StringEn.SALE_RATE,
+      child: TextFormField(
+        keyboardType: TextInputType.numberWithOptions(
+          decimal: true
+        ),
+        controller: rate,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.SALE_RATE,
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Enter Product Rate";
+          }
+          return null;
+        }),
+        onChanged: (value){
+          calculateNetAmt();
+        },
       ),
-      validator: ((value) {
-        if (value!.isEmpty) {
-          return "Enter Product Rate";
-        }
-        return null;
-      }),
-      onChanged: (value){
-        calculateNetAmt();
-      },
     );
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return TextFormField(
-      textInputAction: TextInputAction.done,
-      // autofillHints: const [AutofillHints.email],
-      keyboardType: TextInputType.emailAddress,
-      controller: _textController,
-      textAlignVertical: TextAlignVertical.center,
-      focusNode: searchFocus,
-      style: text_field_textStyle,
-      decoration: textfield_decoration.copyWith(
-        hintText: "Product Name",
-        prefixIcon: Container(
-            width: 50,
-            padding: EdgeInsets.all(10),
-            alignment: Alignment.centerLeft,
-            child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      // onChanged: _onChangeHandler,
+      child: TextFormField(
+        textInputAction: TextInputAction.done,
+        // autofillHints: const [AutofillHints.email],
+        keyboardType: TextInputType.emailAddress,
+        controller: _textController,
+        textAlignVertical: TextAlignVertical.center,
+        focusNode: searchFocus,
+        style: text_field_textStyle,
+        decoration: textfield_decoration.copyWith(
+          hintText: "Product Name",
+          prefixIcon: Container(
+              width: 50,
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+        ),
+        // onChanged: _onChangeHandler,
+      ),
     );
   }
   
@@ -257,7 +319,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
         "$title",
-        style: item_heading_textStyle,
+        style: page_heading_textStyle,
       ),
     );
   }
@@ -291,6 +353,82 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       ),
     );
   }
+
+
+
+  /* Widget for Buttons Layout0 */
+  Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height:parentHeight*.05,
+            width: parentWidth*.45,
+            // width: SizeConfig.blockSizeVertical * 20.0,
+            decoration: const BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  StringEn.CLOSE,
+                  textAlign: TextAlign.center,
+                  style: text_field_textStyle,
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            var item={
+              "id":widget.editproduct!=null?widget.editproduct['id']:"",
+              "pname":_textController.text,
+              "rate":double.parse(rate.text),
+              "gst":double.parse(gst.text),
+              "net":double.parse(net.text)
+            };
+            if(widget.mListener!=null){
+
+              widget.mListener.addProductSaleRateDetail(item);
+              Navigator.pop(context);
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height: parentHeight * .05,
+            width: parentWidth*.45,
+            decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR.withOpacity(0.4),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(5),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  StringEn.SAVE,
+                  textAlign: TextAlign.center,
+                  style: text_field_textStyle,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
 
 }
 
