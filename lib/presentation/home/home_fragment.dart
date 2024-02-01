@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 
@@ -20,19 +21,16 @@ class _HomeFragmentState extends State<HomeFragment> {
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
-            child:  Card(
+            child: Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
+                  borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
-
+                    borderRadius: BorderRadius.circular(25)),
                 leading: GestureDetector(
                   onTap: () {
                     Scaffold.of(context).openDrawer();
@@ -59,101 +57,142 @@ class _HomeFragmentState extends State<HomeFragment> {
           ),
         ),
         backgroundColor: Color(0xFFfffff5),
-        body: Column(
-          children: [
-            // Container(
-            //   height: SizeConfig.screenHeight * .12,
-            //   decoration: const BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.only(
-            //         bottomRight:Radius.circular(15.6),
-            //         bottomLeft: Radius.circular(15.6),
-            //         // topRight:Radius.circular(15.6),
-            //         // topLeft:Radius.circular(15.6),
-            //       ),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: CommonColor.DASHBOARD_SHADOW,
-            //           blurRadius: 3.0,
-            //         ),]
-            //   ),
-            //   child: getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
-            // ),
-            Container(
-              height: SizeConfig.screenHeight * .75,
-              child: Center(
-                child: Text(
-                  "Coming Soon..",
-                  style: TextStyle(
-                      fontSize: SizeConfig.blockSizeHorizontal * 6,
-                      fontFamily: 'Inter_SemiBold_Font',
-                      color: CommonColor.BLACK_COLOR),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getFieldTitleLayout("Sale,Purchase,Expense"),
+                salepurchasegraph(),
+                SizedBox(
+                  height: 10,
                 ),
-              ),
+                getFieldTitleLayout("Also Explore"),
+
+                SizedBox(
+                  height: 10,
+                ),
+                sale_purchase_expense_container(),
+                SizedBox(
+                  height: 10,
+                ),
+                getFieldTitleLayout("Yearly Report"),
+
+                yearly_report_graph(),
+              ],
             ),
-          ],
+          ),
         ));
   }
 
-  Widget getTopBar(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          left: parentWidth * .05,
-          right: parentWidth * .04,
-          top: parentHeight * .04),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Container(
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Icon(
-                      Icons.menu,
-                      size: parentHeight * .03,
-                      color: Colors.black,
-                    ),
-                  ),
+  Container yearly_report_graph() {
+    return Container(
+                height: 180,
+                width: SizeConfig.screenWidth,
+                margin: EdgeInsets.only(
+                  top: 10,
                 ),
-              ),
-              Container(
-                width: parentWidth * .2,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: parentWidth * .01),
-                      child: Container(
-                        color: Colors.transparent,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Image(
-                            width: parentHeight * .023,
-                            height: parentHeight * .023,
-                            image: const AssetImage('assets/images/home.png'),
-                            color: Colors.transparent,
-                            // fit: BoxFit.contain,
-                          ),
-                        ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.2),
                       ),
-                    ),
-                  ],
+                    ],
+                    image: DecorationImage(
+                        image:
+                            AssetImage("assets/images/home_page_pichart.png"),
+                        fit: BoxFit.fill)),
+              );
+  }
+
+  Row sale_purchase_expense_container() {
+    return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  getSellPurchaseExpenseLayout(Colors.green, "10000", "Sell"),
+                  getSellPurchaseExpenseLayout(
+                      Colors.orange, "10000", "purchase"),
+                  getSellPurchaseExpenseLayout(
+                      Colors.deepPurple, "10000", "Expense"),
+                ],
+              );
+  }
+
+  Container salepurchasegraph() {
+    return Container(
+                height: 150,
+                width: SizeConfig.screenWidth,
+                margin: EdgeInsets.only(
+                  top: 10,
                 ),
-              ),
-            ],
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.2),
+                      ),
+                    ],
+                    image: DecorationImage(
+                        image:
+                            AssetImage("assets/images/home_page_graph1.png"),
+                        fit: BoxFit.cover)),
+              );
+  }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: item_heading_textStyle,
+      ),
+    );
+  }
+  Container getSellPurchaseExpenseLayout(
+      MaterialColor boxcolor, String amount, String title) {
+    return Container(
+      height: 170,
+      width: (SizeConfig.screenWidth * 0.85) / 3,
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: boxcolor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: (SizeConfig.screenWidth * 0.85) / 3,
+            margin: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+                color: boxcolor, borderRadius: BorderRadius.circular(5)),
+            alignment: Alignment.center,
+            child: Text(
+              "$amount",
+              style: subHeading_withBold,
+            ),
           ),
-          Image(
-            width: SizeConfig.screenHeight * .1,
-            image: const AssetImage('assets/images/Shop_Logo.png'),
-            // fit: BoxFit.contain,
+          Text(
+            "$title",
+            style: item_heading_textStyle.copyWith(
+              color: boxcolor,
+            ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          FaIcon(
+            FontAwesomeIcons.solidArrowAltCircleRight,
+            color: boxcolor,
+          )
         ],
       ),
     );
