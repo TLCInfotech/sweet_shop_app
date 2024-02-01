@@ -52,20 +52,16 @@ class _MenuActivityState extends State<MenuActivity>
       child: Container(
         width: SizeConfig.screenWidth * .8,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Container(
-                  height: SizeConfig.screenHeight * .05,
-                ),
-                getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                getAddBottomBarLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth),
-              ],
+            Container(
+              height: SizeConfig.screenHeight * .05,
             ),
-            getAddAppVersionLayout(
-                SizeConfig.screenHeight, SizeConfig.screenWidth),
+            getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
+            Container(
+              height: SizeConfig.screenHeight * .85,
+              child: getAddBottomBarLayout(
+                  SizeConfig.screenHeight, SizeConfig.screenWidth),
+            ),
           ],
         ),
       ),
@@ -116,7 +112,10 @@ class _MenuActivityState extends State<MenuActivity>
 
   /* Widget for Bottom Bar Layout */
   Widget getAddBottomBarLayout(double parentHeight, double parentWidth) {
-    return Column(
+    return ListView(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      physics: AlwaysScrollableScrollPhysics(),
       children: [
         openTransactionDropDown==false?getAddTransactionLayout(parentHeight, parentWidth):
         getTransactionSubLayout(parentHeight, parentWidth),

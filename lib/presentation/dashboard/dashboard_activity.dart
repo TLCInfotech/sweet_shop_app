@@ -7,6 +7,10 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/constant.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/dash/expense_fragment.dart';
+import 'package:sweet_shop_app/presentation/dash/payment_fragment.dart';
+import 'package:sweet_shop_app/presentation/dash/purchase_fragment.dart';
+import 'package:sweet_shop_app/presentation/dash/sell_fragment.dart';
 import 'package:sweet_shop_app/presentation/home/home_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user/user_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
@@ -149,7 +153,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                     StringEn.HOME,
                     style: TextStyle(
                         color: currentScreen == Constant.HOME_FRAGMENT ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 2.5,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
                     ),
@@ -163,10 +167,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                UserFragment(
-                  mListener: this,
+                SellFragment(
                 ),
-                Constant.USER);
+                Constant.SELL);
 
           },
           onDoubleTap: (){},
@@ -178,18 +181,18 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: const AssetImage("assets/images/login_user.png"),
+                  image: const AssetImage("assets/images/hand.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.USER,
+                    StringEn.SELL,
                     style: TextStyle(
-                        color: currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 2.5,
+                        color: currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
                     ),
@@ -203,10 +206,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                UserFragment(
-                  mListener: this,
+                PurchaseFragment(
                 ),
-                Constant.USER);
+                Constant.PURCHASE);
 
           },
           onDoubleTap: (){},
@@ -218,18 +220,18 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: const AssetImage("assets/images/login_user.png"),
+                  image: const AssetImage("assets/images/payment-method.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.PURCHASE ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.USER,
+                    StringEn.PURCHASE,
                     style: TextStyle(
-                        color: currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 2.5,
+                        color: currentScreen == Constant.PURCHASE ? CommonColor.THEME_COLOR:Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
                     ),
@@ -243,10 +245,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                UserFragment(
-                  mListener: this,
+                ExpenseFragment(
                 ),
-                Constant.USER);
+                Constant.EXPENSE);
 
           },
           onDoubleTap: (){},
@@ -258,18 +259,18 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: const AssetImage("assets/images/login_user.png"),
+                  image: const AssetImage("assets/images/expense.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.USER,
+                    StringEn.EXPENSE,
                     style: TextStyle(
-                        color: currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 2.5,
+                        color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
                     ),
@@ -283,10 +284,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                UserFragment(
-                  mListener: this,
+                PaymentFragment(
                 ),
-                Constant.USER);
+                Constant.PAYMENT);
 
           },
           onDoubleTap: (){},
@@ -298,18 +298,18 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: const AssetImage("assets/images/login_user.png"),
+                  image: const AssetImage("assets/images/cashless-payment.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.PAYMENT ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.USER,
+                    StringEn.PAYMENT,
                     style: TextStyle(
-                        color: currentScreen == Constant.USER ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 2.5,
+                        color: currentScreen == Constant.PAYMENT ? CommonColor.THEME_COLOR:Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
                     ),
