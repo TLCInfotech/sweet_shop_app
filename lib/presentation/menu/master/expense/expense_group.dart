@@ -226,17 +226,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
                             getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                             SizedBox(height: 20,),
-                            Container(
-                              width: 200,
-                              child: ElevatedButton(
-                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
-                                onPressed: () {
-                                  // Add login functionality
-                                  Navigator.pop(context);
-                                },
-                                child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
-                              ),
-                            ),
+
                           ],
                         ),
                       ),
@@ -414,28 +404,64 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height:parentHeight*.05,
+              width: parentWidth*.45,
+              // width: SizeConfig.blockSizeVertical * 20.0,
+              decoration: const BoxDecoration(
+                color: CommonColor.HINT_TEXT,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.CLOSE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
+          GestureDetector(
+            onTap: () {
+
+              Navigator.pop(context);
+
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height: parentHeight * .05,
+              width: parentWidth*.45,
+              decoration: BoxDecoration(
+                color: CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.SAVE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

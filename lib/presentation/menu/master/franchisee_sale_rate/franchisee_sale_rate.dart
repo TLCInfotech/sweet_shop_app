@@ -305,7 +305,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                         DataCell(
                           Container(
                               width: SizeConfig.screenWidth/4,
-                              child: Text("${product['rate']}")),
+                              child: Text("${((product['rate']).toStringAsFixed(2))}")),
                         ),
                         DataCell(
                           Container(
@@ -315,7 +315,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                         DataCell(
                           Container(
                               width: SizeConfig.screenWidth/4,
-                              child: Text("${product['net']}")),
+                              child: Text("${((product['net']).toStringAsFixed(2))}")),
                         ),
                         DataCell(
                           Container(
@@ -358,7 +358,14 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
+              // border: Border.all(color: Colors.grey.withOpacity(0.5))
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
+
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -409,7 +416,13 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
+              boxShadow: [
+              BoxShadow(
+              offset: Offset(0, 1),
+        blurRadius: 5,
+        color: Colors.black.withOpacity(0.1),
+      ),]
+              // border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -127,7 +127,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       var netAmt=double.parse(rate.text)+((double.parse(rate.text)*(double.parse(gst.text))) / 100);
       print(netAmt);
       setState(() {
-        net.text=netAmt.toString();
+        net.text=(netAmt.toStringAsFixed(2)).toString();
       });
     }
     else{
@@ -135,6 +135,20 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
     }
   }
 
+  calculateOriginalAmt(){
+    if(net.text!="" && gst.text!=""){
+      var gstamt =double.parse(net.text) - (double.parse(net.text) / (1 + (double.parse(gst.text)/100)));
+      var originalAmt = double.parse(net.text)- gstamt;
+
+      setState(() {
+        rate.text=(originalAmt.toStringAsFixed(2)).toString();
+      });
+    }
+    else{
+      net.clear();
+    }
+  }
+  
   /* widget for button layout */
   Widget getButtonLayout() {
     return Container(
@@ -185,18 +199,26 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: net,
-        readOnly: true,
         decoration: textfield_decoration.copyWith(
             hintText: StringEn.NET,
-          fillColor:  CommonColor.TexField_COLOR,
+          fillColor:  Colors.white,
 
         ),
+        onChanged: (value){
+
+          calculateOriginalAmt();
+        },
         validator: ((value) {
           if (value!.isEmpty) {
             return "Net Amt.";
           }
           return null;
         }),
+        onTapOutside: (event) {
+          setState(() {
+            net.text=(double.parse(net.text).toStringAsFixed(2)).toString();
+          });
+        },
       ),
     );
   }
@@ -233,6 +255,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         }),
         onChanged: (value){
           calculateNetAmt();
+          calculateOriginalAmt();
         },
       ),
     );
@@ -270,6 +293,11 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         }),
         onChanged: (value){
           calculateNetAmt();
+        },
+        onTapOutside: (event) {
+          setState(() {
+            rate.text=(double.parse(rate.text).toStringAsFixed(2)).toString();
+          });
         },
       ),
     );
@@ -369,7 +397,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
             width: parentWidth*.45,
             // width: SizeConfig.blockSizeVertical * 20.0,
             decoration: const BoxDecoration(
-              color: CommonColor.THEME_COLOR,
+              color: CommonColor.HINT_TEXT,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(5),
               ),
@@ -406,7 +434,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
             height: parentHeight * .05,
             width: parentWidth*.45,
             decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR.withOpacity(0.4),
+              color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(5),
               ),

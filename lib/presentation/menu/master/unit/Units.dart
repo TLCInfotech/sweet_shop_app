@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/colors.dart';
 import '../../../../core/size_config.dart';
 
 
@@ -162,7 +163,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                     Padding(
                       padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
                       child: Container(
-                        height: SizeConfig.screenHeight*0.3,
+                        height: SizeConfig.screenHeight*0.25,
                         decoration: BoxDecoration(
                           color: Color(0xFFfffff5),
                           borderRadius: BorderRadius.only(
@@ -183,24 +184,35 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               ),
                             ),
 
-                            TextFormField(
-                              controller: unitName,
-                              decoration: textfield_decoration.copyWith(
-                                hintText: StringEn.UNIT_NAME,
-                                filled: true,
-                                fillColor: Colors.white,
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(top: 10, bottom: 10,),
+                              child: Text(
+                                StringEn.UNIT,
+                                style: item_heading_textStyle,
                               ),
                             ),
-                            SizedBox(height: 20,),
                             Container(
-                              width: 200,
-                              child: ElevatedButton(
-                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
-                                onPressed: () {
-                                  // Add login functionality
-                                  Navigator.pop(context);
-                                },
-                                child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
+                              height: SizeConfig.screenHeight * .055,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: CommonColor.WHITE_COLOR,
+                                borderRadius: BorderRadius.circular(4),
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(0, 1),
+                                    blurRadius: 5,
+                                    color: Colors.black.withOpacity(0.1),
+                                  ),
+                                ],
+                              ),
+                              child: TextFormField(
+                                controller: unitName,
+                                decoration: textfield_decoration.copyWith(
+                                  hintText: StringEn.UNIT_NAME,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                ),
                               ),
                             ),
 
@@ -226,28 +238,64 @@ class _UnitsActivityState extends State<UnitsActivity> {
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height:parentHeight*.05,
+              width: parentWidth*.45,
+              // width: SizeConfig.blockSizeVertical * 20.0,
+              decoration: const BoxDecoration(
+                color: CommonColor.HINT_TEXT,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.CLOSE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
+          GestureDetector(
+            onTap: () {
+
+              Navigator.pop(context);
+
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height: parentHeight * .05,
+              width: parentWidth*.45,
+              decoration: BoxDecoration(
+                color: CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.SAVE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

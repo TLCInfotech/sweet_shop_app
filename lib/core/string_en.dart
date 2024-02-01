@@ -119,7 +119,7 @@ class StringEn{
   static const PRODUCTS="Products :";
   static const ADDPRODUCT="Add Product";
   static const GST="GST";
-  static const NET="Net";
+  static const NET="Net Amount";
   static const SALE_RATE="Sale Rate";
   static const PURCHASE_RATE="Purchase Rate";
 

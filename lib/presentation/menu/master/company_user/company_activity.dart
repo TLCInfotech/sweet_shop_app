@@ -424,6 +424,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                   getAddressTwoLayout(parentHeight, parentWidth),
                   getDefaultBankLayout(parentHeight, parentWidth),
                   getExtNameLayout(parentHeight, parentWidth),
+                  SizedBox(height: 10,),
                   getAdharLayout(parentHeight, parentWidth),
                   getPanLayout(parentHeight, parentWidth),
                   getGstLayout(parentHeight, parentWidth),
@@ -567,297 +568,253 @@ class _CompanyCreateState extends State<CompanyCreate>
   }
   /* Widget for branch name text from field layout */
   Widget getPanLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        StringEn.PAN_NO,
-                        style: page_heading_textStyle,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .005),
-                    child: Container(
-                      height: parentHeight * .055,
-                      width: parentWidth*.7,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: CommonColor.WHITE_COLOR,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                        ],
-                      ),
-                      child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        textCapitalization: TextCapitalization.words,
-                        focusNode: _panNoFocus,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        cursorColor: CommonColor.BLACK_COLOR,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: parentWidth * .04, right: parentWidth * .02),
-                          border: InputBorder.none,
-                          counterText: '',
-                          isDense: true,
-                          hintText: "Enter a pan no.",
-                          hintStyle: hint_textfield_Style,
-                        ),
-                        controller: panNoController,
-                        onEditingComplete: () {
-                          _panNoFocus.unfocus();
-                          FocusScope.of(context).requestFocus(_addressFocus);
-                        },
-                        style: text_field_textStyle,
-                      ),
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          StringEn.PAN_NO,
+          style: page_heading_textStyle,
+        ),
+        SizedBox(height: 5,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: parentHeight * .055,
+              width: parentWidth*.7,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: (){
-                  getPanFile();
-                },
-                child: Padding(
-                  padding:  EdgeInsets.only(right: parentWidth*.0),
-                  child: Container(
-                      height: 50,
-                      width: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                          Text("Upload",style: subHeading_withBold)
-                        ],
-                      )
-                  ),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _panNoFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a pan no.",
+                  hintStyle: hint_textfield_Style,
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 5,),
-          panFile!=null?
-          getFileLayout(panFile!):Container()
-        ],
-      ),
+                controller: panNoController,
+                onEditingComplete: () {
+                  _panNoFocus.unfocus();
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                getPanFile();
+              },
+              child: Padding(
+                padding:  EdgeInsets.only(right: parentWidth*.0),
+                child: Container(
+                    height: 50,
+                    width: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                        Text("Upload",style: subHeading_withBold)
+                      ],
+                    )
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        panFile!=null?
+        getFileLayout(panFile!):Container()
+      ],
     );
   }
   /* Widget for branch name text from field layout */
   Widget getAdharLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        StringEn.FRANCHISEE_AADHAR_NO,
-                        style: page_heading_textStyle,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .005),
-                    child: Container(
-                      height: parentHeight * .055,
-                      width: parentWidth*.7,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: CommonColor.WHITE_COLOR,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                        ],
-                      ),
-                      child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        textCapitalization: TextCapitalization.words,
-                        focusNode: _adharoFocus,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        cursorColor: CommonColor.BLACK_COLOR,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: parentWidth * .04, right: parentWidth * .02),
-                          border: InputBorder.none,
-                          counterText: '',
-                          isDense: true,
-                          hintText: "Enter a adhar no.",
-                          hintStyle: hint_textfield_Style,
-                        ),
-                        controller: adharNoController,
-                        onEditingComplete: () {
-                          _adharoFocus.unfocus();
-                          FocusScope.of(context).requestFocus(_addressFocus);
-                        },
-                        style: text_field_textStyle,
-                      ),
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          StringEn.FRANCHISEE_AADHAR_NO,
+          style: page_heading_textStyle,
+        ),
+        SizedBox(height: 5,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: parentHeight * .055,
+              width: parentWidth*.7,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: (){
-                  getAadharFile();
-                },
-                child: Padding(
-                  padding:  EdgeInsets.only(right: parentWidth*.0),
-                  child: Container(
-                      height: 50,
-                      width: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                          Text("Upload",style: subHeading_withBold)
-                        ],
-                      )
-                  ),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _adharoFocus,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a adhar no.",
+                  hintStyle: hint_textfield_Style,
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 5,),
-          adharFile!=null?
-          getFileLayout(adharFile!):Container()
-        ],
-      ),
+                controller: adharNoController,
+                onEditingComplete: () {
+                  _adharoFocus.unfocus();
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                getAadharFile();
+              },
+              child: Padding(
+                padding:  EdgeInsets.only(right: parentWidth*.0),
+                child: Container(
+                    height: 50,
+                    width: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                        Text("Upload",style: subHeading_withBold)
+                      ],
+                    )
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        adharFile!=null?
+        getFileLayout(adharFile!):Container()
+      ],
     );
   }
   /* Widget for branch name text from field layout */
   Widget getGstLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        StringEn.GST_NO,
-                        style: page_heading_textStyle,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .005),
-                    child: Container(
-                      height: parentHeight * .055,
-                      width: parentWidth*.7,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: CommonColor.WHITE_COLOR,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                        ],
-                      ),
-                      child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        textCapitalization: TextCapitalization.words,
-                        focusNode: _gstNoFocus,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        cursorColor: CommonColor.BLACK_COLOR,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: parentWidth * .04, right: parentWidth * .02),
-                          border: InputBorder.none,
-                          counterText: '',
-                          isDense: true,
-                          hintText: "Enter a gst no",
-                          hintStyle: hint_textfield_Style,
-                        ),
-                        controller:gstNoController,
-                        onEditingComplete: () {
-                          _gstNoFocus.unfocus();
-                          FocusScope.of(context).requestFocus(_addressFocus);
-                        },
-                        style: text_field_textStyle,
-                      ),
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          StringEn.GST_NO,
+          style: page_heading_textStyle,
+        ),
+        SizedBox(height: 5,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: parentHeight * .055,
+              width: parentWidth*.7,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: (){
-                  getGstFile();
-                },
-                child: Padding(
-                  padding:  EdgeInsets.only(right: parentWidth*.0),
-                  child: Container(
-                      height: 50,
-                      width: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                          Text("Upload",style: subHeading_withBold)
-                        ],
-                      )
-                  ),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _gstNoFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a gst no",
+                  hintStyle: hint_textfield_Style,
                 ),
-              )
-            ],
-          ),
-          SizedBox(height: 5,),
-          gstFile!=null?
-          getFileLayout(gstFile!):Container()
-        ],
-      ),
+                controller:gstNoController,
+                onEditingComplete: () {
+                  _gstNoFocus.unfocus();
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                getGstFile();
+              },
+              child: Padding(
+                padding:  EdgeInsets.only(right: parentWidth*.0),
+                child: Container(
+                    height: 50,
+                    width: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                        Text("Upload",style: subHeading_withBold)
+                      ],
+                    )
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        gstFile!=null?
+        getFileLayout(gstFile!):Container()
+      ],
     );
   }
   //common widget to display file

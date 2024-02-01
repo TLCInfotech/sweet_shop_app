@@ -101,7 +101,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
                     Padding(
                       padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
                       child: Container(
-                        height: SizeConfig.screenHeight*0.6,
+                        height: SizeConfig.screenHeight*0.5,
                         decoration: BoxDecoration(
                           color: Color(0xFFfffff5),
                           borderRadius: BorderRadius.only(
@@ -122,23 +122,13 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
                               ),
                             ),
                             getFieldTitleLayout(StringEn.CATEGORY),
-                            getCategoryLayout(),
+                            getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                             getFieldTitleLayout(StringEn.PARENT_CATEGORY),
                             getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                             SizedBox(height: 20,),
-                            Container(
-                              width: 200,
-                              child: ElevatedButton(
-                                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Color(0xFFFBE404))),
-                                onPressed: () {
-                                  // Add login functionality
-                                  Navigator.pop(context);
-                                },
-                                child: Text(StringEn.ADD,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87),),
-                              ),
-                            ),
+
                           ],
                         ),
                       ),
@@ -260,21 +250,36 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
   }
 
   /* widget for Category layout */
-  Widget getCategoryLayout() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      controller: categoryName,
-      decoration: textfield_decoration.copyWith(
-          hintText: StringEn.CATEGORY,
-          suffix: Text("%")
+  Widget getCategoryLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
       ),
-      validator: ((value) {
-        if (value!.isEmpty) {
-          return "Enter Category";
-        }
-        return null;
-      }),
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        controller: categoryName,
+        decoration: textfield_decoration.copyWith(
+            hintText: StringEn.CATEGORY,
+            suffix: Text("%")
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Enter Category";
+          }
+          return null;
+        }),
 
+      ),
     );
   }
 
@@ -293,28 +298,64 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height:parentHeight*.05,
+              width: parentWidth*.45,
+              // width: SizeConfig.blockSizeVertical * 20.0,
+              decoration: const BoxDecoration(
+                color: CommonColor.HINT_TEXT,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.CLOSE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
+          GestureDetector(
+            onTap: () {
+
+                Navigator.pop(context);
+
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height: parentHeight * .05,
+              width: parentWidth*.45,
+              decoration: BoxDecoration(
+                color: CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(5),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    StringEn.SAVE,
+                    textAlign: TextAlign.center,
+                    style: text_field_textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
