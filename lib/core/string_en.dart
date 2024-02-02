@@ -157,6 +157,8 @@ class StringEn{
 
   static const PARENT_GROUP = "Parent Group";
   static const ADD_EXPENSE = "Add Expense";
+  static const COMPANY_NAME = "Company Name:";
+  static const TAX = "Tax";
 
 
 }

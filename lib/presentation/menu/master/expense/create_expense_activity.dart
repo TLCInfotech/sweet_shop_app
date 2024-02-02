@@ -13,6 +13,8 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/tax_type_dialog.dart';
 
 class CreateExpenseActivity extends StatefulWidget {
   const CreateExpenseActivity({super.key});
@@ -28,7 +30,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         SingleTickerProviderStateMixin,
         ImagePickerDialogPostInterface,
         ImagePickerListener,StateDialogInterface,CountryDialogInterface,
-        ImagePickerDialogInterface {
+        ImagePickerDialogInterface,TaxDialogInterface , TaxCategoryDialogInterface {
   bool checkActiveValue = false;
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
@@ -466,9 +468,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       getRightLayout(parentHeight, parentWidth),
                     ],
                   ),
+                  getContactNoLayout(parentHeight, parentWidth),
+                  getEmilLayout(parentHeight, parentWidth),
                   getOutstandingLimitLayout(parentHeight, parentWidth),
-                  getDefaultBankLayout(parentHeight, parentWidth),
-                  SizedBox(height: 10,),
+                  getRegTypeLayout(parentHeight, parentWidth),
                   getAdharLayout(parentHeight, parentWidth),
                   getPanLayout(parentHeight, parentWidth),
                   getGstLayout(parentHeight, parentWidth),
@@ -539,7 +542,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     controller: nameController,
                     onEditingComplete: () {
                       _nameFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_branchNameFocus);
+                      FocusScope.of(context).requestFocus(_leaderGroupFocus);
                     },
                     style: text_field_textStyle,
                   ),
@@ -593,7 +596,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: leaderGroupController,
                 onEditingComplete: () {
                   _leaderGroupFocus.unfocus();
-                //  FocusScope.of(context).requestFocus(_addressFocus);
+                FocusScope.of(context).requestFocus(_contactPersonFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -651,7 +654,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: outstandingLimitController,
                       onEditingComplete: () {
                         _outstandingLimitFocus.unfocus();
-                        //  FocusScope.of(context).requestFocus(_addressFocus);
+                          FocusScope.of(context).requestFocus(_adharoFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -740,7 +743,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: contactPersonController,
                 onEditingComplete: () {
                   _contactPersonFocus.unfocus();
-                //  FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_addressFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -797,6 +800,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: panNoController,
                 onEditingComplete: () {
                   _panNoFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_gstNoFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -882,7 +886,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: adharNoController,
                 onEditingComplete: () {
                   _adharoFocus.unfocus();
-                },
+                  FocusScope.of(context).requestFocus(_panNoFocus);
+                  },
                 style: text_field_textStyle,
               ),
             ),
@@ -951,7 +956,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 textCapitalization: TextCapitalization.words,
                 focusNode: _gstNoFocus,
                 keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(
@@ -1143,10 +1148,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       child: Column(
         children: [
           getDistrictCityLayout(parentHeight, parentWidth),
-          getPinCodeLayout(parentHeight, parentWidth),
           getStateLayout(parentHeight, parentWidth),
-          getVendorLayout(parentHeight, parentWidth),
-          // getCountryLayout(parentHeight, parentWidth),
+          //getVendorLayout(parentHeight, parentWidth),
         ],
       ),
     );
@@ -1194,7 +1197,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: districtController,
                       onEditingComplete: () {
                         _districtCity.unfocus();
-                        FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_pinCodeFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1250,7 +1253,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: pinCodeController,
                       onEditingComplete: () {
                         _pinCodeFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_panNoFocus);
+                        FocusScope.of(context).requestFocus(_contactFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1483,12 +1486,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       padding: EdgeInsets.only(left: parentWidth * .01),
       child: Column(
         children: [
-          getRegTypeLayout(parentHeight, parentWidth),
-          getContactNoLayout(parentHeight, parentWidth),
+          getPinCodeLayout(parentHeight, parentWidth),
           getCountryLayout(parentHeight, parentWidth),
-          getEmilLayout(parentHeight, parentWidth),
-         // getCINNoLayout(parentHeight, parentWidth),
-          // getCINNoLayout(parentHeight, parentWidth),
         ],
       ),
     );
@@ -1556,7 +1555,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        //width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1634,7 +1633,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        //width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1672,7 +1671,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: contactController,
                       onEditingComplete: () {
                         _contactFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_jurisdictionFocus);
+                        FocusScope.of(context).requestFocus(_emailFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1691,7 +1690,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        //width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1712,8 +1711,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _emailFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration:  InputDecoration(
@@ -1728,7 +1726,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: emailController,
                       onEditingComplete: () {
                         _emailFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_pinCodeFocus);
+                        FocusScope.of(context).requestFocus(_outstandingLimitFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2019,7 +2017,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     textCapitalization: TextCapitalization.words,
                     focusNode: _extNameFocus,
                     keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     cursorColor: CommonColor.BLACK_COLOR,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
@@ -2049,40 +2047,64 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   Widget getTaxLayout(double parentHeight, double parentWidth){
     return  Padding(
       padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.03),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child:  Text('●'),
-          ),
-          Text(
-            "${StringEn.TAXES}:-",
-            style: appbar_text_style,
-            textAlign: TextAlign.start,
+      child: Container(
+        height: parentHeight * .055,
+       // width: parentWidth*.7,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              StringEn.TAX,
+              style: appbar_text_style,
+              textAlign: TextAlign.start,
 
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
   Widget getAccountInfoLayout(double parentHeight, double parentWidth){
     return  Padding(
       padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.03),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child:  Text('●'),
-          ),
-          Text(
-            "${StringEn.ACCOUNT_INFO}:-",
-            style: appbar_text_style,
-            textAlign: TextAlign.start,
+      child: Container(
+        height: parentHeight * .055,
+        // width: parentWidth*.7,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              StringEn.ACCOUNT_INFO,
+              style: appbar_text_style,
+              textAlign: TextAlign.start,
 
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -2208,7 +2230,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                         Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                         child: Opacity(
                           opacity: a1.value,
-                          child: StateDialog(
+                          child: TaxDialog(
                             mListener: this,
                           ),
                         ),
@@ -2235,7 +2257,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          taxTypeName == "" ? "Select state" : taxTypeName,
+                          taxTypeName == "" ? "Select type" : taxTypeName,
                           style: taxTypeName == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -2287,7 +2309,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                         Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                         child: Opacity(
                           opacity: a1.value,
-                          child: StateDialog(
+                          child: TaxCategoryDialog(
                             mListener: this,
                           ),
                         ),
@@ -2314,7 +2336,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          taxCategoryName == "" ? "Select state" : taxCategoryName,
+                          taxCategoryName == "" ? "Select category" : taxCategoryName,
                           style: taxCategoryName == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -2369,7 +2391,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _hsnNoFocus,
-                      keyboardType: TextInputType.text,
+                      keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration: InputDecoration(
@@ -2384,7 +2407,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: hsnNoController,
                       onEditingComplete: () {
                         _hsnNoFocus.unfocus();
-                       // FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_taxRateFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2425,7 +2448,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _taxRateFocus,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration: InputDecoration(
@@ -2440,7 +2463,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: taxRateController,
                       onEditingComplete: () {
                         _taxRateFocus.unfocus();
-                        //FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_CGSTFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2496,7 +2519,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: CGSTController,
                       onEditingComplete: () {
                         _CGSTFocus.unfocus();
-                        //FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_SGSTFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2552,7 +2575,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: SGSTController,
                       onEditingComplete: () {
                         _SGSTFocus.unfocus();
-                        //FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_cessFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2608,7 +2631,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       controller: cessController,
                       onEditingComplete: () {
                         _cessFocus.unfocus();
-                        //FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_addCessFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -2648,8 +2671,9 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _addCessFocus,
+                      textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
+
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(
@@ -2719,7 +2743,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: bankNameController,
                 onEditingComplete: () {
                   _bankNameFocus.unfocus();
-                  //FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_bankBranchFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -2771,7 +2795,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: bankBranchController,
                 onEditingComplete: () {
                   _bankBranchFocus.unfocus();
-                  //FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_IFSCCodeFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -2807,7 +2831,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _IFSCCodeFocus,
-                keyboardType: TextInputType.text,
+                keyboardType:
+                TextInputType.numberWithOptions(decimal: true),
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -2822,7 +2847,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: IFSCCodeController,
                 onEditingComplete: () {
                   _IFSCCodeFocus.unfocus();
-                  //FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_aCHolderNameFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -2874,7 +2899,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: aCHolderNameController,
                 onEditingComplete: () {
                   _aCHolderNameFocus.unfocus();
-                  //FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_accountNoFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -2911,7 +2936,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _accountNoFocus,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -2926,7 +2951,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 controller: accountNoController,
                 onEditingComplete: () {
                   _accountNoFocus.unfocus();
-                  //FocusScope.of(context).requestFocus(_addressFocus);
+                  FocusScope.of(context).requestFocus(_extNameFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -3018,6 +3043,22 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     // TODO: implement selectCountry
     setState(() {
       countryName=name;
+    });
+  }
+
+  @override
+  selectTaxCate(String id, String name) {
+    // TODO: implement selectTaxCate
+    setState(() {
+      taxCategoryName=name;
+    });
+  }
+
+  @override
+  selectTaxType(String id, String name) {
+    // TODO: implement selectTaxType
+    setState(() {
+      taxTypeName=name;
     });
   }
 }

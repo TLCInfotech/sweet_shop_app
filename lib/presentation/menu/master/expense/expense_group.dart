@@ -7,6 +7,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/parent_group_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
 
 
@@ -17,11 +18,14 @@ class ExpenseGroup extends StatefulWidget {
   State<ExpenseGroup> createState() => _ExpenseGroupState();
 }
 
-class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface {
+class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface ,ParentGroupDialogInterface{
   TextEditingController categoryName = TextEditingController();
   TextEditingController groupName = TextEditingController();
   TextEditingController sequenseNoName = TextEditingController();
   TextEditingController sequenseNatureName = TextEditingController();
+  final _groupNameFocus = FocusNode();
+  final _sequenseNoFocus = FocusNode();
+  final _sequenceNatureFocus = FocusNode();
   String parentCategory="";
   List<dynamic> expense_group=[
     {
@@ -211,10 +215,8 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
                             ),
                             getFieldTitleLayout(StringEn.GROUP_NAME),
                             getGroupNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                             getFieldTitleLayout(StringEn.PARENT_GROUP),
-                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-
+                            getParentGroupLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                             getFieldTitleLayout(StringEn.SEQUENSE_NO),
                             getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                             getFieldTitleLayout(StringEn.SEQUENSE_NATURE),
@@ -297,11 +299,17 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
           ],
         ),
         child: TextFormField(
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.name,
           controller: groupName,
+          focusNode: _groupNameFocus,
+          textInputAction: TextInputAction.next,
           decoration: textfield_decoration.copyWith(
               hintText: StringEn.GROUP_NAME,
           ),
+          onEditingComplete: () {
+            _groupNameFocus.unfocus();
+           // FocusScope.of(context).requestFocus(_sequenseNoFocus);
+          },
           validator: ((value) {
             if (value!.isEmpty) {
               return "Enter group name";
@@ -334,9 +342,16 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
         child: TextFormField(
           keyboardType: TextInputType.number,
           controller: sequenseNoName,
+          focusNode: _sequenseNoFocus,
+          textInputAction: TextInputAction.next,
+
           decoration: textfield_decoration.copyWith(
               hintText: StringEn.SEQUENSE_NO,
           ),
+          onEditingComplete: () {
+            _sequenseNoFocus.unfocus();
+            //FocusScope.of(context).requestFocus(_sequenceNatureFocus);
+          },
           validator: ((value) {
             if (value!.isEmpty) {
               return "Enter sequense no";
@@ -367,11 +382,18 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
           ],
         ),
         child: TextFormField(
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.name,
           controller: sequenseNatureName,
+          focusNode: _sequenceNatureFocus,
+          textInputAction: TextInputAction.done,
+
           decoration: textfield_decoration.copyWith(
               hintText: StringEn.SEQUENSE_NATURE,
           ),
+          onEditingComplete: () {
+            _sequenceNatureFocus.unfocus();
+            //FocusScope.of(context).requestFocus(_sequenseNoFocus);
+          },
           validator: ((value) {
             if (value!.isEmpty) {
               return "Enter sequence nature";
@@ -462,7 +484,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
   }
 
   /* Widget For Category Layout */
-  Widget getAddCategoryLayout(double parentHeight, double parentWidth){
+  Widget getParentGroupLayout(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(
         top: parentHeight * .01),
@@ -482,7 +504,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
                     Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                     child: Opacity(
                       opacity: a1.value,
-                      child: CategoryDialog(
+                      child: ParentGroupDialog(
                         mListener: this,
                       ),
                     ),
@@ -555,7 +577,15 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
   selectCategory(String id, String name) {
     // TODO: implement selectCategory
 setState(() {
-   parentCategory=name;
+  // parentCategory=name;
 });
+  }
+
+  @override
+  selectParentG(String id, String name) {
+    // TODO: implement selectParentG
+    setState(() {
+      parentCategory=name;
+    });
   }
 }

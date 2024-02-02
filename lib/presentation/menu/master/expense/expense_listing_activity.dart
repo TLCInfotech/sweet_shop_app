@@ -100,12 +100,8 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.EXPENSE,
-              style: page_heading_textStyle,
-            ),
-            SizedBox(
-              height: 10,
+            const SizedBox(
+              height: .5,
             ),
             get_items_list_layout()
 
@@ -153,9 +149,8 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text("Expese Name",style: item_heading_textStyle,),
-                                      Text("More available expense in the data description in layout.",
+                                      Text("Leader group name",
                                         style: item_regular_textStyle,),
-                                      Text("500.00 per/kg",style: item_heading_textStyle,),
                                     ],
                                   ),
                                 ),

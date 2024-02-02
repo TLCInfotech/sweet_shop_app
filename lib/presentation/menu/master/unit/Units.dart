@@ -63,12 +63,8 @@ class _UnitsActivityState extends State<UnitsActivity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.UNIT_TITLE,
-              style: page_heading_textStyle,
-            ),
             SizedBox(
-              height: 10,
+              height: .5,
             ),
             get_unit_list_layout()
 
@@ -189,7 +185,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               padding: const EdgeInsets.only(top: 10, bottom: 10,),
                               child: Text(
                                 StringEn.UNIT,
-                                style: item_heading_textStyle,
+                                style: page_heading_textStyle,
                               ),
                             ),
                             Container(
@@ -209,7 +205,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               child: TextFormField(
                                 controller: unitName,
                                 decoration: textfield_decoration.copyWith(
-                                  hintText: StringEn.UNIT_NAME,
+                                  hintText:"Enter unit measurment",
                                   filled: true,
                                   fillColor: Colors.white,
                                 ),

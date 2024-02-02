@@ -32,8 +32,8 @@ class _CompanyCreateState extends State<CompanyCreate>
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
 
-  final _branchNameFocus = FocusNode();
-  final branchNameController = TextEditingController();
+  final _contactPersonFocus = FocusNode();
+  final contactPersonController = TextEditingController();
 
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
@@ -413,7 +413,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                 children: [
                   getImageLayout(parentHeight, parentWidth),
                   getNameLayout(parentHeight, parentWidth),
-                  getBranchNameLayout(parentHeight, parentWidth),
+                  getContactPersonLayout(parentHeight, parentWidth),
                   getAddressLayout(parentHeight, parentWidth),
                   Row(
                     children: [
@@ -421,13 +421,16 @@ class _CompanyCreateState extends State<CompanyCreate>
                       getRightLayout(parentHeight, parentWidth),
                     ],
                   ),
+                  getContactNoLayout(parentHeight, parentWidth),
+                  getEmilLayout(parentHeight, parentWidth),
                   getAddressTwoLayout(parentHeight, parentWidth),
-                  getDefaultBankLayout(parentHeight, parentWidth),
-                  getExtNameLayout(parentHeight, parentWidth),
-                  SizedBox(height: 10,),
                   getAdharLayout(parentHeight, parentWidth),
                   getPanLayout(parentHeight, parentWidth),
                   getGstLayout(parentHeight, parentWidth),
+                  getCINNoLayout(parentHeight, parentWidth),
+                  getJURISDICTIONLayout(parentHeight, parentWidth),
+                  getDefaultBankLayout(parentHeight, parentWidth),
+                  getExtNameLayout(parentHeight, parentWidth),
                   getInvoiceDelcelrationLayout(parentHeight, parentWidth),
                 ],
               ),
@@ -449,7 +452,7 @@ class _CompanyCreateState extends State<CompanyCreate>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.NAME,
+                StringEn.COMPANY_NAME,
                 style: page_heading_textStyle,
               ),
             ],
@@ -492,7 +495,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                     controller: nameController,
                     onEditingComplete: () {
                       _nameFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_branchNameFocus);
+                      FocusScope.of(context).requestFocus(_contactPersonFocus);
                     },
                     style: text_field_textStyle,
                   ),
@@ -506,7 +509,7 @@ class _CompanyCreateState extends State<CompanyCreate>
   }
 
   /* Widget for branch name text from field layout */
-  Widget getBranchNameLayout(double parentHeight, double parentWidth) {
+  Widget getContactPersonLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Column(
@@ -516,7 +519,7 @@ class _CompanyCreateState extends State<CompanyCreate>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.NAME,
+                StringEn.FRANCHISEE_CONTACT_PERSON,
                 style: page_heading_textStyle,
               ),
             ],
@@ -540,7 +543,7 @@ class _CompanyCreateState extends State<CompanyCreate>
               child: TextFormField(
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
-                focusNode: _branchNameFocus,
+                focusNode: _contactPersonFocus,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
@@ -550,12 +553,12 @@ class _CompanyCreateState extends State<CompanyCreate>
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a name",
+                  hintText: "Enter a contact person name",
                   hintStyle: hint_textfield_Style,
                 ),
-                controller: branchNameController,
+                controller: contactPersonController,
                 onEditingComplete: () {
-                  _branchNameFocus.unfocus();
+                  _contactPersonFocus.unfocus();
                   FocusScope.of(context).requestFocus(_addressFocus);
                 },
                 style: text_field_textStyle,
@@ -598,7 +601,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _panNoFocus,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -613,6 +616,8 @@ class _CompanyCreateState extends State<CompanyCreate>
                 controller: panNoController,
                 onEditingComplete: () {
                   _panNoFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_gstNoFocus);
+
                 },
                 style: text_field_textStyle,
               ),
@@ -698,7 +703,8 @@ class _CompanyCreateState extends State<CompanyCreate>
                 controller: adharNoController,
                 onEditingComplete: () {
                   _adharoFocus.unfocus();
-                },
+                  FocusScope.of(context).requestFocus(_panNoFocus);
+                  },
                 style: text_field_textStyle,
               ),
             ),
@@ -766,7 +772,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _gstNoFocus,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -781,6 +787,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                 controller:gstNoController,
                 onEditingComplete: () {
                   _gstNoFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_cinNoFocus);
                 },
                 style: text_field_textStyle,
               ),
@@ -968,14 +975,27 @@ class _CompanyCreateState extends State<CompanyCreate>
       child: Column(
         children: [
           getDistrictCityLayout(parentHeight, parentWidth),
-          getJURISDICTIONLayout(parentHeight, parentWidth),
-          getPinCodeLayout(parentHeight, parentWidth),
+          //getJURISDICTIONLayout(parentHeight, parentWidth),
           getStateLayout(parentHeight, parentWidth),
          // getCountryLayout(parentHeight, parentWidth),
         ],
       ),
     );
   }
+  Widget getRightLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(left: parentWidth * .01),
+      child: Column(
+        children: [
+          getPinCodeLayout(parentHeight, parentWidth),
+        //  getCINNoLayout(parentHeight, parentWidth),
+          getCountryLayout(parentHeight, parentWidth),
+          // getCINNoLayout(parentHeight, parentWidth),
+        ],
+      ),
+    );
+  }
+
 
   /* Widget for distric/city text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
@@ -1029,7 +1049,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: districtController,
                       onEditingComplete: () {
                         _districtCity.unfocus();
-                        FocusScope.of(context).requestFocus(_contactFocus);
+                        FocusScope.of(context).requestFocus(_pinCodeFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1048,7 +1068,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+       // width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1094,7 +1114,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: jurisdictionController,
                       onEditingComplete: () {
                         _jurisdictionFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_emailFocus);
+                        FocusScope.of(context).requestFocus(_defaultBankFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1160,7 +1180,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: pinCodeController,
                       onEditingComplete: () {
                         _pinCodeFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_panNoFocus);
+                        FocusScope.of(context).requestFocus(_contactFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1352,27 +1372,13 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
-  Widget getRightLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .01),
-      child: Column(
-        children: [
-          getContactNoLayout(parentHeight, parentWidth),
-          getEmilLayout(parentHeight, parentWidth),
-          getCINNoLayout(parentHeight, parentWidth),
-          getCountryLayout(parentHeight, parentWidth),
-         // getCINNoLayout(parentHeight, parentWidth),
-        ],
-      ),
-    );
-  }
+
 
   /* Widget for contact no  text from field layout */
   Widget getContactNoLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1420,7 +1426,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: contactController,
                       onEditingComplete: () {
                         _contactFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_jurisdictionFocus);
+                        FocusScope.of(context).requestFocus(_emailFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1439,7 +1445,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+       // width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1470,8 +1476,6 @@ class _CompanyCreateState extends State<CompanyCreate>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _emailFocus,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration:  InputDecoration(
@@ -1486,7 +1490,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: emailController,
                       onEditingComplete: () {
                         _emailFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_pinCodeFocus);
+                        FocusScope.of(context).requestFocus(_addTwoFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1638,7 +1642,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+       // width: parentWidth * .43,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1685,7 +1689,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: cinNoController,
                       onEditingComplete: () {
                         _cinNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_addTwoFocus);
+                        FocusScope.of(context).requestFocus(_jurisdictionFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1755,7 +1759,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       controller: addTwoController,
                       onEditingComplete: () {
                         _addTwoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_defaultBankFocus);
+                        FocusScope.of(context).requestFocus(_adharoFocus);
                       },
                       style: text_field_textStyle,
                     ),
