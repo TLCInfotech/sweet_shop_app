@@ -64,7 +64,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: .5,
+              height: 5,
             ),
             get_unit_list_layout()
 
