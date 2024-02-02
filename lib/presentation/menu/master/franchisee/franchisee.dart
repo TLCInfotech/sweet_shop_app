@@ -59,12 +59,8 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.FRANCHISEE_TITLE,
-              style: page_heading_textStyle,
-            ),
             SizedBox(
-              height: 10,
+              height: .5,
             ),
             get_franchisee_list_layout()
           ],

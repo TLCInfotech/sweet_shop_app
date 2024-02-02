@@ -67,12 +67,8 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-          StringEn.CATEGORY_TITLE,
-              style: page_heading_textStyle,
-            ),
-            SizedBox(
-              height: 10,
+            const SizedBox(
+              height: .5,
             ),
             get_category_items_list_layout()
 
@@ -124,7 +120,6 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
                             getFieldTitleLayout(StringEn.CATEGORY),
                             getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                            getFieldTitleLayout(StringEn.PARENT_CATEGORY),
                             getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                             SizedBox(height: 20,),
@@ -159,7 +154,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Category",
+            StringEn.PARENT_CATEGORY,
             style: page_heading_textStyle,
           ),
           GestureDetector(
@@ -290,7 +285,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
         "$title",
-        style: item_heading_textStyle,
+        style: page_heading_textStyle,
       ),
     );
   }

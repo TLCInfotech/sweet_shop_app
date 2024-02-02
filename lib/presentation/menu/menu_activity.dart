@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
+import 'package:sweet_shop_app/presentation/menu/master/company_user/users_list.dart';
 import 'package:sweet_shop_app/presentation/menu/master/expense/expense_listing_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/expense/expense_group.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee.dart';
@@ -247,7 +248,6 @@ class _MenuActivityState extends State<MenuActivity>
             getExpenseLayout(parentHeight,parentWidth),
             getExpensceGroupLayout(parentHeight,parentWidth),
             getCompanyInfoLayout(parentHeight,parentWidth),
-
           ],
         ),
       ),
@@ -347,7 +347,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UserCreate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => UsersList()));
       },
       onDoubleTap: (){},
       child: Padding(

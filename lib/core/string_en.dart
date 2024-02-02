@@ -17,7 +17,7 @@ class StringEn{
   static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
   static const PARENT_CATEGORY = "Parent Category";
-  static const ADD_CATEGORY = "Add Category";
+  static const ADD_CATEGORY = "Create Category";
   static const CATEGORY_NAME="Enter Item Category";
   static const CLOSE = "Close";
   static const ADD = "ADD";
@@ -26,7 +26,7 @@ class StringEn{
   //Item
   static const ITEM_TITLE="Create Item";
   static const ITEM = "Item";
-  static const ADD_ITEM = "Add Item";
+  static const ADD_ITEM = "Create Item";
   static const ITEM_NAME = "Item Name";
   static const ITEM_CATEGORY = "Item Category";
   static const UNIT_TWO = "Unit 2";
@@ -48,12 +48,12 @@ class StringEn{
 
   //Unit
   static const UNIT_TITLE="Measuring Unit Activity";
-  static const ADD_UNIT = "Add Unit";
+  static const ADD_UNIT = "Create Unit";
   static const UNIT_NAME="Enter Unit Measurment";
 
   //Franchisee
-  static const FRANCHISEE_TITLE="Franchisee Activity";
-  static const ADD_FRANCHISEE = "Add Franchisee";
+  static const FRANCHISEE_TITLE="Franchisee";
+  static const ADD_FRANCHISEE = "Create Franchisee";
 
   //Add franchisee
   static const ADD_FRANCHISEE_TITLE="Franchisee Details";
@@ -155,6 +155,8 @@ class StringEn{
   static const PAYMENT = "Payment";
   static const RECEIPT = "Receipt";
 
+  static const PARENT_GROUP = "Parent Group";
+  static const ADD_EXPENSE = "Add Expense";
 
 
 }

@@ -83,12 +83,8 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.EXPENSE_GROUP,
-              style: page_heading_textStyle,
-            ),
             SizedBox(
-              height: 10,
+              height: .5,
             ),
             get_expense_group_list_layout()
 
@@ -208,22 +204,21 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
                               height: SizeConfig.screenHeight*.03,
                               child: Center(
                                 child: Text(
-                                    StringEn.ADD_CATEGORY,
+                                    StringEn.ADD_EXPENSE,
                                     style: page_heading_textStyle
                                 ),
                               ),
                             ),
                             getFieldTitleLayout(StringEn.GROUP_NAME),
                             getGroupNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
+                            getFieldTitleLayout(StringEn.PARENT_GROUP),
+                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+
                             getFieldTitleLayout(StringEn.SEQUENSE_NO),
                             getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                             getFieldTitleLayout(StringEn.SEQUENSE_NATURE),
                             getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                            getFieldTitleLayout(StringEn.CATEGORY),
-                            getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                            getFieldTitleLayout(StringEn.PARENT_CATEGORY),
-                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                             SizedBox(height: 20,),
 
@@ -531,7 +526,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          parentCategory==""?"Select Parent category":parentCategory,
+                          parentCategory==""?"Select Parent group":parentCategory,
                           style:parentCategory == ""? hint_textfield_Style:
                           text_field_textStyle,
                           overflow: TextOverflow.ellipsis,
