@@ -26,7 +26,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
     super.initState();
   }
 
-  List state_list= ['United Kingdom', 'India', 'China','Australia','Germany','South Africa','Brazil'];
+  List state_list= ['Tax Category 1','Tax Category 2'];
 
   @override
   Widget build(BuildContext context) {
