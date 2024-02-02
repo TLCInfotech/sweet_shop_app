@@ -25,6 +25,7 @@ class FranchiseePurchaseRate extends StatefulWidget {
 class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with AddProductPurchaseRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopyPurchaseRateProductOfFranchiseeInterface{
 
 
+  bool disableColor = false;
   String selectedFranchiseeName="";
   String selectedProductCategory="";
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -74,63 +75,133 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           ),
         ),
       ),
-      body:  Container(
-        height: SizeConfig.safeUsedHeight,
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Color(0xFFfffff5),
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body:  Column(
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
                 children: [
-                  Container(
-                    width: SizeConfig.halfscreenWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        getFieldTitleLayout(StringEn.CATEGORY),
-                        getProductCategoryLayout(),
-                      ],
-                    ),
+                  getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+              
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: SizeConfig.halfscreenWidth,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getFieldTitleLayout(StringEn.CATEGORY),
+                            getProductCategoryLayout(),
+                          ],
+                        ),
+                      ),
+              
+                      Container(
+                        width: SizeConfig.halfscreenWidth,
+                        child: Column(
+                          children: [
+                            getFieldTitleLayout(StringEn.APPLICABLE_FROM),
+                            getApplicableFromLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+              
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-
-                  Container(
-                    width: SizeConfig.halfscreenWidth,
-                    child: Column(
-                      children: [
-                        getFieldTitleLayout(StringEn.APPLICABLE_FROM),
-                        getApplicableFromLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                      ],
-                    ),
-                  )
+              
+                  SizedBox(height: 5,),
+                  // CopyPurchaseRateProductOfFranchisee(mListener: this,),
+              
+                  product_list.length>0?getFieldTitleLayout(StringEn.PRODUCTS):Container(),
+              
+                  getProductRateListLayout(),
+                  SizedBox(height: 20,),
+                  getAddNewProductLayout(),
+                  SizedBox(height: 20,),
+              
+                  getButtonLayout()
+              
                 ],
               ),
+            ),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.black.withOpacity(0.08),
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              height: SizeConfig.safeUsedHeight * .08,
+              child: getSaveAndFinishButtonLayout(
+                  SizeConfig.screenHeight, SizeConfig.screenWidth)),
+          CommonWidget.getCommonPadding(
+              SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-              SizedBox(height: 5,),
-              // CopyPurchaseRateProductOfFranchisee(mListener: this,),
+        ],
+      ),
+    );
+  }
 
-              product_list.length>0?getFieldTitleLayout(StringEn.PRODUCTS):Container(),
-
-              getProductRateListLayout(),
-              SizedBox(height: 20,),
-              getAddNewProductLayout(),
-              SizedBox(height: 20,),
-
-              getButtonLayout()
-
-            ],
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+              left: parentWidth * .04,
+              right: parentWidth * 0.04,
+              top: parentHeight * .015),
+          child: GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height: parentHeight * .06,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child: const Text(
+                      StringEn.SAVE,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
