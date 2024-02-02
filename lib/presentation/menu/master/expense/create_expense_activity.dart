@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -305,6 +306,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       ]),
     );
   }
+
+  List<String> LimitDataUnit = ["Cr","Dr"];
+
+  String ?selectedLimitUnit = null;
 
   double opacityLevel = 1.0;
   Widget getImageLayout(double parentHeight, double parentWidth) {
@@ -745,27 +750,23 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     decoration: box_decoration,
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            stateName == "" ? " " : stateName,
-                            style: stateName == ""
-                                ? hint_textfield_Style
-                                : text_field_textStyle,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            // textScaleFactor: 1.02,
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: parentHeight * .03,
-                            color: /*pollName == ""
-                                  ? CommonColor.HINT_TEXT
-                                  :*/
-                            CommonColor.BLACK_COLOR,
-                          ),
-                        ],
+                      child: DropdownButton<dynamic>(
+                        hint: Text(
+                          StringEn.UNIT, style: hint_textfield_Style,),
+                        underline: SizedBox(),
+                        isExpanded: true,
+                        value: selectedLimitUnit,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedLimitUnit = newValue!;
+                          });
+                        },
+                        items: LimitDataUnit.map((dynamic limit) {
+                          return DropdownMenuItem<dynamic>(
+                            value: limit,
+                            child: Text(limit.toString(), style: item_regular_textStyle),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -858,8 +859,12 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
+                maxLength: 10,
                 textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.characters,
                 focusNode: _panNoFocus,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -944,6 +949,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                maxLength: 12,
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _adharoFocus,
@@ -1028,8 +1037,13 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
+                maxLength: 15,
+
                 textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.characters,
                 focusNode: _gstNoFocus,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
@@ -1728,7 +1742,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     decoration: box_decoration,
                     child: TextFormField(
                       textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization: TextCapitalization.none,
                       focusNode: _contactFocus,
                       keyboardType:
                       TextInputType.numberWithOptions(decimal: true),
@@ -1784,8 +1798,11 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     alignment: Alignment.center,
                     decoration: box_decoration,
                     child: TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
+                      ],
                       textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization: TextCapitalization.none,
                       focusNode: _emailFocus,
                       keyboardType:TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -1853,8 +1870,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _panNoFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration:  InputDecoration(
@@ -2855,8 +2871,11 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               alignment: Alignment.center,
               decoration: box_decoration,
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
                 textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.characters,
                 focusNode: _bankBranchFocus,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -2909,8 +2928,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _IFSCCodeFocus,
-                keyboardType:
-                TextInputType.numberWithOptions(decimal: true),
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -2922,6 +2940,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   hintText: "Enter a IFSC Code",
                   hintStyle: hint_textfield_Style,
                 ),
+
                 controller: IFSCCodeController,
                 onEditingComplete: () {
                   _IFSCCodeFocus.unfocus();

@@ -2,7 +2,7 @@ class StringEn{
   //Login Page
   static const SIGN_IN = "Sign In";
   static const LOG_IN = "Log In";
-  static const LOGIN_SUB_TEXT = "LoginActivity to continue with the app";
+  static const LOGIN_SUB_TEXT = "Login to continue with the app";
   static const LOGOUT = "Log Out";
 
   //Dashboard

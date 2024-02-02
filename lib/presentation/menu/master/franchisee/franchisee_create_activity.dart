@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -506,6 +507,9 @@ String stateName="";
               alignment: Alignment.center,
               decoration: box_decoration,
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _IFSCCodeFocus,
@@ -1070,7 +1074,14 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
+        ],
         focusNode: _franchiseeEmailFocus,
+        textAlignVertical: TextAlignVertical.center,
+        textCapitalization: TextCapitalization.none,
+        cursorColor: CommonColor.BLACK_COLOR,
         keyboardType: TextInputType.emailAddress,
         controller: franchiseeEmail,
         decoration: textfield_decoration.copyWith(
@@ -1125,6 +1136,10 @@ String stateName="";
                   ],
                 ),
                 child: TextFormField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                  ],
+                  maxLength: 10,
                   textAlignVertical: TextAlignVertical.center,
                   textCapitalization: TextCapitalization.characters,
                   focusNode: _panNoFocus,
@@ -1214,6 +1229,10 @@ String stateName="";
                   ],
                 ),
                 child: TextFormField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  maxLength: 12,
                   textAlignVertical: TextAlignVertical.center,
                   textCapitalization: TextCapitalization.words,
                   focusNode: _adharoFocus,
@@ -1301,9 +1320,13 @@ String stateName="";
                   ],
                 ),
                 child: TextFormField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                  ],
                   textAlignVertical: TextAlignVertical.center,
                   textCapitalization: TextCapitalization.characters,
 
+                  maxLength: 15,
                   focusNode: _gstNoFocus,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,

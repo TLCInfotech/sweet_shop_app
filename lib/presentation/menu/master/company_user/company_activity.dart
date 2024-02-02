@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -638,10 +639,15 @@ class _CompanyCreateState extends State<CompanyCreate>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
+                maxLength: 10,
+
                 textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.characters,
                 focusNode: _panNoFocus,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -725,6 +731,10 @@ class _CompanyCreateState extends State<CompanyCreate>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                maxLength: 12,
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _adharoFocus,
@@ -809,10 +819,14 @@ class _CompanyCreateState extends State<CompanyCreate>
                 ],
               ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                ],
+                maxLength: 15,
                 textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
+                textCapitalization: TextCapitalization.characters,
                 focusNode: _gstNoFocus,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -1202,10 +1216,11 @@ class _CompanyCreateState extends State<CompanyCreate>
                       ],
                     ),
                     child: TextFormField(
+
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _pinCodeFocus,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration: InputDecoration(
@@ -1513,6 +1528,9 @@ class _CompanyCreateState extends State<CompanyCreate>
                       ],
                     ),
                     child: TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
+                      ],
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _emailFocus,
@@ -1578,11 +1596,15 @@ class _CompanyCreateState extends State<CompanyCreate>
                       ],
                     ),
                     child: TextFormField(
+
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                      ],
+                      maxLength: 10,
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _panNoFocus,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:TextInputType.text,
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration:  InputDecoration(
@@ -1710,11 +1732,14 @@ class _CompanyCreateState extends State<CompanyCreate>
                       ],
                     ),
                     child: TextFormField(
+
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
+                      ],
                       textAlignVertical: TextAlignVertical.center,
                       textCapitalization: TextCapitalization.words,
                       focusNode: _cinNoFocus,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:TextInputType.text,
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
                       decoration:  InputDecoration(
