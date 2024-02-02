@@ -62,10 +62,7 @@ class _UsersListState extends State<UsersList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.USER,
-              style: page_heading_textStyle,
-            ),
+
             SizedBox(
               height: 10,
             ),

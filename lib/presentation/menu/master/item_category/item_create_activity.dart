@@ -213,6 +213,17 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
     );
   }
 
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
   /* Widget for TopBar Layout */
   Widget getAddTopBarLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -436,18 +447,32 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
               child: Column(
                 children: [
                   getImageLayout(parentHeight, parentWidth),
-                  getNameLayout(parentHeight, parentWidth),
-                  getAddCategoryLayout(parentHeight, parentWidth),
-                  getMeasuringUnitLayout(parentHeight, parentWidth),
-                  getUnitTwoLayout(parentHeight, parentWidth),
-                  getUnitThreeLayout(parentHeight, parentWidth),
-                  getPackSizeLayout(parentHeight, parentWidth),
-                  getHSNNOLayout(parentHeight, parentWidth),
-                  getDefaultStoreLayout(parentHeight, parentWidth),
-                  getMinStockLayout(parentHeight, parentWidth),
-                  getMaxStockLayout(parentHeight, parentWidth),
-                  getExtNameLayout(parentHeight, parentWidth),
-                  getAddDescriptionLayout(parentHeight, parentWidth),
+                  SizedBox(height: 20,),
+                  getFieldTitleLayout("Basic Information"),
+                  Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getNameLayout(parentHeight, parentWidth),
+                      getAddCategoryLayout(parentHeight, parentWidth),
+                      getMeasuringUnitLayout(parentHeight, parentWidth),
+                      getUnitTwoLayout(parentHeight, parentWidth),
+                      getUnitThreeLayout(parentHeight, parentWidth),
+                      getPackSizeLayout(parentHeight, parentWidth),
+                      getHSNNOLayout(parentHeight, parentWidth),
+                      getDefaultStoreLayout(parentHeight, parentWidth),
+                      getMinStockLayout(parentHeight, parentWidth),
+                      getMaxStockLayout(parentHeight, parentWidth),
+                      getExtNameLayout(parentHeight, parentWidth),
+                      getAddDescriptionLayout(parentHeight, parentWidth),
+                    ],
+                    ),
+                  )
+
 
                 ],
               ),
@@ -848,7 +873,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       children: [
                         Container(
                           height: parentHeight * .058,
-                          width: parentWidth * .32,
+                          width: parentWidth * .3,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -1069,7 +1094,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       children: [
                         Container(
                           height: parentHeight * .058,
-                          width: parentWidth * .32,
+                          width: parentWidth * .3,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Colors.white,

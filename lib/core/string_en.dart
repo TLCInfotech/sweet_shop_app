@@ -47,7 +47,7 @@ class StringEn{
   static const ITEM_DESCRIPTION = "Item Description";
 
   //Unit
-  static const UNIT_TITLE="Measuring Unit Activity";
+  static const UNIT_TITLE="Measuring Unit ";
   static const ADD_UNIT = "Create Unit";
   static const UNIT_NAME="Enter Unit Measurment";
 

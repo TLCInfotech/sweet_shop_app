@@ -72,7 +72,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.ITEM_TITLE,
+                StringEn.ITEM,
                 style: appbar_text_style,),
             ),
           ),
@@ -94,10 +94,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringEn.ITEM_TITLE,
-              style: page_heading_textStyle,
-            ),
+
             SizedBox(
               height: 10,
             ),
@@ -150,9 +147,9 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Sweet Item 1 sjhdfjas",style: item_heading_textStyle,),
+                                      Text("Sweet Item $index ",style: item_heading_textStyle,),
                                       Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                      Text("500.00 per/kg",style: item_heading_textStyle,),
+                                      Text("500.00 kg",style: item_heading_textStyle,),
 
                                     ],
                                   ),

@@ -437,6 +437,18 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
+
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
     return ListView(
@@ -457,38 +469,102 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   left: parentWidth * .01, right: parentWidth * .01),
               child: Column(
                 children: [
+
+
                   getImageLayout(parentHeight, parentWidth),
-                  getNameLayout(parentHeight, parentWidth),
-                  getLeaderGroupLayout(parentHeight, parentWidth),
-                  getContactPersonLayout(parentHeight, parentWidth),
-                  getAddressLayout(parentHeight, parentWidth),
-                  Row(
-                    children: [
-                      getLeftLayout(parentHeight, parentWidth),
-                      getRightLayout(parentHeight, parentWidth),
+                  SizedBox(height: 20,),
+                  getFieldTitleLayout("Basic Information"),
+                  Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getNameLayout(parentHeight, parentWidth),
+                      getLeaderGroupLayout(parentHeight, parentWidth),
+                      getContactPersonLayout(parentHeight, parentWidth),
+                      getAddressLayout(parentHeight, parentWidth),
+                      Row(
+                        children: [
+                          getLeftLayout(parentHeight, parentWidth),
+                          getRightLayout(parentHeight, parentWidth),
+                        ],
+                      ),
+                      getContactNoLayout(parentHeight, parentWidth),
+                      getEmilLayout(parentHeight, parentWidth),
                     ],
+                    ),
                   ),
-                  getContactNoLayout(parentHeight, parentWidth),
-                  getEmilLayout(parentHeight, parentWidth),
-                  getOutstandingLimitLayout(parentHeight, parentWidth),
-                  getRegTypeLayout(parentHeight, parentWidth),
-                  getAdharLayout(parentHeight, parentWidth),
-                  getPanLayout(parentHeight, parentWidth),
-                  getGstLayout(parentHeight, parentWidth),
-                  getTaxLayout(parentHeight, parentWidth),
-                  Row(
-                    children: [
-                      getTaxLeftLayout(parentHeight, parentWidth),
-                      getTaxRightLayout(parentHeight, parentWidth),
+
+
+                  SizedBox(height: 20,),
+                  getFieldTitleLayout("Document Information"),
+                  Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getOutstandingLimitLayout(parentHeight, parentWidth),
+                      SizedBox(height:10,),
+                      // getRegTypeLayout(parentHeight, parentWidth),
+                      getAdharLayout(parentHeight, parentWidth),
+                      getPanLayout(parentHeight, parentWidth),
+                      getGstLayout(parentHeight, parentWidth),
                     ],
+                    ),
                   ),
-                  getAccountInfoLayout(parentHeight, parentWidth),
-                  getBankNameLayout(parentHeight, parentWidth),
-                  getBankBranchNameLayout(parentHeight, parentWidth),
-                  getFSCCodeLayout(parentHeight, parentWidth),
-                  getACHolderNameLayout(parentHeight, parentWidth),
-                  getAcoountNoLayout(parentHeight, parentWidth),
-                  getExtNameLayout(parentHeight, parentWidth),
+
+                  SizedBox(height: 20,),
+                  getFieldTitleLayout("Tax Information"),
+                  Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      Row(
+                        children: [
+                          getTaxLeftLayout(parentHeight, parentWidth),
+                          getTaxRightLayout(parentHeight, parentWidth),
+                        ],
+                      ),
+                    ],
+                    ),
+                  ),
+
+
+                  // getTaxLayout(parentHeight, parentWidth),
+
+                  SizedBox(height: 20,),
+                  getFieldTitleLayout("Account Information"),
+                  Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+
+                      // getAccountInfoLayout(parentHeight, parentWidth),
+                      getBankNameLayout(parentHeight, parentWidth),
+                      getBankBranchNameLayout(parentHeight, parentWidth),
+                      getFSCCodeLayout(parentHeight, parentWidth),
+                      getACHolderNameLayout(parentHeight, parentWidth),
+                      getAcoountNoLayout(parentHeight, parentWidth),
+                      getExtNameLayout(parentHeight, parentWidth),
+                    ],
+                    ),
+                  ),
+
+
                 ],
               ),
             ),
@@ -632,7 +708,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 Padding(
                   padding:  EdgeInsets.only(right: parentWidth*.01),                  child: Container(
                     height: parentHeight * .055,
-                    width: parentWidth*.55,
+                    width: parentWidth*.5,
                     alignment: Alignment.center,
                     decoration: box_decoration,
                     child: TextFormField(
@@ -1160,7 +1236,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1216,7 +1292,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1328,7 +1404,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1407,7 +1483,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2211,7 +2287,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2290,7 +2366,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2335,14 +2411,16 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          taxCategoryName == "" ? "Select category" : taxCategoryName,
-                          style: taxCategoryName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
+                        Expanded(
+                          child: Text(
+                            taxCategoryName == "" ? "Select category" : taxCategoryName,
+                            style: taxCategoryName == ""
+                                ? hint_textfield_Style
+                                : text_field_textStyle,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            // textScaleFactor: 1.02,
+                          ),
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
@@ -2369,7 +2447,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2426,7 +2504,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2482,7 +2560,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2538,7 +2616,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2594,7 +2672,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2649,7 +2727,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

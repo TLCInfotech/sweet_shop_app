@@ -33,6 +33,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   final _formkey = GlobalKey<FormState>();
 
+  final ScrollController _scrollController = ScrollController();
   final _panNoFocus = FocusNode();
   final panNoController = TextEditingController();
   final _gstNoFocus = FocusNode();
@@ -41,23 +42,47 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   final cinNoController = TextEditingController();
   final _adharoFocus = FocusNode();
   final adharNoController = TextEditingController();
+
   late ImagePickerHandler imagePicker;
   late AnimationController _Controller;
   File? picImage;
 
   TextEditingController franchiseeName = TextEditingController();
+  final _franchiseeNameFocus=FocusNode();
   TextEditingController franchiseeContactPerson = TextEditingController();
+  final _franchiseeContactPersonFocus=FocusNode();
   TextEditingController franchiseeAddress = TextEditingController();
+  final _franchiseeAddressFocus=FocusNode();
   TextEditingController franchiseeMobileNo = TextEditingController();
+  final _franchiseeMobileNoFocus=FocusNode();
   TextEditingController franchiseeContactNo = TextEditingController();
+  final _franchiseeContactNoFocus=FocusNode();
   TextEditingController franchiseeEmail = TextEditingController();
+  final _franchiseeEmailFocus=FocusNode();
+
+  TextEditingController pincode = TextEditingController();
+  final _pincodeFocus=FocusNode();
 
   TextEditingController franchiseeAadharNo = TextEditingController();
   TextEditingController franchiseeGSTNO = TextEditingController();
   TextEditingController franchiseePanNo = TextEditingController();
 
   TextEditingController franchiseeOutstandingLimit = TextEditingController();
+  final _franchiseeOutstandingLimitFocus = FocusNode();
   TextEditingController franchiseePaymentDays = TextEditingController();
+  final _franchiseePaymentDaysFocus = FocusNode();
+
+  final _accountNoFocus = FocusNode();
+  final accountNoController = TextEditingController();
+  final _aCHolderNameFocus = FocusNode();
+  final aCHolderNameController = TextEditingController();
+  final _IFSCCodeFocus = FocusNode();
+  final IFSCCodeController = TextEditingController();
+  final _bankBranchFocus = FocusNode();
+  final bankBranchController = TextEditingController();
+  final _bankNameFocus = FocusNode();
+  final bankNameController = TextEditingController();
+  bool disableColor = false;
 String countryName="";
 String stateName="";
 
@@ -156,65 +181,469 @@ String stateName="";
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formkey,
-            child: Container(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    getImageLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_NAME),
-                    getFranchiseeNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_CONTACT_PERSON),
-                    getContactPersonLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_ADDRESS),
-                    getAddressLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        getCityLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                      ],
-                    ),
-                    getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_MOBILENO),
-                    getMobileNoLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
-                    getEmailLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 10,),
-                    getAdharLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 5,),
-                    getPanLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 5,),
-                    getGstLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
-                    getOutstandingLimit(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
-                    getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 20.0),
-                    getButtonLayout()
-
-                  ],
-                ),
-              ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                // color: CommonColor.DASHBOARD_BACKGROUND,
+                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
+            Container(
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black.withOpacity(0.08),
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                height: SizeConfig.safeUsedHeight * .08,
+                child: getSaveAndFinishButtonLayout(
+                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
+            CommonWidget.getCommonPadding(
+                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-          ),
+          ],
         ),
       ),
     );
   }
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+              left: parentWidth * .04,
+              right: parentWidth * 0.04,
+              top: parentHeight * .015),
+          child: GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+            },
+            onDoubleTap: () {},
+            child: Container(
+              height: parentHeight * .06,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child: const Text(
+                      StringEn.SAVE,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget getAllFields(double parentHeight, double parentWidth) {
+    return ListView(
+      shrinkWrap: true,
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      // padding: EdgeInsets.only(
+      //     left: parentWidth * 0.04,
+      //     right: parentWidth * 0.04,
+      //     top: parentHeight * 0.01,
+      //     bottom: parentHeight * 0.02),
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: parentHeight * .01),
+          child: Container(
+            child: Column(
+              children: [
+                SizedBox(height: 20,),
+                getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                SizedBox(height: 20,),
+                getFieldTitleLayout("Basic Information"),
+                BasicInfo(),
+                SizedBox(height: 20,),
+                getFieldTitleLayout("Document Information"),
+                Document_Information(),
+                SizedBox(height: 20.0),
+                getFieldTitleLayout("Account Information"),
+                Container(
 
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.grey,width: 1),
+                  ),
+                  child: Column(children: [
+                    getBankNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    getBankBranchNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    getFSCCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    getACHolderNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    getAcoountNoLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+
+  }
+
+  Container Document_Information() {
+    return Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+
+                    ),
+                    child: Column(children: [
+                      getAdharLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      SizedBox(height: 5,),
+                      getPanLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      SizedBox(height: 5,),
+                      getGstLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
+                      getOutstandingLimit(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
+                      getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    ],
+                    ),
+                  );
+  }
+
+  Container BasicInfo() {
+    return Container(
+
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getFranchiseeNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_CONTACT_PERSON),
+                      getContactPersonLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_ADDRESS),
+                      getAddressLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          getCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                          getPincodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                          getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                        ],
+                      ),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_MOBILENO),
+                      getMobileNoLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
+                      getEmailLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    ],
+                    ),
+                  );
+  }
+
+
+  /* Widget for bank name text from field layout */
+  Widget getBankNameLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.BANK_NAME,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _bankNameFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a bank name",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: bankNameController,
+                onEditingComplete: () {
+                  _bankNameFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_bankBranchFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /* Widget for bank branch name text from field layout */
+  Widget getBankBranchNameLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.BANT_BRACH,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _bankBranchFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a bank branch name",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: bankBranchController,
+                onEditingComplete: () {
+                  _bankBranchFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_IFSCCodeFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  /* Widget for IFSC Code text from field layout */
+  Widget getFSCCodeLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.IFSC_CODE,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _IFSCCodeFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a IFSC Code",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: IFSCCodeController,
+                onEditingComplete: () {
+                  _IFSCCodeFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_aCHolderNameFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /* Widget for Account holder name text from field layout */
+  Widget getACHolderNameLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.ACCOUNT_HOLDER_NAME,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _aCHolderNameFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a account holder name",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: aCHolderNameController,
+                onEditingComplete: () {
+                  _aCHolderNameFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_accountNoFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /* Widget for Account No name text from field layout */
+  Widget getAcoountNoLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.ACCOUNT_NO,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _accountNoFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a account no Code",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: accountNoController,
+                onEditingComplete: () {
+                  _accountNoFocus.unfocus();
+                  //FocusScope.of(context).requestFocus(_addressFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
-
+      width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -304,7 +733,7 @@ String stateName="";
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -501,23 +930,6 @@ String stateName="";
   }
 
 
-  /* widget for button layout */
-  Widget getButtonLayout() {
-    return Container(
-      width: 200,
-      child: ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-            CommonColor.THEME_COLOR)),
-        onPressed: () {
-          _formkey.currentState?.validate();
-          // Navigator.pop(context);
-        },
-        child: Text(StringEn.ADD,
-            style: button_text_style),
-      ),
-    );
-  }
-
 
   /* widget for franchisee payment days layout */
   Widget getPaymentDaysLayout(double parentHeight, double parentWidth) {
@@ -536,6 +948,7 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+        focusNode: _franchiseePaymentDaysFocus,
         keyboardType: TextInputType.number,
         controller: franchiseePaymentDays,
         decoration: textfield_decoration.copyWith(
@@ -546,6 +959,10 @@ String stateName="";
             return "Enter Payment Days";
           }
           return null;
+        },
+        onEditingComplete: () {
+          _franchiseePaymentDaysFocus.unfocus();
+          FocusScope.of(context).requestFocus(_bankNameFocus);
         },
       ),
     );
@@ -574,6 +991,7 @@ String stateName="";
               ],
             ),
             child: TextFormField(
+              focusNode: _franchiseeOutstandingLimitFocus,
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
               ),
@@ -587,6 +1005,10 @@ String stateName="";
                   return "Enter Email Address";
                 }
                 return null;
+              },
+              onEditingComplete: () {
+                _franchiseeOutstandingLimitFocus.unfocus();
+                FocusScope.of(context).requestFocus(_franchiseePaymentDaysFocus);
               },
             ),
           ),
@@ -631,235 +1053,6 @@ String stateName="";
     );
   }
 
-
-  /* widget for franchisee gst no layout */
-  Widget getGSTNoLayout(double parentHeight, double parentWidth) {
-    return Column(
-      children: [
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: SizeConfig.screenWidth - 110,
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: franchiseeGSTNO,
-                maxLength: 15,
-                decoration: textfield_decoration.copyWith(
-                  hintText: StringEn.FRANCHISEE_GST_NO,
-                ),
-                onChanged:(value){
-                  franchiseeGSTNO.text=value.toUpperCase();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Enter GST No";
-                  }
-                  else if (!Util.isGSTValid(value)) {
-                    return "Enter Valid GST No";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            SizedBox(width: 10,),
-            GestureDetector(
-              onTap: () {
-                getPanCardFile();
-              },
-              child: Container(
-                  height: 50,
-                  width: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
-                        size: 20,),
-                      Text("Upload", style: subHeading_withBold)
-                    ],
-                  )
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        gstCardFile != null ?
-        getFileLayout(gstCardFile!) : Container()
-      ],
-    );
-  }
-
-
-  /* widget for franchisee pan no layout */
-  Widget getPANNoLayout(double parentHeight, double parentWidth) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: SizeConfig.screenWidth - 110,
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: franchiseePanNo,
-                maxLength: 12,
-                decoration: textfield_decoration.copyWith(
-                  hintText: StringEn.FRANCHISEE_PAN_NO,
-                ),
-                onChanged:(value){
-                  franchiseePanNo.text=value.toUpperCase();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Enter PAN No";
-                  }
-                  else if (Util.isPanValid(value)) {
-                    return "Enter Valid PAN";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            SizedBox(width: 10,),
-            GestureDetector(
-              onTap: () {
-                getPanCardFile();
-              },
-              child: Container(
-                  height: 50,
-                  width: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
-                        size: 20,),
-                      Text("Upload", style: subHeading_withBold)
-                    ],
-                  )
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        panCardFile != null ?
-        getFileLayout(panCardFile!) : Container()
-      ],
-    );
-  }
-
-  /* widget for franchisee aadhar no layout */
-  Widget getAdharNoLayout(double parentHeight, double parentWidth) {
-    return Column(
-      children: [
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: SizeConfig.screenWidth - 110,
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: franchiseeAadharNo,
-                maxLength: 12,
-                decoration: textfield_decoration.copyWith(
-                  hintText: StringEn.FRANCHISEE_AADHAR_NO,
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Enter Aadhar No";
-                  }
-                  else if (Util.isAadharValid(value)) {
-                    return "Enter Valid Aadhar";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            SizedBox(width: 10,),
-            GestureDetector(
-              onTap: () {
-                getAadharCardFile();
-              },
-              child: Container(
-                  height: 50,
-                  width: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(FontAwesomeIcons.fileArrowUp, color: Colors.white,
-                        size: 20,),
-                      Text("Upload", style: subHeading_withBold)
-                    ],
-                  )
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        aadharCardFile != null ?
-        getFileLayout(aadharCardFile!) : Container()
-      ],
-    );
-  }
-
   /* widget for franchisee email layout */
   Widget getEmailLayout(double parentHeight, double parentWidth) {
     return Container(
@@ -877,6 +1070,7 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+        focusNode: _franchiseeEmailFocus,
         keyboardType: TextInputType.emailAddress,
         controller: franchiseeEmail,
         decoration: textfield_decoration.copyWith(
@@ -890,6 +1084,10 @@ String stateName="";
             return "Enter Valid Email";
           }
           return null;
+        },
+        onEditingComplete: () {
+          _franchiseeEmailFocus.unfocus();
+          FocusScope.of(context).requestFocus(_adharoFocus);
         },
       ),
     );
@@ -928,7 +1126,7 @@ String stateName="";
                 ),
                 child: TextFormField(
                   textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
+                  textCapitalization: TextCapitalization.characters,
                   focusNode: _panNoFocus,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -945,6 +1143,7 @@ String stateName="";
                   controller: panNoController,
                   onEditingComplete: () {
                     _panNoFocus.unfocus();
+                    FocusScope.of(context).requestFocus(_gstNoFocus);
                   },
                   style: text_field_textStyle,
                 ),
@@ -1033,6 +1232,7 @@ String stateName="";
                   controller: adharNoController,
                   onEditingComplete: () {
                     _adharoFocus.unfocus();
+                    FocusScope.of(context).requestFocus(_panNoFocus);
                   },
                   style: text_field_textStyle,
                 ),
@@ -1102,7 +1302,8 @@ String stateName="";
                 ),
                 child: TextFormField(
                   textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
+                  textCapitalization: TextCapitalization.characters,
+
                   focusNode: _gstNoFocus,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -1119,6 +1320,7 @@ String stateName="";
                   controller:gstNoController,
                   onEditingComplete: () {
                     _gstNoFocus.unfocus();
+                    FocusScope.of(context).requestFocus(_franchiseeOutstandingLimitFocus);
                   },
                   style: text_field_textStyle,
                 ),
@@ -1157,6 +1359,7 @@ String stateName="";
     );
   }
   /* widget for franchisee mobile layout */
+
   Widget getMobileNoLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
@@ -1173,6 +1376,7 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+        focusNode: _franchiseeMobileNoFocus,
         keyboardType: TextInputType.phone,
         controller: franchiseeMobileNo,
         maxLength: 10,
@@ -1192,6 +1396,61 @@ String stateName="";
 
           return null;
         },
+        onEditingComplete: () {
+          _franchiseeMobileNoFocus.unfocus();
+          FocusScope.of(context).requestFocus(_franchiseeEmailFocus);
+        },
+      ),
+    );
+  }
+
+
+  /* widget for Contact Person layout */
+  Widget getPincodeLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            StringEn.PIN_CODE,
+            style: page_heading_textStyle,
+          ),
+          Container(
+            width: parentWidth*.4,
+            height: parentHeight * .055,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              controller: pincode,
+              focusNode: _pincodeFocus,
+              decoration: textfield_decoration.copyWith(
+                hintText: StringEn.PIN_CODE,
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter Contact Person";
+                }
+                return null;
+              },
+              onEditingComplete: () {
+                _pincodeFocus.unfocus();
+                FocusScope.of(context).requestFocus(_franchiseeMobileNoFocus);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1201,7 +1460,7 @@ String stateName="";
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth*.43,
+        width: parentWidth*.4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1306,6 +1565,7 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+        focusNode: _franchiseeContactPersonFocus,
         keyboardType: TextInputType.text,
         controller: franchiseeContactPerson,
         decoration: textfield_decoration.copyWith(
@@ -1316,6 +1576,10 @@ String stateName="";
             return "Enter Contact Person";
           }
           return null;
+        },
+        onEditingComplete: () {
+          _franchiseeContactPersonFocus.unfocus();
+          FocusScope.of(context).requestFocus(_franchiseeAddressFocus);
         },
       ),
     );
@@ -1340,6 +1604,7 @@ String stateName="";
       ),
       child: TextFormField(
         maxLines: 4,
+        focusNode: _franchiseeAddressFocus,
         keyboardType: TextInputType.streetAddress,
         controller: franchiseeAddress,
         decoration: textfield_decoration.copyWith(
@@ -1353,6 +1618,10 @@ String stateName="";
           //   return "Enter Valid Address";
           // }
           return null;
+        },
+        onEditingComplete: () {
+          _franchiseeAddressFocus.unfocus();
+          FocusScope.of(context).requestFocus(_pincodeFocus);
         },
       ),
     );
@@ -1376,6 +1645,7 @@ String stateName="";
         ],
       ),
       child: TextFormField(
+        focusNode: _franchiseeNameFocus,
         keyboardType: TextInputType.text,
         controller: franchiseeName,
         decoration: textfield_decoration.copyWith(
@@ -1387,6 +1657,10 @@ String stateName="";
           }
           return null;
         }),
+        onEditingComplete: () {
+          _franchiseeNameFocus.unfocus();
+          FocusScope.of(context).requestFocus(_franchiseeContactPersonFocus);
+        },
       ),
     );
   }

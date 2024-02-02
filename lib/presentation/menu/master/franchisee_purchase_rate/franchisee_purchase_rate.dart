@@ -115,7 +115,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 ],
               ),
 
-              CopyPurchaseRateProductOfFranchisee(mListener: this,),
+              SizedBox(height: 5,),
+              // CopyPurchaseRateProductOfFranchisee(mListener: this,),
 
               product_list.length>0?getFieldTitleLayout(StringEn.PRODUCTS):Container(),
 

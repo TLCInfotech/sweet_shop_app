@@ -391,6 +391,18 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
+
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
     return ListView(
@@ -412,26 +424,54 @@ class _CompanyCreateState extends State<CompanyCreate>
               child: Column(
                 children: [
                   getImageLayout(parentHeight, parentWidth),
-                  getNameLayout(parentHeight, parentWidth),
-                  getContactPersonLayout(parentHeight, parentWidth),
-                  getAddressLayout(parentHeight, parentWidth),
-                  Row(
-                    children: [
-                      getLeftLayout(parentHeight, parentWidth),
-                      getRightLayout(parentHeight, parentWidth),
+
+                  SizedBox(height: 20.0),
+                  getFieldTitleLayout("Basic Information"),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getNameLayout(parentHeight, parentWidth),
+                      getContactPersonLayout(parentHeight, parentWidth),
+                      getAddressLayout(parentHeight, parentWidth),
+                      Row(
+                        children: [
+                          getLeftLayout(parentHeight, parentWidth),
+                          getRightLayout(parentHeight, parentWidth),
+                        ],
+                      ),
+                      getContactNoLayout(parentHeight, parentWidth),
+                      getEmilLayout(parentHeight, parentWidth),
+                      getAddressTwoLayout(parentHeight, parentWidth),
                     ],
+                    ),
                   ),
-                  getContactNoLayout(parentHeight, parentWidth),
-                  getEmilLayout(parentHeight, parentWidth),
-                  getAddressTwoLayout(parentHeight, parentWidth),
-                  getAdharLayout(parentHeight, parentWidth),
-                  getPanLayout(parentHeight, parentWidth),
-                  getGstLayout(parentHeight, parentWidth),
-                  getCINNoLayout(parentHeight, parentWidth),
-                  getJURISDICTIONLayout(parentHeight, parentWidth),
-                  getDefaultBankLayout(parentHeight, parentWidth),
-                  getExtNameLayout(parentHeight, parentWidth),
-                  getInvoiceDelcelrationLayout(parentHeight, parentWidth),
+
+
+                  SizedBox(height: 20.0),
+                  getFieldTitleLayout("Other Information"),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getAdharLayout(parentHeight, parentWidth),
+                      getPanLayout(parentHeight, parentWidth),
+                      getGstLayout(parentHeight, parentWidth),
+                      getCINNoLayout(parentHeight, parentWidth),
+                      getJURISDICTIONLayout(parentHeight, parentWidth),
+                      getDefaultBankLayout(parentHeight, parentWidth),
+                      getExtNameLayout(parentHeight, parentWidth),
+                      getInvoiceDelcelrationLayout(parentHeight, parentWidth),
+                    ],
+                    ),
+                  ),
+
                 ],
               ),
             ),
@@ -584,7 +624,7 @@ class _CompanyCreateState extends State<CompanyCreate>
           children: [
             Container(
               height: parentHeight * .055,
-              width: parentWidth*.7,
+              width: parentWidth*.65,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: CommonColor.WHITE_COLOR,
@@ -671,7 +711,7 @@ class _CompanyCreateState extends State<CompanyCreate>
           children: [
             Container(
               height: parentHeight * .055,
-              width: parentWidth*.7,
+              width: parentWidth*.65,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: CommonColor.WHITE_COLOR,
@@ -755,7 +795,7 @@ class _CompanyCreateState extends State<CompanyCreate>
           children: [
             Container(
               height: parentHeight * .055,
-              width: parentWidth*.7,
+              width: parentWidth*.65,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: CommonColor.WHITE_COLOR,
@@ -1002,7 +1042,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1133,7 +1173,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1199,7 +1239,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1288,7 +1328,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        width: parentWidth * .43,
+        width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

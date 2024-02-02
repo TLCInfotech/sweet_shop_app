@@ -115,8 +115,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 ],
               ),
 
-              CopySaleRateProductOfFranchisee(mListener: this,),
+              // CopySaleRateProductOfFranchisee(mListener: this,),
 
+              SizedBox(height: 5,),
               product_list.length>0?getFieldTitleLayout(StringEn.PRODUCTS):Container(),
 
               getProductRateListLayout(),
