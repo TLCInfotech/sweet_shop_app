@@ -105,8 +105,9 @@ class StringEn{
   static const FRANCHISE_PURCHASE_RATE = "Franchisee Purchase Rate";
   static const FRANCHISE = "Franchisee";
   static const MEASURING_UNIT = "Measuring Unit";
-  static const EXPENSE = "Expense";
-  static const EXPENSE_GROUP = "Expense Group";
+  static const EXPENSE = "Ledger";
+  static const EXPENSE_GROUP = "Ledger Group";
+  static const CREATE_EXPENSE="Create Ledger";
   static const COMPANY_INFO = "Comapny Info";
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";

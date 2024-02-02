@@ -149,7 +149,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     children: [
                                       Text("Sweet Item $index ",style: item_heading_textStyle,),
                                       Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                      Text("500.00 kg",style: item_heading_textStyle,),
+                                      Text("500.00/kg",style: item_heading_textStyle,),
 
                                     ],
                                   ),

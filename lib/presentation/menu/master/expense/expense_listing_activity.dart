@@ -148,8 +148,8 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Expese Name",style: item_heading_textStyle,),
-                                      Text("Leader group name",
+                                      Text("Ledger Name",style: item_heading_textStyle,),
+                                      Text("Leadger group name",
                                         style: item_regular_textStyle,),
                                     ],
                                   ),

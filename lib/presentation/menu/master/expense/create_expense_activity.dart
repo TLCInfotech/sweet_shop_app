@@ -200,7 +200,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
                 title: const Text(
-                  "Create Expense",
+                  StringEn.CREATE_EXPENSE,
                   style: appbar_text_style,
                 ),
               ),
