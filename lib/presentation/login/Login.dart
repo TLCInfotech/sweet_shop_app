@@ -49,9 +49,9 @@ class _LoginActivityState extends State<LoginActivity> {
                       style: subHeading_withBold
                     ),
                     SizedBox(height: 40.0),
-                    getUserNameLayout(),
+                    getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(height: 10.0),
-                    getPasswordLayout(),
+                    getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(height: 20.0),
                     getButtonLayout()
                   ],
@@ -65,22 +65,32 @@ class _LoginActivityState extends State<LoginActivity> {
   }
 
   /* widget for user name layout */
-  Widget getUserNameLayout(){
-  return TextFormField(
-      controller: username,
-      decoration: textfield_decoration.copyWith(
-        hintText: 'UserName',
+  Widget getUserNameLayout(double parentHeight,double parentWidth){
+  return Container(
+    height: parentHeight * .055,
+    alignment: Alignment.center,
+    decoration: box_decoration,
+    child: TextFormField(
+        controller: username,
+        decoration: textfield_decoration.copyWith(
+          hintText: 'User name',
+        ),
       ),
-    );
+  );
   }
   /* widget for password layout */
-  Widget getPasswordLayout(){
-  return  TextFormField(
-    controller: password,
-    obscureText: true,
-    decoration: textfield_decoration.copyWith(
-      hintText: 'Password',
-     ),
+  Widget getPasswordLayout(double parentHeight,double parentWidth){
+  return  Container(
+    height: parentHeight * .055,
+    alignment: Alignment.center,
+    decoration: box_decoration,
+    child: TextFormField(
+      controller: password,
+      obscureText: true,
+      decoration: textfield_decoration.copyWith(
+        hintText: 'Password',
+       ),
+    ),
   );
   }
   /* widget for button layout */

@@ -501,7 +501,7 @@ class _UserCreateState extends State<UserCreate>
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
                 focusNode: _workingdaysFocus,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
