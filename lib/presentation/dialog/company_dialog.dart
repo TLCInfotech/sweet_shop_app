@@ -4,16 +4,16 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
-class TaxCategoryDialog extends StatefulWidget {
-  final TaxCategoryDialogInterface mListener;
+class CompanyDialog extends StatefulWidget {
+  final CompanyDialogInterface mListener;
 
-  const TaxCategoryDialog({super.key, required this.mListener});
+  const CompanyDialog({super.key, required this.mListener});
 
   @override
-  State<TaxCategoryDialog> createState() => _TaxCategoryDialogState();
+  State<CompanyDialog> createState() => _CompanyDialogState();
 }
 
-class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
+class _CompanyDialogState extends State<CompanyDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -26,7 +26,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
     super.initState();
   }
 
-  List state_list= ['Tax Category 1','Tax Category 2'];
+  List company= ['Company 1','Company 2','Company 3','Company 4','Company 5'];
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: const Center(
                       child: Text(
-                          StringEn.TAX_CATEGORY,
+                          StringEn.COMPANY,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -156,14 +156,14 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: state_list.length,
+          itemCount: company.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectTaxCate(index.toString(),state_list.elementAt(index));
+                    widget.mListener.selectCompany(index.toString(),company.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -182,7 +182,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state_list.elementAt(index),
+                        company.elementAt(index),
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -231,6 +231,6 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
 }
 
 
-abstract class TaxCategoryDialogInterface{
-  selectTaxCate(String id,String name);
+abstract class CompanyDialogInterface{
+  selectCompany(String id,String name);
 }
