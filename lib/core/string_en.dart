@@ -165,21 +165,29 @@ class StringEn{
   static const CREATE_COMPANY = "Create Company";
   static const CREATE_SELL = "Create Sell";
   static const CREATE_RECEIPT = "Create Receipt";
-  static const COMPANY = "Company:";
-  static const DATE = "Date:";
-  static const INVOICE_NO = "Invoice No:";
-  static const PARTY = "Party:";
-  static const PURCHASE_LEDGER = "Purchase Ledger:";
-  static const REF_NO = "Ref No:";
-  static const STORE = "Store:";
-  static const GR_NO = "GR No:";
-  static const GR_DATE = "GR Date:";
-  static const PO_NO = "PO NO:";
-  static const PO_DATE = "PO Date:";
-  static const PARTY_INVOICE_NO = "Party Invoice No:";
-  static const PARTY_INVOICE_DATE = "Party Invoice Date:";
-  static const VOUCHER_NO = "Voucher No:";
-  static const NEW_VOUCHER_NO = "New Voucher No:";
+  static const COMPANY = "Company";
+  static const DATE = "Date";
+  static const INVOICE_NO = "Invoice No";
+  static const PARTY = "Party";
+  static const PURCHASE_LEDGER = "Purchase Ledger";
+  static const REF_NO = "Ref No";
+  static const STORE = "Store";
+  static const GR_NO = "GR No";
+  static const GR_DATE = "GR Date";
+  static const PO_NO = "PO NO";
+  static const PO_DATE = "PO Date";
+  static const PARTY_INVOICE_NO = "Party Invoice No";
+  static const PARTY_INVOICE_DATE = "Party Invoice Date";
+  static const VOUCHER_NO = "Voucher No";
+  static const NEW_VOUCHER_NO = "New Voucher No";
+
+  //purchase screen
+  static const ADD_PURCHASE = "Create Purchase";
+  static const PURCHASE_ITEM = "Item Purchased";
+  static const QUANTITY = "Quantity";
+  static const DICOUNT = "Discount(%)";
+
+
 
 
 }
