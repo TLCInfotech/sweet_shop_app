@@ -17,13 +17,14 @@ import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/fra
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/ledger/ledger_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
+
+import 'transaction/expense/ledger_activity.dart';
 
 class MenuActivity extends StatefulWidget {
   final MenuActivityInterface mListener;
@@ -779,7 +780,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.EXPENSE,
+              StringEn.EXPENSES,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
@@ -15,7 +19,7 @@ class SellActivity extends StatefulWidget {
   State<SellActivity> createState() => _SellActivityState();
 }
 
-class _SellActivityState extends State<SellActivity> {
+class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterface {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +56,10 @@ class _SellActivityState extends State<SellActivity> {
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSellInvoice()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSellInvoice(
+              dateNew: DateFormat('yyyy-MM-dd').format(invoiceDate),
+              mListener: this,
+            )));
           }),
       body: Container(
         margin: EdgeInsets.all(15),
@@ -62,12 +69,63 @@ class _SellActivityState extends State<SellActivity> {
             const SizedBox(
               height: .5,
             ),
+            getPurchaseDateLayout(),
+            const SizedBox(
+              height: .5,
+            ),
             get_purchase_list_layout()
           ],
         ),
       ),
     );
   }
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GestureDetector(
+      onTap: () async{
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (Platform.isIOS) {
+          var date= await CommonWidget.startDate(context,invoiceDate);
+          setState(() {
+            invoiceDate=date;
+          });
+          // startDateIOS(context);
+        } else if (Platform.isAndroid) {
+          var date= await CommonWidget.startDate(context,invoiceDate) ;
+          setState(() {
+            invoiceDate=date;
+          });
+        }
+      },
+      child: Container(
+          height: 40,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              // border: Border.all(color: Colors.grey.withOpacity(0.5))
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
+
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
+                style: page_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.calendar,
+                color: Colors.black87, size: 16,)
+            ],
+          )
+      ),
+    );
+  }
+
 
   Expanded get_purchase_list_layout() {
     return Expanded(

@@ -27,9 +27,15 @@ import '../../../dialog/franchisee_dialog.dart';
 import 'add_edit_ledger_for_payment.dart';
 
 class CreatePayment extends StatefulWidget {
+  final CreatePaymentInterface mListener;
+  final String dateNew;
+
+  const CreatePayment({super.key,required this.mListener, required this.dateNew});
   @override
   _CreatePaymentState createState() => _CreatePaymentState();
 }
+
+
 
 class _CreatePaymentState extends State<CreatePayment> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditLedgerForPaymentInterface {
 
@@ -331,11 +337,11 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               width:SizeConfig.screenWidth/4,
 
               child: Text(
-                "Current Bal",
+                "Amount",
               ),
             ),
             numeric: true,
-            tooltip: "Current Bal",
+            tooltip: "Ledger Amt",
 
           ),
           DataColumn(
@@ -343,11 +349,11 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               width:SizeConfig.screenWidth/4,
 
               child: Text(
-                "Amount",
+                "Current Bal",
               ),
             ),
             numeric: true,
-            tooltip: "Ledger Amt",
+            tooltip: "Current Bal",
 
           ),
           DataColumn(
@@ -400,15 +406,13 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
-                      child: Text("${item['currentBal']}")),
+                      child: Text("${((item['amount']).toStringAsFixed(2))}")),
                 ),
-
                 DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amount']).toStringAsFixed(2))}")),
+                      child: Text("${item['currentBal']}")),
                 ),
-
                 DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
@@ -444,8 +448,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       child: Column(children: [
         getFieldTitleLayout(StringEn.DATE),
         getReceiptDateLayout(),
-        getFieldTitleLayout(StringEn.VOUCHER_NO),
-        getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        // getFieldTitleLayout(StringEn.VOUCHER_NO),
+        // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         SizedBox(height: 10,)
       ],
@@ -471,7 +475,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   Widget getReceiptDateLayout(){
     return GestureDetector(
       onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
+/*        FocusScope.of(context).requestFocus(FocusNode());
         if (Platform.isIOS) {
           var date= await CommonWidget.startDate(context,invoiceDate);
           setState(() {
@@ -483,7 +487,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           setState(() {
             invoiceDate=date;
           });
-        }
+        }*/
       },
       child: Container(
           height: 50,
@@ -502,8 +506,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
-                style: item_regular_textStyle,),
+              Text(widget.dateNew,
+                style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
@@ -680,3 +684,5 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
 }
 
+abstract class CreatePaymentInterface {
+}

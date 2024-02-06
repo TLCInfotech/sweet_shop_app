@@ -106,8 +106,10 @@ class StringEn{
   static const FRANCHISE = "Franchisee";
   static const MEASURING_UNIT = "Measuring Unit";
   static const EXPENSE = "Ledger";
+  static const EXPENSES = "Expense";
   static const EXPENSE_GROUP = "Ledger Group";
   static const CREATE_EXPENSE="Create Ledger";
+  static const CREATE_EXPENSES="Create Expense";
   static const COMPANY_INFO = "Comapny Info";
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";

@@ -17,19 +17,18 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/core/util.dart';
-import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/ledger/add_edit_ledger_for_ledger.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
-
 import '../../../dialog/franchisee_dialog.dart';
+import 'add_edit_ledger_for_ledger.dart';
 
 class CreateLedger extends StatefulWidget {
+  final CreateLedgerInterface mListener;
+  final String dateNew;
+
+  const CreateLedger({super.key, required this.mListener, required this.dateNew});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
+
 
 class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditLedgerForLedgerInterface {
 
@@ -112,7 +111,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.CREATE_EXPENSE,
+                  StringEn.CREATE_EXPENSES,
                   style: appbar_text_style,),
               ),
             ),
@@ -325,7 +324,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             tooltip: "This is Ledger Name",
 
           ),
-          DataColumn(
+/*          DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
 
@@ -336,7 +335,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             numeric: true,
             tooltip: "Current Bal",
 
-          ),
+          ),*/
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
@@ -396,11 +395,11 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                         ],
                       )),
                 ),
-                DataCell(
+           /*     DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
                       child: Text("${item['currentBal']}")),
-                ),
+                ),*/
 
                 DataCell(
                   Container(
@@ -443,8 +442,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       child: Column(children: [
         getFieldTitleLayout(StringEn.DATE),
         getReceiptDateLayout(),
-        getFieldTitleLayout(StringEn.VOUCHER_NO),
-        getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        // getFieldTitleLayout(StringEn.VOUCHER_NO),
+        // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         SizedBox(height: 10,)
       ],
@@ -470,19 +469,19 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   Widget getReceiptDateLayout(){
     return GestureDetector(
       onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }
+        // FocusScope.of(context).requestFocus(FocusNode());
+        // if (Platform.isIOS) {
+        //   var date= await CommonWidget.startDate(context,invoiceDate);
+        //   setState(() {
+        //     invoiceDate=date;
+        //   });
+        //   // startDateIOS(context);
+        // } else if (Platform.isAndroid) {
+        //   var date= await CommonWidget.startDate(context,invoiceDate) ;
+        //   setState(() {
+        //     invoiceDate=date;
+        //   });
+        // }
       },
       child: Container(
           height: 50,
@@ -501,8 +500,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
-                style: item_regular_textStyle,),
+              Text(widget.dateNew,
+                style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
@@ -679,3 +678,5 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 }
 
+abstract class CreateLedgerInterface {
+}

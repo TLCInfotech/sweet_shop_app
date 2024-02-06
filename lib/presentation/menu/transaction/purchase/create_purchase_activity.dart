@@ -27,9 +27,16 @@ import 'add_or_edit_Item.dart';
 
 
 class CreatePurchaseInvoice extends StatefulWidget {
+  final CreatePurchaseInvoiceInterface mListener;
+  final String dateNew;
+
+  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew});
+
   @override
   _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
 }
+
+
 
 class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditItemInterface {
 
@@ -515,9 +522,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       child: Column(children: [
         getFieldTitleLayout(StringEn.DATE),
         getPurchaseDateLayout(),
-        getFieldTitleLayout(StringEn.INVOICE_NO),
-        getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        // getFieldTitleLayout(StringEn.INVOICE_NO),
+        // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         SizedBox(height: 10,)
       ],
       ),
@@ -543,18 +550,18 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return GestureDetector(
       onTap: () async{
         FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }
+        // if (Platform.isIOS) {
+        //   var date= await CommonWidget.startDate(context,invoiceDate);
+        //   setState(() {
+        //     invoiceDate=date;
+        //   });
+        //   // startDateIOS(context);
+        // } else if (Platform.isAndroid) {
+        //   var date= await CommonWidget.startDate(context,invoiceDate) ;
+        //   setState(() {
+        //     invoiceDate=date;
+        //   });
+        // }
       },
       child: Container(
           height: 50,
@@ -573,8 +580,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
-                style: item_regular_textStyle,),
+              Text(widget.dateNew,
+                style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
@@ -757,3 +764,5 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 }
 
+abstract class CreatePurchaseInvoiceInterface {
+}

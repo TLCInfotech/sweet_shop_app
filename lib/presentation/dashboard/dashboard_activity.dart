@@ -7,17 +7,13 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/constant.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/dash/expense_fragment.dart';
-import 'package:sweet_shop_app/presentation/dash/payment_fragment.dart';
-import 'package:sweet_shop_app/presentation/dash/purchase_fragment.dart';
-import 'package:sweet_shop_app/presentation/dash/sell_fragment.dart';
 import 'package:sweet_shop_app/presentation/home/home_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user/user_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/ledger/ledger_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 
+import '../menu/transaction/expense/ledger_activity.dart';
 import '../menu/transaction/payment/payment_activity.dart';
 
 class DashboardActivity extends StatefulWidget {
