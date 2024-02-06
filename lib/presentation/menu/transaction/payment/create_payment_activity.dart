@@ -21,54 +21,48 @@ import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 
 import '../../../dialog/franchisee_dialog.dart';
-import 'add_or_edit_Item.dart';
+import 'add_edit_ledger_for_payment.dart';
 
-
-class CreatePurchaseInvoice extends StatefulWidget {
+class CreatePayment extends StatefulWidget {
   @override
-  _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
+  _CreatePaymentState createState() => _CreatePaymentState();
 }
 
-class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditItemInterface {
+class _CreatePaymentState extends State<CreatePayment> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditLedgerForPaymentInterface {
 
   final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
-  
+
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _InvoiceNoFocus = FocusNode();
-  final InvoiceNoController = TextEditingController();
+  final _voucherNoFocus = FocusNode();
+  final VoucherNoController = TextEditingController();
 
 
   String selectedFranchiseeName="";
 
-  List<dynamic> Item_list=[
+  List<dynamic> Ledger_list=[
     {
       "id":1,
-      "itemName":"Item1",
-      "quantity":2,
-      "unit":"kg",
-      "rate":500,
-      "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
-      "taxableAmt":550.00,
+      "ledgerName":"Ladger1",
+      "currentBal":10,
+      "amount":100.00,
+      "narration":""
+
     },
     {
       "id":2,
-      "itemName":"Item2",
-      "quantity":5,
-      "unit":"kg",
-      "rate":500,
-      "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
-      "taxableAmt":550.00,
+      "ledgerName":"Ladger2",
+      "currentBal":20,
+      "amount":100.00,
+      "narration":""
+
     },
   ];
 
@@ -118,7 +112,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.ADD_PURCHASE,
+                  StringEn.CREATE_PAYMENT,
                   style: appbar_text_style,),
               ),
             ),
@@ -231,12 +225,12 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Details"),
-                  InvoiceInfo(),
+                  getFieldTitleLayout("Payment Details"),
+                  PaymentInfo(),
                   SizedBox(height: 20,),
-                  Item_list.length>0?getFieldTitleLayout(StringEn.PURCHASE_ITEM):Container(),
+                  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEDGER):Container(),
 
-                  getProductRateListLayout(),
+                  getLedgerListLayout(),
                   SizedBox(height: 20,),
                   getAddNewProductLayout(),
 
@@ -268,7 +262,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Add New Item",
+              Text("Add New Ledger",
                 style: item_heading_textStyle,),
               FaIcon(FontAwesomeIcons.plusCircle,
                 color: Colors.black87, size: 20,)
@@ -289,7 +283,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditItem(
+              child: AddOrEditLedgerForPayment(
                 mListener: this,
                 editproduct:product,
               ),
@@ -308,7 +302,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
   /* Widget to get item  list Layout */
-  SingleChildScrollView getProductRateListLayout() {
+  SingleChildScrollView getLedgerListLayout() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -325,96 +319,50 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                "Item Name",
+                "Ledger Name",
               ),
             ),
             numeric: false,
-            tooltip: "This is Item Name",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:60,
-
-              child: Text(
-                "Quantity",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Quantity",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-
-              child: Text(
-                "Unit",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Unit",
+            tooltip: "This is Ledger Name",
 
           ),
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
-              child: Text(
-                "Rate",
 
+              child: Text(
+                "Current Bal",
               ),
             ),
             numeric: true,
-            tooltip: "Item Rate",
+            tooltip: "Current Bal",
 
           ),
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
+
               child: Text(
                 "Amount",
-
               ),
             ),
             numeric: true,
-            tooltip: "Item Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:80,
-              child: Text(
-                "Discount(%)",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item discount",
+            tooltip: "Ledger Amt",
 
           ),
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Discount Amt",
+                "Narration",
 
               ),
             ),
             numeric: true,
-            tooltip: "Discount Amt",
+            tooltip: "Ledger Narration",
 
           ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                "Taxable Amt",
 
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Taxable Amt",
-
-          ),
           DataColumn(
             label: Container(
               width:50,
@@ -427,7 +375,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
           ),
         ],
-        rows: Item_list
+        rows: Ledger_list
             .map(
               (item) => DataRow(
               cells: [
@@ -444,56 +392,37 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                           }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
                           Container(
                               width: SizeConfig.screenWidth/4,
-                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
+                              child: Text("${item['ledgerName']}",overflow: TextOverflow.clip,)),
 
                         ],
                       )),
                 ),
                 DataCell(
                   Container(
-                      width: 60,
-                      child: Text("${item['quantity']}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${item['unit']}")),
-                ),
-                DataCell(
-                  Container(
                       width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
+                      child: Text("${item['currentBal']}")),
                 ),
 
                 DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
+                      child: Text("${((item['amount']).toStringAsFixed(2))}")),
                 ),
-                DataCell(
-                  Container(
-                      width: 80,
-                      child: Text(item['discount']==null?"0":"${item['discount']}")),
-                ),
+
                 DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['discountAmt']).toStringAsFixed(2))}")),
+                      child: Text("${item['narration']}")),
                 ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
-                ),
+
                 DataCell(
                   Container(
                       width: 50,
                       child: GestureDetector(
                           onTap: (){
-                            Item_list.remove(item);
+                            Ledger_list.remove(item);
                             setState(() {
-                              Item_list=Item_list;
+                              Ledger_list=Ledger_list;
                             });
                           },
                           child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
@@ -504,7 +433,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
-  Container InvoiceInfo() {
+  Container PaymentInfo() {
     return Container(
 
       padding: EdgeInsets.all(10),
@@ -514,9 +443,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       ),
       child: Column(children: [
         getFieldTitleLayout(StringEn.DATE),
-        getPurchaseDateLayout(),
-        getFieldTitleLayout(StringEn.INVOICE_NO),
-        getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        getReceiptDateLayout(),
+        getFieldTitleLayout(StringEn.VOUCHER_NO),
+        getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         SizedBox(height: 10,)
       ],
@@ -539,7 +468,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
   /* Widget to get add Invoice date Layout */
-  Widget getPurchaseDateLayout(){
+  Widget getReceiptDateLayout(){
     return GestureDetector(
       onTap: () async{
         FocusScope.of(context).requestFocus(FocusNode());
@@ -584,45 +513,42 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
   /* Widget for Invoice No text from field layout */
-  Widget getInvoiceNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.words,
-          focusNode: _InvoiceNoFocus,
-          keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
-          cursorColor: CommonColor.BLACK_COLOR,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(
-                left: parentWidth * .04, right: parentWidth * .02),
-            border: InputBorder.none,
-            counterText: '',
-            isDense: true,
-            hintText: "Enter a item name",
-            hintStyle: hint_textfield_Style,
+  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
           ),
-          controller: InvoiceNoController,
-          onEditingComplete: () {
-            _InvoiceNoFocus.unfocus();
-          },
-          style: text_field_textStyle,
+        ],
+      ),
+      child: TextFormField(
+        textAlignVertical: TextAlignVertical.center,
+        textCapitalization: TextCapitalization.words,
+        focusNode: _voucherNoFocus,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        cursorColor: CommonColor.BLACK_COLOR,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(
+              left: parentWidth * .04, right: parentWidth * .02),
+          border: InputBorder.none,
+          counterText: '',
+          isDense: true,
+          hintText: "Enter a Voucher No",
+          hintStyle: hint_textfield_Style,
         ),
+        controller: VoucherNoController,
+        onEditingComplete: () {
+          _voucherNoFocus.unfocus();
+        },
+        style: text_field_textStyle,
       ),
     );
   }
@@ -726,20 +652,16 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
   @override
-  AddOrEditItemDetail(item) {
+  AddOrEditLedgerForPaymentDetail(item) {
     // TODO: implement AddOrEditItemDetail
-    var itemLlist=Item_list;
+    var itemLlist=Ledger_list;
     if(item['id']!=""){
-      var index=Item_list.indexWhere((element) => item['id']==element['id']);
+      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
       setState(() {
-        Item_list[index]['itemName']=item['itemName'];
-        Item_list[index]['quantity']=item['quantity'];
-        Item_list[index]['unit']=item['unit'];
-        Item_list[index]['rate']=item['rate'];
-        Item_list[index]['amt']=item['amt'];
-        Item_list[index]['discount']=item['discount'];
-        Item_list[index]['discountAmt']=item['discountAmt'];
-        Item_list[index]['taxableAmt']=item['taxableAmt'];
+        Ledger_list[index]['ledgerName']=item['ledgerName'];
+        Ledger_list[index]['currentBal']=item['currentBal'];
+        Ledger_list[index]['amount']=item['amount'];
+        Ledger_list[index]['narration']=item['narration'];
       });
     }
     else {
@@ -750,10 +672,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         itemLlist.add(item);
       }
       setState(() {
-        Item_list = itemLlist;
+        Ledger_list = itemLlist;
       });
     }
   }
+
 
 }
 

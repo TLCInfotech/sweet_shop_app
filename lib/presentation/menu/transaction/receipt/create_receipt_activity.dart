@@ -513,44 +513,41 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
   /* Widget for Invoice No text from field layout */
   Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.words,
-          focusNode: _voucherNoFocus,
-          keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
-          cursorColor: CommonColor.BLACK_COLOR,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(
-                left: parentWidth * .04, right: parentWidth * .02),
-            border: InputBorder.none,
-            counterText: '',
-            isDense: true,
-            hintText: "Enter a Ledger name",
-            hintStyle: hint_textfield_Style,
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
           ),
-          controller: VoucherNoController,
-          onEditingComplete: () {
-            _voucherNoFocus.unfocus();
-          },
-          style: text_field_textStyle,
+        ],
+      ),
+      child: TextFormField(
+        textAlignVertical: TextAlignVertical.center,
+        textCapitalization: TextCapitalization.words,
+        focusNode: _voucherNoFocus,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        cursorColor: CommonColor.BLACK_COLOR,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(
+              left: parentWidth * .04, right: parentWidth * .02),
+          border: InputBorder.none,
+          counterText: '',
+          isDense: true,
+          hintText: "Enter a Voucher No",
+          hintStyle: hint_textfield_Style,
         ),
+        controller: VoucherNoController,
+        onEditingComplete: () {
+          _voucherNoFocus.unfocus();
+        },
+        style: text_field_textStyle,
       ),
     );
   }

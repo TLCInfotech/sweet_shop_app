@@ -17,6 +17,8 @@ import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/fra
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/ledger/ledger_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_activity.dart';
@@ -706,7 +708,8 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getPaymentLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+        
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentActivity(mListener: this)));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -729,6 +732,7 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
   Widget getReceptLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -755,10 +759,11 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
   Widget getExpensseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeSaleRate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this)));
       },
       onDoubleTap: (){},
       child: Padding(

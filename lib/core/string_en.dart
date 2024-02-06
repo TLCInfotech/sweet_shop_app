@@ -191,6 +191,7 @@ class StringEn{
   static const LEDGER="Ledger Name";
   static const AMOUNT="Amount";
   static const NARRATION="Narration";
+  static const CREATE_PAYMENT="Create Payment";
 
 
 
