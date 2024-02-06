@@ -234,7 +234,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   getFieldTitleLayout("Invoice Details"),
                   InvoiceInfo(),
                   SizedBox(height: 20,),
-                  Item_list.length>0?getFieldTitleLayout(StringEn.PURCHASE_ITEM):Container(),
+                  Item_list.length>0?getFieldTitleLayout(StringEn.SELL_ITEM):Container(),
 
                   getProductRateListLayout(),
                   SizedBox(height: 20,),
@@ -261,17 +261,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       child: Container(
           height: 50,
           padding: EdgeInsets.only(left: 10, right: 10),
-          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: CommonColor.THEME_COLOR,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -342,7 +334,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           ),
           DataColumn(
             label: Container(
-              width:50,
+              width:60,
 
               child: Text(
                 "Quantity",
@@ -459,7 +451,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 ),
                 DataCell(
                   Container(
-                      width: 50,
+                      width: 60,
                       child: Text("${item['quantity']}")),
                 ),
 
