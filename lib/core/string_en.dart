@@ -187,6 +187,11 @@ class StringEn{
   static const QUANTITY = "Quantity";
   static const DICOUNT = "Discount(%)";
 
+  static const ADD_LEDGER_ITEM = "Add Ledger ";
+  static const LEDGER="Ledger Name";
+  static const AMOUNT="Amount";
+  static const NARRATION="Narration";
+
 
 
 

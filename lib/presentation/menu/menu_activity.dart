@@ -18,6 +18,7 @@ import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Categ
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
 
@@ -731,7 +732,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getReceptLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this)));
       },
       onDoubleTap: (){},
       child: Padding(
