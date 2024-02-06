@@ -217,7 +217,6 @@ class _CreateReceiptState extends State<CreateReceipt>
                       getVoucherLayout(parentHeight, parentWidth),
                       getNewVoucherNoLayout(parentHeight, parentWidth),
                       getFranshieeLayout(parentHeight, parentWidth),
-
                     ],
                     ),
                   ),
@@ -315,13 +314,12 @@ class _CreateReceiptState extends State<CreateReceipt>
   Widget getVoucherLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        // width: parentWidth * .4,
+      child: Container(// width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              StringEn.COMPANY,
+              StringEn.VOUCHER_NO,
               style: page_heading_textStyle,
             ),
             GestureDetector(

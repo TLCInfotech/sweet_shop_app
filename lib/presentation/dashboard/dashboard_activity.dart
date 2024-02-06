@@ -14,6 +14,11 @@ import 'package:sweet_shop_app/presentation/dash/sell_fragment.dart';
 import 'package:sweet_shop_app/presentation/home/home_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user/user_fragment.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/ledger/ledger_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
+
+import '../menu/transaction/payment/payment_activity.dart';
 
 class DashboardActivity extends StatefulWidget {
 
@@ -168,7 +173,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                SellFragment(
+                SellActivity(
+                  mListener: this,
                 ),
                 Constant.SELL);
 
@@ -207,7 +213,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                PurchaseFragment(
+                PurchaseActivity(
+                  mListener: this,
                 ),
                 Constant.PURCHASE);
 
@@ -246,7 +253,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                ExpenseFragment(
+                LedgerActivity(
+                  mListener: this,
                 ),
                 Constant.EXPENSE);
 
@@ -285,7 +293,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                PaymentFragment(
+                PaymentActivity(
+                  mListener: this,
                 ),
                 Constant.PAYMENT);
 

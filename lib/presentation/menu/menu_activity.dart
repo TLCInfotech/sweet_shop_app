@@ -22,6 +22,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_act
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
 
 class MenuActivity extends StatefulWidget {
@@ -656,7 +657,9 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getSellLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSell()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(

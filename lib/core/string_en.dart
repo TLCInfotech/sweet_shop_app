@@ -193,7 +193,8 @@ class StringEn{
   static const NARRATION="Narration";
   static const CREATE_PAYMENT="Create Payment";
 
-
+  static const ADD_SELL = "Create Sell";
+  static const SELL_ITEM = "Item Sell";
 
 
 }
