@@ -51,17 +51,23 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   String selectedFranchiseeName="";
 
+  String TotalAmount="0.00";
+
   List<dynamic> Item_list=[
     {
       "id":1,
       "itemName":"Item1",
       "quantity":2,
       "unit":"kg",
-      "rate":500,
+      "rate":200,
       "amt":550.00,
       "discount":null,
       "discountAmt":00.00,
       "taxableAmt":550.00,
+      "gst":10,
+      "gstAmt":550.00,
+      "netRate":252.00,
+      "netAmount":590
     },
     {
       "id":2,
@@ -73,6 +79,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       "discount":null,
       "discountAmt":00.00,
       "taxableAmt":550.00,
+      "gst":10,
+      "gstAmt":550.00,
+      "netRate":252.00,
+      "netAmount":590
     },
   ];
 
@@ -85,6 +95,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    calculateTotalAmt();
   }
 
   @override
@@ -237,13 +248,59 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
                   getFieldTitleLayout("Invoice Details"),
                   InvoiceInfo(),
-                  SizedBox(height: 20,),
-                  Item_list.length>0?getFieldTitleLayout(StringEn.SELL_ITEM):Container(),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Item_list.length>0?getFieldTitleLayout(StringEn.SELL_ITEM):Container(),
+                      GestureDetector(
+                          onTap: (){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            if (context != null) {
+                              goToAddOrEditItem(null);
+                            }
+                          },
+                          child: Container(
+                              width: 120,
+                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                              margin: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  color: CommonColor.THEME_COLOR,
+                                  border: Border.all(color: Colors.grey.withOpacity(0.5))
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Add Item",
+                                    style: item_heading_textStyle,),
+                                  FaIcon(FontAwesomeIcons.plusCircle,
+                                    color: Colors.black87, size: 20,)
+                                ],
+                              )
 
-                  getProductRateListLayout(),
-                  SizedBox(height: 20,),
-                  getAddNewProductLayout(parentHeight,parentWidth),
+                          )
+                      )
+                    ],
+                  ),
+                  Item_list.length>0? getProductRateListLayout():Container(),
 
+                  SizedBox(height: 10,),
+                  TotalAmount!="0.00"?Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: CommonColor.DARK_BLUE,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+                        SizedBox(height: 10,),
+                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
+                      ],
+                    ),
+                  ):Container(),
                 ],
               ),
             ),
@@ -421,6 +478,55 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           ),
           DataColumn(
             label: Container(
+              width:60,
+              child: Text(
+                "GST(%)",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item gst",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "GST Amt",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item gst Amt",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Net Rate",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item net rate",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Net Amt",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item net Amt",
+
+          ),
+
+          DataColumn(
+            label: Container(
               width:50,
               child: Text(
                 "Action",
@@ -490,15 +596,40 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                       width: SizeConfig.screenWidth/4,
                       child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
                 ),
+
+                DataCell(
+                  Container(
+                      width: 60,
+                      child: Text("${((item['gst']))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['gstAmt']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['netRate']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['netAmount']).toStringAsFixed(2))}")),
+                ),
                 DataCell(
                   Container(
                       width: 50,
                       child: GestureDetector(
-                          onTap: (){
+                          onTap: ()async{
                             Item_list.remove(item);
                             setState(() {
                               Item_list=Item_list;
                             });
+                            await calculateTotalAmt();
                           },
                           child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
                 ),
@@ -510,13 +641,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   Container InvoiceInfo() {
     return Container(
-
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Column(children: [
+      child: Column(
+        children: [
         getFieldTitleLayout(StringEn.DATE),
         getPurchaseDateLayout(),
         // getFieldTitleLayout(StringEn.INVOICE_NO),
@@ -719,8 +850,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
 
 
-
-
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
@@ -731,7 +860,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
 
   @override
-  AddOrEditItemSellDetail(item) {
+  AddOrEditItemSellDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
     if(item['id']!=""){
@@ -745,6 +874,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         Item_list[index]['discount']=item['discount'];
         Item_list[index]['discountAmt']=item['discountAmt'];
         Item_list[index]['taxableAmt']=item['taxableAmt'];
+        Item_list[index]['gst']=item['gst'];
+        Item_list[index]['gstAmt']=item['gstAmt'];
+        Item_list[index]['netRate']=item['netRate'];
+        Item_list[index]['netAmount']=item['netAmount'];
+
       });
     }
     else {
@@ -758,8 +892,21 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         Item_list = itemLlist;
       });
     }
+    await calculateTotalAmt();
   }
 
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Item_list ){
+      total=total+item['netAmount'];
+      print(item['netAmount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
 }
 
 abstract class CreateSellInvoiceInterface {

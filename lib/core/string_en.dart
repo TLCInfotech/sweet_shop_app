@@ -199,4 +199,9 @@ class StringEn{
   static const SELL_ITEM = "Item Sell";
 
 
+  static const TAX_AMT = "Taxable Amt";
+  static const NET_RATE="Net Rate";
+  static const GST_AMT = "GST Amt.";
+  static const DISCOUNT_AMT = "Discount Amt.";
+
 }
