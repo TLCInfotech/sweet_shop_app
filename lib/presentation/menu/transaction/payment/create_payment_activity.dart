@@ -233,12 +233,46 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
                   getFieldTitleLayout("Payment Details"),
                   PaymentInfo(),
-                  SizedBox(height: 20,),
-                  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEDGER):Container(),
 
-                  getLedgerListLayout(),
-                  SizedBox(height: 20,),
-                  getAddNewProductLayout(),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Ledger_list.length>0?getFieldTitleLayout("Ledgers"):Container(),
+                      GestureDetector(
+                          onTap: (){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            if (context != null) {
+                              goToAddOrEditItem(null);
+                            }
+                          },
+                          child: Container(
+                              width: 140,
+                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                              margin: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  color: CommonColor.THEME_COLOR,
+                                  border: Border.all(color: Colors.grey.withOpacity(0.5))
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Add Ledger",
+                                    style: item_heading_textStyle,),
+                                  FaIcon(FontAwesomeIcons.plusCircle,
+                                    color: Colors.black87, size: 20,)
+                                ],
+                              )
+
+                          )
+                      )
+                    ],
+                  ),
+                  Ledger_list.length>0?    getLedgerListLayout():Container(),
+
+                  SizedBox(height: 10,),
+
+
 
                 ],
               ),

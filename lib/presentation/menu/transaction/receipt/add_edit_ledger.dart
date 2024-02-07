@@ -180,7 +180,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
         ),
         controller: amount,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.QUANTITY,
+          hintText: StringEn.AMOUNT,
         ),
         validator: ((value) {
           if (value!.isEmpty) {

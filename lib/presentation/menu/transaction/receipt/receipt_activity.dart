@@ -104,9 +104,12 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
       child: Container(
           height: 40,
           padding: EdgeInsets.only(left: 10, right: 10),
+          margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
+
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
+              borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
                   offset: Offset(0, 1),
