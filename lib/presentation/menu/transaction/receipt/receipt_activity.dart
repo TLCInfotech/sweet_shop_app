@@ -10,6 +10,8 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
 
+import '../../../../core/size_config.dart';
+
 
 
 class ReceiptActivity extends StatefulWidget {
@@ -66,11 +68,9 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: .5,
-            ),
             getPurchaseDateLayout(),
-            SizedBox(
+            getTotalCountAndAmount(),
+            const SizedBox(
               height: .5,
             ),
             get_purchase_list_layout()
@@ -80,6 +80,56 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     );
   }
 
+
+  Widget getTotalCountAndAmount() {
+    return Container(
+      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getFieldTitleLayout(StringEn.TOTAL_AMOUNT),
+          Container(
+              height: 40,
+              // width: SizeConfig.halfscreenWidth,
+              width: SizeConfig.screenWidth*0.9,
+              padding: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  // border: Border.all(color: Colors.grey.withOpacity(0.5))
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),]
+
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("10 Receipts  ", style: subHeading_withBold,),
+                  Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+                ],
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 5, bottom: 5,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
@@ -185,9 +235,9 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                           SizedBox(width: 10,),
-                                          Expanded(child: Text("Bank Amount: - 3000",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
 

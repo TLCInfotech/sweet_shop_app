@@ -6,8 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 
 
@@ -67,6 +67,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getPurchaseDateLayout(),
+            getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
             ),
@@ -76,6 +77,57 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       ),
     );
   }
+
+  Widget getTotalCountAndAmount() {
+    return Container(
+      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getFieldTitleLayout(StringEn.TOTAL_AMOUNT),
+          Container(
+              height: 40,
+              // width: SizeConfig.halfscreenWidth,
+              width: SizeConfig.screenWidth*0.9,
+              padding: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  // border: Border.all(color: Colors.grey.withOpacity(0.5))
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),]
+
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("10 Invoices  ", style: subHeading_withBold,),
+                  Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+                ],
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 5, bottom: 5,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
+
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   /* Widget to get add Invoice date Layout */
@@ -102,7 +154,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
-              
+
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
@@ -146,10 +198,10 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(5)
+                                  color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                  borderRadius: BorderRadius.circular(5)
                               ),
                               child:  const FaIcon(
                                 FontAwesomeIcons.moneyCheck,
@@ -183,7 +235,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                         children: [
                                           FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                           SizedBox(width: 10,),
-                                          Expanded(child: Text("Total Amount:- 2435",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
 
@@ -219,4 +271,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           },
         ));
   }
+
+
+
 }

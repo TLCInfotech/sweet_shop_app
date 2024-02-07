@@ -9,6 +9,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
 
+import '../../../../core/size_config.dart';
+
 
 
 class PaymentActivity extends StatefulWidget {
@@ -65,16 +67,65 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: .5,
-            ),
+
             getPurchaseDateLayout(),
-            SizedBox(
+            getTotalCountAndAmount(),
+            const SizedBox(
               height: .5,
             ),
             get_payment_list_layout()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getTotalCountAndAmount() {
+    return Container(
+      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getFieldTitleLayout(StringEn.TOTAL_AMOUNT),
+          Container(
+              height: 40,
+              // width: SizeConfig.halfscreenWidth,
+              width: SizeConfig.screenWidth*0.9,
+              padding: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  // border: Border.all(color: Colors.grey.withOpacity(0.5))
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),]
+
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("10 Payments  ", style: subHeading_withBold,),
+                  Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+                ],
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 5, bottom: 5,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
       ),
     );
   }
@@ -169,7 +220,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Recipt No: - 23",style: item_heading_textStyle,),
+                                      Text("Payment No: - 23",style: item_heading_textStyle,),
                                       SizedBox(height: 5,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,9 +234,9 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                           SizedBox(width: 10,),
-                                          Expanded(child: Text("Bank Amount: - 3000",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
 

@@ -124,7 +124,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                       height: SizeConfig.screenHeight*.08,
                       child: const Center(
                         child: Text(
-                            StringEn.PURCHASE_ITEM,
+                            StringEn.ADD_ITEM_DETAIL,
                             style: page_heading_textStyle
                         ),
                       ),

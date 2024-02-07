@@ -73,6 +73,22 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   ];
 
 
+  String TotalAmount="0.00";
+
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Ledger_list ){
+      total=total+item['amount'];
+      print(item['amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -81,6 +97,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    calculateTotalAmt();
   }
 
   @override
@@ -271,6 +288,22 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                   Ledger_list.length>0?    getLedgerListLayout():Container(),
 
                   SizedBox(height: 10,),
+                  TotalAmount!="0.00"?Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: CommonColor.DARK_BLUE,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+                        SizedBox(height: 10,),
+                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
+                      ],
+                    ),
+                  ):Container(),
 
 
 

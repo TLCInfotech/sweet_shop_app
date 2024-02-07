@@ -1,5 +1,4 @@
 
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -17,20 +16,24 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import '../../../dialog/franchisee_dialog.dart';
-import 'add_edit_ledger_for_ledger.dart';
+import 'package:sweet_shop_app/core/util.dart';
+import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
+import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
-class CreateLedger extends StatefulWidget {
-  final CreateLedgerInterface mListener;
+import '../../../dialog/franchisee_dialog.dart';
+import 'add_or_edit_item_opening_bal.dart';
+
+class CreateItemOpeningBal extends StatefulWidget {
+  final CreateItemOpeningBalInterface mListener;
   final String dateNew;
 
-  const CreateLedger({super.key, required this.mListener, required this.dateNew});
+  const CreateItemOpeningBal({super.key, required this.dateNew, required this.mListener});
   @override
-  _CreateLedgerState createState() => _CreateLedgerState();
+  State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalState();
 }
 
-
-class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditLedgerForLedgerInterface {
+class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditItemOpeningBalInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -40,31 +43,44 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _voucherNoFocus = FocusNode();
-  final VoucherNoController = TextEditingController();
+  final _InvoiceNoFocus = FocusNode();
+  final InvoiceNoController = TextEditingController();
 
 
   String selectedFranchiseeName="";
 
-
   String TotalAmount="0.00";
 
-  List<dynamic> Ledger_list=[
+  List<dynamic> Item_list=[
     {
       "id":1,
-      "ledgerName":"Ladger1",
-      "currentBal":10,
-      "amount":100.00,
-      "narration":""
-
+      "itemName":"Item1",
+      "quantity":2,
+      "unit":"kg",
+      "rate":200,
+      "amt":550.00,
+      "discount":null,
+      "discountAmt":00.00,
+      "taxableAmt":550.00,
+      "gst":10,
+      "gstAmt":550.00,
+      "netRate":252.00,
+      "netAmount":590
     },
     {
       "id":2,
-      "ledgerName":"Ladger2",
-      "currentBal":20,
-      "amount":100.00,
-      "narration":""
-
+      "itemName":"Item2",
+      "quantity":5,
+      "unit":"kg",
+      "rate":500,
+      "amt":550.00,
+      "discount":null,
+      "discountAmt":00.00,
+      "taxableAmt":550.00,
+      "gst":10,
+      "gstAmt":550.00,
+      "netRate":252.00,
+      "netAmount":590
     },
   ];
 
@@ -80,18 +96,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     calculateTotalAmt();
   }
 
-  calculateTotalAmt()async{
-    print("Here");
-    var total=0.00;
-    for(var item  in Ledger_list ){
-      total=total+item['amount'];
-      print(item['amount']);
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
-
-  }
   @override
   Widget build(BuildContext context) {
     return contentBox(context);
@@ -102,10 +106,10 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       height: SizeConfig.safeUsedHeight,
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(16.0),
+        // borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFfffff5),
@@ -126,8 +130,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                 ),
 
                 backgroundColor: Colors.white,
-                title: Text(
-                  StringEn.CREATE_EXPENSES,
+                title: const Text(
+                  StringEn.ADD_OPENING_BAL,
                   style: appbar_text_style,),
               ),
             ),
@@ -240,14 +244,13 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Receipt Details"),
-                  LedgerInfo(),
-
+                  getFieldTitleLayout("Invoice Details"),
+                  InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout("Expenses"):Container(),
+                      Item_list.length>0?getFieldTitleLayout(StringEn.ITEM):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -256,7 +259,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                             }
                           },
                           child: Container(
-                              width: 140,
+                              width: 120,
                               padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
                               margin: EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
@@ -266,7 +269,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Ledger",
+                                  Text("Add Item",
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -277,7 +280,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       )
                     ],
                   ),
-                  Ledger_list.length>0? getLedgerListLayout():Container(),
+                  Item_list.length>0? getProductRateListLayout():Container(),
 
                   SizedBox(height: 10,),
                   TotalAmount!="0.00"?Container(
@@ -292,7 +295,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       children: [
                         Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
                         SizedBox(height: 10,),
-                        Text("Total Expense : ${TotalAmount}",style: subHeading_withBold,)
+                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
                       ],
                     ),
                   ):Container(),
@@ -306,7 +309,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   }
   /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -321,10 +324,10 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               color: CommonColor.THEME_COLOR,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Add New Ledger",
+              Text("Add New Item",
                 style: item_heading_textStyle,),
               FaIcon(FontAwesomeIcons.plusCircle,
                 color: Colors.black87, size: 20,)
@@ -345,7 +348,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditLedgerForLedger(
+              child: AddOrEditItemOpeningBal(
                 mListener: this,
                 editproduct:product,
               ),
@@ -364,7 +367,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 
   /* Widget to get item  list Layout */
-  SingleChildScrollView getLedgerListLayout() {
+  SingleChildScrollView getProductRateListLayout() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -381,47 +384,142 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                "Ledger Name",
+                "Item Name",
               ),
             ),
             numeric: false,
-            tooltip: "This is Ledger Name",
+            tooltip: "This is Item Name",
 
           ),
-/*          DataColumn(
+          DataColumn(
             label: Container(
-              width:SizeConfig.screenWidth/4,
+              width:60,
 
               child: Text(
-                "Current Bal",
+                "Quantity",
               ),
             ),
             numeric: true,
-            tooltip: "Current Bal",
+            tooltip: "Item Quantity",
 
-          ),*/
+          ),
+          DataColumn(
+            label: Container(
+              width:50,
+
+              child: Text(
+                "Unit",
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item Unit",
+
+          ),
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Rate",
 
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item Rate",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
               child: Text(
                 "Amount",
+
               ),
             ),
             numeric: true,
-            tooltip: "Ledger Amt",
+            tooltip: "Item Amt",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:80,
+              child: Text(
+                "Discount(%)",
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item discount",
 
           ),
           DataColumn(
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Narration",
+                "Discount Amt",
 
               ),
             ),
             numeric: true,
-            tooltip: "Ledger Narration",
+            tooltip: "Discount Amt",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Taxable Amt",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item Taxable Amt",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:60,
+              child: Text(
+                "GST(%)",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item gst",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "GST Amt",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item gst Amt",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Net Rate",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item net rate",
+
+          ),
+          DataColumn(
+            label: Container(
+              width:SizeConfig.screenWidth/4,
+              child: Text(
+                "Net Amt",
+
+              ),
+            ),
+            numeric: true,
+            tooltip: "Item net Amt",
 
           ),
 
@@ -437,7 +535,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
           ),
         ],
-        rows: Ledger_list
+        rows: Item_list
             .map(
               (item) => DataRow(
               cells: [
@@ -454,38 +552,82 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                           }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
                           Container(
                               width: SizeConfig.screenWidth/4,
-                              child: Text("${item['ledgerName']}",overflow: TextOverflow.clip,)),
+                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
 
                         ],
                       )),
                 ),
-           /*     DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${item['currentBal']}")),
-                ),*/
-
                 DataCell(
                   Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amount']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${item['narration']}")),
+                      width: 60,
+                      child: Text("${item['quantity']}")),
                 ),
 
                 DataCell(
                   Container(
                       width: 50,
+                      child: Text("${item['unit']}")),
+                ),
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
+                ),
+                DataCell(
+                  Container(
+                      width: 80,
+                      child: Text(item['discount']==null?"0":"${item['discount']}")),
+                ),
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['discountAmt']).toStringAsFixed(2))}")),
+                ),
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: 60,
+                      child: Text("${((item['gst']))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['gstAmt']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['netRate']).toStringAsFixed(2))}")),
+                ),
+
+                DataCell(
+                  Container(
+                      width: SizeConfig.screenWidth/4,
+                      child: Text("${((item['netAmount']).toStringAsFixed(2))}")),
+                ),
+                DataCell(
+                  Container(
+                      width: 50,
                       child: GestureDetector(
-                          onTap: (){
-                            Ledger_list.remove(item);
+                          onTap: ()async{
+                            Item_list.remove(item);
                             setState(() {
-                              Ledger_list=Ledger_list;
+                              Item_list=Item_list;
                             });
+                            await calculateTotalAmt();
                           },
                           child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
                 ),
@@ -495,22 +637,22 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     );
   }
 
-  Container LedgerInfo() {
+  Container InvoiceInfo() {
     return Container(
-
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Column(children: [
-        getFieldTitleLayout(StringEn.DATE),
-        getReceiptDateLayout(),
-        // getFieldTitleLayout(StringEn.VOUCHER_NO),
-        // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        SizedBox(height: 10,)
-      ],
+      child: Column(
+        children: [
+          getFieldTitleLayout(StringEn.DATE),
+          getPurchaseDateLayout(),
+          // getFieldTitleLayout(StringEn.INVOICE_NO),
+          // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          SizedBox(height: 10,)
+        ],
       ),
     );
   }
@@ -530,22 +672,22 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 
   /* Widget to get add Invoice date Layout */
-  Widget getReceiptDateLayout(){
+  Widget getPurchaseDateLayout(){
     return GestureDetector(
       onTap: () async{
-        // FocusScope.of(context).requestFocus(FocusNode());
-        // if (Platform.isIOS) {
-        //   var date= await CommonWidget.startDate(context,invoiceDate);
-        //   setState(() {
-        //     invoiceDate=date;
-        //   });
-        //   // startDateIOS(context);
-        // } else if (Platform.isAndroid) {
-        //   var date= await CommonWidget.startDate(context,invoiceDate) ;
-        //   setState(() {
-        //     invoiceDate=date;
-        //   });
-        // }
+/*        FocusScope.of(context).requestFocus(FocusNode());
+        if (Platform.isIOS) {
+          var date= await CommonWidget.startDate(context,invoiceDate);
+          setState(() {
+            invoiceDate=date;
+          });
+          // startDateIOS(context);
+        } else if (Platform.isAndroid) {
+          var date= await CommonWidget.startDate(context,invoiceDate) ;
+          setState(() {
+            invoiceDate=date;
+          });
+        }*/
       },
       child: Container(
           height: 50,
@@ -575,42 +717,45 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   }
 
   /* Widget for Invoice No text from field layout */
-  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        textAlignVertical: TextAlignVertical.center,
-        textCapitalization: TextCapitalization.words,
-        focusNode: _voucherNoFocus,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        cursorColor: CommonColor.BLACK_COLOR,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(
-              left: parentWidth * .04, right: parentWidth * .02),
-          border: InputBorder.none,
-          counterText: '',
-          isDense: true,
-          hintText: "Enter a Voucher No",
-          hintStyle: hint_textfield_Style,
+  Widget getInvoiceNoLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
         ),
-        controller: VoucherNoController,
-        onEditingComplete: () {
-          _voucherNoFocus.unfocus();
-        },
-        style: text_field_textStyle,
+        child: TextFormField(
+          textAlignVertical: TextAlignVertical.center,
+          textCapitalization: TextCapitalization.words,
+          focusNode: _InvoiceNoFocus,
+          keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.next,
+          cursorColor: CommonColor.BLACK_COLOR,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(
+                left: parentWidth * .04, right: parentWidth * .02),
+            border: InputBorder.none,
+            counterText: '',
+            isDense: true,
+            hintText: "Enter a item name",
+            hintStyle: hint_textfield_Style,
+          ),
+          controller: InvoiceNoController,
+          onEditingComplete: () {
+            _InvoiceNoFocus.unfocus();
+          },
+          style: text_field_textStyle,
+        ),
       ),
     );
   }
@@ -703,8 +848,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   }
 
 
-
-
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
@@ -713,17 +856,27 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     });
   }
 
+
   @override
-  AddOrEditLedgerForLedgerDetail(item) {
-    // TODO: implement AddOrEditItemDetail
-    var itemLlist=Ledger_list;
+  AddOrEditItemOpeningBalDetail(item)async {
+    // TODO: implement AddOrEditItemSellDetail
+    var itemLlist=Item_list;
     if(item['id']!=""){
-      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
+      var index=Item_list.indexWhere((element) => item['id']==element['id']);
       setState(() {
-        Ledger_list[index]['ledgerName']=item['ledgerName'];
-        Ledger_list[index]['currentBal']=item['currentBal'];
-        Ledger_list[index]['amount']=item['amount'];
-        Ledger_list[index]['narration']=item['narration'];
+        Item_list[index]['itemName']=item['itemName'];
+        Item_list[index]['quantity']=item['quantity'];
+        Item_list[index]['unit']=item['unit'];
+        Item_list[index]['rate']=item['rate'];
+        Item_list[index]['amt']=item['amt'];
+        Item_list[index]['discount']=item['discount'];
+        Item_list[index]['discountAmt']=item['discountAmt'];
+        Item_list[index]['taxableAmt']=item['taxableAmt'];
+        Item_list[index]['gst']=item['gst'];
+        Item_list[index]['gstAmt']=item['gstAmt'];
+        Item_list[index]['netRate']=item['netRate'];
+        Item_list[index]['netAmount']=item['netAmount'];
+
       });
     }
     else {
@@ -734,13 +887,27 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         itemLlist.add(item);
       }
       setState(() {
-        Ledger_list = itemLlist;
+        Item_list = itemLlist;
       });
     }
+    await calculateTotalAmt();
+  }
+
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Item_list ){
+      total=total+item['netAmount'];
+      print(item['netAmount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
   }
 
 
 }
 
-abstract class CreateLedgerInterface {
+abstract class CreateItemOpeningBalInterface {
 }

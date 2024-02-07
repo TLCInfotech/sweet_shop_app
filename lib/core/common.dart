@@ -16,6 +16,11 @@ import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 class CommonWidget {
 
+
+  static getCurrencyFormat(var amount) {
+    return NumberFormat.currency(locale: "HI", name: "INR ", decimalDigits: 2,).format(amount);
+  }
+
   static getCommonPadding(double padding, Color colors) {
     return Container(
       height: padding,

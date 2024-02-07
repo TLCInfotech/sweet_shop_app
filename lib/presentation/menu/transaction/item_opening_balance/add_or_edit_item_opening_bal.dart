@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,17 +6,16 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
-class AddOrEditItemSell extends StatefulWidget {
-  final AddOrEditItemSellInterface mListener;
+class AddOrEditItemOpeningBal extends StatefulWidget {
+  final AddOrEditItemOpeningBalInterface mListener;
   final dynamic editproduct;
 
-  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct});
-
+  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct});
   @override
-  State<AddOrEditItemSell> createState() => _AddOrEditItemSellState();
+  State<AddOrEditItemOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
 
-class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
+class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -131,7 +129,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                     ),
                     getFieldTitleLayout(StringEn.ITEM_NAME),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getFieldTitleLayout(StringEn.QUANTITY),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,15 +138,15 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                         getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
                       ],
                     ),
-                      
+
                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getTaxableAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getITemgstAndGstAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getItemNetRateAndNetAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     SizedBox(height: 10,)
                   ],
@@ -240,7 +238,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                 readOnly: true,
                 decoration: textfield_decoration.copyWith(
                     hintText: StringEn.NET_RATE,
-                  fillColor: CommonColor.TexField_COLOR
+                    fillColor: CommonColor.TexField_COLOR
 
                 ),
                 validator: ((value) {
@@ -395,8 +393,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
 
   Widget getRateAndAmount(double parentHeight, double parentWidth){
-   return Row(
-     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,8 +420,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                 controller: rate,
                 readOnly: true,
                 decoration: textfield_decoration.copyWith(
-                  hintText: StringEn.RATE,
-                  fillColor: CommonColor.TexField_COLOR
+                    hintText: StringEn.RATE,
+                    fillColor: CommonColor.TexField_COLOR
                 ),
                 validator: ((value) {
                   if (value!.isEmpty) {
@@ -603,8 +601,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
         controller: unit,
         readOnly: true,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.UNIT,
-          fillColor: CommonColor.TexField_COLOR
+            hintText: StringEn.UNIT,
+            fillColor: CommonColor.TexField_COLOR
         ),
         validator: ((value) {
           if (value!.isEmpty) {
@@ -626,7 +624,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
-       width: (parentWidth*0.8)/2,
+      width: (parentWidth*0.8)/2,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: CommonColor.WHITE_COLOR,
@@ -792,7 +790,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
             };
             if(widget.mListener!=null){
 
-              widget.mListener.AddOrEditItemSellDetail(item);
+              widget.mListener.AddOrEditItemOpeningBalDetail(item);
               Navigator.pop(context);
             }
           },
@@ -873,22 +871,18 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
         await calculateTaxableAmt();
 
         if(gst.text!="")
-          {
-            await calculateGstAmt();
-            await calculateNetAmt();
-            await calculateNetRate();
-          }
+        {
+          await calculateGstAmt();
+          await calculateNetAmt();
+          await calculateNetRate();
+        }
       }
     }
 
   }
 
-
-
-
 }
 
-
-abstract class AddOrEditItemSellInterface{
-  AddOrEditItemSellDetail(dynamic item);
+abstract class AddOrEditItemOpeningBalInterface{
+  AddOrEditItemOpeningBalDetail(dynamic item);
 }

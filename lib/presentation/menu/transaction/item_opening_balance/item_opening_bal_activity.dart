@@ -6,21 +6,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 
-import '../../../../core/size_config.dart';
+import 'create_item_opening_bal_activity.dart';
 
-
-
-class PurchaseActivity extends StatefulWidget {
-  const PurchaseActivity({super.key, required mListener});
+class ItemOpeningBal extends StatefulWidget {
+  const ItemOpeningBal({super.key});
 
   @override
-  State<PurchaseActivity> createState() => _PurchaseActivityState();
+  State<ItemOpeningBal> createState() => _ItemOpeningBalState();
 }
 
-class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseInvoiceInterface {
+class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +41,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               ),
 
               backgroundColor: Colors.white,
-              title: Text(
-                StringEn.PURCHASE,
+              title: const Text(
+                StringEn.ITEM_OPENING_BAL,
                 style: appbar_text_style,),
             ),
           ),
@@ -51,15 +50,15 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xFFFBE404),
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 30,
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePurchaseInvoice(
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+              dateNew: DateFormat('yyyy-MM-dd').format(invoiceDate),
               mListener: this,
-              dateNew: DateFormat('yyyy-MM-dd').format(newDate),
             )));
           }),
       body: Container(
@@ -67,9 +66,6 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: .5,
-            ),
             getPurchaseDateLayout(),
             getTotalCountAndAmount(),
             const SizedBox(
@@ -110,7 +106,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("10 Invoices  ", style: subHeading_withBold,),
+                  Text("10 Bal. Sheet  ", style: subHeading_withBold,),
                   Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
                 ],
               )
@@ -132,7 +128,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
     );
   }
 
-  DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
@@ -140,15 +136,15 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       onTap: () async{
         FocusScope.of(context).requestFocus(FocusNode());
         if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,newDate);
+          var date= await CommonWidget.startDate(context,invoiceDate);
           setState(() {
-            newDate=date;
+            invoiceDate=date;
           });
           // startDateIOS(context);
         } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,newDate) ;
+          var date= await CommonWidget.startDate(context,invoiceDate) ;
           setState(() {
-            newDate=date;
+            invoiceDate=date;
           });
         }
       },
@@ -172,7 +168,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(newDate),
+              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
@@ -181,6 +177,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       ),
     );
   }
+
 
   Expanded get_purchase_list_layout() {
     return Expanded(
@@ -206,7 +203,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                                   color: (index)%2==0?Colors.green:Colors.blueAccent,
                                   borderRadius: BorderRadius.circular(5)
                               ),
-                              child:  FaIcon(
+                              child:  const FaIcon(
                                 FontAwesomeIcons.moneyCheck,
                                 color: Colors.white,
                               )
@@ -274,4 +271,6 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           },
         ));
   }
+
+
 }

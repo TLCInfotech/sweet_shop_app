@@ -70,6 +70,20 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     },
   ];
 
+  String TotalAmount="0.00";
+
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Ledger_list ){
+      total=total+item['amount'];
+      print(item['amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
 
   @override
   void initState() {
@@ -79,6 +93,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    calculateTotalAmt();
   }
 
   @override
@@ -244,7 +259,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                             }
                           },
                           child: Container(
-                              width: 120,
+                              width: 140,
                               padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
                               margin: EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
@@ -254,7 +269,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Item",
+                                  Text("Add Ledger",
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -266,6 +281,23 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                     ],
                   ),
                   Ledger_list.length>0? getLedgerListLayout():Container(),
+                  SizedBox(height: 10,),
+                  TotalAmount!="0.00"?Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: CommonColor.DARK_BLUE,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+                        SizedBox(height: 10,),
+                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
+                      ],
+                    ),
+                  ):Container(),
 
                 ],
               ),

@@ -213,4 +213,11 @@ class StringEn{
   static const UPDATE_PASSWORD = "Update Password";
   static const DOMAIN = "Domain";
 
+  static const TOTAL_INVOICE = "Total Invoice";
+  static const TOTAL_AMOUNT="Total";
+  static const ADD_ITEM_DETAIL="Item Details";
+
+  static const ITEM_OPENING_BAL="Item Opening Balance";
+  static const ADD_OPENING_BAL="Create Opening Balance";
+
 }
