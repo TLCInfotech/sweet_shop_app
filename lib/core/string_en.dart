@@ -204,4 +204,13 @@ class StringEn{
   static const GST_AMT = "GST Amt.";
   static const DISCOUNT_AMT = "Discount Amt.";
 
+  //Setting
+  static const SETTING = "Setting";
+  static const DOMAIN_LINK="Domain Link";
+  static const CHANGE_PASSWORD = "Change Password";
+  static const NEW_PASSWORD = "New Password:";
+  static const CONFIRM_PASSWORD = "Confirm Password:";
+  static const UPDATE_PASSWORD = "Update Password";
+  static const DOMAIN = "Domain";
+
 }

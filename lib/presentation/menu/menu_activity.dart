@@ -24,6 +24,8 @@ import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_acti
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
 
+import 'setting/change_password_activity.dart';
+import 'setting/domain_link_activity.dart';
 import 'transaction/expense/ledger_activity.dart';
 
 class MenuActivity extends StatefulWidget {
@@ -46,6 +48,7 @@ class _MenuActivityState extends State<MenuActivity>
   String appVersion = '';
   bool openMasterDropDown = false;
   bool openTransactionDropDown = false;
+  bool openSettingDropDown = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -132,6 +135,9 @@ class _MenuActivityState extends State<MenuActivity>
         openMasterDropDown == false
             ? getAddMasterLayout(parentHeight, parentWidth)
             : getAddMasterSubLayout(parentHeight, parentWidth),
+        openSettingDropDown == false
+            ? getSettingLayout(parentHeight, parentWidth)
+            : getSettingSubLayout(parentHeight, parentWidth),
         getAddLogoutLayout(parentHeight, parentWidth),
       ],
     );
@@ -791,6 +797,142 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for setting Layout */
+  Widget getSettingLayout(double parentHeight, double parentWidth) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          openSettingDropDown = true;
+        });
+      },
+      onDoubleTap: () {},
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: parentHeight * .06,
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+                width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+          ),
+        ),
+        child: Padding(
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                StringEn.SETTING,
+                style:page_heading_textStyle,
+              ),
+              Icon(
+                Icons.arrow_drop_down_sharp,
+                size: 30,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /* Widget for Setting sub  Layout */
+  Widget getSettingSubLayout(double parentHeight, double parentWidth) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: parentHeight * .15,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+        ),
+      ),
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  openSettingDropDown = false;
+                });
+              },
+              onDoubleTap: () {},
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    StringEn.SETTING,
+                    style: page_heading_textStyle,
+                  ),
+                  Icon(
+                    Icons.arrow_drop_up,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
+            getChangePassword(parentHeight,parentWidth),
+            getDomainLink(parentHeight,parentWidth),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget getChangePassword(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.CHANGE_PASSWORD,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getDomainLink(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DomainLinkActivity()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.DOMAIN_LINK,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   /* Widget for AppVersion Layout */
   Widget getAddAppVersionLayout(double parentHeight, double parentWidth) {

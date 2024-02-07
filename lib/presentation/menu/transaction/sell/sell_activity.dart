@@ -181,9 +181,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FaIcon(FontAwesomeIcons.calendar,size: 15,color: Colors.black.withOpacity(0.7),),
+                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                           SizedBox(width: 10,),
-                                          Expanded(child: Text("01/01/2024",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          Expanded(child: Text("Total Amount:- 2435",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
 
