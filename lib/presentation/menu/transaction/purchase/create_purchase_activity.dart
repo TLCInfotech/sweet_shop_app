@@ -389,7 +389,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                "Item Name",
+                StringEn.ITEM_NAME,
               ),
             ),
             numeric: false,
@@ -401,7 +401,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               width:60,
 
               child: Text(
-                "Quantity",
+                StringEn.QUANTITY,
               ),
             ),
             numeric: true,
@@ -413,7 +413,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               width:50,
 
               child: Text(
-                "Unit",
+                StringEn.UNIT,
               ),
             ),
             numeric: true,
@@ -424,7 +424,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Rate",
+                StringEn.RATE,
 
               ),
             ),
@@ -436,7 +436,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Amount",
+                StringEn.AMOUNT,
 
               ),
             ),
@@ -448,7 +448,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:80,
               child: Text(
-                "Discount(%)",
+                StringEn.DICOUNT,
               ),
             ),
             numeric: true,
@@ -459,7 +459,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Discount Amt",
+                StringEn.DISCOUNT_AMT,
 
               ),
             ),
@@ -471,7 +471,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Taxable Amt",
+                StringEn.TAX_AMT,
 
               ),
             ),
@@ -483,7 +483,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:60,
               child: Text(
-                "GST(%)",
+                StringEn.GST_PER,
 
               ),
             ),
@@ -495,7 +495,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "GST Amt",
+                StringEn.GST_AMT,
 
               ),
             ),
@@ -507,7 +507,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Rate",
+                StringEn.NET_RATE,
 
               ),
             ),
@@ -519,7 +519,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Amt",
+                StringEn.NET,
 
               ),
             ),
@@ -532,7 +532,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             label: Container(
               width:50,
               child: Text(
-                "Action",
+                StringEn.ACTION,
               ),
             ),
             numeric: true,

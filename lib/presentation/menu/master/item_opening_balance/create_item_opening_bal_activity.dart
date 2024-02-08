@@ -244,7 +244,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Details"),
+                  getFieldTitleLayout(StringEn.INVOICE_DETAIL),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -269,7 +269,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Item",
+                                  Text(StringEn.ADD_ITEMS,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -384,7 +384,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                "Item Name",
+                StringEn.ITEM_NAME,
               ),
             ),
             numeric: false,
@@ -396,7 +396,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               width:60,
 
               child: Text(
-                "Quantity",
+                StringEn.QUANTITY,
               ),
             ),
             numeric: true,
@@ -408,7 +408,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               width:50,
 
               child: Text(
-                "Unit",
+                StringEn.UNIT,
               ),
             ),
             numeric: true,
@@ -419,7 +419,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Rate",
+                StringEn.RATE,
 
               ),
             ),
@@ -431,7 +431,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Amount",
+                StringEn.AMOUNT,
 
               ),
             ),
@@ -443,7 +443,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:80,
               child: Text(
-                "Discount(%)",
+                StringEn.DICOUNT,
               ),
             ),
             numeric: true,
@@ -454,7 +454,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Discount Amt",
+                StringEn.DISCOUNT_AMT,
 
               ),
             ),
@@ -466,7 +466,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Taxable Amt",
+                StringEn.TAX_AMT,
 
               ),
             ),
@@ -478,7 +478,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:60,
               child: Text(
-                "GST(%)",
+                StringEn.GST_PER,
 
               ),
             ),
@@ -490,7 +490,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "GST Amt",
+                StringEn.GST_AMT,
 
               ),
             ),
@@ -502,7 +502,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Rate",
+                StringEn.NET_RATE,
 
               ),
             ),
@@ -514,7 +514,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Amt",
+                StringEn.NET,
 
               ),
             ),
@@ -527,7 +527,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width:50,
               child: Text(
-                "Action",
+                StringEn.ACTION,
               ),
             ),
             numeric: true,

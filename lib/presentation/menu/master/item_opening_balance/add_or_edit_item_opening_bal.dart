@@ -48,23 +48,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
 
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
 
   @override
   void initState() {
@@ -130,24 +113,17 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                     getFieldTitleLayout(StringEn.ITEM_NAME),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getFieldTitleLayout(StringEn.QUANTITY),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                        getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
-                      ],
-                    ),
 
-                    getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                    getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                    getTaxableAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                    getITemgstAndGstAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                    getItemNetRateAndNetAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getQuantityAndUnit(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //
+                    // getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //
+                    // getTaxableAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //
+                    // getITemgstAndGstAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //
+                    // getItemNetRateAndNetAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     SizedBox(height: 10,)
                   ],
                 ),
@@ -392,6 +368,98 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
+  Widget getQuantityAndUnit(double parentHeight, double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getFieldTitleLayout(StringEn.QUANTITY),
+    Container(
+    height: parentHeight * .055,
+    width: (parentWidth*0.8)/2,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+    color: CommonColor.WHITE_COLOR,
+    borderRadius: BorderRadius.circular(4),
+    boxShadow: [
+    BoxShadow(
+    offset: Offset(0, 1),
+    blurRadius: 5,
+    color: Colors.black.withOpacity(0.1),
+    ),
+    ],
+    ),
+    child: TextFormField(
+    keyboardType: TextInputType.number,
+    controller: quantity,
+    decoration: textfield_decoration.copyWith(
+    hintText: StringEn.QUANTITY,
+    ),
+    validator: ((value) {
+    if (value!.isEmpty) {
+    return "Enter Item Quantity";
+    }
+    return null;
+    }),
+    onChanged: (value)async{
+    await calculateRates();
+    },
+    onTapOutside: (event) {
+
+    },
+    ),
+    ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getFieldTitleLayout(StringEn.UNIT),
+    Container(
+    height: parentHeight * .055,
+    width: (parentWidth*0.8)/2,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+    color: CommonColor.TexField_COLOR,
+    borderRadius: BorderRadius.circular(4),
+    boxShadow: [
+    BoxShadow(
+    offset: Offset(0, 1),
+    blurRadius: 5,
+    color: Colors.black.withOpacity(0.1),
+    ),
+    ],
+    ),
+    child: TextFormField(
+    keyboardType: TextInputType.number,
+    controller: unit,
+    readOnly: true,
+    decoration: textfield_decoration.copyWith(
+    hintText: StringEn.UNIT,
+    fillColor: CommonColor.TexField_COLOR
+    ),
+    validator: ((value) {
+    if (value!.isEmpty) {
+    return "Enter Unit";
+    }
+    return null;
+    }),
+    onChanged: (value){
+
+    },
+    onTapOutside: (event) {
+
+    },
+    ),
+    )
+          ],
+        )
+
+      ],
+    );
+  }
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

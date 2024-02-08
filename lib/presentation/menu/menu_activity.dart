@@ -787,7 +787,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.PAYMENT,
+              StringEn.PAYMENT_INVOICE,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -814,7 +814,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.RECEIPT,
+              StringEn.RECEIPT_INVOICE,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -841,7 +841,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.EXPENSES,
+              StringEn.EXPENSES_INVOICE,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
