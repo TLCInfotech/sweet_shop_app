@@ -235,7 +235,7 @@ class StringEn{
   static const ITEM_OPENING_BAL="Item Opening Balance";
   static const ADD_OPENING_BAL="Create Opening Balance";
 
-  static const OPENING_BAL="Opening Balance";
+  static const OPENING_BAL="Item Opening Balance";
   static const LEARDER_OPENING_BAL="Leader Opening Balance";
   static const GST_PER="GST(%)";
   static const ACTION="Action";
@@ -244,4 +244,5 @@ class StringEn{
   static const LEDGER_OPENING_BAL="Ledger Opening Balance";
   static const ADD_LEDGER_OPENING_BAL="Create Ledger Opening Balance";
   static const LEDGER_DETAIL="Ledger Detail";
+
 }

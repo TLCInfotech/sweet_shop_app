@@ -10,16 +10,16 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 
-import 'create_item_opening_bal_activity.dart';
+import 'create_ledger_opening_bal_activity.dart';
 
-class ItemOpeningBal extends StatefulWidget {
-  const ItemOpeningBal({super.key});
+class LedgerOpeningBal extends StatefulWidget {
+  const LedgerOpeningBal({super.key});
 
   @override
-  State<ItemOpeningBal> createState() => _ItemOpeningBalState();
+  State<LedgerOpeningBal> createState() => _ItemOpeningBalState();
 }
 
-class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
+class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpeningBalInterface{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
               backgroundColor: Colors.white,
               title: const Text(
-                StringEn.ITEM_OPENING_BAL,
+                StringEn.LEDGER_OPENING_BAL,
                 style: appbar_text_style,),
             ),
           ),
@@ -56,7 +56,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
               dateNew: DateFormat('yyyy-MM-dd').format(invoiceDate),
               mListener: this,
             )));
