@@ -91,12 +91,12 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.ADD_LEDGER_ITEM,
+                          StringEn.ADD_EEXPENSE,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.LEDGER),
+                  getFieldTitleLayout(StringEn.EXPENSES_NAME),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.AMOUNT),

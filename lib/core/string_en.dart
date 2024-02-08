@@ -107,6 +107,9 @@ class StringEn{
   static const MEASURING_UNIT = "Measuring Unit";
   static const EXPENSE = "Ledger";
   static const EXPENSES = "Expense";
+  static const EXPENSES_NAME = "Expense Name";
+  static const ADD_EEXPENSE = "Add Expense";
+  static const EXPENSE_DETAILS = "Expense Details";
   static const EXPENSE_GROUP = "Ledger Group";
   static const CREATE_EXPENSE="Create Ledger";
   static const CREATE_EXPENSES="Create Expense";
@@ -153,8 +156,8 @@ class StringEn{
   static const SEQUENSE_NO = "Sequence No";
   static const SEQUENSE_NATURE = "Sequence Nature";
 
-  static const SELL = "Sell";
-  static const PURCHASE = "Purchase";
+  static const SELL = "Sale Invoice";
+  static const PURCHASE = "Purchase Invoice";
   static const PAYMENT = "Payment";
   static const RECEIPT = "Receipt";
 
@@ -165,7 +168,7 @@ class StringEn{
 
 
   static const CREATE_COMPANY = "Create Company";
-  static const CREATE_SELL = "Create Sell";
+  static const CREATE_SELL = "Create Sale Invoice";
   static const CREATE_RECEIPT = "Create Receipt";
   static const COMPANY = "Company";
   static const DATE = "Date";
@@ -184,7 +187,7 @@ class StringEn{
   static const NEW_VOUCHER_NO = "New Voucher No";
 
   //purchase screen
-  static const ADD_PURCHASE = "Create Purchase";
+  static const ADD_PURCHASE = "Create Purchase Invoice";
   static const PURCHASE_ITEM = "Item Purchased";
   static const QUANTITY = "Quantity";
   static const DICOUNT = "Discount(%)";
@@ -195,8 +198,8 @@ class StringEn{
   static const NARRATION="Narration";
   static const CREATE_PAYMENT="Create Payment";
 
-  static const ADD_SELL = "Create Sell";
-  static const SELL_ITEM = "Item Sell";
+  static const ADD_SELL = "Create Sale";
+  static const SELL_ITEM = "Item Sale";
 
 
   static const TAX_AMT = "Taxable Amt";

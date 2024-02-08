@@ -240,14 +240,14 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Receipt Details"),
+                  getFieldTitleLayout(StringEn.EXPENSE_DETAILS),
                   LedgerInfo(),
 
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout("Expenses"):Container(),
+                      Ledger_list.length>0?getFieldTitleLayout(StringEn.EXPENSES):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -266,7 +266,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Ledger",
+                                  Text(StringEn.ADD_EEXPENSE,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -379,9 +379,9 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         columns: [
           DataColumn(
             label: Container(
-              width: SizeConfig.screenWidth/4,
+              width: SizeConfig.screenWidth/3,
               child: Text(
-                "Ledger Name",
+               StringEn.EXPENSES_NAME,
               ),
             ),
             numeric: false,

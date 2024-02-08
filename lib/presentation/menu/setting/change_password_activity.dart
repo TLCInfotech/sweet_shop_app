@@ -357,7 +357,7 @@ bool disableColor=false;
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
                     child: const Text(
-                      StringEn.SAVE,
+                      StringEn.CHANGE_PASSWORD,
                       style: page_heading_textStyle,
                     ),
                   ),
