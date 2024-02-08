@@ -101,7 +101,7 @@ class _CreateReceiptState extends State<CreateReceipt>
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
                 title: const Text(
-                  StringEn.CREATE_RECEIPT,
+                  StringEn.CREATE_RECEIPT_INVOICE,
                   style: appbar_text_style,
                 ),
               ),

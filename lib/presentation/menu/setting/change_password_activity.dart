@@ -163,7 +163,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                   left: parentWidth * .01, right: parentWidth * .01),
               child: Column(
                 children: [
-                  getFieldTitleLayout(StringEn.UPDATE_PASSWORD),
+                  //getFieldTitleLayout(StringEn.UPDATE_PASSWORD),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(

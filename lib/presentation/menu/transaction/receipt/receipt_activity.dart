@@ -44,7 +44,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.RECEIPT,
+                StringEn.RECEIPT_INVOICE,
                 style: appbar_text_style,),
             ),
           ),
@@ -84,37 +84,31 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   Widget getTotalCountAndAmount() {
     return Container(
       margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          getFieldTitleLayout(StringEn.TOTAL_AMOUNT),
-          Container(
-              height: 40,
-              // width: SizeConfig.halfscreenWidth,
-              width: SizeConfig.screenWidth*0.9,
-              padding: EdgeInsets.only(left: 10, right: 10),
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  // border: Border.all(color: Colors.grey.withOpacity(0.5))
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),]
+      child: Container(
+          height: 40,
+          // width: SizeConfig.halfscreenWidth,
+          width: SizeConfig.screenWidth*0.9,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              // border: Border.all(color: Colors.grey.withOpacity(0.5))
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
 
-              ),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("10 Receipts  ", style: subHeading_withBold,),
-                  Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
-                ],
-              )
+          ),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("10 Receipts  ", style: subHeading_withBold,),
+              Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+            ],
           )
-        ],
       ),
     );
   }

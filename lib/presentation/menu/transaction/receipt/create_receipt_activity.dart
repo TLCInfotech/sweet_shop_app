@@ -131,7 +131,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.CREATE_RECEIPT,
+                  StringEn.CREATE_RECEIPT_INVOICE,
                   style: appbar_text_style,),
               ),
             ),
@@ -244,13 +244,13 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Receipt Details"),
+                  getFieldTitleLayout(StringEn.RECEPT_DETAIL),
                   ReceiptInfo(),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout("Ledgers"):Container(),
+                      Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -269,7 +269,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Ledger",
+                                  Text(StringEn.ADD_LEADER,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)

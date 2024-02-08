@@ -26,7 +26,10 @@ class StringEn{
   //Item
   static const ITEM_TITLE="Create Item";
   static const ITEM = "Item";
-  static const ADD_ITEM = "Create Item";
+  static const CREATE_ITEM = "Create Item";
+  static const ADD_ITEMS = "Add Item";
+  static const INVOICE_DETAIL = "Invoice Detail";
+  static const INVOICE_DETAILS = "Invoice Detail";
   static const ITEM_NAME = "Item Name";
   static const ITEM_CATEGORY = "Item Category";
   static const UNIT_TWO = "Unit 2";
@@ -56,7 +59,7 @@ class StringEn{
   static const ADD_FRANCHISEE = "Create Franchisee";
 
   //Add franchisee
-  static const ADD_FRANCHISEE_TITLE="Franchisee Details";
+  static const ADD_FRANCHISEE_TITLE="Franchisee Detail";
   static const FRANCHISEE_NAME="Franchisee Name";
   static const FRANCHISEE_CONTACT_PERSON="Contact Person:";
   static const FRANCHISEE_ADDRESS="Address:";
@@ -107,12 +110,13 @@ class StringEn{
   static const MEASURING_UNIT = "Measuring Unit";
   static const EXPENSE = "Ledger";
   static const EXPENSES = "Expense";
+  static const EXPENSES_INVOICE = "Expense Invoice";
   static const EXPENSES_NAME = "Expense Name";
   static const ADD_EEXPENSE = "Add Expense";
-  static const EXPENSE_DETAILS = "Expense Details";
+  static const EXPENSE_DETAILS = "Expense Detail";
   static const EXPENSE_GROUP = "Ledger Group";
   static const CREATE_EXPENSE="Create Ledger";
-  static const CREATE_EXPENSES="Create Expense";
+  static const CREATE_EXPENSES="Create Expense Invoice";
   static const COMPANY_INFO = "Comapny Info";
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";
@@ -159,17 +163,24 @@ class StringEn{
   static const SELL = "Sale Invoice";
   static const PURCHASE = "Purchase Invoice";
   static const PAYMENT = "Payment";
+  static const PAYMENT_DETAIL = "Payment Detail";
+  static const PAYMENT_INVOICE = "Payment Invoice";
   static const RECEIPT = "Receipt";
+  static const RECEIPT_INVOICE = "Receipt Invoice";
 
   static const PARENT_GROUP = "Parent Group";
   static const ADD_EXPENSE = "Add Expense";
   static const COMPANY_NAME = "Company Name:";
   static const TAX = "Tax";
+  static const LEADER_DETAIL = "Ledger Detail";
+  static const ADD_LEADER = "Add Ledger";
+  static const RECEPT_DETAIL = "Receipt Detail";
 
 
   static const CREATE_COMPANY = "Create Company";
   static const CREATE_SELL = "Create Sale Invoice";
   static const CREATE_RECEIPT = "Create Receipt";
+  static const CREATE_RECEIPT_INVOICE = "Create Receipt Invoice";
   static const COMPANY = "Company";
   static const DATE = "Date";
   static const INVOICE_NO = "Invoice No";
@@ -189,23 +200,24 @@ class StringEn{
   //purchase screen
   static const ADD_PURCHASE = "Create Purchase Invoice";
   static const PURCHASE_ITEM = "Item Purchased";
+  static const ITEM_DETAIL = "Item Detail";
   static const QUANTITY = "Quantity";
-  static const DICOUNT = "Discount(%)";
+  static const DICOUNT = "Disc.(%)";
 
   static const ADD_LEDGER_ITEM = "Add Ledger ";
   static const LEDGER="Ledger Name";
   static const AMOUNT="Amount";
   static const NARRATION="Narration";
-  static const CREATE_PAYMENT="Create Payment";
+  static const CREATE_PAYMENT="Create Payment Invoice";
 
-  static const ADD_SELL = "Create Sale";
+  static const ADD_SELL = "Create Sale Invoice";
   static const SELL_ITEM = "Item Sale";
 
 
-  static const TAX_AMT = "Taxable Amt";
+  static const TAX_AMT = "Taxable Amount";
   static const NET_RATE="Net Rate";
-  static const GST_AMT = "GST Amt.";
-  static const DISCOUNT_AMT = "Discount Amt.";
+  static const GST_AMT = "GST Amount";
+  static const DISCOUNT_AMT = "Disc. Amount";
 
   //Setting
   static const SETTING = "Setting";
@@ -218,9 +230,18 @@ class StringEn{
 
   static const TOTAL_INVOICE = "Total Invoice";
   static const TOTAL_AMOUNT="Total";
-  static const ADD_ITEM_DETAIL="Item Details";
+  static const ADD_ITEM_DETAIL="Item Detail";
 
   static const ITEM_OPENING_BAL="Item Opening Balance";
   static const ADD_OPENING_BAL="Create Opening Balance";
 
+  static const OPENING_BAL="Opening Balance";
+  static const LEARDER_OPENING_BAL="Leader Opening Balance";
+  static const GST_PER="GST(%)";
+  static const ACTION="Action";
+
+
+  static const LEDGER_OPENING_BAL="Ledger Opening Balance";
+  static const ADD_LEDGER_OPENING_BAL="Create Ledger Opening Balance";
+  static const LEDGER_DETAIL="Ledger Detail";
 }

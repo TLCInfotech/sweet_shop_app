@@ -248,14 +248,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Payment Details"),
+                  getFieldTitleLayout(StringEn.PAYMENT_DETAIL),
                   PaymentInfo(),
 
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout("Ledgers"):Container(),
+                      Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -274,7 +274,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Ledger",
+                                  Text(StringEn.ADD_LEADER,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)

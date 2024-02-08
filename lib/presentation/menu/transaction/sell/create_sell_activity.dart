@@ -246,7 +246,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Details"),
+                  getFieldTitleLayout(StringEn.INVOICE_DETAIL),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -271,7 +271,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Item",
+                                  Text(StringEn.ADD_ITEMS,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -386,7 +386,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                "Item Name",
+                StringEn.ITEM_NAME,
               ),
             ),
             numeric: false,
@@ -398,7 +398,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               width:60,
 
               child: Text(
-                "Quantity",
+                StringEn.QUANTITY,
               ),
             ),
             numeric: true,
@@ -410,7 +410,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               width:50,
 
               child: Text(
-                "Unit",
+                StringEn.UNIT,
               ),
             ),
             numeric: true,
@@ -421,7 +421,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Rate",
+                StringEn.RATE,
 
               ),
             ),
@@ -433,7 +433,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Amount",
+                StringEn.AMOUNT,
 
               ),
             ),
@@ -445,7 +445,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:80,
               child: Text(
-                "Discount(%)",
+                StringEn.DICOUNT,
               ),
             ),
             numeric: true,
@@ -456,7 +456,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Discount Amt",
+                StringEn.DISCOUNT_AMT,
 
               ),
             ),
@@ -468,7 +468,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Taxable Amt",
+                StringEn.TAX_AMT,
 
               ),
             ),
@@ -480,7 +480,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:60,
               child: Text(
-                "GST(%)",
+                StringEn.GST_PER,
 
               ),
             ),
@@ -492,7 +492,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "GST Amt",
+                StringEn.GST_AMT,
 
               ),
             ),
@@ -504,7 +504,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Rate",
+                StringEn.NET_RATE,
 
               ),
             ),
@@ -516,7 +516,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:SizeConfig.screenWidth/4,
               child: Text(
-                "Net Amt",
+               StringEn.NET,
 
               ),
             ),
@@ -529,7 +529,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             label: Container(
               width:50,
               child: Text(
-                "Action",
+                StringEn.ACTION,
               ),
             ),
             numeric: true,
@@ -714,50 +714,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 color: Colors.black87, size: 16,)
             ],
           )
-      ),
-    );
-  }
-
-  /* Widget for Invoice No text from field layout */
-  Widget getInvoiceNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.words,
-          focusNode: _InvoiceNoFocus,
-          keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
-          cursorColor: CommonColor.BLACK_COLOR,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(
-                left: parentWidth * .04, right: parentWidth * .02),
-            border: InputBorder.none,
-            counterText: '',
-            isDense: true,
-            hintText: "Enter a item name",
-            hintStyle: hint_textfield_Style,
-          ),
-          controller: InvoiceNoController,
-          onEditingComplete: () {
-            _InvoiceNoFocus.unfocus();
-          },
-          style: text_field_textStyle,
-        ),
       ),
     );
   }

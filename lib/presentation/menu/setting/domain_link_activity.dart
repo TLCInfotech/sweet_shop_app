@@ -95,50 +95,6 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
 
   double opacityLevel = 1.0;
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -186,59 +142,52 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text(
-            StringEn.DOMAIN,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .5,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .01),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.sentences,
-                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
-                      focusNode: _domainLinkFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      maxLines: 20,
-                      maxLength: 500,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding:
-                        EdgeInsets.only(left: parentWidth * .04),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a domain link",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: domainLinkController,
-                      onEditingComplete: () {
-                        _domainLinkFocus.unfocus();
-                      },
-                      style: text_field_textStyle,
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                height: parentHeight * .5,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
                     ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: parentHeight * .01),
+                  child: TextFormField(
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: TextCapitalization.sentences,
+                    scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
+                    focusNode: _domainLinkFocus,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    maxLines: 20,
+                    maxLength: 500,
+                    cursorColor: CommonColor.BLACK_COLOR,
+                    decoration: InputDecoration(
+                      contentPadding:
+                      EdgeInsets.only(left: parentWidth * .04),
+                      border: InputBorder.none,
+                      counterText: '',
+                      isDense: true,
+                      hintText: "Enter a domain link",
+                      hintStyle: hint_textfield_Style,
+                    ),
+                    controller: domainLinkController,
+                    onEditingComplete: () {
+                      _domainLinkFocus.unfocus();
+                    },
+                    style: text_field_textStyle,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

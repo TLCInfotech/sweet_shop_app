@@ -249,13 +249,13 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Details"),
+                  getFieldTitleLayout(StringEn.INVOICE_DETAILS),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Item_list.length>0?getFieldTitleLayout(StringEn.PURCHASE_ITEM):Container(),
+                      Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -274,7 +274,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Item",
+                                  Text(StringEn.ADD_ITEMS,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)

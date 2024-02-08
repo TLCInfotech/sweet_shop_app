@@ -15,6 +15,7 @@ import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee.da
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/franchisee_purchase_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/franchisee_sale_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
+import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
@@ -220,7 +221,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .53,
+      height: parentHeight * .62,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -262,6 +263,8 @@ class _MenuActivityState extends State<MenuActivity>
             getExpenseLayout(parentHeight,parentWidth),
             getExpensceGroupLayout(parentHeight,parentWidth),
             getCompanyInfoLayout(parentHeight,parentWidth),
+            getOpeningBalanceLayout(parentHeight,parentWidth),
+            getLeaderOpeningLayout(parentHeight,parentWidth),
           ],
         ),
       ),
@@ -481,6 +484,58 @@ class _MenuActivityState extends State<MenuActivity>
             ),
             Text(
               StringEn.COMPANY_INFO,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ItemOpeningBal()));
+        },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.OPENING_BAL,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyCreate()));
+        },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.LEARDER_OPENING_BAL,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
