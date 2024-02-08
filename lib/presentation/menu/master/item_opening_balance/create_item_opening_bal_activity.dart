@@ -59,13 +59,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       "unit":"kg",
       "rate":200,
       "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
-      "taxableAmt":550.00,
-      "gst":10,
-      "gstAmt":550.00,
-      "netRate":252.00,
-      "netAmount":590
+
     },
     {
       "id":2,
@@ -74,13 +68,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       "unit":"kg",
       "rate":500,
       "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
-      "taxableAmt":550.00,
-      "gst":10,
-      "gstAmt":550.00,
-      "netRate":252.00,
-      "netAmount":590
+
     },
   ];
 
@@ -244,13 +232,13 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               child: Column(
                 children: [
 
-                  getFieldTitleLayout(StringEn.INVOICE_DETAIL),
+                  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Item_list.length>0?getFieldTitleLayout(StringEn.ITEM):Container(),
+                      Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -269,7 +257,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_ITEMS,
+                                  Text("Add Item",
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -384,7 +372,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             label: Container(
               width: SizeConfig.screenWidth/4,
               child: Text(
-                StringEn.ITEM_NAME,
+                "Item Name",
               ),
             ),
             numeric: false,
@@ -396,7 +384,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               width:60,
 
               child: Text(
-                StringEn.QUANTITY,
+                "Quantity",
               ),
             ),
             numeric: true,
@@ -408,7 +396,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               width:50,
 
               child: Text(
-                StringEn.UNIT,
+                "Unit",
               ),
             ),
             numeric: true,
@@ -417,9 +405,9 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
           ),
           DataColumn(
             label: Container(
-              width:SizeConfig.screenWidth/4,
+              width:50,
               child: Text(
-                StringEn.RATE,
+                "Rate",
 
               ),
             ),
@@ -429,9 +417,9 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
           ),
           DataColumn(
             label: Container(
-              width:SizeConfig.screenWidth/4,
+              width:50,
               child: Text(
-                StringEn.AMOUNT,
+                "Amount",
 
               ),
             ),
@@ -439,95 +427,13 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             tooltip: "Item Amt",
 
           ),
-          DataColumn(
-            label: Container(
-              width:80,
-              child: Text(
-                StringEn.DICOUNT,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item discount",
 
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.DISCOUNT_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Discount Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.TAX_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Taxable Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:60,
-              child: Text(
-                StringEn.GST_PER,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.GST_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.NET_RATE,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.NET,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net Amt",
-
-          ),
 
           DataColumn(
             label: Container(
               width:50,
               child: Text(
-                StringEn.ACTION,
+                "Action",
               ),
             ),
             numeric: true,
@@ -570,54 +476,16 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                 ),
                 DataCell(
                   Container(
-                      width: SizeConfig.screenWidth/4,
+                      width: 50,
                       child: Text("${((item['rate']).toStringAsFixed(2))}")),
                 ),
 
                 DataCell(
                   Container(
-                      width: SizeConfig.screenWidth/4,
+                      width: 50,
                       child: Text("${((item['amt']).toStringAsFixed(2))}")),
                 ),
-                DataCell(
-                  Container(
-                      width: 80,
-                      child: Text(item['discount']==null?"0":"${item['discount']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['discountAmt']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
-                ),
 
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${((item['gst']))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['gstAmt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netRate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netAmount']).toStringAsFixed(2))}")),
-                ),
                 DataCell(
                   Container(
                       width: 50,

@@ -17,6 +17,7 @@ import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/fra
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
+import 'package:sweet_shop_app/presentation/menu/master/ledger_opening_balance/ledger_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
@@ -522,7 +523,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CompanyCreate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerOpeningBal()));
         },
       onDoubleTap: (){},
       child: Padding(

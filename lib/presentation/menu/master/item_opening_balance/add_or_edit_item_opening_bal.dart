@@ -30,23 +30,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   TextEditingController amount = TextEditingController();
 
-  TextEditingController discount = TextEditingController();
-  FocusNode discountFocus = FocusNode() ;
-
-  TextEditingController discountAmt = TextEditingController();
-
-  TextEditingController taxableAmt = TextEditingController();
-
-  TextEditingController gst = TextEditingController();
-  FocusNode gstFocus = FocusNode() ;
-
-  TextEditingController gstAmount = TextEditingController();
-
-  TextEditingController netRate = TextEditingController();
-
-  TextEditingController netAmount = TextEditingController();
-
-
   FocusNode searchFocus = FocusNode() ;
 
   @override
@@ -64,14 +47,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         quantity.text=widget.editproduct['quantity'].toString();
         rate.text=widget.editproduct['rate'].toString();
         amount.text=widget.editproduct['amount'].toString();
-        discount.text=widget.editproduct['discount']==null?"0":widget.editproduct['discount'].toString();
-        discountAmt.text=widget.editproduct['discountAmt'].toString();
-        taxableAmt.text=widget.editproduct['taxableAmt'].toString();
-        gst.text=widget.editproduct['gst'].toString();
-        gstAmount.text=widget.editproduct['gstAmt'].toString();
-        netRate.text=widget.editproduct['netRate'].toString();
-        netAmount.text=widget.editproduct['netAmt'].toString();
-
 
       });
       await calculateRates();
@@ -89,7 +64,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           Padding(
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
-              height: SizeConfig.screenHeight*0.8,
+              height: SizeConfig.screenHeight*0.55 ,
               decoration: const BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
@@ -138,235 +113,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
-  /* widget for product gst layout */
-  Widget getTaxableAmtLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        getFieldTitleLayout(StringEn.TAX_AMT),
-        Container(
-          height: parentHeight * .055,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.TexField_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            controller: taxableAmt,
-            readOnly: true,
-            decoration: textfield_decoration.copyWith(
-                hintText: StringEn.TAX_AMT,
-                fillColor: CommonColor.TexField_COLOR
-            ),
-            validator: ((value) {
-              if (value!.isEmpty) {
-                return "Enter taxable amt";
-              }
-              return null;
-            }),
-            onChanged: (value){
-
-            },
-            onTapOutside: (event) {
-
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  /* widget for product gst layout */
-  Widget getItemNetRateAndNetAmtLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.NET_RATE),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: netRate,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.NET_RATE,
-                    fillColor: CommonColor.TexField_COLOR
-
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item net rate";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-              ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.NET),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: netAmount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.NET,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter net amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        ),
-      ],
-    );
-  }
-
-  /* widget for product gst layout */
-  Widget getITemgstAndGstAmtLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.GST+"(%)"),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: gst,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.GST,
-                    suffix: Text("%")
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item gst";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-                  calculateRates();
-                },
-              ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.GST_AMT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: gstAmount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.GST_AMT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter gst amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        ),
-      ],
-    );
-  }
 
   Widget getQuantityAndUnit(double parentHeight, double parentWidth){
     return Row(
@@ -460,6 +206,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       ],
     );
   }
+
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -551,98 +298,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           ],
         )
 
-      ],
-    );
-  }
-
-
-  /* widget for product discount layout */
-  Widget getItemDiscountandAmtLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.DICOUNT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: discount,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.DICOUNT,
-                    suffix: Text("%")
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item discount";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-                  calculateRates();
-                },
-              ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.DISCOUNT_AMT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: discountAmt,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.DISCOUNT_AMT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Discount";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        ),
       ],
     );
   }
@@ -848,13 +503,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
               "unit":"kg",
               "rate":double.parse(rate.text),
               "amt":double.parse(amount.text),
-              "discount":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
-              "discountAmt":double.parse(discountAmt.text),
-              "taxableAmt":double.parse(taxableAmt.text),
-              "gst":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
-              "gstAmt":double.parse(gstAmount.text),
-              "netRate":double.parse(netRate.text),
-              "netAmount":double.parse(netAmount.text)
+
             };
             if(widget.mListener!=null){
 
@@ -895,56 +544,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     });
   }
 
-  calculateDiscountAmt(){
-    var disAmt=double.parse(amount.text)*(double.parse(discount.text)/100);
-    setState(() {
-      discountAmt.text=disAmt.toStringAsFixed(2);
-    });
-  }
-
-  calculateTaxableAmt(){
-    var taxAmt=double.parse(amount.text)-double.parse(discountAmt.text);
-    setState(() {
-      taxableAmt.text=taxAmt.toStringAsFixed(2);
-    });
-  }
-
-  calculateGstAmt(){
-    var gstAmt=double.parse(taxableAmt.text)*(double.parse(gst.text)/100);
-    setState(() {
-      gstAmount.text=gstAmt.toStringAsFixed(2);
-    });
-  }
-
-  calculateNetAmt(){
-    var netamt=double.parse(taxableAmt.text)+double.parse(gstAmount.text);
-    setState(() {
-      netAmount.text=netamt.toStringAsFixed(2);
-    });
-  }
-
-  calculateNetRate(){
-    var netRates=double.parse(netAmount.text)/int.parse(quantity.text);
-    setState(() {
-      netRate.text=netRates.toStringAsFixed(2);
-    });
-  }
 
   calculateRates()async{
     if(quantity.text!=""&&rate.text!="") {
       await calculateAmt();
-
-      if(discount.text!="") {
-        await calculateDiscountAmt();
-        await calculateTaxableAmt();
-
-        if(gst.text!="")
-        {
-          await calculateGstAmt();
-          await calculateNetAmt();
-          await calculateNetRate();
-        }
-      }
     }
 
   }

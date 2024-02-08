@@ -233,7 +233,7 @@ class StringEn{
   static const ADD_ITEM_DETAIL="Item Detail";
 
   static const ITEM_OPENING_BAL="Item Opening Balance";
-  static const ADD_OPENING_BAL="Create Opening Balance";
+  static const ADD_OPENING_BAL="Create Item Opening Balance";
 
   static const OPENING_BAL="Item Opening Balance";
   static const LEARDER_OPENING_BAL="Leader Opening Balance";
