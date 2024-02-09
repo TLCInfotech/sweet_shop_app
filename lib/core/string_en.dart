@@ -252,6 +252,10 @@ class StringEn{
   static const EXPENSE_REPORT = "Expense Report";
   static const SALE_REPORT = "Sale Report";
   static const PURCHASE_REPORT = "Purchase Report";
+  static const REPORT_TYPE = "Report Type";
+  static const DATE_ONE = "Date 1";
+  static const DATE_TWO = "Date 2";
+  static const BANK_CASH_LEDGER = "Bank / Cash Ledger";
 
 
 

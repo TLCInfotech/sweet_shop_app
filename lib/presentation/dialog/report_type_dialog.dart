@@ -4,16 +4,16 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
-class FranchiseeDialog extends StatefulWidget {
-  final FranchiseeDialogInterface mListener;
+class ReportTypeDialog extends StatefulWidget {
+  final ReportTypeDialogInterface mListener;
 
-  const FranchiseeDialog({super.key, required this.mListener});
+  const ReportTypeDialog({super.key, required this.mListener});
 
   @override
-  State<FranchiseeDialog> createState() => _FranchiseeDialogState();
+  State<ReportTypeDialog> createState() => _ReportTypeDialogState();
 }
 
-class _FranchiseeDialogState extends State<FranchiseeDialog>{
+class _ReportTypeDialogState extends State<ReportTypeDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -28,7 +28,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
 
 
   }
-  List franchisee_list= ['F1', 'F2', 'F3','F4'];
+  List franchisee_list= ['R1', 'R2', 'R3','R4','R4','R5','R6','R7','R8'];
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.FRANCHISE,
+                          StringEn.REPORT_TYPE,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -165,7 +165,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectedFranchisee(index.toString(),franchisee_list.elementAt(index));
+                    widget.mListener.selectedReportType(index.toString(),franchisee_list.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -233,6 +233,6 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
 }
 
 
-abstract class FranchiseeDialogInterface{
-  selectedFranchisee(String id,String name);
+abstract class ReportTypeDialogInterface{
+  selectedReportType(String id,String name);
 }

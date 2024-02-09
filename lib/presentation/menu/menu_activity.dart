@@ -26,6 +26,9 @@ import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_acti
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
 
+import 'report/MIS/mis_report_activity.dart';
+import 'report/payment/payment_report_activity.dart';
+import 'report/recipt/recipt_report_layout.dart';
 import 'setting/change_password_activity.dart';
 import 'setting/domain_link_activity.dart';
 import 'transaction/expense/ledger_activity.dart';
@@ -784,8 +787,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getPaymentReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -813,8 +815,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getReciptReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RecieptReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -842,8 +843,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MisReportActivity(
         )));
       },
       onDoubleTap: (){},
