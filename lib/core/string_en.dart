@@ -245,4 +245,14 @@ class StringEn{
   static const ADD_LEDGER_OPENING_BAL="Create Ledger Opening Balance";
   static const LEDGER_DETAIL="Ledger Detail";
 
+
+  static const RECEIPT_REPORT = "Receipt Report";
+  static const PAYMENT_REPORT = "Payment Report";
+  static const MIS_REPORT = "MIS Report";
+  static const EXPENSE_REPORT = "Expense Report";
+  static const SALE_REPORT = "Sale Report";
+  static const PURCHASE_REPORT = "Purchase Report";
+
+
+
 }

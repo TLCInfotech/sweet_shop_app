@@ -50,6 +50,7 @@ class _MenuActivityState extends State<MenuActivity>
   String appVersion = '';
   bool openMasterDropDown = false;
   bool openTransactionDropDown = false;
+  bool openReportDropDown = false;
   bool openSettingDropDown = false;
   @override
   void initState() {
@@ -133,7 +134,8 @@ class _MenuActivityState extends State<MenuActivity>
       children: [
         openTransactionDropDown==false?getAddTransactionLayout(parentHeight, parentWidth):
         getTransactionSubLayout(parentHeight, parentWidth),
-        getAddReportLayout(parentHeight, parentWidth),
+        openReportDropDown==false?getAddReportLayout(parentHeight, parentWidth):
+        getReportSubLayout(parentHeight, parentWidth),
         openMasterDropDown == false
             ? getAddMasterLayout(parentHeight, parentWidth)
             : getAddMasterSubLayout(parentHeight, parentWidth),
@@ -604,9 +606,11 @@ class _MenuActivityState extends State<MenuActivity>
 
   /* Widget for report Layout */
   Widget getAddReportLayout(double parentHeight, double parentWidth) {
-    return GestureDetector(
+    return  GestureDetector(
       onTap: () {
-
+        setState(() {
+          openReportDropDown = true;
+        });
       },
       onDoubleTap: () {},
       child: Container(
@@ -619,15 +623,251 @@ class _MenuActivityState extends State<MenuActivity>
           ),
         ),
         child: Padding(
-          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
-          child: const Text(
-            StringEn.REPORT,
-            style: page_heading_textStyle
+          padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                StringEn.REPORT,
+                style:page_heading_textStyle,
+              ),
+              Icon(
+                Icons.arrow_drop_down_sharp,
+                size: 30,
+              ),
+            ],
           ),
         ),
       ),
     );
+
   }
+
+
+  /* Widget for report Layout */
+  Widget getReportSubLayout(double parentHeight, double parentWidth) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      height: parentHeight * .35,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+              width: 1, color: CommonColor.BLACK_COLOR.withOpacity(0.2)),
+        ),
+      ),
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  openReportDropDown = false;
+                });
+              },
+              onDoubleTap: () {},
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    StringEn.TRANSACTION,
+                    style: page_heading_textStyle,
+                  ),
+                  Icon(
+                    Icons.arrow_drop_up,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
+            getSellReportLayout(parentHeight,parentWidth),
+            getPurchaseReportLayout(parentHeight,parentWidth),
+            getExpenseReportLayout(parentHeight,parentWidth),
+            getPaymentReportLayout(parentHeight,parentWidth),
+            getReciptReportLayout(parentHeight,parentWidth),
+            getMISReportLayout(parentHeight, parentWidth)
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  Widget getSellReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.SALE_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getPurchaseReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.PURCHASE_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getExpenseReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.EXPENSE_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getPaymentReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.PAYMENT_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getReciptReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.RECEIPT_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getMISReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              StringEn.MIS_REPORT,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   /* Widget for transaction Layout */
   Widget getAddTransactionLayout(double parentHeight, double parentWidth) {
@@ -667,7 +907,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  /* Widget for Master Layout */
+  /* Widget for transaction Layout */
   Widget getTransactionSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
