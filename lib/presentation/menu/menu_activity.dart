@@ -19,6 +19,9 @@ import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/ite
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger_opening_balance/ledger_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
+import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
@@ -700,9 +703,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getSellReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
-        )));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SaleReportActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -729,9 +730,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getPurchaseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
-        )));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseReportActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -758,8 +757,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getExpenseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseReportActivity(
         )));
       },
       onDoubleTap: (){},

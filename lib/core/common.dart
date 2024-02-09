@@ -187,5 +187,39 @@ class CommonWidget {
     }
   }
 
+  static previousDate(BuildContext context,date) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: date as DateTime,
+      firstDate: DateTime(1970),
+      lastDate: DateTime(2030, 12, 31),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: CommonColor.THEME_COLOR, // <-- SEE HERE
+              onPrimary: CommonColor.WHITE_COLOR, // <-- SEE HERE
+              onSurface: CommonColor.BLACK_COLOR, // <-- SEE HERE
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: CommonColor.BLACK_COLOR, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+      print(formattedDate);
+      return picked;
+    }
+    else{
+      return null;
+    }
+  }
+
 
 }
