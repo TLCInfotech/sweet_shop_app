@@ -249,7 +249,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               child: Column(
                 children: [
 
-                  getFieldTitleLayout(StringEn.INVOICE_DETAILS),
+                 // getFieldTitleLayout(StringEn.INVOICE_DETAILS),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                     Row(
@@ -644,7 +644,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   Container InvoiceInfo() {
     return Container(
-
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),

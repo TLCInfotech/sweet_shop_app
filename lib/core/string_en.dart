@@ -28,8 +28,8 @@ class StringEn{
   static const ITEM = "Item";
   static const CREATE_ITEM = "Create Item";
   static const ADD_ITEMS = "Add Item";
-  static const INVOICE_DETAIL = "Invoice Detail";
-  static const INVOICE_DETAILS = "Invoice Detail";
+ // static const INVOICE_DETAIL = "Invoice Detail";
+ // static const INVOICE_DETAILS = "Invoice Detail";
   static const ITEM_NAME = "Item Name";
   static const ITEM_CATEGORY = "Item Category";
   static const UNIT_TWO = "Unit 2";
@@ -233,7 +233,7 @@ class StringEn{
   static const ADD_ITEM_DETAIL="Item Detail";
 
   static const ITEM_OPENING_BAL="Item Opening Balance";
-  static const ADD_OPENING_BAL="Create Item Opening Balance";
+  static const ADD_OPENING_BAL="Item Opening Balance";
 
   static const OPENING_BAL="Item Opening Balance";
   static const LEARDER_OPENING_BAL="Leader Opening Balance";
@@ -242,7 +242,7 @@ class StringEn{
 
 
   static const LEDGER_OPENING_BAL="Ledger Opening Balance";
-  static const ADD_LEDGER_OPENING_BAL="Create Ledger Opening Balance";
+  static const ADD_LEDGER_OPENING_BAL="Ledger Opening Balance";
   static const LEDGER_DETAIL="Ledger Detail";
 
 

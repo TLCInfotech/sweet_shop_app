@@ -246,7 +246,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               child: Column(
                 children: [
 
-                  getFieldTitleLayout(StringEn.INVOICE_DETAIL),
+               //   getFieldTitleLayout(StringEn.INVOICE_DETAIL),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -641,6 +641,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   Container InvoiceInfo() {
     return Container(
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),

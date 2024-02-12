@@ -229,7 +229,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Detail"),
+                //  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -278,8 +278,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                        SizedBox(height: 10,),
+                      //  Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+                       // SizedBox(height: 10,),
                         Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
                       ],
                     ),
@@ -487,6 +487,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
   Container InvoiceInfo() {
     return Container(
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),

@@ -232,7 +232,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               child: Column(
                 children: [
 
-                  getFieldTitleLayout("Invoice Detail"),
+              //    getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -271,7 +271,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                   Item_list.length>0? getProductRateListLayout():Container(),
 
                   SizedBox(height: 10,),
-                  TotalAmount!="0.00"?Container(
+                 Container(
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -281,12 +281,13 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                        SizedBox(height: 10,),
+                        //Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+                       // SizedBox(height: 10,),
                         Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
                       ],
                     ),
-                  ):Container(),
+                  )
+                     //:Container(),
                 ],
               ),
             ),
@@ -507,6 +508,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
   Container InvoiceInfo() {
     return Container(
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
