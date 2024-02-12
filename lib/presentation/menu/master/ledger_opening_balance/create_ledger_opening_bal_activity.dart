@@ -55,16 +55,14 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     {
       "id":1,
       "itemName":"Item1",
-      "unit":"kg",
-      "rate":200,
       "amt":550.00,
+      "amtType":"Cr",
     },
     {
       "id":2,
       "itemName":"Item2",
-      "unit":"kg",
-      "rate":500,
       "amt":550.00,
+      "amtType":"Dr",
 
     },
   ];
@@ -380,33 +378,23 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
           DataColumn(
             label: Container(
               width:50,
-
-              child: Text(
-                "Unit",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Unit",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Rate",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: " Rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
               child: Text(
                 "Amount",
 
+              ),
+            ),
+            numeric: true,
+            tooltip: " Amt",
+
+          ),
+
+
+          DataColumn(
+            label: Container(
+              width:50,
+              child: Text(
+                "Type",
+                overflow: TextOverflow.clip,
               ),
             ),
             numeric: true,
@@ -450,23 +438,23 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                       )),
                 ),
 
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${item['unit']}")),
-                ),
-                DataCell(
-                  Container(
-                      width:50,
-                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
-                ),
+
 
                 DataCell(
                   Container(
                       width: 50,
                       child: Text("${((item['amt']).toStringAsFixed(2))}")),
                 ),
-                             DataCell(
+
+
+
+                DataCell(
+                  Container(
+                      width: 50,
+                      child: Text("${((item['amtType']))}")),
+                ),
+
+                DataCell(
                   Container(
                       width: 50,
                       child: GestureDetector(
@@ -714,9 +702,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       var index=Item_list.indexWhere((element) => item['id']==element['id']);
       setState(() {
         Item_list[index]['itemName']=item['itemName'];
-        Item_list[index]['unit']=item['unit'];
-        Item_list[index]['rate']=item['rate'];
         Item_list[index]['amt']=item['amt'];
+        Item_list[index]['amtType']=item['amtType'];
       });
     }
     else {

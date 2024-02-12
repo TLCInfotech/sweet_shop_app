@@ -257,6 +257,7 @@ class StringEn{
   static const DATE_TWO = "To Date";
   static const BANK_CASH_LEDGER = "Bank / Cash Ledger";
   static const SHOW_REPORT="Show Report";
+  static const Amount_TYPE="Amount Type";
 
 
 

@@ -16,14 +16,13 @@ class AddOrEditLedgerOpeningBal extends StatefulWidget {
 }
 
 class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
+  List<String> AmountType = ["Cr","Dr"];
+
+  String ?selectedType = null;
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode() ;
-
-  TextEditingController unit = TextEditingController();
-
-  TextEditingController rate = TextEditingController();
 
   TextEditingController amount = TextEditingController();
 
@@ -58,12 +57,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     if(widget.editproduct!=null){
       setState(() {
         _textController.text=widget.editproduct['itemName'];
-        unit.text=widget.editproduct['unit'].toString();
-        rate.text=widget.editproduct['rate'].toString();
-        amount.text=widget.editproduct['amount'].toString();
-
+        amount.text=widget.editproduct['amt'].toString();
+        selectedType=widget.editproduct['amtType'];
       });
-      await calculateRates();
     }
   }
 
@@ -102,13 +98,8 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
                     getFieldTitleLayout(StringEn.LEDGER),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getFieldTitleLayout(StringEn.UNIT),
-
-
-                    getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                    getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
+                    getAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getAmtType(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                     SizedBox(height: 10,)
                   ],
@@ -126,138 +117,90 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
 
 
 
-  Widget getRateAndAmount(double parentHeight, double parentWidth){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget getAmount(double parentHeight, double parentWidth){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.RATE),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
+        getFieldTitleLayout(StringEn.AMOUNT),
+        Container(
+          height: parentHeight * .055,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
               ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: rate,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.RATE,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Rate";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
+            ],
+          ),
+          child: TextFormField(
+            keyboardType: TextInputType.number,
+            controller: amount,
+            decoration: textfield_decoration.copyWith(
+                hintText: StringEn.AMOUNT,
+            ),
+            validator: ((value) {
+              if (value!.isEmpty) {
+                return "Enter Amt";
+              }
+              return null;
+            }),
+            onChanged: (value){
 
-                },
-                onTapOutside: (event) {
+            },
+            onTapOutside: (event) {
 
-                },
-              ),
-            )
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.AMOUNT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: amount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.AMOUNT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
+            },
+          ),
         )
 
       ],
     );
   }
 
-
-  Widget getUnitLayout(double parentHeight, double parentWidth){
-    return  Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.TexField_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
+  Widget getAmtType(double parentHeight, double parentWidth){
+    return    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        getFieldTitleLayout(StringEn.Amount_TYPE),
+        Container(
+          height: parentHeight * .055,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: CommonColor.WHITE_COLOR,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: unit,
-        readOnly: true,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.UNIT,
-            fillColor: CommonColor.TexField_COLOR
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Unit";
-          }
-          return null;
-        }),
-        onChanged: (value){
-
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
+          child: DropdownButton<dynamic>(
+            hint: Text(
+              StringEn.Amount_TYPE, style: hint_textfield_Style,),
+            underline: SizedBox(),
+            isExpanded: true,
+            value: selectedType,
+            onChanged: (newValue) {
+              setState(() {
+                selectedType = newValue!;
+              });
+            },
+            items: AmountType.map((dynamic limit) {
+              return DropdownMenuItem<dynamic>(
+                value: limit,
+                child: Text(limit.toString(), style: item_regular_textStyle),
+              );
+            }).toList(),
+          ),
+        )
+      ],
     );
   }
 
@@ -379,9 +322,8 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
             var item={
               "id":widget.editproduct!=null?widget.editproduct['id']:"",
               "itemName":_textController.text,
-              "unit":"kg",
-              "rate":double.parse(rate.text),
               "amt":double.parse(amount.text),
+              "amtType":selectedType
 
             };
             if(widget.mListener!=null){
@@ -416,20 +358,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     );
   }
 
-  calculateAmt(){
-    // var amt=int.parse(quantity.text)*double.parse(rate.text);
-    setState(() {
-      amount.text=double.parse(rate.text).toStringAsFixed(2);
-    });
-  }
-
-
-  calculateRates()async{
-    if(rate.text!="") {
-      await calculateAmt();
-    }
-
-  }
 
 }
 
