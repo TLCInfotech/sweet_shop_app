@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -158,54 +159,65 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: parentWidth * .04,
-              right: parentWidth * 0.04,
-              top: parentHeight * .015),
-          child: GestureDetector(
-            onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-            },
-            onDoubleTap: () {},
-            child: Container(
-              height: parentHeight * .06,
-              decoration: BoxDecoration(
-                color: disableColor == true
-                    ? CommonColor.THEME_COLOR.withOpacity(.5)
-                    : CommonColor.THEME_COLOR,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
-                      style: page_heading_textStyle,
-                    ),
+        Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
+              // SizedBox(height: 10,),
+              Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            // if(widget.comeFrom=="clientInfoList"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+            //   )));
+            // }if(widget.comeFrom=="Projects"){
+            //   Navigator.pop(context,false);
+            // }
+            // else if(widget.comeFrom=="edit"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+            //   )));
+            // }
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -268,25 +280,10 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                       )
                     ],
                   ),
-                  Item_list.length>0? getProductRateListLayout():Container(),
+                  Item_list.length>0? get_purchase_list_layout(parentHeight,parentWidth):Container(),
 
                   SizedBox(height: 10,),
-                 Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonColor.DARK_BLUE,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        //Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                       // SizedBox(height: 10,),
-                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
-                      ],
-                    ),
-                  )
+
                      //:Container(),
                 ],
               ),
@@ -353,7 +350,104 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
         });
   }
 
+  Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Item_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
+                child: Card(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 40,
+                            width: 40,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            child:
+                           Text((index+1).toString(),style: page_heading_textStyle),
+                        ),
+                      ),
+                      Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Item name- I1 ",style: item_heading_textStyle,),
+                                    SizedBox(height: 5,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("${Item_list[index]['quantity']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text("${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 5,),
+                                        Text("Rate: ${Item_list[index]['rate']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
 
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 5,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 20,color: Colors.black.withOpacity(0.7),),
+                                        SizedBox(width: 10,),
+                                        Expanded(child: Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child:IconButton(
+                                    icon:  FaIcon(
+                                      FontAwesomeIcons.trash,
+                                      size: 18,
+                                      color: Colors.redAccent,
+                                    ),
+                                    onPressed: (){},
+                                  ) )
+                            ],
+                          )
+
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    );
+  }
 
   /* Widget to get item  list Layout */
   SingleChildScrollView getProductRateListLayout() {
@@ -516,7 +610,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       ),
       child: Column(
         children: [
-          getFieldTitleLayout(StringEn.DATE),
+        //  getFieldTitleLayout(StringEn.DATE),
           getPurchaseDateLayout(),
           // getFieldTitleLayout(StringEn.INVOICE_NO),
           // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -638,10 +732,10 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+    /*      const Text(
             StringEn.FRANCHISEE_NAME,
             style: page_heading_textStyle,
-          ),
+          ),*/
           Padding(
             padding: EdgeInsets.only(top: parentHeight * .005),
             child: Container(

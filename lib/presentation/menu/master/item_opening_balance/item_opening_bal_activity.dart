@@ -102,7 +102,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Ledger  ", style: subHeading_withBold,),
+              Text("10 Items  ", style: subHeading_withBold,),
               Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
