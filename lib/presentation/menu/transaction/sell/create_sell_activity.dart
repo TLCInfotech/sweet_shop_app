@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -61,8 +62,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       "unit":"kg",
       "rate":200,
       "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
+      "discount":10,
+      "discountAmt":100.00,
       "taxableAmt":550.00,
       "gst":10,
       "gstAmt":550.00,
@@ -76,8 +77,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       "unit":"kg",
       "rate":500,
       "amt":550.00,
-      "discount":null,
-      "discountAmt":00.00,
+      "discount":12,
+      "discountAmt":100.00,
       "taxableAmt":550.00,
       "gst":10,
       "gstAmt":550.00,
@@ -282,7 +283,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                       )
                     ],
                   ),
-                  Item_list.length>0? getProductRateListLayout():Container(),
 
                   SizedBox(height: 10,),
                   TotalAmount!="0.00"?Container(
@@ -301,6 +301,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                       ],
                     ),
                   ):Container(),
+
+                  Item_list.length>0?get_Item_list_layout():Container()
+
                 ],
               ),
             ),
@@ -364,6 +367,120 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         pageBuilder: (context, animation2, animation1) {
           throw Exception('No widget to return in pageBuilder');
         });
+  }
+
+
+  Widget get_Item_list_layout() {
+    return Column(
+      children: [
+        for(var item in Item_list)
+          AnimationConfiguration.staggeredList(
+            position: Item_list.indexOf(item),
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
+                child: Card(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: (Item_list.indexOf(item))%2==0?Colors.green:Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          child:
+                          Text("${Item_list.indexOf(item)}",style: item_heading_textStyle,),
+                        ),
+                      ),
+                      Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("${item['itemName']}",overflow: TextOverflow.clip,style: item_heading_textStyle,),
+                                    SizedBox(height: 2,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("${item['quantity']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text("${item['unit']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text(" Rate: ${CommonWidget.getCurrencyFormat(item['rate'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Dis. ${item['discount']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text("Amt(dis.) : ${item['discountAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("GST ${item['gst']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text("Amt(gst) : ${item['gstAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Dis. ${item['gst']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        SizedBox(width: 2,),
+                                        Text("Amt(gst) : ${item['gstAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                        SizedBox(width: 10,),
+                                        Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child:IconButton(
+                                    icon:  FaIcon(
+                                      FontAwesomeIcons.trash,
+                                      size: 18,
+                                      color: Colors.redAccent,
+                                    ),
+                                    onPressed: (){},
+                                  ) )
+                            ],
+                          )
+
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          )
+      ],
+    );
   }
 
 
@@ -642,19 +759,18 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   Container InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        getFieldTitleLayout(StringEn.DATE),
         getPurchaseDateLayout(),
         // getFieldTitleLayout(StringEn.INVOICE_NO),
         // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        SizedBox(height: 10,)
       ],
       ),
     );
@@ -693,8 +809,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         }*/
       },
       child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          width: (SizeConfig.screenWidth)*0.3,
+          height: (SizeConfig.screenHeight) * .055,
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
@@ -710,7 +827,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(widget.dateNew,
-                style: page_heading_textStyle,),
+                style: item_regular_textStyle,),
+              SizedBox(width: 2,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
@@ -723,86 +841,74 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.FRANCHISEE_NAME,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
-                onTap: (){
-                  showGeneralDialog(
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionBuilder: (context, a1, a2, widget) {
-                        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                        return Transform(
-                          transform:
-                          Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                          child: Opacity(
-                            opacity: a1.value,
-                            child:FranchiseeDialog(
-                              mListener: this,
-                            ),
-                          ),
-                        );
-                      },
-                      transitionDuration: Duration(milliseconds: 200),
-                      barrierDismissible: true,
-                      barrierLabel: '',
-                      context: context,
-                      pageBuilder: (context, animation2, animation1) {
-                        throw Exception('No widget to return in pageBuilder');
-                      });
+      padding: EdgeInsets.all(8),
+      child: Container(
+        width: parentWidth*0.52,
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child:  GestureDetector(
+          onTap: (){
+            showGeneralDialog(
+                barrierColor: Colors.black.withOpacity(0.5),
+                transitionBuilder: (context, a1, a2, widget) {
+                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                  return Transform(
+                    transform:
+                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                    child: Opacity(
+                      opacity: a1.value,
+                      child:FranchiseeDialog(
+                        mListener: this,
+                      ),
+                    ),
+                  );
                 },
-                onDoubleTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                        style: selectedFranchiseeName == ""
-                            ? hint_textfield_Style
-                            : text_field_textStyle,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        // textScaleFactor: 1.02,
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
-                      ),
-                    ],
-                  ),
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation2, animation1) {
+                  throw Exception('No widget to return in pageBuilder');
+                });
+          },
+          onDoubleTap: (){},
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
+                  style: selectedFranchiseeName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  // textScaleFactor: 1.02,
                 ),
-              ),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: parentHeight * .03,
+                  color: /*pollName == ""
+                          ? CommonColor.HINT_TEXT
+                          :*/
+                  CommonColor.BLACK_COLOR,
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
-
     );
   }
 
