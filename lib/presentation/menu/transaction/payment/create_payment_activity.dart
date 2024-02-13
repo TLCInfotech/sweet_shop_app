@@ -252,9 +252,9 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
                   SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
+                    //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -433,7 +433,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                             alignment: Alignment.center,
                                             //width: SizeConfig.screenWidth*0.8/2,
                                             child:
-                                            Text(Ledger_list[index]['currentBal'].toString(),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                            Text(Ledger_list[index]['currentBal'].toString(),overflow: TextOverflow.clip,style: item_regular_textStyle),
                                           ),
                                           Container(
                                             alignment: Alignment.centerRight,
