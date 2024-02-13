@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -57,7 +58,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       "ledgerName":"Ladger1",
       "currentBal":10,
       "amount":100.00,
-      "narration":""
+      "narration":"Narration 1"
 
     },
     {
@@ -65,7 +66,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       "ledgerName":"Ladger2",
       "currentBal":20,
       "amount":100.00,
-      "narration":""
+      "narration":"Narration2"
 
     },
   ];
@@ -168,60 +169,74 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
-          decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Ledger_list.length} Products",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round Off : ${double.parse(TotalAmount).round()}",style:  item_regular_textStyle.copyWith(color: Colors.grey)),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-            }
-          },
-          onDoubleTap: () {},
-          child: Container(
+    return Padding(
+      padding: const EdgeInsets.only(top: 5,bottom: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TotalAmount!="0.00"? Container(
             width: SizeConfig.halfscreenWidth,
-            height: 50,
+            padding: EdgeInsets.only(top: 10,bottom:10),
             decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
+              // color:  CommonColor.DARK_BLUE,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
-                    style: page_heading_textStyle,
-                  ),
-                ),
+                Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+                SizedBox(height: 4,),
+                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
               ],
             ),
+          ):Container(),
+          GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+            },
+            onDoubleTap: () {},
+            child: Container(
+              width: SizeConfig.halfscreenWidth,
+              height: 50,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child: const Text(
+                      StringEn.SAVE,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -247,10 +262,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                   ReceiptInfo(),
                   SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
-                      GestureDetector(
+                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
@@ -279,24 +293,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                       )
                     ],
                   ),
+                  Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                   Ledger_list.length>0? getLedgerListLayout():Container(),
                   SizedBox(height: 10,),
-                  TotalAmount!="0.00"?Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonColor.DARK_BLUE,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                        SizedBox(height: 10,),
-                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
-                      ],
-                    ),
-                  ):Container(),
 
                 ],
               ),
@@ -307,6 +306,149 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
 
   }
+
+
+
+  Widget get_Item_list_layout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Ledger_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
+                child: GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditItem(Ledger_list[index]);
+                    }
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.all(10.0),
+                        //   child: Container(
+                        //     height: 40,
+                        //       width: 40,
+                        //       alignment: Alignment.center,
+                        //       padding: EdgeInsets.all(10),
+                        //       decoration: BoxDecoration(
+                        //           color: (index)%2==0?Colors.green:Colors.blueAccent,
+                        //           borderRadius: BorderRadius.circular(5)
+                        //       ),
+                        //       child:
+                        //      Text((index+1).toString(),style: page_heading_textStyle),
+                        //   ),
+                        // ),
+                        Expanded(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Row(
+                                        children: [
+                                          Container(
+                                              height: 25,
+                                              width: 25,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.purple.withOpacity(0.3),
+                                                  borderRadius: BorderRadius.circular(15)
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
+                                          SizedBox(width: 5,),
+                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5 ,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child: Text("Bal. : ${Ledger_list[index]['currentBal']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          SizedBox(width: 5,),
+
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child:IconButton(
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.trash,
+                                        size: 15,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: ()async{
+                                        Ledger_list.remove(Ledger_list[index]);
+                                        setState(() {
+                                          Ledger_list=Ledger_list;
+                                        });
+                                        await calculateTotalAmt();
+                                      },
+                                    ) ),
+                                // Positioned(
+                                //     bottom: 10,
+                                //     right: 10,
+                                //     child:
+                                //     Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
+                                // )
+                              ],
+                            )
+
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    );
+  }
+
+
   /* Widget to get add Product Layout */
   Widget getAddNewProductLayout(){
     return GestureDetector(
@@ -497,22 +639,21 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   }
 
   Container ReceiptInfo() {
-    return Container(
-
-      padding: EdgeInsets.all(10),
+    return  Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        //getFieldTitleLayout(StringEn.DATE),
-        getReceiptDateLayout(),
-        // getFieldTitleLayout(StringEn.VOUCHER_NO),
-        // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        SizedBox(height: 10,)
-      ],
+          getReceiptDateLayout(),
+          // getFieldTitleLayout(StringEn.INVOICE_NO),
+          // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        ],
       ),
     );
   }
@@ -535,8 +676,8 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   Widget getReceiptDateLayout(){
     return GestureDetector(
       onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-       /* if (Platform.isIOS) {
+/*        FocusScope.of(context).requestFocus(FocusNode());
+        if (Platform.isIOS) {
           var date= await CommonWidget.startDate(context,invoiceDate);
           setState(() {
             invoiceDate=date;
@@ -550,8 +691,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         }*/
       },
       child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          width: (SizeConfig.screenWidth)*0.3,
+          height: (SizeConfig.screenHeight) * .055,
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
@@ -567,7 +709,8 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(widget.dateNew,
-                style: page_heading_textStyle,),
+                style: item_regular_textStyle,),
+              SizedBox(width: 2,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
@@ -575,6 +718,82 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       ),
     );
   }
+
+
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Container(
+        width: parentWidth*0.52,
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child:  GestureDetector(
+          onTap: (){
+            showGeneralDialog(
+                barrierColor: Colors.black.withOpacity(0.5),
+                transitionBuilder: (context, a1, a2, widget) {
+                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                  return Transform(
+                    transform:
+                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                    child: Opacity(
+                      opacity: a1.value,
+                      child:FranchiseeDialog(
+                        mListener: this,
+                      ),
+                    ),
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation2, animation1) {
+                  throw Exception('No widget to return in pageBuilder');
+                });
+          },
+          onDoubleTap: (){},
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
+                  style: selectedFranchiseeName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  // textScaleFactor: 1.02,
+                ),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: parentHeight * .03,
+                  color: /*pollName == ""
+                          ? CommonColor.HINT_TEXT
+                          :*/
+                  CommonColor.BLACK_COLOR,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   /* Widget for Invoice No text from field layout */
   Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
@@ -618,93 +837,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   }
 
 
-  /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.FRANCHISEE_NAME,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
-                onTap: (){
-                  showGeneralDialog(
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionBuilder: (context, a1, a2, widget) {
-                        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                        return Transform(
-                          transform:
-                          Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                          child: Opacity(
-                            opacity: a1.value,
-                            child:FranchiseeDialog(
-                              mListener: this,
-                            ),
-                          ),
-                        );
-                      },
-                      transitionDuration: Duration(milliseconds: 200),
-                      barrierDismissible: true,
-                      barrierLabel: '',
-                      context: context,
-                      pageBuilder: (context, animation2, animation1) {
-                        throw Exception('No widget to return in pageBuilder');
-                      });
-                },
-                onDoubleTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                        style: selectedFranchiseeName == ""
-                            ? hint_textfield_Style
-                            : text_field_textStyle,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        // textScaleFactor: 1.02,
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-
-    );
-  }
-
-
 
 
   @override
@@ -739,6 +871,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         Ledger_list = itemLlist;
       });
     }
+    calculateTotalAmt();
   }
 
 }

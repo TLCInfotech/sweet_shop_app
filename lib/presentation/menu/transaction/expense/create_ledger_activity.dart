@@ -183,7 +183,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${Ledger_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(fontSize: 17),),
                 SizedBox(height: 4,),
                 Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
@@ -863,6 +863,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         Ledger_list = itemLlist;
       });
     }
+
+    calculateTotalAmt();
   }
 
 
