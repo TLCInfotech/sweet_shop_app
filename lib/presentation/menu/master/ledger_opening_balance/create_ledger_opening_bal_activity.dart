@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -54,13 +55,13 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   List<dynamic> Item_list=[
     {
       "id":1,
-      "itemName":"Item1",
+      "itemName":"Ledger 1",
       "amt":550.00,
       "amtType":"Cr",
     },
     {
       "id":2,
-      "itemName":"Item2",
+      "itemName":"Ledger 2",
       "amt":550.00,
       "amtType":"Dr",
 
@@ -138,7 +139,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
+                height: SizeConfig.safeUsedHeight * .12,
                 child: getSaveAndFinishButtonLayout(
                     SizeConfig.screenHeight, SizeConfig.screenWidth)),
             CommonWidget.getCommonPadding(
@@ -150,19 +151,31 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     );
   }
 
-
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: parentWidth * .04,
-              right: parentWidth * 0.04,
-              top: parentHeight * .015),
-          child: GestureDetector(
+    return Padding(
+      padding: const EdgeInsets.only(top: 10,bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: SizeConfig.halfscreenWidth,
+            padding: EdgeInsets.only(top: 10,bottom:10),
+            decoration: BoxDecoration(
+              // color:  CommonColor.DARK_BLUE,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                SizedBox(height: 5,),
+                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
+              ],
+            ),
+          ),
+          GestureDetector(
             onTap: () {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -182,15 +195,17 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
             },
             onDoubleTap: () {},
             child: Container(
-              height: parentHeight * .06,
+              width: SizeConfig.halfscreenWidth,
+              height: 50,
               decoration: BoxDecoration(
                 color: disableColor == true
                     ? CommonColor.THEME_COLOR.withOpacity(.5)
                     : CommonColor.THEME_COLOR,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
@@ -203,8 +218,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -233,7 +248,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Item_list.length>0?getFieldTitleLayout("Ledger Detail"):Container(),
+                      Item_list.isNotEmpty?getFieldTitleLayout("Ledger Detail"):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -263,25 +278,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                       )
                     ],
                   ),
-                  Item_list.length>0? getProductRateListLayout():Container(),
-
+                  Item_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
                   SizedBox(height: 10,),
-                  TotalAmount!="0.00"?Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonColor.DARK_BLUE,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                      //  Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                       // SizedBox(height: 10,),
-                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
-                      ],
-                    ),
-                  ):Container(),
                 ],
               ),
             ),
@@ -347,6 +345,115 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
         });
   }
 
+
+  Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Item_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
+                child: Card(
+                  child: Row(
+                    children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.all(10.0),
+                      //   child: Container(
+                      //     height: 40,
+                      //       width: 40,
+                      //       alignment: Alignment.center,
+                      //       padding: EdgeInsets.all(10),
+                      //       decoration: BoxDecoration(
+                      //           color: (index)%2==0?Colors.green:Colors.blueAccent,
+                      //           borderRadius: BorderRadius.circular(5)
+                      //       ),
+                      //       child:
+                      //      Text((index+1).toString(),style: page_heading_textStyle),
+                      //   ),
+                      // ),
+                      Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            height: 25,
+                                            width: 25,
+                                            decoration: BoxDecoration(
+                                                color: Colors.purple.withOpacity(0.3),
+                                                borderRadius: BorderRadius.circular(15)
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
+                                        SizedBox(width: 5,),
+                                        Text("${(Item_list[index]['itemName'])} ",style: item_heading_textStyle,),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5 ,),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("  ${(Item_list[index]['amt']).toStringAsFixed(2)} ${Item_list[index]['amtType']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue)),
+                                        SizedBox(width: 5,),
+
+                                      ],
+                                    ),
+                                    SizedBox(height: 5,),
+
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child:IconButton(
+                                    icon:  FaIcon(
+                                      FontAwesomeIcons.trash,
+                                      size: 15,
+                                      color: Colors.redAccent,
+                                    ),
+                                    onPressed: (){},
+                                  ) ),
+                              // Positioned(
+                              //     bottom: 10,
+                              //     right: 10,
+                              //     child:
+                              //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
+                              // )
+                            ],
+                          )
+
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    );
+  }
 
 
   /* Widget to get item  list Layout */
@@ -483,7 +590,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       ),
       child: Column(
         children: [
-          getFieldTitleLayout(StringEn.DATE),
+         // getFieldTitleLayout(StringEn.DATE),
           getPurchaseDateLayout(),
           // getFieldTitleLayout(StringEn.INVOICE_NO),
           // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -605,10 +712,10 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+       /*   const Text(
             StringEn.FRANCHISEE_NAME,
             style: page_heading_textStyle,
-          ),
+          ),*/
           Padding(
             padding: EdgeInsets.only(top: parentHeight * .005),
             child: Container(
