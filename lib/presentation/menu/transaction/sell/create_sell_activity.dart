@@ -158,7 +158,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
+                height: SizeConfig.safeUsedHeight * .12,
                 child: getSaveAndFinishButtonLayout(
                     SizeConfig.screenHeight, SizeConfig.screenWidth)),
             CommonWidget.getCommonPadding(
@@ -173,16 +173,30 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: parentWidth * .04,
-              right: parentWidth * 0.04,
-              top: parentHeight * .015),
-          child: GestureDetector(
+    return Padding(
+      padding: const EdgeInsets.only(top: 5,bottom: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TotalAmount!="0.00"? Container(
+            width: SizeConfig.halfscreenWidth,
+            padding: EdgeInsets.only(top: 10,bottom:10),
+            decoration: BoxDecoration(
+              // color:  CommonColor.DARK_BLUE,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+                SizedBox(height: 4,),
+                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+              ],
+            ),
+          ):Container(),
+          GestureDetector(
             onTap: () {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -202,15 +216,17 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             },
             onDoubleTap: () {},
             child: Container(
-              height: parentHeight * .06,
+              width: SizeConfig.halfscreenWidth,
+              height: 50,
               decoration: BoxDecoration(
                 color: disableColor == true
                     ? CommonColor.THEME_COLOR.withOpacity(.5)
                     : CommonColor.THEME_COLOR,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
@@ -223,8 +239,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -251,9 +267,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Item_list.length>0?getFieldTitleLayout(StringEn.SELL_ITEM):Container(),
+
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -285,24 +301,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   ),
 
                   SizedBox(height: 10,),
-                  TotalAmount!="0.00"?Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonColor.DARK_BLUE,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                        SizedBox(height: 10,),
-                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
-                      ],
-                    ),
-                  ):Container(),
 
-                  Item_list.length>0?get_Item_list_layout():Container()
+                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
 
                 ],
               ),
@@ -370,120 +370,197 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
 
 
-  Widget get_Item_list_layout() {
-    return Column(
-      children: [
-        for(var item in Item_list)
-          AnimationConfiguration.staggeredList(
-            position: Item_list.indexOf(item),
+
+
+  Widget get_Item_list_layout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Item_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
             duration:
             const Duration(milliseconds: 500),
             child: SlideAnimation(
               verticalOffset: -44.0,
               child: FadeInAnimation(
                 delay: Duration(microseconds: 1500),
-                child: Card(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: (Item_list.indexOf(item))%2==0?Colors.green:Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(5)
-                          ),
-                          child:
-                          Text("${Item_list.indexOf(item)}",style: item_heading_textStyle,),
-                        ),
-                      ),
-                      Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("${item['itemName']}",overflow: TextOverflow.clip,style: item_heading_textStyle,),
-                                    SizedBox(height: 2,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text("${item['quantity']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 2,),
-                                        Text("${item['unit']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 2,),
-                                        Text(" Rate: ${CommonWidget.getCurrencyFormat(item['rate'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text("Dis. ${item['discount']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 2,),
-                                        Text("Amt(dis.) : ${item['discountAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text("GST ${item['gst']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 2,),
-                                        Text("Amt(gst) : ${item['gstAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text("Dis. ${item['gst']}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 2,),
-                                        Text("Amt(gst) : ${item['gstAmt']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        SizedBox(width: 10,),
-                                        Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                      ],
-                                    ),
+                child: GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditItem(Item_list[index]);
+                    }
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.all(10.0),
+                        //   child: Container(
+                        //     height: 40,
+                        //       width: 40,
+                        //       alignment: Alignment.center,
+                        //       padding: EdgeInsets.all(10),
+                        //       decoration: BoxDecoration(
+                        //           color: (index)%2==0?Colors.green:Colors.blueAccent,
+                        //           borderRadius: BorderRadius.circular(5)
+                        //       ),
+                        //       child:
+                        //      Text((index+1).toString(),style: page_heading_textStyle),
+                        //   ),
+                        // ),
+                        Expanded(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                              height: 25,
+                                              width: 25,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.purple.withOpacity(0.3),
+                                                  borderRadius: BorderRadius.circular(15)
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
+                                          SizedBox(width: 5,),
+                                          Text("Item name- I1 ",style: item_heading_textStyle,),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5 ,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                              width: SizeConfig.screenWidth*0.8/3,
+                                              child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['rate'])}/${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
 
-                                  ],
+                                          SizedBox(width: 5,),
+                                          Container(
+                                              width: SizeConfig.screenWidth*0.8/3,
+                                              child: Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+
+
+                                          SizedBox(width: 5,),
+                                          Container(
+                                              alignment: Alignment.centerRight,
+                                              width: SizeConfig.screenWidth*0.8/3,
+                                              child: Text(" ${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+
+                                        ],
+                                      ),
+                                      SizedBox(height: 5,),
+
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:
+                                            Text(" ${(Item_list[index]['discount'])} % Disc.",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+                                          SizedBox(width: 5,),
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:Text("${CommonWidget.getCurrencyFormat(Item_list[index]['discountAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          SizedBox(width: 5,),
+
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['taxableAmt']),overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                        ],
+                                      ),
+                                      SizedBox(height: 5,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:
+                                            Text(" ${(Item_list[index]['gst'])} % GST",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+                                          SizedBox(width: 5,),
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['gstAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          SizedBox(width: 5,),
+
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child:IconButton(
-                                    icon:  FaIcon(
-                                      FontAwesomeIcons.trash,
-                                      size: 18,
-                                      color: Colors.redAccent,
-                                    ),
-                                    onPressed: (){},
-                                  ) )
-                            ],
-                          )
+                                Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child:IconButton(
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.trash,
+                                        size: 15,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: ()async{
+                                        Item_list.remove(Item_list[index]);
+                                        setState(() {
+                                          Item_list=Item_list;
+                                        });
+                                        await calculateTotalAmt();
+                                      },
+                                    ) ),
+                                // Positioned(
+                                //     bottom: 10,
+                                //     right: 10,
+                                //     child:
+                                //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
+                                // )
+                              ],
+                            )
 
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          )
-      ],
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
     );
   }
-
-
 
   /* Widget to get item  list Layout */
   SingleChildScrollView getProductRateListLayout() {
