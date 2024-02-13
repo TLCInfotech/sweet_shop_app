@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -283,28 +284,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                       )
                     ],
                   ),
-                  Ledger_list.length>0?    getLedgerListLayout():Container(),
-
-                  SizedBox(height: 10,),
-                  TotalAmount!="0.00"?Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: CommonColor.DARK_BLUE,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text("Round Off : ${double.parse(TotalAmount).round()}",style: subHeading_withBold,),
-                        SizedBox(height: 10,),
-                        Text("Total Amount : ${TotalAmount}",style: subHeading_withBold,)
-                      ],
-                    ),
-                  ):Container(),
-
-
-
+                  Ledger_list.length>0?    get_Item_list_layout(parentHeight,parentWidth):Container(),
                 ],
               ),
             ),
@@ -370,6 +350,147 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
         });
   }
 
+
+
+  Widget get_Item_list_layout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Ledger_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
+                child: GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditItem(Ledger_list[index]);
+                    }
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.all(10.0),
+                        //   child: Container(
+                        //     height: 40,
+                        //       width: 40,
+                        //       alignment: Alignment.center,
+                        //       padding: EdgeInsets.all(10),
+                        //       decoration: BoxDecoration(
+                        //           color: (index)%2==0?Colors.green:Colors.blueAccent,
+                        //           borderRadius: BorderRadius.circular(5)
+                        //       ),
+                        //       child:
+                        //      Text((index+1).toString(),style: page_heading_textStyle),
+                        //   ),
+                        // ),
+                        Expanded(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+                                      Row(
+                                        children: [
+                                          Container(
+                                              height: 25,
+                                              width: 25,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.purple.withOpacity(0.3),
+                                                  borderRadius: BorderRadius.circular(15)
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
+                                          SizedBox(width: 5,),
+                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5 ,),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.6/2,
+                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          SizedBox(width: 5,),
+
+                                          Container(
+                                            alignment: Alignment.center,
+                                            //width: SizeConfig.screenWidth*0.8/2,
+                                            child:
+                                            Text(Ledger_list[index]['currentBal'].toString(),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: SizeConfig.screenWidth*0.6/2,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child:IconButton(
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.trash,
+                                        size: 15,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: ()async{
+                                        Ledger_list.remove(Ledger_list[index]);
+                                        setState(() {
+                                          Ledger_list=Ledger_list;
+                                        });
+                                        await calculateTotalAmt();
+                                      },
+                                    ) ),
+                                // Positioned(
+                                //     bottom: 10,
+                                //     right: 10,
+                                //     child:
+                                //     Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
+                                // )
+                              ],
+                            )
+
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    );
+  }
 
 
   /* Widget to get item  list Layout */
@@ -575,7 +696,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(widget.dateNew,
-                style: page_heading_textStyle,),
+                style: item_regular_textStyle,),
+              SizedBox(width: 2,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
