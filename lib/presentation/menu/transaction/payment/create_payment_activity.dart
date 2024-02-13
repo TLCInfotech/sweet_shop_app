@@ -60,7 +60,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       "ledgerName":"Ladger1",
       "currentBal":10,
       "amount":100.00,
-      "narration":""
+      "narration":"narration1"
 
     },
     {
@@ -68,7 +68,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       "ledgerName":"Ladger2",
       "currentBal":20,
       "amount":100.00,
-      "narration":""
+      "narration":"narration2"
 
     },
   ];
@@ -423,21 +423,20 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            width: SizeConfig.screenWidth*0.6/2,
+                                            width: SizeConfig.screenWidth*0.8/3,
+                                            child: Text("Bal. : ${Ledger_list[index]['currentBal']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+                                          Container(
+                                            width: SizeConfig.screenWidth*0.8/3,
                                             child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                           ),
 
                                           SizedBox(width: 5,),
 
                                           Container(
-                                            alignment: Alignment.center,
-                                            //width: SizeConfig.screenWidth*0.8/2,
-                                            child:
-                                            Text(Ledger_list[index]['currentBal'].toString(),overflow: TextOverflow.clip,style: item_regular_textStyle),
-                                          ),
-                                          Container(
                                             alignment: Alignment.centerRight,
-                                            width: SizeConfig.screenWidth*0.6/2,
+                                            width: SizeConfig.screenWidth*0.8/3,
                                             child:
                                             Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),

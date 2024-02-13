@@ -213,7 +213,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
             onDoubleTap: () {},
             child: Container(
               width: SizeConfig.halfscreenWidth,
-              height: 50,
+              height: 40,
               decoration: BoxDecoration(
                 color: disableColor == true
                     ? CommonColor.THEME_COLOR.withOpacity(.5)
@@ -294,9 +294,8 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                     ],
                   ),
                   Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  Ledger_list.length>0? getLedgerListLayout():Container(),
+                 // Ledger_list.length>0? getLedgerListLayout():Container(),
                   SizedBox(height: 10,),
-
                 ],
               ),
             ),
