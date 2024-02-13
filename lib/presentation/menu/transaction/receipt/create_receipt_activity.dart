@@ -109,7 +109,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFfffff5),
@@ -155,7 +154,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
+                height: SizeConfig.safeUsedHeight * .12,
                 child: getSaveAndFinishButtonLayout(
                     SizeConfig.screenHeight, SizeConfig.screenWidth)),
             CommonWidget.getCommonPadding(
@@ -167,57 +166,58 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
-
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: parentWidth * .04,
-              right: parentWidth * 0.04,
-              top: parentHeight * .015),
-          child: GestureDetector(
-            onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-            },
-            onDoubleTap: () {},
-            child: Container(
-              height: parentHeight * .06,
-              decoration: BoxDecoration(
-                color: disableColor == true
-                    ? CommonColor.THEME_COLOR.withOpacity(.5)
-                    : CommonColor.THEME_COLOR,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
-                      style: page_heading_textStyle,
-                    ),
+        Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(top: 10,bottom:10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${Ledger_list.length} Products",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("Round Off : ${double.parse(TotalAmount).round()}",style:  item_regular_textStyle.copyWith(color: Colors.grey)),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            height: 50,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -243,8 +243,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               key: _formkey,
               child: Column(
                 children: [
-
-                  getFieldTitleLayout(StringEn.RECEPT_DETAIL),
+                  //getFieldTitleLayout(StringEn.RECEPT_DETAIL),
                   ReceiptInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -505,8 +504,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Column(children: [
-        getFieldTitleLayout(StringEn.DATE),
+      child: Column(
+        children: [
+        //getFieldTitleLayout(StringEn.DATE),
         getReceiptDateLayout(),
         // getFieldTitleLayout(StringEn.VOUCHER_NO),
         // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),

@@ -258,6 +258,8 @@ class StringEn{
   static const BANK_CASH_LEDGER = "Bank / Cash Ledger";
   static const SHOW_REPORT="Show Report";
   static const Amount_TYPE="Amount Type";
+  static const PRODUCT_DETAIL="Product Detail";
+  static const ADD_PRODUCT="Add Product";
 
 
 
