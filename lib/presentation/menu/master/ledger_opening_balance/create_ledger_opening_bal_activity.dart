@@ -246,9 +246,9 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Item_list.isNotEmpty?getFieldTitleLayout("Ledger Detail"):Container(),
+                    //  Item_list.isNotEmpty?getFieldTitleLayout("Ledger Detail"):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -361,6 +361,111 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               verticalOffset: -44.0,
               child: FadeInAnimation(
                 delay: Duration(microseconds: 1500),
+                child: GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditItem(Item_list[index]);
+                    }
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                              child:Row(
+                                children: [
+                                  Container(
+                                      width: parentWidth*.1,
+                                      height:parentWidth*.1,
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(15)
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                  ),
+
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      width: parentWidth*.70,
+                                      //  height: parentHeight*.1,
+                                      child:  Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
+
+                                          SizedBox(height: 5,),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child:
+                                            Text("${(Item_list[index]['amt']).toStringAsFixed(2)} ${Item_list[index]['amtType']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                      width: parentWidth*.1,
+                                      // height: parentHeight*.1,
+                                      color: Colors.transparent,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 15,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: ()async{
+                                          Item_list.remove(Item_list[index]);
+                                          setState(() {
+                                            Item_list=Item_list;
+                                          });
+                                          await calculateTotalAmt();
+                                        },
+                                      )
+                                  ),
+                                ],
+                              )
+                          ),
+                        )
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    );
+
+
+    /*Container(
+      height: parentHeight*.6,
+      child: ListView.separated(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: Item_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return  AnimationConfiguration.staggeredList(
+            position: index,
+            duration:
+            const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: Duration(microseconds: 1500),
                 child: Card(
                   child: Row(
                     children: [
@@ -408,7 +513,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text("  ${(Item_list[index]['amt']).toStringAsFixed(2)} ${Item_list[index]['amtType']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue)),
                                         SizedBox(width: 5,),
 
                                       ],
@@ -452,7 +556,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
           );
         },
       ),
-    );
+    );*/
   }
 
 

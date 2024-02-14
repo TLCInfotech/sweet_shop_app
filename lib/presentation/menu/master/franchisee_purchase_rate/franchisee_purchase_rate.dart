@@ -255,7 +255,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   }
 
   Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
-    return Container(
+    return  Container(
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
@@ -269,106 +269,126 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               verticalOffset: -44.0,
               child: FadeInAnimation(
                 delay: Duration(microseconds: 1500),
-                child: Card(
-                  child: Row(
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.all(10.0),
-                      //   child: Container(
-                      //     height: 40,
-                      //       width: 40,
-                      //       alignment: Alignment.center,
-                      //       padding: EdgeInsets.all(10),
-                      //       decoration: BoxDecoration(
-                      //           color: (index)%2==0?Colors.green:Colors.blueAccent,
-                      //           borderRadius: BorderRadius.circular(5)
-                      //       ),
-                      //       child:
-                      //      Text((index+1).toString(),style: page_heading_textStyle),
-                      //   ),
-                      // ),
-                      Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                                color: Colors.purple.withOpacity(0.3),
-                                                borderRadius: BorderRadius.circular(15)
+                child: GestureDetector(
+                  onTap: (){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditProduct(product_list[index]);
+                    }
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                              child:Row(
+                                children: [
+                                  Container(
+                                      width: parentWidth*.1,
+                                      height:parentWidth*.1,
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(15)
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                  ),
+
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      width: parentWidth*.70,
+                                      //  height: parentHeight*.1,
+                                      child:  Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
+
+                                          SizedBox(height: 5,),
+                                          /*  Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child:
+                                            Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+                                          SizedBox(height: 5,),*/
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child:
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Basic Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                    Text("${(product_list[index]['rate']).toStringAsFixed(2)} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                  ],
+                                                ),
+                                                SizedBox(width: 5,),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text("GST ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                    Text("${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                  ],
+                                                ),
+                                                SizedBox(width: 5,),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Net Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                    Text("${(product_list[index]['net']).toStringAsFixed(2)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                  ],
+                                                ),
+
+                                              ],
                                             ),
-                                            alignment: Alignment.center,
-                                            child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
-                                        SizedBox(width: 5,),
-                                        Text("${(product_list[index]['pname'])} ",style: item_heading_textStyle,),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5 ,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Basic Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                            Text("${(product_list[index]['rate']).toStringAsFixed(2)} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ],
-                                        ),
-                                        SizedBox(width: 5,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Text("GST ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                            Text("${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ],
-                                        ),
-                                        SizedBox(width: 5,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Net Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                            Text("${(product_list[index]['net']).toStringAsFixed(2)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ],
-                                        ),
 
-                                      ],
+                                          ),
+                                          /*  SizedBox(height: 5,),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),*/
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 5,),
+                                  ),
 
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child:IconButton(
-                                    icon:  FaIcon(
-                                      FontAwesomeIcons.trash,
-                                      size: 15,
-                                      color: Colors.redAccent,
-                                    ),
-                                    onPressed: (){},
-                                  ) ),
-                              // Positioned(
-                              //     bottom: 10,
-                              //     right: 10,
-                              //     child:
-                              //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
-                              // )
-                            ],
-                          )
+                                  Container(
+                                      width: parentWidth*.1,
+                                      // height: parentHeight*.1,
+                                      color: Colors.transparent,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 15,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: ()async{
+                                          product_list.remove(product_list[index]);
+                                          setState(() {
+                                            product_list=product_list;
+                                          });
+                                          await calculateTotalAmt();
+                                        },
+                                      )
+                                  ),
+                                ],
+                              )
+                          ),
+                        )
 
-                      )
-                    ],
+
+                      ],
+                    ),
                   ),
                 ),
               ),
