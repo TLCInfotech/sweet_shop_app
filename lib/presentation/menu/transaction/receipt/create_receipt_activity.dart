@@ -260,7 +260,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                       GestureDetector(
+                      GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
@@ -290,7 +290,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                     ],
                   ),
                   Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                 // Ledger_list.length>0? getLedgerListLayout():Container(),
+                  // Ledger_list.length>0? getLedgerListLayout():Container(),
                   SizedBox(height: 10,),
                 ],
               ),

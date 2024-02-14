@@ -267,7 +267,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                       GestureDetector(
+                      GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
@@ -334,74 +334,74 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                   child: Card(
                     child: Row(
                       children: [
-                          Expanded(
-                            child: Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                            child:Row(
-                              children: [
-                                Container(
-                                  width: parentWidth*.1,
-                                  height:parentWidth*.1,
-                                decoration: BoxDecoration(
-                                color: Colors.purple.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                                alignment: Alignment.center,
-                                child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
-                            ),
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                              child:Row(
+                                children: [
+                                  Container(
+                                      width: parentWidth*.1,
+                                      height:parentWidth*.1,
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(15)
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                  ),
 
-                                Expanded(
-                                  child: Container(
-                                    padding: EdgeInsets.only(left: 10),
-                                    width: parentWidth*.70,
-                                  //  height: parentHeight*.1,
-                                  child:  Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                         Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      width: parentWidth*.70,
+                                      //  height: parentHeight*.1,
+                                      child:  Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
 
-                                        SizedBox(height: 5,),
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          width: SizeConfig.screenWidth,
-                                          child:
-                                          Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                        ),
-                                        SizedBox(height: 5 ,),
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          width: SizeConfig.screenWidth,
-                                          child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        ),
-                                  
-                                  
-                                      ],
+                                          SizedBox(height: 5,),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child:
+                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          ),
+                                          SizedBox(height: 5 ,),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: SizeConfig.screenWidth,
+                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          ),
+
+
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
 
-                                Container(
-                                  width: parentWidth*.1,
-                                 // height: parentHeight*.1,
-                                  color: Colors.transparent,
-                                  child:IconButton(
-                                    icon:  FaIcon(
-                                      FontAwesomeIcons.trash,
-                                      size: 15,
-                                      color: Colors.redAccent,
-                                    ),
-                                    onPressed: ()async{
-                                      Ledger_list.remove(Ledger_list[index]);
-                                      setState(() {
-                                        Ledger_list=Ledger_list;
-                                      });
-                                      await calculateTotalAmt();
-                                    },
-                                  )
-                                ),
-                              ],
-                            )
+                                  Container(
+                                      width: parentWidth*.1,
+                                      // height: parentHeight*.1,
+                                      color: Colors.transparent,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 15,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: ()async{
+                                          Ledger_list.remove(Ledger_list[index]);
+                                          setState(() {
+                                            Ledger_list=Ledger_list;
+                                          });
+                                          await calculateTotalAmt();
+                                        },
+                                      )
+                                  ),
+                                ],
+                              )
 
 
 
@@ -454,8 +454,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                         ) ),
                                   ],
                                 ),*/
-                              ),
-                          )
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -550,7 +550,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             label: Container(
               width: SizeConfig.screenWidth/3,
               child: Text(
-               StringEn.EXPENSES_NAME,
+                StringEn.EXPENSES_NAME,
               ),
             ),
             numeric: false,
@@ -628,7 +628,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                         ],
                       )),
                 ),
-           /*     DataCell(
+                /*     DataCell(
                   Container(
                       width: SizeConfig.screenWidth/4,
                       child: Text("${item['currentBal']}")),

@@ -186,7 +186,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
 
             ],
           ),
@@ -247,14 +247,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               child: Column(
                 children: [
 
-               //   getFieldTitleLayout(StringEn.PAYMENT_DETAIL),
+                  //   getFieldTitleLayout(StringEn.PAYMENT_DETAIL),
                   PaymentInfo(),
 
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                    //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
+                      //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -660,13 +660,13 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-      //  getFieldTitleLayout(StringEn.DATE),
-        getReceiptDateLayout(),
-        // getFieldTitleLayout(StringEn.VOUCHER_NO),
-        // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        SizedBox(height: 10,)
-      ],
+          //  getFieldTitleLayout(StringEn.DATE),
+          getReceiptDateLayout(),
+          // getFieldTitleLayout(StringEn.VOUCHER_NO),
+          // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          SizedBox(height: 10,)
+        ],
       ),
     );
   }
