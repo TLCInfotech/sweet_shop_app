@@ -328,8 +328,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                        Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                        //Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                      //  Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                        Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
+
                                                       ],
                                                     ),
 
@@ -337,8 +339,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                        Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                      //  Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                        Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                                       ],
                                                     ),
 
@@ -346,7 +348,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                                 ),
                                                 SizedBox(height: 5,),
 
-                                                Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                               // Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                               ],
                                             ),
 
