@@ -116,7 +116,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFfffff5),
@@ -177,74 +176,71 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5,bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          TotalAmount!="0.00"? Container(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(top: 10,bottom:10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("Round Off : ${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              SizedBox(height: 4,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+        GestureDetector(
+          onTap: () {
+            // if(widget.comeFrom=="clientInfoList"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+            //   )));
+            // }if(widget.comeFrom=="Projects"){
+            //   Navigator.pop(context,false);
+            // }
+            // else if(widget.comeFrom=="edit"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+            //   )));
+            // }
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
             width: SizeConfig.halfscreenWidth,
-            padding: EdgeInsets.only(top: 10,bottom:10),
+            height: 50,
             decoration: BoxDecoration(
-              // color:  CommonColor.DARK_BLUE,
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                Text("Round Off : ${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
-                SizedBox(height: 4,),
-                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
+                  ),
+                ),
               ],
             ),
-          ):Container(),
-          GestureDetector(
-            onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-            },
-            onDoubleTap: () {},
-            child: Container(
-              width: SizeConfig.halfscreenWidth,
-              height: 50,
-              decoration: BoxDecoration(
-                color: disableColor == true
-                    ? CommonColor.THEME_COLOR.withOpacity(.5)
-                    : CommonColor.THEME_COLOR,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
-                      style: page_heading_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

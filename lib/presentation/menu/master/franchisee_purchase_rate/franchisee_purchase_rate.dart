@@ -255,7 +255,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   }
 
   Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
-    return  Container(
+    return   Container(
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
@@ -318,34 +318,35 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Basic Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                    Text("${(product_list[index]['rate']).toStringAsFixed(2)} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                                  ],
-                                                ),
-                                                SizedBox(width: 5,),
-                                                Column(
+                                                Row(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    Text("GST ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                    Text("${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                  ],
-                                                ),
-                                                SizedBox(width: 5,),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Net Rate",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                    Text("${(product_list[index]['net']).toStringAsFixed(2)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                                  ],
-                                                ),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                        Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                      ],
+                                                    ),
 
+                                                    SizedBox(width: 5,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                        Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ),
+                                                SizedBox(height: 5,),
+
+                                                Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                               ],
                                             ),
 
