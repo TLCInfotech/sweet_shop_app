@@ -97,6 +97,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -131,24 +132,25 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                     ),
                     getFieldTitleLayout(StringEn.ITEM_NAME),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getFieldTitleLayout(StringEn.QUANTITY),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                        getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
-                      ],
-                    ),
-                      
+                    getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //     getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+                    //   ],
+                    // ),
+
                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getTaxableAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getITemgstAndGstAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      
+
                     getItemNetRateAndNetAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     SizedBox(height: 10,)
                   ],
@@ -621,12 +623,11 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
       ),
     );
   }
-
   /* widget for product rate layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
-       width: (parentWidth*0.8)/2,
+      // width: (parentWidth*0.8)/2,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: CommonColor.WHITE_COLOR,
@@ -644,6 +645,11 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
         controller: quantity,
         decoration: textfield_decoration.copyWith(
           hintText: StringEn.QUANTITY,
+          suffix: Container(
+              width: 50,
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              child: Text("${unit.text}",style: item_regular_textStyle,)),
         ),
         validator: ((value) {
           if (value!.isEmpty) {

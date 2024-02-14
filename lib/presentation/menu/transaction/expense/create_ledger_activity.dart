@@ -292,7 +292,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       )
                     ],
                   ),
-                  Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                  Ledger_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                   SizedBox(height: 10,),
                 ],
               ),
@@ -452,8 +452,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                 ),*/
                               ),
                           )
-
-
                       ],
                     ),
                   ),

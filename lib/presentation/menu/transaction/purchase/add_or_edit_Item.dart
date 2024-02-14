@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -133,13 +134,14 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                     getFieldTitleLayout(StringEn.QUANTITY),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                        getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
-                      ],
-                    ),
+                    getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    //     getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+                    //   ],
+                    // ),
 
                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
@@ -626,7 +628,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
-      width: (parentWidth*0.8)/2,
+      // width: (parentWidth*0.8)/2,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: CommonColor.WHITE_COLOR,
@@ -644,6 +646,11 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         controller: quantity,
         decoration: textfield_decoration.copyWith(
           hintText: StringEn.QUANTITY,
+          suffix: Container(
+              width: 50,
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              child: Text("${unit.text}",style: item_regular_textStyle,)),
         ),
         validator: ((value) {
           if (value!.isEmpty) {
@@ -663,7 +670,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
-      height: parentHeight * .055,
+      padding: EdgeInsets.all(8),
+      width: parentWidth,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: CommonColor.WHITE_COLOR,
@@ -684,6 +692,9 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         textAlignVertical: TextAlignVertical.center,
         focusNode: searchFocus,
         style: text_field_textStyle,
+        minLines: 1,
+        maxLines: 4,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: textfield_decoration.copyWith(
           hintText: "Item Name",
           prefixIcon: Container(

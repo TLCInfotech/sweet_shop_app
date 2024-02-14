@@ -60,35 +60,36 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   List<dynamic> Item_list=[
     {
       "id":1,
-      "itemName":"Item1",
-      "quantity":2,
-      "unit":"kg",
+      "itemName":"Item Name - Gulakand Burfi With Dry Fruit",
+      "quantity":10,
+      "unit":"Kg",
       "rate":200,
-      "amt":550.00,
-      "discount":18,
+      "amt":2000.00,
+      "discount":5,
       "discountAmt":100.00,
-      "taxableAmt":550.00,
-      "gst":10,
-      "gstAmt":550.00,
-      "netRate":252.00,
-      "netAmount":590
+      "taxableAmt":1900.00,
+      "gst":18,
+      "gstAmt":342.00,
+      "netRate":242.00,
+      "netAmount":2242.00
     },
     {
       "id":2,
-      "itemName":"Item2",
-      "quantity":5,
-      "unit":"kg",
+      "itemName":"Item Name - Mango Burfi",
+      "quantity":25,
+      "unit":"Kg",
       "rate":500,
-      "amt":550.00,
-      "discount":12,
-      "discountAmt":120.00,
-      "taxableAmt":550.00,
-      "gst":10,
-      "gstAmt":550.00,
-      "netRate":252.00,
-      "netAmount":590
+      "amt":12500.00,
+      "discount":10,
+      "discountAmt":1250.00,
+      "taxableAmt":11250.00,
+      "gst":18,
+      "gstAmt":2025.00,
+      "netRate":531.00,
+      "netAmount":13275.00
     },
   ];
+
 
 
   @override
@@ -193,7 +194,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+                Text("Round Off : ${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
                 SizedBox(height: 4,),
                 Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
               ],
@@ -343,154 +344,80 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   child: Card(
                     child: Row(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.all(10.0),
-                        //   child: Container(
-                        //     height: 40,
-                        //       width: 40,
-                        //       alignment: Alignment.center,
-                        //       padding: EdgeInsets.all(10),
-                        //       decoration: BoxDecoration(
-                        //           color: (index)%2==0?Colors.green:Colors.blueAccent,
-                        //           borderRadius: BorderRadius.circular(5)
-                        //       ),
-                        //       child:
-                        //      Text((index+1).toString(),style: page_heading_textStyle),
-                        //   ),
-                        // ),
+
+
                         Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                              height: 25,
-                                              width: 25,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.purple.withOpacity(0.3),
-                                                  borderRadius: BorderRadius.circular(15)
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
-                                          SizedBox(width: 5,),
-                                          Text("Item name- I1 ",style: item_heading_textStyle,),
-                                        ],
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                              child:Row(
+                                children: [
+                                  Container(
+                                      width: parentWidth*.1,
+                                      height:parentWidth*.1,
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(15)
                                       ),
-                                      SizedBox(height: 5 ,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                              width: SizeConfig.screenWidth*0.8/3,
-                                              child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['rate'])}/${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-
-                                          SizedBox(width: 5,),
-                                          Container(
-                                              width: SizeConfig.screenWidth*0.8/3,
-                                              child: Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-
-
-                                          SizedBox(width: 5,),
-                                          Container(
-                                              alignment: Alignment.centerRight,
-                                              width: SizeConfig.screenWidth*0.8/3,
-                                              child: Text(" ${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
-
-                                           ],
-                                      ),
-                                      SizedBox(height: 5,),
-
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child:
-                                            Text(" ${(Item_list[index]['discount'])} % Disc.",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-                                          SizedBox(width: 5,),
-                                          Container(
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child:Text("${CommonWidget.getCurrencyFormat(Item_list[index]['discountAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-
-                                          SizedBox(width: 5,),
-
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['taxableAmt']),overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-
-                                        ],
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child:
-                                            Text(" ${(Item_list[index]['gst'])} % GST",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-                                          SizedBox(width: 5,),
-                                          Container(
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['gstAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-
-                                          SizedBox(width: 5,),
-
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            width: SizeConfig.screenWidth*0.8/3,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),
-
-                                        ],
-                                      ),
-
-                                    ],
+                                      alignment: Alignment.center,
+                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 15,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: ()async{
-                                        Item_list.remove(Item_list[index]);
-                                        setState(() {
-                                          Item_list=Item_list;
-                                        });
-                                        await calculateTotalAmt();
-                                      },
-                                    ) ),
-                                // Positioned(
-                                //     bottom: 10,
-                                //     right: 10,
-                                //     child:
-                                //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
-                                // )
-                              ],
-                            )
 
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 10),
+                                      width: parentWidth*.70,
+                                      //  height: parentHeight*.1,
+                                      child:  Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
+
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                  alignment: Alignment.centerRight,
+                                                  child: Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                child:
+                                                Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                      width: parentWidth*.1,
+                                      // height: parentHeight*.1,
+                                      color: Colors.transparent,
+                                      child:IconButton(
+                                        icon:  FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 15,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: ()async{
+                                          Item_list.remove(Item_list[index]);
+                                          setState(() {
+                                            Item_list=Item_list;
+                                          });
+                                          await calculateTotalAmt();
+                                        },
+                                      )
+                                  ),
+                                ],
+                              )
+
+                          ),
                         )
+
                       ],
                     ),
                   ),
