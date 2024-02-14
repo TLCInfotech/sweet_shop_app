@@ -57,7 +57,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   List<dynamic> Item_list=[
     {
       "id":1,
-      "itemName":"Item Name - Gulakand Burfi With Dry Fruit",
+      "itemName":"Gulakand Burfi ",
       "quantity":10,
       "unit":"Kg",
       "rate":200,
@@ -72,7 +72,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     },
     {
       "id":2,
-      "itemName":"Item Name - Mango Burfi",
+      "itemName":" Mango Burfi",
       "quantity":25,
       "unit":"Kg",
       "rate":500,
@@ -188,9 +188,12 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round Off : ${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))<0.50 &&  double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))!=0.00 ?
+              Text("Round Off :-0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
+                : Text("Round Off : 0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
+                ,
               SizedBox(height: 4,),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
           ),
         ):Container(),

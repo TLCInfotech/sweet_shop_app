@@ -44,7 +44,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       "rate":1050.00,
       "gst":10,
       "gstAmt":100,
-      "net":1150.00,
+      "net":115000.00,
     },
     {
       "id":2,
@@ -286,7 +286,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                       alignment: Alignment.center,
                                       child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
-
                                   Expanded(
                                     child: Container(
                                       padding: EdgeInsets.only(left: 10),
@@ -310,39 +309,18 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                        Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                                      ],
-                                                    ),
+                                                Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
+                                                // Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
-                                                    SizedBox(width: 5,),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                        Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                                      ],
-                                                    ),
-
-                                                  ],
-                                                ),
-                                                SizedBox(height: 5,),
-
-                                                Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                               ],
                                             ),
 
                                           ),
+
                                           /*  SizedBox(height: 5,),
                                           Container(
                                             alignment: Alignment.centerLeft,
@@ -354,6 +332,73 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                       ),
                                     ),
                                   ),
+                                  // Expanded(
+                                  //   child: Container(
+                                  //     padding: EdgeInsets.only(left: 10),
+                                  //     width: parentWidth*.70,
+                                  //     //  height: parentHeight*.1,
+                                  //     child:  Column(
+                                  //       mainAxisAlignment: MainAxisAlignment.start,
+                                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
+                                  //
+                                  //         SizedBox(height: 5,),
+                                  //         /*  Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           width: SizeConfig.screenWidth,
+                                  //           child:
+                                  //           Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                  //         ),
+                                  //         SizedBox(height: 5,),*/
+                                  //         Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           width: SizeConfig.screenWidth,
+                                  //           child:
+                                  //           Column(
+                                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                                  //             children: [
+                                  //               Row(
+                                  //                 crossAxisAlignment: CrossAxisAlignment.center,
+                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                 children: [
+                                  //                   Column(
+                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                     children: [
+                                  //                       Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                  //                       Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                  //                     ],
+                                  //                   ),
+                                  //
+                                  //                   SizedBox(width: 5,),
+                                  //                   Column(
+                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                     children: [
+                                  //                       Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                  //                       Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                  //                     ],
+                                  //                   ),
+                                  //
+                                  //                 ],
+                                  //               ),
+                                  //               SizedBox(height: 5,),
+                                  //
+                                  //               Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                  //             ],
+                                  //           ),
+                                  //
+                                  //         ),
+                                  //         /*  SizedBox(height: 5,),
+                                  //         Container(
+                                  //           alignment: Alignment.centerLeft,
+                                  //           width: SizeConfig.screenWidth,
+                                  //           child:
+                                  //           Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                  //         ),*/
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
 
                                   Container(
                                       width: parentWidth*.1,

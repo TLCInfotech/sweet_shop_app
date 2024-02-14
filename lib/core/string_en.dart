@@ -116,7 +116,7 @@ class StringEn{
   static const EXPENSE_DETAILS = "Expense Detail";
   static const EXPENSE_GROUP = "Ledger Group";
   static const CREATE_EXPENSE="Create Ledger";
-  static const CREATE_EXPENSES="Create Expense Invoice";
+  static const CREATE_EXPENSES="Expense Invoice - New";
   static const COMPANY_INFO = "Comapny Info";
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";
@@ -178,9 +178,9 @@ class StringEn{
 
 
   static const CREATE_COMPANY = "Create Company";
-  static const CREATE_SELL = "Create Sale Invoice";
+  static const CREATE_SELL = "Sale Invoice-New";
   static const CREATE_RECEIPT = "Create Receipt";
-  static const CREATE_RECEIPT_INVOICE = "Create Receipt Invoice";
+  static const CREATE_RECEIPT_INVOICE = "Receipt Invoice - New";
   static const COMPANY = "Company";
   static const DATE = "Date";
   static const INVOICE_NO = "Invoice No";
@@ -198,7 +198,7 @@ class StringEn{
   static const NEW_VOUCHER_NO = "New Voucher No";
 
   //purchase screen
-  static const ADD_PURCHASE = "Create Purchase Invoice";
+  static const ADD_PURCHASE = "Purchase Invoice - New";
   static const PURCHASE_ITEM = "Item Purchased";
   static const ITEM_DETAIL = "Item Detail";
   static const QUANTITY = "Quantity";
@@ -208,9 +208,9 @@ class StringEn{
   static const LEDGER="Ledger Name";
   static const AMOUNT="Amount";
   static const NARRATION="Narration";
-  static const CREATE_PAYMENT="Create Payment Invoice";
+  static const CREATE_PAYMENT="Payment Invoice - New";
 
-  static const ADD_SELL = "Create Sale Invoice";
+  static const ADD_SELL = "Sale Invoice - New";
   static const SELL_ITEM = "Item Sale";
 
 
