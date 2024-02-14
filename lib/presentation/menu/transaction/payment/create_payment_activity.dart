@@ -185,10 +185,13 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Ledger_list.length} Products",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round Off : ${double.parse(TotalAmount).round()}",style:  item_regular_textStyle.copyWith(color: Colors.grey)),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
-            ],
+              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))<0.50 &&  double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))!=0.00 ?
+              Text("Round Off :-0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
+                  : Text("Round Off : 0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
+              ,
+              SizedBox(height: 4,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),],
           ),
         ),
         GestureDetector(
