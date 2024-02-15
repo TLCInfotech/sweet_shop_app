@@ -53,25 +53,25 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   List<dynamic> Ledger_list=[
     {
       "id":1,
-      "ledgerName":"Regenapps clouds prtivate as Limited Limited Limited Lim ited Limi tedL imitedL imi ted",
+      "ledgerName":"Breakfast",
       "currentBal":10,
-      "amount":100.00,
-      "narration":"Narration1"
+      "amount":200.00,
+      "narration":"Breakfast for two people."
 
     },
     {
       "id":2,
-      "ledgerName":"Ladger2",
+      "ledgerName":"Medical Expenase",
       "currentBal":20,
-      "amount":100.00,
-      "narration":"Narration2 narration narration narration narration narration narration"
+      "amount":400.00,
+      "narration":"Charges for medical."
     },
     {
       "id":3,
-      "ledgerName":"Ladger3",
+      "ledgerName":"Electricity Expense",
       "currentBal":20,
-      "amount":100.00,
-      "narration":"Narration3"
+      "amount":1000.00,
+      "narration":"Charges for electricity"
     },
   ];
 
@@ -187,11 +187,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))<0.50 &&  double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))!=0.00 ?
-              Text("Round Off :-0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
-                  : Text("Round Off : 0${TotalAmount.substring(TotalAmount.length-3,TotalAmount.length) }",style: item_regular_textStyle.copyWith(fontSize: 17),)
-              ,
-              SizedBox(height: 4,),
+          Text("Round off:- ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+          SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
           ),
@@ -241,6 +238,30 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         ),
       ],
     );
+  }
+
+
+
+  double calculateRoundOffAmt(){
+    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
+      return 0.00;
+    }
+    else {
+      var amt = (1 - double.parse(
+          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
+      print(amt);
+      if (amt == 0.00) {
+        return 0.00;
+      }
+      if (amt < 0.50) {
+        print((-1 * amt).toStringAsFixed(2));
+        return amt;
+      }
+      else {
+        print((amt).toStringAsFixed(2));
+        return (-1 * amt);
+      }
+    }
   }
 
   Widget getAllFields(double parentHeight, double parentWidth) {

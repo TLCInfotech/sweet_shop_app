@@ -108,7 +108,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("10 Invoices", style: subHeading_withBold,),
-              Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
       ),
