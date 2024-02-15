@@ -27,23 +27,6 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   TextEditingController gstAmt = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
 
   @override
   void initState() {
@@ -91,18 +74,18 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.ADDPRODUCT,
+                          StringEn.ADD_ITEMS,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.PRODUCTS),
+                  getFieldTitleLayout(StringEn.ITEM),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.PURCHASE_RATE),
+                  getFieldTitleLayout(StringEn.SALE_RATE),
                   getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.GST),
+                  getFieldTitleLayout("${StringEn.GST}%"),
                   getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.GST_AMT),
@@ -330,7 +313,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         ),
         controller: rate,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.PURCHASE_RATE,
+          hintText: StringEn.SALE_RATE,
         ),
         validator: ((value) {
           if (value!.isEmpty) {
@@ -374,7 +357,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Product Name",
+          hintText:StringEn.ITEM_NAME,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
