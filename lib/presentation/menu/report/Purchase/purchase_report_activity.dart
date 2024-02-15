@@ -642,7 +642,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

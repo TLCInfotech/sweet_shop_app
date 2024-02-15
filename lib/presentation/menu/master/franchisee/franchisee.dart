@@ -6,8 +6,6 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee_create_activity.dart';
 
 
-
-
 class AddFranchiseeActivity extends StatefulWidget {
   const AddFranchiseeActivity({super.key, required mListener});
 

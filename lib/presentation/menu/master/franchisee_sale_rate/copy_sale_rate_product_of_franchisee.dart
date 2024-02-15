@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-
 import '../../../../core/colors.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/string_en.dart';

@@ -53,7 +53,6 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
-              // color: Colors.red,
               margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
@@ -71,7 +70,6 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -96,41 +94,6 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
     );
   }
 
-
-
-
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {

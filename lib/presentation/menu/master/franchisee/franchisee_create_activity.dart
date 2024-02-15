@@ -32,15 +32,12 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     ImagePickerListener,CountryDialogInterface,
     ImagePickerDialogInterface {
 
-  final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
   final _panNoFocus = FocusNode();
   final panNoController = TextEditingController();
   final _gstNoFocus = FocusNode();
   final gstNoController = TextEditingController();
-  final _cinNoFocus = FocusNode();
-  final cinNoController = TextEditingController();
   final _adharoFocus = FocusNode();
   final adharNoController = TextEditingController();
 
@@ -56,8 +53,6 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   final _franchiseeAddressFocus=FocusNode();
   TextEditingController franchiseeMobileNo = TextEditingController();
   final _franchiseeMobileNoFocus=FocusNode();
-  TextEditingController franchiseeContactNo = TextEditingController();
-  final _franchiseeContactNoFocus=FocusNode();
   TextEditingController franchiseeEmail = TextEditingController();
   final _franchiseeEmailFocus=FocusNode();
 
@@ -272,11 +267,6 @@ String stateName="";
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),

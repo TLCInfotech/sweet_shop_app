@@ -17,44 +17,10 @@ class ExpenseListingActivity extends StatefulWidget {
 }
 
 class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
-
-  final _formkey=GlobalKey<FormState>();
   TextEditingController itemName = TextEditingController();
   TextEditingController itemRate = TextEditingController();
   TextEditingController itemPkgSize = TextEditingController();
 
-  List<dynamic> item_category=[
-    {
-      "name":"Category 1",
-      "id":123
-    },
-    {
-      "name":"Category 2",
-      "id":123
-    },
-    {
-      "name":"Category 3",
-      "id":123
-    },
-  ];
-
-  String? selectedCategory="choose";
-
-
-  List<dynamic> measuring_unit=[
-    {
-      "name":"kg",
-      "id":123
-    },
-    {
-      "name":"Ltr",
-      "id":123
-    },
-    {
-      "name":"Gram",
-      "id":123
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {

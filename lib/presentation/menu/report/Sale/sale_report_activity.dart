@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -642,7 +641,6 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

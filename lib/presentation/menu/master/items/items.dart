@@ -86,7 +86,6 @@ class _ItemsActivityState extends State<ItemsActivity> {
             color: Colors.black87,
           ),
           onPressed: () {
-         //   add_item_layout(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCreateActivity()));
           }),
       body: Container(
@@ -94,7 +93,6 @@ class _ItemsActivityState extends State<ItemsActivity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             SizedBox(
               height: 10,
             ),

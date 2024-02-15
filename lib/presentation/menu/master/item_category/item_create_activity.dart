@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -12,9 +11,7 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/measuring_unit_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
 class ItemCreateActivity extends StatefulWidget {
   const ItemCreateActivity({super.key});
@@ -40,31 +37,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
 
-  final _districtCity = FocusNode();
-  final districtController = TextEditingController();
-
-  final _contactFocus = FocusNode();
-  final contactController = TextEditingController();
-  final _invoiceFocus = FocusNode();
-  final invoiceController = TextEditingController();
-  final _addTwoFocus = FocusNode();
-  final addTwoController = TextEditingController();
-  final _defaultBankFocus = FocusNode();
-  final defaultBankController = TextEditingController();
-  final _jurisdictionFocus = FocusNode();
-  final jurisdictionController = TextEditingController();
-  final _cityFocus = FocusNode();
-  final cityController = TextEditingController();
-  final _emailFocus = FocusNode();
-  final emailController = TextEditingController();
-  final _pinCodeFocus = FocusNode();
-  final pinCodeController = TextEditingController();
   final _panNoFocus = FocusNode();
   final panNoController = TextEditingController();
   final _gstNoFocus = FocusNode();
   final gstNoController = TextEditingController();
-  final _cinNoFocus = FocusNode();
-  final cinNoController = TextEditingController();
   final _adharoFocus = FocusNode();
   final adharNoController = TextEditingController();
 
@@ -79,15 +55,6 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-  String hourlyRate = "\$0";
-  DateTime joinDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  DateTime endDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String startingDate = "";
-  String endingDate = "";
-  bool isPurchaseDateValidShow = false;
-  bool isPurchaseDateMsgValidShow = false;
 
   @override
   void initState() {

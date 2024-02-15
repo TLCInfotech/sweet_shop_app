@@ -3,7 +3,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-
 import '../../../../core/colors.dart';
 import '../../../../core/size_config.dart';
 import '../../../dialog/category_dialog.dart';
@@ -17,7 +16,6 @@ class ItemCategoryActivity extends StatefulWidget {
 }
 
 class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with CategoryDialogInterface{
-  final _formkey=GlobalKey<FormState>();
   TextEditingController categoryName = TextEditingController();
 
   String parentCategory="";
@@ -25,7 +23,6 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white.withOpacity(0.95),
       backgroundColor: Color(0xFFfffff5),
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,

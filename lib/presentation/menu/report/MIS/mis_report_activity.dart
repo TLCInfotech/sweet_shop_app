@@ -100,38 +100,6 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
 
 
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -162,7 +130,6 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                     ],
                   ),
                   getLeaderNameLayout(parentHeight, parentWidth),
-                  //getBankCashLedgerLayout(parentHeight, parentWidth),
                 ],
               ),
             ),
@@ -479,73 +446,12 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
     );
   }
 
-  /* Widget for bank cash ledger layout */
-  Widget getBankCashLedgerLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.BANK_CASH_LEDGER,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: bankcashFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a bank / cash",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: bankCashController,
-                onEditingComplete: () {
-                  bankcashFocus.unfocus();
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

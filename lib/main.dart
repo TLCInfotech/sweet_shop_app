@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
       title: 'SWEETSHOP',
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
+
+
       builder: (context, child) {
         return MediaQuery(
           child: child!,

@@ -24,10 +24,7 @@ class FranchiseePurchaseRate extends StatefulWidget {
 }
 
 class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with AddProductPurchaseRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopyPurchaseRateProductOfFranchiseeInterface{
-
-
   final _formkey = GlobalKey<FormState>();
-
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   String selectedFranchiseeName="";
@@ -135,7 +132,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
             //  Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
              // Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(color: Colors.grey)),
-
             ],
           ),
         ),
@@ -194,11 +190,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01,left: parentWidth*.03,right: parentWidth*.03),
@@ -487,51 +478,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       ),
     );
   }
-  /* widget for button layout */
-  Widget getButtonLayout() {
-    return Container(
-      width: 200,
-      child: ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-            CommonColor.THEME_COLOR)),
-        onPressed: () {
-
-          Navigator.pop(context);
-        },
-        child: Text(StringEn.SAVE,
-            style: button_text_style),
-      ),
-    );
-  }
-
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditProduct(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Product",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
 
   Future<Object?> goToAddOrEditProduct(product) {
     return showGeneralDialog(
@@ -558,135 +504,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             pageBuilder: (context, animation2, animation1) {
               throw Exception('No widget to return in pageBuilder');
             });
-  }
-
-  /* Widget to get product rate list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                dataRowHeight: 50,
-                dividerThickness: 2,
-                horizontalMargin: 10,
-                dataTextStyle: item_regular_textStyle,
-                headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-                headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-                decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-                showBottomBorder: true,
-                columns: [
-                  DataColumn(
-                    label: Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text(
-                        "Product Name",
-                      ),
-                    ),
-                    numeric: false,
-                    tooltip: "This is Product Name",
-
-                  ),
-                  DataColumn(
-                    label: Container(
-                      width:SizeConfig.screenWidth/4,
-
-                      child: Text(
-                        "Purchase Rate",
-                      ),
-                    ),
-                    numeric: true,
-                    tooltip: "Product Rate",
-
-                  ),
-                  DataColumn(
-                    label: Container(
-                      width:50,
-
-                      child: Text(
-                        "GST(%)",
-                      ),
-                    ),
-                    numeric: true,
-                    tooltip: "Product GST",
-
-                  ),
-                  DataColumn(
-                    label: Container(
-                      width:SizeConfig.screenWidth/4,
-                      child: Text(
-                        "Net",
-
-                      ),
-                    ),
-                    numeric: true,
-                    tooltip: "Product Net",
-
-                  ),
-                  DataColumn(
-                    label: Container(
-                      width:50,
-                      child: Text(
-                        "Action",
-
-                      ),
-                    ),
-                    numeric: true,
-                    tooltip: "",
-
-                  ),
-                ],
-                rows: product_list
-                    .map(
-                      (product) => DataRow(
-                      cells: [
-                        DataCell(
-                          Container(
-                              width: SizeConfig.screenWidth/4+50,
-                              child: Row(
-                                children: [
-                                  IconButton(onPressed: (){
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    if (context != null) {
-                                      goToAddOrEditProduct(product);
-                                    }
-                                  }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                                  Container(
-                                      width: SizeConfig.screenWidth/4,
-                                      child: Text("${product['pname']}",overflow: TextOverflow.clip,)),
-
-                                ],
-                              )),
-                        ),
-                        DataCell(
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${((product['rate']).toStringAsFixed(2))}")),
-                        ),
-                        DataCell(
-                          Container(
-                              width: 50,
-                              child: Text("${product['gst']}")),
-                        ),
-                        DataCell(
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${((product['net']).toStringAsFixed(2))}")),
-                        ),
-                        DataCell(
-                          Container(
-                              width: 50,
-                              child: GestureDetector(
-                                  onTap: (){
-                                    product_list.remove(product);
-                                    setState(() {
-                                      product_list=product_list;
-                                    });
-                                  },
-                                  child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                        ),
-                      ]),
-                ) .toList(),
-              ),
-            );
   }
 
   /* Widget to get add Product Layout */
@@ -868,17 +685,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
 
 
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
 
 
   @override

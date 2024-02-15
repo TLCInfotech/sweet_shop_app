@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -11,8 +9,6 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
 class UserCreate extends StatefulWidget {
   const UserCreate({super.key});
@@ -47,19 +43,8 @@ class _UserCreateState extends State<UserCreate>
   String countryId = "";
   String stateName = "";
   String stateId = "";
-  Color currentColor = CommonColor.THEME_COLOR;
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
-  String hourlyRate = "\$0";
-  DateTime joinDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  DateTime endDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String startingDate = "";
-  String endingDate = "";
-  bool isPurchaseDateValidShow = false;
-  bool isPurchaseDateMsgValidShow = false;
 
   @override
   void initState() {
@@ -135,7 +120,6 @@ class _UserCreateState extends State<UserCreate>
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -157,77 +141,6 @@ class _UserCreateState extends State<UserCreate>
           ],
         ),
       ),
-    );
-  }
-
-  /* Widget for TopBar Layout */
-  Widget getAddTopBarLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .05,
-          left: parentWidth * 0.0,
-          right: parentWidth * 0.05),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            color: Colors.transparent,
-            width: parentWidth * .25,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .05),
-                    child: Image(
-                      image: AssetImage("assets/images/back.png"),
-                      height: parentHeight * .035,
-                      width: parentHeight * .035,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Text(
-          "Create Item",
-          style: TextStyle(
-            fontFamily: "Montserrat_Bold",
-            fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Container(
-          width: parentWidth * .2,
-          decoration: BoxDecoration(
-            color: CommonColor.THEME_COLOR,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: parentHeight * .01, bottom: parentHeight * .01),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  StringEn.POST,
-                  style: TextStyle(
-                    color: CommonColor.BLACK_COLOR,
-                    fontSize: SizeConfig.blockSizeHorizontal * 4.3,
-                    fontFamily: 'Inter_Regular_Font',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
     );
   }
 
@@ -329,38 +242,6 @@ class _UserCreateState extends State<UserCreate>
     );
   }
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -745,16 +626,7 @@ class _UserCreateState extends State<UserCreate>
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
+
               if (mounted) {
                 setState(() {
                   disableColor = true;
@@ -798,24 +670,9 @@ class _UserCreateState extends State<UserCreate>
         picImage = image;
       });
     }
-    print("neweww  $image");
   }
 
-  @override
-  selectState(String id, String name) {
-    // TODO: implement selectState
-    setState(() {
-      stateName=name;
-    });
-  }
 
-  @override
-  selectCountry(String id, String name) {
-    // TODO: implement selectCountry
-    setState(() {
-      countryName=name;
-    });
-  }
 }
 
 // abstract class UserCreateInterface {

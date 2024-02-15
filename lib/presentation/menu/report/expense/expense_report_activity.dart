@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
 import '../../../../core/string_en.dart';
-import '../../../dialog/category_dialog.dart';
 import '../../../dialog/franchisee_dialog.dart';
-import '../../../dialog/item_dialog.dart';
 import '../../../dialog/report_type_dialog.dart';
 import 'dart:io';
 
@@ -53,7 +50,6 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
-              // color: Colors.red,
               margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
@@ -71,7 +67,6 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -531,7 +526,6 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

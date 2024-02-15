@@ -54,7 +54,6 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
-              // color: Colors.red,
               margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
@@ -72,7 +71,6 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
