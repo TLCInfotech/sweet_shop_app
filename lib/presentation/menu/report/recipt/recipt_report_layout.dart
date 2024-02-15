@@ -100,38 +100,6 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
 
 
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -318,7 +286,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicablefrom),
+                          DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -391,7 +359,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicableTwofrom),
+                          DateFormat('dd-MM-yyyy').format(applicableTwofrom),
                           style: applicableTwofrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

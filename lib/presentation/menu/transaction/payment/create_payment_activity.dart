@@ -57,17 +57,17 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   List<dynamic> Ledger_list=[
     {
       "id":1,
-      "ledgerName":"Ladger1",
+      "ledgerName":"Mahesh Kirana Store",
       "currentBal":10,
-      "amount":100.00,
+      "amount":780.00,
       "narration":"narration1"
 
     },
     {
       "id":2,
-      "ledgerName":"Ladger2",
+      "ledgerName":"Rajesh Furnicture",
       "currentBal":20,
-      "amount":100.00,
+      "amount":5300.00,
       "narration":"narration2"
 
     },

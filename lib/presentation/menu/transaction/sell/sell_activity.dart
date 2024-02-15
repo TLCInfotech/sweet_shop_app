@@ -57,7 +57,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSellInvoice(
-              dateNew: DateFormat('yyyy-MM-dd').format(invoiceDate),
+              dateNew: DateFormat('dd-MM-yyyy').format(invoiceDate),
               mListener: this,
             )));
           }),
@@ -162,7 +162,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
+              Text(DateFormat('dd-MM-yyyy').format(invoiceDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

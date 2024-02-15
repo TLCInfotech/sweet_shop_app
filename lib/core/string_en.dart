@@ -28,6 +28,7 @@ class StringEn{
   static const ITEM = "Item";
   static const CREATE_ITEM = "Create Item";
   static const ADD_ITEMS = "Add Item";
+
  // static const INVOICE_DETAIL = "Invoice Detail";
  // static const INVOICE_DETAILS = "Invoice Detail";
   static const ITEM_NAME = "Item Name";
@@ -131,7 +132,8 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const ADDPRODUCT="Add Product";
   static const GST="GST";
   static const NET="Net Amount";
-  static const SALE_RATE="Sale Rate";
+  static const NET_RATE="Net Rate";
+  static const SALE_RATE="Basic Rate";
   static const PURCHASE_RATE="Purchase Rate";
 
 //expense
@@ -218,7 +220,6 @@ static const CREATE_EXPENSES="Expense Invoice - New";
 
 
   static const TAX_AMT = "Taxable Amount";
-  static const NET_RATE="Net Rate";
   static const GST_AMT = "GST Amount";
   static const DISCOUNT_AMT = "Disc. Amount";
 

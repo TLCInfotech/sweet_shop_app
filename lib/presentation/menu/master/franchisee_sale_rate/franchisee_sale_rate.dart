@@ -40,19 +40,19 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   List<dynamic> product_list=[
     {
       "id":1,
-      "pname":"Product1",
-      "rate":1050.00,
-      "gst":10,
-      "gstAmt":100,
-      "net":115000.00,
+      "pname":"Gulakand Burfi",
+      "rate":1000.00,
+      "gst":12,
+      "gstAmt":120,
+      "net":1120.00,
     },
     {
       "id":2,
-      "pname":"Product2",
-      "rate":1050.00,
-      "gst":10,
-      "gstAmt":100,
-      "net":1510.00,
+      "pname":"Mango Burfi",
+      "rate":800.00,
+      "gst":12,
+      "gstAmt":96,
+      "net":896.00,
     },
   ];
 
@@ -133,7 +133,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${product_list.length} Products",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
              // Text("Round Off : ${double.parse(TotalAmount).round()}",style:  item_regular_textStyle.copyWith(color: Colors.grey)),
               //Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
@@ -223,7 +223,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_PRODUCT,
+                                  Text(StringEn.ADD_ITEMS,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -313,8 +313,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
-                                                // Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                //Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+
+                                              //  Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
                                               ],
                                             ),
@@ -841,7 +843,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(applicablefrom),
+              Text(DateFormat('dd-MM-yyyy').format(applicablefrom),
                 style: item_regular_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

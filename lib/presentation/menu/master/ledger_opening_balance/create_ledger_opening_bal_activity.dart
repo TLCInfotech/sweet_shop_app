@@ -55,14 +55,14 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   List<dynamic> Item_list=[
     {
       "id":1,
-      "itemName":"Ledger 1",
+      "itemName":"Mahesh Kirana Store",
       "amt":550.00,
       "amtType":"Cr",
     },
     {
       "id":2,
-      "itemName":"Ledger 2",
-      "amt":550.00,
+      "itemName":"Rajesh Furnicture",
+      "amt":1000.00,
       "amtType":"Dr",
 
     },

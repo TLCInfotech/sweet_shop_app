@@ -281,7 +281,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicablefrom),
+                          DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -355,7 +355,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicableTo),
+                          DateFormat('dd-MM-yyyy').format(applicableTo),
                           style: applicableTo == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

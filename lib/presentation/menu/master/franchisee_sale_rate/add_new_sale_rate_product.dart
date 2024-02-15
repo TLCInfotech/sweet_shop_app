@@ -24,6 +24,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   TextEditingController rate = TextEditingController();
   TextEditingController gst = TextEditingController();
   TextEditingController net = TextEditingController();
+  TextEditingController gstAmt = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
   //
@@ -58,6 +59,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         rate.text=widget.editproduct['rate'].toString();
         gst.text=widget.editproduct['gst'].toString();
         net.text=widget.editproduct['net'].toString();
+        gstAmt.text=widget.editproduct['gstAmt'].toString();
 
       });
     }
@@ -89,21 +91,24 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.ADDPRODUCT,
+                          StringEn.ADD_ITEMS,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.PRODUCTS),
+                  getFieldTitleLayout(StringEn.ITEM),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.SALE_RATE),
                   getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.GST),
+                  getFieldTitleLayout(StringEn.GST+"%"),
                   getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.NET),
+                  getFieldTitleLayout(StringEn.GST_AMT),
+                  getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
+                  getFieldTitleLayout(StringEn.NET_RATE),
                   getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                /*   SizedBox(height: 20,),
@@ -180,6 +185,48 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
     );
   }
 
+
+  /* widget for gst amount layout */
+  Widget getGstAmountLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: TextFormField(
+
+        keyboardType: TextInputType.number,
+        controller: gstAmt,
+        decoration: textfield_decoration.copyWith(
+            hintText: StringEn.GST_AMT,
+        ),
+        onChanged: (value){
+
+          calculateOriginalAmt();
+        },
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Net Amt.";
+          }
+          return null;
+        }),
+        onTapOutside: (event) {
+          setState(() {
+            gstAmt.text=(double.parse(net.text).toStringAsFixed(2)).toString();
+          });
+        },
+      ),
+    );
+  }
 
   /* widget for product net layout */
   Widget getProductNetLayout(double parentHeight, double parentWidth) {
@@ -327,7 +374,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Product Name",
+          hintText: StringEn.ITEM_NAME,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),

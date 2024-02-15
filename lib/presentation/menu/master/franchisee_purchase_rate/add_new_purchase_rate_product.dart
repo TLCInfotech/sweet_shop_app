@@ -24,6 +24,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   TextEditingController rate = TextEditingController();
   TextEditingController gst = TextEditingController();
   TextEditingController net = TextEditingController();
+  TextEditingController gstAmt = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
   //
@@ -58,6 +59,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         rate.text=widget.editproduct['rate'].toString();
         gst.text=widget.editproduct['gst'].toString();
         net.text=widget.editproduct['net'].toString();
+        gstAmt.text=widget.editproduct['gstAmt'].toString();
 
       });
     }
@@ -102,6 +104,9 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
                   getFieldTitleLayout(StringEn.GST),
                   getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
+                  getFieldTitleLayout(StringEn.GST_AMT),
+                  getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getFieldTitleLayout(StringEn.NET),
                   getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -223,6 +228,48 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
     );
   }
 
+
+  /* widget for gst amount layout */
+  Widget getGstAmountLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: TextFormField(
+
+        keyboardType: TextInputType.number,
+        controller: gstAmt,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.GST_AMT,
+        ),
+        onChanged: (value){
+
+          calculateOriginalAmt();
+        },
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Net Amt.";
+          }
+          return null;
+        }),
+        onTapOutside: (event) {
+          setState(() {
+            gstAmt.text=(double.parse(net.text).toStringAsFixed(2)).toString();
+          });
+        },
+      ),
+    );
+  }
 
   /* widget for product gst layout */
   Widget getProductGSTLayout(double parentHeight, double parentWidth) {

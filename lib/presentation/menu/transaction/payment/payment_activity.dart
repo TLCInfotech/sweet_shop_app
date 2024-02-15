@@ -59,7 +59,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
               mListener: this,
-              dateNew:DateFormat('yyyy-MM-dd').format(newDate),
+              dateNew:DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -104,7 +104,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Payments  ", style: subHeading_withBold,),
+              Text("10 Invoices  ", style: subHeading_withBold,),
               Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -164,7 +164,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(newDate),
+              Text(DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

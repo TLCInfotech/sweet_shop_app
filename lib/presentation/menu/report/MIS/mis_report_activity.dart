@@ -162,7 +162,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                     ],
                   ),
                   getLeaderNameLayout(parentHeight, parentWidth),
-                  getBankCashLedgerLayout(parentHeight, parentWidth),
+                  //getBankCashLedgerLayout(parentHeight, parentWidth),
                 ],
               ),
             ),
@@ -318,7 +318,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicablefrom),
+                          DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -391,7 +391,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicableTwofrom),
+                          DateFormat('dd-MM-yyyy').format(applicableTwofrom),
                           style: applicableTwofrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

@@ -287,7 +287,7 @@ class _CreateReceiptState extends State<CreateReceipt>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('yyyy-MM-dd').format(applicablefrom),
+                          DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

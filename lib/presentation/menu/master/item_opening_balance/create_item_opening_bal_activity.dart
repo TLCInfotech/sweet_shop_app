@@ -55,20 +55,20 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
   List<dynamic> Item_list=[
     {
       "id":1,
-      "itemName":"Item1",
+      "itemName":"Gulakand Burfi",
       "quantity":2,
       "unit":"kg",
       "rate":200.00,
-      "amt":550.00,
+      "amt":400.00,
 
     },
     {
       "id":2,
-      "itemName":"Item2",
+      "itemName":"Mango Burfi",
       "quantity":5,
       "unit":"kg",
       "rate":500.00,
-      "amt":550.00,
+      "amt":2500.00,
 
     },
   ];
@@ -252,9 +252,9 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
+                    //  Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -421,7 +421,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                                 Text("${(Item_list[index]['rate']).toStringAsFixed(2)}/${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                                 Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
@@ -429,13 +429,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                                             ),
 
                                           ),
-                                        /*  SizedBox(height: 5,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),*/
                                         ],
                                       ),
                                     ),

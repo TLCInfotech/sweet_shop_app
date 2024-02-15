@@ -57,7 +57,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
-              dateNew: DateFormat('yyyy-MM-dd').format(invoiceDate),
+              dateNew: DateFormat('dd-MM-yyyy').format(invoiceDate),
               mListener: this,
             )));
           }),
@@ -102,7 +102,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Ledger  ", style: subHeading_withBold,),
+              Text("10 Ledgers  ", style: subHeading_withBold,),
               Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -162,7 +162,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(invoiceDate),
+              Text(DateFormat('dd-MM-yyyy').format(invoiceDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

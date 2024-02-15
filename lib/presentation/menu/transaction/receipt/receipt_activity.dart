@@ -60,7 +60,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
               mListener: this,
-              dateNew: DateFormat('yyyy-MM-dd').format(newDate),
+              dateNew: DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -105,7 +105,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Receipts  ", style: subHeading_withBold,),
+              Text("10 Invoices", style: subHeading_withBold,),
               Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -165,7 +165,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('yyyy-MM-dd').format(newDate),
+              Text(DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

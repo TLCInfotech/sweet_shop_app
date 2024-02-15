@@ -18,7 +18,7 @@ class CommonWidget {
 
 
   static getCurrencyFormat(var amount) {
-    return NumberFormat.currency(locale: "HI", name: "INR ", decimalDigits: 2,).format(amount);
+    return NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
   }
 
   static getCommonPadding(double padding, Color colors) {
@@ -178,7 +178,7 @@ class CommonWidget {
       },
     );
     if (picked != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
       print(formattedDate);
       return picked;
     }
@@ -212,7 +212,7 @@ class CommonWidget {
       },
     );
     if (picked != null) {
-      String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
       print(formattedDate);
       return picked;
     }
