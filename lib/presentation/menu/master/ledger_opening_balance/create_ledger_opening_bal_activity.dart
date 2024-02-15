@@ -155,83 +155,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     );
   }
 
-  /* Widget for navigate to next screen button layout */
-  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10,bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            width: SizeConfig.halfscreenWidth,
-            padding: EdgeInsets.only(top: 10,bottom:10),
-            decoration: BoxDecoration(
-              // color:  CommonColor.DARK_BLUE,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                SizedBox(height: 5,),
-                Row(
-                  children: [
-                    Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
-                    Text(TotalCr>TotalDr?" Cr":" Dr",style: item_heading_textStyle,)
-                  ],
-                )
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-            },
-            onDoubleTap: () {},
-            child: Container(
-              width: SizeConfig.halfscreenWidth,
-              height: 50,
-              decoration: BoxDecoration(
-                color: disableColor == true
-                    ? CommonColor.THEME_COLOR.withOpacity(.5)
-                    : CommonColor.THEME_COLOR,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
-                      style: page_heading_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -297,61 +220,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       ],
     );
 
-  }
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
-  Future<Object?> goToAddOrEditItem(product) {
-    return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: AddOrEditLedgerOpeningBal(
-                mListener: this,
-                editproduct:product,
-              ),
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
   }
 
 
@@ -461,236 +329,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     );
 
 
-    /*Container(
-      height: parentHeight*.6,
-      child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: Item_list.length,
-        itemBuilder: (BuildContext context, int index) {
-          return  AnimationConfiguration.staggeredList(
-            position: index,
-            duration:
-            const Duration(milliseconds: 500),
-            child: SlideAnimation(
-              verticalOffset: -44.0,
-              child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
-                child: Card(
-                  child: Row(
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.all(10.0),
-                      //   child: Container(
-                      //     height: 40,
-                      //       width: 40,
-                      //       alignment: Alignment.center,
-                      //       padding: EdgeInsets.all(10),
-                      //       decoration: BoxDecoration(
-                      //           color: (index)%2==0?Colors.green:Colors.blueAccent,
-                      //           borderRadius: BorderRadius.circular(5)
-                      //       ),
-                      //       child:
-                      //      Text((index+1).toString(),style: page_heading_textStyle),
-                      //   ),
-                      // ),
-                      Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                                color: Colors.purple.withOpacity(0.3),
-                                                borderRadius: BorderRadius.circular(15)
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
-                                        SizedBox(width: 5,),
-                                        Text("${(Item_list[index]['itemName'])} ",style: item_heading_textStyle,),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5 ,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(width: 5,),
-
-                                      ],
-                                    ),
-                                    SizedBox(height: 5,),
-
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child:IconButton(
-                                    icon:  FaIcon(
-                                      FontAwesomeIcons.trash,
-                                      size: 15,
-                                      color: Colors.redAccent,
-                                    ),
-                                    onPressed: (){},
-                                  ) ),
-                              // Positioned(
-                              //     bottom: 10,
-                              //     right: 10,
-                              //     child:
-                              //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
-                              // )
-                            ],
-                          )
-
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
-            height: 5,
-          );
-        },
-      ),
-    );*/
-  }
-
-
-  /* Widget to get item  list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                "Ledger Name",
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Item Name",
-
-          ),
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Amount",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: " Amt",
-
-          ),
-
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Type",
-                overflow: TextOverflow.clip,
-              ),
-            ),
-            numeric: true,
-            tooltip: " Amt",
-
-          ),
-
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Action",
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: Item_list
-            .map(
-              (item) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(item);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-
-
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
-                ),
-
-
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${((item['amtType']))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: ()async{
-                            Item_list.remove(item);
-                            setState(() {
-                              Item_list=Item_list;
-                            });
-                            await calculateTotalAmt();
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
-      ),
-    );
   }
 
   Container InvoiceInfo() {
@@ -714,6 +352,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     );
   }
 
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -725,8 +364,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       ),
     );
   }
-
-
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
@@ -774,51 +411,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       ),
     );
   }
-
-  /* Widget for Invoice No text from field layout */
-  Widget getInvoiceNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.words,
-          focusNode: _InvoiceNoFocus,
-          keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
-          cursorColor: CommonColor.BLACK_COLOR,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(
-                left: parentWidth * .04, right: parentWidth * .02),
-            border: InputBorder.none,
-            counterText: '',
-            isDense: true,
-            hintText: "Enter a item name",
-            hintStyle: hint_textfield_Style,
-          ),
-          controller: InvoiceNoController,
-          onEditingComplete: () {
-            _InvoiceNoFocus.unfocus();
-          },
-          style: text_field_textStyle,
-        ),
-      ),
-    );
-  }
-
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
@@ -890,6 +482,140 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
             ),
           ),
         ),
+      ),
+    );
+  }
+
+
+  /* Widget to get add Product Layout */
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          goToAddOrEditItem(null);
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Add New Item",
+                style: item_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.plusCircle,
+                color: Colors.black87, size: 20,)
+            ],
+          )
+      ),
+    );
+  }
+
+  Future<Object?> goToAddOrEditItem(product) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditLedgerOpeningBal(
+                mListener: this,
+                editproduct:product,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
+  }
+
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10,bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: SizeConfig.halfscreenWidth,
+            padding: EdgeInsets.only(top: 10,bottom:10),
+            decoration: BoxDecoration(
+              // color:  CommonColor.DARK_BLUE,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                SizedBox(height: 5,),
+                Row(
+                  children: [
+                    Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+                    Text(TotalCr>TotalDr?" Cr":" Dr",style: item_heading_textStyle,)
+                  ],
+                )
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+            },
+            onDoubleTap: () {},
+            child: Container(
+              width: SizeConfig.halfscreenWidth,
+              height: 50,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child: const Text(
+                      StringEn.SAVE,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

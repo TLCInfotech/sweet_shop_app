@@ -20,6 +20,8 @@ class ItemOpeningBal extends StatefulWidget {
 }
 
 class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,20 +112,6 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     );
   }
 
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 5, bottom: 5,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
-
-  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GestureDetector(
@@ -171,6 +159,21 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
       ),
     );
   }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 5, bottom: 5,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
+
+
+
 
 
   Expanded get_purchase_list_layout() {

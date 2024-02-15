@@ -312,102 +312,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   String ?selectedLimitUnit = null;
 
   double opacityLevel = 1.0;
-  Widget getImageLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            picImage == null
-                ? Container(
-              height: parentHeight * .25,
-              width: parentHeight * .25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/images/placeholder.png'), // Replace with your image asset path
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(7),
-              ),
-            )
-                : Container(
-              height: parentHeight * .25,
-              width: parentHeight * .25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  image: DecorationImage(
-                    image: FileImage(picImage!),
-                    fit: BoxFit.cover,
-                  )),
-            ),
-            GestureDetector(
-              onTap: () {
-                if (mounted) {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    showCupertinoDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (context) {
-                        return AnimatedOpacity(
-                          opacity: opacityLevel,
-                          duration: const Duration(seconds: 2),
-                          child: ImagePickerDialogPost(
-                            imagePicker,
-                            _Controller,
-                            context,
-                            this,
-                            isOpenFrom: '',
-                          ),
-                        );
-                      },
-                    );
-                  });
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(left: parentWidth * .08),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: parentHeight * .05,
-                      width: parentHeight * .05,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors
-                            .white, // Change the color to your desired fill color
-                      ),
-                      /*     decoration: BoxDecoration(
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/edit_post.png'), // Replace with your image asset path
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(7),
-                      ),*/
-                    ),
-                    Container(
-                        height: parentHeight * .03,
-                        width: parentHeight * .03,
-                        child: const Image(
-                          image: AssetImage("assets/images/edit_post.png"),
-                          fit: BoxFit.contain,
-                        ))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   /* Widget for create first project layout */
   Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
@@ -442,17 +346,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -579,6 +472,116 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
+  Widget getImageLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            picImage == null
+                ? Container(
+              height: parentHeight * .25,
+              width: parentHeight * .25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                image: const DecorationImage(
+                  image: AssetImage(
+                      'assets/images/placeholder.png'), // Replace with your image asset path
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(7),
+              ),
+            )
+                : Container(
+              height: parentHeight * .25,
+              width: parentHeight * .25,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  image: DecorationImage(
+                    image: FileImage(picImage!),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (mounted) {
+                  setState(() {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    showCupertinoDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) {
+                        return AnimatedOpacity(
+                          opacity: opacityLevel,
+                          duration: const Duration(seconds: 2),
+                          child: ImagePickerDialogPost(
+                            imagePicker,
+                            _Controller,
+                            context,
+                            this,
+                            isOpenFrom: '',
+                          ),
+                        );
+                      },
+                    );
+                  });
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: parentWidth * .08),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: parentHeight * .05,
+                      width: parentHeight * .05,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors
+                            .white, // Change the color to your desired fill color
+                      ),
+                      /*     decoration: BoxDecoration(
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/edit_post.png'), // Replace with your image asset path
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(7),
+                      ),*/
+                    ),
+                    Container(
+                        height: parentHeight * .03,
+                        width: parentHeight * .03,
+                        child: const Image(
+                          image: AssetImage("assets/images/edit_post.png"),
+                          fit: BoxFit.contain,
+                        ))
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /* widget for button layout */
+  Widget getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
+
+
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -689,6 +692,265 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   }
 
 
+  /* Widget for contact person text from field layout */
+  Widget getContactPersonLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringEn.FRANCHISEE_CONTACT_PERSON,
+                style: page_heading_textStyle,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Container(
+              height: parentHeight * .055,
+              alignment: Alignment.center,
+              decoration: box_decoration,
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.words,
+                focusNode: _contactPersonFocus,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                cursorColor: CommonColor.BLACK_COLOR,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(
+                      left: parentWidth * .04, right: parentWidth * .02),
+                  border: InputBorder.none,
+                  counterText: '',
+                  isDense: true,
+                  hintText: "Enter a contact person",
+                  hintStyle: hint_textfield_Style,
+                ),
+                controller: contactPersonController,
+                onEditingComplete: () {
+                  _contactPersonFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_addressFocus);
+                },
+                style: text_field_textStyle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /* Widget for description text from field layout */
+  Widget getAddressLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: parentHeight * 0.02,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            StringEn.ADDRESS,
+            style: page_heading_textStyle,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .005),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  height: parentHeight * .135,
+                  decoration:box_decoration,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: parentHeight * .01),
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.sentences,
+                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
+                      focusNode: _addressFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      maxLines: 6,
+                      maxLength: 500,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding:
+                        EdgeInsets.only(left: parentWidth * .04),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a address",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: addressController,
+                      onEditingComplete: () {
+                        _addressFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_districtCity);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  /* Widget for select contract layout */
+
+  Widget getLeftLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(right: parentWidth * .01),
+      child: Column(
+        children: [
+          getDistrictCityLayout(parentHeight, parentWidth),
+          getStateLayout(parentHeight, parentWidth),
+          //getVendorLayout(parentHeight, parentWidth),
+        ],
+      ),
+    );
+  }
+
+
+  Widget getRightLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(left: parentWidth * .01),
+      child: Column(
+        children: [
+          getPinCodeLayout(parentHeight, parentWidth),
+          getCountryLayout(parentHeight, parentWidth),
+        ],
+      ),
+    );
+  }
+
+  /* Widget for contact no  text from field layout */
+  Widget getContactNoLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        //width: parentWidth * .43,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.CONTACT_NO,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.none,
+                      focusNode: _contactFocus,
+                      keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+
+                      decoration:  InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a contact no",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: contactController,
+                      onEditingComplete: () {
+                        _contactFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_emailFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for  email  text from field layout */
+  Widget getEmilLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        //width: parentWidth * .43,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.EMAIL,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
+                      ],
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.none,
+                      focusNode: _emailFocus,
+                      keyboardType:TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration:  InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a email",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: emailController,
+                      onEditingComplete: () {
+                        _emailFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_outstandingLimitFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
   /* Widget for outstanding limit text from field layout */
   Widget getOutstandingLimitLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -779,33 +1041,46 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
-  /* Widget for contact person text from field layout */
-  Widget getContactPersonLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.FRANCHISEE_CONTACT_PERSON,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
+
+  /* Widget for branch name text from field layout */
+  Widget getAdharLayout(double parentHeight, double parentWidth) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          StringEn.FRANCHISEE_AADHAR_NO,
+          style: page_heading_textStyle,
+        ),
+        SizedBox(height: 5,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
               height: parentHeight * .055,
+              width: parentWidth*.7,
               alignment: Alignment.center,
-              decoration: box_decoration,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
               child: TextFormField(
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                maxLength: 12,
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.words,
-                focusNode: _contactPersonFocus,
-                keyboardType: TextInputType.text,
+                focusNode: _adharoFocus,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 cursorColor: CommonColor.BLACK_COLOR,
                 decoration: InputDecoration(
@@ -814,22 +1089,50 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a contact person",
+                  hintText: "Enter a adhar no.",
                   hintStyle: hint_textfield_Style,
                 ),
-                controller: contactPersonController,
+                controller: adharNoController,
                 onEditingComplete: () {
-                  _contactPersonFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_addressFocus);
+                  _adharoFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_panNoFocus);
                 },
                 style: text_field_textStyle,
               ),
             ),
-          ),
-        ],
-      ),
+            GestureDetector(
+              onTap: (){
+                getAadharFile();
+              },
+              child: Padding(
+                padding:  EdgeInsets.only(right: parentWidth*.0),
+                child: Container(
+                    height: 50,
+                    width: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
+                        Text("Upload",style: subHeading_withBold)
+                      ],
+                    )
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 5,),
+        adharFile!=null?
+        getFileLayout(adharFile!):Container()
+      ],
     );
   }
+
   /* Widget for branch name text from field layout */
   Widget getPanLayout(double parentHeight, double parentWidth) {
     return Column(
@@ -918,96 +1221,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       ],
     );
   }
-  /* Widget for branch name text from field layout */
-  Widget getAdharLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          StringEn.FRANCHISEE_AADHAR_NO,
-          style: page_heading_textStyle,
-        ),
-        SizedBox(height: 5,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: parentHeight * .055,
-              width: parentWidth*.7,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                maxLength: 12,
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _adharoFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a adhar no.",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: adharNoController,
-                onEditingComplete: () {
-                  _adharoFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_panNoFocus);
-                  },
-                style: text_field_textStyle,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                getAadharFile();
-              },
-              child: Padding(
-                padding:  EdgeInsets.only(right: parentWidth*.0),
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                        Text("Upload",style: subHeading_withBold)
-                      ],
-                    )
-                ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        adharFile!=null?
-        getFileLayout(adharFile!):Container()
-      ],
-    );
-  }
+
   /* Widget for branch name text from field layout */
   Widget getGstLayout(double parentHeight, double parentWidth) {
     return Column(
@@ -1097,6 +1311,552 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
+
+  Widget getTaxLeftLayout(double parentHeight, double parentWidth){
+    return Padding(
+      padding: EdgeInsets.only(right: parentWidth * .01),
+      child: Column(
+        children: [
+          getTaxTypeLayout(parentHeight,parentWidth),
+          getHSNLayout(parentHeight,parentWidth),
+          getCGSTLayout(parentHeight,parentWidth),
+          getCessLayout(parentHeight,parentWidth),
+        ],
+      ),
+    );
+  }
+
+
+  /* Widget for taxt type layout */
+  Widget getTaxTypeLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.TAX_TYPE,
+              style: page_heading_textStyle,
+            ),
+            GestureDetector(
+              onTap: (){
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      return Transform(
+                        transform:
+                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: TaxDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception('No widget to return in pageBuilder');
+                    });
+              },
+              onDoubleTap: (){},
+              child: Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Container(
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  decoration: box_decoration,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          taxTypeName == "" ? "Select type" : taxTypeName,
+                          style: taxTypeName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for HSN text from field layout */
+  Widget getHSNLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.HSN_NO,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _hsnNoFocus,
+                      keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a HSN",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: hsnNoController,
+                      onEditingComplete: () {
+                        _hsnNoFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_taxRateFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  /* Widget for CGST text from field layout */
+  Widget getCGSTLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.CGST,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _CGSTFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a CGST ",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: CGSTController,
+                      onEditingComplete: () {
+                        _CGSTFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_SGSTFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+/* Widget for cess text from field layout */
+  Widget getCessLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.CESS,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _cessFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a  cess",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: cessController,
+                      onEditingComplete: () {
+                        _cessFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_addCessFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+  Widget getTaxRightLayout(double parentHeight, double parentWidth){
+    return Padding(
+      padding: EdgeInsets.only(left: parentWidth * .01),
+      child: Column(
+        children: [
+          getTaxCategoryLayout(parentHeight,parentWidth),
+          getTaxRateLayout(parentHeight,parentWidth),
+          getSGSTLayout(parentHeight,parentWidth),
+          getAddCessLayout(parentHeight,parentWidth),
+        ],
+      ),
+    );
+  }
+
+
+  /* Widget for taxt category layout */
+  Widget getTaxCategoryLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.TAX_CATEGORY,
+              style: page_heading_textStyle,
+            ),
+            GestureDetector(
+              onTap: (){
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      return Transform(
+                        transform:
+                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: TaxCategoryDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception('No widget to return in pageBuilder');
+                    });
+              },
+              onDoubleTap: (){},
+              child: Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Container(
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  decoration: box_decoration,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            taxCategoryName == "" ? "Select category" : taxCategoryName,
+                            style: taxCategoryName == ""
+                                ? hint_textfield_Style
+                                : text_field_textStyle,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            // textScaleFactor: 1.02,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for tax rate text from field layout */
+  Widget getTaxRateLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.TAX_RATE,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _taxRateFocus,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a tax rate",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: taxRateController,
+                      onEditingComplete: () {
+                        _taxRateFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_CGSTFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  /* Widget for SGST text from field layout */
+  Widget getSGSTLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.SGST,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _SGSTFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a  SGST",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: SGSTController,
+                      onEditingComplete: () {
+                        _SGSTFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_cessFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  /* Widget for add cess text from field layout */
+  Widget getAddCessLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.ADD_CESS,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _addCessFocus,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
+
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a add cess",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: addCessController,
+                      onEditingComplete: () {
+                        _addCessFocus.unfocus();
+                        //FocusScope.of(context).requestFocus(_contactFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
   //common widget to display file
   Stack getFileLayout(File fileName) {
     return Stack(
@@ -1170,80 +1930,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   }
 
 
-  /* Widget for description text from field layout */
-  Widget getAddressLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: parentHeight * 0.02,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.ADDRESS,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .135,
-                  decoration:box_decoration,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .01),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.sentences,
-                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
-                      focusNode: _addressFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      maxLines: 6,
-                      maxLength: 500,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding:
-                        EdgeInsets.only(left: parentWidth * .04),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a address",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: addressController,
-                      onEditingComplete: () {
-                        _addressFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_districtCity);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  /* Widget for select contract layout */
-
-  Widget getLeftLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(right: parentWidth * .01),
-      child: Column(
-        children: [
-          getDistrictCityLayout(parentHeight, parentWidth),
-          getStateLayout(parentHeight, parentWidth),
-          //getVendorLayout(parentHeight, parentWidth),
-        ],
-      ),
-    );
-  }
 
   /* Widget for distric/city text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
@@ -1288,118 +1975,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       onEditingComplete: () {
                         _districtCity.unfocus();
                         FocusScope.of(context).requestFocus(_pinCodeFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for pin code text from field layout */
-  Widget getPinCodeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.PIN_CODE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _pinCodeFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a pin code",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: pinCodeController,
-                      onEditingComplete: () {
-                        _pinCodeFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_contactFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for vendor text from field layout */
-  Widget getVendorLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.VENDOR_CODE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _vendorCodeFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a vendor coed",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: vendorCodeController,
-                      onEditingComplete: () {
-                        _vendorCodeFocus.unfocus();
-                       // FocusScope.of(context).requestFocus(_panNoFocus);
                       },
                       style: text_field_textStyle,
                     ),
@@ -1492,6 +2067,64 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
+
+  /* Widget for pin code text from field layout */
+  Widget getPinCodeLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              StringEn.PIN_CODE,
+              style: page_heading_textStyle,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .005),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: parentHeight * .055,
+                    // width: parentWidth * .85,
+                    alignment: Alignment.center,
+                    decoration: box_decoration,
+                    child: TextFormField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textCapitalization: TextCapitalization.words,
+                      focusNode: _pinCodeFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: CommonColor.BLACK_COLOR,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: parentWidth * .04, right: parentWidth * .02),
+                        border: InputBorder.none,
+                        counterText: '',
+                        isDense: true,
+                        hintText: "Enter a pin code",
+                        hintStyle: hint_textfield_Style,
+                      ),
+                      controller: pinCodeController,
+                      onEditingComplete: () {
+                        _pinCodeFocus.unfocus();
+                        FocusScope.of(context).requestFocus(_contactFocus);
+                      },
+                      style: text_field_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -1571,513 +2204,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
-  Widget getRightLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .01),
-      child: Column(
-        children: [
-          getPinCodeLayout(parentHeight, parentWidth),
-          getCountryLayout(parentHeight, parentWidth),
-        ],
-      ),
-    );
-  }
-
-
-  /* Widget for reg type  text from field layout */
-  Widget getRegTypeLayoutttt(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.REG_TYPE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _regTypeFocus,
-                      keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a reg type",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: regTypeController,
-                      onEditingComplete: () {
-                        _regTypeFocus.unfocus();
-                     //   FocusScope.of(context).requestFocus(_jurisdictionFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for country text from field layout */
-  Widget getRegTypeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        //width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.REG_TYPE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Container(
-                height: parentHeight * .055,
-                alignment: Alignment.center,
-                decoration: box_decoration,
-                child:  GestureDetector(
-                  onTap: (){
-                    showGeneralDialog(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        transitionBuilder: (context, a1, a2, widget) {
-                          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                          return Transform(
-                            transform:
-                            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                            child: Opacity(
-                              opacity: a1.value,
-                              child:CountryDialog(
-                                mListener: this,
-                              ),
-                            ),
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        barrierLabel: '',
-                        context: context,
-                        pageBuilder: (context, animation2, animation1) {
-                          throw Exception('No widget to return in pageBuilder');
-                        });
-                  },
-                  onDoubleTap: (){},
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          regTypeName == "" ? "Select" : regTypeName,
-                          style: regTypeName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  /* Widget for contact no  text from field layout */
-  Widget getContactNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        //width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CONTACT_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.none,
-                      focusNode: _contactFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a contact no",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: contactController,
-                      onEditingComplete: () {
-                        _contactFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_emailFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for  email  text from field layout */
-  Widget getEmilLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        //width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.EMAIL,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
-                      ],
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.none,
-                      focusNode: _emailFocus,
-                      keyboardType:TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a email",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: emailController,
-                      onEditingComplete: () {
-                        _emailFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_outstandingLimitFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for pan no  text from field layout */
-  Widget getPanoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.PAN_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _panNoFocus,
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter pan no",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: panNoController,
-                      onEditingComplete: () {
-                        _panNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_gstNoFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for gst no  text from field layout */
-  Widget getGstNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.GST_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _gstNoFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a gst no",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: gstNoController,
-                      onEditingComplete: () {
-                        _gstNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_cinNoFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for cin no  text from field layout */
-  Widget getCINNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .43,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CIN_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _cinNoFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration:  InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter cin no",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: cinNoController,
-                      onEditingComplete: () {
-                        _cinNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_addTwoFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-  /* Widget for default bank text from field layout */
-  Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.DEFAULT_BANK,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: box_decoration,
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _defaultBankFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: "Enter a name",
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: defaultBankController,
-                    onEditingComplete: () {
-                      _defaultBankFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_extNameFocus);
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /* Widget for ext name text from field layout */
   Widget getExtNameLayout(double parentHeight, double parentWidth) {
@@ -2136,100 +2262,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
-  Widget getTaxLayout(double parentHeight, double parentWidth){
-    return  Padding(
-      padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.03),
-      child: Container(
-        height: parentHeight * .055,
-       // width: parentWidth*.7,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              StringEn.TAX,
-              style: appbar_text_style,
-              textAlign: TextAlign.start,
 
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  Widget getAccountInfoLayout(double parentHeight, double parentWidth){
-    return  Padding(
-      padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.03),
-      child: Container(
-        height: parentHeight * .055,
-        // width: parentWidth*.7,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              StringEn.ACCOUNT_INFO,
-              style: appbar_text_style,
-              textAlign: TextAlign.start,
 
-            ),
-          ],
-        ),
-      ),
-    );
-  }
- Widget getTaxLeftLayout(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(right: parentWidth * .01),
-      child: Column(
-        children: [
-          getTaxTypeLayout(parentHeight,parentWidth),
-          getHSNLayout(parentHeight,parentWidth),
-          getCGSTLayout(parentHeight,parentWidth),
-          getCessLayout(parentHeight,parentWidth),
-        ],
-      ),
-    );
- }
-
- Widget getTaxRightLayout(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .01),
-      child: Column(
-        children: [
-          getTaxCategoryLayout(parentHeight,parentWidth),
-          getTaxRateLayout(parentHeight,parentWidth),
-          getSGSTLayout(parentHeight,parentWidth),
-          getAddCessLayout(parentHeight,parentWidth),
-        ],
-      ),
-    );
- }
   /*Widget for TCS / TDS Applicable Layout*/
-  Widget getTCSTDSApplicableLayout(
-      double parentHeight, double parentWidth) {
+  Widget getTCSTDSApplicableLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * .016),
       child: Row(
@@ -2298,502 +2334,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   }
 
 
-  /* Widget for taxt type layout */
-  Widget getTaxTypeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.TAX_TYPE,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: (){
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform:
-                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: TaxDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception('No widget to return in pageBuilder');
-                    });
-              },
-              onDoubleTap: (){},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: box_decoration,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          taxTypeName == "" ? "Select type" : taxTypeName,
-                          style: taxTypeName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  /* Widget for taxt category layout */
-  Widget getTaxCategoryLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.TAX_CATEGORY,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: (){
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform:
-                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: TaxCategoryDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception('No widget to return in pageBuilder');
-                    });
-              },
-              onDoubleTap: (){},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: box_decoration,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            taxCategoryName == "" ? "Select category" : taxCategoryName,
-                            style: taxCategoryName == ""
-                                ? hint_textfield_Style
-                                : text_field_textStyle,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            // textScaleFactor: 1.02,
-                          ),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for HSN text from field layout */
-  Widget getHSNLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.HSN_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _hsnNoFocus,
-                      keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a HSN",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: hsnNoController,
-                      onEditingComplete: () {
-                        _hsnNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_taxRateFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for tax rate text from field layout */
-  Widget getTaxRateLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.TAX_RATE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _taxRateFocus,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a tax rate",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: taxRateController,
-                      onEditingComplete: () {
-                        _taxRateFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_CGSTFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for CGST text from field layout */
-  Widget getCGSTLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CGST,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _CGSTFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a CGST ",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: CGSTController,
-                      onEditingComplete: () {
-                        _CGSTFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_SGSTFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for SGST text from field layout */
-  Widget getSGSTLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.SGST,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _SGSTFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a  SGST",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: SGSTController,
-                      onEditingComplete: () {
-                        _SGSTFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_cessFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /* Widget for cess text from field layout */
-  Widget getCessLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CESS,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _cessFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a  cess",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: cessController,
-                      onEditingComplete: () {
-                        _cessFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_addCessFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  /* Widget for add cess text from field layout */
-  Widget getAddCessLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.ADD_CESS,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    // width: parentWidth * .85,
-                    alignment: Alignment.center,
-                    decoration: box_decoration,
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _addCessFocus,
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.text,
-
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter a add cess",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: addCessController,
-                      onEditingComplete: () {
-                        _addCessFocus.unfocus();
-                        //FocusScope.of(context).requestFocus(_contactFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
 
   /* Widget for bank name text from field layout */

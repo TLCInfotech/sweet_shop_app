@@ -158,99 +158,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
-  Widget getQuantityAndUnit(double parentHeight, double parentWidth){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.QUANTITY),
-    Container(
-    height: parentHeight * .055,
-    width: (parentWidth*0.8)/2,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-    color: CommonColor.WHITE_COLOR,
-    borderRadius: BorderRadius.circular(4),
-    boxShadow: [
-    BoxShadow(
-    offset: Offset(0, 1),
-    blurRadius: 5,
-    color: Colors.black.withOpacity(0.1),
-    ),
-    ],
-    ),
-    child: TextFormField(
-    keyboardType: TextInputType.number,
-    controller: quantity,
-    decoration: textfield_decoration.copyWith(
-    hintText: StringEn.QUANTITY,
-    ),
-    validator: ((value) {
-    if (value!.isEmpty) {
-    return "Enter Item Quantity";
-    }
-    return null;
-    }),
-    onChanged: (value)async{
-    await calculateRates();
-    },
-    onTapOutside: (event) {
-
-    },
-    ),
-    ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.UNIT),
-    Container(
-    height: parentHeight * .055,
-    width: (parentWidth*0.8)/2,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-    color: CommonColor.TexField_COLOR,
-    borderRadius: BorderRadius.circular(4),
-    boxShadow: [
-    BoxShadow(
-    offset: Offset(0, 1),
-    blurRadius: 5,
-    color: Colors.black.withOpacity(0.1),
-    ),
-    ],
-    ),
-    child: TextFormField(
-    keyboardType: TextInputType.number,
-    controller: unit,
-    readOnly: true,
-    decoration: textfield_decoration.copyWith(
-    hintText: StringEn.UNIT,
-    fillColor: CommonColor.TexField_COLOR
-    ),
-    validator: ((value) {
-    if (value!.isEmpty) {
-    return "Enter Unit";
-    }
-    return null;
-    }),
-    onChanged: (value){
-
-    },
-    onTapOutside: (event) {
-
-    },
-    ),
-    )
-          ],
-        )
-
-      ],
-    );
-  }
-
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -346,48 +253,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
-
-  Widget getUnitLayout(double parentHeight, double parentWidth){
-    return  Container(
-      height: parentHeight * .055,
-      width: (parentWidth*0.8)/2,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.TexField_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: unit,
-        readOnly: true,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.UNIT,
-            fillColor: CommonColor.TexField_COLOR
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Unit";
-          }
-          return null;
-        }),
-        onChanged: (value){
-
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
-    );
-  }
-
-
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
       height: parentHeight * .055,
@@ -435,38 +300,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       ),
     );
   }
-
-
-  Widget getCloseButton(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
-            ),
-          ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
 
   /* Widget for Buttons Layout0 */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {

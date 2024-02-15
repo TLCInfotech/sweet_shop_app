@@ -157,78 +157,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
   }
 
 
-  /* Widget for navigate to next screen button layout */
-  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10,bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            width: SizeConfig.halfscreenWidth,
-            padding: EdgeInsets.only(top: 10,bottom:10),
-            decoration: BoxDecoration(
-              // color:  CommonColor.DARK_BLUE,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                SizedBox(height: 4,),
-                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-            },
-            onDoubleTap: () {},
-            child: Container(
-              width: SizeConfig.halfscreenWidth,
-              height: 50,
-              decoration: BoxDecoration(
-                color: disableColor == true
-                    ? CommonColor.THEME_COLOR.withOpacity(.5)
-                    : CommonColor.THEME_COLOR,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
-                      style: page_heading_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -297,61 +225,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       ],
     );
 
-  }
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
-  Future<Object?> goToAddOrEditItem(product) {
-    return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: AddOrEditItemOpeningBal(
-                mListener: this,
-                editproduct:product,
-              ),
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
   }
 
   Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
@@ -475,289 +348,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       ),
     );
 
-
-    /*Container(
-      height: parentHeight*.6,
-      child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: Item_list.length,
-        itemBuilder: (BuildContext context, int index) {
-          return  AnimationConfiguration.staggeredList(
-            position: index,
-            duration:
-            const Duration(milliseconds: 500),
-            child: SlideAnimation(
-              verticalOffset: -44.0,
-              child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
-                child: Card(
-                  child: Row(
-                    children: [
-                      // Padding(
-                      //   padding: const EdgeInsets.all(10.0),
-                      //   child: Container(
-                      //     height: 40,
-                      //       width: 40,
-                      //       alignment: Alignment.center,
-                      //       padding: EdgeInsets.all(10),
-                      //       decoration: BoxDecoration(
-                      //           color: (index)%2==0?Colors.green:Colors.blueAccent,
-                      //           borderRadius: BorderRadius.circular(5)
-                      //       ),
-                      //       child:
-                      //      Text((index+1).toString(),style: page_heading_textStyle),
-                      //   ),
-                      // ),
-                      Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                              color: Colors.purple.withOpacity(0.3),
-                                              borderRadius: BorderRadius.circular(15)
-                                            ),
-                                             alignment: Alignment.center,
-                                             child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
-                                        SizedBox(width: 5,),
-                                        Text("Item name- I1 ",style: item_heading_textStyle,),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5 ,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(" ${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                        SizedBox(width: 5,),
-                                        Text("  ${(Item_list[index]['rate']).toStringAsFixed(2)}/${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        SizedBox(width: 5,),
-                                        Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-
-                                      ],
-                                    ),
-                                    SizedBox(height: 5,),
-
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child:IconButton(
-                                    icon:  FaIcon(
-                                      FontAwesomeIcons.trash,
-                                      size: 15,
-                                      color: Colors.redAccent,
-                                    ),
-                                    onPressed: (){},
-                                  ) ),
-                              // Positioned(
-                              //     bottom: 10,
-                              //     right: 10,
-                              //     child:
-                              //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
-                              // )
-                            ],
-                          )
-
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
-            height: 5,
-          );
-        },
-      ),
-    );*/
   }
-
-  /* Widget to get item  list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                "Item Name",
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Item Name",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:60,
-
-              child: Text(
-                "Quantity",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Quantity",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-
-              child: Text(
-                "Unit",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Unit",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Rate",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Amount",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Amt",
-
-          ),
-
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Action",
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: Item_list
-            .map(
-              (item) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(item);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${item['quantity']}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${item['unit']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: ()async{
-                            Item_list.remove(item);
-                            setState(() {
-                              Item_list=Item_list;
-                            });
-                            await calculateTotalAmt();
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
-      ),
-    );
-  }
-  //
-  // Container InvoiceInfo() {
-  //   return Container(
-  //     margin: EdgeInsets.only(top: 10),
-  //     padding: EdgeInsets.all(10),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(5),
-  //       border: Border.all(color: Colors.grey,width: 1),
-  //     ),
-  //     child: Column(
-  //       children: [
-  //       //  getFieldTitleLayout(StringEn.DATE),
-  //         getPurchaseDateLayout(),
-  //         // getFieldTitleLayout(StringEn.INVOICE_NO),
-  //         // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-  //         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-  //         SizedBox(height: 10,)
-  //       ],
-  //     ),
-  //   );
-  // }
 
 
   Container InvoiceInfo() {
@@ -791,8 +382,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       ),
     );
   }
-
-
 
 
   /* Widget to get add Invoice date Layout */
@@ -960,93 +549,134 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       ),
     );
   }
-  //
-  //
-  // /* Widget to get Franchisee Name Layout */
-  // Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-  //   return Padding(
-  //     padding: EdgeInsets.only(top: parentHeight * 0.02),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //   /*      const Text(
-  //           StringEn.FRANCHISEE_NAME,
-  //           style: page_heading_textStyle,
-  //         ),*/
-  //         Padding(
-  //           padding: EdgeInsets.only(top: parentHeight * .005),
-  //           child: Container(
-  //             height: parentHeight * .055,
-  //             alignment: Alignment.center,
-  //             decoration: BoxDecoration(
-  //               color: CommonColor.WHITE_COLOR,
-  //               borderRadius: BorderRadius.circular(4),
-  //               boxShadow: [
-  //                 BoxShadow(
-  //                   offset: Offset(0, 1),
-  //                   blurRadius: 5,
-  //                   color: Colors.black.withOpacity(0.1),
-  //                 ),
-  //               ],
-  //             ),
-  //             child:  GestureDetector(
-  //               onTap: (){
-  //                 showGeneralDialog(
-  //                     barrierColor: Colors.black.withOpacity(0.5),
-  //                     transitionBuilder: (context, a1, a2, widget) {
-  //                       final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-  //                       return Transform(
-  //                         transform:
-  //                         Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-  //                         child: Opacity(
-  //                           opacity: a1.value,
-  //                           child:FranchiseeDialog(
-  //                             mListener: this,
-  //                           ),
-  //                         ),
-  //                       );
-  //                     },
-  //                     transitionDuration: Duration(milliseconds: 200),
-  //                     barrierDismissible: true,
-  //                     barrierLabel: '',
-  //                     context: context,
-  //                     pageBuilder: (context, animation2, animation1) {
-  //                       throw Exception('No widget to return in pageBuilder');
-  //                     });
-  //               },
-  //               onDoubleTap: (){},
-  //               child: Padding(
-  //                 padding: EdgeInsets.all(8.0),
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-  //                       style: selectedFranchiseeName == ""
-  //                           ? hint_textfield_Style
-  //                           : text_field_textStyle,
-  //                       overflow: TextOverflow.ellipsis,
-  //                       maxLines: 1,
-  //                       // textScaleFactor: 1.02,
-  //                     ),
-  //                     Icon(
-  //                       Icons.keyboard_arrow_down,
-  //                       size: parentHeight * .03,
-  //                       color: /*pollName == ""
-  //                               ? CommonColor.HINT_TEXT
-  //                               :*/
-  //                       CommonColor.BLACK_COLOR,
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //
-  //   );
-  // }
+  /* Widget to get add Product Layout */
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          goToAddOrEditItem(null);
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Add New Item",
+                style: item_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.plusCircle,
+                color: Colors.black87, size: 20,)
+            ],
+          )
+      ),
+    );
+  }
+
+  Future<Object?> goToAddOrEditItem(product) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditItemOpeningBal(
+                mListener: this,
+                editproduct:product,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
+  }
+
+
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10,bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: SizeConfig.halfscreenWidth,
+            padding: EdgeInsets.only(top: 10,bottom:10),
+            decoration: BoxDecoration(
+              // color:  CommonColor.DARK_BLUE,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                SizedBox(height: 4,),
+                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+            },
+            onDoubleTap: () {},
+            child: Container(
+              width: SizeConfig.halfscreenWidth,
+              height: 50,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child: const Text(
+                      StringEn.SAVE,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
 
   @override

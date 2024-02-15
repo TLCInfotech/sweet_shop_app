@@ -20,6 +20,9 @@ class SellActivity extends StatefulWidget {
 }
 
 class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterface {
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +106,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("10 Invoices  ", style: subHeading_withBold,),
-              Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
       ),
@@ -122,7 +125,6 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     );
   }
 
-  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){

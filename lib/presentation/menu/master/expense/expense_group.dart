@@ -245,42 +245,6 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
   }
 
   /* widget for Category layout */
-  Widget getCategoryLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding:  EdgeInsets.only(top: parentHeight*.01),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          keyboardType: TextInputType.number,
-          controller: categoryName,
-          decoration: textfield_decoration.copyWith(
-              hintText: StringEn.CATEGORY,
-              suffix: Text("%")
-          ),
-          validator: ((value) {
-            if (value!.isEmpty) {
-              return "Enter Category";
-            }
-            return null;
-          }),
-
-        ),
-      ),
-    );
-  }
-  /* widget for Category layout */
   Widget getGroupNameLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding:  EdgeInsets.only(top: parentHeight*.01),

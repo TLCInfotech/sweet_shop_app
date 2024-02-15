@@ -46,7 +46,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _InvoiceNoFocus = FocusNode();
   final InvoiceNoController = TextEditingController();
 
 
@@ -188,7 +187,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off:- ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
@@ -234,7 +233,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
 
   double calculateRoundOffAmt(){
-    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
+    print(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)));
+    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
       return 0.00;
     }
     else {
@@ -254,16 +254,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       }
     }
   }
+
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
+
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -323,63 +320,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
 
   }
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
-  Future<Object?> goToAddOrEditItem(product) {
-    return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: AddOrEditItemSell(
-                mListener: this,
-                editproduct:product,
-              ),
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
-  }
-
-
 
 
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
@@ -439,8 +379,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                                      alignment: Alignment.centerRight,
-                                                                      child: Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                  alignment: Alignment.centerRight,
+                                                  child: Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
 
                                               Container(
                                                 alignment: Alignment.centerLeft,
@@ -478,139 +418,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
                           ),
                         )
-                        // Expanded(
-                        //     child: Stack(
-                        //       children: [
-                        //         Container(
-                        //           margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                        //           child: Column(
-                        //             mainAxisAlignment: MainAxisAlignment.start,
-                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                        //             children: [
-                        //               Row(
-                        //                 children: [
-                        //                   Container(
-                        //                       height: 25,
-                        //                       width: 25,
-                        //                       decoration: BoxDecoration(
-                        //                           color: Colors.purple.withOpacity(0.3),
-                        //                           borderRadius: BorderRadius.circular(15)
-                        //                       ),
-                        //                       alignment: Alignment.center,
-                        //                       child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)),
-                        //                   SizedBox(width: 5,),
-                        //                   Text("Item name- I1 ",style: item_heading_textStyle,),
-                        //                 ],
-                        //               ),
-                        //               SizedBox(height: 5 ,),
-                        //               Row(
-                        //                 crossAxisAlignment: CrossAxisAlignment.center,
-                        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //                 children: [
-                        //                   Container(
-                        //                       width: SizeConfig.screenWidth*0.8/3,
-                        //                       child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['rate'])}/${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                        //
-                        //                   SizedBox(width: 5,),
-                        //                   Container(
-                        //                       width: SizeConfig.screenWidth*0.8/3,
-                        //                       child: Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                        //
-                        //
-                        //                   SizedBox(width: 5,),
-                        //                   Container(
-                        //                       alignment: Alignment.centerRight,
-                        //                       width: SizeConfig.screenWidth*0.8/3,
-                        //                       child: Text(" ${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
-                        //
-                        //                 ],
-                        //               ),
-                        //               SizedBox(height: 5,),
-                        //
-                        //               Row(
-                        //                 crossAxisAlignment: CrossAxisAlignment.center,
-                        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //                 children: [
-                        //                   Container(
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child:
-                        //                     Text(" ${(Item_list[index]['discount'])} % Disc.",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                        //                   ),
-                        //                   SizedBox(width: 5,),
-                        //                   Container(
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child:Text("${CommonWidget.getCurrencyFormat(Item_list[index]['discountAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                        //                   ),
-                        //
-                        //                   SizedBox(width: 5,),
-                        //
-                        //                   Container(
-                        //                     alignment: Alignment.centerRight,
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child:
-                        //                     Text(CommonWidget.getCurrencyFormat(Item_list[index]['taxableAmt']),overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                        //                   ),
-                        //
-                        //                 ],
-                        //               ),
-                        //               SizedBox(height: 5,),
-                        //               Row(
-                        //                 crossAxisAlignment: CrossAxisAlignment.center,
-                        //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //                 children: [
-                        //                   Container(
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child:
-                        //                     Text(" ${(Item_list[index]['gst'])} % GST",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                        //                   ),
-                        //                   SizedBox(width: 5,),
-                        //                   Container(
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child: Text("${CommonWidget.getCurrencyFormat(Item_list[index]['gstAmt'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                        //                   ),
-                        //
-                        //                   SizedBox(width: 5,),
-                        //
-                        //                   Container(
-                        //                     alignment: Alignment.centerRight,
-                        //                     width: SizeConfig.screenWidth*0.8/3,
-                        //                     child:
-                        //                     Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                        //                   ),
-                        //
-                        //                 ],
-                        //               ),
-                        //
-                        //             ],
-                        //           ),
-                        //         ),
-                        //         Positioned(
-                        //             top: 0,
-                        //             right: 0,
-                        //             child:IconButton(
-                        //               icon:  FaIcon(
-                        //                 FontAwesomeIcons.trash,
-                        //                 size: 15,
-                        //                 color: Colors.redAccent,
-                        //               ),
-                        //               onPressed: ()async{
-                        //                 Item_list.remove(Item_list[index]);
-                        //                 setState(() {
-                        //                   Item_list=Item_list;
-                        //                 });
-                        //                 await calculateTotalAmt();
-                        //               },
-                        //             ) ),
-                        //         // Positioned(
-                        //         //     bottom: 10,
-                        //         //     right: 10,
-                        //         //     child:
-                        //         //     Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)
-                        //         // )
-                        //       ],
-                        //     )
-                        //
-                        // )
+
                       ],
                     ),
                   ),
@@ -628,275 +436,60 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
   }
 
-  /* Widget to get item  list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.ITEM_NAME,
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Item Name",
-
+  /* Widget to get add Product Layout */
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          goToAddOrEditItem(null);
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-          DataColumn(
-            label: Container(
-              width:60,
-
-              child: Text(
-                StringEn.QUANTITY,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Quantity",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-
-              child: Text(
-                StringEn.UNIT,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Unit",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.RATE,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.AMOUNT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:80,
-              child: Text(
-                StringEn.DICOUNT,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item discount",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.DISCOUNT_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Discount Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.TAX_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Taxable Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:60,
-              child: Text(
-                StringEn.GST_PER,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.GST_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.NET_RATE,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-               StringEn.NET,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net Amt",
-
-          ),
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                StringEn.ACTION,
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: Item_list
-            .map(
-              (item) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(item);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${item['quantity']}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${item['unit']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 80,
-                      child: Text(item['discount']==null?"0":"${item['discount']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['discountAmt']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${((item['gst']))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['gstAmt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netRate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netAmount']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: ()async{
-                            Item_list.remove(item);
-                            setState(() {
-                              Item_list=Item_list;
-                            });
-                            await calculateTotalAmt();
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Add New Item",
+                style: item_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.plusCircle,
+                color: Colors.black87, size: 20,)
+            ],
+          )
       ),
     );
+  }
+
+  Future<Object?> goToAddOrEditItem(product) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditItemSell(
+                mListener: this,
+                editproduct:product,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
   }
 
   Container InvoiceInfo() {

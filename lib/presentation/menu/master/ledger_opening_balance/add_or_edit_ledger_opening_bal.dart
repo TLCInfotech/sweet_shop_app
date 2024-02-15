@@ -116,6 +116,42 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   }
 
 
+  Widget getAddSearchLayout(double parentHeight, double parentWidth){
+    return Container(
+      height: parentHeight * .055,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        textInputAction: TextInputAction.done,
+        // autofillHints: const [AutofillHints.email],
+        keyboardType: TextInputType.text,
+        controller: _textController,
+        textAlignVertical: TextAlignVertical.center,
+        focusNode: searchFocus,
+        style: text_field_textStyle,
+        decoration: textfield_decoration.copyWith(
+          hintText: "Item Name",
+          prefixIcon: Container(
+              width: 50,
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+        ),
+        // onChanged: _onChangeHandler,
+      ),
+    );
+  }
+
 
   Widget getAmount(double parentHeight, double parentWidth){
     return Column(
@@ -205,42 +241,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   }
 
 
-  Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.text,
-        controller: _textController,
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: searchFocus,
-        style: text_field_textStyle,
-        decoration: textfield_decoration.copyWith(
-          hintText: "Item Name",
-          prefixIcon: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-        ),
-        // onChanged: _onChangeHandler,
-      ),
-    );
-  }
-
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -252,37 +252,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
       ),
     );
   }
-
-
-  Widget getCloseButton(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
-            ),
-          ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
 
 
   /* Widget for Buttons Layout0 */
