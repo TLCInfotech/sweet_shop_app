@@ -167,75 +167,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
-  /* Widget for navigate to next screen button layout */
-  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        TotalAmount!="0.00"? Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
-          decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
-            ],
-          ),
-        ):Container(),
-        GestureDetector(
-          onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-            }
-          },
-          onDoubleTap: () {},
-          child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 40,
-            decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
-                    style: page_heading_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -356,14 +287,14 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                         children: [
                                           Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 5,),
+                                          SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
                                             Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
-                                          SizedBox(height: 5 ,),
+                                          SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
@@ -398,57 +329,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                 ],
                               )
 
-
-
-
-                            /*
-                                                          child: Row(
-                                  children: [
-                                  Expanded(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                              child: Text("Regenapps clouds prtivate Limited Limited Limited Limited LimitedL imitedL imited",style: item_heading_textStyle,)
-
-                                          ),
-                                          SizedBox(width: 5,),
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            width: SizeConfig.screenWidth*0.8/2,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),
-                                          SizedBox(height: 5 ,),
-                                          Container(
-                                            width: SizeConfig.screenWidth*0.8/2,
-                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-
-
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child:IconButton(
-                                          icon:  FaIcon(
-                                            FontAwesomeIcons.trash,
-                                            size: 15,
-                                            color: Colors.redAccent,
-                                          ),
-                                          onPressed: ()async{
-                                            Ledger_list.remove(Ledger_list[index]);
-                                            setState(() {
-                                              Ledger_list=Ledger_list;
-                                            });
-                                            await calculateTotalAmt();
-                                          },
-                                        ) ),
-                                  ],
-                                ),*/
                           ),
                         )
 
@@ -471,194 +351,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   }
 
 
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Ledger",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
-  Future<Object?> goToAddOrEditItem(product) {
-    return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: AddOrEditLedger(
-                mListener: this,
-                editproduct:product,
-              ),
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
-  }
-
-
-
-  /* Widget to get item  list Layout */
-  SingleChildScrollView getLedgerListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                "Ledger Name",
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Ledger Name",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-
-              child: Text(
-                "Amount",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Ledger Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-
-              child: Text(
-                "Current Bal",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Current Bal",
-
-          ),
-
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                "Narration",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Ledger Narration",
-
-          ),
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Action",
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: Ledger_list
-            .map(
-              (item) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(item);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${item['ledgerName']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amount']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${item['currentBal']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${item['narration']}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: (){
-                            Ledger_list.remove(item);
-                            setState(() {
-                              Ledger_list=Ledger_list;
-                            });
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
-      ),
-    );
-  }
 
   Container ReceiptInfo() {
     return  Container(
@@ -691,7 +383,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       ),
     );
   }
-
 
 
   /* Widget to get add Invoice date Layout */
@@ -816,50 +507,134 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
-
-  /* Widget for Invoice No text from field layout */
-  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
+  /* Widget to get add Product Layout */
+  Widget getAddNewProductLayout(){
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          goToAddOrEditItem(null);
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-        ],
-      ),
-      child: TextFormField(
-        textAlignVertical: TextAlignVertical.center,
-        textCapitalization: TextCapitalization.words,
-        focusNode: _voucherNoFocus,
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        cursorColor: CommonColor.BLACK_COLOR,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(
-              left: parentWidth * .04, right: parentWidth * .02),
-          border: InputBorder.none,
-          counterText: '',
-          isDense: true,
-          hintText: "Enter a Voucher No",
-          hintStyle: hint_textfield_Style,
-        ),
-        controller: VoucherNoController,
-        onEditingComplete: () {
-          _voucherNoFocus.unfocus();
-        },
-        style: text_field_textStyle,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Add New Ledger",
+                style: item_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.plusCircle,
+                color: Colors.black87, size: 20,)
+            ],
+          )
       ),
     );
   }
 
+  Future<Object?> goToAddOrEditItem(product) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditLedger(
+                mListener: this,
+                editproduct:product,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
+  }
 
 
+
+
+
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(top: 10,bottom:10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+        GestureDetector(
+          onTap: () {
+            // if(widget.comeFrom=="clientInfoList"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+            //   )));
+            // }if(widget.comeFrom=="Projects"){
+            //   Navigator.pop(context,false);
+            // }
+            // else if(widget.comeFrom=="edit"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+            //   )));
+            // }
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            height: 40,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   selectedFranchisee(String id, String name) {

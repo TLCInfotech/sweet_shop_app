@@ -103,7 +103,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("10 Ledgers  ", style: subHeading_withBold,),
-              Text("- "+CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
       ),

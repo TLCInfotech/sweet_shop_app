@@ -247,36 +247,6 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   }
 
 
-  Widget getCloseButton(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-          height: parentHeight*.065,
-          decoration: const BoxDecoration(
-            color: Colors.deepOrange,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-              bottomRight: Radius.circular(7),
-            ),
-          ),
-          child:const Center(
-            child: Text(
-              StringEn.CLOSE,
-              textAlign: TextAlign.center,
-              style: text_field_textStyle,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
 
   /* Widget for Buttons Layout0 */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {

@@ -25,10 +25,7 @@ import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_a
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/receipt_create_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/sell_create_activity.dart';
-
 import 'report/MIS/mis_report_activity.dart';
 import 'report/payment/payment_report_activity.dart';
 import 'report/recipt/recipt_report_layout.dart';

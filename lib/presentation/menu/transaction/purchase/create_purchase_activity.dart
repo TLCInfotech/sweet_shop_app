@@ -173,101 +173,145 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
+  Container InvoiceInfo() {
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: Colors.grey,width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          getPurchaseDateLayout(),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+        ],
+      ),
+    );
+  }
 
-  /* Widget for navigate to next screen button layout */
-  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        TotalAmount!="0.00"? Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GestureDetector(
+      onTap: () async{
+/*        FocusScope.of(context).requestFocus(FocusNode());
+        if (Platform.isIOS) {
+          var date= await CommonWidget.startDate(context,invoiceDate);
+          setState(() {
+            invoiceDate=date;
+          });
+          // startDateIOS(context);
+        } else if (Platform.isAndroid) {
+          var date= await CommonWidget.startDate(context,invoiceDate) ;
+          setState(() {
+            invoiceDate=date;
+          });
+        }*/
+      },
+      child: Container(
+          width: (SizeConfig.screenWidth)*0.3,
+          height: (SizeConfig.screenHeight) * .055,
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-          Text("Round off:- ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
-              SizedBox(height: 4,),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+              color: Colors.white,
+              // border: Border.all(color: Colors.grey.withOpacity(0.5))
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
 
-            ],
           ),
-        ):Container(),
-        GestureDetector(
-          onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-            }
-          },
-          onDoubleTap: () {},
-          child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 50,
-            decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
-              borderRadius: BorderRadius.circular(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.dateNew,
+                style: item_regular_textStyle,),
+              SizedBox(width: 2,),
+              FaIcon(FontAwesomeIcons.calendar,
+                color: Colors.black87, size: 16,)
+            ],
+          )
+      ),
+    );
+  }
+
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Container(
+        width: parentWidth*0.52,
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          ],
+        ),
+        child:  GestureDetector(
+          onTap: (){
+            showGeneralDialog(
+                barrierColor: Colors.black.withOpacity(0.5),
+                transitionBuilder: (context, a1, a2, widget) {
+                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                  return Transform(
+                    transform:
+                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                    child: Opacity(
+                      opacity: a1.value,
+                      child:FranchiseeDialog(
+                        mListener: this,
+                      ),
+                    ),
+                  );
+                },
+                transitionDuration: Duration(milliseconds: 200),
+                barrierDismissible: true,
+                barrierLabel: '',
+                context: context,
+                pageBuilder: (context, animation2, animation1) {
+                  throw Exception('No widget to return in pageBuilder');
+                });
+          },
+          onDoubleTap: (){},
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
-                    style: page_heading_textStyle,
-                  ),
+                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
+                  style: selectedFranchiseeName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  // textScaleFactor: 1.02,
+                ),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: parentHeight * .03,
+                  color: /*pollName == ""
+                          ? CommonColor.HINT_TEXT
+                          :*/
+                  CommonColor.BLACK_COLOR,
                 ),
               ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
-
-
-  double calculateRoundOffAmt(){
-    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
-      return 0.00;
-    }
-    else {
-      var amt = (1 - double.parse(
-          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
-      print(amt);
-      if (amt == 0.00) {
-        return 0.00;
-      }
-      if (amt < 0.50) {
-        print((-1 * amt).toStringAsFixed(2));
-        return amt;
-      }
-      else {
-        print((amt).toStringAsFixed(2));
-        return (-1 * amt);
-      }
-    }
-  }
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -287,10 +331,10 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               child: Column(
                 children: [
 
-                 // getFieldTitleLayout(StringEn.INVOICE_DETAILS),
+                  // getFieldTitleLayout(StringEn.INVOICE_DETAILS),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
-                    Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       // Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
@@ -510,298 +554,78 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         });
   }
 
-
-
-  /* Widget to get item  list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.ITEM_NAME,
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Item Name",
-
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(top: 10,bottom:10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
           ),
-          DataColumn(
-            label: Container(
-              width:60,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+          Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              SizedBox(height: 4,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
 
-              child: Text(
-                StringEn.QUANTITY,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Quantity",
-
+            ],
           ),
-          DataColumn(
-            label: Container(
-              width:50,
-
-              child: Text(
-                StringEn.UNIT,
-              ),
+        ):Container(),
+        GestureDetector(
+          onTap: () {
+            // if(widget.comeFrom=="clientInfoList"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+            //   )));
+            // }if(widget.comeFrom=="Projects"){
+            //   Navigator.pop(context,false);
+            // }
+            // else if(widget.comeFrom=="edit"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+            //   )));
+            // }
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            height: 50,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.circular(8),
             ),
-            numeric: true,
-            tooltip: "Item Unit",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.RATE,
-
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
+                  ),
+                ),
+              ],
             ),
-            numeric: true,
-            tooltip: "Item Rate",
-
           ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.AMOUNT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:80,
-              child: Text(
-                StringEn.DICOUNT,
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item discount",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.DISCOUNT_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Discount Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.TAX_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item Taxable Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:60,
-              child: Text(
-                StringEn.GST_PER,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.GST_AMT,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item gst Amt",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.NET_RATE,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                StringEn.NET,
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Item net Amt",
-
-          ),
-
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                StringEn.ACTION,
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: Item_list
-            .map(
-              (item) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(item);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${item['itemName']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${item['quantity']}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${item['unit']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['rate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['amt']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 80,
-                      child: Text(item['discount']==null?"0":"${item['discount']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['discountAmt']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['taxableAmt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: 60,
-                      child: Text("${((item['gst']))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['gstAmt']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netRate']).toStringAsFixed(2))}")),
-                ),
-
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((item['netAmount']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: ()async{
-                            Item_list.remove(item);
-                            setState(() {
-                              Item_list=Item_list;
-                            });
-                            await calculateTotalAmt();
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
-      ),
+        ),
+      ],
     );
   }
 
-  Container InvoiceInfo() {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Colors.grey,width: 1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          getPurchaseDateLayout(),
-          // getFieldTitleLayout(StringEn.INVOICE_NO),
-          // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
-    );
-  }
+
 
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
@@ -817,138 +641,28 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
 
-
-  /* Widget to get add Invoice date Layout */
-  Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-/*        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }*/
-      },
-      child: Container(
-          width: (SizeConfig.screenWidth)*0.3,
-          height: (SizeConfig.screenHeight) * .055,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(widget.dateNew,
-                style: item_regular_textStyle,),
-              SizedBox(width: 2,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
-    );
+  double calculateRoundOffAmt(){
+    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
+      return 0.00;
+    }
+    else {
+      var amt = (1 - double.parse(
+          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
+      print(amt);
+      if (amt == 0.00) {
+        return 0.00;
+      }
+      if (amt < 0.50) {
+        print((-1 * amt).toStringAsFixed(2));
+        return amt;
+      }
+      else {
+        print((amt).toStringAsFixed(2));
+        return (-1 * amt);
+      }
+    }
   }
 
-
-  /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Container(
-        width: parentWidth*0.52,
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child:  GestureDetector(
-          onTap: (){
-            showGeneralDialog(
-                barrierColor: Colors.black.withOpacity(0.5),
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                    child: Opacity(
-                      opacity: a1.value,
-                      child:FranchiseeDialog(
-                        mListener: this,
-                      ),
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation2, animation1) {
-                  throw Exception('No widget to return in pageBuilder');
-                });
-          },
-          onDoubleTap: (){},
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                  style: selectedFranchiseeName == ""
-                      ? hint_textfield_Style
-                      : text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: parentHeight * .03,
-                  color: /*pollName == ""
-                          ? CommonColor.HINT_TEXT
-                          :*/
-                  CommonColor.BLACK_COLOR,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
-  }
 
 
   calculateTotalAmt()async{
@@ -963,6 +677,18 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     });
 
   }
+
+
+
+  @override
+  selectedFranchisee(String id, String name) {
+    // TODO: implement selectedFranchisee
+    setState(() {
+      selectedFranchiseeName=name;
+    });
+  }
+
+
 
   @override
   AddOrEditItemDetail(item)async {

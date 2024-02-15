@@ -88,8 +88,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                     getFieldTitleLayout(StringEn.ITEM_NAME),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
+                    getFieldTitleLayout(StringEn.QUANTITY),
+                    getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getQuantityAndUnit(SizeConfig.screenHeight,SizeConfig.screenWidth),
                      getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     //
                     // getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -113,6 +114,49 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
+  /* widget for product rate layout */
+  Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
+    return Container(
+      height: parentHeight * .055,
+      // width: (parentWidth*0.8)/2,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        controller: quantity,
+        decoration: textfield_decoration.copyWith(
+          hintText: StringEn.QUANTITY,
+          suffix: Container(
+              width: 50,
+              padding: EdgeInsets.all(10),
+              alignment: Alignment.centerLeft,
+              child: Text("${unit.text}",style: item_regular_textStyle,)),
+        ),
+        validator: ((value) {
+          if (value!.isEmpty) {
+            return "Enter Item Quantity";
+          }
+          return null;
+        }),
+        onChanged: (value)async{
+          await calculateRates();
+        },
+        onTapOutside: (event) {
+
+        },
+      ),
+    );
+  }
 
   Widget getQuantityAndUnit(double parentHeight, double parentWidth){
     return Row(
@@ -343,44 +387,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     );
   }
 
-  /* widget for product rate layout */
-  Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      width: (parentWidth*0.8)/2,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: quantity,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.QUANTITY,
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Item Quantity";
-          }
-          return null;
-        }),
-        onChanged: (value)async{
-          await calculateRates();
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
-    );
-  }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(

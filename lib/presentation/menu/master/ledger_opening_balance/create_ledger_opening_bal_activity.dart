@@ -51,6 +51,10 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   String selectedFranchiseeName="";
 
   String TotalAmount="0.00";
+  double TotalCr=0.00;
+
+  double TotalDr=0.00;
+
 
   List<dynamic> Item_list=[
     {
@@ -171,7 +175,12 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               children: [
                 Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 SizedBox(height: 5,),
-                Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
+                Row(
+                  children: [
+                    Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+                    Text(TotalCr>TotalDr?" Cr":" Dr",style: item_heading_textStyle,)
+                  ],
+                )
               ],
             ),
           ),
@@ -924,13 +933,35 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
+    var totalcr=0.00;
+    var totaldr=0.00;
     for(var item  in Item_list ){
       total=total+item['amt'];
-      print(item['netAmount']);
+      if(item['amtType']=="Cr"){
+        totalcr=totalcr+item['amt'];
+      }
+      else  if(item['amtType']=="Dr"){
+        totaldr=totaldr+item['amt'];
+      }
     }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
+    if(totalcr>totaldr){
+      var total=totalcr-totaldr;
+      setState(() {
+        TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
+        TotalCr=totalcr;
+        TotalDr=totaldr;
+      });
+
+    }
+    if(totalcr<=totaldr){
+      var total=totalcr-totaldr;
+      setState(() {
+        TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
+        TotalCr=totalcr;
+        TotalDr=totaldr;
+      });
+
+    }
 
   }
 

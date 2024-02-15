@@ -187,10 +187,10 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: net,
+        readOnly: true,
         decoration: textfield_decoration.copyWith(
             hintText: StringEn.NET,
-          fillColor:  Colors.white,
-
+            fillColor: CommonColor.TexField_COLOR
         ),
         onChanged: (value){
 
@@ -210,7 +210,6 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       ),
     );
   }
-
 
   /* widget for gst amount layout */
   Widget getGstAmountLayout(double parentHeight, double parentWidth) {
@@ -232,12 +231,13 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
         keyboardType: TextInputType.number,
         controller: gstAmt,
+        readOnly: true,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.GST_AMT,
+            hintText: StringEn.GST_AMT,
+            fillColor: CommonColor.TexField_COLOR
         ),
         onChanged: (value){
 
-          calculateOriginalAmt();
         },
         validator: ((value) {
           if (value!.isEmpty) {
@@ -274,8 +274,8 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         keyboardType: TextInputType.number,
         controller: gst,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.RATE,
-          suffix: Text("%")
+            hintText: StringEn.RATE,
+            suffix: Text("%")
         ),
         validator: ((value) {
           if (value!.isEmpty) {
@@ -286,11 +286,18 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         onChanged: (value){
           calculateNetAmt();
           calculateOriginalAmt();
+          calculateGstAmt();
         },
       ),
     );
   }
-  
+  calculateGstAmt(){
+    var gstAmtt=double.parse(rate.text)*(double.parse(gst.text)/100);
+    setState(() {
+      gstAmt.text=gstAmtt.toStringAsFixed(2);
+    });
+  }
+
   /* widget for product rate layout */
   Widget getProductRateLayout(double parentHeight, double parentWidth) {
     return Container(
@@ -309,7 +316,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       ),
       child: TextFormField(
         keyboardType: TextInputType.numberWithOptions(
-          decimal: true
+            decimal: true
         ),
         controller: rate,
         decoration: textfield_decoration.copyWith(
@@ -322,7 +329,9 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
           return null;
         }),
         onChanged: (value){
+
           calculateNetAmt();
+          calculateGstAmt();
         },
         onTapOutside: (event) {
           setState(() {

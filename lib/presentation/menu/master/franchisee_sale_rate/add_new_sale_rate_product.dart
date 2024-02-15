@@ -64,7 +64,12 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       });
     }
   }
-
+  calculateGstAmt(){
+    var gstAmtt=double.parse(rate.text)*(double.parse(gst.text)/100);
+    setState(() {
+      gstAmt.text=gstAmtt.toStringAsFixed(2);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -206,12 +211,13 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
         keyboardType: TextInputType.number,
         controller: gstAmt,
+        readOnly: true,
         decoration: textfield_decoration.copyWith(
             hintText: StringEn.GST_AMT,
+          fillColor: CommonColor.TexField_COLOR
         ),
         onChanged: (value){
 
-          calculateOriginalAmt();
         },
         validator: ((value) {
           if (value!.isEmpty) {
@@ -247,8 +253,10 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: net,
+        readOnly: true,
         decoration: textfield_decoration.copyWith(
             hintText: StringEn.NET,
+          fillColor: CommonColor.TexField_COLOR
         ),
         onChanged: (value){
 
@@ -302,6 +310,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         onChanged: (value){
           calculateNetAmt();
           calculateOriginalAmt();
+          calculateGstAmt();
         },
       ),
     );
@@ -340,6 +349,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         onChanged: (value){
 
           calculateNetAmt();
+          calculateGstAmt();
         },
         onTapOutside: (event) {
           setState(() {
