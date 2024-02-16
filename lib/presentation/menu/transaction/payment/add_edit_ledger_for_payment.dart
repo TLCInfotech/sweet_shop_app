@@ -30,24 +30,8 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   FocusNode narrationFocus = FocusNode() ;
 
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
 
+  /* initialise the value*/
   @override
   void initState() {
     // TODO: implement initState
@@ -55,6 +39,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
     setVal();
   }
 
+  /* get the value layout*/
   setVal(){
     if(widget.editproduct!=null){
       setState(() {
@@ -77,19 +62,19 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*0.7,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
                   topRight: Radius.circular(8),
                 ),
               ),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                           StringEn.ADD_LEDGER_ITEM,
                           style: page_heading_textStyle
@@ -105,9 +90,6 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                   getFieldTitleLayout(StringEn.NARRATION),
                   getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  /*   SizedBox(height: 20,),
-                  getButtonLayout()*/
-                  
                 ],
               ),
             ),
@@ -122,7 +104,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
 
 
 
-  /* widget for product gst layout */
+  /* widget for narration layout */
   Widget getLedgerNarrationLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
@@ -132,7 +114,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.1),
           ),
@@ -158,7 +140,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
     );
   }
 
-  /* widget for product rate layout */
+  /* widget for ledger amount layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
@@ -168,14 +150,14 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.1),
           ),
         ],
       ),
       child: TextFormField(
-        keyboardType: TextInputType.numberWithOptions(
+        keyboardType: const TextInputType.numberWithOptions(
           decimal: true
         ),
         controller: amount,
@@ -198,6 +180,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
     );
   }
 
+  /* widget for ledger search layout */
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
       height: parentHeight * .055,
@@ -207,7 +190,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.1),
           ),
@@ -215,32 +198,31 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       ),
       child: TextFormField(
         textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
         keyboardType: TextInputType.text,
         controller: _textController,
         textAlignVertical: TextAlignVertical.center,
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Ledger Name",
+          hintText: StringEn.LEDGER,
           prefixIcon: Container(
               width: 50,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               alignment: Alignment.centerLeft,
-              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+              child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
         ),
         // onChanged: _onChangeHandler,
       ),
     );
   }
 
-  /* widget for button layout */
+  /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
-        "$title",
+        title,
         style: page_heading_textStyle,
       ),
     );
@@ -260,7 +242,6 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
           child: Container(
             height:parentHeight*.05,
             width: parentWidth*.45,
-            // width: SizeConfig.blockSizeVertical * 20.0,
             decoration: const BoxDecoration(
               color: CommonColor.HINT_TEXT,
               borderRadius: BorderRadius.only(
@@ -298,7 +279,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
           child: Container(
             height: parentHeight * .05,
             width: parentWidth*.45,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(5),

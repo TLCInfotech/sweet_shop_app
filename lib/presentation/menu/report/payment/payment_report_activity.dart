@@ -195,7 +195,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          reportType == "" ? "Select report type" : reportType,
+                          reportType == "" ? StringEn.SELECT_REPORT_TYPE : reportType,
                           style: reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -423,7 +423,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a leader name",
+                      hintText: StringEn.ENTER_LEDGER_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: leaderController,
@@ -486,7 +486,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a bank / cash",
+                  hintText: StringEn.ENTER_BANK_CASH,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: bankCashController,
@@ -550,7 +550,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
       ],
     );
   }
-
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType

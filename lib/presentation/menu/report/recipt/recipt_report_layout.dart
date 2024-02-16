@@ -199,21 +199,17 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          reportType == "" ? "Select report type" : reportType,
+                          reportType == "" ? StringEn.SELECT_REPORT_TYPE : reportType,
                           style: reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          // textScaleFactor: 1.02,
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
                           size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
+                          color:  CommonColor.BLACK_COLOR,
                         ),
                       ],
                     ),
@@ -427,7 +423,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a franchisee name",
+                      hintText:StringEn.ENTER_FRANCHISEE_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: leaderController,
@@ -490,7 +486,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a bank / cash",
+                  hintText: StringEn.ENTER_BANK_CASH,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: bankCashController,
@@ -555,6 +551,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
     );
   }
 
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType

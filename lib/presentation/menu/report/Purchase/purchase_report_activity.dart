@@ -144,7 +144,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
-        // width: parentWidth * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -200,7 +199,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          reportType == "" ? "Select report type" : reportType,
+                          reportType == "" ?StringEn.SELECT_REPORT_TYPE: reportType,
                           style: reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -211,10 +210,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                         Icon(
                           Icons.keyboard_arrow_down,
                           size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
+                          color:  CommonColor.BLACK_COLOR,
                         ),
                       ],
                     ),
@@ -250,7 +246,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                   setState(() {
                     applicablefrom=date;
                   });
-                  // startDateIOS(context);
                 } else if (Platform.isAndroid) {
                   var date= await CommonWidget.previousDate(context,applicablefrom) ;
                   setState(() {
@@ -287,7 +282,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                               : text_field_textStyle,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          // textScaleFactor: 1.02,
                         ),
                         const FaIcon(FontAwesomeIcons.calendar,
                           color: Colors.black87, size: 16,)
@@ -361,7 +355,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                               : text_field_textStyle,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          // textScaleFactor: 1.02,
                         ),
                         const FaIcon(FontAwesomeIcons.calendar,
                           color: Colors.black87, size: 16,)
@@ -447,10 +440,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
+                        color: CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
@@ -616,15 +606,11 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
                             : text_field_textStyle,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        // textScaleFactor: 1.02,
                       ),
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
+                        color: CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
@@ -685,7 +671,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
     );
   }
 
-
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType
@@ -693,7 +679,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
       reportType=name;
     });
   }
-
+  /* Widget for get franchisee name drop down layout */
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
@@ -701,7 +687,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
       selectedFranchiseeName=name;
     });
   }
-
+  /* Widget for get category drop down layout */
   @override
   selectCategory(String id, String name) {
     // TODO: implement selectCategory
@@ -714,6 +700,8 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> with Re
     }
   }
 
+
+  /* Widget for get item drop down layout */
   @override
   selectedItem(String id, String name) {
     // TODO: implement selectedItem

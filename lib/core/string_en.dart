@@ -206,7 +206,7 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const PURCHASE_ITEM = "Item Purchased";
   static const ITEM_DETAIL = "Item Detail";
   static const QUANTITY = "Quantity";
-  static const DICOUNT = "Disc.(%)";
+  static const DICOUNT = "Disc.%";
 
   static const ADD_LEDGER_ITEM = "Add Ledger ";
   static const LEDGER="Ledger Name";
@@ -241,7 +241,6 @@ static const CREATE_EXPENSES="Expense Invoice - New";
 
   static const OPENING_BAL="Item Opening Balance";
   static const LEARDER_OPENING_BAL="Leader Opening Balance";
-  static const GST_PER="GST(%)";
   static const ACTION="Action";
 
 
@@ -264,6 +263,21 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const Amount_TYPE="Amount Type";
   static const PRODUCT_DETAIL="Product Detail";
   static const ADD_PRODUCT="Add Product";
+
+  //neww
+
+  static const ENTER_EXPENSE="Enter Expense";
+  static const SELECT_REPORT_TYPE="Select report type";
+  static const ENTER_FRANCHISEE_NAME= "Enter a franchisee name";
+  static const ENTER_BANK_CASH= "Enter a bank / cash";
+  static const ENTER_LEDGER_NAME= "Enter a leader name";
+  static const ENTER_A_NEW_PASSWORD= "Enter a new password";
+  static const ENTER_CONFIRM_PASSWORD= "Enter a confirm password";
+  static const ENTER_A_DOMAIN_LINK= "Enter a domain link";
+  static const ROUND_OFF= "Round off:";
+  static const LEDGERS = "Ledgers";
+  static const INVOICES = "Invoices";
+  static const ITEMS = "Items";
 
 
 

@@ -77,7 +77,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*0.7,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -89,7 +89,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: Center(
+                    child: const Center(
                       child: Text(
                           StringEn.ADD_EEXPENSE,
                           style: page_heading_textStyle
@@ -98,16 +98,10 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                   ),
                   getFieldTitleLayout(StringEn.EXPENSES_NAME),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                   getFieldTitleLayout(StringEn.AMOUNT),
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                   getFieldTitleLayout(StringEn.NARRATION),
                   getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                  /*   SizedBox(height: 20,),
-                  getButtonLayout()*/
-                  
                 ],
               ),
             ),
@@ -122,7 +116,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
 
 
 
-  /* widget for product gst layout */
+  /* widget for ledger narration layout */
   Widget getLedgerNarrationLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
@@ -158,7 +152,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
     );
   }
 
-  /* widget for product rate layout */
+  /* widget for ledger amount  layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight * .055,
@@ -198,6 +192,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
     );
   }
 
+  /* widget for ledger search  layout */
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
       height: parentHeight * .055,
@@ -215,14 +210,13 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       ),
       child: TextFormField(
         textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
         keyboardType: TextInputType.text,
         controller: _textController,
         textAlignVertical: TextAlignVertical.center,
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Ledger Name",
+          hintText: StringEn.LEDGER,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -234,7 +228,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
     );
   }
 
-  /* widget for button layout */
+  /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -248,7 +242,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
 
 
 
-  /* Widget for Buttons Layout0 */
+  /* Widget for add Buttons Layout0 */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -261,7 +255,6 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
           child: Container(
             height:parentHeight*.05,
             width: parentWidth*.45,
-            // width: SizeConfig.blockSizeVertical * 20.0,
             decoration: const BoxDecoration(
               color: CommonColor.HINT_TEXT,
               borderRadius: BorderRadius.only(
@@ -299,7 +292,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
           child: Container(
             height: parentHeight * .05,
             width: parentWidth*.45,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(5),

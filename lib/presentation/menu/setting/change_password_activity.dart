@@ -71,7 +71,6 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -99,50 +98,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
 
   double opacityLevel = 1.0;
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -163,7 +119,6 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                   left: parentWidth * .01, right: parentWidth * .01),
               child: Column(
                 children: [
-                  //getFieldTitleLayout(StringEn.UPDATE_PASSWORD),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -188,7 +143,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
 
 
 
-  /* Widget for name text from field layout */
+  /* Widget for password text from field layout */
   Widget getNewPasswordLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
@@ -236,7 +191,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a new password",
+                      hintText: StringEn.ENTER_A_NEW_PASSWORD,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: newPasswordController,
@@ -254,7 +209,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
     );
   }
 
-  /* Widget for name text from field layout */
+  /* Widget for confirm password text from field layout */
   Widget getConfirmPasswordLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
@@ -302,7 +257,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a confirm password",
+                      hintText: StringEn.ENTER_CONFIRM_PASSWORD,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: confirmPasswordController,
@@ -326,7 +281,6 @@ bool disableColor=false;
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(

@@ -48,9 +48,6 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _voucherNoFocus = FocusNode();
-  final VoucherNoController = TextEditingController();
-
 
   String selectedFranchiseeName="";
 
@@ -76,8 +73,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   String TotalAmount="0.00";
 
+/* calculate total amount function*/
   calculateTotalAmt()async{
-    print("Here");
     var total=0.00;
     for(var item  in Ledger_list ){
       total=total+item['amount'];
@@ -89,7 +86,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   }
 
-
+/* initialise the function and value */
   @override
   void initState() {
     // TODO: implement initState
@@ -106,18 +103,20 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     return contentBox(context);
   }
 
+
+/* Widget for build context layout*/
   Widget contentBox(BuildContext context) {
     return Container(
       height: SizeConfig.safeUsedHeight,
       width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Color(0xFFfffff5),
+        color: const Color(0xFFfffff5),
         borderRadius: BorderRadius.circular(0.0),
       ),
       child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
+        backgroundColor: const Color(0xFFfffff5),
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
@@ -128,14 +127,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               ),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)
                 ),
 
                 backgroundColor: Colors.white,
-                title: Text(
+                title: const Text(
                   StringEn.CREATE_PAYMENT,
                   style: appbar_text_style,),
               ),
@@ -147,20 +146,16 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
             Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: CommonColor.WHITE_COLOR,
 
                 ),
                 height: SizeConfig.safeUsedHeight * .12,
                 child: getSaveAndFinishButtonLayout(
                     SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            // CommonWidget.getCommonPadding(
-            //     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
           ],
         ),
       ),
@@ -168,20 +163,13 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   }
 
 
-
-
-
+/* Widget for all field layout*/
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
-      children: [
+   children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
           child: Container(
@@ -189,11 +177,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               key: _formkey,
               child: Column(
                 children: [
-
-                  //   getFieldTitleLayout(StringEn.PAYMENT_DETAIL),
                   PaymentInfo(),
-
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -207,8 +192,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                           },
                           child: Container(
                               width: 140,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
@@ -238,11 +223,11 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   }
 
-
+/* Widget for payment info layout*/
   Container PaymentInfo() {
     return Container(
 
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -250,24 +235,21 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          //  getFieldTitleLayout(StringEn.DATE),
           getReceiptDateLayout(),
-          // getFieldTitleLayout(StringEn.VOUCHER_NO),
-          // getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          SizedBox(height: 10,)
+       getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          const SizedBox(height: 10,)
         ],
       ),
     );
   }
 
 
-
+/* Widget for item list layout layout*/
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight*.6,
       child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: Ledger_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
@@ -277,7 +259,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             child: SlideAnimation(
               verticalOffset: -44.0,
               child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
+                delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
                     FocusScope.of(context).requestFocus(FocusNode());
@@ -306,7 +288,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
                                   Expanded(
                                     child: Container(
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: const EdgeInsets.only(left: 10),
                                       width: parentWidth*.70,
                                       //  height: parentHeight*.1,
                                       child:  Column(
@@ -315,14 +297,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                         children: [
                                           Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 3,),
+                                          const SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
                                             Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
-                                          SizedBox(height: 2 ,),
+                                          const SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
@@ -340,7 +322,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
                                       child:IconButton(
-                                        icon:  FaIcon(
+                                        icon:  const FaIcon(
                                           FontAwesomeIcons.trash,
                                           size: 15,
                                           color: Colors.redAccent,
@@ -370,7 +352,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
+          return const SizedBox(
             height: 5,
           );
         },
@@ -380,13 +362,13 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
 
 
-  /* widget for button layout */
+  /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
-        "$title",
+        title,
         style: page_heading_textStyle,
       ),
     );
@@ -394,57 +376,39 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
 
 
-  /* Widget to get add Invoice date Layout */
+  /* Widget to receipt dateLayout */
   Widget getReceiptDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-/*        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }*/
-      },
-      child: Container(
-          width: (SizeConfig.screenWidth)*0.3,
-          height: (SizeConfig.screenHeight) * .055,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
+    return Container(
+        width: (SizeConfig.screenWidth)*0.3,
+        height: (SizeConfig.screenHeight) * .055,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
+              ),]
 
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(widget.dateNew,
-                style: item_regular_textStyle,),
-              SizedBox(width: 2,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(widget.dateNew,
+              style: item_regular_textStyle,),
+            const SizedBox(width: 2,),
+            const FaIcon(FontAwesomeIcons.calendar,
+              color: Colors.black87, size: 16,)
+          ],
+        )
     );
   }
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return Padding(
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       child: Container(
         width: parentWidth*0.52,
         height: parentHeight * .055,
@@ -454,7 +418,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
-              offset: Offset(0, 1),
+              offset: const Offset(0, 1),
               blurRadius: 5,
               color: Colors.black.withOpacity(0.1),
             ),
@@ -477,7 +441,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                     ),
                   );
                 },
-                transitionDuration: Duration(milliseconds: 200),
+                transitionDuration: const Duration(milliseconds: 200),
                 barrierDismissible: true,
                 barrierLabel: '',
                 context: context,
@@ -487,7 +451,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           },
           onDoubleTap: (){},
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -524,7 +488,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       children: [
         Container(
           width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
+          padding: const EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
@@ -576,35 +540,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     );
   }
 
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Ledger",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
+/* Widget for add or edit button layout*/
   Future<Object?> goToAddOrEditItem(product) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
@@ -623,7 +559,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -632,7 +568,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
         });
   }
 
-
+  /* Widget for get franchisee drop down function */
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
@@ -641,6 +577,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     });
   }
 
+  /* Widget for add or edit ledger function */
   @override
   AddOrEditLedgerForPaymentDetail(item) {
     // TODO: implement AddOrEditItemDetail

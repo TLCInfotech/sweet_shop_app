@@ -26,7 +26,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
+      backgroundColor: const Color(0xFFfffff5),
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
         child: SafeArea(
@@ -37,14 +37,14 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             ),
             color: Colors.transparent,
             // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
             child: AppBar(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
               ),
 
               backgroundColor: Colors.white,
-              title: Text(
+              title: const Text(
                 StringEn.PAYMENT_INVOICE,
                 style: appbar_text_style,),
             ),
@@ -52,8 +52,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
+          backgroundColor: const Color(0xFFFBE404),
+          child: const Icon(
             Icons.add,
             size: 30,
             color: Colors.black87,
@@ -65,7 +65,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             )));
           }),
       body: Container(
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,7 +82,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     );
   }
 
-  /* Widget to get add Invoice date Layout */
+  /* Widget to get add purchase date Layout */
   Widget getPurchaseDateLayout(){
     return GestureDetector(
       onTap: () async{
@@ -92,7 +92,6 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           setState(() {
             newDate=date;
           });
-          // startDateIOS(context);
         } else if (Platform.isAndroid) {
           var date= await CommonWidget.startDate(context,newDate) ;
           setState(() {
@@ -102,27 +101,24 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       },
       child: Container(
           height: 40,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          margin: EdgeInsets.all(8),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
-
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
-
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.calendar,
+              const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
           )
@@ -130,21 +126,21 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     );
   }
 
+  /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
-      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      margin: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
-          // width: SizeConfig.halfscreenWidth,
           width: SizeConfig.screenWidth*0.9,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.green,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -154,7 +150,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Invoices  ", style: subHeading_withBold,),
+              const Text("10 ${StringEn.INVOICES}", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -162,18 +158,19 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     );
   }
 
-  /* widget for button layout */
+  /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 5, bottom: 5,),
       child: Text(
-        "$title",
+        title,
         style: page_heading_textStyle,
       ),
     );
   }
 
+  /* Widget to get add payment list Layout */
   Expanded get_payment_list_layout() {
     return Expanded(
         child: ListView.separated(
@@ -186,23 +183,22 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
+                  delay: const Duration(microseconds: 1500),
                   child: Card(
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: (index)%2==0?Colors.green:Colors.blueAccent,
                                   borderRadius: BorderRadius.circular(5)
                               ),
-                              child:  FaIcon(
+                              child:  const FaIcon(
                                 FontAwesomeIcons.moneyCheck,
                                 color: Colors.white,
                               )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
                           ),
                         ),
                         Expanded(
@@ -214,22 +210,22 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Payment No: - 23",style: item_heading_textStyle,),
-                                      SizedBox(height: 5,),
+                                      const Text("Payment No: - 23",style: item_heading_textStyle,),
+                                      const SizedBox(height: 5,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          const SizedBox(width: 10,),
+                                          const Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
-                                      SizedBox(height: 5,),
+                                      const SizedBox(height: 5,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
+                                          const SizedBox(width: 10,),
                                           Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
@@ -241,7 +237,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                     top: 0,
                                     right: 0,
                                     child:IconButton(
-                                      icon:  FaIcon(
+                                      icon:  const FaIcon(
                                         FontAwesomeIcons.trash,
                                         size: 18,
                                         color: Colors.redAccent,
@@ -260,7 +256,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },

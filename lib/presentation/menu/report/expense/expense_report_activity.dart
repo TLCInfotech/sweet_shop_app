@@ -192,7 +192,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          reportType == "" ? "Select report type" : reportType,
+                          reportType == "" ? StringEn.SELECT_REPORT_TYPE : reportType,
                           style: reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -203,9 +203,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                         Icon(
                           Icons.keyboard_arrow_down,
                           size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
+                          color:
                           CommonColor.BLACK_COLOR,
                         ),
                       ],
@@ -456,7 +454,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
     );
   }
 
-  /* Widget for name text from field layout */
+  /* Widget for expense text from field layout */
   Widget getExpenseNameLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
@@ -504,7 +502,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter Expense ",
+                      hintText: StringEn.ENTER_EXPENSE,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: expenseController,
@@ -569,7 +567,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
     );
   }
 
-
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType
@@ -577,7 +575,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
       reportType=name;
     });
   }
-
+  /* Widget for get franchisee drop down layout */
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee

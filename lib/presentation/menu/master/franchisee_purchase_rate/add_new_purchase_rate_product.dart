@@ -91,11 +91,8 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                   getFieldTitleLayout(StringEn.GST_AMT),
                   getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.NET),
+                  getFieldTitleLayout(StringEn.NET_RATE),
                   getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  /*      SizedBox(height: 20,),
-                  getButtonLayout()
-                  */
                 ],
               ),
             ),
@@ -189,7 +186,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         controller: net,
         readOnly: true,
         decoration: textfield_decoration.copyWith(
-            hintText: StringEn.NET,
+            hintText: StringEn.NET_RATE,
             fillColor: CommonColor.TexField_COLOR
         ),
         onChanged: (value){

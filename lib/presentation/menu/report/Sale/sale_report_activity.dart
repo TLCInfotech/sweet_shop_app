@@ -210,10 +210,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                         Icon(
                           Icons.keyboard_arrow_down,
                           size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
+                          color:   CommonColor.BLACK_COLOR,
                         ),
                       ],
                     ),
@@ -446,10 +443,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
+                        color: CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
@@ -533,10 +527,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
+                        color:  CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
@@ -620,10 +611,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
+                        color:  CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
@@ -684,7 +672,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
     );
   }
 
-
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType
@@ -693,6 +681,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
     });
   }
 
+  /* Widget for get franchisee drop down layout */
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
@@ -700,6 +689,8 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
       selectedFranchiseeName=name;
     });
   }
+
+  /* Widget for get category drop down layout */
 
   @override
   selectCategory(String id, String name) {
@@ -713,6 +704,8 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
     }
   }
 
+
+  /* Widget for get item drop down layout */
   @override
   selectedItem(String id, String name) {
     // TODO: implement selectedItem

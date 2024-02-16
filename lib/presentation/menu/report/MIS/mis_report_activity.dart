@@ -72,7 +72,6 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -200,7 +199,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          reportType == "" ? "Select report type" : reportType,
+                          reportType == "" ? StringEn.SELECT_REPORT_TYPE : reportType,
                           style: reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -211,10 +210,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                         Icon(
                           Icons.keyboard_arrow_down,
                           size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                          CommonColor.BLACK_COLOR,
+                          color: CommonColor.BLACK_COLOR,
                         ),
                       ],
                     ),
@@ -428,7 +424,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a franchisee name",
+                      hintText: StringEn.ENTER_FRANCHISEE_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: leaderController,
@@ -495,6 +491,7 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
     );
   }
 
+  /* Widget for get report drop down layout */
   @override
   selectedReportType(String id, String name) {
     // TODO: implement selectedReportType

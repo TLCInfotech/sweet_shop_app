@@ -491,7 +491,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            getFieldTitleLayout(StringEn.GST+"(%)"),
+            getFieldTitleLayout(StringEn.GST+"%"),
             Container(
               height: parentHeight * .055,
               width: (parentWidth*0.8)/2,
@@ -511,7 +511,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                 keyboardType: TextInputType.number,
                 controller: gst,
                 decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.GST,
+                    hintText: "${StringEn.GST}%",
                     suffix: Text("%")
                 ),
                 validator: ((value) {

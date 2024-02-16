@@ -49,10 +49,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _InvoiceNoFocus = FocusNode();
-  final InvoiceNoController = TextEditingController();
-
-
   String selectedFranchiseeName="";
 
   String TotalAmount="0.00";
@@ -91,7 +87,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   ];
 
 
-
+  /* initialise the vale and function Layout */
   @override
   void initState() {
     // TODO: implement initState
@@ -108,17 +104,18 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return contentBox(context);
   }
 
+  /* Widget to get build context Layout */
   Widget contentBox(BuildContext context) {
     return Container(
       height: SizeConfig.safeUsedHeight,
       width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(16.0),
+      decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
       ),
       child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
+        backgroundColor: const Color(0xFFfffff5),
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
@@ -128,15 +125,13 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   borderRadius: BorderRadius.circular(25)
               ),
               color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)
                 ),
-
                 backgroundColor: Colors.white,
-                title: Text(
+                title: const Text(
                   StringEn.ADD_PURCHASE,
                   style: appbar_text_style,),
               ),
@@ -148,7 +143,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
             Container(
@@ -173,10 +167,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
+  /* Widget to get invoice info Layout */
   Container InvoiceInfo() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(5),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -191,34 +186,21 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
-  /* Widget to get add Invoice date Layout */
+  /* Widget to get add purchase date Layout */
   Widget getPurchaseDateLayout(){
     return GestureDetector(
       onTap: () async{
-/*        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }*/
       },
       child: Container(
           width: (SizeConfig.screenWidth)*0.3,
           height: (SizeConfig.screenHeight) * .055,
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -229,8 +211,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             children: [
               Text(widget.dateNew,
                 style: item_regular_textStyle,),
-              SizedBox(width: 2,),
-              FaIcon(FontAwesomeIcons.calendar,
+              const SizedBox(width: 2,),
+              const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
           )
@@ -241,7 +223,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Container(
         width: parentWidth*0.52,
         height: parentHeight * .055,
@@ -251,7 +233,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
-              offset: Offset(0, 1),
+              offset: const Offset(0, 1),
               blurRadius: 5,
               color: Colors.black.withOpacity(0.1),
             ),
@@ -274,7 +256,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                     ),
                   );
                 },
-                transitionDuration: Duration(milliseconds: 200),
+                transitionDuration: const Duration(milliseconds: 200),
                 barrierDismissible: true,
                 barrierLabel: '',
                 context: context,
@@ -284,7 +266,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           },
           onDoubleTap: (){},
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -311,7 +293,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       ),
     );
   }
-
+  /* Widget to get all field Layout */
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -333,7 +315,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
                   // getFieldTitleLayout(StringEn.INVOICE_DETAILS),
                   InvoiceInfo(),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -347,8 +329,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                           },
                           child: Container(
                               width: 120,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
@@ -369,7 +351,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   ),
                   Item_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
 
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
 
                 ],
               ),
@@ -381,12 +363,12 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   }
 
-
+  /* Widget to get item list Layout */
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight*.6,
       child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
@@ -396,7 +378,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             child: SlideAnimation(
               verticalOffset: -44.0,
               child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
+                delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
                     FocusScope.of(context).requestFocus(FocusNode());
@@ -427,7 +409,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
                                   Expanded(
                                     child: Container(
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: const EdgeInsets.only(left: 10),
                                       width: parentWidth*.70,
                                       //  height: parentHeight*.1,
                                       child:  Column(
@@ -436,7 +418,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                                         children: [
                                           Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 5,),
+                                          const SizedBox(height: 5,),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
@@ -461,7 +443,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
                                       child:IconButton(
-                                        icon:  FaIcon(
+                                        icon:  const FaIcon(
                                           FontAwesomeIcons.trash,
                                           size: 15,
                                           color: Colors.redAccent,
@@ -490,7 +472,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
+          return const SizedBox(
             height: 5,
           );
         },
@@ -498,7 +480,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
-  /* Widget to get add Product Layout */
+  /* Widget to get add new Product Layout */
   Widget getAddNewProductLayout(){
     return GestureDetector(
       onTap: () {
@@ -509,12 +491,12 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       },
       child: Container(
           height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Add New Item",
@@ -527,6 +509,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
+  /* Widget to add and edit Layout */
   Future<Object?> goToAddOrEditItem(product) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
@@ -545,7 +528,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -561,7 +544,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
+          padding: const EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
@@ -570,9 +553,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-          Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
-              SizedBox(height: 4,),
+              Text("${Item_list.length} ${StringEn.ITEMS}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+          Text("${StringEn.ROUND_OFF} ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              const SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
 
             ],
@@ -580,16 +563,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         ):Container(),
         GestureDetector(
           onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
             if (mounted) {
               setState(() {
                 disableColor = true;
@@ -627,13 +600,13 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
 
-  /* widget for button layout */
+  /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
-        "$title",
+        title,
         style: page_heading_textStyle,
       ),
     );
@@ -689,6 +662,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
 
+  /* Widget to get add purchase date Layout */
 
   @override
   AddOrEditItemDetail(item)async {

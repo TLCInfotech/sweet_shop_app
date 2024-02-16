@@ -7,7 +7,6 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/users_list.dart';
 import 'package:sweet_shop_app/presentation/menu/master/expense/expense_listing_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/expense/expense_group.dart';
@@ -59,7 +58,6 @@ class _MenuActivityState extends State<MenuActivity>
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("hkhjghjkgjgh  $openMasterDropDown");
   }
 
   @override
@@ -77,7 +75,7 @@ class _MenuActivityState extends State<MenuActivity>
             getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
             Container(
               height: SizeConfig.screenHeight * .85,
-              child: getAddBottomBarLayout(
+              child: getAllFieldLayout(
                   SizeConfig.screenHeight, SizeConfig.screenWidth),
             ),
           ],
@@ -128,8 +126,8 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  /* Widget for Bottom Bar Layout */
-  Widget getAddBottomBarLayout(double parentHeight, double parentWidth) {
+  /* Widget for all field Layout */
+  Widget getAllFieldLayout(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
@@ -223,7 +221,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  /* Widget for Master Layout */
+  /* Widget for Master sub field Layout */
   Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -278,7 +276,7 @@ class _MenuActivityState extends State<MenuActivity>
   }
 
 
-
+  /* Widget for franchisee sale rate Layout */
   Widget getFranchiseeSaleRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -306,6 +304,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for franchisee purchase rate sub field Layout */
   Widget getFranchiseePurchaseRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -333,7 +332,7 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
-
+  /* Widget for franchisee  Layout */
   Widget getFranchiseeLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -367,6 +366,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for user Layout */
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -394,6 +394,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for measuring unit Layout */
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -421,6 +422,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for expense Layout */
   Widget getExpenseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -447,6 +449,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for expense group Layout */
   Widget getExpensceGroupLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -473,6 +477,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for company info Layout */
   Widget getCompanyInfoLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -499,6 +505,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for item opening balance Layout */
   Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -525,6 +533,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for ledger opening balance Layout */
   Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -552,6 +562,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for category Layout */
   Widget getCategoryLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -578,6 +589,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for item Layout */
   Widget getItemLayout(double parentHeight, double parentWidth){
     return GestureDetector(
       onTap: (){
@@ -603,9 +616,6 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
-
-
-
 
   /* Widget for report Layout */
   Widget getAddReportLayout(double parentHeight, double parentWidth) {
@@ -643,11 +653,10 @@ class _MenuActivityState extends State<MenuActivity>
         ),
       ),
     );
-
   }
 
 
-  /* Widget for report Layout */
+  /* Widget for report sub field Layout */
   Widget getReportSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -696,7 +705,7 @@ class _MenuActivityState extends State<MenuActivity>
   }
 
 
-
+  /* Widget for sell report Layout */
   Widget getSellReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -724,6 +733,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for purchase report Layout */
   Widget getPurchaseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -751,6 +761,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for expense report Layout */
   Widget getExpenseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -779,6 +790,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for payment report Layout */
   Widget getPaymentReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -807,6 +819,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for receipt report Layout */
   Widget getReciptReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -835,6 +848,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for mis report Layout */
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -902,7 +916,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  /* Widget for transaction Layout */
+  /* Widget for transaction sub field Layout */
   Widget getTransactionSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -951,7 +965,7 @@ class _MenuActivityState extends State<MenuActivity>
 
 
 
-
+/* Widget for sell transaction Layout */
   Widget getSellLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -980,6 +994,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for purchase transaction Layout */
   Widget getPuerchaseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1006,6 +1022,8 @@ class _MenuActivityState extends State<MenuActivity>
       ),
     );
   }
+
+  /* Widget for payment transaction Layout */
   Widget getPaymentLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1034,6 +1052,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for receipt transaction Layout */
   Widget getReceptLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1061,6 +1080,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for expense transaction Layout */
   Widget getExpensseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1126,7 +1146,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-  /* Widget for Setting sub  Layout */
+  /* Widget for Setting sub field Layout */
   Widget getSettingSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -1170,7 +1190,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
-
+/* Widget for change password Layout */
   Widget getChangePassword(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1198,6 +1218,7 @@ class _MenuActivityState extends State<MenuActivity>
     );
   }
 
+  /* Widget for domain link Layout */
   Widget getDomainLink(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){

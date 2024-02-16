@@ -49,7 +49,6 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
-              // color: Colors.red,
               margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
@@ -67,7 +66,6 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -176,7 +174,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a domain link",
+                      hintText: StringEn.ENTER_A_DOMAIN_LINK,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: domainLinkController,
