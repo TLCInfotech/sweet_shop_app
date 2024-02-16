@@ -17,16 +17,16 @@ class StringEn{
   static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
   static const PARENT_CATEGORY = "Parent Category";
-  static const ADD_CATEGORY = "Create Category";
+  static const ADD_CATEGORY = " Category";
   static const CATEGORY_NAME="Enter Item Category";
   static const CLOSE = "Close";
   static const ADD = "ADD";
   static const UPDATE="UPDATE";
 
   //Item
-  static const ITEM_TITLE="Create Item";
+  static const ITEM_TITLE=" Item";
   static const ITEM = "Item";
-  static const CREATE_ITEM = "Create Item";
+  static const CREATE_ITEM = " Item";
   static const ADD_ITEMS = "Add Item";
 
  // static const INVOICE_DETAIL = "Invoice Detail";
@@ -52,18 +52,18 @@ class StringEn{
 
   //Unit
   static const UNIT_TITLE="Measuring Unit ";
-  static const ADD_UNIT = "Create Unit";
+  static const ADD_UNIT = " Unit";
   static const UNIT_NAME="Enter Unit Measurment";
 
   //Franchisee
   static const FRANCHISEE_TITLE="Franchisee";
-  static const ADD_FRANCHISEE = "Create Franchisee";
+  static const ADD_FRANCHISEE = " Franchisee";
 
   //Add franchisee
   static const ADD_FRANCHISEE_TITLE="Franchisee Detail";
   static const FRANCHISEE_NAME="Franchisee Name";
-  static const FRANCHISEE_CONTACT_PERSON="Contact Person:";
-  static const FRANCHISEE_ADDRESS="Address:";
+  static const FRANCHISEE_CONTACT_PERSON="Contact Person";
+  static const FRANCHISEE_ADDRESS="Address";
   static const FRANCHISEE_CITY="City";
   static const FRANCHISEE_STATE="State";
   static const FRANCHISEE_MOBILENO="Mobile No";
@@ -85,26 +85,26 @@ class StringEn{
 // static const ADD_F
 
   static const POST = "Post";
-  static const NAME = "Name:";
-  static const BRAND_NAME = "Brand Name:";
+  static const NAME = "Name";
+  static const BRAND_NAME = "Brand Name";
   static const FRANCHISEE = "Franchisee";
-  static const ADDRESS = "Address:";
+  static const ADDRESS = "Address";
   static const SAVE = "Save";
-  static const DISTRICTCITY = "District/City:";
-  static const CONTACT_NO = "Contact No:";
-  static const JURISDICTION = "Jurisdiction:";
-  static const CITY = "City:";
-  static const EMAIL = "E-Mail:";
-  static const PIN_CODE = "Pin Code:";
-  static const PAN_NO = "PAN No:";
-  static const STATE = "State:";
-  static const GST_NO = "GST No:";
-  static const COUNTRY = "Country:";
-  static const CIN_NO = "CIN No:";
-  static const ADDRESS_TWO = "Address 2:";
-  static const DEFAULT_BANK = "Default Bank:";
-  static const EXT_NAME = "Ext. Name:";
-  static const INVOICE_DECLERATION = "Invoice Declaration:";
+  static const DISTRICTCITY = "District/City";
+  static const CONTACT_NO = "Contact No";
+  static const JURISDICTION = "Jurisdiction";
+  static const CITY = "City";
+  static const EMAIL = "E-Mail";
+  static const PIN_CODE = "Pin Code";
+  static const PAN_NO = "PAN No";
+  static const STATE = "State";
+  static const GST_NO = "GST No";
+  static const COUNTRY = "Country";
+  static const CIN_NO = "CIN No";
+  static const ADDRESS_TWO = "Address 2";
+  static const DEFAULT_BANK = "Default Bank";
+  static const EXT_NAME = "Ext. Name";
+  static const INVOICE_DECLERATION = "Invoice Declaration";
   static const FRANCHISE_SALE_RATE = "Franchisee Sale Rate";
   static const FRANCHISE_PURCHASE_RATE = "Franchisee Purchase Rate";
   static const FRANCHISE = "Franchisee";
@@ -116,7 +116,7 @@ class StringEn{
   static const ADD_EEXPENSE = "Add Expense";
   static const EXPENSE_DETAILS = "Expense Detail";
   static const EXPENSE_GROUP = "Ledger Group";
-  static const CREATE_EXPENSE="Create Ledger";
+  static const CREATE_EXPENSE=" Ledger";
 static const CREATE_EXPENSES="Expense Invoice - New";
 
   static const COMPANY_INFO = "Comapny Info";
@@ -128,7 +128,7 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   //sale rate
   static const APPLICABLE_FROM="Applicable From";
   static const COPY_FROM_FRANCHISEE = "Copy From Franchisee";
-  static const PRODUCTS="Products :";
+  static const PRODUCTS="Products ";
   static const ADDPRODUCT="Add Product";
   static const GST="GST";
   static const NET="Net Amount";
@@ -138,27 +138,27 @@ static const CREATE_EXPENSES="Expense Invoice - New";
 
 //expense
 
-  static const LEADER_GROUP = "Leader Group:";
-  static const REG_TYPE = "Reg Type:";
-  static const OUTSTANDING_LIMIT = "Outstanding Limit:";
-  static const VENDOR_CODE = "Vendor Code:";
-  static const PAYMENT_DAYS = "Payment Days:";
+  static const LEADER_GROUP = "Leader Group";
+  static const REG_TYPE = "Reg Type";
+  static const OUTSTANDING_LIMIT = "Outstanding Limit";
+  static const VENDOR_CODE = "Vendor Code";
+  static const PAYMENT_DAYS = "Payment Days";
   static const TAXES = "Taxes";
-  static const TAX_TYPE = "Tax Type:";
-  static const TAX_CATEGORY= "Tax Category:";
-  static const TAX_RATE = "Tax Rate %:";
-  static const SGST = "SGST %:";
-  static const CGST = "CGST %:";
-  static const CESS = "Cess %:";
-  static const ADD_CESS = "Add Cess %:";
-  static const TCS_TDS_APPLICABLE = "TCS/TDS Applicable:";
-  static const BANK_NAME = "Bank Name:";
+  static const TAX_TYPE = "Tax Type";
+  static const TAX_CATEGORY= "Tax Category";
+  static const TAX_RATE = "Tax Rate %";
+  static const SGST = "SGST %";
+  static const CGST = "CGST %";
+  static const CESS = "Cess %";
+  static const ADD_CESS = "Add Cess %";
+  static const TCS_TDS_APPLICABLE = "TCS/TDS Applicable";
+  static const BANK_NAME = "Bank Name";
   static const ACCOUNT_INFO = "Account Info";
-  static const BANT_BRACH = "Bank Branch:";
-  static const IFSC_CODE = "IFSC Code:";
-  static const ACCOUNT_HOLDER_NAME = "A/C Holder Name:";
-  static const ACCOUNT_NO = "Account No:";
-  static const BRANCH_NAME = "Branch Name:";
+  static const BANT_BRACH = "Bank Branch";
+  static const IFSC_CODE = "IFSC Code";
+  static const ACCOUNT_HOLDER_NAME = "A/C Holder Name";
+  static const ACCOUNT_NO = "Account No";
+  static const BRANCH_NAME = "Branch Name";
   static const GROUP_NAME = "Group Name";
   static const SEQUENSE_NO = "Sequence No";
   static const SEQUENSE_NATURE = "Sequence Nature";
@@ -173,16 +173,16 @@ static const CREATE_EXPENSES="Expense Invoice - New";
 
   static const PARENT_GROUP = "Parent Group";
   static const ADD_EXPENSE = "Add Expense";
-  static const COMPANY_NAME = "Company Name:";
+  static const COMPANY_NAME = "Company Name";
   static const TAX = "Tax";
   static const LEADER_DETAIL = "Ledger Detail";
   static const ADD_LEADER = "Add Ledger";
   static const RECEPT_DETAIL = "Receipt Detail";
 
 
-  static const CREATE_COMPANY = "Create Company";
+  static const CREATE_COMPANY = " Company";
   static const CREATE_SELL = "Sale Invoice-New";
-  static const CREATE_RECEIPT = "Create Receipt";
+  static const CREATE_RECEIPT = " Receipt";
   static const CREATE_RECEIPT_INVOICE = "Receipt Invoice - New";
  static const COMPANY = "Company";
   static const DATE = "Date";
@@ -227,8 +227,8 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const SETTING = "Setting";
   static const DOMAIN_LINK="Domain Link";
   static const CHANGE_PASSWORD = "Change Password";
-  static const NEW_PASSWORD = "New Password:";
-  static const CONFIRM_PASSWORD = "Confirm Password:";
+  static const NEW_PASSWORD = "New Password";
+  static const CONFIRM_PASSWORD = "Confirm Password";
   static const UPDATE_PASSWORD = "Update Password";
   static const DOMAIN = "Domain";
 
@@ -274,10 +274,16 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const ENTER_A_NEW_PASSWORD= "Enter a new password";
   static const ENTER_CONFIRM_PASSWORD= "Enter a confirm password";
   static const ENTER_A_DOMAIN_LINK= "Enter a domain link";
-  static const ROUND_OFF= "Round off:";
+  static const ROUND_OFF= "Round off";
   static const LEDGERS = "Ledgers";
   static const INVOICES = "Invoices";
   static const ITEMS = "Items";
+
+  static const BASIC_INFO="Basic Information";
+  static const OTHER_INFO="Other Information";
+  static const UPLOAD="Upload";
+  static const SELECT_STATE="Select state";
+  static const SELECT_COUNTRY="Select country";
 
 
 

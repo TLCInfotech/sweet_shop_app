@@ -14,6 +14,8 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/exit_app_dialog.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 
+import 'common_style.dart';
+
 class CommonWidget {
 
 
@@ -221,5 +223,15 @@ class CommonWidget {
     }
   }
 
+  static getFieldTitleLayout(String title) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      child: Text(
+        "$title",
+        style: page_heading_textStyle,
+      ),
+    );
+  }
 
 }

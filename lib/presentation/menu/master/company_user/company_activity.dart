@@ -12,8 +12,11 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class CompanyCreate extends StatefulWidget {
   const CompanyCreate({super.key});
@@ -106,27 +109,6 @@ class _CompanyCreateState extends State<CompanyCreate>
   File? adharFile ;
   File? panFile ;
   File? gstFile ;
-  // method to pick adhar document
-  getAadharFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      adharFile=file;
-    });
-  }
-  // method to pick pan document
-  getPanFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      panFile=file;
-    });
-  }
-  // method to pick gst document
-  getGstFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      gstFile=file;
-    });
-  }
 
 
   @override
@@ -153,7 +135,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
                 title: const Text(
-                  "Create Company",
+                  StringEn.COMPANY,
                   style: appbar_text_style,
                 ),
               ),
@@ -189,78 +171,10 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
-  /* Widget for TopBar Layout */
-  Widget getAddTopBarLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .05,
-          left: parentWidth * 0.0,
-          right: parentWidth * 0.05),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            color: Colors.transparent,
-            width: parentWidth * .25,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .05),
-                    child: Image(
-                      image: AssetImage("assets/images/back.png"),
-                      height: parentHeight * .035,
-                      width: parentHeight * .035,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Text(
-          "Create Item",
-          style: TextStyle(
-            fontFamily: "Montserrat_Bold",
-            fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Container(
-          width: parentWidth * .2,
-          decoration: BoxDecoration(
-            color: CommonColor.THEME_COLOR,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: parentHeight * .01, bottom: parentHeight * .01),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  StringEn.POST,
-                  style: TextStyle(
-                    color: CommonColor.BLACK_COLOR,
-                    fontSize: SizeConfig.blockSizeHorizontal * 4.3,
-                    fontFamily: 'Inter_Regular_Font',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-
   double opacityLevel = 1.0;
+
+
+  // Pick Profile photo
   Widget getImageLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -352,50 +266,7 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
@@ -418,9 +289,8 @@ class _CompanyCreateState extends State<CompanyCreate>
               child: Column(
                 children: [
                   getImageLayout(parentHeight, parentWidth),
-
                   SizedBox(height: 20.0),
-                  getFieldTitleLayout("Basic Information"),
+                  CommonWidget.getFieldTitleLayout(StringEn.BASIC_INFO),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -428,6 +298,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
+
                       getNameLayout(parentHeight, parentWidth),
                       getContactPersonLayout(parentHeight, parentWidth),
                       getAddressLayout(parentHeight, parentWidth),
@@ -440,13 +311,14 @@ class _CompanyCreateState extends State<CompanyCreate>
                       getContactNoLayout(parentHeight, parentWidth),
                       getEmilLayout(parentHeight, parentWidth),
                       getAddressTwoLayout(parentHeight, parentWidth),
+                      getDefaultBankLayout(parentHeight, parentWidth),
+                      getExtNameLayout(parentHeight, parentWidth),
                     ],
                     ),
                   ),
 
-
                   SizedBox(height: 20.0),
-                  getFieldTitleLayout("Other Information"),
+                  CommonWidget.getFieldTitleLayout(StringEn.OTHER_INFO),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -454,14 +326,66 @@ class _CompanyCreateState extends State<CompanyCreate>
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
-                      getAdharLayout(parentHeight, parentWidth),
-                      getPanLayout(parentHeight, parentWidth),
-                      getGstLayout(parentHeight, parentWidth),
+                      // addhar
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            adharNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            adharFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_AADHAR_NO,
+                        documentFile: adharFile,
+                        controller: adharNoController,
+                        focuscontroller: _adharoFocus,
+                        focusnext: _panNoFocus,
+                      ),
+                      // pan
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            panNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            panFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_PAN_NO,
+                        documentFile: panFile,
+                        controller: panNoController,
+                        focuscontroller: _panNoFocus,
+                        focusnext: _gstNoFocus,
+                      ),
+                      // gst
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            gstNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            gstFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_GST_NO,
+                        documentFile: gstFile,
+                        controller: gstNoController,
+                        focuscontroller: _gstNoFocus,
+                        focusnext: _cinNoFocus,
+                      ),
+
                       getCINNoLayout(parentHeight, parentWidth),
                       getJURISDICTIONLayout(parentHeight, parentWidth),
-                      getDefaultBankLayout(parentHeight, parentWidth),
-                      getExtNameLayout(parentHeight, parentWidth),
+
                       getInvoiceDelcelrationLayout(parentHeight, parentWidth),
+
                     ],
                     ),
                   ),
@@ -475,21 +399,31 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
+
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return SignleLineEditableTextformField(
+      controller: nameController,
+      focuscontroller: _nameFocus,
+      focusnext: _contactPersonFocus,
+      title:StringEn.COMPANY_NAME,
+      callbackOnchage: (value ) {
+        setState(() {
+          nameController.text=value;
+        });
+      },
+      textInput:  TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.COMPANY_NAME,
-                style: page_heading_textStyle,
-              ),
-            ],
+          Text(
+            StringEn.COMPANY_NAME,
+            style: page_heading_textStyle,
           ),
           Padding(
             padding: EdgeInsets.only(top: parentHeight * .005),
@@ -523,7 +457,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a name",
+                      hintText: StringEn.COMPANY_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: nameController,
@@ -542,72 +476,101 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
-  /* Widget for branch name text from field layout */
+  /* Widget for contact person text from field layout */
   Widget getContactPersonLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.FRANCHISEE_CONTACT_PERSON,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _contactPersonFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a contact person name",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: contactPersonController,
-                onEditingComplete: () {
-                  _contactPersonFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_addressFocus);
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return  SignleLineEditableTextformField(
+      controller: contactPersonController,
+      focuscontroller: _contactPersonFocus,
+      focusnext: _addressFocus,
+      title:StringEn.FRANCHISEE_CONTACT_PERSON,
+      callbackOnchage: (value ) {
+        setState(() {
+          contactPersonController.text=value;
+        });
+      },
+      textInput:  TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
+    //   Padding(
+    //   padding: EdgeInsets.only(top: parentHeight * 0.02),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       const Row(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: [
+    //           Text(
+    //             StringEn.FRANCHISEE_CONTACT_PERSON,
+    //             style: page_heading_textStyle,
+    //           ),
+    //         ],
+    //       ),
+    //       Padding(
+    //         padding: EdgeInsets.only(top: parentHeight * .005),
+    //         child: Container(
+    //           height: parentHeight * .055,
+    //           alignment: Alignment.center,
+    //           decoration: BoxDecoration(
+    //             color: CommonColor.WHITE_COLOR,
+    //             borderRadius: BorderRadius.circular(4),
+    //             boxShadow: [
+    //               BoxShadow(
+    //                 offset: Offset(0, 1),
+    //                 blurRadius: 5,
+    //                 color: Colors.black.withOpacity(0.1),
+    //               ),
+    //             ],
+    //           ),
+    //           child: TextFormField(
+    //             textAlignVertical: TextAlignVertical.center,
+    //             textCapitalization: TextCapitalization.words,
+    //             focusNode: _contactPersonFocus,
+    //             keyboardType: TextInputType.text,
+    //             textInputAction: TextInputAction.next,
+    //             cursorColor: CommonColor.BLACK_COLOR,
+    //             decoration: InputDecoration(
+    //               contentPadding: EdgeInsets.only(
+    //                   left: parentWidth * .04, right: parentWidth * .02),
+    //               border: InputBorder.none,
+    //               counterText: '',
+    //               isDense: true,
+    //               hintText: StringEn.FRANCHISEE_CONTACT_PERSON,
+    //               hintStyle: hint_textfield_Style,
+    //             ),
+    //             controller: contactPersonController,
+    //             onEditingComplete: () {
+    //               _contactPersonFocus.unfocus();
+    //               FocusScope.of(context).requestFocus(_addressFocus);
+    //             },
+    //             style: text_field_textStyle,
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
 
-  /* Widget for description text from field layout */
+  /* Widget for address text from field layout */
   Widget getAddressLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: addressController,
+      focuscontroller: _addressFocus,
+      focusnext: _districtCity,
+      title:StringEn.ADDRESS,
+      callbackOnchage: (value ) {
+        setState(() {
+          addressController.text=value;
+        });
+      },
+      textInput:  TextInputType.text,
+      maxlines: 6,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+
+      Padding(
       padding: EdgeInsets.only(
         top: parentHeight * 0.02,
       ),
@@ -655,7 +618,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a address",
+                        hintText: StringEn.ADDRESS,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: addressController,
@@ -676,7 +639,7 @@ class _CompanyCreateState extends State<CompanyCreate>
   }
 
 
-  /* Widget for select contract layout */
+  /* Widget for getting district and state layout */
 
   Widget getLeftLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -691,6 +654,8 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
+
+  /* Widget for getting pincode and country layout */
   Widget getRightLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .01),
@@ -708,7 +673,21 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for contact no  text from field layout */
   Widget getContactNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return SignleLineEditableTextformField(
+      controller: contactController,
+      focuscontroller: _contactFocus,
+      focusnext: _emailFocus,
+      title: StringEn.CONTACT_NO,
+      callbackOnchage: (value ) {
+        setState(() {
+          contactController.text=value;
+        });
+      },
+      textInput:   TextInputType.numberWithOptions(decimal: true),
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
         child: Column(
@@ -752,7 +731,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a contact no",
+                        hintText: StringEn.CONTACT_NO,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: contactController,
@@ -775,7 +754,22 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for  email  text from field layout */
   Widget getEmilLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: emailController,
+      focuscontroller: _emailFocus,
+      focusnext: _addTwoFocus,
+      title:StringEn.ADDRESS,
+      callbackOnchage: (value ) {
+        setState(() {
+          emailController.text=value;
+        });
+      },
+      textInput:   TextInputType.emailAddress,
+      maxlines: 1,
+      format:   FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z  @ .]')),
+    );
+
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
 
@@ -820,7 +814,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a email",
+                        hintText:  StringEn.EMAIL,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: emailController,
@@ -842,7 +836,22 @@ class _CompanyCreateState extends State<CompanyCreate>
 
 /* Widget for address two from field layout */
   Widget getAddressTwoLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: addTwoController,
+      focuscontroller: _addTwoFocus,
+      focusnext: _defaultBankFocus,
+      title:StringEn.ADDRESS_TWO,
+      callbackOnchage: (value ) {
+        setState(() {
+          addTwoController.text=value;
+        });
+      },
+      textInput:   TextInputType.text,
+      maxlines: 6,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+
+      Padding(
       padding: EdgeInsets.only(
         top: parentHeight * 0.02,
       ),
@@ -890,7 +899,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a address 2",
+                        hintText:  StringEn.ADDRESS_TWO,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: addTwoController,
@@ -911,281 +920,24 @@ class _CompanyCreateState extends State<CompanyCreate>
   }
 
 
-  /* Widget for branch name text from field layout */
-  Widget getAdharLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          StringEn.FRANCHISEE_AADHAR_NO,
-          style: page_heading_textStyle,
-        ),
-        SizedBox(height: 5,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: parentHeight * .055,
-              width: parentWidth*.65,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                maxLength: 12,
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _adharoFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a adhar no.",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: adharNoController,
-                onEditingComplete: () {
-                  _adharoFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_panNoFocus);
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                getAadharFile();
-              },
-              child: Padding(
-                padding:  EdgeInsets.only(right: parentWidth*.0),
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                        Text("Upload",style: subHeading_withBold)
-                      ],
-                    )
-                ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        adharFile!=null?
-        getFileLayout(adharFile!):Container()
-      ],
-    );
-  }
-
-  /* Widget for branch name text from field layout */
-  Widget getPanLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          StringEn.PAN_NO,
-          style: page_heading_textStyle,
-        ),
-        SizedBox(height: 5,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: parentHeight * .055,
-              width: parentWidth*.65,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
-                ],
-                maxLength: 10,
-
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.characters,
-                focusNode: _panNoFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a pan no.",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: panNoController,
-                onEditingComplete: () {
-                  _panNoFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_gstNoFocus);
-
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                getPanFile();
-              },
-              child: Padding(
-                padding:  EdgeInsets.only(right: parentWidth*.0),
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                        Text("Upload",style: subHeading_withBold)
-                      ],
-                    )
-                ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        panFile!=null?
-        getFileLayout(panFile!):Container()
-      ],
-    );
-  }
-
-  /* Widget for branch name text from field layout */
-  Widget getGstLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          StringEn.GST_NO,
-          style: page_heading_textStyle,
-        ),
-        SizedBox(height: 5,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: parentHeight * .055,
-              width: parentWidth*.65,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
-                ],
-                maxLength: 15,
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.characters,
-                focusNode: _gstNoFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: "Enter a gst no",
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller:gstNoController,
-                onEditingComplete: () {
-                  _gstNoFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_cinNoFocus);
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                getGstFile();
-              },
-              child: Padding(
-                padding:  EdgeInsets.only(right: parentWidth*.0),
-                child: Container(
-                    height: 50,
-                    width: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                        Text("Upload",style: subHeading_withBold)
-                      ],
-                    )
-                ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 5,),
-        gstFile!=null?
-        getFileLayout(gstFile!):Container()
-      ],
-    );
-  }
-
 
   /* Widget for cin no  text from field layout */
   Widget getCINNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return   SignleLineEditableTextformField(
+      controller: cinNoController,
+      focuscontroller: _cinNoFocus,
+      focusnext: _jurisdictionFocus,
+      title:StringEn.CIN_NO,
+      callbackOnchage: (value ) {
+        setState(() {
+          cinNoController.text=value;
+        });
+      },
+      textInput:   TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
 
@@ -1255,7 +1007,21 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for JURISDICTION text from field layout */
   Widget getJURISDICTIONLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: jurisdictionController,
+      focuscontroller: _jurisdictionFocus,
+      focusnext: _invoiceFocus,
+      title:StringEn.JURISDICTION,
+      callbackOnchage: (value ) {
+        setState(() {
+          jurisdictionController.text=value;
+        });
+      },
+      textInput:   TextInputType.emailAddress,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
 
@@ -1298,7 +1064,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a jurisdiction",
+                        hintText:  StringEn.JURISDICTION,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: jurisdictionController,
@@ -1315,13 +1081,27 @@ class _CompanyCreateState extends State<CompanyCreate>
           ],
         ),
       ),
-    );
+    ) ;
   }
 
 
   /* Widget for default bank text from field layout */
   Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return SignleLineEditableTextformField(
+      controller: defaultBankController,
+      focuscontroller: _defaultBankFocus,
+      focusnext: _extNameFocus,
+      title:StringEn.DEFAULT_BANK,
+      callbackOnchage: (value ) {
+        setState(() {
+          defaultBankController.text=value;
+        });
+      },
+      textInput:   TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[ A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1367,7 +1147,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a name",
+                      hintText:  StringEn.DEFAULT_BANK,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: defaultBankController,
@@ -1388,7 +1168,21 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for ext name text from field layout */
   Widget getExtNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: extNameController,
+      focuscontroller: _extNameFocus,
+      focusnext: _adharoFocus,
+      title:StringEn.EXT_NAME,
+      callbackOnchage: (value ) {
+        setState(() {
+          extNameController.text=value;
+        });
+      },
+      textInput:   TextInputType.emailAddress,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1434,7 +1228,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a ext name",
+                      hintText:  StringEn.EXT_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: extNameController,
@@ -1453,9 +1247,23 @@ class _CompanyCreateState extends State<CompanyCreate>
     );
   }
 
-/* Widget for description text from field layout */
+/* Widget for invoice declaration text from field layout */
   Widget getInvoiceDelcelrationLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  SignleLineEditableTextformField(
+      controller: invoiceController,
+      focuscontroller: _invoiceFocus,
+      focusnext: null,
+      title:StringEn.INVOICE_DECLERATION,
+      callbackOnchage: (value ) {
+        setState(() {
+          nameController.text=value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 6,
+      format:FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+      Padding(
       padding: EdgeInsets.only(
         top: parentHeight * 0.02,
       ),
@@ -1503,7 +1311,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a invoice decleration",
+                        hintText: StringEn.INVOICE_DECLERATION,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: invoiceController,
@@ -1597,7 +1405,7 @@ class _CompanyCreateState extends State<CompanyCreate>
   
 
 
-  /* Widget for distric/city text from field layout */
+  /* Widget for distric text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
@@ -1643,7 +1451,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a district",
+                        hintText:StringEn.DISTRICTCITY,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: districtController,
@@ -1724,7 +1532,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          stateName == "" ? "Select state" : stateName,
+                          stateName == "" ? StringEn.SELECT_STATE: stateName,
                           style: stateName == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -1800,7 +1608,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                         border: InputBorder.none,
                         counterText: '',
                         isDense: true,
-                        hintText: "Enter a pin code",
+                        hintText:  StringEn.PIN_CODE,
                         hintStyle: hint_textfield_Style,
                       ),
                       controller: pinCodeController,
@@ -1881,7 +1689,7 @@ class _CompanyCreateState extends State<CompanyCreate>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          countryName == "" ? "Select country" : countryName,
+                          countryName == "" ? StringEn.SELECT_COUNTRY: countryName,
                           style: countryName == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -1908,8 +1716,6 @@ class _CompanyCreateState extends State<CompanyCreate>
       ),
     );
   }
-
-
 
 
   /* Widget for navigate to next screen button layout */
