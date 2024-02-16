@@ -96,7 +96,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.EXPENSES_NAME),
+                  getFieldTitleLayout(StringEn.EXPENSES),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                   getFieldTitleLayout(StringEn.AMOUNT),
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -216,7 +216,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.LEDGER,
+          hintText: StringEn.EXPENSES,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),

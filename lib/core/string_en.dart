@@ -267,11 +267,11 @@ static const CREATE_EXPENSES="Expense Invoice - New";
 
   static const ENTER_EXPENSE="Enter Expense";
   static const SELECT_REPORT_TYPE="Select report type";
-  static const ENTER_FRANCHISEE_NAME= "Enter a franchisee name";
-  static const ENTER_BANK_CASH= "Enter a bank / cash";
-  static const ENTER_LEDGER_NAME= "Enter a leader name";
-  static const ENTER_A_NEW_PASSWORD= "Enter a new password";
-  static const ENTER_CONFIRM_PASSWORD= "Enter a confirm password";
+  static const ENTER_FRANCHISEE_NAME= "Franchisee Name";
+  static const ENTER_BANK_CASH= " Bank / Cash";
+  static const ENTER_LEDGER_NAME= " Leader Name";
+  static const ENTER_A_NEW_PASSWORD= " New Password";
+  static const ENTER_CONFIRM_PASSWORD= "Confirm Password";
   static const ENTER_A_DOMAIN_LINK= "Enter a domain link";
   static const ROUND_OFF= "Round off";
   static const LEDGERS = "Ledgers";

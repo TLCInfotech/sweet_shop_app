@@ -502,7 +502,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: StringEn.ENTER_EXPENSE,
+                      hintText: StringEn.EXPENSES,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: expenseController,
