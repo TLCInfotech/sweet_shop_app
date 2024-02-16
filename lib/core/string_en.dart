@@ -17,7 +17,7 @@ class StringEn{
   static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
   static const PARENT_CATEGORY = "Parent Category";
-  static const ADD_CATEGORY = " Category";
+  static const ADD_CATEGORY = "Item Category";
   static const CATEGORY_NAME="Enter Item Category";
   static const CLOSE = "Close";
   static const ADD = "ADD";
@@ -26,7 +26,7 @@ class StringEn{
   //Item
   static const ITEM_TITLE=" Item";
   static const ITEM = "Item";
-  static const CREATE_ITEM = " Item";
+  static const CREATE_ITEM = "Item - New";
   static const ADD_ITEMS = "Add Item";
 
  // static const INVOICE_DETAIL = "Invoice Detail";
@@ -57,7 +57,7 @@ class StringEn{
 
   //Franchisee
   static const FRANCHISEE_TITLE="Franchisee";
-  static const ADD_FRANCHISEE = " Franchisee";
+  static const ADD_FRANCHISEE = "Franchisee - New";
 
   //Add franchisee
   static const ADD_FRANCHISEE_TITLE="Franchisee Detail";
@@ -116,7 +116,7 @@ class StringEn{
   static const ADD_EEXPENSE = "Add Expense";
   static const EXPENSE_DETAILS = "Expense Detail";
   static const EXPENSE_GROUP = "Ledger Group";
-  static const CREATE_EXPENSE=" Ledger";
+  static const CREATE_EXPENSE="Ledger - New";
 static const CREATE_EXPENSES="Expense Invoice - New";
 
   static const COMPANY_INFO = "Comapny Info";
@@ -153,7 +153,6 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const ADD_CESS = "Add Cess %";
   static const TCS_TDS_APPLICABLE = "TCS/TDS Applicable";
   static const BANK_NAME = "Bank Name";
-  static const ACCOUNT_INFO = "Account Info";
   static const BANT_BRACH = "Bank Branch";
   static const IFSC_CODE = "IFSC Code";
   static const ACCOUNT_HOLDER_NAME = "A/C Holder Name";
@@ -161,7 +160,7 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const BRANCH_NAME = "Branch Name";
   static const GROUP_NAME = "Group Name";
   static const SEQUENSE_NO = "Sequence No";
-  static const SEQUENSE_NATURE = "Sequence Nature";
+  static const SEQUENSE_NATURE = "Group Nature";
 
   static const SELL = "Sale Invoice";
   static const PURCHASE = "Purchase Invoice";
@@ -172,7 +171,7 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const RECEIPT_INVOICE = "Receipt Invoice";
 
   static const PARENT_GROUP = "Parent Group";
-  static const ADD_EXPENSE = "Add Expense";
+  static const ADD_EXPENSE = "Add Ledger Group";
   static const COMPANY_NAME = "Company Name";
   static const TAX = "Tax";
   static const LEADER_DETAIL = "Ledger Detail";
@@ -280,11 +279,17 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const ITEMS = "Items";
 
   static const BASIC_INFO="Basic Information";
+  static const DOCUMENT_INFO="Document Information";
+  static const ACCOUNT_INFO="Account Information";
   static const OTHER_INFO="Other Information";
+  static const TAX_INFO="Tax Information";
   static const UPLOAD="Upload";
   static const SELECT_STATE="Select state";
   static const SELECT_COUNTRY="Select country";
-
+  static const USER_NEW="User - New";
+  static const USER_NAME="User Name";
+  static const SELECT_CATEGORY="Select Category";
+  static const SELECT_UNIT="Select measuring unit";
 
 
 }

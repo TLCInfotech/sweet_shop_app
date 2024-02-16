@@ -383,9 +383,21 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
                         Expanded(
                             child: Stack(
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
-                                  child: Text("Item Category",style: item_heading_textStyle,),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
+                                        child: Text("Item Category",style: item_heading_textStyle,),
+                                      ),
+                                      Container(
+                                        child: Text("Parent Category",style: item_regular_textStyle,),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Positioned(
                                     top: 0,

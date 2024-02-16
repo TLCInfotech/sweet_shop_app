@@ -360,7 +360,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
           },
           validator: ((value) {
             if (value!.isEmpty) {
-              return "Enter sequence nature";
+              return "Enter group nature";
             }
             return null;
           }),

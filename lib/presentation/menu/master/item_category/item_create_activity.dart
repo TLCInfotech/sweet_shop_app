@@ -144,7 +144,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
                 title: const Text(
-                  "Create Item",
+                  StringEn.CREATE_ITEM,
                   style: appbar_text_style,
                 ),
               ),
@@ -415,7 +415,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                 children: [
                   getImageLayout(parentHeight, parentWidth),
                   SizedBox(height: 20,),
-                  getFieldTitleLayout("Basic Information"),
+                  getFieldTitleLayout(StringEn.BASIC_INFO),
                   Container(
 
                     padding: EdgeInsets.all(10),
@@ -461,7 +461,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.NAME,
+                StringEn.ITEM_NAME,
                 style: page_heading_textStyle,
               ),
             ],
@@ -498,7 +498,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a item name",
+                      hintText: StringEn.ITEM_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: itemNameController,
@@ -527,7 +527,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Category",
+            StringEn.CATEGORY,
             style: page_heading_textStyle,
           ),
           GestureDetector(
@@ -593,7 +593,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              categoryName==""?"Select category":categoryName,
+                              categoryName==""?StringEn.SELECT_CATEGORY:categoryName,
                               style:categoryName == ""? hint_textfield_Style:
                               text_field_textStyle,
                               overflow: TextOverflow.ellipsis,
@@ -725,7 +725,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              measuringUnit==""?"Select measuring unit":measuringUnit,
+                              measuringUnit==""?StringEn.SELECT_UNIT:measuringUnit,
                               style:measuringUnit == ""? hint_textfield_Style:
                               text_field_textStyle,
                               overflow: TextOverflow.ellipsis,
@@ -1272,7 +1272,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a max stock",
+                      hintText: StringEn.MAX_STOCK,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: maxController,
@@ -1340,7 +1340,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a min stock",
+                      hintText: StringEn.MIN_STOCK,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: minController,
@@ -1408,7 +1408,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a ext name",
+                      hintText: StringEn.EXT_NAME,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: extNameController,
@@ -1475,7 +1475,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a pack size name",
+                      hintText:StringEn.PACK_SIZE,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: packSizeController,
@@ -1542,7 +1542,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a hsn no.",
+                      hintText: StringEn.HSN_NO,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: hsnNoController,
@@ -1619,7 +1619,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                           contentPadding: EdgeInsets.only(top: parentHeight*.01,bottom: parentHeight*.01),
                           counterText: "",
                           border: InputBorder.none,
-                          hintText: "Enter a description..",
+                          hintText:  StringEn.ITEM_DESCRIPTION,
                           hintStyle:hint_textfield_Style,
                         ),
                         style: text_field_textStyle,
@@ -1719,7 +1719,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity>
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: "Enter a default store",
+                      hintText: StringEn.DEFAULT_STORE,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: defaultStoreController,

@@ -579,7 +579,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.CATEGORY,
+              StringEn.ITEM_CATEGORY,
               style:  page_heading_textStyle,
               textAlign: TextAlign.center,
 
@@ -682,7 +682,7 @@ class _MenuActivityState extends State<MenuActivity>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    StringEn.TRANSACTION,
+                    StringEn.REPORT,
                     style: page_heading_textStyle,
                   ),
                   Icon(

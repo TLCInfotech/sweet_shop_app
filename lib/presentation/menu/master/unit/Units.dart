@@ -184,7 +184,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(top: 10, bottom: 10,),
                               child: Text(
-                                StringEn.UNIT,
+                                StringEn.MEASURING_UNIT,
                                 style: page_heading_textStyle,
                               ),
                             ),
@@ -205,7 +205,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               child: TextFormField(
                                 controller: unitName,
                                 decoration: textfield_decoration.copyWith(
-                                  hintText:"Enter unit measurment",
+                                  hintText:StringEn.MEASURING_UNIT,
                                   filled: true,
                                   fillColor: Colors.white,
                                 ),

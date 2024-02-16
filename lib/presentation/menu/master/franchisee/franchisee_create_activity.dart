@@ -276,13 +276,13 @@ String stateName="";
                 SizedBox(height: 20,),
                 getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                 SizedBox(height: 20,),
-                getFieldTitleLayout("Basic Information"),
+                getFieldTitleLayout(StringEn.BASIC_INFO),
                 BasicInfo(),
                 SizedBox(height: 20,),
-                getFieldTitleLayout("Document Information"),
+                getFieldTitleLayout(StringEn.DOCUMENT_INFO),
                 Document_Information(),
                 SizedBox(height: 20.0),
-                getFieldTitleLayout("Account Information"),
+                getFieldTitleLayout(StringEn.ACCOUNT_INFO),
                 Container(
 
                   padding: EdgeInsets.all(10),
@@ -324,8 +324,7 @@ String stateName="";
                       getPanLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                       SizedBox(height: 5,),
                       getGstLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                      getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
-                      getOutstandingLimit(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+
                       getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
                       getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     ],
@@ -342,6 +341,7 @@ String stateName="";
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
+                      getFieldTitleLayout(StringEn.FRANCHISEE_NAME),
                       getFranchiseeNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                       getFieldTitleLayout(StringEn.FRANCHISEE_CONTACT_PERSON),
                       getContactPersonLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
@@ -365,6 +365,8 @@ String stateName="";
                       getMobileNoLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                       getFieldTitleLayout(StringEn.FRANCHISEE_EMAIL),
                       getEmailLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFieldTitleLayout(StringEn.FRANCHISEE_OUTSTANDING_LIMIT),
+                      getOutstandingLimit(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                     ],
                     ),
                   );
@@ -406,7 +408,7 @@ String stateName="";
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a bank name",
+                  hintText:StringEn.BANK_NAME,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: bankNameController,
@@ -458,7 +460,7 @@ String stateName="";
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a bank branch name",
+                  hintText:StringEn.BANT_BRACH,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: bankBranchController,
@@ -512,7 +514,7 @@ String stateName="";
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a IFSC Code",
+                  hintText:  StringEn.IFSC_CODE,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: IFSCCodeController,
@@ -564,7 +566,7 @@ String stateName="";
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a account holder name",
+                  hintText:  StringEn.ACCOUNT_HOLDER_NAME,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: aCHolderNameController,
@@ -616,7 +618,7 @@ String stateName="";
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a account no Code",
+                  hintText: StringEn.ACCOUNT_NO,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: accountNoController,
@@ -950,7 +952,7 @@ String stateName="";
         ),
         validator: (value) {
           if (value!.isEmpty) {
-            return "Enter Payment Days";
+            return StringEn.PAYMENT_DAYS;
           }
           return null;
         },
@@ -1142,7 +1144,7 @@ String stateName="";
                     border: InputBorder.none,
                     counterText: '',
                     isDense: true,
-                    hintText: "Enter a pan no.",
+                    hintText:StringEn.PAN_NO,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller: panNoController,
@@ -1235,7 +1237,7 @@ String stateName="";
                     border: InputBorder.none,
                     counterText: '',
                     isDense: true,
-                    hintText: "Enter a adhar no.",
+                    hintText: StringEn.FRANCHISEE_AADHAR_NO,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller: adharNoController,
@@ -1315,7 +1317,6 @@ String stateName="";
                   ],
                   textAlignVertical: TextAlignVertical.center,
                   textCapitalization: TextCapitalization.characters,
-
                   maxLength: 15,
                   focusNode: _gstNoFocus,
                   keyboardType: TextInputType.text,
@@ -1327,7 +1328,7 @@ String stateName="";
                     border: InputBorder.none,
                     counterText: '',
                     isDense: true,
-                    hintText: "Enter a gst no",
+                    hintText:  StringEn.GST_NO,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller:gstNoController,
@@ -1393,6 +1394,8 @@ String stateName="";
         keyboardType: TextInputType.phone,
         controller: franchiseeMobileNo,
         maxLength: 10,
+        textAlignVertical: TextAlignVertical.center,
+        textAlign: TextAlign.start,
         decoration: textfield_decoration.copyWith(
           hintText: StringEn.FRANCHISEE_MOBILENO,
         ),
