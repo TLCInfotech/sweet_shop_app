@@ -17,6 +17,7 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
+import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
@@ -319,12 +320,60 @@ String stateName="";
 
                     ),
                     child: Column(children: [
-                      getAdharLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                      SizedBox(height: 5,),
-                      getPanLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                      SizedBox(height: 5,),
-                      getGstLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-
+                      // addhar
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            adharNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            adharFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_AADHAR_NO,
+                        documentFile: adharFile,
+                        controller: adharNoController,
+                        focuscontroller: _adharoFocus,
+                        focusnext: _panNoFocus,
+                      ),
+                      // pan
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            panNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            panFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_PAN_NO,
+                        documentFile: panFile,
+                        controller: panNoController,
+                        focuscontroller: _panNoFocus,
+                        focusnext: _gstNoFocus,
+                      ),
+                      // gst
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            gstNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            gstFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_GST_NO,
+                        documentFile: gstFile,
+                        controller: gstNoController,
+                        focuscontroller: _gstNoFocus,
+                        focusnext: _franchiseePaymentDaysFocus,
+                      ),
                       getFieldTitleLayout(StringEn.FRANCHISEE_PAYMENT_DAYS),
                       getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     ],

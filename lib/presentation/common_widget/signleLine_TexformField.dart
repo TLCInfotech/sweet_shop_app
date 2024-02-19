@@ -10,7 +10,7 @@ import '../../core/common.dart';
 import '../../core/common_style.dart';
 import '../../core/string_en.dart';
 
-class SignleLineEditableTextformField extends StatefulWidget{
+class SingleLineEditableTextFormField extends StatefulWidget{
   final title;
   final Function(String) callbackOnchage;
   final controller;
@@ -20,13 +20,13 @@ class SignleLineEditableTextformField extends StatefulWidget{
   final maxlines;
   final format;
   
-  SignleLineEditableTextformField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format});
+  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format});
 
   @override
-  State<SignleLineEditableTextformField> createState() => _SignleLineEditableTextformFieldState();
+  State<SingleLineEditableTextFormField> createState() => _SingleLineEditableTextFormFieldState();
 }
 
-class _SignleLineEditableTextformFieldState extends State<SignleLineEditableTextformField> {
+class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableTextFormField> {
 
   @override
   Widget build(BuildContext context) {

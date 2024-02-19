@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
@@ -127,15 +128,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-  String hourlyRate = "\$0";
-  DateTime joinDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  DateTime endDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String startingDate = "";
-  String endingDate = "";
-  bool isPurchaseDateValidShow = false;
-  bool isPurchaseDateMsgValidShow = false;
 
   @override
   void initState() {
@@ -367,13 +359,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   left: parentWidth * .01, right: parentWidth * .01),
               child: Column(
                 children: [
-
-
                   getImageLayout(parentHeight, parentWidth),
                   SizedBox(height: 20,),
                   getFieldTitleLayout(StringEn.BASIC_INFO),
                   Container(
-
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
@@ -397,8 +386,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     ],
                     ),
                   ),
-
-
                   SizedBox(height: 20,),
                   getFieldTitleLayout(StringEn.DOCUMENT_INFO),
                   Container(
@@ -409,16 +396,63 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
-
-                      SizedBox(height:10,),
-                      // getRegTypeLayout(parentHeight, parentWidth),
-                      getAdharLayout(parentHeight, parentWidth),
-                      getPanLayout(parentHeight, parentWidth),
-                      getGstLayout(parentHeight, parentWidth),
+                      // addhar
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            adharNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            adharFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_AADHAR_NO,
+                        documentFile: adharFile,
+                        controller: adharNoController,
+                        focuscontroller: _adharoFocus,
+                        focusnext: _panNoFocus,
+                      ),
+                      // pan
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            panNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            panFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_PAN_NO,
+                        documentFile: panFile,
+                        controller: panNoController,
+                        focuscontroller: _panNoFocus,
+                        focusnext: _gstNoFocus,
+                      ),
+                      // gst
+                      PickDocument(
+                        callbackOnchage: (value ) {
+                          setState(() {
+                            gstNoController.text=value;
+                          });
+                        },
+                        callbackFile: (File? file) {
+                          setState(() {
+                            gstFile=file;
+                          });
+                        },
+                        title:  StringEn.FRANCHISEE_GST_NO,
+                        documentFile: gstFile,
+                        controller: gstNoController,
+                        focuscontroller: _gstNoFocus,
+                        focusnext: _cinNoFocus,
+                      ),
                     ],
                     ),
                   ),
-
                   SizedBox(height: 20,),
                   getFieldTitleLayout(StringEn.TAX_INFO),
                   Container(
@@ -816,7 +850,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         children: [
           getDistrictCityLayout(parentHeight, parentWidth),
           getStateLayout(parentHeight, parentWidth),
-          //getVendorLayout(parentHeight, parentWidth),
         ],
       ),
     );

@@ -5,8 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/master/expense/create_expense_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/ledger/create_expense_activity.dart';
 
 
 class ExpenseListingActivity extends StatefulWidget {

@@ -83,15 +83,6 @@ class _CompanyCreateState extends State<CompanyCreate>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-  String hourlyRate = "\$0";
-  DateTime joinDate =
-      DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  DateTime endDate =
-      DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String startingDate = "";
-  String endingDate = "";
-  bool isPurchaseDateValidShow = false;
-  bool isPurchaseDateMsgValidShow = false;
 
   @override
   void initState() {
@@ -402,7 +393,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
-    return SignleLineEditableTextformField(
+    return SingleLineEditableTextFormField(
       controller: nameController,
       focuscontroller: _nameFocus,
       focusnext: _contactPersonFocus,
@@ -478,7 +469,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for contact person text from field layout */
   Widget getContactPersonLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
@@ -555,7 +546,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for address text from field layout */
   Widget getAddressLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
@@ -673,7 +664,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for contact no  text from field layout */
   Widget getContactNoLayout(double parentHeight, double parentWidth) {
-    return SignleLineEditableTextformField(
+    return SingleLineEditableTextFormField(
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
@@ -754,7 +745,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for  email  text from field layout */
   Widget getEmilLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
@@ -836,7 +827,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
 /* Widget for address two from field layout */
   Widget getAddressTwoLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: addTwoController,
       focuscontroller: _addTwoFocus,
       focusnext: _defaultBankFocus,
@@ -923,7 +914,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for cin no  text from field layout */
   Widget getCINNoLayout(double parentHeight, double parentWidth) {
-    return   SignleLineEditableTextformField(
+    return SingleLineEditableTextFormField(
       controller: cinNoController,
       focuscontroller: _cinNoFocus,
       focusnext: _jurisdictionFocus,
@@ -1007,7 +998,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for JURISDICTION text from field layout */
   Widget getJURISDICTIONLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: jurisdictionController,
       focuscontroller: _jurisdictionFocus,
       focusnext: _invoiceFocus,
@@ -1087,7 +1078,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for default bank text from field layout */
   Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
-    return SignleLineEditableTextformField(
+    return SingleLineEditableTextFormField(
       controller: defaultBankController,
       focuscontroller: _defaultBankFocus,
       focusnext: _extNameFocus,
@@ -1168,7 +1159,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for ext name text from field layout */
   Widget getExtNameLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
@@ -1249,7 +1240,7 @@ class _CompanyCreateState extends State<CompanyCreate>
 
 /* Widget for invoice declaration text from field layout */
   Widget getInvoiceDelcelrationLayout(double parentHeight, double parentWidth) {
-    return  SignleLineEditableTextformField(
+    return  SingleLineEditableTextFormField(
       controller: invoiceController,
       focuscontroller: _invoiceFocus,
       focusnext: null,
