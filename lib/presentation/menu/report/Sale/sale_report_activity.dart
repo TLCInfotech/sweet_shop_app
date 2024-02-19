@@ -14,7 +14,6 @@ import 'dart:io';
 
 class SaleReportActivity extends StatefulWidget {
   const SaleReportActivity({super.key});
-
   @override
   State<SaleReportActivity> createState() => _SaleReportActivityState();
 }
@@ -277,7 +276,8 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicablefrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+                         // DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -351,7 +351,8 @@ class _SaleReportActivityState extends State<SaleReportActivity> with ReportType
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicableTo),
+                          CommonWidget.getDateLayout(applicableTo),
+                         // DateFormat('dd-MM-yyyy').format(applicableTo),
                           style: applicableTo == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

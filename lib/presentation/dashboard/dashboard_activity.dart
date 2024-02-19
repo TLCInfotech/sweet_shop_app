@@ -169,6 +169,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           onTap: (){
             addNewScreen(
                 SellActivity(
+                  comeFor: "dash",
                   mListener: this,
                 ),
                 Constant.SELL);
@@ -191,7 +192,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.SELL,
+                    StringEn.SALE,
                     style: TextStyle(
                         color: currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
@@ -210,6 +211,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             addNewScreen(
                 PurchaseActivity(
                   mListener: this,
+                  comeFor: "dash",
                 ),
                 Constant.PURCHASE);
 
@@ -249,6 +251,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           onTap: (){
             addNewScreen(
                 LedgerActivity(
+                  comeFor: "dash",
                   mListener: this,
                 ),
                 Constant.EXPENSE);
@@ -289,6 +292,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           onTap: (){
             addNewScreen(
                 PaymentActivity(
+                  comeFor: "dash",
                   mListener: this,
                 ),
                 Constant.PAYMENT);

@@ -898,7 +898,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       TextInputType.numberWithOptions(decimal: true),
                       textInputAction: TextInputAction.next,
                       cursorColor: CommonColor.BLACK_COLOR,
-
                       decoration:  InputDecoration(
                         contentPadding: EdgeInsets.only(
                             left: parentWidth * .04, right: parentWidth * .02),

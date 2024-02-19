@@ -34,7 +34,7 @@ class _LoginActivityState extends State<LoginActivity> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -43,16 +43,16 @@ class _LoginActivityState extends State<LoginActivity> {
                      StringEn.SIGN_IN,
                       style: big_title_style
                     ),
-                    SizedBox(height: 5.0),
+                    const SizedBox(height: 5.0),
                     const Text(
                       StringEn.LOGIN_SUB_TEXT,
                       style: subHeading_withBold
                     ),
-                    SizedBox(height: 40.0),
+                    const SizedBox(height: 40.0),
                     getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     getButtonLayout()
                   ],
                 ),
@@ -73,7 +73,7 @@ class _LoginActivityState extends State<LoginActivity> {
     child: TextFormField(
         controller: username,
         decoration: textfield_decoration.copyWith(
-          hintText: 'User name',
+          hintText: StringEn.USER_NAME,
         ),
       ),
   );

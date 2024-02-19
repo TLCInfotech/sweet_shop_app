@@ -29,12 +29,10 @@ import '../../../dialog/franchisee_dialog.dart';
 class CreateReceipt extends StatefulWidget {
   final CreateReceiptInterface mListener;
   final String dateNew;
-
   const CreateReceipt({super.key,required this.mListener, required this.dateNew});
   @override
   _CreateReceiptState createState() => _CreateReceiptState();
 }
-
 
 class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditLedgerInterface {
 

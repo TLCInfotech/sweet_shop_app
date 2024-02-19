@@ -28,9 +28,6 @@ class StringEn{
   static const ITEM = "Item";
   static const CREATE_ITEM = "Item - New";
   static const ADD_ITEMS = "Add Item";
-
- // static const INVOICE_DETAIL = "Invoice Detail";
- // static const INVOICE_DETAILS = "Invoice Detail";
   static const ITEM_NAME = "Item Name";
   static const ITEM_CATEGORY = "Item Category";
   static const UNIT_TWO = "Unit 2";
@@ -117,8 +114,7 @@ class StringEn{
   static const EXPENSE_DETAILS = "Expense Detail";
   static const EXPENSE_GROUP = "Ledger Group";
   static const CREATE_EXPENSE="Ledger - New";
-static const CREATE_EXPENSES="Expense Invoice - New";
-
+  static const CREATE_EXPENSES="Expense Invoice - New";
   static const COMPANY_INFO = "Comapny Info";
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";
@@ -161,15 +157,13 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const GROUP_NAME = "Group Name";
   static const SEQUENSE_NO = "Sequence No";
   static const SEQUENSE_NATURE = "Group Nature";
-
   static const SELL = "Sale Invoice";
-  static const PURCHASE = "Purchase Invoice";
+  static const PURCHASE_INVOICE = "Purchase Invoice";
   static const PAYMENT = "Payment";
   static const PAYMENT_DETAIL = "Payment Detail";
   static const PAYMENT_INVOICE = "Payment Invoice";
   static const RECEIPT = "Receipt";
   static const RECEIPT_INVOICE = "Receipt Invoice";
-
   static const PARENT_GROUP = "Parent Group";
   static const ADD_EXPENSE = "Add Ledger Group";
   static const COMPANY_NAME = "Company Name";
@@ -177,13 +171,11 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const LEADER_DETAIL = "Ledger Detail";
   static const ADD_LEADER = "Add Ledger";
   static const RECEPT_DETAIL = "Receipt Detail";
-
-
   static const CREATE_COMPANY = " Company";
   static const CREATE_SELL = "Sale Invoice-New";
   static const CREATE_RECEIPT = " Receipt";
   static const CREATE_RECEIPT_INVOICE = "Receipt Invoice - New";
- static const COMPANY = "Company";
+  static const COMPANY = "Company";
   static const DATE = "Date";
   static const INVOICE_NO = "Invoice No";
   static const PARTY = "Party";
@@ -206,18 +198,13 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const ITEM_DETAIL = "Item Detail";
   static const QUANTITY = "Quantity";
   static const DICOUNT = "Disc.%";
-
   static const ADD_LEDGER_ITEM = "Add Ledger ";
   static const LEDGER="Ledger Name";
   static const AMOUNT="Amount";
   static const NARRATION="Narration";
   static const CREATE_PAYMENT="Payment Invoice - New";
-
-
   static const ADD_SELL = "Sale Invoice - New";
   static const SELL_ITEM = "Item Sale";
-
-
   static const TAX_AMT = "Taxable Amount";
   static const GST_AMT = "GST Amount";
   static const DISCOUNT_AMT = "Disc. Amount";
@@ -230,24 +217,17 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const CONFIRM_PASSWORD = "Confirm Password";
   static const UPDATE_PASSWORD = "Update Password";
   static const DOMAIN = "Domain";
-
   static const TOTAL_INVOICE = "Total Invoice";
   static const TOTAL_AMOUNT="Total";
   static const ADD_ITEM_DETAIL="Item Detail";
-
   static const ITEM_OPENING_BAL="Item Opening Balance";
   static const ADD_OPENING_BAL="Item Opening Balance";
-
   static const OPENING_BAL="Item Opening Balance";
   static const LEARDER_OPENING_BAL="Leader Opening Balance";
   static const ACTION="Action";
-
-
   static const LEDGER_OPENING_BAL="Ledger Opening Balance";
   static const ADD_LEDGER_OPENING_BAL="Ledger Opening Balance";
   static const LEDGER_DETAIL="Ledger Detail";
-
-
   static const RECEIPT_REPORT = "Receipt Report";
   static const PAYMENT_REPORT = "Payment Report";
   static const MIS_REPORT = "MIS Report";
@@ -277,7 +257,6 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const LEDGERS = "Ledgers";
   static const INVOICES = "Invoices";
   static const ITEMS = "Items";
-
   static const BASIC_INFO="Basic Information";
   static const DOCUMENT_INFO="Document Information";
   static const ACCOUNT_INFO="Account Information";
@@ -290,6 +269,6 @@ static const CREATE_EXPENSES="Expense Invoice - New";
   static const USER_NAME="User Name";
   static const SELECT_CATEGORY="Select Category";
   static const SELECT_UNIT="Select measuring unit";
-
-
+  static const SALE = "Sale";
+  static const PURCHASE = "Purchase";
 }

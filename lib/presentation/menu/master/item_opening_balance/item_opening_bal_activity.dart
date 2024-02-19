@@ -25,7 +25,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
+      backgroundColor: const Color(0xFFfffff5),
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
         child: SafeArea(
@@ -36,7 +36,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             ),
             color: Colors.transparent,
             // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
             child: AppBar(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
@@ -51,7 +51,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
+          backgroundColor: const Color(0xFFFBE404),
           child: const Icon(
             Icons.add,
             size: 30,
@@ -59,12 +59,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-              dateNew: DateFormat('dd-MM-yyyy').format(invoiceDate),
+              dateNew:CommonWidget.getDateLayout(invoiceDate),
+
+              //DateFormat('dd-MM-yyyy').format(invoiceDate),
               mListener: this,
             )));
           }),
       body: Container(
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,19 +84,19 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
   Widget getTotalCountAndAmount() {
     return Container(
-      margin: EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 8),
+      margin: const EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
           // width: SizeConfig.halfscreenWidth,
           width: SizeConfig.screenWidth*0.9,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.green,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -104,7 +106,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Items  ", style: subHeading_withBold,),
+              const Text("10 Items  ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -132,8 +134,8 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
       },
       child: Container(
           height: 40,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          margin: EdgeInsets.all(8),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               color: Colors.white,
 
@@ -141,7 +143,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -150,9 +152,11 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(invoiceDate),
+              Text(
+                CommonWidget.getDateLayout(invoiceDate),
+                //DateFormat('dd-MM-yyyy').format(invoiceDate),
                 style: page_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.calendar,
+              const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
             ],
           )
@@ -188,14 +192,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
+                  delay: const Duration(microseconds: 1500),
                   child: Card(
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: (index)%2==0?Colors.green:Colors.blueAccent,
                                   borderRadius: BorderRadius.circular(5)
@@ -216,22 +220,22 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                      SizedBox(height: 5,),
+                                      const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
+                                      const SizedBox(height: 5,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          const SizedBox(width: 10,),
+                                          const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
-                                      SizedBox(height: 5,),
+                                      const SizedBox(height: 5,),
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
+                                          const SizedBox(width: 10,),
                                           Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         ],
                                       ),
@@ -243,7 +247,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                                     top: 0,
                                     right: 0,
                                     child:IconButton(
-                                      icon:  FaIcon(
+                                      icon:  const FaIcon(
                                         FontAwesomeIcons.trash,
                                         size: 18,
                                         color: Colors.redAccent,
@@ -262,7 +266,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },

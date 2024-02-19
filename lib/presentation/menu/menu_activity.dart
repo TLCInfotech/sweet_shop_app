@@ -1012,7 +1012,7 @@ class _MenuActivityState extends State<MenuActivity>
               child:  Text('●'),
             ),
             Text(
-              StringEn.PURCHASE,
+              StringEn.PURCHASE_INVOICE,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

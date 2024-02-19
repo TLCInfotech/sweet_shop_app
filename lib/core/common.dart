@@ -1,6 +1,3 @@
-
-
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -15,10 +12,7 @@ import 'package:sweet_shop_app/presentation/dialog/exit_app_dialog.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 import 'common_style.dart';
-
 class CommonWidget {
-
-
   static getCurrencyFormat(var amount) {
     return NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
   }
@@ -29,12 +23,12 @@ class CommonWidget {
       color: colors,
     );
   }
+
   static getScreenBackgroundGradient() {
-    return RadialGradient(center: Alignment.center, radius: 0.7, stops: [
+    return const RadialGradient(center: Alignment.center, radius: 0.7, stops: [
       .001,
       1.999
     ], colors: <Color>[
-
       CommonColor.WHITE_COLOR,
       CommonColor.WHITE_COLOR,
     ]);
@@ -99,20 +93,17 @@ class CommonWidget {
 
 
   static showExitDialog(BuildContext context, String message, isDialogType) {
-    if (context != null) {
-      showCupertinoDialog(
-        context: context,
-        useRootNavigator: true,
-        barrierDismissible: true,
-        builder: (context) {
-          return ExitAppDialog(
-            // message: message,
-            isDialogType: isDialogType,
-          );
-        },
-      );
+    showCupertinoDialog(
+      context: context,
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (context) {
+        return ExitAppDialog(
+          isDialogType: isDialogType,
+        );
+      },
+    );
     }
-  }
 
  static pickDocumentFromfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -232,6 +223,9 @@ class CommonWidget {
         style: page_heading_textStyle,
       ),
     );
+  }
+  static getDateLayout(DateTime dateNew) {
+    return DateFormat('dd-MM-yyyy').format(dateNew);
   }
 
 }

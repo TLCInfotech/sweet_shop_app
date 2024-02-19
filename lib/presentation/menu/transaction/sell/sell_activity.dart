@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,10 +9,9 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 
-
-
 class SellActivity extends StatefulWidget {
-  const SellActivity({super.key, required mListener});
+final String? comeFor;
+  const SellActivity({super.key, required mListener,  this.comeFor});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
@@ -42,11 +40,13 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
               ),
-
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.SELL,
-                style: appbar_text_style,),
+              title: const Center(
+                child: Text(
+                  StringEn.SELL,
+                  style: appbar_text_style,),
+              ),
+              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
         ),
@@ -60,8 +60,8 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSellInvoice(
-              dateNew: DateFormat('dd-MM-yyyy').format(invoiceDate),
-              mListener: this,
+              dateNew:CommonWidget.getDateLayout(invoiceDate),
+              mListener:this,
             )));
           }),
       body: Container(
@@ -164,7 +164,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(invoiceDate),
+              Text(CommonWidget.getDateLayout(invoiceDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

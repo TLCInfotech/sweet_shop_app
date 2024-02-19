@@ -80,7 +80,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                     controller: widget.controller,
                     onEditingComplete: () {
                       widget.focuscontroller.unfocus();
-                      FocusScope.of(context).requestFocus( widget.focusnext);
+                      FocusScope.of(context).requestFocus(widget.focusnext);
                     },
                     style: text_field_textStyle,
                   ),

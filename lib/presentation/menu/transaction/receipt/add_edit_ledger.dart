@@ -10,9 +10,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 class AddOrEditLedger extends StatefulWidget {
   final AddOrEditLedgerInterface mListener;
   final dynamic editproduct;
-
   const AddOrEditLedger({super.key, required this.mListener, required this.editproduct});
-
   @override
   State<AddOrEditLedger> createState() => _AddOrEditLedgerState();
 }

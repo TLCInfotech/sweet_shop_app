@@ -228,7 +228,6 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
     );
   }
 
-
   /* Widget for Buttons Layout0 */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
     return Row(

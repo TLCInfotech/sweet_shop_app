@@ -9,9 +9,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 
 class DomainLinkActivity extends StatefulWidget {
   const DomainLinkActivity({super.key});
-
   // final DomainLinkActivityInterface mListener;
-
   @override
   State<DomainLinkActivity> createState() => _DomainLinkActivityState();
 }

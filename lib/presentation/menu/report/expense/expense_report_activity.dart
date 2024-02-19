@@ -271,7 +271,8 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicablefrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+                          //DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -345,7 +346,8 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicableTo),
+                          CommonWidget.getDateLayout(applicableTo),
+                         // DateFormat('dd-MM-yyyy').format(applicableTo),
                           style: applicableTo == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -575,6 +577,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
       reportType=name;
     });
   }
+
   /* Widget for get franchisee drop down layout */
   @override
   selectedFranchisee(String id, String name) {

@@ -12,9 +12,7 @@ import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
 
 class RecieptReportActivity extends StatefulWidget {
   const RecieptReportActivity({super.key});
-
   // final RecieptReportActivityInterface mListener;
-
   @override
   State<RecieptReportActivity> createState() => _RecieptReportActivityState();
 }
@@ -280,7 +278,8 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicablefrom),
+                        CommonWidget.getDateLayout(applicablefrom),
+                         // DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -353,7 +352,9 @@ class _RecieptReportActivityState extends State<RecieptReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicableTwofrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+
+                          //DateFormat('dd-MM-yyyy').format(applicableTwofrom),
                           style: applicableTwofrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

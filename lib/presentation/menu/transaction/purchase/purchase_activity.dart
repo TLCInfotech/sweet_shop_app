@@ -14,7 +14,8 @@ import '../../../../core/size_config.dart';
 
 
 class PurchaseActivity extends StatefulWidget {
-  const PurchaseActivity({super.key, required mListener});
+  final String? comeFor;
+  const PurchaseActivity({super.key, required mListener, this.comeFor});
 
   @override
   State<PurchaseActivity> createState() => _PurchaseActivityState();
@@ -46,9 +47,12 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.PURCHASE,
-                style: appbar_text_style,),
+              title: const Center(
+                child: Text(
+                  StringEn.PURCHASE_INVOICE,
+                  style: appbar_text_style,),
+              ),
+              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
         ),
@@ -63,7 +67,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePurchaseInvoice(
               mListener: this,
-              dateNew: DateFormat('dd-MM-yyyy').format(newDate),
+              dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -122,7 +126,9 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(newDate),
+              Text(
+                CommonWidget.getDateLayout(newDate),
+                //DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
               const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
@@ -176,7 +182,6 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       ),
     );
   }
-
 
   /* Widget to get purchase list Layout */
   Expanded get_purchase_list_layout() {

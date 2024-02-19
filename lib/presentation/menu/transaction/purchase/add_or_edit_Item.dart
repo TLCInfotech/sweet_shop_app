@@ -482,7 +482,6 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     );
   }
 
-
   /* widget for product gst layout */
   Widget getITemgstAndGstAmtLayout(double parentHeight, double parentWidth) {
     return Row(

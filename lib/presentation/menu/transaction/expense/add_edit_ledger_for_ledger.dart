@@ -228,6 +228,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
     );
   }
 
+
   /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(

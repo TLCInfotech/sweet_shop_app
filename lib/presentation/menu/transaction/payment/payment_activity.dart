@@ -14,8 +14,8 @@ import '../../../../core/size_config.dart';
 
 
 class PaymentActivity extends StatefulWidget {
-  const PaymentActivity({super.key, required mListener});
-
+  final String? comeFor;
+  const PaymentActivity({super.key, required mListener, this.comeFor});
   @override
   State<PaymentActivity> createState() => _PaymentActivityState();
 }
@@ -44,9 +44,12 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.PAYMENT_INVOICE,
-                style: appbar_text_style,),
+              title: const Center(
+                child: Text(
+                  StringEn.PAYMENT_INVOICE,
+                  style: appbar_text_style,),
+              ),
+              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
         ),
@@ -61,7 +64,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
               mListener: this,
-              dateNew:DateFormat('dd-MM-yyyy').format(newDate),
+              dateNew:   CommonWidget.getDateLayout(newDate),//DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -116,7 +119,9 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(newDate),
+              Text(
+                CommonWidget.getDateLayout(newDate),
+               // DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
               const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
@@ -157,6 +162,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       ),
     );
   }
+
 
   /* widget for title layout */
   Widget getFieldTitleLayout(String title) {

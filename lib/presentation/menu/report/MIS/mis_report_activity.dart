@@ -12,9 +12,7 @@ import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
 
 class MisReportActivity extends StatefulWidget {
   const MisReportActivity({super.key});
-
   // final MisReportActivityInterface mListener;
-
   @override
   State<MisReportActivity> createState() => _MisReportActivityState();
 }
@@ -281,7 +279,9 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicablefrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+
+                          //  DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -354,7 +354,8 @@ class _MisReportActivityState extends State<MisReportActivity>with ReportTypeDia
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicableTwofrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+                          //  DateFormat('dd-MM-yyyy').format(applicableTwofrom),
                           style: applicableTwofrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

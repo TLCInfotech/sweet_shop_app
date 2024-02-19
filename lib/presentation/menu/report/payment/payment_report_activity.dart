@@ -12,9 +12,7 @@ import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
 
 class PaymentReportActivity extends StatefulWidget {
   const PaymentReportActivity({super.key});
-
   // final PaymentReportActivityInterface mListener;
-
   @override
   State<PaymentReportActivity> createState() => _PaymentReportActivityState();
 }
@@ -280,7 +278,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicablefrom),
+                          CommonWidget.getDateLayout(applicablefrom),
+                         // DateFormat('dd-MM-yyyy').format(applicablefrom),
                           style: applicablefrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,
@@ -353,7 +352,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity>with Repor
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(applicableTwofrom),
+                          CommonWidget.getDateLayout(applicableTwofrom),
+                         // DateFormat('dd-MM-yyyy').format(applicableTwofrom),
                           style: applicableTwofrom == null
                               ? hint_textfield_Style
                               : text_field_textStyle,

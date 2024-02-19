@@ -62,11 +62,12 @@ class _ExpenseGroupState extends State<ExpenseGroup>with CategoryDialogInterface
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
               ),
-
               backgroundColor: Colors.white,
-              title: Text(
-                StringEn.EXPENSE_GROUP,
-                style: appbar_text_style,),
+              title: Center(
+                child: Text(
+                  StringEn.EXPENSE_GROUP,
+                  style: appbar_text_style,),
+              ),
             ),
           ),
         ),

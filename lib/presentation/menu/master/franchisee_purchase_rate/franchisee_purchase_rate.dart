@@ -540,7 +540,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(applicablefrom),
+              Text(
+                CommonWidget.getDateLayout(applicablefrom),
+                //DateFormat('dd-MM-yyyy').format(applicablefrom),
                 style: item_regular_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

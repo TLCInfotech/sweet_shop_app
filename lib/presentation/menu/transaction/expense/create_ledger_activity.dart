@@ -586,7 +586,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         });
   }
 
-
   /* Widget for get franchisee drop down function */
   @override
   selectedFranchisee(String id, String name) {

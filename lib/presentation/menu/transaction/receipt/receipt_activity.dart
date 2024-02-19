@@ -16,7 +16,6 @@ import '../../../../core/size_config.dart';
 
 class ReceiptActivity extends StatefulWidget {
   const ReceiptActivity({super.key, required mListener});
-
   @override
   State<ReceiptActivity> createState() => _ReceiptActivityState();
 }
@@ -62,7 +61,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
               mListener: this,
-              dateNew: DateFormat('dd-MM-yyyy').format(newDate),
+              dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -122,7 +121,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(newDate),
+              Text(
+                CommonWidget.getDateLayout(newDate),
                 style: page_heading_textStyle,),
               FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)

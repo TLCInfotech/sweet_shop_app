@@ -12,7 +12,8 @@ import '../../../../core/size_config.dart';
 
 
 class LedgerActivity extends StatefulWidget {
-  const LedgerActivity({super.key, required mListener});
+  final String? comeFor;
+  const LedgerActivity({super.key, required mListener, this.comeFor});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -43,9 +44,12 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.EXPENSES_INVOICE,
-                style: appbar_text_style,),
+              title: const Center(
+                child: Text(
+                  StringEn.EXPENSES_INVOICE,
+                  style: appbar_text_style,),
+              ),
+              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
         ),
@@ -60,7 +64,8 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
               mListener: this,
-              dateNew:DateFormat('dd-MM-yyyy').format(newDate),
+              dateNew:     CommonWidget.getDateLayout(newDate),
+             // DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -118,7 +123,9 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd-MM-yyyy').format(newDate),
+              Text(
+                CommonWidget.getDateLayout(newDate),
+               // DateFormat('dd-MM-yyyy').format(newDate),
                 style: page_heading_textStyle,),
               const FaIcon(FontAwesomeIcons.calendar,
                 color: Colors.black87, size: 16,)
@@ -127,6 +134,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
       ),
     );
   }
+
 
 
   /* Widget to get total count and amount layout */

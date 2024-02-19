@@ -599,7 +599,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
 
-
   /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
