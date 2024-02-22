@@ -144,7 +144,8 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
 
   /* Widget for password text from field layout */
   Widget getNewPasswordLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +155,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
             children: [
               Text(
                 StringEn.NEW_PASSWORD,
-                style: page_heading_textStyle,
+                style: item_heading_textStyle,
               ),
             ],
           ),
@@ -220,7 +221,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
             children: [
               Text(
                 StringEn.CONFIRM_PASSWORD,
-                style: page_heading_textStyle,
+                style: item_heading_textStyle,
               ),
             ],
           ),

@@ -12,8 +12,9 @@ import '../../../common_widget/signleLine_TexformField.dart';
 class AddOrEditItemSell extends StatefulWidget {
   final AddOrEditItemSellInterface mListener;
   final dynamic editproduct;
+  final comeFrom;
 
-  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct});
+  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct, required this.comeFrom});
 
   @override
   State<AddOrEditItemSell> createState() => _AddOrEditItemSellState();
@@ -221,63 +222,23 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
     );
 
-      Container(
-      height: parentHeight * .055,
-      // width: (parentWidth*0.8)/2,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: quantity,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.QUANTITY,
-          suffix: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: Text("${unit.text}",style: item_regular_textStyle,)),
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Item Quantity";
-          }
-          return null;
-        }),
-        onChanged: (value)async{
-          await calculateRates();
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
-    );
   }
 
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GetDisableTextFormField(
-            parentWidth: (parentWidth),
-            title: StringEn.RATE,
-            controller: rate
-        ),
-        GetDisableTextFormField(
-            parentWidth: (parentWidth),
-            title: StringEn.AMOUNT,
-            controller: amount
-        )]
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GetDisableTextFormField(
+              parentWidth: (parentWidth),
+              title: StringEn.RATE,
+              controller: rate
+          ),
+          GetDisableTextFormField(
+              parentWidth: (parentWidth),
+              title: StringEn.AMOUNT,
+              controller: amount
+          )]
     );
   }
 
@@ -287,28 +248,28 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-    SingleLineEditableTextFormField(
-      parentWidth: (parentWidth),
-    validation: (value) {
-    if (value!.isEmpty) {
-    return StringEn.ENTER+StringEn.DICOUNT;
-    }
-    return null;
-    },
-    controller: discount,
-    focuscontroller: null,
-    focusnext: null,
-    title: StringEn.DICOUNT,
-    callbackOnchage: (value)async {
-    setState(() {
-      discount.text = value;
-    });
-    await calculateRates();
-    },
-    textInput: TextInputType.number,
-    maxlines: 1,
-    format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-    ),
+        SingleLineEditableTextFormField(
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER+StringEn.DICOUNT;
+            }
+            return null;
+          },
+          controller: discount,
+          focuscontroller: null,
+          focusnext: null,
+          title: StringEn.DICOUNT,
+          callbackOnchage: (value)async {
+            setState(() {
+              discount.text = value;
+            });
+            await calculateRates();
+          },
+          textInput: TextInputType.number,
+          maxlines: 1,
+          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        ),
 
         GetDisableTextFormField(
             parentWidth: (parentWidth),
@@ -532,11 +493,11 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
         await calculateTaxableAmt();
 
         if(gst.text!="")
-          {
-            await calculateGstAmt();
-            await calculateNetAmt();
-            await calculateNetRate();
-          }
+        {
+          await calculateGstAmt();
+          await calculateNetAmt();
+          await calculateNetRate();
+        }
       }
     }
 

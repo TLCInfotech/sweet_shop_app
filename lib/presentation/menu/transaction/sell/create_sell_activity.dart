@@ -9,6 +9,8 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
 import 'add_or_edit_Item.dart';
 
@@ -481,7 +483,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   Container InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -489,10 +491,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        getPurchaseDateLayout(),
-        // getFieldTitleLayout(StringEn.INVOICE_NO),
-        // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          Container(
+              width:(SizeConfig.screenWidth)*.32,
+              child: getPurchaseDateLayout()),
+
+          SizedBox(width: 5,),
+          Expanded(
+              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
       ],
       ),
     );
@@ -514,124 +519,33 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-/*        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }*/
-      },
-      child: Container(
-          width: (SizeConfig.screenWidth)*0.3,
-          height: (SizeConfig.screenHeight) * .055,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
+    return
+      GetDateLayout(
 
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(widget.dateNew,
-                style: item_regular_textStyle,),
-              SizedBox(width: 2,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
-    );
+          titleIndicator: false,
+          title: StringEn.DATE,
+          callback: (date){
+            setState(() {
+              invoiceDate=date!;
+            });
+          },
+          applicablefrom: invoiceDate
+      );
   }
 
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Container(
-        width: parentWidth*0.52,
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child:  GestureDetector(
-          onTap: (){
-            showGeneralDialog(
-                barrierColor: Colors.black.withOpacity(0.5),
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                    child: Opacity(
-                      opacity: a1.value,
-                      child:FranchiseeDialog(
-                        mListener: this,
-                      ),
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation2, animation1) {
-                  throw Exception('No widget to return in pageBuilder');
-                });
+    return
+      GetFranchiseeLayout(
+          titleIndicator: false,
+          title: StringEn.FRANCHISEE_NAME ,
+          callback: (name){
+            setState(() {
+              selectedFranchiseeName=name!;
+            });
           },
-          onDoubleTap: (){},
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                  style: selectedFranchiseeName == ""
-                      ? hint_textfield_Style
-                      : text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: parentHeight * .03,
-                  color: /*pollName == ""
-                          ? CommonColor.HINT_TEXT
-                          :*/
-                  CommonColor.BLACK_COLOR,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+          franchiseeName: selectedFranchiseeName);
   }
 
 

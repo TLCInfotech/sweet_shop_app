@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditLedger extends StatefulWidget {
   final AddOrEditLedgerInterface mListener;
@@ -97,10 +100,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                   getFieldTitleLayout(StringEn.LEDGER),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.AMOUNT),
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.NARRATION),
                   getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   /*   SizedBox(height: 20,),
@@ -122,77 +123,51 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
 
   /* widget for product gst layout */
   Widget getLedgerNarrationLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.text,
-        controller: narration,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.NARRATION,
+    return  SingleLineEditableTextFormField(
 
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Narration";
-          }
-          return null;
-        }),
-        onChanged: (value){
-
-        },
-      ),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.NARRATION;
+        }
+        return null;
+      },
+      controller: narration,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.NARRATION,
+      callbackOnchage: (value)async {
+        setState(() {
+          narration.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z ]')),
     );
+
   }
 
   /* widget for product rate layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.numberWithOptions(
-          decimal: true
-        ),
-        controller: amount,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.AMOUNT,
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter amount";
-          }
-          return null;
-        }),
-        onChanged: (value){
-
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
+    return      SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.AMOUNT;
+        }
+        return null;
+      },
+      controller: amount,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.AMOUNT,
+      callbackOnchage: (value)async {
+        setState(() {
+          amount.text = value;
+        });
+      },
+      textInput: TextInputType.numberWithOptions(decimal: true),
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
     );
   }
 

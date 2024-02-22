@@ -684,20 +684,4 @@ class _CompanyCreateState extends State<CompanyCreate> {
     );
   }
 
-  @override
-  userImage(File image, String comeFrom) {
-    if (mounted) {
-      setState(() {
-        picImage = image;
-      });
-    }
-  }
-
-
-  @override
-  selectCountry(String id, String name) {
-    setState(() {
-      countryName = name;
-    });
-  }
 }

@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
 import '../../../../core/common.dart';
 import '../../../../core/size_config.dart';
+import '../../../common_widget/get_date_layout.dart';
 
 
 
@@ -69,15 +69,15 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             )));
           }),
       body: Container(
-        margin: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getPurchaseDateLayout(),
-            getTotalCountAndAmount(),
             const SizedBox(
-              height: .5,
+              height: 10,
             ),
+            getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
             ),
@@ -90,49 +90,17 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
 
   /* Widget to get add PURCHASE date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,newDate);
+    return GetDateLayout(
+        titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
           setState(() {
-            newDate=date;
+            newDate=date!;
           });
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,newDate) ;
-          setState(() {
-            newDate=date;
-          });
-        }
-      },
-      child: Container(
-          height: 40,
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(newDate),
-               // DateFormat('dd-MM-yyyy').format(newDate),
-                style: page_heading_textStyle,),
-              const FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        },
+        applicablefrom: newDate
     );
+
   }
 
 

@@ -7,9 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/widget_for_sale_purchase/create_sell_activity.dart';
 
 import '../../../../core/size_config.dart';
+import '../../../common_widget/get_date_layout.dart';
 
 
 
@@ -21,7 +22,7 @@ class PurchaseActivity extends StatefulWidget {
   State<PurchaseActivity> createState() => _PurchaseActivityState();
 }
 
-class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseInvoiceInterface {
+class _PurchaseActivityState extends State<PurchaseActivity>with CreateSellInvoiceInterface {
 
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -65,20 +66,22 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePurchaseInvoice(
-              mListener: this,
-              dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                CreateSellInvoice(
+                  comeFrom:StringEn.PURCHASE_INVOICE,
+                  dateNew:CommonWidget.getDateLayout(newDate),
+                  mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
-        margin: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: .5,
-            ),
             getPurchaseDateLayout(),
+            const SizedBox(
+              height: 10,
+            ),
             getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
@@ -92,49 +95,15 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
 
   /* Widget to get add purchase date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,newDate);
+    return  GetDateLayout(
+        titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
           setState(() {
-            newDate=date;
+            newDate=date!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,newDate) ;
-          setState(() {
-            newDate=date;
-          });
-        }
-      },
-      child: Container(
-          height: 40,
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(newDate),
-                //DateFormat('dd-MM-yyyy').format(newDate),
-                style: page_heading_textStyle,),
-              const FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        },
+        applicablefrom: newDate
     );
   }
 

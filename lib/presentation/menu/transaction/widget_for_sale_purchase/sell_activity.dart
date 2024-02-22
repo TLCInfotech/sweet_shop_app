@@ -6,12 +6,12 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 
 import '../../../common_widget/get_date_layout.dart';
-import '../widget_for_sale_purchase/create_sell_activity.dart';
 
 class SellActivity extends StatefulWidget {
-final String? comeFor;
+  final String? comeFor;
   const SellActivity({super.key, required mListener,  this.comeFor});
 
   @override
@@ -60,9 +60,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
             color: Colors.black87,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                CreateSellInvoice(
-                  comeFrom:StringEn.SELL,
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateSellInvoice(
               dateNew:CommonWidget.getDateLayout(invoiceDate),
               mListener:this,
             )));

@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_pur
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
 
 import '../../../../core/size_config.dart';
+import '../../../common_widget/get_date_layout.dart';
 
 
 
@@ -65,11 +66,14 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
             )));
           }),
       body: Container(
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getPurchaseDateLayout(),
+            const SizedBox(
+              height: 10,
+            ),
             getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
@@ -85,50 +89,15 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,newDate);
+    return GetDateLayout(
+        titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
           setState(() {
-            newDate=date;
+            newDate=date!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,newDate) ;
-          setState(() {
-            newDate=date;
-          });
-        }
-      },
-      child: Container(
-          height: 40,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          margin: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(newDate),
-                style: page_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        },
+        applicablefrom: newDate
     );
   }
 

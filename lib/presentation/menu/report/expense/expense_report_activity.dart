@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/colors.dart';
@@ -6,9 +7,11 @@ import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
 import '../../../../core/string_en.dart';
-import '../../../dialog/franchisee_dialog.dart';
-import '../../../dialog/report_type_dialog.dart';
-import 'dart:io';
+import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class ExpenseReportActivity extends StatefulWidget {
   const ExpenseReportActivity({super.key});
@@ -17,7 +20,7 @@ class ExpenseReportActivity extends StatefulWidget {
   State<ExpenseReportActivity> createState() => _ExpenseReportActivityState();
 }
 
-class _ExpenseReportActivityState extends State<ExpenseReportActivity> with ReportTypeDialogInterface ,FranchiseeDialogInterface{
+class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
 
   String reportType = "";
   String reportId = "";
@@ -115,13 +118,19 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
                 children: [
                   getReportTypeLayout(parentHeight, parentWidth),
                   Row(
+                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
                     children: [
-                      getDateONELayout(parentHeight, parentWidth),
-                      getDateTwoLayout(parentHeight, parentWidth),
+                      Container(
+                          width:(SizeConfig.halfscreenWidth),
+                          child: getDateONELayout(parentHeight, parentWidth)),
+                      Container(
+
+                          width:(SizeConfig.halfscreenWidth),
+                          child: getDateTwoLayout(parentHeight, parentWidth)),
                     ],
                   ),
                   getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+                 getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                 ],
               ),
             ),
@@ -133,393 +142,83 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        // width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.REPORT_TYPE,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: (){
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform:
-                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: ReportTypeDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception('No widget to return in pageBuilder');
-                    });
-              },
-              onDoubleTap: (){},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          reportType == "" ? StringEn.SELECT_REPORT_TYPE : reportType,
-                          style: reportType == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color:
-                          CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return GetReportTypeLayout(
+        title:  StringEn.REPORT_TYPE,
+        callback: (name){
+          setState(() {
+            reportType=name!;
+          });
+        },
+        reportType: reportType);
   }
 
 
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02,right: parentWidth*.02),
-      child: Container(
-        width: parentWidth * .42,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.DATE_ONE,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: () async {
-                FocusScope.of(context).requestFocus(FocusNode());
-                if (Platform.isIOS) {
-                  var date= await CommonWidget.previousDate(context,applicablefrom);
-                  setState(() {
-                    applicablefrom=date;
-                  });
-                  // startDateIOS(context);
-                } else if (Platform.isAndroid) {
-                  var date= await CommonWidget.previousDate(context,applicablefrom) ;
-                  setState(() {
-                    applicablefrom=date;
-                  });
-                }
-              },
-              onDoubleTap: (){},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          CommonWidget.getDateLayout(applicablefrom),
-                          //DateFormat('dd-MM-yyyy').format(applicablefrom),
-                          style: applicablefrom == null
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
-                        const FaIcon(FontAwesomeIcons.calendar,
-                          color: Colors.black87, size: 16,)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return GetDateLayout(
+        title: StringEn.DATE_ONE,
+        callback: (date){
+          setState(() {
+            applicablefrom=date!;
+          });
+        },
+        applicablefrom: applicablefrom
     );
+
   }
 
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02,left: parentWidth*.02),
-      child: Container(
-        width: parentWidth * .42,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.DATE_TWO,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: () async {
-                FocusScope.of(context).requestFocus(FocusNode());
-                if (Platform.isIOS) {
-                  var date= await CommonWidget.previousDate(context,applicableTo);
-                  setState(() {
-                    applicableTo=date;
-                  });
-                  // startDateIOS(context);
-                } else if (Platform.isAndroid) {
-                  var date= await CommonWidget.previousDate(context,applicableTo) ;
-                  setState(() {
-                    applicableTo=date;
-                  });
-                }
-              },
-              onDoubleTap: (){},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          CommonWidget.getDateLayout(applicableTo),
-                         // DateFormat('dd-MM-yyyy').format(applicableTo),
-                          style: applicableTo == null
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
-                        const FaIcon(FontAwesomeIcons.calendar,
-                          color: Colors.black87, size: 16,)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return GetDateLayout(
+        title: StringEn.DATE_TWO,
+        callback: (date){
+          setState(() {
+            applicableTo=date!;
+          });
+        },
+        applicablefrom: applicableTo
     );
   }
 
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.FRANCHISEE_NAME,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
-                onTap: (){
-                  showGeneralDialog(
-                      barrierColor: Colors.black.withOpacity(0.5),
-                      transitionBuilder: (context, a1, a2, widget) {
-                        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                        return Transform(
-                          transform:
-                          Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                          child: Opacity(
-                            opacity: a1.value,
-                            child:FranchiseeDialog(
-                              mListener: this,
-                            ),
-                          ),
-                        );
-                      },
-                      transitionDuration: Duration(milliseconds: 200),
-                      barrierDismissible: true,
-                      barrierLabel: '',
-                      context: context,
-                      pageBuilder: (context, animation2, animation1) {
-                        throw Exception('No widget to return in pageBuilder');
-                      });
-                },
-                onDoubleTap: (){},
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                        style: selectedFranchiseeName == ""
-                            ? hint_textfield_Style
-                            : text_field_textStyle,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        // textScaleFactor: 1.02,
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        size: parentHeight * .03,
-                        color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                        CommonColor.BLACK_COLOR,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return GetFranchiseeLayout(
+        title: StringEn.FRANCHISEE_NAME ,
+        callback: (name){
+          setState(() {
+            selectedFranchiseeName=name!;
+          });
+        },
+        franchiseeName: selectedFranchiseeName);
 
-    );
   }
+
+
 
   /* Widget for expense text from field layout */
   Widget getExpenseNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.EXPENSES,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _expenseFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: StringEn.EXPENSES,
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: expenseController,
-                    onEditingComplete: () {
-                      _expenseFocus.unfocus();
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.EXPENSES;
+        }
+        return null;
+      },
+      controller: expenseController,
+      focuscontroller: _expenseFocus,
+      focusnext: null,
+      title: StringEn.EXPENSES,
+      callbackOnchage: (value) {
+        setState(() {
+          expenseController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
+
   }
 
 
@@ -567,24 +266,6 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> with Repo
         ),
       ],
     );
-  }
-
-  /* Widget for get report drop down layout */
-  @override
-  selectedReportType(String id, String name) {
-    // TODO: implement selectedReportType
-    setState(() {
-      reportType=name;
-    });
-  }
-
-  /* Widget for get franchisee drop down layout */
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
   }
 
 

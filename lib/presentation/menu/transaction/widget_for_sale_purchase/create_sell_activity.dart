@@ -9,21 +9,22 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
-
+import 'package:sweet_shop_app/presentation/menu/transaction/widget_for_sale_purchase/add_or_edit_Item.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
-class CreateReceipt extends StatefulWidget {
-  final CreateReceiptInterface mListener;
+class CreateSellInvoice extends StatefulWidget {
+  final CreateSellInvoiceInterface mListener;
   final String dateNew;
-  const CreateReceipt({super.key,required this.mListener, required this.dateNew});
+  final String comeFrom;
+
+  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener, required  this.comeFrom});
   @override
-  _CreateReceiptState createState() => _CreateReceiptState();
+  _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
 
-class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProviderStateMixin,AddOrEditLedgerInterface {
+class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTickerProviderStateMixin,AddOrEditItemSellInterface{
 
   final _formkey = GlobalKey<FormState>();
 
@@ -33,45 +34,46 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final _voucherNoFocus = FocusNode();
-  final VoucherNoController = TextEditingController();
+  final InvoiceNoController = TextEditingController();
 
 
   String selectedFranchiseeName="";
 
-  List<dynamic> Ledger_list=[
+  String TotalAmount="0.00";
+
+  List<dynamic> Item_list=[
     {
       "id":1,
-      "ledgerName":"Mahesh Kirana Store",
-      "currentBal":10,
-      "amount":780.00,
-      "narration":"narration1"
-
+      "itemName":"Gulakand Burfi ",
+      "quantity":10,
+      "unit":"Kg",
+      "rate":200,
+      "amt":2000.00,
+      "discount":5,
+      "discountAmt":100.00,
+      "taxableAmt":1900.00,
+      "gst":18,
+      "gstAmt":342.00,
+      "netRate":242.00,
+      "netAmount":2242.00
     },
     {
       "id":2,
-      "ledgerName":"Rajesh Furnicture",
-      "currentBal":20,
-      "amount":5300.00,
-      "narration":"narration2"
-
+      "itemName":" Mango Burfi",
+      "quantity":25,
+      "unit":"Kg",
+      "rate":500,
+      "amt":12500.00,
+      "discount":10,
+      "discountAmt":1250.00,
+      "taxableAmt":11250.00,
+      "gst":18,
+      "gstAmt":2025.00,
+      "netRate":531.00,
+      "netAmount":13275.00
     },
   ];
 
-  String TotalAmount="0.00";
-
-  calculateTotalAmt()async{
-    print("Here");
-    var total=0.00;
-    for(var item  in Ledger_list ){
-      total=total+item['amount'];
-      print(item['amount']);
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
-
-  }
 
   @override
   void initState() {
@@ -94,9 +96,10 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       height: SizeConfig.safeUsedHeight,
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
+        // borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFfffff5),
@@ -117,8 +120,10 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                 ),
 
                 backgroundColor: Colors.white,
-                title: Text(
-                  StringEn.CREATE_RECEIPT_INVOICE,
+                title: widget.comeFrom==StringEn.SELL? Text(
+                  StringEn.ADD_SELL,
+                  style: appbar_text_style,):Text(
+                  StringEn.ADD_PURCHASE,
                   style: appbar_text_style,),
               ),
             ),
@@ -154,16 +159,98 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
+
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.halfscreenWidth,
+          padding: EdgeInsets.only(top: 10,bottom:10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              SizedBox(height: 4,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+        GestureDetector(
+          onTap: () {
+            if (mounted) {
+              setState(() {
+                disableColor = true;
+              });
+            }
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            height: 50,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? CommonColor.THEME_COLOR.withOpacity(.5)
+                  : CommonColor.THEME_COLOR,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child: const Text(
+                    StringEn.SAVE,
+                    style: page_heading_textStyle,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
+
+  double calculateRoundOffAmt(){
+    print(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)));
+    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
+      return 0.00;
+    }
+    else {
+      var amt = (1 - double.parse(
+          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
+      print(amt);
+      if (amt == 0.00) {
+        return 0.00;
+      }
+      if (amt < 0.50) {
+        print((-1 * amt).toStringAsFixed(2));
+        return amt;
+      }
+      else {
+        print((amt).toStringAsFixed(2));
+        return (-1 * amt);
+      }
+    }
+  }
+
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
+
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -172,21 +259,23 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               key: _formkey,
               child: Column(
                 children: [
-                  //getFieldTitleLayout(StringEn.RECEPT_DETAIL),
-                  ReceiptInfo(),
+
+                  //   getFieldTitleLayout(StringEn.INVOICE_DETAIL),
+                  InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
-                              goToAddOrEditItem(null);
+                              goToAddOrEditItem(null,null);
                             }
                           },
                           child: Container(
-                              width: 140,
+                              width: 120,
                               padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
                               margin: EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
@@ -196,7 +285,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_LEADER,
+                                  Text(StringEn.ADD_ITEMS,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -207,9 +296,11 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                       )
                     ],
                   ),
-                  Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  // Ledger_list.length>0? getLedgerListLayout():Container(),
+
                   SizedBox(height: 10,),
+
+                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
+
                 ],
               ),
             ),
@@ -220,14 +311,12 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
   }
 
-
-
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: Ledger_list.length,
+        itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -241,7 +330,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                   onTap: (){
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Ledger_list[index]);
+                      goToAddOrEditItem(Item_list[index],widget.comeFrom);
                     }
                   },
                   child: Card(
@@ -272,23 +361,23 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 3,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                  alignment: Alignment.centerRight,
+                                                  child: Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                child:
+                                                Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 2 ,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
-
-
                                         ],
                                       ),
                                     ),
@@ -305,9 +394,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
-                                          Ledger_list.remove(Ledger_list[index]);
+                                          Item_list.remove(Item_list[index]);
                                           setState(() {
-                                            Ledger_list=Ledger_list;
+                                            Item_list=Item_list;
                                           });
                                           await calculateTotalAmt();
                                         },
@@ -318,7 +407,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
                           ),
                         )
-
 
                       ],
                     ),
@@ -337,10 +425,66 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
+  /* Widget to get add Product Layout */
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          goToAddOrEditItem(null,widget.comeFrom);
+        }
+      },
+      child: Container(
+          height: 50,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: CommonColor.THEME_COLOR,
+              border: Border.all(color: Colors.grey.withOpacity(0.5))
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Add New Item",
+                style: item_heading_textStyle,),
+              FaIcon(FontAwesomeIcons.plusCircle,
+                color: Colors.black87, size: 20,)
+            ],
+          )
+      ),
+    );
+  }
 
+  Future<Object?> goToAddOrEditItem(product,comefrom) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditItemSell(
+                comeFrom:comefrom,
+                mListener: this,
+                editproduct:product,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        }
+        );
+  }
 
-  Container ReceiptInfo() {
-    return  Container(
+  Container InvoiceInfo() {
+    return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
       decoration: BoxDecoration(
@@ -352,7 +496,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         children: [
           Container(
               width:(SizeConfig.screenWidth)*.32,
-              child: getReceiptDateLayout()),
+              child: getPurchaseDateLayout()),
 
           SizedBox(width: 5,),
           Expanded(
@@ -375,176 +519,66 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   }
 
 
+
   /* Widget to get add Invoice date Layout */
-  Widget getReceiptDateLayout(){
-    return  GetDateLayout(
+  Widget getPurchaseDateLayout(){
+    return
+      GetDateLayout(
 
-        titleIndicator: false,
-        title: StringEn.DATE,
-        callback: (date){
-          setState(() {
-            invoiceDate=date!;
-          });
-        },
-        applicablefrom: invoiceDate
-    );
+          titleIndicator: false,
+          title: StringEn.DATE,
+          callback: (date){
+            setState(() {
+              invoiceDate=date!;
+            });
+          },
+          applicablefrom: invoiceDate
+      );
   }
-
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-        titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
-        callback: (name){
-          setState(() {
-            selectedFranchiseeName=name!;
-          });
-        },
-        franchiseeName: selectedFranchiseeName);
-  }
-
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Ledger",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
-
-  Future<Object?> goToAddOrEditItem(product) {
-    return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: AddOrEditLedger(
-                mListener: this,
-                editproduct:product,
-              ),
-            ),
-          );
-        },
-        transitionDuration: Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
-  }
-
-
-
-
-
-  /* Widget for navigate to next screen button layout */
-  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        TotalAmount!="0.00"? Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
-          decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
-            ],
-          ),
-        ):Container(),
-        GestureDetector(
-          onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-            }
+    return
+      GetFranchiseeLayout(
+          titleIndicator: false,
+          title: StringEn.FRANCHISEE_NAME ,
+          callback: (name){
+            setState(() {
+              selectedFranchiseeName=name!;
+            });
           },
-          onDoubleTap: () {},
-          child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 40,
-            decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
-                    style: page_heading_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+          franchiseeName: selectedFranchiseeName);
   }
 
 
   @override
-  AddOrEditLedgerDetail(item) {
-    // TODO: implement AddOrEditItemDetail
-    var itemLlist=Ledger_list;
+  selectedFranchisee(String id, String name) {
+    // TODO: implement selectedFranchisee
+    setState(() {
+      selectedFranchiseeName=name;
+    });
+  }
+
+
+  @override
+  AddOrEditItemSellDetail(item)async {
+    // TODO: implement AddOrEditItemSellDetail
+    var itemLlist=Item_list;
     if(item['id']!=""){
-      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
+      var index=Item_list.indexWhere((element) => item['id']==element['id']);
       setState(() {
-        Ledger_list[index]['ledgerName']=item['ledgerName'];
-        Ledger_list[index]['currentBal']=item['currentBal'];
-        Ledger_list[index]['amount']=item['amount'];
-        Ledger_list[index]['narration']=item['narration'];
+        Item_list[index]['itemName']=item['itemName'];
+        Item_list[index]['quantity']=item['quantity'];
+        Item_list[index]['unit']=item['unit'];
+        Item_list[index]['rate']=item['rate'];
+        Item_list[index]['amt']=item['amt'];
+        Item_list[index]['discount']=item['discount'];
+        Item_list[index]['discountAmt']=item['discountAmt'];
+        Item_list[index]['taxableAmt']=item['taxableAmt'];
+        Item_list[index]['gst']=item['gst'];
+        Item_list[index]['gstAmt']=item['gstAmt'];
+        Item_list[index]['netRate']=item['netRate'];
+        Item_list[index]['netAmount']=item['netAmount'];
       });
     }
     else {
@@ -555,13 +589,25 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         itemLlist.add(item);
       }
       setState(() {
-        Ledger_list = itemLlist;
+        Item_list = itemLlist;
       });
     }
-    calculateTotalAmt();
+    await calculateTotalAmt();
   }
 
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Item_list ){
+      total=total+item['netAmount'];
+      print(item['netAmount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
 }
 
-abstract class CreateReceiptInterface {
+abstract class CreateSellInvoiceInterface {
 }

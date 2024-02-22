@@ -472,8 +472,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     });
 
   }
-
-
   @override
   addProductPurchaseRateDetail( dynamic item)async {
     // TODO: implement addProductDetail
