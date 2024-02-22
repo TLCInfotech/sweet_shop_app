@@ -1,14 +1,16 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class UserCreate extends StatefulWidget {
   const UserCreate({super.key});
@@ -19,12 +21,7 @@ class UserCreate extends StatefulWidget {
   State<UserCreate> createState() => _UserCreateState();
 }
 
-class _UserCreateState extends State<UserCreate>
-    with
-        SingleTickerProviderStateMixin,
-        ImagePickerDialogPostInterface,
-        ImagePickerListener,
-        ImagePickerDialogInterface {
+class _UserCreateState extends State<UserCreate> {
   final _userFocus = FocusNode();
   final userController = TextEditingController();
 
@@ -36,8 +33,6 @@ class _UserCreateState extends State<UserCreate>
 
   bool checkPasswordValue = false;
   bool checkActiveValue = false;
-  late ImagePickerHandler imagePicker;
-  late AnimationController _Controller;
   File? picImage;
   String countryName = "";
   String countryId = "";
@@ -46,44 +41,7 @@ class _UserCreateState extends State<UserCreate>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _Controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    imagePicker = ImagePickerHandler(this, _Controller);
-    imagePicker.setListener(this);
-    imagePicker.init(context);
-  }
-  File? adharFile ;
-  File? panFile ;
-  File? gstFile ;
-  // method to pick adhar document
-  getAadharFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      adharFile=file;
-    });
-  }
-  // method to pick pan document
-  getPanFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      panFile=file;
-    });
-  }
-  // method to pick gst document
-  getGstFile()async{
-    File file=await CommonWidget.pickDocumentFromfile();
-    setState(() {
-      gstFile=file;
-    });
-  }
-
+  final _formkey=GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +78,11 @@ class _UserCreateState extends State<UserCreate>
           children: [
             Expanded(
               child: Container(
-                  child: getAllTextFormFieldLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                  child: Form(
+                    key: _formkey,
+                    child: getAllTextFormFieldLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  )),
             ),
             Container(
                 decoration: BoxDecoration(
@@ -143,103 +104,18 @@ class _UserCreateState extends State<UserCreate>
       ),
     );
   }
-
-  double opacityLevel = 1.0;
-  Widget getImageLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            picImage == null
-                ? Container(
-              height: parentHeight * .25,
-              width: parentHeight * .25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/images/placeholder.png'), // Replace with your image asset path
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(7),
-              ),
-            )
-                : Container(
-              height: parentHeight * .25,
-              width: parentHeight * .25,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  image: DecorationImage(
-                    image: FileImage(picImage!),
-                    fit: BoxFit.cover,
-                  )),
-            ),
-            GestureDetector(
-              onTap: () {
-                if (mounted) {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    showCupertinoDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (context) {
-                        return AnimatedOpacity(
-                          opacity: opacityLevel,
-                          duration: const Duration(seconds: 2),
-                          child: ImagePickerDialogPost(
-                            imagePicker,
-                            _Controller,
-                            context,
-                            this,
-                            isOpenFrom: '',
-                          ),
-                        );
-                      },
-                    );
-                  });
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(left: parentWidth * .08),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: parentHeight * .05,
-                      width: parentHeight * .05,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors
-                            .white, // Change the color to your desired fill color
-                      ),
-                      /*     decoration: BoxDecoration(
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/edit_post.png'), // Replace with your image asset path
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(7),
-                      ),*/
-                    ),
-                    Container(
-                        height: parentHeight * .03,
-                        width: parentHeight * .03,
-                        child: const Image(
-                          image: AssetImage("assets/images/edit_post.png"),
-                          fit: BoxFit.contain,
-                        ))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+ Widget getImageLayout(double parentHeight, double parentWidth) {
+    return  GetSingleImage(
+        height: parentHeight * .25,
+        width: parentHeight * .25,
+        picImage: picImage,
+        callbackFile: (file){
+          setState(() {
+            picImage=file;
+          });
+        }
     );
+
   }
 
 
@@ -281,200 +157,71 @@ class _UserCreateState extends State<UserCreate>
 
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.USER_NAME,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _userFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: StringEn.USER_NAME,
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: userController,
-                    onEditingComplete: () {
-                      _userFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_workingdaysFocus);
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.USER_NAME;
+          }
+          return null;
+        },
+      controller: userController,
+      focuscontroller: _userFocus,
+      focusnext: _workingdaysFocus,
+      title: StringEn.USER_NAME,
+      callbackOnchage: (value) {
+        setState(() {
+          userController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
+
   }
 
   /* Widget for working days text from field layout */
   Widget getWorkingDaysLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.WRKING_DAYS,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _workingdaysFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText:  StringEn.WRKING_DAYS,
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: workingdaysController,
-                onEditingComplete: () {
-                  _workingdaysFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_franchiseFocus);
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.WRKING_DAYS;
+          }
+          return null;
+        },
+      controller: workingdaysController,
+      focuscontroller: _workingdaysFocus,
+      focusnext: _franchiseFocus,
+      title: StringEn.WRKING_DAYS,
+      callbackOnchage: (value) {
+        setState(() {
+          workingdaysController.text = value;
+        });
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
     );
+
   }
 
 
 
   /* Widget for franchisee name text from field layout */
   Widget getFranchiseeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.FRANCHISE,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _franchiseFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: StringEn.FRANCHISE,
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: afranchiseController,
-                onEditingComplete: () {
-                  _franchiseFocus.unfocus();
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return GetFranchiseeLayout(
+        title:  StringEn.FRANCHISE,
+        callback: (name){
+          setState(() {
+            afranchiseController.text=name!;
+          });
+        },
+        franchiseeName: afranchiseController.text);
   }
 
 
   /*Widget for Terms and privacy Layout*/
-  Widget getResetPswwordLayout(
-      double parentHeight, double parentWidth) {
+  Widget getResetPswwordLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * .016),
       child: Row(
@@ -544,8 +291,7 @@ class _UserCreateState extends State<UserCreate>
 
 
   /*Widget for active Layout*/
-  Widget getActiveLayout(
-      double parentHeight, double parentWidth) {
+  Widget getActiveLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * .016),
       child: Row(
@@ -627,11 +373,7 @@ class _UserCreateState extends State<UserCreate>
           child: GestureDetector(
             onTap: () {
 
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
+              _formkey.currentState?.validate();
             },
             onDoubleTap: () {},
             child: Container(
@@ -660,18 +402,6 @@ class _UserCreateState extends State<UserCreate>
       ],
     );
   }
-
-
-  @override
-  userImage(File image, String comeFrom) {
-    // TODO: implement userImage
-    if (mounted) {
-      setState(() {
-        picImage = image;
-      });
-    }
-  }
-
 
 }
 

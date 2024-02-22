@@ -44,7 +44,7 @@ class _PickDocumentState extends State<PickDocument> {
       children: [
         Text(
           widget.title,
-          style: page_heading_textStyle,
+          style: item_heading_textStyle,
         ),
         SizedBox(height: 5,),
         Row(

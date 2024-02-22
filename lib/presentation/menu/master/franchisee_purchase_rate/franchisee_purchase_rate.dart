@@ -9,12 +9,11 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/franchisee_dialog.dart';
-import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 
-import 'copy_purchase_rate_product_of_franchisee.dart';
+import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_date_layout.dart';
 
 class FranchiseePurchaseRate extends StatefulWidget {
   const FranchiseePurchaseRate({super.key});
@@ -23,7 +22,7 @@ class FranchiseePurchaseRate extends StatefulWidget {
   State<FranchiseePurchaseRate> createState() => _FranchiseePurchaseRateState();
 }
 
-class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with AddProductPurchaseRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopyPurchaseRateProductOfFranchiseeInterface{
+class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with AddProductPurchaseRateInterface {
   final _formkey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
@@ -130,9 +129,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-            //  Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
-             // Text("Round Off : ${double.parse(TotalAmount).round()}",style: item_regular_textStyle.copyWith(color: Colors.grey)),
-            ],
+                ],
           ),
         ),
         GestureDetector(
@@ -299,13 +296,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                           Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
-                                          /*  Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),
-                                          SizedBox(height: 5,),*/
+
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
@@ -317,91 +308,17 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                                 //Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                                 Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
-                                                //  Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
                                               ],
                                             ),
 
                                           ),
 
-                                          /*  SizedBox(height: 5,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),*/
+
                                         ],
                                       ),
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   child: Container(
-                                  //     padding: EdgeInsets.only(left: 10),
-                                  //     width: parentWidth*.70,
-                                  //     //  height: parentHeight*.1,
-                                  //     child:  Column(
-                                  //       mainAxisAlignment: MainAxisAlignment.start,
-                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
-                                  //
-                                  //         SizedBox(height: 5,),
-                                  //         /*  Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //         ),
-                                  //         SizedBox(height: 5,),*/
-                                  //         Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Column(
-                                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                                  //             children: [
-                                  //               Row(
-                                  //                 crossAxisAlignment: CrossAxisAlignment.center,
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Column(
-                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //                     children: [
-                                  //                       Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //                       Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //                     ],
-                                  //                   ),
-                                  //
-                                  //                   SizedBox(width: 5,),
-                                  //                   Column(
-                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //                     children: [
-                                  //                       Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //                       Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //                     ],
-                                  //                   ),
-                                  //
-                                  //                 ],
-                                  //               ),
-                                  //               SizedBox(height: 5,),
-                                  //
-                                  //               Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //             ],
-                                  //           ),
-                                  //
-                                  //         ),
-                                  //         /*  SizedBox(height: 5,),
-                                  //         Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //         ),*/
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
 
                                   Container(
                                       width: parentWidth*.1,
@@ -448,7 +365,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   Container InvoiceInfo() {
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -456,7 +373,16 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          GetFranchiseeLayout(
+              titleIndicator:false,
+          title:  StringEn.FRANCHISE,
+          callback: (name){
+            setState(() {
+              selectedCopyFranchiseeName=name!;
+            });
+          },
+          franchiseeName: selectedCopyFranchiseeName),
+          // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
           Padding(
             padding:  EdgeInsets.only(top: SizeConfig.screenHeight*.01),
             child: Row(
@@ -508,210 +434,29 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
   /* Widget to get add Product Layout */
   Widget getApplicableFromLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,applicablefrom);
+    return GetDateLayout(
+        titleIndicator:false,
+        title:  StringEn.DATE ,
+        callback: (name){
           setState(() {
-            applicablefrom=date;
+            applicablefrom=name!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,applicablefrom) ;
-          setState(() {
-            applicablefrom=date;
-          });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(applicablefrom),
-                //DateFormat('dd-MM-yyyy').format(applicablefrom),
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
-    );
+        },
+        applicablefrom: applicablefrom);
+
   }
 
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                    1.0;
-                return Transform(
-                  transform:
-                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: CategoryDialog(
-                      mListener: this,
-                    ),
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception('No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedProductCategory == "" ? StringEn.CATEGORY : selectedProductCategory,
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8), size: 16,)
-            ],
-          )
-      ),
-    );
-  }
-
-
-
-
-  /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * .005),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child:  GestureDetector(
-          onTap: (){
-            showGeneralDialog(
-                barrierColor: Colors.black.withOpacity(0.5),
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                    child: Opacity(
-                      opacity: a1.value,
-                      child:FranchiseeDialog(
-                        mListener: this,
-                      ),
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation2, animation1) {
-                  throw Exception('No widget to return in pageBuilder');
-                });
-          },
-          onDoubleTap: (){},
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                  style: selectedFranchiseeName == ""
-                      ? hint_textfield_Style
-                      : text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: parentHeight * .03,
-                  color: /*pollName == ""
-                          ? CommonColor.HINT_TEXT
-                          :*/
-                  CommonColor.BLACK_COLOR,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-
-
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
-  }
-
-
-  @override
-  selectCategory(String id, String name) {
-    // TODO: implement selectCategory
-    setState(() {
-      selectedProductCategory=name;
-    });
-  }
-
-  @override
-  selectedFranchiseeToCopyPurchaseRateProduct(String id, String name) {
-    // TODO: implement selectedFranchiseeToCopyProduct
-    setState(() {
-      selectedCopyFranchiseeName=name;
-    });
+    return  GetCategoryLayout(
+        titleIndicator:false,
+        title:  StringEn.CATEGORY ,
+        callback: (name){
+          setState(() {
+            selectedProductCategory=name!;
+          });
+        },
+        selectedProductCategory: selectedProductCategory);
   }
 
   String TotalAmount="0.00";

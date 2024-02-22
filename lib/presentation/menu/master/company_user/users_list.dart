@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
-import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
 
 
 class UsersList extends StatefulWidget {

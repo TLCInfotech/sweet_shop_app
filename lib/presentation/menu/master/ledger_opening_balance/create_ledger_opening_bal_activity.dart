@@ -1,28 +1,17 @@
 
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/core/util.dart';
-import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
-import '../../../dialog/franchisee_dialog.dart';
+import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_ledger_opening_bal.dart';
 
 class CreateLedgerOpeningBal extends StatefulWidget {
@@ -34,7 +23,7 @@ class CreateLedgerOpeningBal extends StatefulWidget {
   State<CreateLedgerOpeningBal> createState() => _CreateItemOpeningBalState();
 }
 
-class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditItemOpeningBalInterface {
+class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with SingleTickerProviderStateMixin,AddOrEditItemOpeningBalInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -160,11 +149,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
+
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -334,7 +319,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   Container InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -343,10 +328,13 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
          // getFieldTitleLayout(StringEn.DATE),
-          getPurchaseDateLayout(),
-          // getFieldTitleLayout(StringEn.INVOICE_NO),
-          // getInvoiceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          Container(
+              width:(SizeConfig.screenWidth)*.32,
+              child: getPurchaseDateLayout()),
+
+          SizedBox(width: 5,),
+          Expanded(
+              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
         ],
       ),
     );
@@ -367,123 +355,33 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-/*        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
-          setState(() {
-            invoiceDate=date;
-          });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }*/
-      },
-      child:  Container(
-          width: (SizeConfig.screenWidth)*0.3,
-          height: (SizeConfig.screenHeight) * .055,
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
+    return  GetDateLayout(
 
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(widget.dateNew,
-                style: item_regular_textStyle,),
-              SizedBox(width: 2,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
+          setState(() {
+            invoiceDate=date!;
+          });
+        },
+        applicablefrom: invoiceDate
     );
+
+
   }
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  Padding(
-      padding: EdgeInsets.all(5),
-      child: Container(
-        width: parentWidth*0.52,
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child:  GestureDetector(
-          onTap: (){
-            showGeneralDialog(
-                barrierColor: Colors.black.withOpacity(0.5),
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                    child: Opacity(
-                      opacity: a1.value,
-                      child:FranchiseeDialog(
-                        mListener: this,
-                      ),
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation2, animation1) {
-                  throw Exception('No widget to return in pageBuilder');
-                });
-          },
-          onDoubleTap: (){},
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                  style: selectedFranchiseeName == ""
-                      ? hint_textfield_Style
-                      : text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: parentHeight * .03,
-                  color: /*pollName == ""
-                          ? CommonColor.HINT_TEXT
-                          :*/
-                  CommonColor.BLACK_COLOR,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return  GetFranchiseeLayout(
+        titleIndicator: false,
+        title: StringEn.FRANCHISEE_NAME ,
+        callback: (name){
+          setState(() {
+            selectedFranchiseeName=name!;
+          });
+        },
+        franchiseeName: selectedFranchiseeName);
+
   }
 
 
@@ -621,13 +519,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   }
 
 
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
-  }
 
 
   @override

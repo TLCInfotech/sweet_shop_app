@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+
+import '../../../common_widget/get_diable_textformfield.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddProductSaleRate extends StatefulWidget {
   final AddProductSaleRateInterface mListener;
@@ -27,23 +31,6 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   TextEditingController gstAmt = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
 
   @override
   void initState() {
@@ -64,12 +51,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       });
     }
   }
-  calculateGstAmt(){
-    var gstAmtt=double.parse(rate.text)*(double.parse(gst.text)/100);
-    setState(() {
-      gstAmt.text=gstAmtt.toStringAsFixed(2);
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -104,22 +86,13 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   getFieldTitleLayout(StringEn.ITEM),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.SALE_RATE),
                   getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.GST+"%"),
                   getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.GST_AMT),
                   getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getFieldTitleLayout(StringEn.NET_RATE),
                   getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-               /*   SizedBox(height: 20,),
-                  getButtonLayout()*/
-
-
                 ],
               ),
             ),
@@ -127,13 +100,15 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           Padding(
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          ),        ],
+          ),
+        ],
       ),
     );
   }
 
   calculateNetAmt(){
 
+    print("HE");
     if(rate.text!="" && gst.text!=""){
       var netAmt=double.parse(rate.text)+((double.parse(rate.text)*(double.parse(gst.text))) / 100);
       print(netAmt);
@@ -160,204 +135,90 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
     }
   }
 
-  /* widget for button layout */
-  Widget getButtonLayout() {
-    return Container(
-      width: 200,
-      child: ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-            CommonColor.THEME_COLOR)),
-        onPressed: () {
 
-          var item={
-            "id":widget.editproduct!=null?widget.editproduct['id']:"",
-            "pname":_textController.text,
-            "rate":double.parse(rate.text),
-            "gst":double.parse(gst.text),
-            "net":double.parse(net.text)
-          };
-          if(widget.mListener!=null){
-
-            widget.mListener.addProductSaleRateDetail(item);
-            Navigator.pop(context);
-          }
-
-          // Navigator.pop(context);
-        },
-        child: Text(StringEn.SAVE,
-            style: button_text_style),
-      ),
-    );
-  }
-
-
-  /* widget for gst amount layout */
-  Widget getGstAmountLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-
-        keyboardType: TextInputType.number,
-        controller: gstAmt,
-        readOnly: true,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.GST_AMT,
-          fillColor: CommonColor.TexField_COLOR
-        ),
-        onChanged: (value){
-
-        },
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Net Amt.";
-          }
-          return null;
-        }),
-        onTapOutside: (event) {
-          setState(() {
-            gstAmt.text=(double.parse(net.text).toStringAsFixed(2)).toString();
-          });
-        },
-      ),
-    );
-  }
 
   /* widget for product net layout */
   Widget getProductNetLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: net,
-        readOnly: true,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.NET,
-          fillColor: CommonColor.TexField_COLOR
-        ),
-        onChanged: (value){
-
-          calculateOriginalAmt();
-        },
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Net Amt.";
-          }
-          return null;
-        }),
-        onTapOutside: (event) {
-          setState(() {
-            net.text=(double.parse(net.text).toStringAsFixed(2)).toString();
-          });
-        },
-      ),
+    return GetDisableTextFormField(
+      controller: net,
+      title: StringEn.NET_RATE,
     );
   }
 
+  /* widget for gst amount layout */
+  Widget getGstAmountLayout(double parentHeight, double parentWidth) {
+    return GetDisableTextFormField(
+      controller: gstAmt,
+      title: StringEn.GST_AMT,
+    );
+
+  }
 
   /* widget for product gst layout */
   Widget getProductGSTLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: gst,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.RATE,
-          suffix: Text("%")
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Product GST";
-          }
-          return null;
-        }),
-        onChanged: (value){
-          calculateNetAmt();
-          calculateOriginalAmt();
-          calculateGstAmt();
-        },
-      ),
+    return SingleLineEditableTextFormField(
+      suffix:Text("%"),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.GST;
+        }
+        return null;
+      },
+      controller: gst,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.GST,
+      callbackOnchage: (value) async{
+        print("here");
+        setState(() {
+          gst.text = value;
+        });
+        await calculateNetAmt();
+        await calculateOriginalAmt();
+        await calculateGstAmt();
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
     );
+
   }
-  
+  calculateGstAmt(){
+    if(rate.text!="" && gst.text!="") {
+      var gstAmtt = double.parse(rate.text) * (double.parse(gst.text) / 100);
+      setState(() {
+        gstAmt.text = gstAmtt.toStringAsFixed(2).toString();
+      });
+    }
+  }
+
   /* widget for product rate layout */
   Widget getProductRateLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.numberWithOptions(
-          decimal: true
-        ),
-        controller: rate,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.SALE_RATE,
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Product Rate";
-          }
-          return null;
-        }),
-        onChanged: (value){
+    return SingleLineEditableTextFormField(
 
-          calculateNetAmt();
-          calculateGstAmt();
-        },
-        onTapOutside: (event) {
-          setState(() {
-            rate.text=(double.parse(rate.text).toStringAsFixed(2)).toString();
-          });
-        },
-      ),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.SALE_RATE;
+        }
+        return null;
+      },
+      controller: rate,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.SALE_RATE,
+      callbackOnchage: (value)async {
+        print("#");
+        setState(() {
+          rate.text = value;
+        });
+        await calculateNetAmt();
+        await calculateGstAmt();
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
     );
+
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
@@ -384,7 +245,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.ITEM_NAME,
+          hintText:StringEn.ITEM_NAME,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -395,7 +256,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       ),
     );
   }
-  
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -403,7 +264,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       padding: const EdgeInsets.only(top: 10, bottom: 10,),
       child: Text(
         "$title",
-        style: page_heading_textStyle,
+        style: item_heading_textStyle,
       ),
     );
   }
@@ -437,7 +298,6 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       ),
     );
   }
-
 
 
   /* Widget for Buttons Layout0 */
@@ -512,6 +372,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       ],
     );
   }
+
 
 
 }

@@ -8,12 +8,10 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/franchisee_dialog.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
-import 'copy_sale_rate_product_of_franchisee.dart';
-
+import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_category_layout.dart';
+import '../../../common_widget/get_date_layout.dart';
 
 class FranchiseeSaleRate extends StatefulWidget {
   const FranchiseeSaleRate({super.key});
@@ -22,11 +20,9 @@ class FranchiseeSaleRate extends StatefulWidget {
   State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
 }
 
-class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProductSaleRateInterface, FranchiseeDialogInterface,CategoryDialogInterface,CopySaleRateProductOfFranchiseeInterface{
-
+class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProductSaleRateInterface{
 
   final _formkey = GlobalKey<FormState>();
-
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   String selectedFranchiseeName="";
@@ -80,7 +76,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
+              title: Text(
                 StringEn.FRANCHISE_SALE_RATE,
                 style: appbar_text_style,),
             ),
@@ -105,7 +101,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 ),
               ),
               height: SizeConfig.safeUsedHeight * .08,
-              child: getSaveAndFinishButtonLayout(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              child: getSaveAndFinishButtonLayout(
+                  SizeConfig.screenHeight, SizeConfig.screenWidth)),
           CommonWidget.getCommonPadding(
               SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
@@ -131,13 +128,21 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-             // Text("Round Off : ${double.parse(TotalAmount).round()}",style:  item_regular_textStyle.copyWith(color: Colors.grey)),
-              //Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
-            ],
+                ],
           ),
         ),
         GestureDetector(
           onTap: () {
+            // if(widget.comeFrom=="clientInfoList"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+            //   )));
+            // }if(widget.comeFrom=="Projects"){
+            //   Navigator.pop(context,false);
+            // }
+            // else if(widget.comeFrom=="edit"){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+            //   )));
+            // }
             if (mounted) {
               setState(() {
                 disableColor = true;
@@ -181,11 +186,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01,left: parentWidth*.03,right: parentWidth*.03),
@@ -201,7 +201,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                     // product_list.isNotEmpty?getFieldTitleLayout(StringEn.PRODUCT_DETAIL):Container(),
+                      //product_list.isNotEmpty?getFieldTitleLayout(StringEn.PRODUCT_DETAIL):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -313,91 +313,18 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                                 //Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                                 Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
-                                              //  Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                //  Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
                                               ],
                                             ),
 
                                           ),
 
-                                          /*  SizedBox(height: 5,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          ),*/
+
                                         ],
                                       ),
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   child: Container(
-                                  //     padding: EdgeInsets.only(left: 10),
-                                  //     width: parentWidth*.70,
-                                  //     //  height: parentHeight*.1,
-                                  //     child:  Column(
-                                  //       mainAxisAlignment: MainAxisAlignment.start,
-                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
-                                  //
-                                  //         SizedBox(height: 5,),
-                                  //         /*  Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Text("${(Item_list[index]['quantity'])}.00 ${Item_list[index]['unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //         ),
-                                  //         SizedBox(height: 5,),*/
-                                  //         Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Column(
-                                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                                  //             children: [
-                                  //               Row(
-                                  //                 crossAxisAlignment: CrossAxisAlignment.center,
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Column(
-                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //                     children: [
-                                  //                       Text("Basic",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //                       Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //                     ],
-                                  //                   ),
-                                  //
-                                  //                   SizedBox(width: 5,),
-                                  //                   Column(
-                                  //                     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //                     children: [
-                                  //                       Text("Net",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //                       Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //                     ],
-                                  //                   ),
-                                  //
-                                  //                 ],
-                                  //               ),
-                                  //               SizedBox(height: 5,),
-                                  //
-                                  //               Text("GST ${(product_list[index]['gst']).toStringAsFixed(2)}%  100.00",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                  //             ],
-                                  //           ),
-                                  //
-                                  //         ),
-                                  //         /*  SizedBox(height: 5,),
-                                  //         Container(
-                                  //           alignment: Alignment.centerLeft,
-                                  //           width: SizeConfig.screenWidth,
-                                  //           child:
-                                  //           Text(CommonWidget.getCurrencyFormat(Item_list[index]['amt']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                  //         ),*/
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
 
                                   Container(
                                       width: parentWidth*.1,
@@ -439,13 +366,12 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         },
       ),
     );
-
   }
 
   Container InvoiceInfo() {
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -453,7 +379,16 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          GetFranchiseeLayout(
+              titleIndicator:false,
+              title:  StringEn.FRANCHISE,
+              callback: (name){
+                setState(() {
+                  selectedCopyFranchiseeName=name!;
+                });
+              },
+              franchiseeName: selectedCopyFranchiseeName),
+          // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
           Padding(
             padding:  EdgeInsets.only(top: SizeConfig.screenHeight*.01),
             child: Row(
@@ -472,51 +407,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             ),
           ),
         ],
-      ),
-    );
-  }
-  /* widget for button layout */
-  Widget getButtonLayout() {
-    return Container(
-      width: 200,
-      child: ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(
-            CommonColor.THEME_COLOR)),
-        onPressed: () {
-
-          Navigator.pop(context);
-        },
-        child: Text(StringEn.SAVE,
-            style: button_text_style),
-      ),
-    );
-  }
-
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditProduct(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Product",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
       ),
     );
   }
@@ -548,344 +438,32 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         });
   }
 
-  /* Widget to get product rate list Layout */
-  SingleChildScrollView getProductRateListLayout() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowHeight: 50,
-        dividerThickness: 2,
-        horizontalMargin: 10,
-        dataTextStyle: item_regular_textStyle,
-        headingRowColor: MaterialStateColor.resolveWith((states) => CommonColor.DARK_BLUE),
-        headingTextStyle: item_heading_textStyle.copyWith(fontSize: 16,color: Colors.white,overflow: TextOverflow.clip),
-        decoration: BoxDecoration(border: Border.all(color: CommonColor.THEME_COLOR, width:0)),
-        showBottomBorder: true,
-        columns: [
-          DataColumn(
-            label: Container(
-              width: SizeConfig.screenWidth/4,
-              child: Text(
-                "Product Name",
-              ),
-            ),
-            numeric: false,
-            tooltip: "This is Product Name",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-
-              child: Text(
-                "Purchase Rate",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Product Rate",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-
-              child: Text(
-                "GST(%)",
-              ),
-            ),
-            numeric: true,
-            tooltip: "Product GST",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:SizeConfig.screenWidth/4,
-              child: Text(
-                "Net",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "Product Net",
-
-          ),
-          DataColumn(
-            label: Container(
-              width:50,
-              child: Text(
-                "Action",
-
-              ),
-            ),
-            numeric: true,
-            tooltip: "",
-
-          ),
-        ],
-        rows: product_list
-            .map(
-              (product) => DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4+50,
-                      child: Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditProduct(product);
-                            }
-                          }, icon: Icon(Icons.edit,color: Colors.green,size: 18,)),
-                          Container(
-                              width: SizeConfig.screenWidth/4,
-                              child: Text("${product['pname']}",overflow: TextOverflow.clip,)),
-
-                        ],
-                      )),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((product['rate']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: Text("${product['gst']}")),
-                ),
-                DataCell(
-                  Container(
-                      width: SizeConfig.screenWidth/4,
-                      child: Text("${((product['net']).toStringAsFixed(2))}")),
-                ),
-                DataCell(
-                  Container(
-                      width: 50,
-                      child: GestureDetector(
-                          onTap: (){
-                            product_list.remove(product);
-                            setState(() {
-                              product_list=product_list;
-                            });
-                          },
-                          child: FaIcon(FontAwesomeIcons.trash,color: Colors.red,))),
-                ),
-              ]),
-        ) .toList(),
-      ),
-    );
-  }
-
   /* Widget to get add Product Layout */
   Widget getApplicableFromLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,applicablefrom);
+    return GetDateLayout(
+        titleIndicator:false,
+        title:  StringEn.DATE ,
+        callback: (name){
           setState(() {
-            applicablefrom=date;
+            applicablefrom=name!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,applicablefrom) ;
-          setState(() {
-            applicablefrom=date;
-          });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(applicablefrom),
-              //  DateFormat('dd-MM-yyyy').format(applicablefrom),
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
-    );
+        },
+        applicablefrom: applicablefrom);
+
   }
 
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout(){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                    1.0;
-                return Transform(
-                  transform:
-                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: CategoryDialog(
-                      mListener: this,
-                    ),
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception('No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedProductCategory == "" ? StringEn.CATEGORY : selectedProductCategory,
-                style: item_regular_textStyle,),
-              FaIcon(FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8), size: 16,)
-            ],
-          )
-      ),
-    );
-  }
+    return  GetCategoryLayout(
+        titleIndicator:false,
+        title:  StringEn.CATEGORY ,
+        callback: (name){
+          setState(() {
+            selectedProductCategory=name!;
+          });
+        },
+        selectedProductCategory: selectedProductCategory);
 
-
-
-
-  /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * .005),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child:  GestureDetector(
-          onTap: (){
-            showGeneralDialog(
-                barrierColor: Colors.black.withOpacity(0.5),
-                transitionBuilder: (context, a1, a2, widget) {
-                  final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                  return Transform(
-                    transform:
-                    Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                    child: Opacity(
-                      opacity: a1.value,
-                      child:FranchiseeDialog(
-                        mListener: this,
-                      ),
-                    ),
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 200),
-                barrierDismissible: true,
-                barrierLabel: '',
-                context: context,
-                pageBuilder: (context, animation2, animation1) {
-                  throw Exception('No widget to return in pageBuilder');
-                });
-          },
-          onDoubleTap: (){},
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedFranchiseeName == "" ? StringEn.FRANCHISEE_NAME : selectedFranchiseeName,
-                  style: selectedFranchiseeName == ""
-                      ? hint_textfield_Style
-                      : text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: parentHeight * .03,
-                  color: /*pollName == ""
-                          ? CommonColor.HINT_TEXT
-                          :*/
-                  CommonColor.BLACK_COLOR,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
-
-
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
-  }
-
-
-  @override
-  selectCategory(String id, String name) {
-    // TODO: implement selectCategory
-    setState(() {
-      selectedProductCategory=name;
-    });
   }
 
   String TotalAmount="0.00";
@@ -928,17 +506,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         product_list = productList;
       });
     }
-   await calculateTotalAmt();
-  }
-
-
-
-  @override
-  selectedFranchiseeToCopySaleRateProduct(String id, String name) {
-    // TODO: implement selectedFranchiseeToCopyProduct
-    setState(() {
-      selectedCopyFranchiseeName=name;
-    });
+    await calculateTotalAmt();
   }
 
 

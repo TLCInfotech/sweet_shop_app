@@ -2,20 +2,16 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
-
+import 'package:sweet_shop_app/presentation/common_widget/get_country_layout.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_district_layout.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_state_value.dart';
+import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class CompanyCreate extends StatefulWidget {
@@ -25,14 +21,8 @@ class CompanyCreate extends StatefulWidget {
   State<CompanyCreate> createState() => _CompanyCreateState();
 }
 
-class _CompanyCreateState extends State<CompanyCreate>
-    with
-        SingleTickerProviderStateMixin,
-        ImagePickerDialogPostInterface,
-        ImagePickerListener,
-        StateDialogInterface,
-        CountryDialogInterface,
-        ImagePickerDialogInterface {
+class _CompanyCreateState extends State<CompanyCreate> {
+
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
 
@@ -72,10 +62,7 @@ class _CompanyCreateState extends State<CompanyCreate>
   final cinNoController = TextEditingController();
   final _adharoFocus = FocusNode();
   final adharNoController = TextEditingController();
-
-  late ImagePickerHandler imagePicker;
-  late AnimationController _Controller;
-  File? picImage;
+ File? picImage;
   String countryName = "";
   String countryId = "";
   String stateName = "";
@@ -83,19 +70,6 @@ class _CompanyCreateState extends State<CompanyCreate>
   Color currentColor = CommonColor.THEME_COLOR;
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _Controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    imagePicker = ImagePickerHandler(this, _Controller);
-    imagePicker.setListener(this);
-    imagePicker.init(context);
-  }
 
   File? adharFile;
   File? panFile;
@@ -163,92 +137,15 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   // Pick Profile photo
   Widget getImageLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            picImage == null
-                ? Container(
-                    height: parentHeight * .25,
-                    width: parentHeight * .25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/placeholder.png'), // Replace with your image asset path
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                  )
-                : Container(
-                    height: parentHeight * .25,
-                    width: parentHeight * .25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        image: DecorationImage(
-                          image: FileImage(picImage!),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-            GestureDetector(
-              onTap: () {
-                if (mounted) {
-                  setState(() {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    showCupertinoDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (context) {
-                        return AnimatedOpacity(
-                          opacity: opacityLevel,
-                          duration: const Duration(seconds: 2),
-                          child: ImagePickerDialogPost(
-                            imagePicker,
-                            _Controller,
-                            context,
-                            this,
-                            isOpenFrom: '',
-                          ),
-                        );
-                      },
-                    );
-                  });
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(left: parentWidth * .08),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      height: parentHeight * .05,
-                      width: parentHeight * .05,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors
-                            .white, // Change the color to your desired fill color
-                      ),
-                    ),
-                    Container(
-                        height: parentHeight * .03,
-                        width: parentHeight * .03,
-                        child: const Image(
-                          image: AssetImage("assets/images/edit_post.png"),
-                          fit: BoxFit.contain,
-                        ))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+    return GetSingleImage(
+        height: parentHeight * .25,
+        width: parentHeight * .25,
+        picImage: picImage,
+        callbackFile: (file){
+          setState(() {
+            picImage=file;
+          });
+        }
     );
   }
 
@@ -384,6 +281,12 @@ class _CompanyCreateState extends State<CompanyCreate>
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.COMPANY_NAME;
+          }
+          return null;
+        },
       controller: nameController,
       focuscontroller: _nameFocus,
       focusnext: _contactPersonFocus,
@@ -397,69 +300,17 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            StringEn.COMPANY_NAME,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _nameFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: StringEn.COMPANY_NAME,
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: nameController,
-                    onEditingComplete: () {
-                      _nameFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_contactPersonFocus);
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   /* Widget for contact person text from field layout */
   Widget getContactPersonLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER +StringEn.FRANCHISEE_CONTACT_PERSON;
+          }
+          return null;
+        },
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
@@ -473,69 +324,17 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-    //   Padding(
-    //   padding: EdgeInsets.only(top: parentHeight * 0.02),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       const Row(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Text(
-    //             StringEn.FRANCHISEE_CONTACT_PERSON,
-    //             style: page_heading_textStyle,
-    //           ),
-    //         ],
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.only(top: parentHeight * .005),
-    //         child: Container(
-    //           height: parentHeight * .055,
-    //           alignment: Alignment.center,
-    //           decoration: BoxDecoration(
-    //             color: CommonColor.WHITE_COLOR,
-    //             borderRadius: BorderRadius.circular(4),
-    //             boxShadow: [
-    //               BoxShadow(
-    //                 offset: Offset(0, 1),
-    //                 blurRadius: 5,
-    //                 color: Colors.black.withOpacity(0.1),
-    //               ),
-    //             ],
-    //           ),
-    //           child: TextFormField(
-    //             textAlignVertical: TextAlignVertical.center,
-    //             textCapitalization: TextCapitalization.words,
-    //             focusNode: _contactPersonFocus,
-    //             keyboardType: TextInputType.text,
-    //             textInputAction: TextInputAction.next,
-    //             cursorColor: CommonColor.BLACK_COLOR,
-    //             decoration: InputDecoration(
-    //               contentPadding: EdgeInsets.only(
-    //                   left: parentWidth * .04, right: parentWidth * .02),
-    //               border: InputBorder.none,
-    //               counterText: '',
-    //               isDense: true,
-    //               hintText: StringEn.FRANCHISEE_CONTACT_PERSON,
-    //               hintStyle: hint_textfield_Style,
-    //             ),
-    //             controller: contactPersonController,
-    //             onEditingComplete: () {
-    //               _contactPersonFocus.unfocus();
-    //               FocusScope.of(context).requestFocus(_addressFocus);
-    //             },
-    //             style: text_field_textStyle,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   /* Widget for address text from field layout */
   Widget getAddressLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.ADDRESS;
+          }
+          return null;
+        },
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
@@ -548,73 +347,6 @@ class _CompanyCreateState extends State<CompanyCreate>
       textInput: TextInputType.text,
       maxlines: 6,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
-    );
-
-    Padding(
-      padding: EdgeInsets.only(
-        top: parentHeight * 0.02,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.ADDRESS,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .135,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .01),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.sentences,
-                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
-                      focusNode: _addressFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      maxLines: 6,
-                      maxLength: 500,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: parentWidth * .04),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.ADDRESS,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: addressController,
-                      onEditingComplete: () {
-                        _addressFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_districtCity);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -647,7 +379,14 @@ class _CompanyCreateState extends State<CompanyCreate>
 
   /* Widget for contact no  text from field layout */
   Widget getContactNoLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return
+      SingleLineEditableTextFormField(
+        validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.CONTACT_NO;
+          }
+          return null;
+        },
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
@@ -661,76 +400,21 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CONTACT_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _contactFocus,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.CONTACT_NO,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: contactController,
-                      onEditingComplete: () {
-                        _contactFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_emailFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   /* Widget for  email  text from field layout */
   Widget getEmilLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.EMAIL;
+          }
+          return null;
+        },
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
-      title: StringEn.ADDRESS,
+      title: StringEn.EMAIL,
       callbackOnchage: (value) {
         setState(() {
           emailController.text = value;
@@ -741,73 +425,17 @@ class _CompanyCreateState extends State<CompanyCreate>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z  @ .]')),
     );
 
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.EMAIL,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z]'))
-                      ],
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _emailFocus,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.EMAIL,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: emailController,
-                      onEditingComplete: () {
-                        _emailFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_addTwoFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
 /* Widget for address two from field layout */
   Widget getAddressTwoLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.ADDRESS_TWO;
+          }
+          return null;
+        },
       controller: addTwoController,
       focuscontroller: _addTwoFocus,
       focusnext: _defaultBankFocus,
@@ -822,77 +450,17 @@ class _CompanyCreateState extends State<CompanyCreate>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
 
-    Padding(
-      padding: EdgeInsets.only(
-        top: parentHeight * 0.02,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.ADDRESS_TWO,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .135,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .01),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.sentences,
-                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
-                      focusNode: _addTwoFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      maxLines: 6,
-                      maxLength: 500,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: parentWidth * .04),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.ADDRESS_TWO,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: addTwoController,
-                      onEditingComplete: () {
-                        _addTwoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_adharoFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   /* Widget for cin no  text from field layout */
   Widget getCINNoLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.CIN_NO;
+          }
+          return null;
+        },
       controller: cinNoController,
       focuscontroller: _cinNoFocus,
       focusnext: _jurisdictionFocus,
@@ -906,74 +474,18 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.CIN_NO,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
-                      ],
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _cinNoFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: "Enter cin no",
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: cinNoController,
-                      onEditingComplete: () {
-                        _cinNoFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_jurisdictionFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+
   }
 
   /* Widget for JURISDICTION text from field layout */
   Widget getJURISDICTIONLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.JURISDICTION;
+          }
+          return null;
+        },
       controller: jurisdictionController,
       focuscontroller: _jurisdictionFocus,
       focusnext: _invoiceFocus,
@@ -987,71 +499,18 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.JURISDICTION,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _jurisdictionFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.JURISDICTION,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: jurisdictionController,
-                      onEditingComplete: () {
-                        _jurisdictionFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_defaultBankFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+
   }
 
   /* Widget for default bank text from field layout */
   Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.DEFAULT_BANK;
+          }
+          return null;
+        },
       controller: defaultBankController,
       focuscontroller: _defaultBankFocus,
       focusnext: _extNameFocus,
@@ -1065,74 +524,18 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[ A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.DEFAULT_BANK,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _defaultBankFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: StringEn.DEFAULT_BANK,
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: defaultBankController,
-                    onEditingComplete: () {
-                      _defaultBankFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_extNameFocus);
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+
   }
 
   /* Widget for ext name text from field layout */
   Widget getExtNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.EXT_NAME;
+          }
+          return null;
+        },
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
@@ -1146,74 +549,18 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                StringEn.EXT_NAME,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: _extNameFocus,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    cursorColor: CommonColor.BLACK_COLOR,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                          left: parentWidth * .04, right: parentWidth * .02),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      hintText: StringEn.EXT_NAME,
-                      hintStyle: hint_textfield_Style,
-                    ),
-                    controller: extNameController,
-                    onEditingComplete: () {
-                      _extNameFocus.unfocus();
-                      FocusScope.of(context).requestFocus(_invoiceFocus);
-                    },
-                    style: text_field_textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+
   }
 
 /* Widget for invoice declaration text from field layout */
   Widget getInvoiceDelcelrationLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER+StringEn.INVOICE_DECLERATION;
+          }
+          return null;
+        },
       controller: invoiceController,
       focuscontroller: _invoiceFocus,
       focusnext: null,
@@ -1227,461 +574,68 @@ class _CompanyCreateState extends State<CompanyCreate>
       maxlines: 6,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-    Padding(
-      padding: EdgeInsets.only(
-        top: parentHeight * 0.02,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            StringEn.INVOICE_DECLERATION,
-            style: page_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  height: parentHeight * .15,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: parentHeight * .01),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.sentences,
-                      scrollPadding: EdgeInsets.only(bottom: parentHeight * .2),
-                      focusNode: _invoiceFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      maxLines: 6,
-                      maxLength: 500,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: parentWidth * .04),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.INVOICE_DECLERATION,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: invoiceController,
-                      onEditingComplete: () {
-                        _invoiceFocus.unfocus();
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
-  //common widget to display file
-  Stack getFileLayout(File fileName) {
-    return Stack(
-      children: [
-        fileName.uri.toString().contains(".pdf")
-            ? Container(
-                height: 100,
-                width: SizeConfig.screenWidth,
-                alignment: Alignment.center,
-                margin:
-                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FaIcon(
-                      FontAwesomeIcons.filePdf,
-                      color: Colors.redAccent,
-                    ),
-                    Text(
-                      fileName.uri.toString().split('/').last,
-                      style: item_heading_textStyle,
-                    ),
-                  ],
-                ))
-            : Container(
-                height: 100,
-                margin:
-                    EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                    image: DecorationImage(
-                      image: FileImage(fileName),
-                      fit: BoxFit.cover,
-                    )),
-              ),
-        Positioned(
-            right: 1,
-            top: 1,
-            child: IconButton(
-                onPressed: () {
-                  if (fileName == adharFile) {
-                    setState(() {
-                      adharFile = null;
-                    });
-                  } else if (fileName == panFile) {
-                    setState(() {
-                      panFile = null;
-                    });
-                  } else if (fileName == gstFile) {
-                    setState(() {
-                      gstFile = null;
-                    });
-                  }
-                },
-                icon: Icon(
-                  Icons.remove_circle_sharp,
-                  color: Colors.red,
-                )))
-      ],
-    );
-  }
 
   /* Widget for distric text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.DISTRICTCITY,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _districtCity,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.DISTRICTCITY,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: districtController,
-                      onEditingComplete: () {
-                        _districtCity.unfocus();
-                        FocusScope.of(context).requestFocus(_pinCodeFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return GetDistrictLayout(
+        title:  StringEn.DISTRICTCITY,
+        callback: (name){
+          setState(() {
+            districtController.text=name!;
+          });
+        },
+        districtName: districtController.text);
   }
 
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.STATE,
-              style: page_heading_textStyle,
-            ),
-            GestureDetector(
-              onTap: () {
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue =
-                          Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform: Matrix4.translationValues(
-                            0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: StateDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception('No widget to return in pageBuilder');
-                    });
-              },
-              onDoubleTap: () {},
-              child: Padding(
-                padding: EdgeInsets.only(top: parentHeight * .005),
-                child: Container(
-                  height: parentHeight * .055,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          stateName == "" ? StringEn.SELECT_STATE : stateName,
-                          style: stateName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                              CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return GetStateLayout(
+        title:  StringEn.STATE,
+        callback: (name){
+          setState(() {
+            stateName=name!;
+          });
+        },
+        stateName: stateName);
   }
 
   /* Widget for pin code text from field layout */
   Widget getPinCodeLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.PIN_CODE,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: parentHeight * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textCapitalization: TextCapitalization.words,
-                      focusNode: _pinCodeFocus,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: CommonColor.BLACK_COLOR,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: parentWidth * .04, right: parentWidth * .02),
-                        border: InputBorder.none,
-                        counterText: '',
-                        isDense: true,
-                        hintText: StringEn.PIN_CODE,
-                        hintStyle: hint_textfield_Style,
-                      ),
-                      controller: pinCodeController,
-                      onEditingComplete: () {
-                        _pinCodeFocus.unfocus();
-                        FocusScope.of(context).requestFocus(_contactFocus);
-                      },
-                      style: text_field_textStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SingleLineEditableTextFormField(
+      controller: pinCodeController,
+      focuscontroller: _pinCodeFocus,
+      focusnext: _contactFocus,
+      title: StringEn.PIN_CODE,
+      callbackOnchage: (value) {
+        setState(() {
+          pinCodeController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return "Enter Contact Person";
+        }
+        return null;
+      },
+      parentWidth: (SizeConfig.screenWidth ),
     );
   }
 
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        width: parentWidth * .4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              StringEn.COUNTRY,
-              style: page_heading_textStyle,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .005),
-              child: Container(
-                height: parentHeight * .055,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    showGeneralDialog(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        transitionBuilder: (context, a1, a2, widget) {
-                          final curvedValue =
-                              Curves.easeInOutBack.transform(a1.value) - 1.0;
-                          return Transform(
-                            transform: Matrix4.translationValues(
-                                0.0, curvedValue * 200, 0.0),
-                            child: Opacity(
-                              opacity: a1.value,
-                              child: CountryDialog(
-                                mListener: this,
-                              ),
-                            ),
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        barrierLabel: '',
-                        context: context,
-                        pageBuilder: (context, animation2, animation1) {
-                          throw Exception('No widget to return in pageBuilder');
-                        });
-                  },
-                  onDoubleTap: () {},
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          countryName == ""
-                              ? StringEn.SELECT_COUNTRY
-                              : countryName,
-                          style: countryName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: parentHeight * .03,
-                          color: /*pollName == ""
-                                ? CommonColor.HINT_TEXT
-                                :*/
-                              CommonColor.BLACK_COLOR,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return GetCountryLayout(
+        title:  StringEn.COUNTRY,
+        callback: (name){
+          setState(() {
+            countryName=name!;
+          });
+        },
+        countryName: countryName);
   }
 
   /* Widget for navigate to next screen button layout */
@@ -1739,12 +693,6 @@ class _CompanyCreateState extends State<CompanyCreate>
     }
   }
 
-  @override
-  selectState(String id, String name) {
-    setState(() {
-      stateName = name;
-    });
-  }
 
   @override
   selectCountry(String id, String name) {

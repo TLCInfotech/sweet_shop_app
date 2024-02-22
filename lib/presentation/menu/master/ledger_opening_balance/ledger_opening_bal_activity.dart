@@ -6,6 +6,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../common_widget/get_date_layout.dart';
 import 'create_ledger_opening_bal_activity.dart';
 
 class LedgerOpeningBal extends StatefulWidget {
@@ -63,6 +64,9 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getPurchaseDateLayout(),
+            const SizedBox(
+              height: 5,
+            ),
             getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
@@ -76,50 +80,17 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
+    return GetDateLayout(
+        titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
           setState(() {
-            invoiceDate=date;
+            invoiceDate=date!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }
-      },
-      child: Container(
-          height: 40,
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(invoiceDate),
-                //DateFormat('dd-MM-yyyy').format(invoiceDate),
-                style: page_heading_textStyle,),
-              const FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        },
+        applicablefrom: invoiceDate
     );
+
   }
 
   Widget getTotalCountAndAmount() {

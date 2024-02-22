@@ -12,7 +12,7 @@ class StringEn{
   static const REPORT = "Report";
   static const USER = "User";
   static const UNIT = "Unit";
-
+  static const SELECT_DISTRICT = "Select Dist./city";
   // Category
   static const CATEGORY_TITLE="Item Category";
   static const CATEGORY = "Category";
@@ -119,18 +119,20 @@ class StringEn{
   static const WRKING_DAYS = "Working Days";
   static const RESET_PASSWORD = "Reset Password ";
   static const ACTIVE = "Active";
-
+  static const ENTER="Enter ";
+  static const VALID="Valid ";
 
   //sale rate
   static const APPLICABLE_FROM="Applicable From";
   static const COPY_FROM_FRANCHISEE = "Copy From Franchisee";
   static const PRODUCTS="Products ";
   static const ADDPRODUCT="Add Product";
-  static const GST="GST";
+  static const GST="GST %";
   static const NET="Net Amount";
   static const NET_RATE="Net Rate";
   static const SALE_RATE="Basic Rate";
   static const PURCHASE_RATE="Purchase Rate";
+
 
 //expense
 

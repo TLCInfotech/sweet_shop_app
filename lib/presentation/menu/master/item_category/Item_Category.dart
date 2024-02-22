@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/size_config.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/category_dialog.dart';
 
 
@@ -15,7 +18,7 @@ class ItemCategoryActivity extends StatefulWidget {
   State<ItemCategoryActivity> createState() => _ItemCategoryActivityState();
 }
 
-class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with CategoryDialogInterface{
+class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   TextEditingController categoryName = TextEditingController();
 
   String parentCategory="";
@@ -114,7 +117,6 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
                                 ),
                               ),
                             ),
-                            getFieldTitleLayout(StringEn.CATEGORY),
                             getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                             getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
@@ -144,135 +146,41 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
-    return Padding(
-      padding: EdgeInsets.only(
-        top: parentHeight * .015,),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            StringEn.PARENT_CATEGORY,
-            style: page_heading_textStyle,
-          ),
-          GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              if(mounted){
-
-              }
-              if (context != null) {
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform:
-                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: CategoryDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception('No widget to return in pageBuilder');
-                    });
-              }
-            },
-            onDoubleTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: parentHeight * .01,
-              ),
-              child: Stack(
-                  alignment: Alignment.centerRight,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      height: parentHeight * .058,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              parentCategory==""?"Select Parent category":parentCategory,
-                              style:parentCategory == ""? hint_textfield_Style:
-                              text_field_textStyle,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              // textScaleFactor: 1.02,
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: parentHeight * .03,
-                              color: /*pollName == ""
-                                  ? CommonColor.HINT_TEXT
-                                  :*/ CommonColor.BLACK_COLOR,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  ]),
-            ),
-          ),
-        ],
-      ),
+    return GetCategoryLayout(
+        title:   StringEn.PARENT_CATEGORY,
+        callback: (name){
+          setState(() {
+            parentCategory=name!;
+          });
+    },
+        selectedProductCategory: parentCategory
     );
+
   }
 
   /* widget for Category layout */
   Widget getCategoryLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: categoryName,
-        decoration: textfield_decoration.copyWith(
-            hintText: StringEn.CATEGORY,
-            suffix: Text("%")
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Category";
-          }
-          return null;
-        }),
-
-      ),
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.CATEGORY;
+        }
+        return null;
+      },
+      controller: categoryName,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.CATEGORY,
+      callbackOnchage: (value) {
+        setState(() {
+          categoryName.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z ]')),
     );
+
   }
 
   /* widget for title layout */
@@ -428,14 +336,5 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity>  with Categ
           },
         ));
 
-  }
-  @override
-  selectCategory(String id, String name) {
-    // TODO: implement selectCategory
-    if(mounted){
-      setState(() {
-        parentCategory=name;
-      });
-    }
   }
 }

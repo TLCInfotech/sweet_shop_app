@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -6,6 +7,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../../core/colors.dart';
 import '../../../../core/size_config.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 
 
 class UnitsActivity extends StatefulWidget {
@@ -180,37 +182,26 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               ),
                             ),
 
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(top: 10, bottom: 10,),
-                              child: Text(
-                                StringEn.MEASURING_UNIT,
-                                style: page_heading_textStyle,
-                              ),
-                            ),
-                            Container(
-                              height: SizeConfig.screenHeight * .055,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: CommonColor.WHITE_COLOR,
-                                borderRadius: BorderRadius.circular(4),
-                                boxShadow: [
-                                  BoxShadow(
-                                    offset: Offset(0, 1),
-                                    blurRadius: 5,
-                                    color: Colors.black.withOpacity(0.1),
-                                  ),
-                                ],
-                              ),
-                              child: TextFormField(
-                                controller: unitName,
-                                decoration: textfield_decoration.copyWith(
-                                  hintText:StringEn.MEASURING_UNIT,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                ),
-                              ),
-                            ),
+                        SingleLineEditableTextFormField(
+                          validation: (value) {
+                            if (value!.isEmpty) {
+                              return StringEn.ENTER+StringEn.MEASURING_UNIT;
+                            }
+                            return null;
+                          },
+                          controller: unitName,
+                          focuscontroller: null,
+                          focusnext: null,
+                          title: StringEn.MEASURING_UNIT,
+                          callbackOnchage: (value) {
+                            setState(() {
+                              unitName.text = value;
+                            });
+                          },
+                          textInput: TextInputType.text,
+                          maxlines: 1,
+                          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z]')),
+                        )
 
                           ],
                         ),

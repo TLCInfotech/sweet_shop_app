@@ -19,8 +19,14 @@ class SingleLineEditableTextFormField extends StatefulWidget{
   final textInput;
   final maxlines;
   final format;
-  
-  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format});
+  final parentWidth;
+  final maxlength;
+  final String? Function(dynamic value) validation;
+  // final Function(String) validation;
+  final suffix;
+  final readOnly;
+
+  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly, });
 
   @override
   State<SingleLineEditableTextFormField> createState() => _SingleLineEditableTextFormFieldState();
@@ -37,7 +43,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
         children: [
           Text(
             widget.title,
-            style: page_heading_textStyle,
+            style: item_heading_textStyle,
           ),
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
@@ -45,6 +51,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
               clipBehavior: Clip.none,
               children: [
                 Container(
+                  width: widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
                   height: widget.maxlines>1? (SizeConfig.screenHeight) * .15:(SizeConfig.screenHeight) * .055,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
@@ -59,12 +66,15 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                     ],
                   ),
                   child: TextFormField(
+                    onChanged: (value){widget.callbackOnchage(value);},
+                    readOnly: widget.readOnly!=false?false:true,
                     inputFormatters:<TextInputFormatter>[widget.format],
                     textAlignVertical: TextAlignVertical.center,
                     textCapitalization: TextCapitalization.words,
                     focusNode: widget.focuscontroller,
                     keyboardType:widget.textInput,
                     maxLines: widget.maxlines,
+                    maxLength: widget.maxlength==null?500:widget.maxlength,
                     scrollPadding: EdgeInsets.only(bottom: (SizeConfig.screenHeight) * .2),
                     textInputAction: TextInputAction.next,
                     cursorColor: CommonColor.BLACK_COLOR,
@@ -76,12 +86,18 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                       isDense: true,
                       hintText: widget.title,
                       hintStyle: hint_textfield_Style,
+
+                      suffix: widget.suffix!=null?widget.suffix:Container(height: 2,width: 2,),
                     ),
                     controller: widget.controller,
+                    validator: widget.validation,
                     onEditingComplete: () {
-                      widget.focuscontroller.unfocus();
-                      FocusScope.of(context).requestFocus(widget.focusnext);
+                      if(widget.focuscontroller!=null) {
+                        widget.focuscontroller.unfocus();
+                        FocusScope.of(context).requestFocus(widget.focusnext);
+                      }
                     },
+
                     style: text_field_textStyle,
                   ),
                 ),

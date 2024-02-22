@@ -1,10 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_amt_type.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
@@ -154,90 +158,39 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
 
 
   Widget getAmount(double parentHeight, double parentWidth){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        getFieldTitleLayout(StringEn.AMOUNT),
-        Container(
-          height: parentHeight * .055,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            controller: amount,
-            decoration: textfield_decoration.copyWith(
-                hintText: StringEn.AMOUNT,
-            ),
-            validator: ((value) {
-              if (value!.isEmpty) {
-                return "Enter Amt";
-              }
-              return null;
-            }),
-            onChanged: (value){
-
-            },
-            onTapOutside: (event) {
-
-            },
-          ),
-        )
-
-      ],
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.AMOUNT;
+        }
+        return null;
+      },
+      controller: amount,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.AMOUNT,
+      callbackOnchage: (value) {
+        setState(() {
+          amount.text = value;
+        });
+      },
+      textInput: TextInputType.numberWithOptions(decimal: true),
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
     );
+
   }
 
   Widget getAmtType(double parentHeight, double parentWidth){
-    return    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        getFieldTitleLayout(StringEn.Amount_TYPE),
-        Container(
-          height: parentHeight * .055,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.WHITE_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: DropdownButton<dynamic>(
-            hint: Text(
-              StringEn.Amount_TYPE, style: hint_textfield_Style,),
-            underline: SizedBox(),
-            isExpanded: true,
-            value: selectedType,
-            onChanged: (newValue) {
-              setState(() {
-                selectedType = newValue!;
-              });
-            },
-            items: AmountType.map((dynamic limit) {
-              return DropdownMenuItem<dynamic>(
-                value: limit,
-                child: Text(limit.toString(), style: item_regular_textStyle),
-              );
-            }).toList(),
-          ),
-        )
-      ],
-    );
+    return GetAmountTypeCrDr(
+        title: StringEn.Amount_TYPE,
+        callback: (type){
+          setState(() {
+            selectedType=type;
+          });
+        },
+        selectedType: selectedType);
+
   }
 
 

@@ -1,10 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_diable_textformfield.dart';
+
+import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditItemOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
@@ -88,18 +92,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                     getFieldTitleLayout(StringEn.ITEM_NAME),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getFieldTitleLayout(StringEn.QUANTITY),
+                    // getFieldTitleLayout(StringEn.QUANTITY),
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                      getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    //
-                    // getItemDiscountandAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    //
-                    // getTaxableAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    //
-                    // getITemgstAndGstAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    //
-                    // getItemNetRateAndNetAmtLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
                     SizedBox(height: 10,)
                   ],
                 ),
@@ -116,138 +113,47 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   /* widget for product rate layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight * .055,
-      // width: (parentWidth*0.8)/2,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: quantity,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.QUANTITY,
-          suffix: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: Text("${unit.text}",style: item_regular_textStyle,)),
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Item Quantity";
-          }
-          return null;
-        }),
-        onChanged: (value)async{
-          await calculateRates();
-        },
-        onTapOutside: (event) {
-
-        },
-      ),
+    return SingleLineEditableTextFormField(
+      suffix: Text("${unit.text}"),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.QUANTITY;
+        }
+        return null;
+      },
+      controller: quantity,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.QUANTITY,
+      callbackOnchage: (value)async {
+        setState(() {
+          quantity.text = value;
+        });
+        await calculateRates();
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
     );
+
+
   }
 
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.RATE),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: rate,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.RATE,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Rate";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.RATE,
+            controller: rate
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.AMOUNT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: amount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.AMOUNT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.AMOUNT,
+            controller: amount
+        ),
 
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        )
 
       ],
     );

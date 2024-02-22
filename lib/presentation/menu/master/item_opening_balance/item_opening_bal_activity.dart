@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 
 import 'create_item_opening_bal_activity.dart';
 
@@ -66,11 +65,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             )));
           }),
       body: Container(
-        margin: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getPurchaseDateLayout(),
+            const SizedBox(
+              height: 5,
+            ),
             getTotalCountAndAmount(),
             const SizedBox(
               height: .5,
@@ -116,52 +118,17 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GestureDetector(
-      onTap: () async{
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (Platform.isIOS) {
-          var date= await CommonWidget.startDate(context,invoiceDate);
+    return GetDateLayout(
+      titleIndicator: false,
+        title: StringEn.DATE,
+        callback: (date){
           setState(() {
-            invoiceDate=date;
+            invoiceDate=date!;
           });
-          // startDateIOS(context);
-        } else if (Platform.isAndroid) {
-          var date= await CommonWidget.startDate(context,invoiceDate) ;
-          setState(() {
-            invoiceDate=date;
-          });
-        }
-      },
-      child: Container(
-          height: 40,
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: Colors.white,
-
-              // border: Border.all(color: Colors.grey.withOpacity(0.5))
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),]
-
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CommonWidget.getDateLayout(invoiceDate),
-                //DateFormat('dd-MM-yyyy').format(invoiceDate),
-                style: page_heading_textStyle,),
-              const FaIcon(FontAwesomeIcons.calendar,
-                color: Colors.black87, size: 16,)
-            ],
-          )
-      ),
+        },
+        applicablefrom: invoiceDate
     );
+
   }
 
   /* widget for button layout */
