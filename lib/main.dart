@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'presentation/menu/master/item_category/Item_Category.dart';
 import 'presentation/menu/master/unit/Units.dart';
 
@@ -25,7 +26,26 @@ class MyApp extends StatelessWidget {
       title: 'SWEETSHOP',
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
+      supportedLocales: const [
+        Locale( 'en' , '' ),
+        Locale( 'de' , '' ),
+      ],
 
+      localizationsDelegates: const [
+        ApplicationLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocaleLanguage in supportedLocales) {
+          if (supportedLocaleLanguage.languageCode == locale!.languageCode &&
+              supportedLocaleLanguage.countryCode == locale.countryCode) {
+            return supportedLocaleLanguage;
+          }
+        }
+        return supportedLocales.first;
+      },
 
       builder: (context, child) {
         return MediaQuery(
