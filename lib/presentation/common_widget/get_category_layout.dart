@@ -102,7 +102,7 @@ class _GetCategoryLayoutState extends State<GetCategoryLayout> with SingleTicker
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.selectedProductCategory == "" ? StringEn.CATEGORY : widget.selectedProductCategory,
+                        Text(widget.selectedProductCategory == "" ? widget.title : widget.selectedProductCategory,
                           style: item_regular_textStyle,),
                         FaIcon(FontAwesomeIcons.caretDown,
                           color: Colors.black87.withOpacity(0.8), size: 16,)

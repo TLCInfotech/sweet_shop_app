@@ -38,7 +38,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
         children: [
          widget.titleIndicator!=false? Text(
             widget.title,
-            style: page_heading_textStyle,
+            style: item_heading_textStyle,
           ):Container(),
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
