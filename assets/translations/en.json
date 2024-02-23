@@ -157,7 +157,7 @@
   "item_purchased" : "Item Purchased",
   "item_detail" : "Item Detail",
   "quantity" : "Quantity",
-  "disc_percent" : "Disc.(%)",
+  "disc_percent" : "Disc. %",
   "ledger_name" : "Ledger Name",
   "amount" : "Amount",
   "narration" : "Narration",
@@ -177,7 +177,6 @@
   "total_invoice" : "Total Invoice",
   "item_opening_balance" : "Item Opening Balance",
   "ledger_opening_balance" : "Ledger Opening Balance",
-  "gst_percent" : "GST(%)",
   "action" : "Action",
   "receipt_report" : "Receipt Report",
   "payment_report" : "Payment Report",
@@ -234,7 +233,8 @@
   "ledger_new": "Ledger - New",
   "sale_rate": "Sale Rate",
   "tax_rate": "Tax Rate ",
-  "valid": "Valid"
+  "valid": "Valid",
+  "gst_percent": "GST %"
 
 }
 
