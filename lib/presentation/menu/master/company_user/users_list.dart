@@ -6,6 +6,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
 
+import '../../../../core/localss/application_localizations.dart';
+
 
 class UsersList extends StatefulWidget {
   const UsersList({super.key});
@@ -38,7 +40,7 @@ class _UsersListState extends State<UsersList> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.USER,
+                ApplicationLocalizations.of(context)!.translate("user")!,
                 style: appbar_text_style,),
             ),
           ),

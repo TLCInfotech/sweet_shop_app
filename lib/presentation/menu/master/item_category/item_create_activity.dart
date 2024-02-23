@@ -16,6 +16,7 @@ import 'package:sweet_shop_app/presentation/common_widget/get_unit_layout.dart';
 import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/measuring_unit_dialog.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class ItemCreateActivity extends StatefulWidget {
@@ -116,8 +117,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.CREATE_ITEM,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("create_item")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -198,7 +199,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           ),
         ),
         Text(
-          "Create Item",
+          ApplicationLocalizations.of(context)!.translate("create_item")!,
           style: TextStyle(
             fontFamily: "Montserrat_Bold",
             fontSize: SizeConfig.blockSizeHorizontal * 5.0,
@@ -219,7 +220,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.POST,
+                  ApplicationLocalizations.of(context)!.translate("post")!,
                   style: TextStyle(
                     color: CommonColor.BLACK_COLOR,
                     fontSize: SizeConfig.blockSizeHorizontal * 4.3,
@@ -273,7 +274,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 children: [
                   getImageLayout(parentHeight, parentWidth),
                   SizedBox(height: 20,),
-                  getFieldTitleLayout(StringEn.BASIC_INFO),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!),
                   Container(
 
                     padding: EdgeInsets.all(10),
@@ -313,14 +314,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.WRKING_DAYS;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("working_days")!;
         }
         return null;
       },
       controller: itemNameController,
       focuscontroller: _itemNameFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.ITEM_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callbackOnchage: (value) {
         setState(() {
           itemNameController.text = value;
@@ -337,7 +338,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
-        title: StringEn.CATEGORY,
+        title: ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (value){
           setState(() {
             categoryName=value!;
@@ -354,7 +355,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return GetUnitLayout(
       parentWidth: (SizeConfig.screenWidth),
-        title: StringEn.MEASURING_UNIT,
+        title:ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
         callback: (value){
           setState(() {
             measuringUnit=value!;
@@ -376,7 +377,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
           GetUnitLayout(
           parentWidth:parentWidth * .25,
-        title: StringEn.UNIT_TWO,
+        title: ApplicationLocalizations.of(context)!.translate("unit_two")!,
         callback: (value){
           setState(() {
             unitTwoName=value!;
@@ -413,7 +414,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 border: InputBorder.none,
                 counterText: '',
                 isDense: true,
-                hintText: "Enter a item name",
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
               // controller: itemNameController,
@@ -467,7 +468,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 border: InputBorder.none,
                 counterText: '',
                 isDense: true,
-                hintText: "Enter a item name",
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
               //controller: itemNameController,
@@ -493,7 +494,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
           GetUnitLayout(
               parentWidth:parentWidth * .25,
-              title: StringEn.UNIT_THREE,
+              title: ApplicationLocalizations.of(context)!.translate("unit_three")!,
               callback: (value){
                 setState(() {
                   unitThreeName=value!;
@@ -530,7 +531,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 border: InputBorder.none,
                 counterText: '',
                 isDense: true,
-                hintText: "Enter a item name",
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
               // controller: itemNameController,
@@ -584,7 +585,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 border: InputBorder.none,
                 counterText: '',
                 isDense: true,
-                hintText: "Enter a item name",
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
               //controller: itemNameController,
@@ -605,14 +606,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.MAX_STOCK;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("max_stock")!;
         }
         return null;
       },
       controller: maxController,
       focuscontroller: _maxFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.MAX_STOCK,
+      title: ApplicationLocalizations.of(context)!.translate("max_stock")!,
       callbackOnchage: (value) {
         setState(() {
           maxController.text = value;
@@ -631,14 +632,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.MIN_STOCK;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("min_stock")!;
         }
         return null;
       },
       controller: minController,
       focuscontroller: _minFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.MIN_STOCK,
+      title: ApplicationLocalizations.of(context)!.translate("min_stock")!,
       callbackOnchage: (value) {
         setState(() {
           minController.text = value;
@@ -657,14 +658,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return  SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.EXT_NAME;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("ext_name")!;
         }
         return null;
       },
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.EXT_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("ext_name")!,
       callbackOnchage: (value) {
         setState(() {
           extNameController.text = value;
@@ -682,14 +683,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.PACK_SIZE;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pack_size")!;
         }
         return null;
       },
       controller: packSizeController,
       focuscontroller: _packSizeFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.PACK_SIZE,
+      title: ApplicationLocalizations.of(context)!.translate("pack_size")!,
       callbackOnchage: (value) {
         setState(() {
           packSizeController.text = value;
@@ -707,14 +708,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.HSN_NO;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("hsn_no")!;
         }
         return null;
       },
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.HSN_NO,
+      title: ApplicationLocalizations.of(context)!.translate("hsn_no")!,
       callbackOnchage: (value) {
         setState(() {
           hsnNoController.text = value;
@@ -733,14 +734,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.ITEM_DESCRIPTION;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("item_description")!;
         }
         return null;
       },
       controller: descController,
       focuscontroller: _descFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.ITEM_DESCRIPTION,
+      title: ApplicationLocalizations.of(context)!.translate("item_description")!,
       callbackOnchage: (value) {
         setState(() {
           descController.text = value;
@@ -758,14 +759,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.DEFAULT_STORE;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("default_store")!;
         }
         return null;
       },
       controller: defaultStoreController,
       focuscontroller: _defaultStoreFocus,
       focusnext: _branchNameFocus,
-      title: StringEn.DEFAULT_STORE,
+      title: ApplicationLocalizations.of(context)!.translate("default_store")!,
       callbackOnchage: (value) {
         setState(() {
           defaultStoreController.text = value;
@@ -785,11 +786,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.NAME,
+                ApplicationLocalizations.of(context)!.translate("name")!,
                 style: page_heading_textStyle,
               ),
             ],
@@ -823,7 +824,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                   border: InputBorder.none,
                   counterText: '',
                   isDense: true,
-                  hintText: "Enter a name",
+                  hintText: ApplicationLocalizations.of(context)!.translate("bank_branch")!,
                   hintStyle: hint_textfield_Style,
                 ),
                 controller: branchNameController,
@@ -883,8 +884,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

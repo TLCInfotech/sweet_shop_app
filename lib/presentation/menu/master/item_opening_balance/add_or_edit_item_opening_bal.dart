@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_diable_textformfield.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditItemOpeningBal extends StatefulWidget {
@@ -82,17 +83,16 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                   children: [
                     Container(
                       height: SizeConfig.screenHeight*.08,
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                            StringEn.ADD_ITEM_DETAIL,
+                            ApplicationLocalizations.of(context)!.translate("item_detail")!,
                             style: page_heading_textStyle
                         ),
                       ),
                     ),
-                    getFieldTitleLayout(StringEn.ITEM_NAME),
+                    getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    // getFieldTitleLayout(StringEn.QUANTITY),
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                      getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -117,14 +117,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       suffix: Text("${unit.text}"),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.QUANTITY;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("quantity")!;
         }
         return null;
       },
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.QUANTITY,
+      title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
           quantity.text = value;
@@ -145,12 +145,12 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       children: [
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.RATE,
+            title: ApplicationLocalizations.of(context)!.translate("rate")!,
             controller: rate
         ),
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.AMOUNT,
+            title:ApplicationLocalizations.of(context)!.translate("amount")!,
             controller: amount
         ),
 
@@ -183,7 +183,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Item Name",
+          hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -227,11 +227,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -266,11 +266,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

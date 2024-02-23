@@ -7,6 +7,8 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
 
+import '../../../../core/localss/application_localizations.dart';
+
 
 class ItemsActivity extends StatefulWidget {
   const ItemsActivity({super.key});
@@ -72,7 +74,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.ITEM,
+                ApplicationLocalizations.of(context)!.translate("item")!,
                 style: appbar_text_style,),
             ),
           ),

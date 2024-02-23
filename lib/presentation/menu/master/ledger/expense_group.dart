@@ -7,6 +7,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -61,7 +62,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
               backgroundColor: Colors.white,
               title: Center(
                 child: Text(
-                  StringEn.EXPENSE_GROUP,
+                  ApplicationLocalizations.of(context)!.translate("ledger_group")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -203,17 +204,17 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                               height: SizeConfig.screenHeight*.03,
                               child: Center(
                                 child: Text(
-                                    StringEn.ADD_EXPENSE,
+                                    ApplicationLocalizations.of(context)!.translate("add_ledger_group")!,
                                     style: page_heading_textStyle
                                 ),
                               ),
                             ),
                             getGroupNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                            // getFieldTitleLayout(StringEn.PARENT_GROUP),
+
                             getParentGroupLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                            // getFieldTitleLayout(StringEn.SEQUENSE_NO),
+                            // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_no")!),
                             getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                            // getFieldTitleLayout(StringEn.SEQUENSE_NATURE),
+                            // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_nature")!),
                             getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                             SizedBox(height: 20,),
@@ -243,14 +244,14 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.GROUP_NAME;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("group_name")!;
         }
         return null;
       },
       controller: groupName,
       focuscontroller: _groupNameFocus,
       focusnext: _sequenseNoFocus,
-      title: StringEn.GROUP_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("group_name")!,
       callbackOnchage: (value) {
         setState(() {
           groupName.text = value;
@@ -267,14 +268,14 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.SEQUENSE_NO;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("sequence_no")!;
         }
         return null;
       },
       controller: sequenseNoName,
       focuscontroller: _sequenseNoFocus,
       focusnext: _sequenceNatureFocus,
-      title: StringEn.SEQUENSE_NO,
+      title: ApplicationLocalizations.of(context)!.translate("sequence_no")!,
       callbackOnchage: (value) {
         setState(() {
           sequenseNoName.text = value;
@@ -291,14 +292,14 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.SEQUENSE_NATURE;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("sequence_nature")!;
         }
         return null;
       },
       controller: sequenseNatureName,
       focuscontroller: _sequenceNatureFocus,
       focusnext: _sequenceNatureFocus,
-      title: StringEn.SEQUENSE_NATURE,
+      title: ApplicationLocalizations.of(context)!.translate("sequence_nature")!,
       callbackOnchage: (value) {
         setState(() {
           sequenseNatureName.text = value;
@@ -360,11 +361,11 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                   bottomLeft: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.CLOSE,
+                    ApplicationLocalizations.of(context)!.translate("close")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),
@@ -389,11 +390,11 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                   bottomRight: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.SAVE,
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),
@@ -409,7 +410,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
-        title:   StringEn.PARENT_CATEGORY,
+        title:   ApplicationLocalizations.of(context)!.translate("parent_category")!,
         callback: (name){
           setState(() {
             parentCategory=name!;

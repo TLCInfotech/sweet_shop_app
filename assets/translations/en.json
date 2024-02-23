@@ -21,6 +21,7 @@
   "create_item" : "Create Item",
   "item" : "Item",
   "add_item" : "Add Item",
+  "add_category" : "Add Category",
   "unit_two" : "Unit 2",
   "unit_three" : "Unit 3",
   "rate" : "Rate",
@@ -44,6 +45,7 @@
   "create_franchisee" : "Create Franchisee",
   "franchisee_details" : "Franchisee Detail",
   "franchisee_name" : "Franchisee Name",
+  "franchisee_new" : "Franchisee - New",
   "contact_person" : "Contact Person:",
   "address" : "Address:",
   "city" : "City",
@@ -100,13 +102,14 @@
   "net_rate" : "Net Rate",
   "basic_rate" : "Basic Rate",
   "purchase_rate" : "Purchase Rate",
+  "sale_rate" : "Sale Rate",
   "leader_group" : "Leader Group:",
   "reg_type" : "Reg Type:",
   "vendor_code" : "Vendor Code:",
   "taxes" : "Taxes",
   "tax_type" : "Tax Type:",
   "tax_category" : "Tax Category:",
-  "tax_rate_percent" : "Tax Rate %:",
+  "tax_rate" : "Tax Rate ",
   "sgst_percent" : "SGST %:",
   "cgst_percent" : "CGST %:",
   "cess_percent" : "Cess %:",
@@ -135,6 +138,7 @@
   "tax" : "Tax:",
   "ledger_detail" : "Ledger Detail",
   "add_ledger" : "Add Ledger",
+  "add_ledger_group" : "Add Ledger Group",
   "create_company" : "Create Company",
   "sale_invoice_new" : "Sale Invoice - New",
   "create_receipt" : "Create Receipt",
@@ -160,6 +164,7 @@
   "quantity" : "Quantity",
   "disc_percent" : "Disc.(%)",
   "ledger_name" : "Ledger Name",
+  "ledger_new" : "Ledger - New",
   "amount" : "Amount",
   "narration" : "Narration",
   "payment_invoice_new" : "Payment Invoice - New",
@@ -222,7 +227,9 @@
   "purchase": "Purchase",
   "yes": "Yes",
   "no": "No",
-  "exit_app_sub_text": "Are you sure you want to exit from this app"
+  "enter":"Enter",
+  "exit_app_sub_text": "Are you sure you want to exit from this app",
+  "valid": "Valid"
 
 }
 

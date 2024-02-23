@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import '../../core/colors.dart';
 import '../../core/common.dart';
 import '../../core/common_style.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 
 class PickDocument extends StatefulWidget{
@@ -67,14 +68,11 @@ class _PickDocumentState extends State<PickDocument> {
                 ],
               ),
               child: TextFormField(
-                // inputFormatters: <TextInputFormatter>[
-                //    widget.title==StringEn.FRANCHISEE_AADHAR_NO ?FilteringTextInputFormatter.digitsOnly:
-                //       FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]'))
-                // ],
-                maxLength: widget.title==StringEn.FRANCHISEE_AADHAR_NO?12:widget.title==StringEn.FRANCHISEE_PAN_NO?10:
-                widget.title==StringEn.FRANCHISEE_GST_NO?15:100,
 
-                keyboardType: widget.title==StringEn.FRANCHISEE_AADHAR_NO?TextInputType.number:TextInputType.text,
+                maxLength: widget.title==ApplicationLocalizations.of(context)!.translate("adhar_number")!?12:widget.title==ApplicationLocalizations.of(context)!.translate("pan_number")!?10:
+                widget.title==ApplicationLocalizations.of(context)!.translate("gst_number")!?15:100,
+
+                keyboardType: widget.title==ApplicationLocalizations.of(context)!.translate("adhar_number")!?TextInputType.number:TextInputType.text,
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.center,
                 textCapitalization: TextCapitalization.characters,
@@ -116,11 +114,11 @@ class _PickDocumentState extends State<PickDocument> {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(5)
                     ),
-                    child: const Column(
+                    child:  Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FaIcon(FontAwesomeIcons.fileArrowUp,color: Colors.white,size: 20,),
-                        Text(StringEn.UPLOAD,style: subHeading_withBold)
+                        Text(ApplicationLocalizations.of(context)!.translate("upload")!,style: subHeading_withBold)
                       ],
                     )
                 ),
@@ -179,15 +177,15 @@ class _PickDocumentState extends State<PickDocument> {
                 top: 1,
                 child: IconButton(
                     onPressed: (){
-                      if(widget.title==StringEn.FRANCHISEE_AADHAR_NO){
+                      if(widget.title==ApplicationLocalizations.of(context)!.translate("adhar_number")!){
                         widget.callbackFile(null);
                       }
-                      else if(widget.title==StringEn.FRANCHISEE_PAN_NO){
+                      else if(widget.title==ApplicationLocalizations.of(context)!.translate("pan_number")!){
                         setState(() {
                           widget.callbackFile(null);
                         });
                       }
-                      else  if(widget.title==StringEn.FRANCHISEE_GST_NO){
+                      else  if(widget.title==ApplicationLocalizations.of(context)!.translate("gst_number")!){
                         setState(() {
                           widget.callbackFile(null);
                         });

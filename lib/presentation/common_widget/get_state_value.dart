@@ -12,6 +12,7 @@ import '../../core/common_style.dart';
 import '../../core/imagePicker/image_picker_dialog.dart';
 import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
 import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 import '../dialog/state_dialog.dart';
@@ -91,7 +92,7 @@ class _GetStateLayoutState extends State<GetStateLayout> with     SingleTickerPr
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.stateName == "" ? StringEn.SELECT_STATE : widget.stateName,
+                          widget.stateName == "" ? ApplicationLocalizations.of(context)!.translate("select_state")!  : widget.stateName,
                           style: widget.stateName == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,

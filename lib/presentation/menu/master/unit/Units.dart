@@ -6,6 +6,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../../core/colors.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -44,7 +45,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.UNIT_TITLE,
+                ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -107,8 +108,8 @@ class _UnitsActivityState extends State<UnitsActivity> {
                             child: Stack(
                               children: [
                                 Container(
-                                  margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
-                                  child: Text("Measuring Unit",style: item_heading_textStyle,),
+                                  margin:  EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                  child: Text(ApplicationLocalizations.of(context)!.translate("measuring_unit")!,style: item_heading_textStyle,),
                                 ),
                                 Positioned(
                                     top: 0,
@@ -176,7 +177,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                               height: SizeConfig.screenHeight*.08,
                               child: Center(
                                 child: Text(
-                                    StringEn.ADD_UNIT,
+                                    ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
                                     style: page_heading_textStyle
                                 ),
                               ),
@@ -185,14 +186,14 @@ class _UnitsActivityState extends State<UnitsActivity> {
                         SingleLineEditableTextFormField(
                           validation: (value) {
                             if (value!.isEmpty) {
-                              return StringEn.ENTER+StringEn.MEASURING_UNIT;
+                              return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("measuring_unit")!;
                             }
                             return null;
                           },
                           controller: unitName,
                           focuscontroller: null,
                           focusnext: null,
-                          title: StringEn.MEASURING_UNIT,
+                          title: ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
                           callbackOnchage: (value) {
                             setState(() {
                               unitName.text = value;
@@ -222,6 +223,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           throw Exception('No widget to return in pageBuilder');
         });
   }
+
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
@@ -242,11 +244,11 @@ class _UnitsActivityState extends State<UnitsActivity> {
                   bottomLeft: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.CLOSE,
+                    ApplicationLocalizations.of(context)!.translate("close")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),
@@ -270,11 +272,11 @@ class _UnitsActivityState extends State<UnitsActivity> {
                   bottomRight: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.SAVE,
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),

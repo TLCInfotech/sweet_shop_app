@@ -6,6 +6,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'create_ledger_opening_bal_activity.dart';
 
@@ -37,8 +38,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
                   borderRadius: BorderRadius.circular(25)
               ),
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.LEDGER_OPENING_BAL,
+              title:  Text(
+                ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -82,7 +83,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
         titleIndicator: false,
-        title: StringEn.DATE,
+        title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -116,7 +117,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("10 ${StringEn.LEDGERS}", style: subHeading_withBold,),
+               Text("10 ${ApplicationLocalizations.of(context)!.translate("ledgers")!}", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )

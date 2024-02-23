@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class UserCreate extends StatefulWidget {
@@ -66,8 +67,8 @@ class _UserCreateState extends State<UserCreate> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.USER_NEW,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("user_new")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -160,14 +161,14 @@ class _UserCreateState extends State<UserCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.USER_NAME;
+            return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("user_name")!;
           }
           return null;
         },
       controller: userController,
       focuscontroller: _userFocus,
       focusnext: _workingdaysFocus,
-      title: StringEn.USER_NAME,
+      title:     ApplicationLocalizations.of(context)!.translate("user_name")!,
       callbackOnchage: (value) {
         setState(() {
           userController.text = value;
@@ -185,14 +186,14 @@ class _UserCreateState extends State<UserCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.WRKING_DAYS;
+            return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("working_days")!;
           }
           return null;
         },
       controller: workingdaysController,
       focuscontroller: _workingdaysFocus,
       focusnext: _franchiseFocus,
-      title: StringEn.WRKING_DAYS,
+      title: ApplicationLocalizations.of(context)!.translate("working_days")!,
       callbackOnchage: (value) {
         setState(() {
           workingdaysController.text = value;
@@ -210,7 +211,7 @@ class _UserCreateState extends State<UserCreate> {
   /* Widget for franchisee name text from field layout */
   Widget getFranchiseeLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
-        title:  StringEn.FRANCHISE,
+        title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name){
           setState(() {
             afranchiseController.text=name!;
@@ -280,7 +281,7 @@ class _UserCreateState extends State<UserCreate> {
             child: Padding(
                 padding: EdgeInsets.only(
                     left: parentWidth * .02, top: parentHeight * .01),
-                child:const Text(StringEn.RESET_PASSWORD,
+                child: Text(ApplicationLocalizations.of(context)!.translate("reset_password")!,
                   style: page_heading_textStyle,)
             ),
           ),
@@ -350,7 +351,7 @@ class _UserCreateState extends State<UserCreate> {
             child: Padding(
                 padding: EdgeInsets.only(
                     left: parentWidth * .02, top: parentHeight * .01),
-                child:const Text(StringEn.ACTIVE,
+                child: Text(ApplicationLocalizations.of(context)!.translate("active")!,
                   style: page_heading_textStyle,)
             ),
           ),
@@ -389,8 +390,8 @@ class _UserCreateState extends State<UserCreate> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -77,7 +78,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.FRANCHISE_SALE_RATE,
+                ApplicationLocalizations.of(context)!.translate("franchisee_sale_rate")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -127,7 +128,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${product_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 ],
           ),
         ),
@@ -165,8 +166,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),
@@ -201,7 +202,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      //product_list.isNotEmpty?getFieldTitleLayout(StringEn.PRODUCT_DETAIL):Container(),
+
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -217,10 +218,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_ITEMS,
+                                  Text(   ApplicationLocalizations.of(context)!.translate("add_item")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -381,7 +382,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         children: [
           GetFranchiseeLayout(
               titleIndicator:false,
-              title:  StringEn.FRANCHISE,
+              title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name){
                 setState(() {
                   selectedCopyFranchiseeName=name!;
@@ -442,7 +443,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   Widget getApplicableFromLayout(double parentHeight, double parentWidth){
     return GetDateLayout(
         titleIndicator:false,
-        title:  StringEn.DATE ,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
             applicablefrom=name!;
@@ -456,7 +457,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   Widget getProductCategoryLayout(){
     return  GetCategoryLayout(
         titleIndicator:false,
-        title:  StringEn.CATEGORY ,
+        title:    ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name){
           setState(() {
             selectedProductCategory=name!;

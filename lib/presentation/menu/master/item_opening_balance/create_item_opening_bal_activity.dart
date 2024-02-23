@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_item_opening_bal.dart';
 
@@ -106,8 +107,8 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                 ),
 
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.ADD_OPENING_BAL,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -165,7 +166,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                    //  Item_list.length>0?getFieldTitleLayout(StringEn.ITEM_DETAIL):Container(),
+
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -181,11 +182,10 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Item",
-                                    style: item_heading_textStyle,),
+                                  Text("${ApplicationLocalizations.of(context)!.translate("add_item")!}", style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
                                 ],
@@ -369,7 +369,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
     return GetDateLayout(
 
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -385,7 +385,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
       titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
+        title: ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -426,7 +426,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             border: InputBorder.none,
             counterText: '',
             isDense: true,
-            hintText: "Enter a item name",
+            hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
             hintStyle: hint_textfield_Style,
           ),
           controller: InvoiceNoController,
@@ -435,34 +435,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
           },
           style: text_field_textStyle,
         ),
-      ),
-    );
-  }
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
       ),
     );
   }
@@ -513,7 +485,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 SizedBox(height: 4,),
                 Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
               ],
@@ -553,8 +525,8 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

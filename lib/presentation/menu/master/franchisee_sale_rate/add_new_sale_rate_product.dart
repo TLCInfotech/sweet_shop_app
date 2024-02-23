@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -78,12 +79,12 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.ADD_ITEMS,
+                          ApplicationLocalizations.of(context)!.translate("add_item")!,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.ITEM),
+                  getFieldTitleLayout(   ApplicationLocalizations.of(context)!.translate("item")!,),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -141,7 +142,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   Widget getProductNetLayout(double parentHeight, double parentWidth) {
     return GetDisableTextFormField(
       controller: net,
-      title: StringEn.NET_RATE,
+      title:    ApplicationLocalizations.of(context)!.translate("net_rate")!,
     );
   }
 
@@ -149,7 +150,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   Widget getGstAmountLayout(double parentHeight, double parentWidth) {
     return GetDisableTextFormField(
       controller: gstAmt,
-      title: StringEn.GST_AMT,
+      title:    ApplicationLocalizations.of(context)!.translate("gst_amount")!,
     );
 
   }
@@ -160,14 +161,14 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       suffix:Text("%"),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.GST;
+          return    ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("gst_percent")!;
         }
         return null;
       },
       controller: gst,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.GST,
+      title:ApplicationLocalizations.of(context)!.translate("gst_percent")!,
       callbackOnchage: (value) async{
         print("here");
         setState(() {
@@ -198,14 +199,14 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.SALE_RATE;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("sale_rate")!;
         }
         return null;
       },
       controller: rate,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.SALE_RATE,
+      title:  ApplicationLocalizations.of(context)!.translate("sale_rate")!,
       callbackOnchage: (value)async {
         print("#");
         setState(() {
@@ -239,13 +240,13 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       child: TextFormField(
         textInputAction: TextInputAction.done,
         // autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: TextInputType.text,
         controller: _textController,
         textAlignVertical: TextAlignVertical.center,
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText:StringEn.ITEM_NAME,
+          hintText:    ApplicationLocalizations.of(context)!.translate("item_name")!,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -287,9 +288,9 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),
@@ -320,11 +321,11 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -357,11 +358,11 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import 'create_item_opening_bal_activity.dart';
 
 class ItemOpeningBal extends StatefulWidget {
@@ -42,8 +43,8 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.ITEM_OPENING_BAL,
+              title:  Text(
+                ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -108,7 +109,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("10 Items  ", style: subHeading_withBold,),
+               Text("10 ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -120,7 +121,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
       titleIndicator: false,
-        title: StringEn.DATE,
+        title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;

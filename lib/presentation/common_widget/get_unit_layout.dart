@@ -13,6 +13,7 @@ import '../../core/common_style.dart';
 import '../../core/imagePicker/image_picker_dialog.dart';
 import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
 import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 import '../dialog/measuring_unit_dialog.dart';
@@ -153,7 +154,7 @@ class _GetUnitLayoutState extends State<GetUnitLayout> with SingleTickerProvider
                       (SizeConfig.screenWidth) * .01,
                       SizeConfig.blockSizeHorizontal * 2.5,
                       isCategoryMsgValidShow,
-                      StringEn.ADD_CATEGORY,
+                      ApplicationLocalizations.of(context)!.translate("unit")! ,
                     ),
                   ]),
             ),

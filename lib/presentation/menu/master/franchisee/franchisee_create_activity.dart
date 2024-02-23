@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_country_layout.dart';
 import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
@@ -141,7 +142,7 @@ String stateName="";
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.ADD_FRANCHISEE,
+                  ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -220,8 +221,8 @@ String stateName="";
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),
@@ -248,13 +249,13 @@ String stateName="";
                 SizedBox(height: 20,),
                 getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                 SizedBox(height: 20,),
-                getFieldTitleLayout(StringEn.BASIC_INFO),
+                getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("basic_information")!),
                 BasicInfo(),
                 SizedBox(height: 20,),
-                getFieldTitleLayout(StringEn.DOCUMENT_INFO),
+                getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("document_information")!),
                 Document_Information(),
                 SizedBox(height: 20.0),
-                getFieldTitleLayout(StringEn.ACCOUNT_INFO),
+                getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("account_information")!),
                 Container(
 
                   padding: EdgeInsets.all(10),
@@ -303,7 +304,7 @@ String stateName="";
                             adharFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_AADHAR_NO,
+                        title:      ApplicationLocalizations.of(context)!.translate("adhar_number")!,
                         documentFile: adharFile,
                         controller: adharNoController,
                         focuscontroller: _adharoFocus,
@@ -321,7 +322,7 @@ String stateName="";
                             panFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_PAN_NO,
+                        title:  ApplicationLocalizations.of(context)!.translate("pan_number")!,
                         documentFile: panFile,
                         controller: panNoController,
                         focuscontroller: _panNoFocus,
@@ -339,7 +340,7 @@ String stateName="";
                             gstFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_GST_NO,
+                        title:  ApplicationLocalizations.of(context)!.translate("gst_number")!,
                         documentFile: gstFile,
                         controller: gstNoController,
                         focuscontroller: _gstNoFocus,
@@ -397,7 +398,7 @@ String stateName="";
       controller: bankNameController,
       focuscontroller: _bankNameFocus,
       focusnext: _bankBranchFocus,
-      title: StringEn.BANK_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("bank_name")!,
       callbackOnchage: (value) {
         setState(() {
           bankNameController.text = value;
@@ -408,7 +409,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANK_NAME;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("bank_name")!;
         }
 
         return null;
@@ -423,7 +424,7 @@ String stateName="";
       controller: bankBranchController,
       focuscontroller: _bankBranchFocus,
       focusnext: _IFSCCodeFocus,
-      title: StringEn.BANT_BRACH,
+      title: ApplicationLocalizations.of(context)!.translate("bank_branch")!,
       callbackOnchage: (value) {
         setState(() {
           bankBranchController.text = value;
@@ -434,7 +435,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("bank_branch")!;
         }
         return null;
       },
@@ -447,7 +448,7 @@ String stateName="";
       controller: IFSCCodeController,
       focuscontroller: _IFSCCodeFocus,
       focusnext: _aCHolderNameFocus,
-      title: StringEn.IFSC_CODE,
+      title: ApplicationLocalizations.of(context)!.translate("ifsc_branch")!,
       callbackOnchage: (value) {
         setState(() {
           IFSCCodeController.text = value;
@@ -458,7 +459,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("ifsc_branch")!;
         }
         return null;
       },
@@ -472,7 +473,7 @@ String stateName="";
       controller: aCHolderNameController,
       focuscontroller: _aCHolderNameFocus,
       focusnext: _accountNoFocus,
-      title: StringEn.ACCOUNT_HOLDER_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("ac_holder_name")!,
       callbackOnchage: (value) {
         setState(() {
           aCHolderNameController.text = value;
@@ -483,7 +484,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[a-z A-Z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("ac_holder_name")!;
         }
         return null;
       },
@@ -497,7 +498,7 @@ String stateName="";
       controller: accountNoController,
       focuscontroller: _accountNoFocus,
       focusnext: _franchiseeNameFocus,
-      title: StringEn.ACCOUNT_NO,
+      title: ApplicationLocalizations.of(context)!.translate("account_no")!,
       callbackOnchage: (value) {
         setState(() {
           accountNoController.text = value;
@@ -508,7 +509,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("account_no")!;
         }
         return null;
       },
@@ -519,7 +520,7 @@ String stateName="";
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return GetCountryLayout(
-        title:  StringEn.COUNTRY,
+        title:  ApplicationLocalizations.of(context)!.translate("country")!,
         callback: (name){
           setState(() {
             countryName=name!;
@@ -532,7 +533,7 @@ String stateName="";
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return GetStateLayout(
-        title:  StringEn.STATE,
+        title:  ApplicationLocalizations.of(context)!.translate("state")!,
         callback: (name){
           setState(() {
             stateName=name!;
@@ -576,7 +577,7 @@ String stateName="";
       controller: franchiseePaymentDays,
       focuscontroller: _franchiseePaymentDaysFocus,
       focusnext: _bankNameFocus,
-      title: StringEn.FRANCHISEE_PAYMENT_DAYS,
+      title: ApplicationLocalizations.of(context)!.translate("payment_days")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseePaymentDays.text = value;
@@ -587,7 +588,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.PAYMENT_DAYS;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("payment_days")!;
         }
         return null;
       },
@@ -608,22 +609,20 @@ String stateName="";
       controller: franchiseeOutstandingLimit,
         focuscontroller: _franchiseeOutstandingLimitFocus,
         focusnext: _adharoFocus,
-        title: StringEn.FRANCHISEE_OUTSTANDING_LIMIT,
+        title: ApplicationLocalizations.of(context)!.translate("outstanding_limit")!,
         callbackOnchage: (value) {
           setState(() {
             franchiseeOutstandingLimit.text = value;
           });
         },
-        textInput: TextInputType.emailAddress,
+        textInput: TextInputType.number,
         maxlines: 1,
         format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.FRANCHISEE_OUTSTANDING_LIMIT;
+            return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("outstanding_limit")!;
           }
-          else if (Util.isEmailValid(value)) {
-            return "Enter Valid Email";
-          }
+
           return null;
         },
       )
@@ -647,7 +646,7 @@ String stateName="";
           ),
           child: DropdownButton<dynamic>(
             hint: Text(
-              StringEn.UNIT, style: hint_textfield_Style,),
+              ApplicationLocalizations.of(context)!.translate("unit")!, style: hint_textfield_Style,),
             underline: SizedBox(),
             isExpanded: true,
             value: selectedLimitUnit,
@@ -674,7 +673,7 @@ String stateName="";
       controller: franchiseeEmail,
       focuscontroller: _franchiseeEmailFocus,
       focusnext: _adharoFocus,
-      title: StringEn.FRANCHISEE_EMAIL,
+      title: ApplicationLocalizations.of(context)!.translate("email_address")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeEmail.text = value;
@@ -685,10 +684,10 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Email Address";
+          return ApplicationLocalizations.of(context)!.translate("email_address")!;
         }
         else if (Util.isEmailValid(value)) {
-          return "Enter Valid Email";
+          return ApplicationLocalizations.of(context)!.translate("valid")!+ApplicationLocalizations.of(context)!.translate("email_address")!;
         }
         return null;
       },
@@ -703,7 +702,7 @@ String stateName="";
       controller: franchiseeMobileNo,
       focuscontroller: _franchiseeMobileNoFocus,
       focusnext: _franchiseeEmailFocus,
-      title: StringEn.FRANCHISEE_MOBILENO,
+      title: ApplicationLocalizations.of(context)!.translate("mobile_no")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeMobileNo.text = value;
@@ -718,10 +717,10 @@ String stateName="";
         // RegExp regExp = new RegExp(pattern);
         // print(Util.isMobileValid(value!));
         if (value!.isEmpty) {
-          return "Enter Mobile No.";
+          return ApplicationLocalizations.of(context)!.translate("mobile_no")!;
         }
         else if (Util.isMobileValid(value)) {
-          return "Enter Valid Mobile No.";
+          return ApplicationLocalizations.of(context)!.translate("valid")!+ApplicationLocalizations.of(context)!.translate("mobile_no")!;
         }
 
         return null;
@@ -738,7 +737,7 @@ String stateName="";
       controller: pincode,
       focuscontroller: _pincodeFocus,
       focusnext: _franchiseeMobileNoFocus,
-      title: StringEn.PIN_CODE,
+      title: ApplicationLocalizations.of(context)!.translate("pin_code")!,
       callbackOnchage: (value) {
         setState(() {
           pincode.text = value;
@@ -749,7 +748,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Contact Person";
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
         }
         return null;
       },
@@ -759,7 +758,7 @@ String stateName="";
   /* Widget for city text from field layout */
   Widget getCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
-        title:  StringEn.CITY,
+        title: ApplicationLocalizations.of(context)!.translate("city")!,
         callback: (name){
           setState(() {
             selectedCity=name!;
@@ -775,7 +774,7 @@ String stateName="";
       controller: franchiseeContactPerson,
       focuscontroller: _franchiseeContactPersonFocus,
       focusnext: _franchiseeAddressFocus,
-      title: StringEn.USER_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("user_name")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeContactPerson.text = value;
@@ -786,7 +785,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Contact Person";
+          return ApplicationLocalizations.of(context)!.translate("contact_person")!;
         }
         return null;
       },
@@ -800,7 +799,7 @@ String stateName="";
       controller: franchiseeAddress,
       focuscontroller: _franchiseeAddressFocus,
       focusnext: _pincodeFocus,
-      title: StringEn.FRANCHISEE_ADDRESS,
+      title:ApplicationLocalizations.of(context)!.translate("address")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeAddress.text = value;
@@ -811,7 +810,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Contact Person";
+          return ApplicationLocalizations.of(context)!.translate("address")!;
         }
         return null;
       },
@@ -826,7 +825,7 @@ String stateName="";
       controller: franchiseeName,
       focuscontroller: _franchiseeNameFocus,
       focusnext: _franchiseeContactPersonFocus,
-      title: StringEn.FRANCHISEE_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeName.text = value;
@@ -837,7 +836,7 @@ String stateName="";
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: ((value) {
         if (value!.isEmpty) {
-          return "Enter Franchisee Name";
+          return ApplicationLocalizations.of(context)!.translate("franchisee_name")!;
         }
         return null;
       }),

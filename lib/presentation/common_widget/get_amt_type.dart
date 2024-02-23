@@ -13,6 +13,7 @@ import '../../core/common_style.dart';
 import '../../core/imagePicker/image_picker_dialog.dart';
 import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
 import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 
@@ -64,7 +65,7 @@ class _GetAmountTypeCrDrState extends State<GetAmountTypeCrDr> {
               ),
               child: DropdownButton<dynamic>(
                 hint: Text(
-                  StringEn.Amount_TYPE, style: hint_textfield_Style,),
+                  ApplicationLocalizations.of(context)!.translate("amount_type")!, style: hint_textfield_Style,),
                 underline: SizedBox(),
                 isExpanded: true,
                 value:widget.selectedType,

@@ -7,6 +7,8 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/create_expense_activity.dart';
 
+import '../../../../core/localss/application_localizations.dart';
+
 
 class ExpenseListingActivity extends StatefulWidget {
   const ExpenseListingActivity({super.key});
@@ -42,8 +44,8 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
               ),
 
               backgroundColor: Colors.white,
-              title: const Text(
-                StringEn.EXPENSE,
+              title:  Text(
+                ApplicationLocalizations.of(context)!.translate("ledger")!,
                 style: appbar_text_style,),
             ),
           ),

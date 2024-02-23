@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_amt_type.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditLedgerOpeningBal extends StatefulWidget {
@@ -92,14 +93,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
                   children: [
                     Container(
                       height: SizeConfig.screenHeight*.08,
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                            StringEn.LEDGER_DETAIL,
+                            ApplicationLocalizations.of(context)!.translate("ledger_detail")!,
                             style: page_heading_textStyle
                         ),
                       ),
                     ),
-                    getFieldTitleLayout(StringEn.LEDGER),
+                    getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger")!),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                     getAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -144,7 +145,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: "Item Name",
+          hintText: ApplicationLocalizations.of(context)!.translate("ledger")!,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -161,14 +162,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.AMOUNT;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("amount")!;
         }
         return null;
       },
       controller: amount,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.AMOUNT,
+      title: ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value) {
         setState(() {
           amount.text = value;
@@ -183,7 +184,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
 
   Widget getAmtType(double parentHeight, double parentWidth){
     return GetAmountTypeCrDr(
-        title: StringEn.Amount_TYPE,
+        title: ApplicationLocalizations.of(context)!.translate("amount_type")!,
         callback: (type){
           setState(() {
             selectedType=type;
@@ -227,11 +228,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -264,11 +265,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

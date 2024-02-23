@@ -6,6 +6,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import '../../../../core/colors.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/category_dialog.dart';
@@ -45,7 +46,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.CATEGORY_TITLE,
+                ApplicationLocalizations.of(context)!.translate("item_category")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -112,7 +113,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                               height: SizeConfig.screenHeight*.08,
                               child: Center(
                                 child: Text(
-                                    StringEn.ADD_CATEGORY,
+                                    ApplicationLocalizations.of(context)!.translate("add_category")!,
                                     style: page_heading_textStyle
                                 ),
                               ),
@@ -147,7 +148,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
-        title:   StringEn.PARENT_CATEGORY,
+        title: ApplicationLocalizations.of(context)!.translate("parent_category")!,
         callback: (name){
           setState(() {
             parentCategory=name!;
@@ -163,14 +164,14 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.CATEGORY;
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("category")!;
         }
         return null;
       },
       controller: categoryName,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.CATEGORY,
+      title:  ApplicationLocalizations.of(context)!.translate("category")!,
       callbackOnchage: (value) {
         setState(() {
           categoryName.text = value;
@@ -215,11 +216,11 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                   bottomLeft: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.CLOSE,
+                    ApplicationLocalizations.of(context)!.translate("close")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),
@@ -243,11 +244,11 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                   bottomRight: Radius.circular(5),
                 ),
               ),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringEn.SAVE,
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/string_en.dart';
 import '../../../common_widget/getFranchisee.dart';
 
@@ -25,7 +26,7 @@ class _CopySaleRateProductOfFranchiseeState extends State<CopySaleRateProductOfF
   @override
   Widget build(BuildContext context) {
     return GetFranchiseeLayout(
-        title:  StringEn.FRANCHISE,
+        title:    ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name){
           setState(() {
             selectedCopyFranchiseeName=name!;

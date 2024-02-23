@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_country_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_district_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_state_value.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -97,8 +98,8 @@ class _CompanyCreateState extends State<CompanyCreate> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.COMPANY,
+                title:  Text(
+    ApplicationLocalizations.of(context)!.translate("company")! ,
                   style: appbar_text_style,
                 ),
               ),
@@ -171,7 +172,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                 children: [
                   getImageLayout(parentHeight, parentWidth),
                   SizedBox(height: 20.0),
-                  CommonWidget.getFieldTitleLayout(StringEn.BASIC_INFO),
+                  CommonWidget.getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("basic_information")! ),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -198,7 +199,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                     ),
                   ),
                   SizedBox(height: 20.0),
-                  CommonWidget.getFieldTitleLayout(StringEn.OTHER_INFO),
+                  CommonWidget.getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("other_information")! ),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -219,7 +220,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                               adharFile = file;
                             });
                           },
-                          title: StringEn.FRANCHISEE_AADHAR_NO,
+                          title:  ApplicationLocalizations.of(context)!.translate("adhar_number")! ,
                           documentFile: adharFile,
                           controller: adharNoController,
                           focuscontroller: _adharoFocus,
@@ -237,7 +238,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                               panFile = file;
                             });
                           },
-                          title: StringEn.FRANCHISEE_PAN_NO,
+                          title: ApplicationLocalizations.of(context)!.translate("pan_number")! ,
                           documentFile: panFile,
                           controller: panNoController,
                           focuscontroller: _panNoFocus,
@@ -255,7 +256,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
                               gstFile = file;
                             });
                           },
-                          title: StringEn.FRANCHISEE_GST_NO,
+                          title:  ApplicationLocalizations.of(context)!.translate("gst_number")! ,
                           documentFile: gstFile,
                           controller: gstNoController,
                           focuscontroller: _gstNoFocus,
@@ -283,14 +284,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.COMPANY_NAME;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("company_name")!;
           }
           return null;
         },
       controller: nameController,
       focuscontroller: _nameFocus,
       focusnext: _contactPersonFocus,
-      title: StringEn.COMPANY_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("company_name")!,
       callbackOnchage: (value) {
         setState(() {
           nameController.text = value;
@@ -307,14 +308,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER +StringEn.FRANCHISEE_CONTACT_PERSON;
+            return     ApplicationLocalizations.of(context)!.translate("enter")!  +ApplicationLocalizations.of(context)!.translate("contact_person")!;
           }
           return null;
         },
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
-      title: StringEn.FRANCHISEE_CONTACT_PERSON,
+      title: ApplicationLocalizations.of(context)!.translate("contact_person")!,
       callbackOnchage: (value) {
         setState(() {
           contactPersonController.text = value;
@@ -331,14 +332,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.ADDRESS;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("address")!;
           }
           return null;
         },
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
-      title: StringEn.ADDRESS,
+      title: ApplicationLocalizations.of(context)!.translate("address")!,
       callbackOnchage: (value) {
         setState(() {
           addressController.text = value;
@@ -383,14 +384,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
       SingleLineEditableTextFormField(
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.CONTACT_NO;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("contact_no")!;
           }
           return null;
         },
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
-      title: StringEn.CONTACT_NO,
+      title: ApplicationLocalizations.of(context)!.translate("contact_no")!,
       callbackOnchage: (value) {
         setState(() {
           contactController.text = value;
@@ -407,14 +408,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.EMAIL;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("email_address")!;
           }
           return null;
         },
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
-      title: StringEn.EMAIL,
+      title:ApplicationLocalizations.of(context)!.translate("email_address")!,
       callbackOnchage: (value) {
         setState(() {
           emailController.text = value;
@@ -432,14 +433,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.ADDRESS_TWO;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("address_two")!;
           }
           return null;
         },
       controller: addTwoController,
       focuscontroller: _addTwoFocus,
       focusnext: _defaultBankFocus,
-      title: StringEn.ADDRESS_TWO,
+      title: ApplicationLocalizations.of(context)!.translate("address_two")!,
       callbackOnchage: (value) {
         setState(() {
           addTwoController.text = value;
@@ -457,14 +458,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.CIN_NO;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("cin_no")!;
           }
           return null;
         },
       controller: cinNoController,
       focuscontroller: _cinNoFocus,
       focusnext: _jurisdictionFocus,
-      title: StringEn.CIN_NO,
+      title:ApplicationLocalizations.of(context)!.translate("cin_no")!,
       callbackOnchage: (value) {
         setState(() {
           cinNoController.text = value;
@@ -482,14 +483,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.JURISDICTION;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("jurisdiction")!;
           }
           return null;
         },
       controller: jurisdictionController,
       focuscontroller: _jurisdictionFocus,
       focusnext: _invoiceFocus,
-      title: StringEn.JURISDICTION,
+      title:ApplicationLocalizations.of(context)!.translate("jurisdiction")!,
       callbackOnchage: (value) {
         setState(() {
           jurisdictionController.text = value;
@@ -507,14 +508,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.DEFAULT_BANK;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("default_bank")!;
           }
           return null;
         },
       controller: defaultBankController,
       focuscontroller: _defaultBankFocus,
       focusnext: _extNameFocus,
-      title: StringEn.DEFAULT_BANK,
+      title: ApplicationLocalizations.of(context)!.translate("default_bank")!,
       callbackOnchage: (value) {
         setState(() {
           defaultBankController.text = value;
@@ -532,14 +533,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.EXT_NAME;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("ext_name")!;
           }
           return null;
         },
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
-      title: StringEn.EXT_NAME,
+      title:ApplicationLocalizations.of(context)!.translate("ext_name")!,
       callbackOnchage: (value) {
         setState(() {
           extNameController.text = value;
@@ -557,14 +558,14 @@ class _CompanyCreateState extends State<CompanyCreate> {
     return SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER+StringEn.INVOICE_DECLERATION;
+            return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("invoice_declaration")! ;
           }
           return null;
         },
       controller: invoiceController,
       focuscontroller: _invoiceFocus,
       focusnext: null,
-      title: StringEn.INVOICE_DECLERATION,
+      title:ApplicationLocalizations.of(context)!.translate("invoice_declaration")!,
       callbackOnchage: (value) {
         setState(() {
           nameController.text = value;
@@ -580,7 +581,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
   /* Widget for distric text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
-        title:  StringEn.DISTRICTCITY,
+        title: ApplicationLocalizations.of(context)!.translate("city")!,
         callback: (name){
           setState(() {
             districtController.text=name!;
@@ -592,7 +593,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return GetStateLayout(
-        title:  StringEn.STATE,
+        title:   ApplicationLocalizations.of(context)!.translate("state")! ,
         callback: (name){
           setState(() {
             stateName=name!;
@@ -607,7 +608,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
       controller: pinCodeController,
       focuscontroller: _pinCodeFocus,
       focusnext: _contactFocus,
-      title: StringEn.PIN_CODE,
+      title: ApplicationLocalizations.of(context)!.translate("pin_code")! ,
       callbackOnchage: (value) {
         setState(() {
           pinCodeController.text = value;
@@ -618,7 +619,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Contact Person";
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
         }
         return null;
       },
@@ -629,7 +630,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return GetCountryLayout(
-        title:  StringEn.COUNTRY,
+        title:  ApplicationLocalizations.of(context)!.translate("country")! ,
         callback: (name){
           setState(() {
             countryName=name!;
@@ -670,8 +671,8 @@ class _CompanyCreateState extends State<CompanyCreate> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+    ApplicationLocalizations.of(context)!.translate("save")! ,
                       style: page_heading_textStyle,
                     ),
                   ),

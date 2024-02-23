@@ -12,6 +12,7 @@ import '../../core/common_style.dart';
 import '../../core/imagePicker/image_picker_dialog.dart';
 import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
 import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 import '../dialog/report_type_dialog.dart';
@@ -93,7 +94,7 @@ class _GetReportTypeLayoutState extends State<GetReportTypeLayout> with     Sing
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.reportType == "" ? StringEn.REPORT_TYPE : widget.reportType,
+                          widget.reportType == "" ? ApplicationLocalizations.of(context)!.translate("report_type")! : widget.reportType,
                           style: widget.reportType == ""
                               ? hint_textfield_Style
                               : text_field_textStyle,

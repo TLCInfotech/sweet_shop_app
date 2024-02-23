@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -78,7 +79,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.FRANCHISE_PURCHASE_RATE,
+                ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -128,7 +129,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${product_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${product_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 ],
           ),
         ),
@@ -166,8 +167,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),
@@ -202,7 +203,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      //product_list.isNotEmpty?getFieldTitleLayout(StringEn.PRODUCT_DETAIL):Container(),
+
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -218,10 +219,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_ITEMS,
+                                  Text(    ApplicationLocalizations.of(context)!.translate("add_item")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -375,8 +376,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         children: [
           GetFranchiseeLayout(
               titleIndicator:false,
-          title:  StringEn.FRANCHISE,
-          callback: (name){
+          title:      ApplicationLocalizations.of(context)!.translate("franchisee")!,
+              callback: (name){
             setState(() {
               selectedCopyFranchiseeName=name!;
             });
@@ -436,7 +437,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   Widget getApplicableFromLayout(double parentHeight, double parentWidth){
     return GetDateLayout(
         titleIndicator:false,
-        title:  StringEn.DATE ,
+        title:      ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
             applicablefrom=name!;
@@ -450,7 +451,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   Widget getProductCategoryLayout(){
     return  GetCategoryLayout(
         titleIndicator:false,
-        title:  StringEn.CATEGORY ,
+        title:      ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name){
           setState(() {
             selectedProductCategory=name!;

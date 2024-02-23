@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_ledger_opening_bal.dart';
@@ -107,8 +108,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                 ),
 
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.ADD_LEDGER_OPENING_BAL,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -181,10 +182,10 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Add Ledger",
+                                  Text(ApplicationLocalizations.of(context)!.translate("add_ledger")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -327,7 +328,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-         // getFieldTitleLayout(StringEn.DATE),
           Container(
               width:(SizeConfig.screenWidth)*.32,
               child: getPurchaseDateLayout()),
@@ -358,7 +358,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     return  GetDateLayout(
 
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -374,7 +374,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  GetFranchiseeLayout(
         titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
+        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -384,35 +384,6 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
   }
 
-
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
 
   Future<Object?> goToAddOrEditItem(product) {
     return showGeneralDialog(
@@ -459,7 +430,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("ledgers")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 SizedBox(height: 5,),
                 Row(
                   children: [
@@ -504,8 +475,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

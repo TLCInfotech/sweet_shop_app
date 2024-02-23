@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_type_dialog.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/util.dart';
 import '../../../common_widget/get_country_layout.dart';
 import '../../../common_widget/get_district_layout.dart';
@@ -160,8 +161,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.CREATE_EXPENSE,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("ledger_new")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -197,115 +198,12 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
   }
 
-  /* Widget for TopBar Layout */
-  Widget getAddTopBarLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .05,
-          left: parentWidth * 0.0,
-          right: parentWidth * 0.05),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            color: Colors.transparent,
-            width: parentWidth * .25,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: parentWidth * .05),
-                    child: Image(
-                      image: AssetImage("assets/images/back.png"),
-                      height: parentHeight * .035,
-                      width: parentHeight * .035,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Text(
-          "Create Item",
-          style: TextStyle(
-            fontFamily: "Montserrat_Bold",
-            fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Container(
-          width: parentWidth * .2,
-          decoration: BoxDecoration(
-            color: CommonColor.THEME_COLOR,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: parentHeight * .01, bottom: parentHeight * .01),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  StringEn.POST,
-                  style: TextStyle(
-                    color: CommonColor.BLACK_COLOR,
-                    fontSize: SizeConfig.blockSizeHorizontal * 4.3,
-                    fontFamily: 'Inter_Regular_Font',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
 
   List<String> LimitDataUnit = ["Cr","Dr"];
 
   String ?selectedLimitUnit = null;
 
   double opacityLevel = 1.0;
-
-  /* Widget for create first project layout */
-  Widget getTopBarSubTextLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: parentHeight * .01,
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "  StringEn.CREATE_FIRST_PROJECT",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            "StringEn.THREE_THREE",
-            style: TextStyle(
-              color: CommonColor.WHITE_COLOR,
-              fontSize: SizeConfig.blockSizeHorizontal * 6,
-              fontFamily: 'Raleway_Bold_Font',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 
   /* Widget for all text form field widget layout */
@@ -330,7 +228,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 children: [
                   getImageLayout(parentHeight, parentWidth),
                   SizedBox(height: 20,),
-                  getFieldTitleLayout(StringEn.BASIC_INFO),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!, ),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -356,7 +254,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     ),
                   ),
                   SizedBox(height: 20,),
-                  getFieldTitleLayout(StringEn.DOCUMENT_INFO),
+                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("document_information")!, ),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -376,7 +274,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                             adharFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_AADHAR_NO,
+                        title: ApplicationLocalizations.of(context)!.translate("adhar_number")!, 
                         documentFile: adharFile,
                         controller: adharNoController,
                         focuscontroller: _adharoFocus,
@@ -394,7 +292,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                             panFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_PAN_NO,
+                        title:      ApplicationLocalizations.of(context)!.translate("pan_number")! ,
                         documentFile: panFile,
                         controller: panNoController,
                         focuscontroller: _panNoFocus,
@@ -412,7 +310,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                             gstFile=file;
                           });
                         },
-                        title:  StringEn.FRANCHISEE_GST_NO,
+                        title:      ApplicationLocalizations.of(context)!.translate("gst_number")!,
                         documentFile: gstFile,
                         controller: gstNoController,
                         focuscontroller: _gstNoFocus,
@@ -422,7 +320,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                     ),
                   ),
                   SizedBox(height: 20,),
-                  getFieldTitleLayout(StringEn.TAX_INFO),
+                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("tax_information")!, ),
                   Container(
 
                     padding: EdgeInsets.all(10),
@@ -445,7 +343,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   // getTaxLayout(parentHeight, parentWidth),
 
                   SizedBox(height: 20,),
-                  getFieldTitleLayout(StringEn.ACCOUNT_INFO),
+                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("account_information")!, ),
                   Container(
 
                     padding: EdgeInsets.all(10),
@@ -508,14 +406,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.NAME;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("name")! ;
         }
         return null;
       },
       controller: nameController,
       focuscontroller: _nameFocus,
       focusnext: _leaderGroupFocus,
-      title: StringEn.NAME,
+      title:     ApplicationLocalizations.of(context)!.translate("name")! ,
       callbackOnchage: (value) {
         setState(() {
           nameController.text = value;
@@ -533,14 +431,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return  SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.LEADER_GROUP;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +    ApplicationLocalizations.of(context)!.translate("ledger_group")! ;
         }
         return null;
       },
       controller: leaderGroupController,
       focuscontroller: _leaderGroupFocus,
       focusnext: _contactPersonFocus,
-      title: StringEn.LEADER_GROUP,
+      title:     ApplicationLocalizations.of(context)!.translate("ledger_group")! ,
       callbackOnchage: (value) {
         setState(() {
           leaderGroupController.text = value;
@@ -560,14 +458,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.FRANCHISEE_CONTACT_PERSON;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("contact_person")! ;
         }
         return null;
       },
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
-      title: StringEn.FRANCHISEE_CONTACT_PERSON,
+      title:     ApplicationLocalizations.of(context)!.translate("contact_person")! ,
       callbackOnchage: (value) {
         setState(() {
           contactPersonController.text = value;
@@ -585,14 +483,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return  SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.ADDRESS;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("address")!;
         }
         return null;
       },
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
-      title: StringEn.ADDRESS,
+      title:     ApplicationLocalizations.of(context)!.translate("address")! ,
       callbackOnchage: (value) {
         setState(() {
           addressController.text = value;
@@ -637,14 +535,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   Widget getContactNoLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField( validation: (value) {
       if (value!.isEmpty) {
-        return StringEn.ENTER+StringEn.CONTACT_NO;
+        return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("contact_no")! ;
       }
       return null;
     },
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
-      title: StringEn.CONTACT_NO,
+      title:   ApplicationLocalizations.of(context)!.translate("contact_no")! ,
       callbackOnchage: (value) {
         setState(() {
           contactController.text = value;
@@ -662,14 +560,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   Widget getEmilLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField( validation: (value) {
       if (value!.isEmpty) {
-        return StringEn.ENTER+StringEn.EMAIL;
+        return     ApplicationLocalizations.of(context)!.translate("enter")! +   ApplicationLocalizations.of(context)!.translate("email_address")! ;
       }
       return null;
     },
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
-      title: StringEn.EMAIL,
+      title:  ApplicationLocalizations.of(context)!.translate("email_address")! ,
       callbackOnchage: (value) {
         setState(() {
           emailController.text = value;
@@ -695,7 +593,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               controller: outstandingLimitController,
               focuscontroller: _outstandingLimitFocus,
               focusnext: _extNameFocus,
-              title: StringEn.FRANCHISEE_OUTSTANDING_LIMIT,
+              title: ApplicationLocalizations.of(context)!.translate("outstanding_limit")!,
               callbackOnchage: (value) {
                 setState(() {
                   outstandingLimitController.text = value;
@@ -706,11 +604,9 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
               validation: (value) {
                 if (value!.isEmpty) {
-                  return StringEn.ENTER+StringEn.FRANCHISEE_OUTSTANDING_LIMIT;
+                  return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("outstanding_limit")! ;
                 }
-                else if (Util.isEmailValid(value)) {
-                  return "Enter Valid Email";
-                }
+
                 return null;
               },
             )
@@ -735,7 +631,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           ),
           child: DropdownButton<dynamic>(
             hint: Text(
-              StringEn.UNIT, style: hint_textfield_Style,),
+              ApplicationLocalizations.of(context)!.translate("unit")!, style: hint_textfield_Style,),
             underline: SizedBox(),
             isExpanded: true,
             value: selectedLimitUnit,
@@ -783,8 +679,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              StringEn.TAX_TYPE,
+             Text(
+              ApplicationLocalizations.of(context)!.translate("tax_type")!,
               style: item_heading_textStyle,
             ),
             GestureDetector(
@@ -861,14 +757,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.HSN_NO;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("hsn_no")!;
         }
         return null;
       },
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
       focusnext: _taxRateFocus,
-      title: StringEn.HSN_NO,
+      title: ApplicationLocalizations.of(context)!.translate("hsn_no")!,
       callbackOnchage: (value) {
         setState(() {
           hsnNoController.text = value;
@@ -891,14 +787,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.CGST;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("cgst_percent")!;
         }
         return null;
       },
       controller: CGSTController,
       focuscontroller: _CGSTFocus,
       focusnext: _SGSTFocus,
-      title: StringEn.CGST,
+      title: ApplicationLocalizations.of(context)!.translate("cgst_percent")!,
       callbackOnchage: (value) {
         setState(() {
           CGSTController.text = value;
@@ -918,14 +814,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.CESS;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("cess_percent")!;
         }
         return null;
       },
       controller: cessController,
       focuscontroller: _cessFocus,
       focusnext: _addCessFocus,
-      title: StringEn.CESS,
+      title: ApplicationLocalizations.of(context)!.translate("cess_percent")!,
       callbackOnchage: (value) {
         setState(() {
           cessController.text = value;
@@ -967,8 +863,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              StringEn.TAX_CATEGORY,
+             Text(
+              ApplicationLocalizations.of(context)!.translate("tax_category")!,
               style: item_heading_textStyle,
             ),
             GestureDetector(
@@ -1010,7 +906,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       children: [
                         Expanded(
                           child: Text(
-                            taxCategoryName == "" ? "Select category" : taxCategoryName,
+                            taxCategoryName == "" ? ApplicationLocalizations.of(context)!.translate("select_category")!: taxCategoryName,
                             style: taxCategoryName == ""
                                 ? hint_textfield_Style
                                 : text_field_textStyle,
@@ -1047,14 +943,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.TAX_RATE;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("tax_rate")!;
         }
         return null;
       },
       controller: taxRateController,
       focuscontroller: _taxRateFocus,
       focusnext: _CGSTFocus,
-      title: StringEn.TAX_RATE,
+      title: ApplicationLocalizations.of(context)!.translate("tax_rate")!,
       callbackOnchage: (value) {
         setState(() {
           taxRateController.text = value;
@@ -1076,14 +972,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.SGST;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("sgst_percent")!;
         }
         return null;
       },
       controller: SGSTController,
       focuscontroller: _SGSTFocus,
       focusnext: _cessFocus,
-      title: StringEn.SGST,
+      title: ApplicationLocalizations.of(context)!.translate("sgst_percent")!,
       callbackOnchage: (value) {
         setState(() {
           SGSTController.text = value;
@@ -1105,14 +1001,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       validation: (value) {
 
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.ADD_CESS;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("add_cess_percent")!;
         }
         return null;
       },
       controller: addCessController,
       focuscontroller: _addCessFocus,
       focusnext: _bankNameFocus,
-      title: StringEn.ADD_CESS,
+      title: ApplicationLocalizations.of(context)!.translate("add_cess_percent")!,
       callbackOnchage: (value) {
         setState(() {
           addCessController.text = value;
@@ -1133,7 +1029,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   /* Widget for distric/city text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
-        title:  StringEn.DISTRICTCITY,
+        title:  ApplicationLocalizations.of(context)!.translate("city")!,
         callback: (name){
           setState(() {
             districtController.text=name!;
@@ -1146,7 +1042,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return GetStateLayout(
-        title:  StringEn.STATE,
+        title:  ApplicationLocalizations.of(context)!.translate("state")!,
         callback: (name){
           setState(() {
             stateName=name!;
@@ -1163,7 +1059,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: pinCodeController,
       focuscontroller: _pinCodeFocus,
       focusnext: _contactFocus,
-      title: StringEn.PIN_CODE,
+      title: ApplicationLocalizations.of(context)!.translate("pin_code")!,
       callbackOnchage: (value) {
         setState(() {
           pinCodeController.text = value;
@@ -1174,7 +1070,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return "Enter Contact Person";
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pin_code")!;
         }
         return null;
       },
@@ -1187,7 +1083,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return GetCountryLayout(
-        title:  StringEn.COUNTRY,
+        title:  ApplicationLocalizations.of(context)!.translate("country")!,
         callback: (name){
           setState(() {
             countryName=name!;
@@ -1203,14 +1099,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.EXT_NAME;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("ext_name")!;
         }
         return null;
       },
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
-      title: StringEn.EXT_NAME,
+      title:  ApplicationLocalizations.of(context)!.translate("ext_name")!,
       callbackOnchage: (value) {
         setState(() {
           extNameController.text = value;
@@ -1285,7 +1181,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             child: Padding(
                 padding: EdgeInsets.only(
                     left: parentWidth * .02, top: parentHeight * .01),
-                child:const Text(StringEn.TCS_TDS_APPLICABLE,
+                child: Text( ApplicationLocalizations.of(context)!.translate("tsc_tds_applicable")!,
                   style: page_heading_textStyle,)
             ),
           ),
@@ -1304,7 +1200,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: bankNameController,
       focuscontroller: _bankNameFocus,
       focusnext: _bankBranchFocus,
-      title: StringEn.BANK_NAME,
+      title: ApplicationLocalizations.of(context)!.translate("bank_name")!,
       callbackOnchage: (value) {
         setState(() {
           bankNameController.text = value;
@@ -1315,7 +1211,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANK_NAME;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("bank_name")!;
         }
 
         return null;
@@ -1331,7 +1227,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: bankBranchController,
       focuscontroller: _bankBranchFocus,
       focusnext: _IFSCCodeFocus,
-      title: StringEn.BANT_BRACH,
+      title:     ApplicationLocalizations.of(context)!.translate("bank_branch")! ,
       callbackOnchage: (value) {
         setState(() {
           bankBranchController.text = value;
@@ -1342,7 +1238,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +    ApplicationLocalizations.of(context)!.translate("bank_branch")! ;
         }
         return null;
       },
@@ -1355,7 +1251,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: IFSCCodeController,
       focuscontroller: _IFSCCodeFocus,
       focusnext: _aCHolderNameFocus,
-      title: StringEn.IFSC_CODE,
+      title: ApplicationLocalizations.of(context)!.translate("ifsc_branch")!,
       callbackOnchage: (value) {
         setState(() {
           IFSCCodeController.text = value;
@@ -1366,7 +1262,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +    ApplicationLocalizations.of(context)!.translate("bank_branch")! ;
         }
         return null;
       },
@@ -1380,7 +1276,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: aCHolderNameController,
       focuscontroller: _aCHolderNameFocus,
       focusnext: _accountNoFocus,
-      title: StringEn.ACCOUNT_HOLDER_NAME,
+      title:ApplicationLocalizations.of(context)!.translate("ac_holder_name")!,
       callbackOnchage: (value) {
         setState(() {
           aCHolderNameController.text = value;
@@ -1391,7 +1287,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[a-z A-Z]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +    ApplicationLocalizations.of(context)!.translate("bank_branch")! ;
         }
         return null;
       },
@@ -1405,7 +1301,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: accountNoController,
       focuscontroller: _accountNoFocus,
       focusnext: _bankNameFocus,
-      title: StringEn.ACCOUNT_NO,
+      title: ApplicationLocalizations.of(context)!.translate("account_no")!,
       callbackOnchage: (value) {
         setState(() {
           accountNoController.text = value;
@@ -1416,7 +1312,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANT_BRACH;
+          return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("bank_branch")! ;
         }
         return null;
       },
@@ -1467,8 +1363,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

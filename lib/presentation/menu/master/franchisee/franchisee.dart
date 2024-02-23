@@ -5,6 +5,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee_create_activity.dart';
 
+import '../../../../core/localss/application_localizations.dart';
+
 
 class AddFranchiseeActivity extends StatefulWidget {
   const AddFranchiseeActivity({super.key, required mListener});
@@ -22,7 +24,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
         preferredSize: AppBar().preferredSize,
         child: SafeArea(
           child:  Card(
-            elevation: 3,
+            elevation: 3, 
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25)
             ),
@@ -36,7 +38,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.FRANCHISEE_TITLE,
+                ApplicationLocalizations.of(context)!.translate("franchisee")!,
                 style: appbar_text_style,),
             ),
           ),

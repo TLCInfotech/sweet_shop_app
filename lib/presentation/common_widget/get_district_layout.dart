@@ -14,6 +14,7 @@ import '../../core/common_style.dart';
 import '../../core/imagePicker/image_picker_dialog.dart';
 import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
 import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 import '../dialog/state_dialog.dart';
@@ -95,7 +96,7 @@ class _GetDistrictLayoutState extends State<GetDistrictLayout> with SingleTicker
                         Container(
                           width:((SizeConfig.screenWidth) * .4 )- 40,
                          child: Text(
-                            widget.districtName == "" ? StringEn.SELECT_DISTRICT : widget.districtName,
+                            widget.districtName == "" ? ApplicationLocalizations.of(context)!.translate("select_city")!  : widget.districtName,
                             style: widget.districtName == ""
                                 ? hint_textfield_Style
                                 : text_field_textStyle,
