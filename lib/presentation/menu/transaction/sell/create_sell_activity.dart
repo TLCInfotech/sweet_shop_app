@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -121,7 +122,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.ADD_SELL,
+                  ApplicationLocalizations.of(context)!.translate("sale_invoice_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -204,8 +205,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),
@@ -256,8 +257,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               key: _formkey,
               child: Column(
                 children: [
-
-                  //   getFieldTitleLayout(StringEn.INVOICE_DETAIL),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -279,10 +278,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_ITEMS,
+                                  Text(
+                                    ApplicationLocalizations.of(context)!.translate("add_item")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -522,7 +522,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       GetDateLayout(
 
           titleIndicator: false,
-          title: StringEn.DATE,
+          title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
               invoiceDate=date!;
@@ -537,7 +537,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     return
       GetFranchiseeLayout(
           titleIndicator: false,
-          title: StringEn.FRANCHISEE_NAME ,
+          title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
           callback: (name){
             setState(() {
               selectedFranchiseeName=name!;

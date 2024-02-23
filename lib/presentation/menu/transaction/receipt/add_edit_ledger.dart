@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +6,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class AddOrEditLedger extends StatefulWidget {
@@ -92,12 +91,13 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.ADD_LEDGER_ITEM,
+                          ApplicationLocalizations.of(context)!.translate("add_ledger")!,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.LEDGER),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
+
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -134,7 +134,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       controller: narration,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.NARRATION,
+      title:   ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
         setState(() {
           narration.text = value;
@@ -159,7 +159,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       controller: amount,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.AMOUNT,
+      title:    ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value)async {
         setState(() {
           amount.text = value;
@@ -241,11 +241,11 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -278,11 +278,11 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

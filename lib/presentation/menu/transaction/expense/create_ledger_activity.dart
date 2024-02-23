@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -123,8 +124,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                 ),
 
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.CREATE_EXPENSES,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("expense_invoice_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -263,7 +264,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     return GetDateLayout(
 
         titleIndicator: false,
-        title: StringEn.DATE,
+        title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -277,7 +278,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  GetFranchiseeLayout(
         titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
+        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -450,8 +451,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),

@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
-
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -46,7 +42,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
 
               backgroundColor: Colors.white,
               title: Text(
-                StringEn.RECEIPT_INVOICE,
+                ApplicationLocalizations.of(context)!.translate("receipt_invoice")!,
                 style: appbar_text_style,),
             ),
           ),
@@ -91,7 +87,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             newDate=date!;
@@ -125,7 +121,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Invoices", style: subHeading_withBold,),
+              Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
