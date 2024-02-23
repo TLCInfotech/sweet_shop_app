@@ -7,6 +7,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../core/localss/application_localizations.dart';
+
 class ChangePasswordActivity extends StatefulWidget {
   const ChangePasswordActivity({super.key});
 
@@ -58,8 +60,8 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.CHANGE_PASSWORD,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("change_password")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -150,11 +152,11 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.NEW_PASSWORD,
+                ApplicationLocalizations.of(context)!.translate("report_type")!,
                 style: item_heading_textStyle,
               ),
             ],
@@ -191,7 +193,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: StringEn.ENTER_A_NEW_PASSWORD,
+                      hintText:ApplicationLocalizations.of(context)!.translate("new_password")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: newPasswordController,
@@ -216,11 +218,11 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                StringEn.CONFIRM_PASSWORD,
+                ApplicationLocalizations.of(context)!.translate("confirm_password")!,
                 style: item_heading_textStyle,
               ),
             ],
@@ -257,7 +259,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: StringEn.ENTER_CONFIRM_PASSWORD,
+                      hintText: ApplicationLocalizations.of(context)!.translate("confirm_password")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: confirmPasswordController,
@@ -310,8 +312,8 @@ bool disableColor=false;
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.CHANGE_PASSWORD,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("change_password")!,
                       style: page_heading_textStyle,
                     ),
                   ),

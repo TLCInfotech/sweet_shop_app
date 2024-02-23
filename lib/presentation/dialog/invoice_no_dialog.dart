@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -51,9 +52,9 @@ class _InvoiceDialogState extends State<InvoiceDialog>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: const Center(
+                    child:  Center(
                       child: Text(
-                          StringEn.INVOICE_NO,
+                          ApplicationLocalizations.of(context)!.translate("invoice_no")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -107,7 +108,6 @@ class _InvoiceDialogState extends State<InvoiceDialog>{
               Expanded(
                 child: TextFormField(
                   textInputAction: TextInputAction.done,
-                  // autofillHints: const [AutofillHints.email],
                   keyboardType: TextInputType.emailAddress,
                   controller: _textController,
                   textAlignVertical: TextAlignVertical.center,
@@ -117,7 +117,7 @@ class _InvoiceDialogState extends State<InvoiceDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText:ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -213,9 +213,9 @@ class _InvoiceDialogState extends State<InvoiceDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -13,19 +14,18 @@ class DistrictDialog extends StatefulWidget {
   State<DistrictDialog> createState() => _DistrictDialogState();
 }
 
-class _DistrictDialogState extends State<DistrictDialog>{
-
+class _DistrictDialogState extends State<DistrictDialog> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
-  FocusNode searchFocus = FocusNode() ;
+  FocusNode searchFocus = FocusNode();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
-  List district_list= ['Kolhapur', 'Sangli', 'Karad','Pune'];
+
+  List district_list = ['Kolhapur', 'Sangli', 'Karad', 'Pune'];
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,12 @@ class _DistrictDialogState extends State<DistrictDialog>{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+            padding: EdgeInsets.only(
+                left: SizeConfig.screenWidth * .05,
+                right: SizeConfig.screenWidth * .05),
             child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
+              height: SizeConfig.screenHeight * .5,
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -49,42 +51,45 @@ class _DistrictDialogState extends State<DistrictDialog>{
               child: Column(
                 children: [
                   Container(
-                    height: SizeConfig.screenHeight*.08,
+                    height: SizeConfig.screenHeight * .08,
                     child: Center(
                       child: Text(
-                          StringEn.FRANCHISEE_SELECT_STATE,
-                          style: page_heading_textStyle
-                      ),
+                          ApplicationLocalizations.of(context)!.translate("select_state")!,
+                          style: page_heading_textStyle),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  getAddSearchLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth),
                   Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
+                      height: SizeConfig.screenHeight * .32,
+                      child: getList(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ],
               ),
             ),
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          getCloseButton(SizeConfig.screenHeight, SizeConfig.screenWidth),
         ],
       ),
     );
   }
 
-
-  Widget getAddSearchLayout(double parentHeight, double parentWidth){
+  Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return Padding(
-      padding:  EdgeInsets.only(bottom: parentHeight*.015,left: parentWidth*.04,right: parentWidth*.04),
+      padding: EdgeInsets.only(
+          bottom: parentHeight * .015,
+          left: parentWidth * .04,
+          right: parentWidth * .04),
       child: Container(
-        height: parentHeight*.05,
+        height: parentHeight * .05,
         alignment: Alignment.center,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           color: CommonColor.GRAY_COLOR.withOpacity(0.5),
-          borderRadius: BorderRadius.all(Radius.circular(050)),
+          borderRadius: const BorderRadius.all(Radius.circular(050)),
         ),
-        child:  Padding(
-          padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04),
+        child: Padding(
+          padding: EdgeInsets.only(
+              left: parentWidth * .04, right: parentWidth * .04),
           child: Row(
             children: [
               GestureDetector(
@@ -95,8 +100,8 @@ class _DistrictDialogState extends State<DistrictDialog>{
                     color: Colors.transparent,
                     child: Padding(
                       padding: EdgeInsets.only(right: parentWidth * .015),
-                      child:Image(
-                        image:  AssetImage("assets/images/search.png"),
+                      child: Image(
+                        image: const AssetImage("assets/images/search.png"),
                         height: parentHeight * .025,
                         fit: BoxFit.contain,
                         color: CommonColor.SEARCH_TEXT_COLOR,
@@ -116,7 +121,7 @@ class _DistrictDialogState extends State<DistrictDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText: "Search",
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -148,26 +153,27 @@ class _DistrictDialogState extends State<DistrictDialog>{
     );
   }
 
-
-  Widget getList(double parentHeight,double parentWidth){
+  Widget getList(double parentHeight, double parentWidth) {
     return Padding(
-      padding:EdgeInsets.only(top: parentHeight*.01),
+      padding: EdgeInsets.only(top: parentHeight * .01),
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
           itemCount: district_list.length,
-          itemBuilder:(BuildContext context, int index){
+          itemBuilder: (BuildContext context, int index) {
             return Padding(
-              padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
+              padding: EdgeInsets.only(
+                  left: parentWidth * .1, right: parentWidth * .1),
               child: GestureDetector(
-                onTap: (){
-                  if(widget.mListener!=null){
-                    widget.mListener.selectDistrict(index.toString(),district_list.elementAt(index));
+                onTap: () {
+                  if (widget.mListener != null) {
+                    widget.mListener.selectDistrict(
+                        index.toString(), district_list.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
                 child: Container(
-                  height: parentHeight*.06,
+                  height: parentHeight * .06,
                   decoration: const BoxDecoration(
                     color: Colors.transparent,
                     border: Border(
@@ -177,7 +183,7 @@ class _DistrictDialogState extends State<DistrictDialog>{
                       ),
                     ),
                   ),
-                  child:Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -195,16 +201,17 @@ class _DistrictDialogState extends State<DistrictDialog>{
     );
   }
 
-  Widget getCloseButton(double parentHeight, double parentWidth){
+  Widget getCloseButton(double parentHeight, double parentWidth) {
     return Padding(
-      padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
+      padding:
+          EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
           // Scaffold.of(context).openDrawer();
         },
         child: Container(
-          height: parentHeight*.065,
+          height: parentHeight * .065,
           decoration: const BoxDecoration(
             color: CommonColor.THEME_COLOR,
             borderRadius: BorderRadius.only(
@@ -212,9 +219,9 @@ class _DistrictDialogState extends State<DistrictDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child:  Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),
@@ -223,13 +230,8 @@ class _DistrictDialogState extends State<DistrictDialog>{
       ),
     );
   }
-
-
-
-
 }
 
-
-abstract class DistrictDialogInterface{
-  selectDistrict(String id,String name);
+abstract class DistrictDialogInterface {
+  selectDistrict(String id, String name);
 }

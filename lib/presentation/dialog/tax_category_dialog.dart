@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -51,9 +52,9 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: const Center(
+                    child:  Center(
                       child: Text(
-                          StringEn.TAX_CATEGORY,
+                          ApplicationLocalizations.of(context)!.translate("tax_category")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -117,7 +118,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText: ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -213,9 +214,9 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

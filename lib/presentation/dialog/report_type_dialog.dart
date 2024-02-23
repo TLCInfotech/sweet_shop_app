@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -42,7 +43,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -55,7 +56,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.REPORT_TYPE,
+                          ApplicationLocalizations.of(context)!.translate("report_type")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -84,7 +85,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
         alignment: Alignment.center,
         decoration:  BoxDecoration(
           color: CommonColor.GRAY_COLOR.withOpacity(0.5),
-          borderRadius: BorderRadius.all(Radius.circular(050)),
+          borderRadius: const BorderRadius.all(Radius.circular(050)),
         ),
         child:  Padding(
           padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04),
@@ -99,7 +100,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
                     child: Padding(
                       padding: EdgeInsets.only(right: parentWidth * .015),
                       child:Image(
-                        image:  AssetImage("assets/images/search.png"),
+                        image:  const AssetImage("assets/images/search.png"),
                         height: parentHeight * .025,
                         fit: BoxFit.contain,
                         color: CommonColor.SEARCH_TEXT_COLOR,
@@ -119,7 +120,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText: ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -215,9 +216,9 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

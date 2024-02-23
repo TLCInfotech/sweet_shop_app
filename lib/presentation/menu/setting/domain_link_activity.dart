@@ -7,6 +7,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../core/localss/application_localizations.dart';
+
 class DomainLinkActivity extends StatefulWidget {
   const DomainLinkActivity({super.key});
   // final DomainLinkActivityInterface mListener;
@@ -52,8 +54,8 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.DOMAIN_LINK,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("domain_link")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -172,7 +174,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: StringEn.ENTER_A_DOMAIN_LINK,
+                      hintText:  ApplicationLocalizations.of(context)!.translate("domain_link")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: domainLinkController,
@@ -225,8 +227,8 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

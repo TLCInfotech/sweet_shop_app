@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -58,8 +57,8 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.EXPENSE_REPORT,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("expense_report")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -143,7 +142,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return GetReportTypeLayout(
-        title:  StringEn.REPORT_TYPE,
+        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
             reportType=name!;
@@ -156,7 +155,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_ONE,
+        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
         callback: (date){
           setState(() {
             applicablefrom=date!;
@@ -170,7 +169,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_TWO,
+        title:ApplicationLocalizations.of(context)!.translate("to_date")!,
         callback: (date){
           setState(() {
             applicableTo=date!;
@@ -184,7 +183,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
-        title: StringEn.FRANCHISEE_NAME ,
+        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -208,7 +207,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
       controller: expenseController,
       focuscontroller: _expenseFocus,
       focusnext: null,
-      title: StringEn.EXPENSES,
+      title:ApplicationLocalizations.of(context)!.translate("expense")!,
       callbackOnchage: (value) {
         setState(() {
           expenseController.text = value;
@@ -254,8 +253,8 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SHOW_REPORT,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("show_report")!,
                       style: page_heading_textStyle,
                     ),
                   ),

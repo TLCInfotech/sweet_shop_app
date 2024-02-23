@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_item_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
 import '../../../../core/colors.dart';
@@ -146,7 +147,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return GetReportTypeLayout(
-        title:  StringEn.REPORT_TYPE,
+        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
             reportType=name!;
@@ -159,7 +160,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_ONE,
+        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
         callback: (date){
           setState(() {
             applicablefrom=date!;
@@ -173,7 +174,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_TWO,
+        title:ApplicationLocalizations.of(context)!.translate("to_date")!,
         callback: (date){
           setState(() {
             applicableTo=date!;
@@ -187,7 +188,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
-        title: StringEn.FRANCHISEE_NAME ,
+        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -202,7 +203,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   Widget getItemameLayout(double parentHeight, double parentWidth) {
     return
       GetItemLayout(
-          title: StringEn.ITEM,
+          title:ApplicationLocalizations.of(context)!.translate("item")!,
           callback: (value){
             setState(() {
               ItemName=value!;
@@ -216,7 +217,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
-        title: StringEn.ITEM_CATEGORY,
+        title:ApplicationLocalizations.of(context)!.translate("item_category")!,
         callback: (value){
           setState(() {
             categoryName=value!;
@@ -259,8 +260,8 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SHOW_REPORT,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("show_report")!,
                       style: page_heading_textStyle,
                     ),
                   ),

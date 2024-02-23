@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/get_report_type_layout.dart';
@@ -147,7 +148,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return GetReportTypeLayout(
-        title:  StringEn.REPORT_TYPE,
+        title:       ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
             reportType=name!;
@@ -159,7 +160,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_ONE,
+        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
         callback: (date){
           setState(() {
             applicablefrom=date!;
@@ -173,7 +174,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_TWO,
+        title:ApplicationLocalizations.of(context)!.translate("to_date")!,
         callback: (date){
           setState(() {
             applicableTwofrom=date!;
@@ -187,7 +188,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
-        title: StringEn.FRANCHISEE_NAME ,
+        title:       ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             franchisee.text=name!;
@@ -209,7 +210,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
       controller: bankCashController,
       focuscontroller: bankcashFocus,
       focusnext: null,
-      title: StringEn.BANK_CASH_LEDGER,
+      title:ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callbackOnchage: (value) {
         setState(() {
           bankCashController.text = value;
@@ -256,8 +257,8 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

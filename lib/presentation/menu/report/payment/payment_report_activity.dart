@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
@@ -64,8 +65,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                 StringEn.PAYMENT_REPORT,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("Payment Report")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -149,7 +150,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return GetReportTypeLayout(
-        title:  StringEn.REPORT_TYPE,
+        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
             reportType=name!;
@@ -161,7 +162,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_ONE,
+        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
         callback: (date){
           setState(() {
             applicablefrom=date!;
@@ -175,7 +176,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_TWO,
+        title:       ApplicationLocalizations.of(context)!.translate("to_date")!,
         callback: (date){
           setState(() {
             applicableTwofrom=date!;
@@ -198,7 +199,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
       controller: leaderController,
       focuscontroller: _leaderFocus,
       focusnext: null,
-      title: StringEn.LEDGER,
+      title:       ApplicationLocalizations.of(context)!.translate("ledger_name")!,
       callbackOnchage: (value) {
         setState(() {
           leaderController.text = value;
@@ -222,7 +223,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
       controller: bankCashController,
       focuscontroller: bankcashFocus,
       focusnext: null,
-      title: StringEn.BANK_CASH_LEDGER,
+      title:       ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callbackOnchage: (value) {
         setState(() {
           bankCashController.text = value;
@@ -270,8 +271,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

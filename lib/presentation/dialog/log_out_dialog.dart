@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 
 class LogOutDialog extends StatefulWidget {
@@ -83,7 +84,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
     return Padding(
       padding: EdgeInsets.only(top: parentHeight * .019),
       child: Text(
-        "Log out",
+        ApplicationLocalizations.of(context)!.translate("log_out")!,
         style: TextStyle(
           color: CommonColor.BLACK_COLOR,
           fontSize: SizeConfig.blockSizeHorizontal * 5,
@@ -106,7 +107,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
         children: [
           Flexible(
             child: Text(
-              "Are you sure you want to log out? You can log in any time you want again.",
+              ApplicationLocalizations.of(context)!.translate("log_out_sub_text")!,
               style: TextStyle(
                 color: CommonColor.BLACK_COLOR,
                 fontSize: SizeConfig.blockSizeHorizontal * 4.0,
@@ -142,7 +143,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "LOG OUT",
+                ApplicationLocalizations.of(context)!.translate("log_out_caps")!,
                 style: TextStyle(
                   color: CommonColor.RED_COLOR,
                   fontSize: SizeConfig.blockSizeHorizontal * 4,
@@ -168,7 +169,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
         padding: EdgeInsets.only(top: parentHeight * .0),
         child: Container(
           height: parentHeight * .07,
-          decoration:   BoxDecoration(
+          decoration:   const BoxDecoration(
             border: Border(
               top: BorderSide(width: 1, color: CommonColor.HINT_TEXT),
             ),
@@ -177,7 +178,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "CANCEL",
+              ApplicationLocalizations.of(context)!.translate("cancel")!,
                 style: TextStyle(
                   color: CommonColor.BLACK_COLOR,
                   fontSize: SizeConfig.blockSizeHorizontal * 4,

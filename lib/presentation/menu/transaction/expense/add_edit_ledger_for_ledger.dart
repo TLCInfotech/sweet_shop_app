@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -92,14 +93,14 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: const Center(
+                    child:Center(
                       child: Text(
-                          StringEn.ADD_EEXPENSE,
+                          ApplicationLocalizations.of(context)!.translate("add_expense")!,
                           style: page_heading_textStyle
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(StringEn.EXPENSES),
+                  getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("expense")!,),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -132,7 +133,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       controller: narration,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.NARRATION,
+      title:  ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
         setState(() {
           narration.text = value;
@@ -157,7 +158,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       controller: amount,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.AMOUNT,
+      title: ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value)async {
         setState(() {
           amount.text = value;
@@ -194,7 +195,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         focusNode: searchFocus,
         style: text_field_textStyle,
         decoration: textfield_decoration.copyWith(
-          hintText: StringEn.EXPENSES,
+          hintText: ApplicationLocalizations.of(context)!.translate("expense")!,
           prefixIcon: Container(
               width: 50,
               padding: EdgeInsets.all(10),
@@ -240,11 +241,11 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -277,11 +278,11 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

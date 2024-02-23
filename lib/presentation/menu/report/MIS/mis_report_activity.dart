@@ -1,14 +1,11 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
@@ -65,8 +62,8 @@ class _MisReportActivityState extends State<MisReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.MIS_REPORT,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("mis_report")!,
                   style: appbar_text_style,
                 ),
               ),
@@ -152,7 +149,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return GetReportTypeLayout(
-        title:  StringEn.REPORT_TYPE,
+        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
             reportType=name!;
@@ -165,7 +162,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_ONE,
+        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
         callback: (date){
           setState(() {
             applicablefrom=date!;
@@ -179,7 +176,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title: StringEn.DATE_TWO,
+        title:ApplicationLocalizations.of(context)!.translate("to_date")!,
         callback: (date){
           setState(() {
             applicableTwofrom=date!;
@@ -193,7 +190,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
-        title: StringEn.FRANCHISEE_NAME ,
+        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             franchisee.text=name!;
@@ -238,8 +235,8 @@ class _MisReportActivityState extends State<MisReportActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: const Text(
-                      StringEn.SAVE,
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

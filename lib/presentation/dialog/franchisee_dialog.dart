@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -55,7 +56,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.FRANCHISE,
+                          ApplicationLocalizations.of(context)!.translate("franchisee")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -119,7 +120,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText:ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -215,9 +216,9 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

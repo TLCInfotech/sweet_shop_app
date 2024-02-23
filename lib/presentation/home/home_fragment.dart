@@ -27,7 +27,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
@@ -37,8 +37,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                   },
                   child: Container(
                     color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(5.0),
                       child: Icon(
                         Icons.menu,
                         color: Colors.black,
@@ -56,7 +56,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             ),
           ),
         ),
-        backgroundColor: Color(0xFFfffff5),
+        backgroundColor: const Color(0xFFfffff5),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -65,16 +65,16 @@ class _HomeFragmentState extends State<HomeFragment> {
               children: [
                 getFieldTitleLayout("Sale,Purchase,Expense"),
                 salepurchasegraph(),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 getFieldTitleLayout("Also Explore"),
 
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 sale_purchase_expense_container(),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 getFieldTitleLayout("Yearly Report"),
@@ -90,19 +90,19 @@ class _HomeFragmentState extends State<HomeFragment> {
     return Container(
                 height: 180,
                 width: SizeConfig.screenWidth,
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 10,
                 ),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                         blurRadius: 5,
                         color: Colors.black.withOpacity(0.2),
                       ),
                     ],
-                    image: DecorationImage(
+                    image: const DecorationImage(
                         image:
                             AssetImage("assets/images/home_page_pichart.png"),
                         fit: BoxFit.fill)),
@@ -126,19 +126,19 @@ class _HomeFragmentState extends State<HomeFragment> {
     return Container(
                 height: 150,
                 width: SizeConfig.screenWidth,
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 10,
                 ),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                         blurRadius: 5,
                         color: Colors.black.withOpacity(0.2),
                       ),
                     ],
-                    image: DecorationImage(
+                    image: const DecorationImage(
                         image:
                             AssetImage("assets/images/home_page_graph1.png"),
                         fit: BoxFit.cover)),
@@ -171,7 +171,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           Container(
             height: 60,
             width: (SizeConfig.screenWidth * 0.85) / 3,
-            margin: EdgeInsets.all(15),
+            margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
                 color: boxcolor, borderRadius: BorderRadius.circular(5)),
             alignment: Alignment.center,
@@ -186,7 +186,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               color: boxcolor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           FaIcon(

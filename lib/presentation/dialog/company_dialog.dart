@@ -4,6 +4,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/localss/application_localizations.dart';
+
 class CompanyDialog extends StatefulWidget {
   final CompanyDialogInterface mListener;
 
@@ -51,9 +53,9 @@ class _CompanyDialogState extends State<CompanyDialog>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: const Center(
+                    child:  Center(
                       child: Text(
-                          StringEn.COMPANY,
+                          ApplicationLocalizations.of(context)!.translate("company")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -117,7 +119,7 @@ class _CompanyDialogState extends State<CompanyDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText: ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -213,9 +215,9 @@ class _CompanyDialogState extends State<CompanyDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

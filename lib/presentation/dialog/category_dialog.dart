@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
@@ -18,23 +19,6 @@ class _CategoryDialogState extends State<CategoryDialog>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
 
   @override
   void initState() {
@@ -44,7 +28,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
   }
-  List sweets=["Ladu","Bundi","Balushayi","Cake","bun pav",];
+  List sweets=["Ladu","Bundi","Balushayi","Cake","Bun Pav",];
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +42,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -71,8 +55,8 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                        "Select Category",
-                        style: TextStyle(
+                          ApplicationLocalizations.of(context)!.translate("select_category")!,
+                      style: TextStyle(
                           fontFamily: "Montserrat_Bold",
                           fontSize: SizeConfig.blockSizeHorizontal * 5.0,
                           color: Colors.black,
@@ -85,7 +69,6 @@ class _CategoryDialogState extends State<CategoryDialog>{
                   Container(
                       height: SizeConfig.screenHeight*.32,
                       child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
                 ],
               ),
             ),
@@ -105,7 +88,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
         alignment: Alignment.center,
         decoration:  BoxDecoration(
           color: CommonColor.GRAY_COLOR.withOpacity(0.5),
-          borderRadius: BorderRadius.all(Radius.circular(050)),
+          borderRadius: const BorderRadius.all(Radius.circular(050)),
         ),
         child:  Padding(
           padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04),
@@ -120,7 +103,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     child: Padding(
                       padding: EdgeInsets.only(right: parentWidth * .015),
                       child:Image(
-                        image:  AssetImage("assets/images/search.png"),
+                        image:  const AssetImage("assets/images/search.png"),
                         height: parentHeight * .025,
                         fit: BoxFit.contain,
                         color: CommonColor.SEARCH_TEXT_COLOR,
@@ -140,7 +123,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText:ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -222,10 +205,9 @@ class _CategoryDialogState extends State<CategoryDialog>{
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
+      child:GestureDetector(
+        onTap:(){
           Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
         },
         child: Container(
           height: parentHeight*.065,
@@ -236,9 +218,10 @@ class _CategoryDialogState extends State<CategoryDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child:Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
+             // StringEn.CLOSE,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

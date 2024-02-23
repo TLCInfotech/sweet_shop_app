@@ -4,6 +4,8 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/localss/application_localizations.dart';
+
 class CountryDialog extends StatefulWidget {
   final CountryDialogInterface mListener;
 
@@ -40,7 +42,7 @@ class _CountryDialogState extends State<CountryDialog>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -53,7 +55,7 @@ class _CountryDialogState extends State<CountryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          StringEn.FRANCHISEE_SELECT_STATE,
+                          ApplicationLocalizations.of(context)!.translate("select_state")!,
                           style: page_heading_textStyle
                       ),
                     ),
@@ -82,7 +84,7 @@ class _CountryDialogState extends State<CountryDialog>{
         alignment: Alignment.center,
         decoration:  BoxDecoration(
           color: CommonColor.GRAY_COLOR.withOpacity(0.5),
-          borderRadius: BorderRadius.all(Radius.circular(050)),
+          borderRadius: const BorderRadius.all(Radius.circular(050)),
         ),
         child:  Padding(
           padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04),
@@ -97,7 +99,7 @@ class _CountryDialogState extends State<CountryDialog>{
                     child: Padding(
                       padding: EdgeInsets.only(right: parentWidth * .015),
                       child:Image(
-                        image:  AssetImage("assets/images/search.png"),
+                        image:  const AssetImage("assets/images/search.png"),
                         height: parentHeight * .025,
                         fit: BoxFit.contain,
                         color: CommonColor.SEARCH_TEXT_COLOR,
@@ -117,7 +119,7 @@ class _CountryDialogState extends State<CountryDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText:  ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -213,9 +215,9 @@ class _CountryDialogState extends State<CountryDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

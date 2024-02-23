@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
+import '../../core/localss/application_localizations.dart';
 
 class CityDialog extends StatefulWidget {
   final CityDialogInterface mListener;
@@ -18,23 +18,7 @@ class _CityDialogState extends State<CityDialog>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
+
 
   @override
   void initState() {
@@ -58,7 +42,7 @@ class _CityDialogState extends State<CityDialog>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),
@@ -69,9 +53,9 @@ class _CityDialogState extends State<CityDialog>{
                 children: [
                   Container(
                     height: SizeConfig.screenHeight*.08,
-                    child: Center(
+                    child:  Center(
                       child: Text(
-                        StringEn.FRANCHISEE_SELECT_CITY,
+                          ApplicationLocalizations.of(context)!.translate("select_city")!,
                         style: page_heading_textStyle
                       ),
                     ),
@@ -100,7 +84,7 @@ class _CityDialogState extends State<CityDialog>{
         alignment: Alignment.center,
         decoration:  BoxDecoration(
           color: CommonColor.GRAY_COLOR.withOpacity(0.5),
-          borderRadius: BorderRadius.all(Radius.circular(050)),
+          borderRadius: const BorderRadius.all(Radius.circular(050)),
         ),
         child:  Padding(
           padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04),
@@ -115,7 +99,7 @@ class _CityDialogState extends State<CityDialog>{
                     child: Padding(
                       padding: EdgeInsets.only(right: parentWidth * .015),
                       child:Image(
-                        image:  AssetImage("assets/images/search.png"),
+                        image:  const AssetImage("assets/images/search.png"),
                         height: parentHeight * .025,
                         fit: BoxFit.contain,
                         color: CommonColor.SEARCH_TEXT_COLOR,
@@ -135,7 +119,7 @@ class _CityDialogState extends State<CityDialog>{
                     isDense: true,
                     counterText: '',
                     border: InputBorder.none,
-                    hintText:"Search",
+                    hintText:ApplicationLocalizations.of(context)!.translate("search")!,
                     hintStyle: TextStyle(
                         color: CommonColor.SEARCH_TEXT_COLOR,
                         fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -231,9 +215,9 @@ class _CityDialogState extends State<CityDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child:const Center(
+          child: Center(
             child: Text(
-              StringEn.CLOSE,
+              ApplicationLocalizations.of(context)!.translate("close")!,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

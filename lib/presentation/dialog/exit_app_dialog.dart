@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 
 class ExitAppDialog extends StatefulWidget {
@@ -38,13 +39,13 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
                 EdgeInsets.only(top: SizeConfig.blockSizeVertical * 10.0),
                 child: Center(
                   child: Card(
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5))
                     ),
                     child: Container(
                       height: SizeConfig.screenHeight * .2,
                       width: SizeConfig.screenWidth * .8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       child: Column(
@@ -77,7 +78,7 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
       children: <Widget>[
         Expanded(
           child: Text(
-              "Are you sure you want to exit from this app",
+              ApplicationLocalizations.of(context)!.translate("exit_app_sub_text")!,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: SizeConfig.blockSizeVertical * 2.3,
@@ -105,7 +106,7 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
             height:parentHeight*.05,
             width: parentWidth*.4,
             // width: SizeConfig.blockSizeVertical * 20.0,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(5),
@@ -115,7 +116,7 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Yes",
+                  ApplicationLocalizations.of(context)!.translate("yes")!,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: SizeConfig.blockSizeVertical * 2.1,
@@ -137,7 +138,7 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
             width: parentWidth*.4,
             decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR.withOpacity(0.4),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomRight: Radius.circular(5),
               ),
             ),
@@ -145,11 +146,10 @@ class _ExitAppDialogState extends State<ExitAppDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                 "No",
+                  ApplicationLocalizations.of(context)!.translate("no")!,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: SizeConfig.blockSizeVertical * 2.1,
-                    // fontFamily: Constant.AVENIR_HEAVY
                   ),
                   textScaleFactor: 1.05,
                 ),
