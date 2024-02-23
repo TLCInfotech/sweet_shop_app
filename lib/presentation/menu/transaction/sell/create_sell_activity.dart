@@ -9,10 +9,10 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
-import 'add_or_edit_Item.dart';
 
 
 class CreateSellInvoice extends StatefulWidget {
@@ -24,14 +24,14 @@ class CreateSellInvoice extends StatefulWidget {
   _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
 
-class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTickerProviderStateMixin,FranchiseeDialogInterface,AddOrEditItemSellInterface {
+class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTickerProviderStateMixin,AddOrEditItemSellInterface {
 
   final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
-  
+
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   final InvoiceNoController = TextEditingController();
@@ -99,7 +99,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
         color: Color(0xFFfffff5),
-       // borderRadius: BorderRadius.circular(16.0),
+        // borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFfffff5),
@@ -120,7 +120,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 ),
 
                 backgroundColor: Colors.white,
-                title: const Text(
+                title: Text(
                   StringEn.ADD_SELL,
                   style: appbar_text_style,),
               ),
@@ -156,7 +156,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       ),
     );
   }
-
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
@@ -258,7 +257,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               child: Column(
                 children: [
 
-               //   getFieldTitleLayout(StringEn.INVOICE_DETAIL),
+                  //   getFieldTitleLayout(StringEn.INVOICE_DETAIL),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -308,7 +307,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
 
   }
-
 
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return Container(
@@ -477,7 +475,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         context: context,
         pageBuilder: (context, animation2, animation1) {
           throw Exception('No widget to return in pageBuilder');
-        });
+        }
+    );
   }
 
   Container InvoiceInfo() {
@@ -498,7 +497,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           SizedBox(width: 5,),
           Expanded(
               child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-      ],
+        ],
       ),
     );
   }
@@ -533,7 +532,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       );
   }
 
-
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return
@@ -546,15 +544,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             });
           },
           franchiseeName: selectedFranchiseeName);
-  }
-
-
-  @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
-    setState(() {
-      selectedFranchiseeName=name;
-    });
   }
 
 
@@ -577,7 +566,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         Item_list[index]['gstAmt']=item['gstAmt'];
         Item_list[index]['netRate']=item['netRate'];
         Item_list[index]['netAmount']=item['netAmount'];
-
       });
     }
     else {

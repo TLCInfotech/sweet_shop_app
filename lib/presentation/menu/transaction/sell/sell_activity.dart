@@ -8,7 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../common_widget/get_date_layout.dart';
-import '../widget_for_sale_purchase/create_sell_activity.dart';
+import 'create_sell_activity.dart';
 
 class SellActivity extends StatefulWidget {
 final String? comeFor;
@@ -20,7 +20,6 @@ final String? comeFor;
 
 class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +61,6 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) =>
                 CreateSellInvoice(
-                  comeFrom:StringEn.SELL,
               dateNew:CommonWidget.getDateLayout(invoiceDate),
               mListener:this,
             )));

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/widget_for_sale_purchase/create_sell_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 
 import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -22,7 +22,7 @@ class PurchaseActivity extends StatefulWidget {
   State<PurchaseActivity> createState() => _PurchaseActivityState();
 }
 
-class _PurchaseActivityState extends State<PurchaseActivity>with CreateSellInvoiceInterface {
+class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseInvoiceInterface {
 
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -67,8 +67,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreateSellInvoi
           ),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                CreateSellInvoice(
-                  comeFrom:StringEn.PURCHASE_INVOICE,
+                CreatePurchaseInvoice(
                   dateNew:CommonWidget.getDateLayout(newDate),
                   mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
             )));

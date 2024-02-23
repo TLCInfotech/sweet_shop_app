@@ -8,6 +8,9 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../common_widget/get_diable_textformfield.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
+
 class AddOrEditItem extends StatefulWidget {
   final AddOrEditItemInterface mListener;
   final dynamic editproduct;
@@ -202,10 +205,32 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     );
   }
 
-
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
-    return Container(
+    return SingleLineEditableTextFormField(
+      suffix: Text("${unit.text}"),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return StringEn.ENTER+StringEn.QUANTITY;
+        }
+        return null;
+      },
+      controller: quantity,
+      focuscontroller: null,
+      focusnext: null,
+      title: StringEn.QUANTITY,
+      callbackOnchage: (value)async {
+        setState(() {
+          quantity.text = value;
+        });
+        await calculateRates();
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+    );
+
+    Container(
       height: parentHeight * .055,
       // width: (parentWidth*0.8)/2,
       alignment: Alignment.center,
@@ -250,96 +275,18 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth){
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.RATE),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: rate,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.RATE,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Rate";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.AMOUNT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: amount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.AMOUNT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
-        )
-
-      ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GetDisableTextFormField(
+              parentWidth: (parentWidth),
+              title: StringEn.RATE,
+              controller: rate
+          ),
+          GetDisableTextFormField(
+              parentWidth: (parentWidth),
+              title: StringEn.AMOUNT,
+              controller: amount
+          )]
     );
   }
 
@@ -349,87 +296,33 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.DICOUNT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: discount,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.DICOUNT,
-                    suffix: Text("%")
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item discount";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-                  calculateRates();
-                },
-              ),
-            ),
-          ],
+        SingleLineEditableTextFormField(
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER+StringEn.DICOUNT;
+            }
+            return null;
+          },
+          controller: discount,
+          focuscontroller: null,
+          focusnext: null,
+          title: StringEn.DICOUNT,
+          callbackOnchage: (value)async {
+            setState(() {
+              discount.text = value;
+            });
+            await calculateRates();
+          },
+          textInput: TextInputType.number,
+          maxlines: 1,
+          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.DISCOUNT_AMT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: discountAmt,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.DISCOUNT_AMT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Discount";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
 
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.DISCOUNT_AMT,
+            controller: discountAmt
         ),
       ],
     );
@@ -438,47 +331,9 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
   /* widget for product gst layout */
   Widget getTaxableAmtLayout(double parentHeight, double parentWidth) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        getFieldTitleLayout(StringEn.TAX_AMT),
-        Container(
-          height: parentHeight * .055,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.TexField_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            controller: taxableAmt,
-            readOnly: true,
-            decoration: textfield_decoration.copyWith(
-                hintText: StringEn.TAX_AMT,
-                fillColor: CommonColor.TexField_COLOR
-            ),
-            validator: ((value) {
-              if (value!.isEmpty) {
-                return "Enter taxable amt";
-              }
-              return null;
-            }),
-            onChanged: (value){
-
-            },
-            onTapOutside: (event) {
-
-            },
-          ),
-        )
-      ],
+    return  GetDisableTextFormField(
+        title: StringEn.TAX_AMT,
+        controller: taxableAmt
     );
   }
 
@@ -487,181 +342,53 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.GST+"%"),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: gst,
-                decoration: textfield_decoration.copyWith(
-                    hintText: "${StringEn.GST}%",
-                    suffix: Text("%")
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item gst";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-                  calculateRates();
-                },
-              ),
-            ),
-          ],
+        SingleLineEditableTextFormField(
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER+StringEn.DICOUNT;
+            }
+            return null;
+          },
+          controller: gst,
+          focuscontroller: null,
+          focusnext: null,
+          title: StringEn.GST,
+          callbackOnchage: (value)async {
+            setState(() {
+              gst.text = value;
+            });
+            await calculateRates();
+          },
+          textInput: TextInputType.number,
+          maxlines: 1,
+          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.GST_AMT),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: gstAmount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.GST_AMT,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter gst amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
 
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.GST_AMT,
+            controller: gstAmount
         ),
+
       ],
     );
   }
-
 
   /* widget for product gst layout */
   Widget getItemNetRateAndNetAmtLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.NET_RATE),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: netRate,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.NET_RATE,
-                    fillColor: CommonColor.TexField_COLOR
-
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter Item net rate";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-              ),
-            ),
-          ],
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.NET_RATE,
+            controller: netRate
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getFieldTitleLayout(StringEn.NET),
-            Container(
-              height: parentHeight * .055,
-              width: (parentWidth*0.8)/2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.TexField_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                controller: netAmount,
-                readOnly: true,
-                decoration: textfield_decoration.copyWith(
-                    hintText: StringEn.NET,
-                    fillColor: CommonColor.TexField_COLOR
-                ),
-                validator: ((value) {
-                  if (value!.isEmpty) {
-                    return "Enter net amt";
-                  }
-                  return null;
-                }),
-                onChanged: (value){
-
-                },
-                onTapOutside: (event) {
-
-                },
-              ),
-            )
-          ],
+        GetDisableTextFormField(
+            parentWidth: (parentWidth),
+            title: StringEn.NET,
+            controller: netAmount
         ),
       ],
     );
