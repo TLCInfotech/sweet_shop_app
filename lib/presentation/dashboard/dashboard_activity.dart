@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/constant.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/home/home_fragment.dart';
@@ -192,7 +193,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.SALE,
+                    ApplicationLocalizations.of(context)!.translate("sale")!,
                     style: TextStyle(
                         color: currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
@@ -233,7 +234,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.PURCHASE,
+                    ApplicationLocalizations.of(context)!.translate("purchase")!,
                     style: TextStyle(
                         color: currentScreen == Constant.PURCHASE ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
@@ -274,7 +275,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.EXPENSE,
+                    ApplicationLocalizations.of(context)!.translate("ledger")!,
+                    //StringEn.EXPENSE,
                     style: TextStyle(
                         color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
@@ -315,7 +317,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    StringEn.PAYMENT,
+                    ApplicationLocalizations.of(context)!.translate("payment")!,
+                  //  StringEn.PAYMENT,
                     style: TextStyle(
                         color: currentScreen == Constant.PAYMENT ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
