@@ -30,7 +30,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    # - assets/translations/
+    - assets/translations/
     - assets/images/
   fonts:
     - family: OutFit_Black_Font
