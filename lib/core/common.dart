@@ -7,10 +7,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/exit_app_dialog.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 
+import '../presentation/dialog/ErrorOccuredDialog.dart';
+import '../presentation/dialog/ShowInformationDialog.dart';
 import 'common_style.dart';
 class CommonWidget {
   static getCurrencyFormat(var amount) {
@@ -72,6 +75,68 @@ class CommonWidget {
           (Route<dynamic> route) => false,
     );
   }
+
+  static errorDialog(BuildContext context, String message) {
+    if (context != null) {
+      showGeneralDialog(
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionBuilder: (context, a1, a2, widget) {
+            final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+            // return Transform(
+            //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            return Transform.scale(
+              scale: a1.value,
+              child: Opacity(
+                opacity: a1.value,
+                child: ErrorOccuredDialog(
+                  message: ApplicationLocalizations.of(context)?.translate("error_message"),
+                ),
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 200),
+          barrierDismissible: true,
+          barrierLabel: '',
+          context: context,
+          pageBuilder: (context, animation2, animation1) {
+            return Container();
+          });
+    }
+  }
+
+
+  static noInternetDialog(BuildContext context, String? message) {
+    if (message != "No internet") {
+      if (context != null) {
+        showGeneralDialog(
+            barrierColor: Colors.black.withOpacity(0.5),
+            transitionBuilder: (context, a1, a2, widget) {
+              final curvedValue =
+                  Curves.easeInOutBack.transform(a1.value) - 1.0;
+              // return Transform(
+              //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+              return Transform.scale(
+                scale: a1.value,
+                child: Opacity(
+                  opacity: a1.value,
+                  child: ShowInformationDialog(
+                    message: message!,
+                  ),
+                ),
+              );
+            },
+            transitionDuration: Duration(milliseconds: 200),
+            barrierDismissible: true,
+            barrierLabel: '',
+            context: context,
+            pageBuilder: (context, animation2, animation1) {
+              return Container();
+            });
+      }
+    } else {
+    }
+  }
+
 
   static isLoader(bool isLoaderShows)  {
     return Visibility(

@@ -233,7 +233,9 @@
   "sale_rate": "Sale Rate",
   "tax_rate": "Tax Rate ",
   "valid": "Valid",
-  "gst_percent": "GST %"
+  "gst_percent": "GST %",
+  "error_message":"Error Occured",
+  "internet_msg": "Check your internet connection!"
 
 }
 
