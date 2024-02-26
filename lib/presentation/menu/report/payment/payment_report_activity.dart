@@ -66,7 +66,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
                 title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("Payment Report")!,
+                  ApplicationLocalizations.of(context)!.translate("payment_report")!,
                   style: appbar_text_style,
                 ),
               ),
