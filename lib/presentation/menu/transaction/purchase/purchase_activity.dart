@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
-
+import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -48,9 +45,9 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               ),
 
               backgroundColor: Colors.white,
-              title: const Center(
+              title:  Center(
                 child: Text(
-                  StringEn.PURCHASE_INVOICE,
+                  ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
                   style: appbar_text_style,),
               ),
               automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
@@ -96,7 +93,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   Widget getPurchaseDateLayout(){
     return  GetDateLayout(
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             newDate=date!;

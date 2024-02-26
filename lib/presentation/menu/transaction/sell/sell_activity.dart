@@ -7,6 +7,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'create_sell_activity.dart';
 
@@ -41,9 +42,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                   borderRadius: BorderRadius.circular(25)
               ),
               backgroundColor: Colors.white,
-              title: const Center(
+              title:  Center(
                 child: Text(
-                  StringEn.SELL,
+                  ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
                   style: appbar_text_style,),
               ),
               automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
@@ -109,7 +110,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 Invoices  ", style: subHeading_withBold,),
+              Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -134,7 +135,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;

@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -126,17 +127,17 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                   children: [
                     Container(
                       height: SizeConfig.screenHeight*.08,
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                            StringEn.ADD_ITEM_DETAIL,
+                            ApplicationLocalizations.of(context)!.translate("item_detail")!,
                             style: page_heading_textStyle
                         ),
                       ),
                     ),
-                    getFieldTitleLayout(StringEn.ITEM_NAME),
+                    getFieldTitleLayout(  ApplicationLocalizations.of(context)!.translate("item_name")!),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getFieldTitleLayout(StringEn.QUANTITY),
+                    getFieldTitleLayout(  ApplicationLocalizations.of(context)!.translate("quantity")!),
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -218,7 +219,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
-      title: StringEn.QUANTITY,
+      title:  ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
           quantity.text = value;
@@ -279,12 +280,12 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         children: [
           GetDisableTextFormField(
               parentWidth: (parentWidth),
-              title: StringEn.RATE,
+              title:  ApplicationLocalizations.of(context)!.translate("rate")!,
               controller: rate
           ),
           GetDisableTextFormField(
               parentWidth: (parentWidth),
-              title: StringEn.AMOUNT,
+              title:  ApplicationLocalizations.of(context)!.translate("amount")!,
               controller: amount
           )]
     );
@@ -307,7 +308,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
           controller: discount,
           focuscontroller: null,
           focusnext: null,
-          title: StringEn.DICOUNT,
+          title:  ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value)async {
             setState(() {
               discount.text = value;
@@ -321,7 +322,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.DISCOUNT_AMT,
+            title:  ApplicationLocalizations.of(context)!.translate("disc_amount")!,
             controller: discountAmt
         ),
       ],
@@ -332,7 +333,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   /* widget for product gst layout */
   Widget getTaxableAmtLayout(double parentHeight, double parentWidth) {
     return  GetDisableTextFormField(
-        title: StringEn.TAX_AMT,
+        title:   ApplicationLocalizations.of(context)!.translate("taxable_amount")!,
         controller: taxableAmt
     );
   }
@@ -353,7 +354,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
           controller: gst,
           focuscontroller: null,
           focusnext: null,
-          title: StringEn.GST,
+          title:  ApplicationLocalizations.of(context)!.translate("gst_percent")!,
           callbackOnchage: (value)async {
             setState(() {
               gst.text = value;
@@ -367,7 +368,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.GST_AMT,
+            title:  ApplicationLocalizations.of(context)!.translate("gst_amount")!,
             controller: gstAmount
         ),
 
@@ -382,12 +383,12 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       children: [
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.NET_RATE,
+            title:  ApplicationLocalizations.of(context)!.translate("net_rate")!,
             controller: netRate
         ),
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title: StringEn.NET,
+            title:  ApplicationLocalizations.of(context)!.translate("net_amount")!,
             controller: netAmount
         ),
       ],
@@ -429,11 +430,11 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.CLOSE,
+                  ApplicationLocalizations.of(context)!.translate("close")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),
@@ -474,11 +475,11 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 bottomRight: Radius.circular(5),
               ),
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  StringEn.SAVE,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                   textAlign: TextAlign.center,
                   style: text_field_textStyle,
                 ),

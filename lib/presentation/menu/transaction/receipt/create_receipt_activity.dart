@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -118,7 +119,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  StringEn.CREATE_RECEIPT_INVOICE,
+                  ApplicationLocalizations.of(context)!.translate("receipt_invoice_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -172,7 +173,6 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               key: _formkey,
               child: Column(
                 children: [
-                  //getFieldTitleLayout(StringEn.RECEPT_DETAIL),
                   ReceiptInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -193,10 +193,11 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_LEADER,
+                                  Text(
+                                    ApplicationLocalizations.of(context)!.translate("add_ledger")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -380,7 +381,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     return  GetDateLayout(
 
         titleIndicator: false,
-        title: StringEn.DATE,
+        title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -395,7 +396,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
         titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
+        title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;
@@ -520,8 +521,8 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),

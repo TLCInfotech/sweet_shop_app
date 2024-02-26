@@ -24,6 +24,7 @@ import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -136,8 +137,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 ),
 
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.CREATE_PAYMENT,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("payment_invoice_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -387,7 +388,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     return GetDateLayout(
 
         titleIndicator: false,
-        title: StringEn.DATE,
+        title:   ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
             invoiceDate=date!;
@@ -401,7 +402,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  GetFranchiseeLayout(
         titleIndicator: false,
-        title: StringEn.FRANCHISEE_NAME ,
+        title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name){
           setState(() {
             selectedFranchiseeName=name!;

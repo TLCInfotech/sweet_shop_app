@@ -23,6 +23,7 @@ import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
+import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -134,8 +135,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                     borderRadius: BorderRadius.circular(25)
                 ),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.ADD_PURCHASE,
+                title:  Text(
+                  ApplicationLocalizations.of(context)!.translate("purchase_invoice_new")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -219,8 +220,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
                 ),
@@ -294,10 +295,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
                               ),
-                              child: const Row(
+                              child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(StringEn.ADD_ITEMS,
+                                  Text(
+                                    ApplicationLocalizations.of(context)!.translate("add_item")!,
                                     style: item_heading_textStyle,),
                                   FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
@@ -533,11 +535,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return
-      GetDateLayout(
-
+    return GetDateLayout(
           titleIndicator: false,
-          title: StringEn.DATE,
+          title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
               invoiceDate=date!;
@@ -552,7 +552,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return
       GetFranchiseeLayout(
           titleIndicator: false,
-          title: StringEn.FRANCHISEE_NAME ,
+          title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
           callback: (name){
             setState(() {
               selectedFranchiseeName=name!;
