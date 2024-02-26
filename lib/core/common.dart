@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 import '../presentation/dialog/ErrorOccuredDialog.dart';
 import '../presentation/dialog/ShowInformationDialog.dart';
+import 'app_preferance.dart';
 import 'common_style.dart';
 class CommonWidget {
   static getCurrencyFormat(var amount) {
@@ -69,6 +70,7 @@ class CommonWidget {
 
   /*Function for clear local data and goto loginPage*/
   static gotoLoginScreen(BuildContext context) {
+    AppPreferences.clearAppPreference();
      Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginActivity()),

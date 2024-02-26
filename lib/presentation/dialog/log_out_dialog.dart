@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -128,7 +129,11 @@ class _LogOutDialogState extends State<LogOutDialog> {
       padding: EdgeInsets.only(top: parentHeight * .027),
       child: GestureDetector(
         onTap: ()  {
-          CommonWidget.gotoLoginScreen(context);
+          setState(() {
+            AppPreferences.clearAppPreference();
+            CommonWidget.gotoLoginScreen(context);
+          });
+
         },
         onDoubleTap: () {},
         child: Container(

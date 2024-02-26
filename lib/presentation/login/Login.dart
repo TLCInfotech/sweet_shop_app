@@ -5,6 +5,12 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/login/login_request_model.dart';
+
 class LoginActivity extends StatefulWidget {
   const LoginActivity({super.key});
 
@@ -17,7 +23,7 @@ class _LoginActivityState extends State<LoginActivity> {
   final _formkey=GlobalKey<FormState>();
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
-
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,12 +106,52 @@ class _LoginActivityState extends State<LoginActivity> {
     child: ElevatedButton(
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+        callLogin();
+       //             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
       },
       child:  Text(StringEn.LOG_IN,
         style: button_text_style),
     ),
   );
+  }
+
+
+
+  callLogin() async {
+    String userName = username.text.trim();
+    String passwordText = password.text.trim();
+    String deviceId = await AppPreferences.getDeviceId();
+    String sessionToken = await AppPreferences.getSessionToken();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      LoginRequestModel model = LoginRequestModel(
+     Password: passwordText,
+     UID: userName,
+        Machine_Name: deviceId
+      );
+      //  widget.mListener.loaderShow(true);
+        String apiUrl =
+            ApiConstants().baseUrl + ApiConstants().login;
+        apiRequestHelper.callAPIsForPostFetchAPI(apiUrl, model.toJson(), "",
+            onSuccess:(token){
+             print("  LedgerLedger  $token ");
+             AppPreferences.setSessionToken(token);
+             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+            }, onFailure: (error) {
+              CommonWidget.noInternetDialog(context, "Signup Error");
+             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+             // widget.mListener.loaderShow(false);
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+             // widget.mListener.loaderShow(false);
+            });
+
+    });
   }
 
 }

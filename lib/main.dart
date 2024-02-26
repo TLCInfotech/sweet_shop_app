@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -6,6 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'core/app_preferance.dart';
 import 'presentation/menu/master/item_category/Item_Category.dart';
 import 'presentation/menu/master/unit/Units.dart';
 
@@ -76,6 +79,26 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     startTimer();
+    getDeviceID();
+  }
+
+
+  /*Function for get Device Id is IOS or Android */
+  getDeviceID()   {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isIOS) {
+      deviceInfo.iosInfo.then((iosInfo) {
+        AppPreferences.setDeviceId(iosInfo.identifierForVendor!);
+      });
+    } else {
+      deviceInfo.androidInfo.then((androidInfo) {
+        AppPreferences.setDeviceId(androidInfo.id);
+print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
+      });
+
+    }
+
   }
 
 
@@ -134,9 +157,10 @@ class _MyHomePageState extends State<MyHomePage> {
     var duration =   const Duration(seconds: 3);
     try {
       String accessToken ="1";
-
-      if (accessToken!="1" ) {
-        return Timer(duration, navigateLogin);
+      String sessionToken =await AppPreferences.getSessionToken();
+        print("grhrgeghreghre  $sessionToken");
+      if (sessionToken!="") {
+        return Timer(duration, navigateDashboard);
 
       }else{
         return Timer(duration, navigateLogin);
