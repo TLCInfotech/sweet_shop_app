@@ -44,8 +44,7 @@ class ApiRequestHelper {
       case 400:
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
 
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
 
         onFailure(apiResponse.validation_error!);
         print("response.data  0 400 ${apiResponse.message}");
@@ -56,8 +55,7 @@ class ApiRequestHelper {
       case 200:
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
         print("rfhjrjrfrjrfj   ${apiResponse.token}");
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
         if(apiResponse.token!.isNotEmpty){
           AppPreferences.setSessionToken(apiResponse.token!);
 

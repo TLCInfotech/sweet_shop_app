@@ -24,6 +24,7 @@ class _LoginActivityState extends State<LoginActivity> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,31 +73,32 @@ class _LoginActivityState extends State<LoginActivity> {
 
   /* widget for user name layout */
   Widget getUserNameLayout(double parentHeight,double parentWidth){
-  return Container(
-    height: parentHeight * .055,
-    alignment: Alignment.center,
-    decoration: box_decoration,
-    child: TextFormField(
-        controller: username,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.USER_NAME,
-        ),
+  return TextFormField(
+      controller: username,
+      decoration: textfield_decoration.copyWith(
+        hintText: StringEn.USER_NAME,
       ),
-  );
+    validator: (value){
+        if(value!.isEmpty){
+          return  StringEn.ENTER+StringEn.USER_NAME;
+        }
+    },
+    );
   }
   /* widget for password layout */
   Widget getPasswordLayout(double parentHeight,double parentWidth){
-  return  Container(
-    height: parentHeight * .055,
-    alignment: Alignment.center,
-    decoration: box_decoration,
-    child: TextFormField(
-      controller: password,
-      obscureText: true,
-      decoration: textfield_decoration.copyWith(
-        hintText: 'Password',
-       ),
-    ),
+  return  TextFormField(
+    controller: password,
+    obscureText: true,
+    decoration: textfield_decoration.copyWith(
+      hintText: 'Password',
+     ),
+    validator: (value){
+      if(value!.isEmpty){
+        return  StringEn.ENTER+"password";
+      }
+
+    },
   );
   }
   /* widget for button layout */
@@ -105,8 +107,12 @@ class _LoginActivityState extends State<LoginActivity> {
     width: 200,
     child: ElevatedButton(
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
-      onPressed: () {
-        callLogin();
+      onPressed: () async{
+        bool? isvalid=_formkey.currentState?.validate();
+        print(isvalid);
+        if(isvalid!) {
+          callLogin();
+        }
        //             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
       },
       child:  Text(StringEn.LOG_IN,
@@ -130,8 +136,7 @@ class _LoginActivityState extends State<LoginActivity> {
         Machine_Name: deviceId
       );
       //  widget.mListener.loaderShow(true);
-        String apiUrl =
-            ApiConstants().baseUrl + ApiConstants().login;
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
         apiRequestHelper.callAPIsForPostFetchAPI(apiUrl, model.toJson(), "",
             onSuccess:(token){
              print("  LedgerLedger  $token ");

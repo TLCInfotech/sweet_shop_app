@@ -58,7 +58,7 @@ const textfield_decoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),
   errorBorder:  OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey),
+    borderSide: BorderSide(color: Colors.red),
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),
 
