@@ -137,10 +137,11 @@ class _LoginActivityState extends State<LoginActivity> {
       );
       //  widget.mListener.loaderShow(true);
         String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
-        apiRequestHelper.callAPIsForPostFetchAPI(apiUrl, model.toJson(), "",
-            onSuccess:(token){
+        apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
+            onSuccess:(token,uid){
              print("  LedgerLedger  $token ");
              AppPreferences.setSessionToken(token);
+             AppPreferences.setUId(uid);
              Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
             }, onFailure: (error) {
               CommonWidget.noInternetDialog(context, "Signup Error");

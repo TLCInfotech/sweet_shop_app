@@ -169,7 +169,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(index.toString(),sweets.elementAt(index));
+                    widget.mListener.selectCategory(index,sweets.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -238,5 +238,5 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
 abstract class CategoryDialogInterface{
-  selectCategory(String id,String name);
+  selectCategory(int id,String name);
 }

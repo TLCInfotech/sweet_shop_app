@@ -218,7 +218,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
         title:ApplicationLocalizations.of(context)!.translate("item_category")!,
-        callback: (value){
+        callback: (value,id){
           setState(() {
             categoryName=value!;
           });

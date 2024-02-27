@@ -3,13 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
+import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
-import '../../../dialog/category_dialog.dart';
 
 
 class ItemCategoryActivity extends StatefulWidget {
@@ -21,8 +24,9 @@ class ItemCategoryActivity extends StatefulWidget {
 
 class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   TextEditingController categoryName = TextEditingController();
-
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   String parentCategory="";
+  int parentCategoryId=0;
 
   @override
   Widget build(BuildContext context) {
@@ -149,9 +153,11 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
         title: ApplicationLocalizations.of(context)!.translate("parent_category")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             parentCategory=name!;
+            parentCategoryId=id!;
+            print("jkfgjgjgbbg  $id");
           });
     },
         selectedProductCategory: parentCategory
@@ -230,8 +236,8 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
           ),
           GestureDetector(
             onTap: () {
-
-                Navigator.pop(context);
+              callPostItemCategory();
+                //Navigator.pop(context);
 
             },
             onDoubleTap: () {},
@@ -336,6 +342,44 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
             );
           },
         ));
-
   }
+
+
+
+  callPostItemCategory() async {
+    String catName = categoryName.text.trim();
+    String creatorName = await AppPreferences.getUId();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
+         Name: catName,
+        //Parent_ID: parentCategoryId,
+        Seq_No: 23,
+        Creator: creatorName,
+        Creator_Machine: deviceId
+      );
+
+      //  widget.mListener.loaderShow(true);
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+      apiRequestHelper.callAPIsForPostAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  LedgerLedger  $data ");
+            Navigator.pop(context);
+            }, onFailure: (error) {
+            CommonWidget.noInternetDialog(context, "Signup Error");
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            // widget.mListener.loaderShow(false);
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
 }

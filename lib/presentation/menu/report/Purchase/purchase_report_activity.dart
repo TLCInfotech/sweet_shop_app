@@ -4,7 +4,6 @@ import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
-import '../../../../core/string_en.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -216,7 +215,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
         title:ApplicationLocalizations.of(context)!.translate("item_category")!,
-        callback: (value){
+        callback: (value,id){
           setState(() {
             categoryName=value!;
           });

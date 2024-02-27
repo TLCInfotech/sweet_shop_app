@@ -339,7 +339,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
         title: ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (value){
+        callback: (value,id){
           setState(() {
             categoryName=value!;
           });

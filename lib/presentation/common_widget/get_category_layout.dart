@@ -19,7 +19,7 @@ import '../dialog/franchisee_dialog.dart';
 class GetCategoryLayout extends StatefulWidget{
   final title;
   final selectedProductCategory;
-  final Function(String?) callback;
+  final Function(String?,int?) callback;
   final titleIndicator;
 
   GetCategoryLayout({required this.title, required this.callback, required this.selectedProductCategory,   this.titleIndicator});
@@ -118,8 +118,8 @@ class _GetCategoryLayoutState extends State<GetCategoryLayout> with SingleTicker
   }
 
   @override
-  selectCategory(String id, String name) {
+  selectCategory(int id, String name) {
     // TODO: implement selectCategory
-    widget.callback(name);
+    widget.callback(name,id);
   }
 }

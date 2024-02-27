@@ -28,6 +28,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
   final _sequenseNoFocus = FocusNode();
   final _sequenceNatureFocus = FocusNode();
   String parentCategory="";
+  int parentCategoryId=0;
   String ParentGroupid="";
   List<dynamic> expense_group=[
   {
@@ -411,9 +412,10 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
   Widget getParentGroupLayout(double parentHeight, double parentWidth){
     return GetCategoryLayout(
         title:   ApplicationLocalizations.of(context)!.translate("parent_category")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             parentCategory=name!;
+            parentCategoryId=id!;
           });
         },
         selectedProductCategory: parentCategory

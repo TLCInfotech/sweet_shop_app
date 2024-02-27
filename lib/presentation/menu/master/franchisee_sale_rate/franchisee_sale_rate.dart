@@ -458,7 +458,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     return  GetCategoryLayout(
         titleIndicator:false,
         title:    ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedProductCategory=name!;
           });

@@ -24,6 +24,19 @@ class AppPreferences {
     prefs.setString("deviceId", deviceId);
   }
 
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getUId() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("uId") ?? "";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setUId(String uId) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    print("uId   $uId");
+    prefs.setString("uId", uId);
+  }
+
   /*set getAppVersion value in SharedPreferences*/
   static Future<String> getSessionToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,7 +56,6 @@ class AppPreferences {
 
   static clearAppPreference() async {
     prefs = await getInstance();
-    prefs!.remove("deviceId");
     prefs!.remove("sessionToken");
   }
 }
