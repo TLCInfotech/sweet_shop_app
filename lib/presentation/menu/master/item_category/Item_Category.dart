@@ -14,6 +14,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/itemCategory/delete_item_category_request_model.dart';
 import '../../../../data/domain/itemCategory/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
+import '../../../../data/domain/itemCategory/put_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 
@@ -31,13 +32,18 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   int parentCategoryId=0;
   TextEditingController seqNo = TextEditingController();
 bool isLoaderShow=false;
+
+  var editedItem=null;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     callGetItemCategory();
   }
+
   List<dynamic> _arrListNew = [];
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -322,58 +328,72 @@ bool isLoaderShow=false;
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
                   delay: const Duration(microseconds: 1500),
-                  child: Card(
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 10,top: 5,bottom: 5),
-                          width:60,
-                          height: 40,
-                          decoration:  BoxDecoration(
-                              color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
-                              borderRadius: const BorderRadius.all(Radius.circular(10))
-                          ),
-                          alignment: Alignment.center,
-                          child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
-                                        child: Text(_arrListNew[index]['Name'],style: item_heading_textStyle,),
-                                      ),
-                                      _arrListNew[index]['Parent_Name']!=null? Container(
-                                        child: Text(_arrListNew[index]['Parent_Name'],style: item_regular_textStyle,),
-                                      ):Container(),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){
-                                        callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
-                                      },
-                                    ) )
-                              ],
-                            )
+                  child: GestureDetector(
+                    onTap: ()async{
 
-                        )
-                      ],
+                      print(_arrListNew[index]);
+                      setState(() {
+                        editedItem=_arrListNew[index];
+                        categoryName.text=_arrListNew[index]['Name'];
+                        parentCategory=_arrListNew[index]['Parent_Name']==null?"":_arrListNew[index]['Parent_Name'];
+                        parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
+                        seqNo.text=_arrListNew[index]['Seq_No'].toString();
+                      });
+                      add_category_layout(context);
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10,top: 5,bottom: 5),
+                            width:60,
+                            height: 40,
+                            decoration:  BoxDecoration(
+                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                            ),
+                            alignment: Alignment.center,
+                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
+                                          child: Text(_arrListNew[index]['Name'],style: item_heading_textStyle,),
+                                        ),
+                                        _arrListNew[index]['Parent_Name']!=null? Container(
+                                          child: Text(_arrListNew[index]['Parent_Name'],style: item_regular_textStyle,),
+                                        ):Container(),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){
+                                          callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                        },
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -434,6 +454,7 @@ bool isLoaderShow=false;
 
     });
   }
+
   callGetItemCategory() async {
     String sessionToken = await AppPreferences.getSessionToken();
 
@@ -479,6 +500,7 @@ bool isLoaderShow=false;
 
     });
   }
+
   callPostItemCategory() async {
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
@@ -535,6 +557,55 @@ bool isLoaderShow=false;
             // widget.mListener.loaderShow(false);
           });
 
+    });
+  }
+
+  callUpdateItemCategory() async {
+    String catName = categoryName.text.trim();
+    String seqNoText = seqNo.text.trim();
+    String creatorName = await AppPreferences.getUId();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+
+      PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
+          name: catName,
+          parentId:parentCategoryId==0?"null":parentCategoryId.toString(),
+          seqNo: seqNoText,
+          modifier: creatorName,
+          modifierMachine: deviceId
+      );
+
+      //  widget.mListener.loaderShow(true);
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
+
+      print(apiUrl);
+      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+          onSuccess:(value){
+            print("  Put Call :   $value ");
+
+            setState(() {
+              editedItem=null;
+              categoryName.clear();
+              parentCategory="";
+              parentCategoryId=0;
+              seqNo.clear();
+            });
+
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            CommonWidget.noInternetDialog(context, "Signup Error");
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            // widget.mListener.loaderShow(false);
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
     });
   }
 

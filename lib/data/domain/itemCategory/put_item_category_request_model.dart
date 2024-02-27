@@ -1,9 +1,9 @@
 class PutItemCategoryRequestModel {
-  String name;
-  String parentId;
-  String seqNo;
-  String modifier;
-  String modifierMachine;
+  String? name;
+  String? parentId;
+  String? seqNo;
+  String? modifier;
+  String? modifierMachine;
 
   PutItemCategoryRequestModel({
     required this.name,

@@ -375,4 +375,95 @@ class ApiRequestHelper {
     }
 
   }
+
+
+  void callAPIsForPutAPI(
+      String apiUrl, dynamic requestBody, String sessionToken,
+      {required Function(dynamic data) onSuccess,
+        required Function(dynamic error) onFailure,
+        required Function(dynamic error) onException,
+        required Function(dynamic error) sessionExpire}) async {
+    //  try {
+    //  headers.addAll({'session-token': sessionToken});
+    print("apiUrl    $apiUrl");
+    print("requestBody    $requestBody");
+
+    print("sessionToken    ${sessionToken}");
+
+    Response response = await http.put(
+        Uri.parse(apiUrl),
+        body: requestBody,
+
+        headers: {
+          'Authorization': '$sessionToken',
+        }
+    );
+
+    switch (response.statusCode) {
+    /*response of api status id zero when something is wrong*/
+      case 400:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+
+        onFailure(apiResponse.msg!);
+        print("response.data  0 400 ${apiResponse.msg}");
+
+        // CommonWidget.showInformationDialog(context, msg);
+        break;
+    /*response of api status id one when get api data Successfully */
+      case 200:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        print("rfhjrjrfrjrfj   ${apiResponse.token}");
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        if(apiResponse.token!.isNotEmpty){
+          AppPreferences.setSessionToken(apiResponse.token!);
+
+        }
+        // print('apiResponse.session_token_key!    ${apiResponse.session_token_key!}');
+        AppPreferences.setDeviceId(apiResponse.Machine_Name!);
+
+        onSuccess(apiResponse.data!);
+
+        break;
+    /*response of api status id Two when session has expired */
+      case 500:
+      //  AppPreferences.clearAppPreference();
+      // sessionExpire("errere");
+      //  CommonWidget.gotoLoginPage(buildContext);
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        onException(apiResponse.msg);
+        break;
+      case 400:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        // AppPreferences.clearAppPreference();
+        // sessionExpire("errere");
+        onFailure(apiResponse.msg);
+        //  CommonWidget.gotoLoginPage(buildContext);
+        break;
+    /*    case 403:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+
+          onFailure(apiResponse.message);
+          // AppPreferences.clearAppPreference();
+          // sessionExpire("gdgdgd");
+          break;*/
+      case 403:
+        AppPreferences.clearAppPreference();
+        sessionExpire("jhhh");
+        break;
+    //    }
+    }
+    /*  } catch (e) {
+      print("e callAPIsForPostFetchAPI   $e");
+      onException(e);
+    }*/
+  }
+
 }
