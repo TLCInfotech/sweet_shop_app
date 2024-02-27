@@ -27,6 +27,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   String parentCategory="";
   int parentCategoryId=0;
+  TextEditingController seqNo = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +127,8 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
                             getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
 
+                            getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
                             SizedBox(height: 20,),
 
                           ],
@@ -148,6 +151,30 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
         });
   }
 
+  /* widget for seq no layout */
+  Widget getseqNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("sequence_no")!;
+        }
+        return null;
+      },
+      controller: categoryName,
+      focuscontroller: null,
+      focusnext: null,
+      title:  ApplicationLocalizations.of(context)!.translate("sequence_no")!,
+      callbackOnchage: (value) {
+        setState(() {
+          seqNo.text = value;
+        });
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9  ]')),
+    );
+
+  }
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
@@ -352,9 +379,9 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
     AppPreferences.getDeviceId().then((deviceId) {
       PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
-         Name: catName,
-        //Parent_ID: parentCategoryId,
-        Seq_No: 23,
+          Name: catName,
+        Parent_ID:parentCategoryId==0?null:parentCategoryId,
+        Seq_No: int.parse(seqNo.text),
         Creator: creatorName,
         Creator_Machine: deviceId
       );
