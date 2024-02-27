@@ -6,7 +6,7 @@
 class ApiResponseForFetch {
   ApiResponseForFetch({
     bool? status,
-    var data,
+    List<dynamic>? data,
     String? msg,
     String? token,
     String? Machine_Name,
@@ -35,7 +35,7 @@ class ApiResponseForFetch {
   }
 
   bool? _status;
-  var _data;
+  List<dynamic>? _data;
   String? _msg;
   String? _token;
   String? _Machine_Name;
@@ -48,7 +48,7 @@ class ApiResponseForFetch {
   String? get token => _token;
   String? get Machine_Name => _Machine_Name;
 
-  get data => _data;
+  List<dynamic>? get data => _data;
 
   String? get msg => _msg;
   String? get s3_url => _s3_url;

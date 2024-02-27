@@ -22,7 +22,7 @@ dependencies:
   syncfusion_flutter_calendar: ^20.3.56
   flutter_localizations:
     sdk: flutter
-
+  json_annotation:
 dev_dependencies:
   flutter_test:
     sdk: flutter

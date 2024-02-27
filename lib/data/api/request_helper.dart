@@ -112,7 +112,7 @@ class ApiRequestHelper {
 
   void callAPIsForPostAPI(
       String apiUrl, dynamic requestBody, String sessionToken,
-      {required Function(String token) onSuccess,
+      {required Function(dynamic data) onSuccess,
         required Function(dynamic error) onFailure,
         required Function(dynamic error) onException,
         required Function(dynamic error) sessionExpire}) async {
@@ -193,5 +193,55 @@ class ApiRequestHelper {
       print("e callAPIsForPostFetchAPI   $e");
       onException(e);
     }*/
+  }
+
+  void callAPIsForGetAPI(
+      String apiUrl, dynamic requestBody, String sessionToken,
+      {required Function(dynamic data) onSuccess,
+        required Function(dynamic error) onFailure,
+        required Function(dynamic error) onException,
+        required Function(dynamic error) sessionExpire}) async {
+    //  try {
+    //  headers.addAll({'session-token': sessionToken});
+    print("apiUrl    $apiUrl");
+    print("requestBody    $requestBody");
+
+    print("sessionToken    ${sessionToken}");
+
+    Response response = await http.get(
+      Uri.parse(apiUrl),
+    );
+
+    switch (response.statusCode) {
+    /*response of api status id zero when something is wrong*/
+      case 400:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg!);
+        print("response.data  0 400 ${apiResponse.msg}");
+        break;
+      case 200:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        onSuccess(apiResponse.data!);
+        break;
+      case 500:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        onException(apiResponse.msg!);
+        break;
+      case 400:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg);
+        break;
+      case 403:
+        AppPreferences.clearAppPreference();
+        sessionExpire("jhhh");
+        break;
+    }
+
   }
 }

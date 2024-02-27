@@ -11,6 +11,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/itemCategory/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
@@ -29,6 +30,13 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   int parentCategoryId=0;
   TextEditingController seqNo = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callGetItemCategory();
+  }
+  List<dynamic> _arrListNew = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +168,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
         }
         return null;
       },
-      controller: categoryName,
+      controller: seqNo,
       focuscontroller: null,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("sequence_no")!,
@@ -297,7 +305,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   Expanded get_category_items_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
+          itemCount: _arrListNew.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -312,7 +320,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 10),
+                          margin: EdgeInsets.only(left: 10,top: 5,bottom: 5),
                           width:60,
                           height: 40,
                           decoration:  BoxDecoration(
@@ -333,11 +341,11 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                                     children: [
                                       Container(
                                         // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
-                                        child: Text("Item Category",style: item_heading_textStyle,),
+                                        child: Text(_arrListNew[index]['Name'],style: item_heading_textStyle,),
                                       ),
-                                      Container(
-                                        child: Text("Parent Category",style: item_regular_textStyle,),
-                                      ),
+                                      _arrListNew[index]['Parent_Name']!=null? Container(
+                                        child: Text(_arrListNew[index]['Parent_Name'],style: item_regular_textStyle,),
+                                      ):Container(),
                                     ],
                                   ),
                                 ),
@@ -373,24 +381,60 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
 
 
+  callGetItemCategory() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              _arrListNew=data;
+            });
+            // _arrListNew.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            CommonWidget.noInternetDialog(context, error);
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
   callPostItemCategory() async {
     String catName = categoryName.text.trim();
     String creatorName = await AppPreferences.getUId();
-
+    var model={};
     AppPreferences.getDeviceId().then((deviceId) {
-      PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
+model={  "Name": catName,
+     //"Parent_ID" :3,
+     // "Seq_No": int.parse(seqNo.text),
+      "Creator": creatorName,
+      "Creator_Machine": deviceId
+};
+   /*   PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
           Name: catName,
-        Parent_ID:parentCategoryId==0?null:parentCategoryId,
+        Parent_ID:parentCategoryId,
         Seq_No: int.parse(seqNo.text),
         Creator: creatorName,
         Creator_Machine: deviceId
-      );
+      );*/
 
       //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForPostAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            print("  LedgerLedger  $data ");
+      apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model, "",
+          onSuccess:(value,uid){
+            print("  LedgerLedger  $value ");
             Navigator.pop(context);
             }, onFailure: (error) {
             CommonWidget.noInternetDialog(context, "Signup Error");

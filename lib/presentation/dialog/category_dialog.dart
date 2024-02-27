@@ -5,6 +5,14 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/common.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/itemCategory/get_toakn_request.dart';
+import '../dialog/franchisee_dialog.dart';
+import '../../core/app_preferance.dart';
+
 class CategoryDialog extends StatefulWidget {
   final CategoryDialogInterface mListener;
 
@@ -19,16 +27,16 @@ class _CategoryDialogState extends State<CategoryDialog>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
-
-
+    callGetItemCategory();
   }
-  List sweets=["Ladu","Bundi","Balushayi","Cake","Bun Pav",];
+  List<dynamic> _arrListNew = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +76,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                   Container(
                       height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                      child: _arrListNew.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
                 ],
               ),
             ),
@@ -162,14 +170,14 @@ class _CategoryDialogState extends State<CategoryDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: sweets.length,
+          itemCount: _arrListNew.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
-                onTap: (){
+                onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(index,sweets.elementAt(index));
+                    widget.mListener.selectCategory(_arrListNew[index]['ID'],_arrListNew[index]['Name']);
                   }
                   Navigator.pop(context);
                 },
@@ -187,12 +195,12 @@ class _CategoryDialogState extends State<CategoryDialog>{
                   child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        sweets.elementAt(index),
+                      _arrListNew[index]['Name']!=null? Text(
+                        _arrListNew[index]['Name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ),
@@ -233,6 +241,36 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
 
+  callGetItemCategory() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              _arrListNew=data;
+            });
+            // _arrListNew.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            CommonWidget.noInternetDialog(context, error);
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 }
 

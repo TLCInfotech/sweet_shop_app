@@ -10,11 +10,6 @@ import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
 import '../../core/colors.dart';
 import '../../core/common.dart';
 import '../../core/common_style.dart';
-import '../../core/imagePicker/image_picker_dialog.dart';
-import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
-import '../../core/imagePicker/image_picker_handler.dart';
-import '../../core/string_en.dart';
-import '../dialog/franchisee_dialog.dart';
 
 class GetCategoryLayout extends StatefulWidget{
   final title;
@@ -103,7 +98,7 @@ class _GetCategoryLayoutState extends State<GetCategoryLayout> with SingleTicker
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(widget.selectedProductCategory == "" ? widget.title : widget.selectedProductCategory,
-                          style: item_regular_textStyle,),
+                          style:widget.selectedProductCategory == "" ? item_regular_textStyle:text_field_textStyle,),
                         FaIcon(FontAwesomeIcons.caretDown,
                           color: Colors.black87.withOpacity(0.8), size: 16,)
                       ],
@@ -116,6 +111,8 @@ class _GetCategoryLayoutState extends State<GetCategoryLayout> with SingleTicker
       ),
     );
   }
+
+
 
   @override
   selectCategory(int id, String name) {
