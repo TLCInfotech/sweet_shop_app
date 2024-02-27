@@ -1,14 +1,14 @@
 class PostItemCategoryRequestModel {
   String? _Name;
-  int? _Parent_ID;
-  int? _Seq_No;
+  String? _Parent_ID;
+  String? _Seq_No;
   String? _Creator;
   String? _Creator_Machine;
 
   PostItemCategoryRequestModel({
     String? Name,
-    int? Parent_ID,
-    int? Seq_No,
+    String? Parent_ID,
+    String? Seq_No,
     String? Creator,
     String? Creator_Machine,
   }) {
@@ -28,8 +28,8 @@ class PostItemCategoryRequestModel {
   }
 
   String? get Name => _Name;
-  int? get Parent_ID => _Parent_ID;
-  int? get Seq_No => _Seq_No;
+  String? get Parent_ID => _Parent_ID;
+  String? get Seq_No => _Seq_No;
   String? get Creator => _Creator;
   String? get Creator_Machine => _Creator_Machine;
 

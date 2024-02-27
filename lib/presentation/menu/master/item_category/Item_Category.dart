@@ -413,26 +413,27 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   }
   callPostItemCategory() async {
     String catName = categoryName.text.trim();
+    String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
-    var model={};
+    //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
-model={  "Name": catName,
-     //"Parent_ID" :3,
-     // "Seq_No": int.parse(seqNo.text),
+/*model={  "Name": catName,
+     "Parent_ID" :parentCategoryId.toString(),
+      "Seq_No": seqNo.text,
       "Creator": creatorName,
       "Creator_Machine": deviceId
-};
-   /*   PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
+};*/
+      PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
           Name: catName,
-        Parent_ID:parentCategoryId,
-        Seq_No: int.parse(seqNo.text),
+        Parent_ID:parentCategoryId.toString(),
+        Seq_No: seqNoText,
         Creator: creatorName,
         Creator_Machine: deviceId
-      );*/
+      );
 
       //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model, "",
+      apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
           onSuccess:(value,uid){
             print("  LedgerLedger  $value ");
             Navigator.pop(context);
