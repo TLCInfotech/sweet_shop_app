@@ -11,6 +11,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/itemCategory/delete_item_category_request_model.dart';
 import '../../../../data/domain/itemCategory/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
@@ -29,7 +30,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   String parentCategory="";
   int parentCategoryId=0;
   TextEditingController seqNo = TextEditingController();
-
+bool isLoaderShow=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -39,56 +40,62 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   List<dynamic> _arrListNew = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title: Text(
+                    ApplicationLocalizations.of(context)!.translate("item_category")!,
+                    style: appbar_text_style,),
+                ),
               ),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                add_category_layout(context);
 
-              backgroundColor: Colors.white,
-              title: Text(
-                ApplicationLocalizations.of(context)!.translate("item_category")!,
-                style: appbar_text_style,),
+              }),
+          body: Container(
+            margin: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: .5,
+                ),
+                get_category_items_list_layout()
+
+              ],
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            add_category_layout(context);
-
-          }),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: .5,
-            ),
-            get_category_items_list_layout()
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -112,14 +119,14 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                       padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
                       child: Container(
                         height: SizeConfig.screenHeight*0.5,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xFFfffff5),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),
                           ),
                         ),
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
                             Container(
@@ -137,7 +144,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
                             getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
 
                           ],
                         ),
@@ -150,7 +157,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -279,7 +286,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
             child: Container(
               height: parentHeight * .05,
               width: parentWidth*.45,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: CommonColor.THEME_COLOR,
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(5),
@@ -314,21 +321,21 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
+                  delay: const Duration(microseconds: 1500),
                   child: Card(
                     color: Colors.white,
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 10,top: 5,bottom: 5),
+                          margin: const EdgeInsets.only(left: 10,top: 5,bottom: 5),
                           width:60,
                           height: 40,
                           decoration:  BoxDecoration(
-                              color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
+                              color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                              borderRadius: const BorderRadius.all(Radius.circular(10))
                           ),
                           alignment: Alignment.center,
-                          child: Text("${(index+1).toString().padLeft(2, '0')}",style: TextStyle(),),
+                          child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
                         ),
                         Expanded(
                             child: Stack(
@@ -353,12 +360,14 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
                                     top: 0,
                                     right: 0,
                                     child:IconButton(
-                                      icon:  FaIcon(
+                                      icon:  const FaIcon(
                                         FontAwesomeIcons.trash,
                                         size: 18,
                                         color: Colors.redAccent,
                                       ),
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                      },
                                     ) )
                               ],
                             )
@@ -372,7 +381,7 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },
@@ -380,10 +389,58 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
   }
 
 
+  callDeleteItemCategory(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
 
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      DeleteItemCategoryRequestModel model = DeleteItemCategoryRequestModel(
+        id:removeId,
+        modifier: uid,
+        modifierMachine: deviceId
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+      apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              _arrListNew.removeAt(index);
+            });
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.noInternetDialog(context, error);
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
   callGetItemCategory() async {
     String sessionToken = await AppPreferences.getSessionToken();
+
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
@@ -391,20 +448,31 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {
+              isLoaderShow=false;
               _arrListNew=data;
             });
             // _arrListNew.addAll(data.map((arrData) =>
             // new EmailPhoneRegistrationModel.fromJson(arrData)));
             print("  LedgerLedger  $data ");
           }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
             CommonWidget.noInternetDialog(context, error);
+
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();
           }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
             CommonWidget.errorDialog(context, e.toString());
 
           },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
             CommonWidget.gotoLoginScreen(context);
             // widget.mListener.loaderShow(false);
           });
@@ -417,6 +485,9 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
     String creatorName = await AppPreferences.getUId();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
 /*model={  "Name": catName,
      "Parent_ID" :parentCategoryId.toString(),
       "Seq_No": seqNo.text,
@@ -433,20 +504,33 @@ class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
 
       //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
-          onSuccess:(value,uid){
-            print("  LedgerLedger  $value ");
+      apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  LedgerLedger  $data ");
+            setState(() {
+              isLoaderShow=false;
+              callGetItemCategory();
+            });
             Navigator.pop(context);
+
             }, onFailure: (error) {
-            CommonWidget.noInternetDialog(context, "Signup Error");
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.noInternetDialog(context, error);
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();
           }, onException: (e) {
-            // widget.mListener.loaderShow(false);
+            setState(() {
+              isLoaderShow=false;
+            });
             CommonWidget.errorDialog(context, e.toString());
 
           },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
             CommonWidget.gotoLoginScreen(context);
             // widget.mListener.loaderShow(false);
           });

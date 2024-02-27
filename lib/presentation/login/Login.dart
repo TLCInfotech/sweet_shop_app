@@ -24,50 +24,56 @@ class _LoginActivityState extends State<LoginActivity> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-
+  bool isLoaderShow=false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Form(
-        key: _formkey,
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                     StringEn.SIGN_IN,
-                      style: big_title_style
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          body: Form(
+            key: _formkey,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                      fit: BoxFit.fitHeight,
                     ),
-                    const SizedBox(height: 5.0),
-                    const Text(
-                      StringEn.LOGIN_SUB_TEXT,
-                      style: subHeading_withBold
-                    ),
-                    const SizedBox(height: 40.0),
-                    getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    const SizedBox(height: 10.0),
-                    getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    const SizedBox(height: 20.0),
-                    getButtonLayout()
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                         StringEn.SIGN_IN,
+                          style: big_title_style
+                        ),
+                        const SizedBox(height: 5.0),
+                        const Text(
+                          StringEn.LOGIN_SUB_TEXT,
+                          style: subHeading_withBold
+                        ),
+                        const SizedBox(height: 40.0),
+                        getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                        const SizedBox(height: 10.0),
+                        getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                        const SizedBox(height: 20.0),
+                        getButtonLayout()
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -130,6 +136,9 @@ class _LoginActivityState extends State<LoginActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
 
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
       LoginRequestModel model = LoginRequestModel(
      Password: passwordText,
      UID: userName,
@@ -139,22 +148,31 @@ class _LoginActivityState extends State<LoginActivity> {
         String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
             onSuccess:(token,uid){
-             print("  LedgerLedger  $token ");
+              setState(() {
+                isLoaderShow=false;
+              });
              AppPreferences.setSessionToken(token);
              AppPreferences.setUId(uid);
              Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
             }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
               CommonWidget.noInternetDialog(context, "Signup Error");
              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
               //  Navigator.of(context, rootNavigator: true).pop();
             }, onException: (e) {
-             // widget.mListener.loaderShow(false);
+              setState(() {
+                isLoaderShow=false;
+              });
               CommonWidget.errorDialog(context, e.toString());
 
             },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
               CommonWidget.gotoLoginScreen(context);
-             // widget.mListener.loaderShow(false);
             });
 
     });
