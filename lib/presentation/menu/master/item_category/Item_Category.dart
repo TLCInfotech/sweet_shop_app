@@ -35,11 +35,25 @@ bool isLoaderShow=false;
 
   var editedItem=null;
 
+  int page = 10;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 10;
+        callGetItemCategory(page);
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    callGetItemCategory();
+    _scrollController.addListener(_scrollListener);
+    callGetItemCategory(page);
   }
 
   List<dynamic> _arrListNew = [];
@@ -284,9 +298,13 @@ bool isLoaderShow=false;
           ),
           GestureDetector(
             onTap: () {
-              callPostItemCategory();
-                //Navigator.pop(context);
-
+             if(editedItem!=null){
+               print("jgbgbgbggn");
+               callUpdateItemCategory();
+             }else{
+               callPostItemCategory();
+             }
+             //Navigator.pop(context);
             },
             onDoubleTap: () {},
             child: Container(
@@ -302,7 +320,8 @@ bool isLoaderShow=false;
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    ApplicationLocalizations.of(context)!.translate("save")!,
+                  editedItem!=null?ApplicationLocalizations.of(context)!.translate("update")!:
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),
@@ -409,6 +428,84 @@ bool isLoaderShow=false;
   }
 
 
+  callGetItemCategory(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      TokenRequestModel model = TokenRequestModel(
+          token: sessionToken,
+          page: page.toString()
+      );
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=1&pageSize=$page";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              List<dynamic> _arrList = [];
+              _arrList=data;
+              if (_arrList.length < 10) {
+                if (mounted) {
+                  setState(() {
+                    isPagination = false;
+                  });
+                }
+              }
+              if (page == 1) {
+                setDataToList(_arrList);
+              } else {
+                setMoreDataToList(_arrList);
+              }
+            });
+
+            // _arrListNew.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.noInternetDialog(context, error);
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (_arrListNew.isNotEmpty) _arrListNew.clear();
+    if (mounted) {
+      setState(() {
+        _arrListNew.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        _arrListNew.addAll(_list);
+      });
+    }
+  }
+
   callDeleteItemCategory(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
 
@@ -417,9 +514,9 @@ bool isLoaderShow=false;
         isLoaderShow=true;
       });
       DeleteItemCategoryRequestModel model = DeleteItemCategoryRequestModel(
-        id:removeId,
-        modifier: uid,
-        modifierMachine: deviceId
+          id:removeId,
+          modifier: uid,
+          modifierMachine: deviceId
       );
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
       apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
@@ -454,53 +551,6 @@ bool isLoaderShow=false;
 
     });
   }
-
-  callGetItemCategory() async {
-    String sessionToken = await AppPreferences.getSessionToken();
-
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
-      });
-      TokenRequestModel model = TokenRequestModel(
-        token: sessionToken,
-      );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              isLoaderShow=false;
-              _arrListNew=data;
-            });
-            // _arrListNew.addAll(data.map((arrData) =>
-            // new EmailPhoneRegistrationModel.fromJson(arrData)));
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.noInternetDialog(context, error);
-
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, e.toString());
-
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
-  }
-
   callPostItemCategory() async {
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
@@ -518,10 +568,10 @@ bool isLoaderShow=false;
 };*/
       PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
           Name: catName,
-        Parent_ID:parentCategoryId.toString(),
-        Seq_No: seqNoText,
-        Creator: creatorName,
-        Creator_Machine: deviceId
+          Parent_ID:parentCategoryId.toString(),
+          Seq_No: seqNoText,
+          Creator: creatorName,
+          Creator_Machine: deviceId
       );
 
       //  widget.mListener.loaderShow(true);
@@ -531,11 +581,11 @@ bool isLoaderShow=false;
             print("  LedgerLedger  $data ");
             setState(() {
               isLoaderShow=false;
-              callGetItemCategory();
+              callGetItemCategory(page);
             });
             Navigator.pop(context);
 
-            }, onFailure: (error) {
+          }, onFailure: (error) {
             setState(() {
               isLoaderShow=false;
             });
@@ -559,6 +609,8 @@ bool isLoaderShow=false;
 
     });
   }
+
+
 
   callUpdateItemCategory() async {
     String catName = categoryName.text.trim();

@@ -286,9 +286,7 @@ class ApiRequestHelper {
     //  headers.addAll({'session-token': sessionToken});
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
-
     print("sessionToken    ${sessionToken}");
-
     Response response = await http.get(
       Uri.parse(apiUrl),
     );
@@ -340,32 +338,34 @@ class ApiRequestHelper {
     print("sessionToken    ${sessionToken}");
 
     Response response = await http.delete(
-      Uri.parse(apiUrl),
+        Uri.parse(apiUrl),
+        body: requestBody
     );
 
     switch (response.statusCode) {
     /*response of api status id zero when something is wrong*/
       case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onFailure(apiResponse.msg!);
         print("response.data  0 400 ${apiResponse.msg}");
         break;
       case 200:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onSuccess(apiResponse.msg!);
+        print("responeseee  ");
         break;
       case 500:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
         apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+            ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onException(apiResponse.msg!);
         break;
       case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
         apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+            ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onFailure(apiResponse.msg);
         break;
       case 403:
@@ -465,5 +465,6 @@ class ApiRequestHelper {
       onException(e);
     }*/
   }
+
 
 }
