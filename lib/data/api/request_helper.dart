@@ -44,12 +44,9 @@ class ApiRequestHelper {
     /*response of api status id zero when something is wrong*/
       case 400:
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
-
         apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
-
         onFailure(apiResponse.msg!);
         print("response.data  0 400 ${apiResponse.msg}");
-
         // CommonWidget.showInformationDialog(context, msg);
         break;
     /*response of api status id one when get api data Successfully */
@@ -282,15 +279,12 @@ class ApiRequestHelper {
         required Function(dynamic error) onFailure,
         required Function(dynamic error) onException,
         required Function(dynamic error) sessionExpire}) async {
-    //  try {
-    //  headers.addAll({'session-token': sessionToken});
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
     print("sessionToken    ${sessionToken}");
     Response response = await http.get(
       Uri.parse(apiUrl),
     );
-
     switch (response.statusCode) {
     /*response of api status id zero when something is wrong*/
       case 400:

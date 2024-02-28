@@ -35,7 +35,7 @@ bool isLoaderShow=false;
 
   var editedItem=null;
 
-  int page = 10;
+  int page = 1;
   bool isPagination = true;
   ScrollController _scrollController = new ScrollController();
 
@@ -43,7 +43,7 @@ bool isLoaderShow=false;
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       if (isPagination) {
-        page = page + 10;
+        page = page + 1;
         callGetItemCategory(page);
       }
     }
@@ -338,6 +338,7 @@ bool isLoaderShow=false;
     return Expanded(
         child: ListView.separated(
           itemCount: _arrListNew.length,
+          controller: _scrollController,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -439,7 +440,7 @@ bool isLoaderShow=false;
           token: sessionToken,
           page: page.toString()
       );
-      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=1&pageSize=$page";
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {
