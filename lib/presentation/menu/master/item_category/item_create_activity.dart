@@ -10,13 +10,17 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/item/post_item_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_unit_layout.dart';
 import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/measuring_unit_dialog.dart';
 
+import '../../../../core/app_preferance.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class ItemCreateActivity extends StatefulWidget {
@@ -94,6 +98,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   String unitThreeId="";
   String unitThreeName="";
   String measuringUnit="";
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+  bool isLoaderShow=false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -853,7 +861,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
+            onTap: () async{
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
               //   )));
@@ -865,9 +873,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               //   )));
               // }
               if (mounted) {
+
                 setState(() {
                   disableColor = true;
                 });
+                await callPostItem();
               }
             },
             onDoubleTap: () {},
@@ -897,5 +907,62 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       ],
     );
   }
+
+  callPostItem() async {
+
+    String creatorName = await AppPreferences.getUId();
+    //var model={};
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+/*model={  "Name": catName,
+     "Parent_ID" :parentCategoryId.toString(),
+      "Seq_No": seqNo.text,
+      "Creator": creatorName,
+      "Creator_Machine": deviceId
+};*/
+      PostItemRequestModel model = PostItemRequestModel(
+          Name: itemNameController.text.trim(),
+          CategoryID: "1",
+        );
+
+      //  widget.mListener.loaderShow(true);
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
+      apiRequestHelper.callAPIsForPostFormDataAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.noInternetDialog(context, error);
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+
 
 }
