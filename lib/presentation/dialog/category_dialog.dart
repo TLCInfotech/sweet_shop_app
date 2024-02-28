@@ -257,12 +257,13 @@ class _CategoryDialogState extends State<CategoryDialog>{
             // new EmailPhoneRegistrationModel.fromJson(arrData)));
             print("  LedgerLedger  $data ");
           }, onFailure: (error) {
-            CommonWidget.noInternetDialog(context, error);
+            CommonWidget.errorDialog(context, error);
+
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();
           }, onException: (e) {
-            CommonWidget.errorDialog(context, e.toString());
+            CommonWidget.errorDialog(context, e);
 
           },sessionExpire: (e) {
             CommonWidget.gotoLoginScreen(context);

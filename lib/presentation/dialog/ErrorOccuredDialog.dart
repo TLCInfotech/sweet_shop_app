@@ -5,7 +5,10 @@ import '../../core/localss/application_localizations.dart';
 import '../../core/size_config.dart';
 
 class ErrorOccuredDialog extends StatefulWidget {
-  const ErrorOccuredDialog({super.key, String? message, });
+
+  final message;
+  final  Function(dynamic value) onCallBack;
+  const ErrorOccuredDialog({super.key,  this.message, required this.onCallBack , });
 
   @override
   State<ErrorOccuredDialog> createState() => _ErrorOccuredDialogState();
@@ -73,7 +76,7 @@ class _ErrorOccuredDialogState extends State<ErrorOccuredDialog> {
       children: <Widget>[
         Expanded(
           child: Text(
-              ApplicationLocalizations.of(context)!.translate("error_message")!,
+              widget.message,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: SizeConfig.blockSizeVertical * 2.3,
@@ -92,6 +95,7 @@ class _ErrorOccuredDialogState extends State<ErrorOccuredDialog> {
       children: [
         GestureDetector(
           onTap: () {
+            widget.onCallBack("yes");
           },
           onDoubleTap: () {},
           child: Container(

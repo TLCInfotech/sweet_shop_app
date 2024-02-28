@@ -236,6 +236,7 @@ bool isLoaderShow=false;
         }
         return null;
       },
+      readOnly: editedItem!=null?false:true,
       controller: categoryName,
       focuscontroller: null,
       focusnext: null,
@@ -428,7 +429,6 @@ bool isLoaderShow=false;
         ));
   }
 
-
   callGetItemCategory(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
 
@@ -468,17 +468,24 @@ bool isLoaderShow=false;
             setState(() {
               isLoaderShow=false;
             });
-            CommonWidget.noInternetDialog(context, error);
+            CommonWidget.errorDialog(context, error);
 
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();
           }, onException: (e) {
+
+            print("Here2=> $e");
+
             setState(() {
               isLoaderShow=false;
             });
-            CommonWidget.errorDialog(context, e.toString());
+           var val= CommonWidget.errorDialog(context, e);
 
+           print("YES");
+           if(val=="yes"){
+             print("Retry");
+           }
           },sessionExpire: (e) {
             setState(() {
               isLoaderShow=false;
@@ -618,22 +625,30 @@ bool isLoaderShow=false;
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
 
+
     AppPreferences.getDeviceId().then((deviceId) {
 
       PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
-          name: catName,
-          parentId:parentCategoryId==0?"null":parentCategoryId.toString(),
-          seqNo: seqNoText,
           modifier: creatorName,
           modifierMachine: deviceId
       );
+      if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
+         model.parentId=parentCategoryId.toString();
+        // seqNo: seqNoText,
+      }
+      if(editedItem['Seq_No']!= int.parse(seqNoText)){
+        model.seqNo=seqNoText.toString();
+      }
+
+      print("MODAL");
+      print(model.toJson());
 
       //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
 
       print(apiUrl);
       apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
-          onSuccess:(value){
+          onSuccess:(value)async{
             print("  Put Call :   $value ");
 
             setState(() {
@@ -643,7 +658,14 @@ bool isLoaderShow=false;
               parentCategoryId=0;
               seqNo.clear();
             });
+            var snackBar = SnackBar(content: Text('Item Category Updated Successfully'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+            setState(() {
+              page=1;
+            });
+
+            await  callGetItemCategory(page);
             Navigator.pop(context);
 
           }, onFailure: (error) {

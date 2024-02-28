@@ -55,7 +55,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                   height: widget.maxlines>1? (SizeConfig.screenHeight) * .15:(SizeConfig.screenHeight) * .055,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
+                    color:widget.readOnly!=false?CommonColor.WHITE_COLOR:CommonColor.TexField_COLOR ,
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
@@ -82,6 +82,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                       contentPadding: EdgeInsets.only(
                           left: (SizeConfig.screenWidth) * .04, right: (SizeConfig.screenWidth) * .02),
                       border: InputBorder.none,
+
                       counterText: '',
                       isDense: true,
                       hintText: widget.title,

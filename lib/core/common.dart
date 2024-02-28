@@ -78,7 +78,7 @@ class CommonWidget {
     );
   }
 
-  static errorDialog(BuildContext context, String message) {
+  static String errorDialog(BuildContext context, String message) {
     if (context != null) {
       showGeneralDialog(
           barrierColor: Colors.black.withOpacity(0.5),
@@ -91,7 +91,11 @@ class CommonWidget {
               child: Opacity(
                 opacity: a1.value,
                 child: ErrorOccuredDialog(
-                  message: ApplicationLocalizations.of(context)?.translate("error_message"),
+                  message:message,
+                  onCallBack:(value){
+                    print("INSIDE");
+                      return "yes";
+                  }
                 ),
               ),
             );
@@ -104,6 +108,7 @@ class CommonWidget {
             return Container();
           });
     }
+    return "null";
   }
 
 

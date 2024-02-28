@@ -6,9 +6,9 @@ class PutItemCategoryRequestModel {
   String? modifierMachine;
 
   PutItemCategoryRequestModel({
-    required this.name,
-    required this.parentId,
-    required this.seqNo,
+     this.name,
+     this.parentId,
+     this.seqNo,
     required this.modifier,
     required this.modifierMachine,
   });

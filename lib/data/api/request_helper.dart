@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:sweet_shop_app/data/api/response_for_fetch.dart';
 import 'package:sweet_shop_app/data/api/response_for_string_dynamic.dart';
+import 'package:sweet_shop_app/presentation/dialog/ErrorOccuredDialog.dart';
 import '../../core/app_preferance.dart';
 
 class ApiRequestHelper {
@@ -282,38 +283,56 @@ class ApiRequestHelper {
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
     print("sessionToken    ${sessionToken}");
-    Response response = await http.get(
-      Uri.parse(apiUrl),
-    );
-    switch (response.statusCode) {
-    /*response of api status id zero when something is wrong*/
-      case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
-        onFailure(apiResponse.msg!);
-        print("response.data  0 400 ${apiResponse.msg}");
-        break;
-      case 200:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
-        onSuccess(apiResponse.data!);
-        break;
-      case 500:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
-        onException(apiResponse.msg!);
-        break;
-      case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
-        onFailure(apiResponse.msg);
-        break;
-      case 403:
-        AppPreferences.clearAppPreference();
-        sessionExpire("jhhh");
-        break;
+    try {
+      Response response = await http.get(
+        Uri.parse(apiUrl),
+      );
+      print(response.statusCode);
+      switch (response.statusCode) {
+      /*response of api status id zero when something is wrong*/
+        case 400:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg!);
+          print("response.data  0 400 ${apiResponse.msg}");
+          break;
+        case 200:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+          onSuccess(apiResponse.data!);
+          break;
+        case 500:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+          onException(apiResponse.msg!);
+          break;
+        case 400:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          break;
+        case 403:
+          AppPreferences.clearAppPreference();
+          sessionExpire("jhhh");
+          break;
+      }
+    }
+    catch(e){
+      print("ERROR $e");
+      var err=e.toString();
+      print(err.toString().contains("Connection failed"));
+      if(e.toString().contains("Connection failed")==true) {
+        print("INSIDE");
+        onException("Check Internet Connection!");
+      }
+      else{
+        onException(e.toString().substring(0,e.toString().indexOf(":")));
+      }
+
     }
 
   }
@@ -382,11 +401,22 @@ class ApiRequestHelper {
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
 
-    print("sessionToken    ${sessionToken}");
+
+    Map<String, dynamic> cleanedData = {};
+    requestBody.forEach((key, value) {
+      print(value);
+      if (value != null) {
+        cleanedData[key] = value;
+      }
+    });
+
+
+    print("NEW BODY##############333");
+    print(jsonEncode(cleanedData));
 
     Response response = await http.put(
         Uri.parse(apiUrl),
-        body: requestBody,
+        body: cleanedData,
 
         headers: {
           'Authorization': '$sessionToken',
@@ -396,9 +426,9 @@ class ApiRequestHelper {
     switch (response.statusCode) {
     /*response of api status id zero when something is wrong*/
       case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
 
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
 
         onFailure(apiResponse.msg!);
         print("response.data  0 400 ${apiResponse.msg}");
@@ -407,15 +437,10 @@ class ApiRequestHelper {
         break;
     /*response of api status id one when get api data Successfully */
       case 200:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        print("rfhjrjrfrjrfj   ${apiResponse.token}");
-        apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
-        if(apiResponse.token!.isNotEmpty){
-          AppPreferences.setSessionToken(apiResponse.token!);
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
 
-        }
-        // print('apiResponse.session_token_key!    ${apiResponse.session_token_key!}');
-        AppPreferences.setDeviceId(apiResponse.Machine_Name!);
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+
 
         onSuccess(apiResponse.data!);
 
@@ -425,15 +450,13 @@ class ApiRequestHelper {
       //  AppPreferences.clearAppPreference();
       // sessionExpire("errere");
       //  CommonWidget.gotoLoginPage(buildContext);
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onException(apiResponse.msg);
         break;
       case 400:
-        ApiResponseForFetch apiResponse = ApiResponseForFetch();
-        apiResponse =
-            ApiResponseForFetch.fromJson(json.decode(response.body));
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         // AppPreferences.clearAppPreference();
         // sessionExpire("errere");
         onFailure(apiResponse.msg);
@@ -452,7 +475,7 @@ class ApiRequestHelper {
         AppPreferences.clearAppPreference();
         sessionExpire("jhhh");
         break;
-    //    }
+        //    }
     }
     /*  } catch (e) {
       print("e callAPIsForPostFetchAPI   $e");
