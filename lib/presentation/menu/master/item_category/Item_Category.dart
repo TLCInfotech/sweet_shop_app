@@ -11,8 +11,8 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
-import '../../../../data/domain/itemCategory/delete_item_category_request_model.dart';
-import '../../../../data/domain/itemCategory/get_toakn_request.dart';
+import '../../../../data/domain/commonRequest/delete_request_model.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../../data/domain/itemCategory/put_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
@@ -521,7 +521,7 @@ bool isLoaderShow=false;
       setState(() {
         isLoaderShow=true;
       });
-      DeleteItemCategoryRequestModel model = DeleteItemCategoryRequestModel(
+      DeleteIRequestModel model = DeleteIRequestModel(
           id:removeId,
           modifier: uid,
           modifierMachine: deviceId

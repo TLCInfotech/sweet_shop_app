@@ -3,24 +3,18 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-
-import '../../core/common.dart';
 import '../../data/api/request_helper.dart';
-import '../../data/api/constant.dart';
-import '../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../core/app_preferance.dart';
 
-class CategoryDialog extends StatefulWidget {
-  final CategoryDialogInterface mListener;
-
-  const CategoryDialog({super.key, required this.mListener});
+class LedegerGroupDialog extends StatefulWidget {
+  final LedegerGroupDialogInterface mListener;
+final List<dynamic> expense_group;
+  const LedegerGroupDialog({super.key, required this.mListener, required this.expense_group});
 
   @override
-  State<CategoryDialog> createState() => _CategoryDialogState();
+  State<LedegerGroupDialog> createState() => _LedegerGroupDialogState();
 }
 
-class _CategoryDialogState extends State<CategoryDialog>{
+class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -31,9 +25,8 @@ class _CategoryDialogState extends State<CategoryDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    callGetItemCategory();
   }
-  List<dynamic> _arrListNew = [];
+
 
 
   @override
@@ -61,8 +54,8 @@ class _CategoryDialogState extends State<CategoryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          ApplicationLocalizations.of(context)!.translate("select_category")!,
-                      style: TextStyle(
+                        ApplicationLocalizations.of(context)!.translate("select_category")!,
+                        style: TextStyle(
                           fontFamily: "Montserrat_Bold",
                           fontSize: SizeConfig.blockSizeHorizontal * 5.0,
                           color: Colors.black,
@@ -74,7 +67,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                   Container(
                       height: SizeConfig.screenHeight*.32,
-                      child: _arrListNew.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
+                      child: widget.expense_group.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
                 ],
               ),
             ),
@@ -136,7 +129,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                 // onChanged: _onChangeHandler,
+                  // onChanged: _onChangeHandler,
                 ),
               ),
               Visibility(
@@ -168,14 +161,14 @@ class _CategoryDialogState extends State<CategoryDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: _arrListNew.length,
+          itemCount: widget.expense_group.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(_arrListNew[index]['ID'],_arrListNew[index]['Name']);
+                    widget.mListener.selectCategory(widget.expense_group[index]['ID'],widget.expense_group[index]['Name']);
                   }
                   Navigator.pop(context);
                 },
@@ -193,8 +186,8 @@ class _CategoryDialogState extends State<CategoryDialog>{
                   child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _arrListNew[index]['Name']!=null? Text(
-                        _arrListNew[index]['Name'],
+                      widget.expense_group[index]['Name']!=null? Text(
+                        widget.expense_group[index]['Name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -227,7 +220,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
           child:Center(
             child: Text(
               ApplicationLocalizations.of(context)!.translate("close")!,
-             // StringEn.CLOSE,
+              // StringEn.CLOSE,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),
@@ -238,42 +231,9 @@ class _CategoryDialogState extends State<CategoryDialog>{
   }
 
 
-
-  callGetItemCategory() async {
-    String sessionToken = await AppPreferences.getSessionToken();
-    AppPreferences.getDeviceId().then((deviceId) {
-      TokenRequestModel model = TokenRequestModel(
-        token: sessionToken,
-      );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              _arrListNew=data;
-            });
-            // _arrListNew.addAll(data.map((arrData) =>
-            // new EmailPhoneRegistrationModel.fromJson(arrData)));
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            CommonWidget.errorDialog(context, error);
-
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            CommonWidget.errorDialog(context, e);
-
-          },sessionExpire: (e) {
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
-  }
-
 }
 
 
-abstract class CategoryDialogInterface{
+abstract class LedegerGroupDialogInterface{
   selectCategory(int id,String name);
 }

@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 import '../presentation/dialog/ErrorOccuredDialog.dart';
 import '../presentation/dialog/ShowInformationDialog.dart';
+import '../presentation/dialog/no_internet_dialog.dart';
 import 'app_preferance.dart';
 import 'common_style.dart';
 class CommonWidget {
@@ -298,6 +299,24 @@ class CommonWidget {
   }
   static getDateLayout(DateTime dateNew) {
     return DateFormat('dd-MM-yyyy').format(dateNew);
+  }
+
+  static noInternetDialogNew(BuildContext context) {
+    /*if (context != null) {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) =>
+            NoInternetConformationDialog(isFor: "",),
+      ),
+      );
+    }*/
+    if (context != null) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              NoInternetConformationDialog());
+    }
+
   }
 
 }

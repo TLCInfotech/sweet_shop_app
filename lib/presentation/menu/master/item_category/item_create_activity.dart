@@ -91,7 +91,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   bool isDescriptionValid = false;
   bool isDescriptionMsgValid = false;
   final postLength = 550;
-  String categoryId="";
+  int categoryId=0;
   String categoryName="";
   String unitTwoId="";
   String unitTwoName="";
@@ -105,60 +105,66 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        backgroundColor: CommonColor.BACKGROUND_COLOR,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("create_item")!,
-                  style: appbar_text_style,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllTextFormFieldLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            backgroundColor: CommonColor.BACKGROUND_COLOR,
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("create_item")!,
+                      style: appbar_text_style,
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllTextFormFieldLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -350,6 +356,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         callback: (value,id){
           setState(() {
             categoryName=value!;
+            categoryId=id!;
           });
     },
         selectedProductCategory: categoryName
@@ -916,20 +923,16 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       setState(() {
         isLoaderShow=true;
       });
-/*model={  "Name": catName,
-     "Parent_ID" :parentCategoryId.toString(),
-      "Seq_No": seqNo.text,
-      "Creator": creatorName,
-      "Creator_Machine": deviceId
-};*/
       PostItemRequestModel model = PostItemRequestModel(
           Name: itemNameController.text.trim(),
-          CategoryID: "1",
+          CategoryID: categoryId.toString(),
+        Creator: creatorName,
+        CreatorMachine: deviceId
         );
 
       //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
-      apiRequestHelper.callAPIsForPostFormDataAPI(apiUrl, model.toJson(), "",
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
             setState(() {
@@ -941,7 +944,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             setState(() {
               isLoaderShow=false;
             });
-            CommonWidget.noInternetDialog(context, error);
+            CommonWidget.errorDialog(context, error.toString());
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();

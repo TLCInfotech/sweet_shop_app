@@ -156,7 +156,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                ApplicationLocalizations.of(context)!.translate("report_type")!,
+                ApplicationLocalizations.of(context)!.translate("new_password")!,
                 style: item_heading_textStyle,
               ),
             ],

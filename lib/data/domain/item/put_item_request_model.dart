@@ -1,25 +1,25 @@
-class PostItemRequestModel {
-  PostItemRequestModel({
+class PutItemRequestModel {
+  PutItemRequestModel({
     required this.Name,
     required this.CategoryID,
-     this.Unit,
-     this.Unit2,
-     this.Unit2Factor,
-     this.Unit2Base,
-     this.Unit3,
-     this.Unit3Factor,
-     this.Unit3Base,
-     this.PackSize,
-     this.Rate,
-     this.MinStock,
-     this.MaxStock,
-     this.HSNNo,
-     this.ExtName,
-     this.DefaultStore,
-     this.DetailDesc,
+    this.Unit,
+    this.Unit2,
+    this.Unit2Factor,
+    this.Unit2Base,
+    this.Unit3,
+    this.Unit3Factor,
+    this.Unit3Base,
+    this.PackSize,
+    this.Rate,
+    this.MinStock,
+    this.MaxStock,
+    this.HSNNo,
+    this.ExtName,
+    this.DefaultStore,
+    this.DetailDesc,
     required this.Creator,
     required this.CreatorMachine,
-     this.Photo,
+    this.Photo,
   });
 
   late final String Name;
@@ -43,7 +43,7 @@ class PostItemRequestModel {
   late final String? CreatorMachine;
   late final String? Photo;
 
-  PostItemRequestModel.fromJson(Map<String, dynamic> json){
+  PutItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];
     CategoryID = json['Category_ID'];
     Unit = json['Unit'];

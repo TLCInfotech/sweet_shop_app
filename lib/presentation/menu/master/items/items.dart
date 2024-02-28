@@ -7,7 +7,13 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/delete_request_model.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 
 
 class ItemsActivity extends StatefulWidget {
@@ -18,7 +24,7 @@ class ItemsActivity extends StatefulWidget {
 }
 
 class _ItemsActivityState extends State<ItemsActivity> {
-
+bool isLoaderShow=false;
   List<dynamic> item_category=[
     {
       "name":"Category 1",
@@ -51,65 +57,99 @@ class _ItemsActivityState extends State<ItemsActivity> {
       "id":123
     },
   ];
+ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+String parentCategory="";
+int parentCategoryId=0;
 
+var editedItem=null;
+
+int page = 1;
+bool isPagination = true;
+ScrollController _scrollController = new ScrollController();
+
+_scrollListener() {
+  if (_scrollController.position.pixels ==
+      _scrollController.position.maxScrollExtent) {
+    if (isPagination) {
+      page = page + 1;
+      callGetItem(page);
+    }
+  }
+}
+@override
+void initState() {
+  // TODO: implement initState
+  super.initState();
+  _scrollController.addListener(_scrollListener);
+  callGetItem(page);
+}
+
+List<dynamic> itemList = [];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title: Text(
+                    ApplicationLocalizations.of(context)!.translate("item")!,
+                    style: appbar_text_style,),
+                ),
               ),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ItemCreateActivity()));
+              }),
+          body: Container(
+            margin: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                get_items_list_layout()
 
-              backgroundColor: Colors.white,
-              title: Text(
-                ApplicationLocalizations.of(context)!.translate("item")!,
-                style: appbar_text_style,),
+              ],
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ItemCreateActivity()));
-          }),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            get_items_list_layout()
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
   Expanded get_items_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6,7,8,9].length,
+          itemCount: itemList.length,
+          controller: _scrollController,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -118,12 +158,12 @@ class _ItemsActivityState extends State<ItemsActivity> {
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
+                  delay: const Duration(microseconds: 1500),
                   child: Card(
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 10),
+                          margin: const EdgeInsets.only(left: 10),
                           width:SizeConfig.imageBlockFromCardWidth,
                           height: 80,
                           decoration: const BoxDecoration(
@@ -147,9 +187,9 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Sweet Item $index ",style: item_heading_textStyle,),
-                                      Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                      Text("500.00/kg",style: item_heading_textStyle,),
+                                      Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
+                                      const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
+                                      const Text("500.00/kg",style: item_heading_textStyle,),
 
                                     ],
                                   ),
@@ -158,12 +198,14 @@ class _ItemsActivityState extends State<ItemsActivity> {
                                     top: 0,
                                     right: 0,
                                     child:IconButton(
-                                      icon:  FaIcon(
+                                      icon:  const FaIcon(
                                         FontAwesomeIcons.trash,
                                         size: 18,
                                         color: Colors.redAccent,
                                       ),
-                                      onPressed: (){},
+                                      onPressed: (){
+                                        callDeleteItem(itemList[index]['ID'].toString(),index);
+                                        },
                                     ) )
                               ],
                             )
@@ -177,7 +219,7 @@ class _ItemsActivityState extends State<ItemsActivity> {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },
@@ -185,5 +227,135 @@ class _ItemsActivityState extends State<ItemsActivity> {
   }
 
 
+  callGetItem(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      TokenRequestModel model = TokenRequestModel(
+          token: sessionToken,
+          page: page.toString()
+      );
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              List<dynamic> _arrList = [];
+              _arrList=data;
+              if (_arrList.length < 10) {
+                if (mounted) {
+                  setState(() {
+                    isPagination = false;
+                  });
+                }
+              }
+              if (page == 1) {
+                setDataToList(_arrList);
+              } else {
+                setMoreDataToList(_arrList);
+              }
+            });
+
+            // _arrListNew.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+
+            print("Here2=> $e");
+
+            setState(() {
+              isLoaderShow=false;
+            });
+            var val= CommonWidget.errorDialog(context, e);
+
+            print("YES");
+            if(val=="yes"){
+              print("Retry");
+            }
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (itemList.isNotEmpty) itemList.clear();
+    if (mounted) {
+      setState(() {
+        itemList.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        itemList.addAll(_list);
+      });
+    }
+  }
+
+  callDeleteItem(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      DeleteIRequestModel model = DeleteIRequestModel(
+          id:removeId,
+          modifier: uid,
+          modifierMachine: deviceId
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
+      apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              itemList.removeAt(index);
+            });
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 }

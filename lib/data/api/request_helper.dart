@@ -5,6 +5,7 @@ import 'package:sweet_shop_app/data/api/response_for_fetch.dart';
 import 'package:sweet_shop_app/data/api/response_for_string_dynamic.dart';
 import 'package:sweet_shop_app/presentation/dialog/ErrorOccuredDialog.dart';
 import '../../core/app_preferance.dart';
+import 'dynamic_respose.dart';
 
 class ApiRequestHelper {
   ApiRequestHelper._internal();
@@ -283,7 +284,7 @@ class ApiRequestHelper {
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
     print("sessionToken    ${sessionToken}");
-    try {
+   // try {
       Response response = await http.get(
         Uri.parse(apiUrl),
       );
@@ -320,7 +321,7 @@ class ApiRequestHelper {
           sessionExpire("jhhh");
           break;
       }
-    }
+    /*}
     catch(e){
       print("ERROR $e");
       var err=e.toString();
@@ -333,7 +334,7 @@ class ApiRequestHelper {
         onException(e.toString().substring(0,e.toString().indexOf(":")));
       }
 
-    }
+    }*/
 
   }
 
@@ -543,6 +544,85 @@ class ApiRequestHelper {
         ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
         apiResponse =
             ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+        // AppPreferences.clearAppPreference();
+        // sessionExpire("errere");
+        onFailure(apiResponse.msg);
+        //  CommonWidget.gotoLoginPage(buildContext);
+        break;
+    /*    case 403:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+
+          onFailure(apiResponse.message);
+          // AppPreferences.clearAppPreference();
+          // sessionExpire("gdgdgd");
+          break;*/
+      case 403:
+        AppPreferences.clearAppPreference();
+        sessionExpire("jhhh");
+        break;
+    //    }
+    }
+    /*  } catch (e) {
+      print("e callAPIsForPostFetchAPI   $e");
+      onException(e);
+    }*/
+  }
+
+
+  void callAPIsForDynamicPI(
+      String apiUrl, dynamic requestBody, String sessionToken,
+      {required Function(dynamic data) onSuccess,
+        required Function(dynamic error) onFailure,
+        required Function(dynamic error) onException,
+        required Function(dynamic error) sessionExpire}) async {
+    //  try {
+    //  headers.addAll({'session-token': sessionToken});
+    print("apiUrl    $apiUrl");
+    print("requestBody    $requestBody");
+
+    Response response = await http.post(
+      Uri.parse(apiUrl),
+      body: requestBody,
+    );
+
+
+    print("###################\n${response.statusCode}");
+
+    switch (response.statusCode) {
+    /*response of api status id zero when something is wrong*/
+      case 400:
+        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+
+        apiResponse = ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+
+        onFailure(apiResponse.msg!);
+        print("response.data  0 400 ${apiResponse.msg}");
+
+        // CommonWidget.showInformationDialog(context, msg);
+        break;
+    /*response of api status id one when get api data Successfully */
+      case 200:
+        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+        apiResponse = ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+        onSuccess(apiResponse.msg!);
+
+        break;
+    /*response of api status id Two when session has expired */
+      case 500:
+      //  AppPreferences.clearAppPreference();
+      // sessionExpire("errere");
+      //  CommonWidget.gotoLoginPage(buildContext);
+        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+        apiResponse =
+            ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+        onException(apiResponse.msg);
+        break;
+      case 400:
+        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+        apiResponse =
+            ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
         // AppPreferences.clearAppPreference();
         // sessionExpire("errere");
         onFailure(apiResponse.msg);

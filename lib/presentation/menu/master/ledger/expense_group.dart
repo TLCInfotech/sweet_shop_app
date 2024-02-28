@@ -3,13 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/delete_request_model.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/ledgerGroup/post_ledger_group_request_model.dart';
+import '../../../../data/domain/ledgerGroup/put_ledger_group_request_model.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../dialog/parent_ledger_group_dialoug.dart';
 
 
 class ExpenseGroup extends StatefulWidget {
@@ -19,8 +30,7 @@ class ExpenseGroup extends StatefulWidget {
   State<ExpenseGroup> createState() => _ExpenseGroupState();
 }
 
-class _ExpenseGroupState extends State<ExpenseGroup>{
-  TextEditingController categoryName = TextEditingController();
+class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInterface{
   TextEditingController groupName = TextEditingController();
   TextEditingController sequenseNoName = TextEditingController();
   TextEditingController sequenseNatureName = TextEditingController();
@@ -30,7 +40,9 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
   String parentCategory="";
   int parentCategoryId=0;
   String ParentGroupid="";
-  List<dynamic> expense_group=[
+  bool isApiCall = false;
+  late InternetConnectionStatus internetStatus;
+/*  List<dynamic> expense_group=[
   {
   "ID" : "13",
   "Name" : "Employee",
@@ -38,64 +50,128 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
   "Seq_No" : "36",
   "Group_Nature" : "A"
 }
-  ];
+  ];*/
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+  bool isLoaderShow=false;
+
+  var editedItem=null;
+
+  int page = 1;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetLedgerGroup(page);
+      }
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetLedgerGroup(page);
+  }
+
+  List<dynamic> expense_group = [];
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              backgroundColor: Colors.white,
-              title: Center(
-                child: Text(
-                  ApplicationLocalizations.of(context)!.translate("ledger_group")!,
-                  style: appbar_text_style,),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  backgroundColor: Colors.white,
+                  title: Center(
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            add_category_layout(context);
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                add_category_layout(context);
 
-          }),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: .5,
+              }),
+          body: Container(
+            margin: const EdgeInsets.all(15),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_expense_group_list_layout()
+
+                  ],
+                ),
+                Visibility(
+                    visible: expense_group.isEmpty && isApiCall  ? true : false,
+                    child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              ],
             ),
-            get_expense_group_list_layout()
-
-          ],
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
+
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Expanded get_expense_group_list_layout() {
     return Expanded(
@@ -109,52 +185,71 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          width:80,
-                          height: 70,
-                          decoration:  BoxDecoration(
-                              color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
-                          alignment: Alignment.center,
-                          child: FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
-                                      Text("${expense_group[index]['Parent_ID']}- ${expense_group[index]['Seq_No']}",style: item_regular_textStyle,),
-                                      Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                  delay: const Duration(microseconds: 1500),
+                  child: GestureDetector(
+                    onTap: (){
 
-                        )
-                      ],
+                      print(expense_group[index]);
+                      setState(() {
+                        editedItem=expense_group[index];
+                        groupName.text=expense_group[index]['Name'];
+                        parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
+                        parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
+                        sequenseNoName.text=expense_group[index]['Seq_No'].toString();
+                        sequenseNatureName.text=expense_group[index]['Group_Nature'].toString();
+                        print("ggfhfghgfhvg  $parentCategory");
+                      });
+                      add_category_layout(context);
+                    },
+                    onDoubleTap: (){},
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            width:80,
+                            height: 70,
+                            decoration:  BoxDecoration(
+                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                            ),
+                            alignment: Alignment.center,
+                            child: const FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
+                                        Text("${expense_group[index]['Parent_ID']}- ${expense_group[index]['Seq_No']}",style: item_regular_textStyle,),
+                                        Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){
+                                          callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                        },
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -162,7 +257,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },
@@ -189,14 +284,14 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                       padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
                       child: Container(
                         height: SizeConfig.screenHeight*0.6,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xFFfffff5),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),
                           ),
                         ),
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: ListView(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
@@ -218,7 +313,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                             // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_nature")!),
                             getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                            SizedBox(height: 20,),
+                            const SizedBox(height: 20,),
 
                           ],
                         ),
@@ -231,7 +326,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -308,6 +403,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
       },
       textInput: TextInputType.text,
       maxlines: 1,
+      maxlength: 2,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z]')),
     );
 
@@ -376,16 +472,26 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
           ),
           GestureDetector(
             onTap: () {
+              if(editedItem!=null){
+                print("jgbgbgbggn");
+                callUpdateLadgerGroup();
+              }else{
+                callPostLedgerGroup();
+              }
+              //Navigator.pop(context);
+            },
+            onDoubleTap: () {},
+        /*    onTap: () {
 
               PostData();
               Navigator.pop(context);
 
             },
-            onDoubleTap: () {},
+            onDoubleTap: () {},*/
             child: Container(
               height: parentHeight * .05,
               width: parentWidth*.45,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: CommonColor.THEME_COLOR,
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(5),
@@ -395,6 +501,7 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
+                    editedItem!=null?ApplicationLocalizations.of(context)!.translate("update")!:
                     ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
@@ -410,17 +517,357 @@ class _ExpenseGroupState extends State<ExpenseGroup>{
 
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth){
-    return GetCategoryLayout(
-        title:   ApplicationLocalizations.of(context)!.translate("parent_category")!,
-        callback: (name,id){
-          setState(() {
-            parentCategory=name!;
-            parentCategoryId=id!;
-          });
-        },
-        selectedProductCategory: parentCategory
+    return Padding(
+      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("select_category")!,
+            style: item_heading_textStyle,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+            child: Container(
+              height: (SizeConfig.screenHeight) * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child:  GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if (context != null) {
+                    showGeneralDialog(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionBuilder: (context, a1, a2, widget) {
+                          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                          return Transform(
+                            transform:
+                            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                            child: Opacity(
+                              opacity: a1.value,
+                              child: LedegerGroupDialog(
+                                mListener: this,
+                                expense_group: expense_group,
+                              ),
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation2, animation1) {
+                          throw Exception('No widget to return in pageBuilder');
+                        });
+                  }
+                },
+                child: Container(
+                    height: 50,
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 5,
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("select_category")!:parentCategory,
+                          style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
+                        FaIcon(FontAwesomeIcons.caretDown,
+                          color: Colors.black87.withOpacity(0.8), size: 16,)
+                      ],
+                    )
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
 
+  }
+
+
+
+  callGetLedgerGroup(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().ledger_group}?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isApiCall=true;
+                isLoaderShow=false;
+                List<dynamic> _arrList = [];
+                _arrList=data;
+                if (_arrList.length < 10) {
+                  if (mounted) {
+                    setState(() {
+                      isPagination = false;
+                    });
+                  }
+                }
+                if (page == 1) {
+                  setDataToList(_arrList);
+                } else {
+                  setMoreDataToList(_arrList);
+                }
+              });
+
+              // expense_group.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (expense_group.isNotEmpty) expense_group.clear();
+    if (mounted) {
+      setState(() {
+        expense_group.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        expense_group.addAll(_list);
+      });
+    }
+  }
+
+  callDeleteLedgerGroup(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      DeleteIRequestModel model = DeleteIRequestModel(
+          id:removeId,
+          modifier: uid,
+          modifierMachine: deviceId
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group;
+      apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              expense_group.removeAt(index);
+            });
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+  callPostLedgerGroup() async {
+    String seqNoText = sequenseNoName.text.trim();
+    String groupNameText = groupName.text.trim();
+    String seqNatureText = sequenseNatureName.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostLedgerGroupRequestModel model = PostLedgerGroupRequestModel(
+          name: groupNameText,
+        seqNo:seqNoText ,
+        parentId:parentCategoryId.toString() ,
+        groupNature: seqNatureText,
+        creator: creatorName,
+        creatorMachine: deviceId,
+      );
+
+      //  widget.mListener.loaderShow(true);
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group;
+      apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              isLoaderShow=false;
+              callGetLedgerGroup(page);
+            });
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+             CommonWidget.errorDialog(context, error.toString());
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+           CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  @override
+  selectCategory(int id, String name) {
+    // TODO: implement selectCategory
+  setState(() {
+    parentCategory=name;
+    parentCategoryId=id;
+  });
+  }
+
+  callUpdateLadgerGroup() async {
+    String seqNoText = sequenseNoName.text.trim();
+    String groupNameText = groupName.text.trim();
+    String seqNatureText = sequenseNatureName.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+
+      PutLedgerGroupRequestModel model = PutLedgerGroupRequestModel(
+         name:groupNameText ,
+        seqNo:seqNoText ,
+        parentId:parentCategoryId.toString() ,
+        groupNature:seqNatureText ,
+        Modifier: creatorName,
+        creatorMachine: deviceId
+      );
+    /*  if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
+        model.parentId=parentCategoryId.toString();
+        // seqNo: seqNoText,
+      }
+      if(editedItem['Seq_No']!= int.parse(seqNo)){
+        model.seqNo=seqNo.toString();
+      }*/
+
+      print("MODAL");
+      print(model.toJson());
+
+      //  widget.mListener.loaderShow(true);
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString();
+
+      print(apiUrl);
+      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+          onSuccess:(value)async{
+            print("  Put Call :   $value ");
+
+            setState(() {
+              editedItem=null;
+              groupName.clear();
+              parentCategory="";
+              parentCategoryId=0;
+              sequenseNoName.clear();
+              sequenseNatureName.clear();
+            });
+            var snackBar = SnackBar(content: Text('Item Category Updated Successfully'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+            setState(() {
+              page=1;
+            });
+
+            await  callGetLedgerGroup(page);
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error.toString());
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            // widget.mListener.loaderShow(false);
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+    });
   }
 
 }

@@ -1,16 +1,16 @@
-class DeleteItemCategoryRequestModel {
+class DeleteIRequestModel {
   String id;
   String modifier;
   String modifierMachine;
 
-  DeleteItemCategoryRequestModel({
+  DeleteIRequestModel({
     required this.id,
     required this.modifier,
     required this.modifierMachine,
   });
 
-  factory DeleteItemCategoryRequestModel.fromJson(Map<String, dynamic> json) {
-    return DeleteItemCategoryRequestModel(
+  factory DeleteIRequestModel.fromJson(Map<String, dynamic> json) {
+    return DeleteIRequestModel(
       id: json['ID'],
       modifier: json['Modifier'],
       modifierMachine: json['Modifier_Machine'],
