@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -33,6 +34,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
   late ImagePickerHandler imagePicker;
   late AnimationController _Controller;
   double opacityLevel = 1.0;
+  Null bytes =null;
 
   @override
   void initState() {
@@ -46,13 +48,33 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
     imagePicker = ImagePickerHandler(this, _Controller);
     imagePicker.setListener(this);
     imagePicker.init(context);
+    // if( widget.picImage == null) {
+    //   setState(() {
+    //     uint8List = Uint8List.fromList(widget.picImage);
+    //   });
+    // }
+    getByts();
   }
 
+  getByts()async{
+    if(widget.picImage!=null) {
+      Uint8List bytes = await imageFileToByte(widget.picImage);
+      return bytes;
+    }
+  }
 
   @override
-  userImage(File image, String comeFrom) {
+  userImage(File image, String comeFrom)async {
     // TODO: implement userImage
+    Uint8List? bytes = await image?.readAsBytes();
+    print(bytes);
     widget.callbackFile(image);
+  }
+
+  Future<Uint8List> imageFileToByte(File imageFile) async {
+    // Read the image file as bytes
+    Uint8List bytes = await imageFile.readAsBytes();
+    return bytes;
   }
 
   @override
@@ -87,7 +109,9 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
                   image: DecorationImage(
                     image: FileImage(widget.picImage!),
                     fit: BoxFit.cover,
-                  )),
+                  )
+              ),
+              // child: ImageMemory(bytes: bytes),
             ),
             GestureDetector(
               onTap: () {
@@ -151,5 +175,20 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
         ),
       ],
     );
+  }
+}
+
+class ImageMemory extends StatelessWidget {
+  const ImageMemory({
+    super.key,
+    required this.imageBytes,
+  });
+
+  final Uint8List imageBytes;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.memory(imageBytes);
   }
 }

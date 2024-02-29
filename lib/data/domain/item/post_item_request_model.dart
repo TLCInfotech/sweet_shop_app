@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class PostItemRequestModel {
   PostItemRequestModel({
     required this.Name,
@@ -41,7 +43,7 @@ class PostItemRequestModel {
   late final String? DetailDesc;
   late final String? Creator;
   late final String? CreatorMachine;
-  late final String? Photo;
+  late final dynamic? Photo;
 
   PostItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];

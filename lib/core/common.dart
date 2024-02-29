@@ -83,6 +83,7 @@ class CommonWidget {
 
 
 
+
   static String errorDialog(BuildContext context, String message) {
     if (context != null) {
       showGeneralDialog(
@@ -181,6 +182,13 @@ class CommonWidget {
       },
     );
     }
+
+    static ConvertFileToByteArray(File file)async{
+      List<int> bytes = await file.readAsBytes();
+      return bytes;
+    }
+
+
 
  static pickDocumentFromfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(

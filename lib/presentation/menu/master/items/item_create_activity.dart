@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ import '../../../../data/api/request_helper.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class ItemCreateActivity extends StatefulWidget {
-  const ItemCreateActivity({super.key});
+  final editItem;
+  const ItemCreateActivity({super.key,this.editItem});
 
   // final ItemCreateActivityInterface mListener;
 
@@ -98,6 +100,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   String unitThreeId="";
   String unitThreeName="";
   String measuringUnit="";
+
+  dynamic picImageBytes;
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
@@ -256,9 +260,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
-        callbackFile: (file){
-          setState(() {
+        callbackFile: (file)async{
+          List<int> bytes = (await file?.readAsBytes()) as List<int>;
+          setState(()  {
             picImage=file;
+            picImageBytes=bytes;
           });
         }
     );
@@ -880,9 +886,22 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               //   )));
               // }
               if (mounted) {
-
                 setState(() {
                   disableColor = true;
+                });
+                Uint8List? bytes = await picImage?.readAsBytes();
+                // ByteData? byte = await picImage?.readAsBytes()
+                // // change here
+                //     .then((Uint8List data) => ByteData.view(data.buffer));
+                // print(byte);
+                JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+                String prettyprint = encoder.convert((bytes));
+                debugPrint(prettyprint);
+
+                setState(() {
+
+                  picImageBytes=bytes;
+                  print("piccccccc. $picImage    ");
                 });
                 await callPostItem();
               }
@@ -926,24 +945,24 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       PostItemRequestModel model = PostItemRequestModel(
           Name: itemNameController.text.trim(),
           CategoryID: categoryId.toString(),
-        Creator: creatorName,
-        CreatorMachine: deviceId,
-        Unit2: "",
-        Unit2Base: "",
-        Unit3: "",
-        Unit2Factor: "",
-        Unit3Base: "",
-        Unit3Factor: "",
-        PackSize: "",
-        Rate: "",
-        MinStock: "",
-        MaxStock: "",
-        HSNNo: "",
-        ExtName: "",
-        DefaultStore: "",
-        DetailDesc: "",
-        Photo: "",
-        Unit: ""
+          Creator: creatorName,
+          CreatorMachine: deviceId,
+          Unit2: "",
+          Unit2Base: "",
+          Unit3: "",
+          Unit2Factor: "",
+          Unit3Base: "",
+          Unit3Factor: "",
+          PackSize: "",
+          Rate: "",
+          MinStock: "",
+          MaxStock: "",
+          HSNNo: "",
+          ExtName: "",
+          DefaultStore: "",
+          DetailDesc: "",
+          Photo: picImageBytes.toString(),
+          Unit: ""
         );
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
