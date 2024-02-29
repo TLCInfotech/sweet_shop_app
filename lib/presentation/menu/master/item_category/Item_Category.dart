@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
@@ -58,6 +60,15 @@ bool isLoaderShow=false;
 
   List<dynamic> _arrListNew = [];
 
+
+  //FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    page = 0;
+    isPagination = true;
+    callGetItemCategory(page);
+    return ;
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -100,21 +111,54 @@ bool isLoaderShow=false;
                 add_category_layout(context);
 
               }),
-          body: Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          body:RefreshIndicator(
+            color: CommonColor.THEME_COLOR,
+            onRefresh: () {
+              return refreshList();
+            },
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                const SizedBox(
-                  height: .5,
-                ),
-                get_category_items_list_layout()
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: .5,
+                      ),
+                      get_category_items_list_layout()
 
+                    ],
+                  ),
+                ),
+                // Visibility(
+                //     visible: expense_group.isEmpty && isApiCall  ? true : false,
+                //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
               ],
             ),
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
+    );
+  }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -431,70 +475,79 @@ bool isLoaderShow=false;
 
   callGetItemCategory(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
-
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
-      });
-      TokenRequestModel model = TokenRequestModel(
-          token: sessionToken,
-          page: page.toString()
-      );
-      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              isLoaderShow=false;
-              List<dynamic> _arrList = [];
-              _arrList=data;
-              if (_arrList.length < 10) {
-                if (mounted) {
-                  setState(() {
-                    isPagination = false;
-                  });
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                List<dynamic> _arrList = [];
+                _arrList=data;
+                if (_arrList.length < 10) {
+                  if (mounted) {
+                    setState(() {
+                      isPagination = false;
+                    });
+                  }
                 }
+                if (page == 1) {
+                  setDataToList(_arrList);
+                } else {
+                  setMoreDataToList(_arrList);
+                }
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error);
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
               }
-              if (page == 1) {
-                setDataToList(_arrList);
-              } else {
-                setMoreDataToList(_arrList);
-              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
             });
 
-            // _arrListNew.addAll(data.map((arrData) =>
-            // new EmailPhoneRegistrationModel.fromJson(arrData)));
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, error);
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
 
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
 
-            print("Here2=> $e");
 
-            setState(() {
-              isLoaderShow=false;
-            });
-           var val= CommonWidget.errorDialog(context, e);
 
-           print("YES");
-           if(val=="yes"){
-             print("Retry");
-           }
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
   }
 
   setDataToList(List<dynamic> _list) {
@@ -516,106 +569,113 @@ bool isLoaderShow=false;
 
   callDeleteItemCategory(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        DeleteIRequestModel model = DeleteIRequestModel(
+            id:removeId,
+            modifier: uid,
+            modifierMachine: deviceId
+        );
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                _arrListNew.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
 
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
       });
-      DeleteIRequestModel model = DeleteIRequestModel(
-          id:removeId,
-          modifier: uid,
-          modifierMachine: deviceId
-      );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              isLoaderShow=false;
-              _arrListNew.removeAt(index);
-            });
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.noInternetDialog(context, error);
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
 
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, e.toString());
 
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
   }
   callPostItemCategory() async {
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
-    //var model={};
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
+            Name: catName,
+            Parent_ID:parentCategoryId.toString(),
+            Seq_No: seqNoText,
+            Creator: creatorName,
+            Creator_Machine: deviceId
+        );
+
+        //  widget.mListener.loaderShow(true);
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+        apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print("  LedgerLedger  $data ");
+              setState(() {
+                isLoaderShow=false;
+                callGetItemCategory(page);
+              });
+              Navigator.pop(context);
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
       });
-/*model={  "Name": catName,
-     "Parent_ID" :parentCategoryId.toString(),
-      "Seq_No": seqNo.text,
-      "Creator": creatorName,
-      "Creator_Machine": deviceId
-};*/
-      PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
-          Name: catName,
-          Parent_ID:parentCategoryId.toString(),
-          Seq_No: seqNoText,
-          Creator: creatorName,
-          Creator_Machine: deviceId
-      );
-
-      //  widget.mListener.loaderShow(true);
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
-      apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            print("  LedgerLedger  $data ");
-            setState(() {
-              isLoaderShow=false;
-              callGetItemCategory(page);
-            });
-            Navigator.pop(context);
-
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.noInternetDialog(context, error);
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, e.toString());
-
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
 
@@ -624,64 +684,66 @@ bool isLoaderShow=false;
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
+            modifier: creatorName,
+            modifierMachine: deviceId
+        );
+        if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
+          model.parentId=parentCategoryId.toString();
+          // seqNo: seqNoText,
+        }
+        if(editedItem['Seq_No']!= int.parse(seqNoText)){
+          model.seqNo=seqNoText.toString();
+        }
 
+        print("MODAL");
+        print(model.toJson());
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
 
-    AppPreferences.getDeviceId().then((deviceId) {
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(value)async{
+              print("  Put Call :   $value ");
 
-      PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
-          modifier: creatorName,
-          modifierMachine: deviceId
-      );
-      if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
-         model.parentId=parentCategoryId.toString();
-        // seqNo: seqNoText,
-      }
-      if(editedItem['Seq_No']!= int.parse(seqNoText)){
-        model.seqNo=seqNoText.toString();
-      }
+              setState(() {
+                editedItem=null;
+                categoryName.clear();
+                parentCategory="";
+                parentCategoryId=0;
+                seqNo.clear();
+              });
+              var snackBar = SnackBar(content: Text('Item Category Updated Successfully'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      print("MODAL");
-      print(model.toJson());
+              setState(() {
+                page=1;
+              });
 
-      //  widget.mListener.loaderShow(true);
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
+              await  callGetItemCategory(page);
+              Navigator.pop(context);
 
-      print(apiUrl);
-      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
-          onSuccess:(value)async{
-            print("  Put Call :   $value ");
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              CommonWidget.errorDialog(context, e.toString());
 
-            setState(() {
-              editedItem=null;
-              categoryName.clear();
-              parentCategory="";
-              parentCategoryId=0;
-              seqNo.clear();
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
             });
-            var snackBar = SnackBar(content: Text('Item Category Updated Successfully'));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
 
-            setState(() {
-              page=1;
-            });
-
-            await  callGetItemCategory(page);
-            Navigator.pop(context);
-
-          }, onFailure: (error) {
-            CommonWidget.noInternetDialog(context, "Signup Error");
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            // widget.mListener.loaderShow(false);
-            CommonWidget.errorDialog(context, e.toString());
-
-          },sessionExpire: (e) {
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-    });
   }
 
 }

@@ -945,8 +945,6 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         Photo: "",
         Unit: ""
         );
-
-      //  widget.mListener.loaderShow(true);
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
@@ -961,9 +959,6 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               isLoaderShow=false;
             });
             CommonWidget.errorDialog(context, error.toString());
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
           },
           onException: (e) {
             setState(() {

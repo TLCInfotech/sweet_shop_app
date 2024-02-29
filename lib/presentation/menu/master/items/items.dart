@@ -2,13 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/master/item_category/item_create_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/items/item_create_activity.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
@@ -25,6 +28,7 @@ class ItemsActivity extends StatefulWidget {
 
 class _ItemsActivityState extends State<ItemsActivity> {
 bool isLoaderShow=false;
+bool isApiCall = false;
   List<dynamic> item_category=[
     {
       "name":"Category 1",
@@ -85,6 +89,15 @@ void initState() {
 }
 
 List<dynamic> itemList = [];
+//FUNC: REFRESH LIST
+Future<void> refreshList() async {
+  await Future.delayed(Duration(seconds: 2));
+  page = 0;
+  isPagination = true;
+  callGetItem(page);
+  return ;
+}
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -126,18 +139,26 @@ List<dynamic> itemList = [];
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ItemCreateActivity()));
               }),
-          body: Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                get_items_list_layout()
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    get_items_list_layout()
 
-              ],
-            ),
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: itemList.isEmpty && isApiCall  ? true : false,
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -145,154 +166,197 @@ List<dynamic> itemList = [];
     );
   }
 
-  Expanded get_items_list_layout() {
+
+/*widget for no data*/
+Widget getNoData(double parentHeight,double parentWidth){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+      Text(
+        "No data available.",
+        style: TextStyle(
+          color: CommonColor.BLACK_COLOR,
+          fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+          fontFamily: 'Inter_Medium_Font',
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ],
+  );
+}
+
+
+Expanded get_items_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: itemList.length,
-          controller: _scrollController,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 10),
-                          width:SizeConfig.imageBlockFromCardWidth,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                                fit: BoxFit.cover,
-                              ),
-                              // borderRadius: BorderRadius.only(
-                              //   bottomLeft: Radius.circular(10),
-                              //   topLeft: Radius.circular(10)
-                              // )
-                              borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
-                                      const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                      const Text("500.00/kg",style: item_heading_textStyle,),
-
-                                    ],
-                                  ),
+        child:   RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: itemList.length,
+            controller: _scrollController,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            width:SizeConfig.imageBlockFromCardWidth,
+                            height: 80,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                                  fit: BoxFit.cover,
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){
-                                        callDeleteItem(itemList[index]['ID'].toString(),index);
-                                        },
-                                    ) )
-                              ],
-                            )
+                                // borderRadius: BorderRadius.only(
+                                //   bottomLeft: Radius.circular(10),
+                                //   topLeft: Radius.circular(10)
+                                // )
+                                borderRadius: BorderRadius.all(Radius.circular(10))
+                            ),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
+                                        const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
+                                        const Text("500.00/kg",style: item_heading_textStyle,),
 
-                        )
-                      ],
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){
+                                          callDeleteItem(itemList[index]['ID'].toString(),index);
+                                          },
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 
 
   callGetItem(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
 
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
-      });
-      TokenRequestModel model = TokenRequestModel(
-          token: sessionToken,
-          page: page.toString()
-      );
-      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              isLoaderShow=false;
-              List<dynamic> _arrList = [];
-              _arrList=data;
-              if (_arrList.length < 10) {
-                if (mounted) {
-                  setState(() {
-                    isPagination = false;
-                  });
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
                 }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
               }
-              if (page == 1) {
-                setDataToList(_arrList);
-              } else {
-                setMoreDataToList(_arrList);
-              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
             });
-
-            // _arrListNew.addAll(data.map((arrData) =>
-            // new EmailPhoneRegistrationModel.fromJson(arrData)));
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, error.toString());
-
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-
-            print("Here2=> $e");
-
-            setState(() {
-              isLoaderShow=false;
-            });
-            var val= CommonWidget.errorDialog(context, e);
-
-            print("YES");
-            if(val=="yes"){
-              print("Retry");
-            }
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
+      });
+    }
+    else{
+    if (mounted) {
+    setState(() {
+    isLoaderShow = false;
     });
+    }
+    CommonWidget.noInternetDialogNew(context);
+    }
   }
 
   setDataToList(List<dynamic> _list) {
@@ -314,48 +378,54 @@ List<dynamic> itemList = [];
 
   callDeleteItem(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        DeleteIRequestModel model = DeleteIRequestModel(
+            id:removeId,
+            modifier: uid,
+            modifierMachine: deviceId
+        );
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                itemList.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
 
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+
       });
-      DeleteIRequestModel model = DeleteIRequestModel(
-          id:removeId,
-          modifier: uid,
-          modifierMachine: deviceId
-      );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
-      apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
-            setState(() {
-              isLoaderShow=false;
-              itemList.removeAt(index);
-            });
-            print("  LedgerLedger  $data ");
-          }, onFailure: (error) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, error.toString());
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
 
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.errorDialog(context, e.toString());
-
-          },sessionExpire: (e) {
-            setState(() {
-              isLoaderShow=false;
-            });
-            CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
   }
 
 }

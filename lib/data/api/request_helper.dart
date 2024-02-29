@@ -302,7 +302,7 @@ class ApiRequestHelper {
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
           apiResponse =
               ApiResponseForFetch.fromJson(json.decode(response.body));
-          onSuccess(apiResponse.data!);
+          onSuccess(apiResponse.data);
           break;
         case 500:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();

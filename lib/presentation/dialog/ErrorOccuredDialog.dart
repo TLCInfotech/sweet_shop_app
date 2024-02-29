@@ -5,7 +5,6 @@ import '../../core/localss/application_localizations.dart';
 import '../../core/size_config.dart';
 
 class ErrorOccuredDialog extends StatefulWidget {
-
   final message;
   final  Function(dynamic value) onCallBack;
   const ErrorOccuredDialog({super.key,  this.message, required this.onCallBack , });
