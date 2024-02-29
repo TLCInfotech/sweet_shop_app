@@ -235,7 +235,8 @@
   "valid": "Valid",
   "gst_percent": "GST %",
   "error_message":"Error Occured",
-  "internet_msg": "Check your internet connection!"
+  "internet_msg": "Check your internet connection!",
+  "delete_msg": "Do you want to delete record!"
 
 }
 

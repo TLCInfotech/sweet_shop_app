@@ -231,6 +231,8 @@
 "exit_app_sub_text"		 : "तुम्हाला खात्री आहे की तुम्ही या ॲपमधून बाहेर पडू इच्छिता",
 "valid"					 : "वैध",
  "error_message":"Error Occured",
- "internet_msg": "Check your internet connection!"
+ "internet_msg": "Check your internet connection!",
+ "delete_msg": "Do you want to delete record!"
+
 
 }

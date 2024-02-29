@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/exit_app_dialog.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 
+import '../presentation/dialog/Delete_Dialog.dart';
 import '../presentation/dialog/ErrorOccuredDialog.dart';
 import '../presentation/dialog/ShowInformationDialog.dart';
 import '../presentation/dialog/no_internet_dialog.dart';
@@ -78,6 +79,77 @@ class CommonWidget {
           (Route<dynamic> route) => false,
     );
   }
+
+
+
+  static  Future<String?>? deleteDialog(BuildContext context) {
+    var str="";
+    if (context != null) {
+     return showGeneralDialog(
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionBuilder: (context, a1, a2, widget) {
+            final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+            // return Transform(
+            //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            return Transform.scale(
+              scale: a1.value,
+              child: Opacity(
+                opacity: a1.value,
+                child: DeleteDialog(
+                    onCallBack:(value){
+                      print("############3");
+                      print(value);
+                      return value;
+                      str=value;
+                    }
+                ),
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 200),
+          barrierDismissible: true,
+          barrierLabel: '',
+          context: context,
+          pageBuilder: (context, animation2, animation1) {
+            return Container();
+          });
+    }
+    return null;
+  }
+
+  // static String deleteDialog(BuildContext context) {
+  //   if (context != null) {
+  //     showGeneralDialog(
+  //         barrierColor: Colors.black.withOpacity(0.5),
+  //         transitionBuilder: (context, a1, a2, widget) {
+  //           final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+  //           // return Transform(
+  //           //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+  //           return Transform.scale(
+  //             scale: a1.value,
+  //             child: Opacity(
+  //               opacity: a1.value,
+  //               child: DeleteDialog(
+  //                   onCallBack:(value){
+  //                     if(value!=null) {
+  //                       return "yes";
+  //                     }
+  //                   }
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //         transitionDuration: Duration(milliseconds: 200),
+  //         barrierDismissible: true,
+  //         barrierLabel: '',
+  //         context: context,
+  //         pageBuilder: (context, animation2, animation1) {
+  //           return Container();
+  //         });
+  //   }
+  //   return "null";
+  // }
+
 
   static String errorDialog(BuildContext context, String message) {
     if (context != null) {

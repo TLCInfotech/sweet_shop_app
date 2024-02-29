@@ -449,8 +449,11 @@ bool isLoaderShow=false;
                                           size: 18,
                                           color: Colors.redAccent,
                                         ),
-                                        onPressed: (){
-                                          callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                        onPressed: ()async{
+                                          var s= await CommonWidget.deleteDialog(context) ;
+                                          print("jkhdskhfsd");
+                                          print(s);
+                                          // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
                                         },
                                       ) )
                                 ],
