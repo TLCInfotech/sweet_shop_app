@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,6 +68,23 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setData();
+  }
+
+  setData()async{
+    if(widget.editItem!=null){
+      print("IN CREATE1");
+      print(widget.editItem['Photo']['data']);
+      List<int> img=[];
+      img=(widget.editItem['Photo']['data']).whereType<int>().toList();
+      Uint8List imageInUnit8List= Uint8List.fromList(img);
+      final tempDir = await getTemporaryDirectory();
+      File file = await File('${tempDir.path}/image.png').create();
+      file.writeAsBytesSync(imageInUnit8List);
+      setState(() {
+        picImage=file;
+      });
+    }
   }
 
   File? adharFile ;
@@ -105,7 +123,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+
   bool isLoaderShow=false;
+
+
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

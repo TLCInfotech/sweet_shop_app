@@ -226,79 +226,88 @@ Expanded get_items_list_layout() {
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
-                    child: Card(
-                      child: Row(
-                        children: [
-                          itemList[index]['Photo']==null? Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width:SizeConfig.imageBlockFromCardWidth,
-                            height: 80,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(10))
-                            ),
-
-                          ): Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width:SizeConfig.imageBlockFromCardWidth,
-                            height: 80,
-                            decoration:  BoxDecoration(
-                                image: DecorationImage(
-                                  image: MemoryImage(Uint8List.fromList(img)), // Replace with your image asset path
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(10))
-                            ),
-
-                          )
-                          ,
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
-                                        const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                        const Text("500.00/kg",style: item_heading_textStyle,),
-
-                                      ],
-                                    ),
+                    child: GestureDetector(
+                      onTap: ()async{
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: itemList[index],)));
+                        setState(() {
+                          page=1;
+                        });
+                        callGetItem(page);
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            itemList[index]['Photo']==null? Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width:SizeConfig.imageBlockFromCardWidth,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                                    fit: BoxFit.cover,
                                   ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-                                            print("##############$response");
-                                            await  callDeleteItem(itemList[index]['ID'].toString(),index);
-                                          }
-                                        },
-                                      )
+                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                              ),
 
-                                      // IconButton(
-                                      //   icon:  const FaIcon(
-                                      //     FontAwesomeIcons.trash,
-                                      //     size: 18,
-                                      //     color: Colors.redAccent,
-                                      //   ),
-                                      //   onPressed: (){
-                                      //     callDeleteItem(itemList[index]['ID'].toString(),index);
-                                      //     },
-                                      // )
-                                     )
-                                ],
-                              )
+                            ): Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width:SizeConfig.imageBlockFromCardWidth,
+                              height: 80,
+                              decoration:  BoxDecoration(
+                                  image: DecorationImage(
+                                    image: MemoryImage(Uint8List.fromList(img)), // Replace with your image asset path
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                              ),
 
-                          )
-                        ],
+                            )
+                            ,
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
+                                          const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
+                                          const Text("500.00/kg",style: item_heading_textStyle,),
+
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await  callDeleteItem(itemList[index]['ID'].toString(),index);
+                                            }
+                                          },
+                                        )
+
+                                        // IconButton(
+                                        //   icon:  const FaIcon(
+                                        //     FontAwesomeIcons.trash,
+                                        //     size: 18,
+                                        //     color: Colors.redAccent,
+                                        //   ),
+                                        //   onPressed: (){
+                                        //     callDeleteItem(itemList[index]['ID'].toString(),index);
+                                        //     },
+                                        // )
+                                       )
+                                  ],
+                                )
+
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
