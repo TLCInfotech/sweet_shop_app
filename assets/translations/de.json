@@ -124,7 +124,7 @@
 "branch_name" 				 : "शाखेचे नाव:",
 "group_name" 				 : "गटाचे नाव",
 "sequence_no" 				 : "क्रम क्रमांक",
-"sequence_nature" 			 : "क्रम निसर्ग",
+"group_nature" 			 : "क्रम निसर्ग",
 "sale_invoice" 			 : "विक्री बीजक",
 "purchase_invoice" 		 : "खरेदी बीजक",
 "payment" 				 	: "पेमेंट",
