@@ -891,17 +891,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 });
                 Uint8List? bytes = await picImage?.readAsBytes();
                 // ByteData? byte = await picImage?.readAsBytes()
-                // // change here
-                //     .then((Uint8List data) => ByteData.view(data.buffer));
+                // .then((Uint8List data) => ByteData.view(data.buffer));
                 // print(byte);
-                JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-                String prettyprint = encoder.convert((bytes));
-                debugPrint(prettyprint);
 
                 setState(() {
 
                   picImageBytes=bytes;
-                  print("piccccccc. $picImage    ");
+                  print("piccccccc. $picImage   $bytes ");
+
                 });
                 await callPostItem();
               }
@@ -964,6 +961,13 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           Photo: picImageBytes.toString(),
           Unit: ""
         );
+      print("@@@@@@@@@@@@s@");
+
+
+      JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+      String prettyprint =  encoder.convert(json.decode(json.encode(model.Photo)));
+      debugPrint(prettyprint);
+
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
