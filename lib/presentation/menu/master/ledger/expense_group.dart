@@ -18,6 +18,7 @@ import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/ledgerGroup/post_ledger_group_request_model.dart';
 import '../../../../data/domain/ledgerGroup/put_ledger_group_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/parent_ledger_group_dialoug.dart';
@@ -234,16 +235,25 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                                   Positioned(
                                       top: 0,
                                       right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: (){
-                                          callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                      child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                          }
                                         },
-                                      ) )
+                                      )
+                                      // IconButton(
+                                      //   icon:  const FaIcon(
+                                      //     FontAwesomeIcons.trash,
+                                      //     size: 18,
+                                      //     color: Colors.redAccent,
+                                      //   ),
+                                      //   onPressed: (){
+                                      //     callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                      //   },
+                                      // )
+                                  )
                                 ],
                               )
 

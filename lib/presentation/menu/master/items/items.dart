@@ -17,6 +17,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 
 
 class ItemsActivity extends StatefulWidget {
@@ -245,16 +246,26 @@ Expanded get_items_list_layout() {
                                   Positioned(
                                       top: 0,
                                       right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: (){
-                                          callDeleteItem(itemList[index]['ID'].toString(),index);
-                                          },
-                                      ) )
+                                      child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            await  callDeleteItem(itemList[index]['ID'].toString(),index);
+                                          }
+                                        },
+                                      )
+
+                                      // IconButton(
+                                      //   icon:  const FaIcon(
+                                      //     FontAwesomeIcons.trash,
+                                      //     size: 18,
+                                      //     color: Colors.redAccent,
+                                      //   ),
+                                      //   onPressed: (){
+                                      //     callDeleteItem(itemList[index]['ID'].toString(),index);
+                                      //     },
+                                      // )
+                                     )
                                 ],
                               )
 

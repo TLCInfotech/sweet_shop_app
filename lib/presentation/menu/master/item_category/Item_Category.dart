@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -443,19 +444,29 @@ bool isLoaderShow=false;
                                   Positioned(
                                       top: 0,
                                       right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          var s= await CommonWidget.deleteDialog(context) ;
-                                          print("jkhdskhfsd");
-                                          print(s);
-                                          // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                      child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            await callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                          }
                                         },
-                                      ) )
+
+                                      )
+                                      // IconButton(
+                                      //   icon:  const FaIcon(
+                                      //     FontAwesomeIcons.trash,
+                                      //     size: 18,
+                                      //     color: Colors.redAccent,
+                                      //   ),
+                                      //   onPressed: ()async{
+                                      //     var val= await CommonWidget.deleteDialog(context);
+                                      //     print("##########33");
+                                      //     print(val);
+                                      //     // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                      //   },
+                                      // )
+                                  )
                                 ],
                               )
 

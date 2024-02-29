@@ -126,7 +126,8 @@ class _ErrorOccuredDialogState extends State<DeleteDialog> {
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: ()async {
+            await widget.onCallBack("no");
             Navigator.pop(context);
           },
           onDoubleTap: () {},

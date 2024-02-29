@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/create_expense_activity.dart';
 
 import '../../../../core/localss/application_localizations.dart';
+import '../../../common_widget/deleteDialog.dart';
 
 
 class ExpenseListingActivity extends StatefulWidget {
@@ -124,14 +125,15 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                                 Positioned(
                                     top: 0,
                                     right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
+                                    child:DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          // await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                        }
+                                      },
+                                    )
+                                )
                               ],
                             )
 
