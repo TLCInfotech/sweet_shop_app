@@ -109,6 +109,13 @@ bool isLoaderShow=false;
                 color: Colors.black87,
               ),
               onPressed: () {
+                setState(() {
+                  editedItem=null;
+                  categoryName.clear();
+                  parentCategory="";
+                  parentCategoryId=0;
+                  seqNo.clear();
+                });
                 add_category_layout(context);
 
               }),

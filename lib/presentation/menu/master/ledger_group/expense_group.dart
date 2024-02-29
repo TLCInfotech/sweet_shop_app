@@ -43,16 +43,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   String ParentGroupid="";
   bool isApiCall = false;
   late InternetConnectionStatus internetStatus;
-/*  List<dynamic> expense_group=[
-  {
-  "ID" : "13",
-  "Name" : "Employee",
-  "Parent_ID" : "34",
-  "Seq_No" : "36",
-  "Group_Nature" : "A"
-}
-  ];*/
-
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   bool isLoaderShow=false;
@@ -63,6 +53,14 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   bool isPagination = true;
   ScrollController _scrollController = new ScrollController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetLedgerGroup(page);
+  }
+
   _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -72,14 +70,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
       }
     }
   }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _scrollController.addListener(_scrollListener);
-    callGetLedgerGroup(page);
-  }
-
   List<dynamic> expense_group = [];
 
 
@@ -123,8 +113,17 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 color: Colors.black87,
               ),
               onPressed: () {
-                add_category_layout(context);
+                setState(() {
+                  groupName.clear();
+                  parentCategory="";
+                  parentCategoryId=0;
+                  sequenseNoName.clear();
+                  sequenseNatureName.clear();
+                  editedItem=null;
+                  print("kvnnnvg  $editedItem");
+                });
 
+                add_category_layout(context);
               }),
           body: Container(
             margin: const EdgeInsets.all(15),
@@ -200,6 +199,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                         sequenseNatureName.text=expense_group[index]['Group_Nature'].toString();
                         print("ggfhfghgfhvg  $parentCategory");
                       });
+
                       add_category_layout(context);
                     },
                     onDoubleTap: (){},

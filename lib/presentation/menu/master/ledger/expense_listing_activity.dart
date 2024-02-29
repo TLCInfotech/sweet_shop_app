@@ -2,12 +2,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/create_expense_activity.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
+import '../../../../core/common.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/delete_request_model.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
 
 
@@ -22,6 +31,43 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
   TextEditingController itemName = TextEditingController();
   TextEditingController itemRate = TextEditingController();
   TextEditingController itemPkgSize = TextEditingController();
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  String parentCategory="";
+  int parentCategoryId=0;
+  bool isLoaderShow=false;
+  bool isApiCall = false;
+  var editedItem=null;
+
+  int page = 1;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetLedger(page);
+      }
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetLedger(page);
+  }
+
+  List<dynamic> ledgerList = [];
+//FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    page = 0;
+    isPagination = true;
+    callGetLedger(page);
+    return ;
+  }
 
 
   @override
@@ -63,26 +109,53 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
             //   add_item_layout(context);
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity()));
           }),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: .5,
-            ),
-            get_items_list_layout()
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: .5,
+                ),
+                get_items_list_layout()
 
-          ],
-        ),
+              ],
+            ),
+          ),
+          Visibility(
+              visible: ledgerList.isEmpty && isApiCall  ? true : false,
+              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+        ],
       ),
+    );
+  }
+/*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
   Expanded get_items_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6,7,8,9].length,
+          itemCount: ledgerList.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -112,11 +185,11 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                               children: [
                                 Container(
                                   margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: const Column(
+                                  child:  Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("Ledger Name",style: item_heading_textStyle,),
+                                      Text(ledgerList[index]['Name'],style: item_heading_textStyle,),
                                       Text("Leadger group name",
                                         style: item_regular_textStyle,),
                                     ],
@@ -129,7 +202,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
-                                          // await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                          await  callDeleteItem(ledgerList[index]['ID'].toString(),index);
                                         }
                                       },
                                     )
@@ -153,6 +226,148 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
         ));
   }
 
+  callGetLedger(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().ledger}?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
 
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (ledgerList.isNotEmpty) ledgerList.clear();
+    if (mounted) {
+      setState(() {
+        ledgerList.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        ledgerList.addAll(_list);
+      });
+    }
+  }
+
+  callDeleteItem(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        DeleteIRequestModel model = DeleteIRequestModel(
+            id:removeId,
+            modifier: uid,
+            modifierMachine: deviceId
+        );
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger;
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                ledgerList.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }
 
 }

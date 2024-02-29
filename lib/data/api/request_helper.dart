@@ -288,7 +288,7 @@ class ApiRequestHelper {
       Response response = await http.get(
         Uri.parse(apiUrl),
       );
-      print(response.statusCode);
+      print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
       switch (response.statusCode) {
       /*response of api status id zero when something is wrong*/
         case 400:
