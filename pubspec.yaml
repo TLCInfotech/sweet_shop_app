@@ -23,6 +23,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   json_annotation:
+  internet_connection_checker: ^0.0.1+3
 dev_dependencies:
   flutter_test:
     sdk: flutter
