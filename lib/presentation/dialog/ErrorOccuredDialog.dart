@@ -55,7 +55,7 @@ class _ErrorOccuredDialogState extends State<ErrorOccuredDialog> {
 
                           Container(
                               height: SizeConfig.screenHeight*.05,
-                              child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                              child: getCloseButtonLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
                         ],
                       ),
                     ),
@@ -154,6 +154,38 @@ class _ErrorOccuredDialogState extends State<ErrorOccuredDialog> {
           ),
         ),
       ],
+    );
+  }
+  /* Widget for Buttons Layout0 */
+  Widget getCloseButtonLayout(double parentHeight,double parentWidth) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      onDoubleTap: () {},
+      child: Container(
+        height: parentHeight * .05,
+        width: parentWidth*.8,
+        decoration: BoxDecoration(
+          color: CommonColor.THEME_COLOR.withOpacity(0.4),
+          borderRadius: const BorderRadius.only(
+            bottomRight: Radius.circular(5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("close")!,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: SizeConfig.blockSizeVertical * 2.1,
+              ),
+              textScaleFactor: 1.05,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -26,14 +26,14 @@ class PostItemRequestModel {
   late final String? CategoryID;
   late final String? Unit;
   late final String? Unit2;
-  late final double? Unit2Factor;
-  late final double? Unit2Base;
+  late final String? Unit2Factor;
+  late final String? Unit2Base;
   late final String? Unit3;
   late final String? Unit3Factor;
   late final String? Unit3Base;
   late final String? PackSize;
-  late final double? Rate;
-  late final double? MinStock;
+  late final String? Rate;
+  late final String? MinStock;
   late final String? MaxStock;
   late final String? HSNNo;
   late final String? ExtName;

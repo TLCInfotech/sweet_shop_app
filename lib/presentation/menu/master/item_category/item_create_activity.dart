@@ -927,7 +927,23 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           Name: itemNameController.text.trim(),
           CategoryID: categoryId.toString(),
         Creator: creatorName,
-        CreatorMachine: deviceId
+        CreatorMachine: deviceId,
+        Unit2: "",
+        Unit2Base: "",
+        Unit3: "",
+        Unit2Factor: "",
+        Unit3Base: "",
+        Unit3Factor: "",
+        PackSize: "",
+        Rate: "",
+        MinStock: "",
+        MaxStock: "",
+        HSNNo: "",
+        ExtName: "",
+        DefaultStore: "",
+        DetailDesc: "",
+        Photo: "",
+        Unit: ""
         );
 
       //  widget.mListener.loaderShow(true);
