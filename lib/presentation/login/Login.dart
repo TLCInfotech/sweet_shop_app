@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -7,6 +8,7 @@ import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
+import '../../core/internet_check.dart';
 import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/login/login_request_model.dart';
@@ -134,34 +136,31 @@ class _LoginActivityState extends State<LoginActivity> {
     String passwordText = password.text.trim();
     String deviceId = await AppPreferences.getDeviceId();
     String sessionToken = await AppPreferences.getSessionToken();
-
-    AppPreferences.getDeviceId().then((deviceId) {
-      setState(() {
-        isLoaderShow=true;
-      });
-      LoginRequestModel model = LoginRequestModel(
-     Password: passwordText,
-     UID: userName,
-        Machine_Name: deviceId
-      );
-      //  widget.mListener.loaderShow(true);
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        LoginRequestModel model = LoginRequestModel(
+            Password: passwordText,
+            UID: userName,
+            Machine_Name: deviceId
+        );
         String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
             onSuccess:(token,uid){
               setState(() {
                 isLoaderShow=false;
               });
-             AppPreferences.setSessionToken(token);
-             AppPreferences.setUId(uid);
-             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+              AppPreferences.setSessionToken(token);
+              AppPreferences.setUId(uid);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
               });
-              CommonWidget.noInternetDialog(context, "Signup Error");
-             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
+              CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
               setState(() {
                 isLoaderShow=false;
@@ -175,7 +174,16 @@ class _LoginActivityState extends State<LoginActivity> {
               CommonWidget.gotoLoginScreen(context);
             });
 
-    });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
   }
 
 }

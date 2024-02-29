@@ -198,7 +198,7 @@ bool isLoaderShow=false;
                               height: SizeConfig.screenHeight*.08,
                               child: Center(
                                 child: Text(
-                                    ApplicationLocalizations.of(context)!.translate("add_category")!,
+                                    ApplicationLocalizations.of(context)!.translate("item_category")!,
                                     style: page_heading_textStyle
                                 ),
                               ),

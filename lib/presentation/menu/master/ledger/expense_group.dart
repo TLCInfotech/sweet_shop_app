@@ -227,7 +227,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
-                                        Text("${expense_group[index]['Parent_ID']}- ${expense_group[index]['Seq_No']}",style: item_regular_textStyle,),
+                                        Text("${expense_group[index]['Parent_Name']}",style: item_regular_textStyle,),
                                         Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
                                       ],
                                     ),
@@ -405,7 +405,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
       controller: sequenseNatureName,
       focuscontroller: _sequenceNatureFocus,
       focusnext: _sequenceNatureFocus,
-      title: ApplicationLocalizations.of(context)!.translate("sequence_nature")!,
+      title: ApplicationLocalizations.of(context)!.translate("group_nature")!,
       callbackOnchage: (value) {
         setState(() {
           sequenseNatureName.text = value;
@@ -533,7 +533,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            ApplicationLocalizations.of(context)!.translate("select_category")!,
+            ApplicationLocalizations.of(context)!.translate("parent_group")!,
             style: item_heading_textStyle,
           ),
           Padding(
@@ -598,7 +598,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("select_category")!:parentCategory,
+                        Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory,
                           style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
                         FaIcon(FontAwesomeIcons.caretDown,
                           color: Colors.black87.withOpacity(0.8), size: 16,)
@@ -634,6 +634,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
               setState(() {
                 isLoaderShow=false;
                 if(data!=null){
+                  print("responseeee   $data");
                   List<dynamic> _arrList = [];
                   _arrList=data;
                   if (_arrList.length < 10) {
