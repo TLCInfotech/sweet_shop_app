@@ -20,7 +20,7 @@ import '../dialog/state_dialog.dart';
 class GetStateLayout extends StatefulWidget{
   final title;
   final stateName;
-  final Function(String?) callback;
+  final Function(String?,String?) callback;
 
   GetStateLayout({required this.title, required this.callback, required this.stateName});
 
@@ -120,7 +120,7 @@ class _GetStateLayoutState extends State<GetStateLayout> with     SingleTickerPr
   }
   @override
   selectState(String id, String name) {
-    widget.callback(name);
+    widget.callback(name,id);
   }
 
 }

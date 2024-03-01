@@ -1159,9 +1159,10 @@ setData()async{
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return GetStateLayout(
         title:  ApplicationLocalizations.of(context)!.translate("state")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             stateName=name!;
+            stateId=id!;
           });
         },
         stateName: stateName);
@@ -1200,9 +1201,10 @@ setData()async{
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return GetCountryLayout(
         title:  ApplicationLocalizations.of(context)!.translate("country")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             countryName=name!;
+            countryId=id!;
           });
         },
         countryName: countryName);
@@ -1535,14 +1537,14 @@ setData()async{
           isLoaderShow=true;
         });
         PostLedgerRequestModel model = PostLedgerRequestModel(
-name: name,
+        name: name,
           groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
           district: "1",
-          state: "2",
+          state: stateId,
           pinCode: pinCode,
-          country: "4",
+          country: countryId,
           contactNo: contactNo,
           email: emailAdd,
           panNo: panNo,
@@ -1639,9 +1641,39 @@ name: name,
       AppPreferences.getDeviceId().then((deviceId) {
         PutLedgerRequestModel model = PutLedgerRequestModel(
             name: name,
-            groupID:parentCategoryId,
-          creator: creatorName,
-          creatorMachine: deviceId
+            groupID: parentCategoryId,
+            contactPerson: contactPerson,
+            address: address,
+            district: "1",
+            state: stateId,
+            pinCode: pinCode,
+            country: countryId,
+            contactNo: contactNo,
+            email: emailAdd,
+            panNo: panNo,
+            adharNo: adharNo,
+            gstNo: gstNo,
+            cinNo: "",
+            fssaiNo: "",
+            outstandingLimit: outLimit,
+            bankName: bankName,
+            bankBranch: bankBranch,
+            ifscCode: ifscCode,
+            accountNo: accountNo,
+            acHolderName: aCHName,
+            hsnNo: hsnNo,
+            gstRate: "",
+            cgstRate: cgstNo,
+            sgstRate: sgstNo,
+            cessRate: cess,
+            addCessRate: addCess,
+            taxCategory: "",//drop
+            gstType: "",
+            tcsApplicable: "",
+            extName: extName,
+            remark: "",
+            creator: creatorName,
+            creatorMachine: deviceId
         );
         print("MODAL");
         print(model.toJson());
@@ -1663,7 +1695,6 @@ name: name,
 
             },sessionExpire: (e) {
               CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
             });
       });
     }else{

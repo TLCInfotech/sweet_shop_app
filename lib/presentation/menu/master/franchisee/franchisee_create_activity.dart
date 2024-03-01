@@ -521,7 +521,7 @@ String stateName="";
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return GetCountryLayout(
         title:  ApplicationLocalizations.of(context)!.translate("country")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             countryName=name!;
           });
@@ -534,7 +534,7 @@ String stateName="";
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return GetStateLayout(
         title:  ApplicationLocalizations.of(context)!.translate("state")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             stateName=name!;
           });

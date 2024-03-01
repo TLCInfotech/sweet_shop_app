@@ -21,7 +21,7 @@ import '../dialog/state_dialog.dart';
 class GetCountryLayout extends StatefulWidget{
   final title;
   final countryName;
-  final Function(String?) callback;
+  final Function(String?,String?) callback;
 
   GetCountryLayout({required this.title, required this.callback, required this.countryName});
 
@@ -123,7 +123,7 @@ class _GetCountryLayoutState extends State<GetCountryLayout> with SingleTickerPr
   @override
   selectCountry(String id, String name) {
     // TODO: implement selectCountry
-    widget.callback(name);
+    widget.callback(name,id);
   }
 
 }
