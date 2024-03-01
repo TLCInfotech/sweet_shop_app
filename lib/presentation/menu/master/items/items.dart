@@ -208,16 +208,11 @@ Expanded get_items_list_layout() {
             controller: _scrollController,
             itemBuilder: (BuildContext context, int index) {
               List<int> img=[];
-              if( itemList[index]['Photo']==null){
-              }
-              else{
-                print((itemList[index]['Photo']['data']));
-                // for(var i in itemList[index]['Photo']['data'] ){
-                //   img.add(i);
-                // }
+              if( itemList[index]['Photo']!=null){
                 img=(itemList[index]['Photo']['data']).whereType<int>().toList();
-
+                print("#################sd ${itemList[index]['Photo']['data']}");
               }
+
               return  AnimationConfiguration.staggeredList(
                 position: index,
                 duration:

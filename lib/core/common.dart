@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -183,9 +184,14 @@ class CommonWidget {
     );
     }
 
-    static ConvertFileToByteArray(File file)async{
-      List<int> bytes = await file.readAsBytes();
-      return bytes;
+    static convertBytesToFile(data) async{
+      List<int> img=[];
+      img=(data).whereType<int>().toList();
+      Uint8List imageInUnit8List= Uint8List.fromList(img);
+      final tempDir = await getTemporaryDirectory();
+      File file = await File('${tempDir.path}/image.png').create();
+      file.writeAsBytesSync(imageInUnit8List);
+      return file;
     }
 
 

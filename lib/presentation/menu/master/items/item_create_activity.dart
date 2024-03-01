@@ -73,16 +73,16 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   setData()async{
     if(widget.editItem!=null){
-      print("IN CREATE1");
-      print(widget.editItem['Photo']['data']);
-      List<int> img=[];
-      img=(widget.editItem['Photo']['data']).whereType<int>().toList();
-      Uint8List imageInUnit8List= Uint8List.fromList(img);
-      final tempDir = await getTemporaryDirectory();
-      File file = await File('${tempDir.path}/image.png').create();
-      file.writeAsBytesSync(imageInUnit8List);
-      setState(() {
-        picImage=file;
+      // List<int> img=[];
+      // img=(widget.editItem['Photo']['data']).whereType<int>().toList();
+      // Uint8List imageInUnit8List= Uint8List.fromList(img);
+      // final tempDir = await getTemporaryDirectory();
+      // File file = await File('${tempDir.path}/image.png').create();
+      // file.writeAsBytesSync(imageInUnit8List);
+
+      File f=await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      setState(()  {
+        picImage=f;
       });
     }
   }
