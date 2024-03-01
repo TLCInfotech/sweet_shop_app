@@ -27,7 +27,7 @@ class ExpenseListingActivity extends StatefulWidget {
   State<ExpenseListingActivity> createState() => _ExpenseListingActivityState();
 }
 
-class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
+class _ExpenseListingActivityState extends State<ExpenseListingActivity>with CreateExpenseActivityInterface {
   TextEditingController itemName = TextEditingController();
   TextEditingController itemRate = TextEditingController();
   TextEditingController itemPkgSize = TextEditingController();
@@ -72,65 +72,73 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
 
-              backgroundColor: Colors.white,
-              title:  Text(
-                ApplicationLocalizations.of(context)!.translate("ledger")!,
-                style: appbar_text_style,),
+                  backgroundColor: Colors.white,
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("ledger")!,
+                    style: appbar_text_style,),
+                ),
+              ),
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                //   add_item_layout(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+                  mListener: this,
+                )));
+              }),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_items_list_layout()
+
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: ledgerList.isEmpty && isApiCall  ? true : false,
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+            ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            //   add_item_layout(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity()));
-          }),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: .5,
-                ),
-                get_items_list_layout()
-
-              ],
-            ),
-          ),
-          Visibility(
-              visible: ledgerList.isEmpty && isApiCall  ? true : false,
-              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
-        ],
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 /*widget for no data*/
@@ -154,75 +162,91 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
 
   Expanded get_items_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: ledgerList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          width:SizeConfig.imageBlockFromCardWidth,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child:  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(ledgerList[index]['Name'],style: item_heading_textStyle,),
-                                      Text("Leadger group name",
-                                        style: item_regular_textStyle,),
-                                    ],
+        child: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: ledgerList.length,
+            controller: _scrollController,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+                          mListener: this,
+                          ledgerList: ledgerList[index],
+                        )));
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 10),
+                              width:SizeConfig.imageBlockFromCardWidth,
+                              height: 80,
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                                    fit: BoxFit.cover,
                                   ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:DeleteDialogLayout(
-                                      callback: (response ) async{
-                                        if(response=="yes"){
-                                          print("##############$response");
-                                          await  callDeleteItem(ledgerList[index]['ID'].toString(),index);
-                                        }
-                                      },
+                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                              ),
+                            ),
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child:  Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(ledgerList[index]['Name'],style: item_heading_textStyle,),
+                                          Text("Leadger group name",
+                                            style: item_regular_textStyle,),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await  callDeleteItem(ledgerList[index]['ID'].toString(),index);
+                                            }
+                                          },
+                                        )
                                     )
+                                  ],
                                 )
-                              ],
-                            )
 
-                        )
-                      ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 
@@ -338,7 +362,6 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
                 isLoaderShow=false;
                 ledgerList.removeAt(index);
               });
-              print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
@@ -368,6 +391,24 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity> {
       CommonWidget.noInternetDialogNew(context);
     }
 
+  }
+
+  @override
+  createPostLedger() {
+    // TODO: implement createPostLedger
+  setState(() {
+    callGetLedger(0);
+  });
+  Navigator.pop(context);
+  }
+
+  @override
+  updatePostLedger() {
+    // TODO: implement updatePostLedger
+    setState(() {
+      callGetLedger(0);
+    });
+    Navigator.pop(context);
   }
 
 }

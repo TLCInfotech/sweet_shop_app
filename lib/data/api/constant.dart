@@ -8,6 +8,8 @@ class ApiConstants {
   String item_gst = "ItemGST";
   String item = "Item";
   String ledger = "Ledger";
+  String country = "Country";
+  String state = "State";
   String ledger_group = "LedgerGroup";
 
 }

@@ -337,6 +337,54 @@ class ApiRequestHelper {
     }*/
 
   }
+  void callAPIsForGetStringDynamicAPI(
+      String apiUrl, dynamic requestBody, String sessionToken,
+      {required Function(dynamic data) onSuccess,
+        required Function(dynamic error) onFailure,
+        required Function(dynamic error) onException,
+        required Function(dynamic error) sessionExpire}) async {
+    print("apiUrl    $apiUrl");
+    print("requestBody    $requestBody");
+    print("sessionToken    ${sessionToken}");
+   // try {
+      Response response = await http.get(
+        Uri.parse(apiUrl),
+      );
+      print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
+      switch (response.statusCode) {
+      /*response of api status id zero when something is wrong*/
+        case 400:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg!);
+          print("response.data  0 400 ${apiResponse.msg}");
+          break;
+        case 200:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onSuccess(apiResponse.data);
+          break;
+        case 500:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onException(apiResponse.msg!);
+          break;
+        case 400:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          break;
+        case 403:
+          AppPreferences.clearAppPreference();
+          sessionExpire("jhhh");
+          break;
+      }
+
+  }
 
   void callAPIsForDeleteAPI(
       String apiUrl, dynamic requestBody, String sessionToken,

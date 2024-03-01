@@ -741,7 +741,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
               CommonWidget.gotoLoginScreen(context);
               // widget.mListener.loaderShow(false);
             });
-
       });
     }else{
       if (mounted) {
@@ -751,8 +750,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
       }
       CommonWidget.noInternetDialogNew(context);
     }
-
-
   }
   callPostLedgerGroup() async {
     String seqNoText = sequenseNoName.text.trim();
@@ -818,15 +815,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   }
 
-  @override
-  selectCategory(int id, String name) {
-    // TODO: implement selectCategory
-  setState(() {
-    parentCategory=name;
-    parentCategoryId=id;
-  });
-  }
-
   callUpdateLadgerGroup() async {
     String seqNoText = sequenseNoName.text.trim();
     String groupNameText = groupName.text.trim();
@@ -887,8 +875,17 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
       }
       CommonWidget.noInternetDialogNew(context);
     }
-
-
   }
+
+  @override
+  selectCategory(int id, String name) {
+    // TODO: implement selectCategory
+  setState(() {
+    parentCategory=name;
+    parentCategoryId=id;
+  });
+  }
+
+
 
 }

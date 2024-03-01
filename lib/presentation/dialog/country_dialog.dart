@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../core/internet_check.dart';
 import '../../core/localss/application_localizations.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class CountryDialog extends StatefulWidget {
   final CountryDialogInterface mListener;
@@ -26,9 +33,12 @@ class _CountryDialogState extends State<CountryDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    callGetCountry();
   }
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  List state_list= ['United Kingdom', 'India', 'China','Australia','Germany','South Africa','Brazil'];
+  List state_list = [];
+ // List state_list= ['United Kingdom', 'India', 'China','Australia','Germany','South Africa','Brazil'];
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +237,67 @@ class _CountryDialogState extends State<CountryDialog>{
     );
   }
 
+  callGetCountry() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().country}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  state_list=data;
+                  print("ghfghgfg  $data");
+                }else{
+                 // isApiCall=true;
+                }
 
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 
 }

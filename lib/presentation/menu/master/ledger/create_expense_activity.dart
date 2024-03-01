@@ -2,18 +2,22 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_type_dialog.dart';
-
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
-import '../../../../core/util.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/ledger/post_ledger_request_model.dart';
+import '../../../../data/domain/ledger/put_ledger_request_model.dart';
 import '../../../common_widget/get_country_layout.dart';
 import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
@@ -21,7 +25,9 @@ import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class CreateExpenseActivity extends StatefulWidget {
-  const CreateExpenseActivity({super.key});
+  final CreateExpenseActivityInterface mListener;
+  final   ledgerList;
+  const CreateExpenseActivity({super.key, required this.mListener,  this.ledgerList});
 
 
   @override
@@ -35,9 +41,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
 
-  final _branchNameFocus = FocusNode();
-  final branchNameController = TextEditingController();
-
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
 
@@ -49,16 +52,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   final _extNameFocus = FocusNode();
   final extNameController = TextEditingController();
-  final _invoiceFocus = FocusNode();
-  final invoiceController = TextEditingController();
   final _addTwoFocus = FocusNode();
   final addTwoController = TextEditingController();
-  final _defaultBankFocus = FocusNode();
-  final defaultBankController = TextEditingController();
-  final _jurisdictionFocus = FocusNode();
-  final jurisdictionController = TextEditingController();
-  final _cityFocus = FocusNode();
-  final cityController = TextEditingController();
   final _emailFocus = FocusNode();
   final emailController = TextEditingController();
   final _pinCodeFocus = FocusNode();
@@ -71,21 +66,12 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final cinNoController = TextEditingController();
   final _adharoFocus = FocusNode();
   final adharNoController = TextEditingController();
-
   final _leaderGroupFocus = FocusNode();
   final leaderGroupController = TextEditingController();
   final _contactPersonFocus = FocusNode();
   final contactPersonController = TextEditingController();
-  final _regTypeFocus = FocusNode();
-  final regTypeController = TextEditingController();
   final _outstandingLimitFocus = FocusNode();
   final outstandingLimitController = TextEditingController();
-  final _vendorCodeFocus = FocusNode();
-  final vendorCodeController = TextEditingController();
-  final _paymentDaysFocus = FocusNode();
-  final paymentDaysController = TextEditingController();
-  final _taxesFocus = FocusNode();
-  final taxesController = TextEditingController();
   final _taxRateFocus = FocusNode();
   final taxRateController = TextEditingController();
   final _CGSTFocus = FocusNode();
@@ -108,7 +94,13 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final bankNameController = TextEditingController();
   final _addCessFocus = FocusNode();
   final addCessController = TextEditingController();
+  bool isApiCall = false;
+  late InternetConnectionStatus internetStatus;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+  bool isLoaderShow=false;
+
+  var editedItem=null;
   late ImagePickerHandler imagePicker;
   late AnimationController _Controller;
   File? picImage;
@@ -126,75 +118,109 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-
+/*  String name = nameController.text.trim();
+  String contactPerson = contactPersonController.text.trim();
+  String address = addressController.text.trim();
+  String pinCode = pinCodeController.text.trim();
+  String contactNo = contactController.text.trim();
+  String emailAdd = emailController.text.trim();
+  String outLimit = outstandingLimitController.text.trim();
+  String extName = extNameController.text.trim();
+  String adharNo = adharNoController.text.trim();
+  String panNo = panNoController.text.trim();
+  String gstNo = gstNoController.text.trim();
+  String hsnNo = hsnNoController.text.trim();
+  String taxRate = taxRateController.text.trim();
+  String cgstNo = CGSTController.text.trim();
+  String sgstNo = SGSTController.text.trim();
+  String cess = cessController.text.trim();
+  String addCess = addCessController.text.trim();
+  String bankName = bankNameController.text.trim();
+  String bankBranch = bankBranchController.text.trim();
+  String ifscCode = IFSCCodeController.text.trim();
+  String accountNo = accountNoController.text.trim();
+  String aCHName = aCHolderNameController.text.trim();*/
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setData();
   }
   File? adharFile ;
   File? panFile ;
   File? gstFile ;
 
+setData()async{
+  if(widget.ledgerList!=null){
+    nameController.text=widget.ledgerList['Name'];
+    contactPersonController.text=widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
 
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        backgroundColor: CommonColor.BACKGROUND_COLOR,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("ledger_new")!,
-                  style: appbar_text_style,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllTextFormFieldLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            backgroundColor: CommonColor.BACKGROUND_COLOR,
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("ledger_new")!,
+                      style: appbar_text_style,
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllTextFormFieldLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -1333,19 +1359,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
               if (mounted) {
                 setState(() {
                   disableColor = true;
+                  callPostLedgerGroup();
                 });
               }
             },
@@ -1392,7 +1409,183 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       taxTypeName=name;
     });
   }
+
+  callPostLedgerGroup() async {
+    String name = nameController.text.trim();
+    String contactPerson = contactPersonController.text.trim();
+    String address = addressController.text.trim();
+    String pinCode = pinCodeController.text.trim();
+    String contactNo = contactController.text.trim();
+    String emailAdd = emailController.text.trim();
+    String outLimit = outstandingLimitController.text.trim();
+    String extName = extNameController.text.trim();
+    String adharNo = adharNoController.text.trim();
+    String panNo = panNoController.text.trim();
+    String gstNo = gstNoController.text.trim();
+    String hsnNo = hsnNoController.text.trim();
+    String taxRate = taxRateController.text.trim();
+    String cgstNo = CGSTController.text.trim();
+    String sgstNo = SGSTController.text.trim();
+    String cess = cessController.text.trim();
+    String addCess = addCessController.text.trim();
+    String bankName = bankNameController.text.trim();
+    String bankBranch = bankBranchController.text.trim();
+    String ifscCode = IFSCCodeController.text.trim();
+    String accountNo = accountNoController.text.trim();
+    String aCHName = aCHolderNameController.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        PostLedgerRequestModel model = PostLedgerRequestModel(
+name: name,
+          groupID: "1",
+          contactPerson: contactPerson,
+          address: address,
+          district: "1",
+          state: "2",
+          pinCode: pinCode,
+          country: "4",
+          contactNo: contactNo,
+          email: emailAdd,
+          panNo: panNo,
+          adharNo: adharNo,
+          gstNo: gstNo,
+          cinNo: "",
+          fssaiNo: "",
+          outstandingLimit: outLimit,
+          bankName: bankName,
+          bankBranch: bankBranch,
+          ifscCode: ifscCode,
+            accountNo: accountNo,
+            acHolderName: aCHName,
+            hsnNo: hsnNo,
+            gstRate: "",
+            cgstRate: cgstNo,
+            sgstRate: sgstNo,
+            cessRate: cess,
+            addCessRate: addCess,
+            taxCategory: "",//drop
+            gstType: "",
+            tcsApplicable: "",
+            extName: extName,
+            remark: "",
+            creator: creatorName,
+          creatorMachine: deviceId
+        );
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                widget.mListener.createPostLedger();
+              });
+
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }
+
+  callUpdateLadgerGroup() async {
+    String name = nameController.text.trim();
+    String contactPerson = contactPersonController.text.trim();
+    String address = addressController.text.trim();
+    String pinCode = pinCodeController.text.trim();
+    String contactNo = contactController.text.trim();
+    String emailAdd = emailController.text.trim();
+    String outLimit = outstandingLimitController.text.trim();
+    String extName = extNameController.text.trim();
+    String adharNo = adharNoController.text.trim();
+    String panNo = panNoController.text.trim();
+    String gstNo = gstNoController.text.trim();
+    String hsnNo = hsnNoController.text.trim();
+    String taxRate = taxRateController.text.trim();
+    String cgstNo = CGSTController.text.trim();
+    String sgstNo = SGSTController.text.trim();
+    String cess = cessController.text.trim();
+    String addCess = addCessController.text.trim();
+    String bankName = bankNameController.text.trim();
+    String bankBranch = bankBranchController.text.trim();
+    String ifscCode = IFSCCodeController.text.trim();
+    String accountNo = accountNoController.text.trim();
+    String aCHName = aCHolderNameController.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        PutLedgerRequestModel model = PutLedgerRequestModel(
+            name: name,
+            groupID:"1",
+          creator: creatorName,
+          creatorMachine: deviceId
+        );
+        print("MODAL");
+        print(model.toJson());
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger+"/"+editedItem['ID'].toString();
+        print(apiUrl);
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(value)async{
+              print("  Put Call :   $value ");
+              setState(() {
+                editedItem=null;
+                widget.mListener.updatePostLedger();
+              });
+              var snackBar = SnackBar(content: Text('ledger Updated Successfully'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
 }
 
-// abstract class CreateExpenseActivityInterface {
-// }
+abstract class CreateExpenseActivityInterface {
+  createPostLedger();
+  updatePostLedger();
+}

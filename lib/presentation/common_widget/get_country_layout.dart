@@ -41,7 +41,7 @@ class _GetCountryLayoutState extends State<GetCountryLayout> with SingleTickerPr
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.title,
+              ApplicationLocalizations.of(context)!.translate("select_country")!,
               style: item_heading_textStyle,
             ),
             GestureDetector(
