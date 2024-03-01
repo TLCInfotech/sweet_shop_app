@@ -43,7 +43,7 @@ class PostItemRequestModel {
   late final String? DetailDesc;
   late final String? Creator;
   late final String? CreatorMachine;
-  late final dynamic? Photo;
+  late final String? Photo;
 
   PostItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];

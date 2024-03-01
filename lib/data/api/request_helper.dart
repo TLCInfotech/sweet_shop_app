@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:sweet_shop_app/data/api/response_for_fetch.dart';
@@ -194,7 +195,6 @@ class ApiRequestHelper {
       onException(e);
     }*/
   }
-
 
 
 
@@ -399,8 +399,8 @@ class ApiRequestHelper {
         required Function(dynamic error) sessionExpire}) async {
     //  try {
     //  headers.addAll({'session-token': sessionToken});
-    print("apiUrl    $apiUrl");
-    print("requestBody    $requestBody");
+    // print("apiUrl    $apiUrl");
+    // print("requestBody    $requestBody");
 
 
     Map<String, dynamic> cleanedData = {};
@@ -413,7 +413,11 @@ class ApiRequestHelper {
 
 
     print("NEW BODY##############333");
-    print(jsonEncode(cleanedData));
+    // print(jsonEncode(cleanedData));
+
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    String prettyprint =  encoder.convert(json.decode(json.encode(cleanedData)));
+    debugPrint(prettyprint);
 
     Response response = await http.put(
         Uri.parse(apiUrl),
@@ -501,12 +505,14 @@ class ApiRequestHelper {
     Map<String, dynamic> cleanedData = {};
     requestBody.forEach((key, value) {
       print(value);
+
       if (value != null && value!="") {
         cleanedData[key] = value;
       }
     });
-
-    print("requestBody    $cleanedData");
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    String prettyprint =  encoder.convert(json.decode(json.encode(cleanedData)));
+    debugPrint(prettyprint);
 
     Response response = await http.post(
       Uri.parse(apiUrl),

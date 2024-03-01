@@ -25,8 +25,9 @@ class SingleLineEditableTextFormField extends StatefulWidget{
   // final Function(String) validation;
   final suffix;
   final readOnly;
+  final capital;
 
-  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly, });
+  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly,  this.capital, });
 
   @override
   State<SingleLineEditableTextFormField> createState() => _SingleLineEditableTextFormFieldState();
@@ -70,7 +71,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                     readOnly: widget.readOnly!=false?false:true,
                     inputFormatters:<TextInputFormatter>[widget.format],
                     textAlignVertical: TextAlignVertical.center,
-                    textCapitalization: TextCapitalization.words,
+                    textCapitalization: widget.capital!=null?TextCapitalization.characters: TextCapitalization.words,
                     focusNode: widget.focuscontroller,
                     keyboardType:widget.textInput,
                     maxLines: widget.maxlines,

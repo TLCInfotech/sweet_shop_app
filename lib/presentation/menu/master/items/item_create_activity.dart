@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,11 @@ import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/measuring_unit_dialog.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/item/put_item_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class ItemCreateActivity extends StatefulWidget {
@@ -45,12 +48,16 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
 
-  final _panNoFocus = FocusNode();
-  final panNoController = TextEditingController();
-  final _gstNoFocus = FocusNode();
-  final gstNoController = TextEditingController();
-  final _adharoFocus = FocusNode();
-  final adharNoController = TextEditingController();
+  final _unitTwofactor = FocusNode();
+  final unitTwofactorController = TextEditingController();
+  final _unitTwoBase = FocusNode();
+  final unitTwoBaseController = TextEditingController();
+
+
+  final _unitThreefactor = FocusNode();
+  final unitThreefactorController = TextEditingController();
+  final _unitThreeBase = FocusNode();
+  final unitThreeBaseController = TextEditingController();
 
   late ImagePickerHandler imagePicker;
   late AnimationController _Controller;
@@ -73,16 +80,26 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   setData()async{
     if(widget.editItem!=null){
-      // List<int> img=[];
-      // img=(widget.editItem['Photo']['data']).whereType<int>().toList();
-      // Uint8List imageInUnit8List= Uint8List.fromList(img);
-      // final tempDir = await getTemporaryDirectory();
-      // File file = await File('${tempDir.path}/image.png').create();
-      // file.writeAsBytesSync(imageInUnit8List);
-
+      print(widget.editItem['Photo']['data']);
       File f=await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
       setState(()  {
         picImage=f;
+        itemNameController.text=widget.editItem['Name'];
+        categoryName=widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:categoryName;
+         unitTwoId=widget.editItem['Unit2']!=null?widget.editItem['Unit2']:unitTwoId;
+          unitTwofactorController.text=widget.editItem['Unit2_Factor']!=null?(widget.editItem['Unit2_Factor']).toString():unitTwofactorController.text;
+           unitTwoBaseController.text=widget.editItem['Unit2_Base']!=null?(widget.editItem['Unit2_Base']).toString():unitTwoBaseController.text;
+          unitThreeId=widget.editItem['Unit3']!=null?widget.editItem['Unit3']:unitThreeId;
+         unitThreeBaseController.text=widget.editItem['Unit3_Base']!=null?(widget.editItem['Unit3_Base']).toString():unitThreeBaseController.text;
+         unitThreefactorController.text=widget.editItem['Unit3_Factor']!=null?(widget.editItem['Unit3_Factor']).toString():unitTwofactorController.text;
+         packSizeController.text=widget.editItem['Pack_Size']!=null?(widget.editItem['Pack_Size']).toString():packSizeController.text;
+         minController.text=widget.editItem['Min_Stock']!=null?(widget.editItem['Min_Stock']).toString():minController.text;
+        maxController.text=widget.editItem['Max_Stock']!=null?(widget.editItem['Max_Stock']).toString():maxController.text;
+        hsnNoController.text=widget.editItem['HSN_No']!=null?widget.editItem['HSN_No']:hsnNoController.text;
+        extNameController.text=widget.editItem['Ext_Name']!=null?widget.editItem['Ext_Name']:extNameController.text;
+        defaultStoreController.text=widget.editItem['Default_Store']!=null?widget.editItem['Default_Store']:defaultStoreController.text;
+         descController.text=widget.editItem['Detail_Desc']!=null?widget.editItem['Detail_Desc']:descController.text;
+         measuringUnit=widget.editItem['Unit']!=null?widget.editItem['Unit']:"";
       });
     }
   }
@@ -154,7 +171,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-                    title:  Text(
+                    title: widget.editItem!=null?Text(
+    ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("item")!,
+    style: appbar_text_style,
+    ): Text(
                       ApplicationLocalizations.of(context)!.translate("create_item")!,
                       style: appbar_text_style,
                     ),
@@ -447,8 +467,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.words,
-              // focusNode: _itemNameFocus,
-              keyboardType: TextInputType.text,
+              focusNode: _unitTwofactor,
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
               decoration: InputDecoration(
@@ -460,10 +480,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
-              // controller: itemNameController,
+              controller: unitTwofactorController,
               onEditingComplete: () {
-                //  _itemNameFocus.unfocus();
-                FocusScope.of(context).requestFocus(_branchNameFocus);
+                 _unitTwofactor.unfocus();
+                FocusScope.of(context).requestFocus(_unitTwoBase);
               },
               style: text_field_textStyle,
             ),
@@ -501,23 +521,24 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.words,
-              // focusNode: _itemNameFocus,
-              keyboardType: TextInputType.text,
+              focusNode: _unitTwoBase,
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
                     left: parentWidth * .04, right: parentWidth * .02),
                 border: InputBorder.none,
+                suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
                 counterText: '',
                 isDense: true,
                 hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
-              //controller: itemNameController,
+              controller: unitTwoBaseController,
               onEditingComplete: () {
-                _itemNameFocus.unfocus();
-                FocusScope.of(context).requestFocus(_branchNameFocus);
+                _unitTwoBase.unfocus();
+                FocusScope.of(context).requestFocus(_unitThreefactor);
               },
               style: text_field_textStyle,
             ),
@@ -564,8 +585,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.words,
-              // focusNode: _itemNameFocus,
-              keyboardType: TextInputType.text,
+              focusNode: _unitThreefactor,
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
               decoration: InputDecoration(
@@ -577,10 +598,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
-              // controller: itemNameController,
+              controller: unitThreefactorController,
               onEditingComplete: () {
-                //  _itemNameFocus.unfocus();
-                FocusScope.of(context).requestFocus(_branchNameFocus);
+                 _unitThreefactor.unfocus();
+                FocusScope.of(context).requestFocus(_unitThreeBase);
               },
               style: text_field_textStyle,
             ),
@@ -618,8 +639,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.words,
-              // focusNode: _itemNameFocus,
-              keyboardType: TextInputType.text,
+              focusNode: _unitThreeBase,
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
               decoration: InputDecoration(
@@ -627,14 +648,15 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                     left: parentWidth * .04, right: parentWidth * .02),
                 border: InputBorder.none,
                 counterText: '',
+                suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
                 isDense: true,
                 hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,
               ),
               //controller: itemNameController,
               onEditingComplete: () {
-                _itemNameFocus.unfocus();
-                FocusScope.of(context).requestFocus(_branchNameFocus);
+                _unitThreeBase.unfocus();
+                FocusScope.of(context).requestFocus(_packSizeFocus);
               },
               style: text_field_textStyle,
             ),
@@ -655,14 +677,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       controller: maxController,
       focuscontroller: _maxFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _extNameFocus,
       title: ApplicationLocalizations.of(context)!.translate("max_stock")!,
       callbackOnchage: (value) {
         setState(() {
           maxController.text = value;
         });
       },
-      textInput: TextInputType.text,
+      textInput: TextInputType.number,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
@@ -681,14 +703,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       controller: minController,
       focuscontroller: _minFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _maxFocus,
       title: ApplicationLocalizations.of(context)!.translate("min_stock")!,
       callbackOnchage: (value) {
         setState(() {
           minController.text = value;
         });
       },
-      textInput: TextInputType.text,
+      textInput: TextInputType.number,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
@@ -707,7 +729,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       controller: extNameController,
       focuscontroller: _extNameFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _descFocus,
       title: ApplicationLocalizations.of(context)!.translate("ext_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -732,7 +754,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       controller: packSizeController,
       focuscontroller: _packSizeFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _hsnNoFocus,
       title: ApplicationLocalizations.of(context)!.translate("pack_size")!,
       callbackOnchage: (value) {
         setState(() {
@@ -755,6 +777,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         }
         return null;
       },
+      capital:true,
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
       focusnext: _branchNameFocus,
@@ -766,7 +789,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       textInput: TextInputType.text,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
 
   }
@@ -808,7 +831,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       controller: defaultStoreController,
       focuscontroller: _defaultStoreFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _minFocus,
       title: ApplicationLocalizations.of(context)!.translate("default_store")!,
       callbackOnchage: (value) {
         setState(() {
@@ -822,67 +845,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   }
 
-  /* Widget for branch name text from field layout */
-  Widget getBranchNameLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                ApplicationLocalizations.of(context)!.translate("name")!,
-                style: page_heading_textStyle,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: parentHeight * .005),
-            child: Container(
-              height: parentHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                textCapitalization: TextCapitalization.words,
-                focusNode: _branchNameFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                cursorColor: CommonColor.BLACK_COLOR,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: parentWidth * .04, right: parentWidth * .02),
-                  border: InputBorder.none,
-                  counterText: '',
-                  isDense: true,
-                  hintText: ApplicationLocalizations.of(context)!.translate("bank_branch")!,
-                  hintStyle: hint_textfield_Style,
-                ),
-                controller: branchNameController,
-                onEditingComplete: () {
-                  _branchNameFocus.unfocus();
-                  FocusScope.of(context).requestFocus(_addressFocus);
-                },
-                style: text_field_textStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
@@ -912,17 +875,21 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                   disableColor = true;
                 });
                 Uint8List? bytes = await picImage?.readAsBytes();
-                // ByteData? byte = await picImage?.readAsBytes()
-                // .then((Uint8List data) => ByteData.view(data.buffer));
-                // print(byte);
-
+                List<int> img=[];
+                if( bytes!=null){
+                  img=(bytes).whereType<int>().toList();
+                }
                 setState(() {
-
-                  picImageBytes=bytes;
-                  print("piccccccc. $picImage   $bytes ");
+                  picImageBytes=img;
 
                 });
-                await callPostItem();
+
+                if(widget.editItem!=null){
+                  await callUpdateItem();
+                }
+                else {
+                  await callPostItem();
+                }
               }
             },
             onDoubleTap: () {},
@@ -939,7 +906,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child:  Text(
+                    child: widget.editItem!=null? Text(
+                      ApplicationLocalizations.of(context)!.translate("update")!,
+                      style: page_heading_textStyle,
+                    ): Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
@@ -966,29 +936,23 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           CategoryID: categoryId.toString(),
           Creator: creatorName,
           CreatorMachine: deviceId,
-          Unit2: "",
-          Unit2Base: "",
-          Unit3: "",
-          Unit2Factor: "",
-          Unit3Base: "",
-          Unit3Factor: "",
-          PackSize: "",
+          Unit2: unitTwoId,
+          Unit2Base: unitTwoBaseController.text.trim(),
+          Unit3:unitThreeId,
+          Unit2Factor:unitTwofactorController.text.trim(),
+          Unit3Base:unitThreeBaseController.text.trim(),
+          Unit3Factor: unitThreefactorController.text.trim(),
+          PackSize: packSizeController.text.trim(),
           Rate: "",
-          MinStock: "",
-          MaxStock: "",
-          HSNNo: "",
-          ExtName: "",
-          DefaultStore: "",
-          DetailDesc: "",
+          MinStock: minController.text.trim(),
+          MaxStock:maxController.text.trim(),
+          HSNNo:hsnNoController.text.trim(),
+          ExtName: extNameController.text.trim(),
+          DefaultStore:defaultStoreController.text.trim(),
+          DetailDesc: descController.text.trim(),
           Photo: picImageBytes.toString(),
-          Unit: ""
+          Unit: measuringUnit
         );
-      print("@@@@@@@@@@@@s@");
-
-
-      JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-      String prettyprint =  encoder.convert(json.decode(json.encode(model.Photo)));
-      debugPrint(prettyprint);
 
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -1020,6 +984,67 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           });
 
     });
+  }
+
+  callUpdateItem() async {
+
+    String creatorName = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        PutItemRequestModel model = PutItemRequestModel(
+            Modifier: creatorName,
+            Modifier_Machine: deviceId,
+            Name: itemNameController.text.trim(),
+            CategoryID: categoryId.toString(),
+            Unit2: unitTwoId,
+            Unit2Base: unitTwoBaseController.text.trim(),
+            Unit3:unitThreeId,
+            Unit2Factor:unitTwofactorController.text.trim(),
+            Unit3Base:unitThreeBaseController.text.trim(),
+            Unit3Factor: unitThreefactorController.text.trim(),
+            PackSize: packSizeController.text.trim(),
+            Rate: "",
+            MinStock: minController.text.trim(),
+            MaxStock:maxController.text.trim(),
+            HSNNo:hsnNoController.text.trim(),
+            ExtName: extNameController.text.trim(),
+            DefaultStore:defaultStoreController.text.trim(),
+            DetailDesc: descController.text.trim(),
+            Photo: null,
+            Unit: measuringUnit
+        );
+
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().item+"/"+widget.editItem['ID'].toString();
+
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(value)async{
+              print("  Put Call :   $value ");
+              var snackBar = SnackBar(content: Text('Item  Updated Successfully'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+              Navigator.pop(context);
+
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
   }
 
 

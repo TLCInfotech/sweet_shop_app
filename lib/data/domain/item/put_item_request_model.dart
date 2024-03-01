@@ -17,8 +17,8 @@ class PutItemRequestModel {
     this.ExtName,
     this.DefaultStore,
     this.DetailDesc,
-    required this.Creator,
-    required this.CreatorMachine,
+    required this.Modifier,
+    required this.Modifier_Machine,
     this.Photo,
   });
 
@@ -26,22 +26,22 @@ class PutItemRequestModel {
   late final String? CategoryID;
   late final String? Unit;
   late final String? Unit2;
-  late final double? Unit2Factor;
-  late final double? Unit2Base;
+  late final String? Unit2Factor;
+  late final String? Unit2Base;
   late final String? Unit3;
   late final String? Unit3Factor;
   late final String? Unit3Base;
   late final String? PackSize;
-  late final double? Rate;
-  late final double? MinStock;
+  late final String? Rate;
+  late final String? MinStock;
   late final String? MaxStock;
   late final String? HSNNo;
   late final String? ExtName;
   late final String? DefaultStore;
   late final String? DetailDesc;
-  late final String? Creator;
-  late final String? CreatorMachine;
-  late final String? Photo;
+  late final String? Modifier;
+  late final String? Modifier_Machine;
+  late final List<int>? Photo;
 
   PutItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];
@@ -61,8 +61,8 @@ class PutItemRequestModel {
     ExtName = json['Ext_Name'];
     DefaultStore = json['Default_Store'];
     DetailDesc = json['Detail_Desc'];
-    Creator = json['Creator'];
-    CreatorMachine = json['Creator_Machine'];
+    Modifier = json['Modifier'];
+    Modifier_Machine = json['Modifier_Machine'];
     Photo = json['Photo'];
   }
 
@@ -85,8 +85,8 @@ class PutItemRequestModel {
     _data['Ext_Name'] = ExtName;
     _data['Default_Store'] = DefaultStore;
     _data['Detail_Desc'] = DetailDesc;
-    _data['Creator'] = Creator;
-    _data['Creator_Machine'] = CreatorMachine;
+    _data['Modifier'] = Modifier;
+    _data['Modifier_Machine'] = Modifier_Machine;
     _data['Photo'] = Photo;
     return _data;
   }
