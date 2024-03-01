@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../core/internet_check.dart';
+import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class LedegerGroupDialog extends StatefulWidget {
   final LedegerGroupDialogInterface mListener;
-final List<dynamic> expense_group;
-  const LedegerGroupDialog({super.key, required this.mListener, required this.expense_group});
+  const LedegerGroupDialog({super.key, required this.mListener,});
 
   @override
   State<LedegerGroupDialog> createState() => _LedegerGroupDialogState();
@@ -20,13 +25,33 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  bool isApiCall = false;
+  late InternetConnectionStatus internetStatus;
+
+  var editedItem=null;
+
+  int page = 1;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetLedgerGroup(page);
   }
 
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetLedgerGroup(page);
+      }
+    }
+  }
+  List<dynamic> expense_group = [];
 
 
   @override
@@ -67,7 +92,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                   Container(
                       height: SizeConfig.screenHeight*.32,
-                      child: widget.expense_group.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
+                      child: expense_group.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
                 ],
               ),
             ),
@@ -161,14 +186,14 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: widget.expense_group.length,
+          itemCount:expense_group.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(widget.expense_group[index]['ID'],widget.expense_group[index]['Name']);
+                    widget.mListener.selectCategory(expense_group[index]['ID'],expense_group[index]['Name']);
                   }
                   Navigator.pop(context);
                 },
@@ -186,8 +211,8 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
                   child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      widget.expense_group[index]['Name']!=null? Text(
-                        widget.expense_group[index]['Name'],
+                      expense_group[index]['Name']!=null? Text(
+                        expense_group[index]['Name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -231,6 +256,88 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
   }
 
 
+  callGetLedgerGroup(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().ledger_group}?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  print("responseeee   $data");
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (expense_group.isNotEmpty) expense_group.clear();
+    if (mounted) {
+      setState(() {
+        expense_group.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        expense_group.addAll(_list);
+      });
+    }
+  }
 }
 
 

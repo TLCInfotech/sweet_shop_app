@@ -568,7 +568,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                               opacity: a1.value,
                               child: LedegerGroupDialog(
                                 mListener: this,
-                                expense_group: expense_group,
+
                               ),
                             ),
                           );

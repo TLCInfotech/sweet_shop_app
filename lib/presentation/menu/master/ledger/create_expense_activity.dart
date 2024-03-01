@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -23,6 +24,7 @@ import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../dialog/parent_ledger_group_dialoug.dart';
 
 class CreateExpenseActivity extends StatefulWidget {
   final CreateExpenseActivityInterface mListener;
@@ -36,7 +38,7 @@ class CreateExpenseActivity extends StatefulWidget {
 
 class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     with
-        SingleTickerProviderStateMixin, TaxDialogInterface , TaxCategoryDialogInterface {
+        SingleTickerProviderStateMixin, TaxDialogInterface , TaxCategoryDialogInterface, LedegerGroupDialogInterface {
   bool checkActiveValue = false;
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
@@ -114,32 +116,12 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   String taxCategoryId = "";
   String regTypeName = "";
   String regTypeId = "";
+  String parentCategory = "";
+  String parentCategoryId = "";
   Color currentColor = CommonColor.THEME_COLOR;
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-/*  String name = nameController.text.trim();
-  String contactPerson = contactPersonController.text.trim();
-  String address = addressController.text.trim();
-  String pinCode = pinCodeController.text.trim();
-  String contactNo = contactController.text.trim();
-  String emailAdd = emailController.text.trim();
-  String outLimit = outstandingLimitController.text.trim();
-  String extName = extNameController.text.trim();
-  String adharNo = adharNoController.text.trim();
-  String panNo = panNoController.text.trim();
-  String gstNo = gstNoController.text.trim();
-  String hsnNo = hsnNoController.text.trim();
-  String taxRate = taxRateController.text.trim();
-  String cgstNo = CGSTController.text.trim();
-  String sgstNo = SGSTController.text.trim();
-  String cess = cessController.text.trim();
-  String addCess = addCessController.text.trim();
-  String bankName = bankNameController.text.trim();
-  String bankBranch = bankBranchController.text.trim();
-  String ifscCode = IFSCCodeController.text.trim();
-  String accountNo = accountNoController.text.trim();
-  String aCHName = aCHolderNameController.text.trim();*/
   @override
   void initState() {
     // TODO: implement initState
@@ -152,8 +134,28 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
 setData()async{
   if(widget.ledgerList!=null){
-    nameController.text=widget.ledgerList['Name'];
-    contactPersonController.text=widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
+    nameController.text=await widget.ledgerList['Name'];
+    contactPersonController.text= await widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
+    addressController.text=await widget.ledgerList['Address']!=null?widget.ledgerList['Address']:addressController.text;
+    pinCodeController.text=await widget.ledgerList['Pin_Code']!=null?widget.ledgerList['Pin_Code']:pinCodeController.text;
+    contactController.text= await widget.ledgerList['Contact_No']!=null?widget.ledgerList['Contact_No']:contactController.text;
+    emailController.text=await widget.ledgerList['EMail']!=null?widget.ledgerList['EMail']: emailController.text;
+    outstandingLimitController.text=await widget.ledgerList['Outstanding_Limit']!=null?widget.ledgerList['Outstanding_Limit'].toString():outstandingLimitController.text;
+    extNameController.text=widget.ledgerList['Ext_Name']!=null?widget.ledgerList['Ext_Name'].toString(): extNameController.text;
+    adharNoController.text=widget.ledgerList['Adhar_No']!=null?widget.ledgerList['Adhar_No'].toString():adharNoController.text;
+    panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
+    gstNoController.text=widget.ledgerList['GST_No']!=null?widget.ledgerList['GST_No'].toString():gstNoController.text;
+    hsnNoController.text=widget.ledgerList['HSN_No']!=null?widget.ledgerList['HSN_No'].toString():hsnNoController.text;
+    taxRateController.text=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString():taxRateController.text;
+    CGSTController.text=widget.ledgerList['CGST_Rate']!=null?widget.ledgerList['CGST_Rate'].toString():CGSTController.text;
+    SGSTController.text=widget.ledgerList['SGST_Rate']!=null?widget.ledgerList['SGST_Rate'].toString():SGSTController.text;
+    cessController.text=widget.ledgerList['Cess_Rate']!=null?widget.ledgerList['Cess_Rate'].toString():cessController.text;
+    addCessController.text=widget.ledgerList['Add_Cess_Rate']!=null?widget.ledgerList['Add_Cess_Rate'].toString():addCessController.text;
+    bankNameController.text=widget.ledgerList['Bank_Name']!=null?widget.ledgerList['Bank_Name'].toString():bankNameController.text;
+    bankBranchController.text=widget.ledgerList['Bank_Branch']!=null?widget.ledgerList['Bank_Branch'].toString():bankBranchController.text;
+    IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
+    accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
+    aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
 
   }
 }
@@ -263,7 +265,7 @@ setData()async{
                     ),
                     child: Column(children: [
                       getNameLayout(parentHeight, parentWidth),
-                      getLeaderGroupLayout(parentHeight, parentWidth),
+                      getParentGroupLayout(parentHeight, parentWidth),
                       getContactPersonLayout(parentHeight, parentWidth),
                       getAddressLayout(parentHeight, parentWidth),
                       Row(
@@ -478,6 +480,94 @@ setData()async{
 
   }
 
+
+  /* Widget For Category Layout */
+  Widget getParentGroupLayout(double parentHeight, double parentWidth){
+    return Padding(
+      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+            style: item_heading_textStyle,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+            child: Container(
+              height: (SizeConfig.screenHeight) * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child:  GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if (context != null) {
+                    showGeneralDialog(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionBuilder: (context, a1, a2, widget) {
+                          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                          return Transform(
+                            transform:
+                            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                            child: Opacity(
+                              opacity: a1.value,
+                              child: LedegerGroupDialog(
+                                mListener: this,
+                              ),
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation2, animation1) {
+                          throw Exception('No widget to return in pageBuilder');
+                        });
+                  }
+                },
+                child: Container(
+                    height: 50,
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 5,
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("ledger_group")!:parentCategory,
+                          style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
+                        FaIcon(FontAwesomeIcons.caretDown,
+                          color: Colors.black87.withOpacity(0.8), size: 16,)
+                      ],
+                    )
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+
+  }
 
   /* Widget for contact person text from field layout */
   Widget getContactPersonLayout(double parentHeight, double parentWidth) {
@@ -1367,7 +1457,6 @@ setData()async{
                   }else{
                     callPostLedgerGroup();
                   }
-
                 });
               }
             },
@@ -1447,7 +1536,7 @@ setData()async{
         });
         PostLedgerRequestModel model = PostLedgerRequestModel(
 name: name,
-          groupID: "1",
+          groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
           district: "1",
@@ -1550,7 +1639,7 @@ name: name,
       AppPreferences.getDeviceId().then((deviceId) {
         PutLedgerRequestModel model = PutLedgerRequestModel(
             name: name,
-            groupID:"1",
+            groupID:parentCategoryId,
           creator: creatorName,
           creatorMachine: deviceId
         );
@@ -1585,6 +1674,15 @@ name: name,
       }
       CommonWidget.noInternetDialogNew(context);
     }
+  }
+
+  @override
+  selectCategory(int id, String name) {
+    // TODO: implement selectCategory
+    setState(() {
+      parentCategory=name;
+      parentCategoryId=id.toString();
+    });
   }
 
 
