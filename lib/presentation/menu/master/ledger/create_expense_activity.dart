@@ -1362,7 +1362,12 @@ setData()async{
               if (mounted) {
                 setState(() {
                   disableColor = true;
-                  callPostLedgerGroup();
+                  if(widget.ledgerList!=null){
+                    callUpdateLadgerGroup();
+                  }else{
+                    callPostLedgerGroup();
+                  }
+
                 });
               }
             },
