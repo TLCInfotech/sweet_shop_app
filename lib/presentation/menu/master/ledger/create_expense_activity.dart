@@ -1736,7 +1736,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             cessRate: cess,
             addCessRate: addCess,
             taxCategory: "",//drop
-            gstType: "",
+            Tax_Type: "",
             tcsApplicable: "",
             extName: extName,
             remark: "",

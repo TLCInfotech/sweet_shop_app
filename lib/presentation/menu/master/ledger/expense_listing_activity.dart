@@ -64,7 +64,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   List<dynamic> ledgerList = [];
 //FUNC: REFRESH LIST
   Future<void> refreshList() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     page = 0;
     isPagination = true;
     callGetLedger(page);
@@ -78,7 +78,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
       alignment: Alignment.center,
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFfffff5),
+          backgroundColor: const Color(0xFFfffff5),
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: SafeArea(
@@ -89,7 +89,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 ),
                 color: Colors.transparent,
                 // color: Colors.red,
-                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
                 child: AppBar(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
@@ -104,7 +104,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             ),
           ),
           floatingActionButton: FloatingActionButton(
-              backgroundColor: Color(0xFFFBE404),
+              backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
                 size: 30,
@@ -115,7 +115,6 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                   mListener: this,
                 )));
-
                 setState(() {
                   page=1;
                 });
@@ -125,7 +124,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             alignment: Alignment.center,
             children: [
               Container(
-                margin: EdgeInsets.all(15),
+                margin: const EdgeInsets.all(15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -133,7 +132,6 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                       height: .5,
                     ),
                     get_items_list_layout()
-
                   ],
                 ),
               ),
@@ -192,7 +190,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 child: SlideAnimation(
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
-                    delay: Duration(microseconds: 1500),
+                    delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
@@ -229,7 +227,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                     image: MemoryImage(Uint8List.fromList(img)), // Replace with your image asset path
                                     fit: BoxFit.cover,
                                   ),
-                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))
                               ),
 
                             )
@@ -244,7 +242,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(ledgerList[index]['Name'],style: item_heading_textStyle,),
-                                          Text("Leadger group name",
+                                          const Text("Leadger group name",
                                             style: item_regular_textStyle,),
                                         ],
                                       ),
@@ -298,10 +296,10 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
-
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
+                  _arrList.clear();
                   _arrList=data;
                   if (_arrList.length < 10) {
                     if (mounted) {

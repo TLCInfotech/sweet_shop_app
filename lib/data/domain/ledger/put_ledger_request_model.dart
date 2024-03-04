@@ -28,7 +28,7 @@ class PutLedgerRequestModel {
   String? cessRate;
   String? addCessRate;
   String? taxCategory;
-  String? gstType;
+  String? Tax_Type;
   String? tcsApplicable;
   String? extName;
   String? remark;
@@ -69,7 +69,7 @@ class PutLedgerRequestModel {
     this.cessRate,
     this.addCessRate,
     this.taxCategory,
-    this.gstType,
+    this.Tax_Type,
     this.tcsApplicable,
     this.extName,
     this.remark,
@@ -106,13 +106,13 @@ class PutLedgerRequestModel {
       'Account_No': accountNo ?? '',
       'AC_Holder_Name': acHolderName ?? '',
       'HSN_No': hsnNo ?? '',
-      'GST_Rate': gstRate ?? '',
+      'Tax_Rate': gstRate ?? '',
       'CGST_Rate': cgstRate ?? '',
       'SGST_Rate': sgstRate ?? '',
       'Cess_Rate': cessRate ?? '',
       'Add_Cess_Rate': addCessRate ?? '',
       'Tax_Category': taxCategory ?? '',
-      'GST_Type': gstType ?? '',
+      'Tax_Type': Tax_Type ?? '',
       'TCS_Applicable': tcsApplicable ?? '',
       'Ext_Name': extName ?? '',
       'Remark': remark ?? '',
