@@ -12,4 +12,5 @@ class ApiConstants {
   String state = "State";
   String ledger_group = "LedgerGroup";
   String measuring_unit="MeasuringUnit";
+  String search_item="searchItem";
 }

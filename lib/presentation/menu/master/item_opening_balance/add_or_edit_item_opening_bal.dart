@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,10 +9,25 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_diable_textformfield.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
+class TestItem {
+  String label;
+  dynamic value;
+  TestItem({required this.label, this.value});
+
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value']);
+  }
+}
 class AddOrEditItemOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
   final dynamic editproduct;
@@ -23,6 +40,10 @@ class AddOrEditItemOpeningBal extends StatefulWidget {
 class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   bool isLoaderShow = false;
+
+  var itemsList = [];
+  var selectedItemID =null;
+
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode() ;
 
@@ -36,6 +57,56 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   TextEditingController amount = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+   fetchShows (searchstring) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+   await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().search_item+"?name=${searchstring}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+               setState(() {
+                 itemsList=  topShowsJson.map((show) => (show)).toList();
+               });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+    }
+    return _list;
+  }
+
 
   @override
   void initState() {
@@ -91,6 +162,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       ),
                     ),
                     getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
+
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -174,24 +246,49 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           ),
         ],
       ),
-      child: TextFormField(
-        textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.text,
-        controller: _textController,
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: searchFocus,
-        style: text_field_textStyle,
-        decoration: textfield_decoration.copyWith(
-          hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-          prefixIcon: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-        ),
-        // onChanged: _onChangeHandler,
-      ),
+      child: TextFieldSearch(
+          label: 'Item',
+          controller: _textController,
+          decoration: textfield_decoration.copyWith(
+            hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+            prefixIcon: Container(
+                width: 50,
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.centerLeft,
+                child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+          ),
+          textStyle: item_regular_textStyle,
+          getSelectedValue: (v) {
+            setState(() {
+              selectedItemID = v.value;
+              itemsList = [];
+            });
+          },
+          future: () {
+            if (_textController.text != "")
+              return fetchSimpleData(
+                  _textController.text.trim());
+          })
+
+
+      // TextFormField(
+      //   textInputAction: TextInputAction.done,
+      //   // autofillHints: const [AutofillHints.email],
+      //   keyboardType: TextInputType.text,
+      //   controller: _textController,
+      //   textAlignVertical: TextAlignVertical.center,
+      //   focusNode: searchFocus,
+      //   style: text_field_textStyle,
+      //   decoration: textfield_decoration.copyWith(
+      //     hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      //     prefixIcon: Container(
+      //         width: 50,
+      //         padding: EdgeInsets.all(10),
+      //         alignment: Alignment.centerLeft,
+      //         child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+      //   ),
+      //   // onChanged: _onChangeHandler,
+      // ),
     );
   }
 
