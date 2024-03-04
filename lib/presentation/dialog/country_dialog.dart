@@ -71,9 +71,18 @@ class _CountryDialogState extends State<CountryDialog>{
                     ),
                   ),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                      Visibility(
+                          visible: state_list.isEmpty  ? true : false,
+                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+                    ],
+                  ),
 
                 ],
               ),
@@ -82,6 +91,25 @@ class _CountryDialogState extends State<CountryDialog>{
           getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
       ),
+    );
+  }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 

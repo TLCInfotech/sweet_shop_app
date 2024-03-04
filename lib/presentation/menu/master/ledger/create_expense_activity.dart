@@ -26,6 +26,7 @@ import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/parent_ledger_group_dialoug.dart';
 
+
 class CreateExpenseActivity extends StatefulWidget {
   final CreateExpenseActivityInterface mListener;
   final   ledgerList;
@@ -110,6 +111,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   String countryId = "";
   String stateName = "";
   String stateId = "";
+  String cityId = "";
   String taxTypeName = "";
   String taxTypeId = "";
   String taxCategoryName = "";
@@ -157,7 +159,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     if(widget.ledgerList['GST_Image']!=null&&widget.ledgerList['GST_Image']['data']!=null && widget.ledgerList['GST_Image']['data'].length>10) {
       g = await CommonWidget.convertBytesToFile(widget.ledgerList['GST_Image']['data']);
     }
-
       setState(()  {
       picImageBytes=(widget.ledgerList['Photo']!=null && widget.ledgerList['Photo']['data']!=null && widget.ledgerList['Photo']['data'].length>10)?(widget.ledgerList['Photo']['data']).whereType<int>().toList():[];
       picImage=f!=null?f:picImage;
@@ -191,10 +192,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
       accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
       aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
-
-    });
-
-
+      });
   }
 }
 
@@ -1260,9 +1258,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
         title:  ApplicationLocalizations.of(context)!.translate("city")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             districtController.text=name!;
+            cityId=id!;
           });
         },
         districtName: districtController.text);
@@ -1612,6 +1611,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     // TODO: implement selectTaxCate
     setState(() {
       taxCategoryName=name;
+      taxCategoryId=id;
     });
   }
 
@@ -1620,6 +1620,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     // TODO: implement selectTaxType
     setState(() {
       taxTypeName=name;
+      taxTypeId=id;
     });
   }
 
@@ -1659,7 +1660,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
-          district: "1",
+          district:cityId,
           state: stateId,
           pinCode: pinCode,
           country: countryId,
@@ -1682,7 +1683,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             sGSTRate: sgstNo,
             cessRate: cess,
             addCessRate: addCess,
-            taxCategory: "",//drop
+            taxCategory: taxCategoryId,//drop
+            Tax_Type: taxTypeId,//drop
             gSTType: "",
             tCSApplicable: "",
             extName: extName,
@@ -1767,7 +1769,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             groupID: parentCategoryId,
             contactPerson: contactPerson,
             address: address,
-            district: "1",
+            district:cityId,
             state: stateId,
             pinCode: pinCode,
             country: countryId,
@@ -1790,8 +1792,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             sgstRate: sgstNo,
             cessRate: cess,
             addCessRate: addCess,
-            taxCategory: "",//drop
-            Tax_Type: "",
+            taxCategory: taxCategoryId,//drop
+            Tax_Type: taxTypeId,
             tcsApplicable: "",
             extName: extName,
             remark: "",

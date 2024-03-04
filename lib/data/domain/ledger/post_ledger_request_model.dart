@@ -31,6 +31,7 @@ class PostLedgerRequestModel {
   String? gSTType;
   String? tCSApplicable;
   String? extName;
+  String? Tax_Type;
   String? remark;
   List<int>? photo;
   List<int>? pANCardImage;
@@ -72,6 +73,7 @@ class PostLedgerRequestModel {
         this.gSTType,
         this.tCSApplicable,
         this.extName,
+        this.Tax_Type,
         this.remark,
         this.photo,
         this.pANCardImage,
@@ -95,6 +97,7 @@ class PostLedgerRequestModel {
     adharNo = json['Adhar_No'];
     gSTNo = json['GST_No'];
     cINNo = json['CIN_No'];
+    Tax_Type = json['Tax_Type'];
     fSSAINo = json['FSSAI_No'];
     outstandingLimit = json['Outstanding_Limit'];
     outstandingLimitType = json['Outstanding_Limit_Type'];

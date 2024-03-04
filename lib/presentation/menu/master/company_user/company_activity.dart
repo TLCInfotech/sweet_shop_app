@@ -582,7 +582,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
         title: ApplicationLocalizations.of(context)!.translate("city")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             districtController.text=name!;
           });

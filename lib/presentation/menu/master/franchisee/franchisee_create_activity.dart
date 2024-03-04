@@ -759,7 +759,7 @@ String stateName="";
   Widget getCityLayout(double parentHeight, double parentWidth) {
     return GetDistrictLayout(
         title: ApplicationLocalizations.of(context)!.translate("city")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedCity=name!;
           });

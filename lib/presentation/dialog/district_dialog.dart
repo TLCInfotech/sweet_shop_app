@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../core/internet_check.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class DistrictDialog extends StatefulWidget {
   final DistrictDialogInterface mListener;
@@ -23,9 +31,12 @@ class _DistrictDialogState extends State<DistrictDialog> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    callGetCity();
   }
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  List district_list = ['Kolhapur', 'Sangli', 'Karad', 'Pune'];
+  List city_list = [];
+ // List city_list = ['Kolhapur', 'Sangli', 'Karad', 'Pune'];
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +71,18 @@ class _DistrictDialogState extends State<DistrictDialog> {
                   ),
                   getAddSearchLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight * .32,
-                      child: getList(
-                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                          height: SizeConfig.screenHeight * .32,
+                          child: getList(
+                              SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                      Visibility(
+                          visible: city_list.isEmpty  ? true : false,
+                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -73,6 +92,26 @@ class _DistrictDialogState extends State<DistrictDialog> {
       ),
     );
   }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return Padding(
@@ -159,7 +198,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: district_list.length,
+          itemCount: city_list.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: EdgeInsets.only(
@@ -168,7 +207,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
                 onTap: () {
                   if (widget.mListener != null) {
                     widget.mListener.selectDistrict(
-                        index.toString(), district_list.elementAt(index));
+                        index.toString(), city_list.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -187,7 +226,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        district_list.elementAt(index),
+                        city_list.elementAt(index),
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -230,6 +269,69 @@ class _DistrictDialogState extends State<DistrictDialog> {
       ),
     );
   }
+
+  callGetCity() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().city}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  city_list=data;
+                  print("ghfghgfg  $data");
+                }else{
+                  // isApiCall=true;
+                }
+
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  
 }
 
 abstract class DistrictDialogInterface {

@@ -13,4 +13,8 @@ class ApiConstants {
   String ledger_group = "LedgerGroup";
   String measuring_unit="MeasuringUnit";
   String search_item="searchItem";
+  String city = "City";
+  String tax_category = "TaxCategory";
+  String tax_type = "TaxType";
+
 }

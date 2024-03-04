@@ -22,7 +22,7 @@ import '../dialog/state_dialog.dart';
 class GetDistrictLayout extends StatefulWidget{
   final title;
   final districtName;
-  final Function(String?) callback;
+  final Function(String?,String?) callback;
 
   GetDistrictLayout({required this.title, required this.callback, required this.districtName});
 
@@ -129,7 +129,7 @@ class _GetDistrictLayoutState extends State<GetDistrictLayout> with SingleTicker
   @override
   selectDistrict(String id, String name) {
     // TODO: implement selectDistrict
-    widget.callback(name);
+    widget.callback(name,id);
   }
 
 }

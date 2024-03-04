@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../core/internet_check.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class TaxDialog extends StatefulWidget {
   final TaxDialogInterface mListener;
@@ -25,9 +33,13 @@ class _TaxDialogState extends State<TaxDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    callGetTaxType();
   }
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  List state_list= ['Income Tax', 'GST', 'Sells Tax'];
+//  List taxTypeList = [];
+  List<dynamic> taxTypeList = [];
+  //List taxTypeList= ['Income Tax', 'GST', 'Sells Tax'];
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +72,17 @@ class _TaxDialogState extends State<TaxDialog>{
                     ),
                   ),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                      Visibility(
+                          visible: taxTypeList.isEmpty  ? true : false,
+                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                    ],
+                  ),
 
                 ],
               ),
@@ -73,6 +93,26 @@ class _TaxDialogState extends State<TaxDialog>{
       ),
     );
   }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
 
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
@@ -157,14 +197,14 @@ class _TaxDialogState extends State<TaxDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: state_list.length,
+          itemCount: taxTypeList.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectTaxType(index.toString(),state_list.elementAt(index));
+                    widget.mListener.selectTaxType(/*index.toString()*/ taxTypeList[index]["code"], taxTypeList[index]["name"]);
                   }
                   Navigator.pop(context);
                 },
@@ -183,7 +223,7 @@ class _TaxDialogState extends State<TaxDialog>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state_list.elementAt(index),
+                        taxTypeList[index]["name"],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -226,7 +266,67 @@ class _TaxDialogState extends State<TaxDialog>{
     );
   }
 
+  callGetTaxType() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().tax_type}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  taxTypeList=data;
+                  print("ghfghgfg  $data");
+                }else{
+                  // isApiCall=true;
+                }
 
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 
 }
