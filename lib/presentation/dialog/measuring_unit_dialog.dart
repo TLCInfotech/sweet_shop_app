@@ -5,6 +5,12 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
+
 class MeasuringUnitDialog extends StatefulWidget {
   final MeasuringUnitDialogInterface mListener;
 
@@ -19,17 +25,16 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
-
-
+    callGetUnit();
   }
-  List sweets=["1kg","20kg","3kg","8kg","9kg","7kg","5kg"];
+  List<dynamic> _arrListNew = [];
 
   @override
   Widget build(BuildContext context) {
@@ -157,21 +162,20 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
     );
   }
 
-
   Widget getList(double parentHeight,double parentWidth){
     return Padding(
       padding:EdgeInsets.only(top: parentHeight*.01),
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: sweets.length,
+          itemCount: _arrListNew.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
-                onTap: (){
+                onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectMeasuringUnit(index.toString(),sweets.elementAt(index));
+                    widget.mListener.selectMeasuringUnit(index.toString(),_arrListNew[index]);
                   }
                   Navigator.pop(context);
                 },
@@ -189,12 +193,12 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
                   child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        sweets.elementAt(index),
+                      _arrListNew[index]!=null? Text(
+                        _arrListNew[index],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ),
@@ -234,6 +238,37 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
   }
 
 
+  callGetUnit() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().measuring_unit;
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              _arrListNew=data;
+            });
+            // _arrListNew.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 
 }

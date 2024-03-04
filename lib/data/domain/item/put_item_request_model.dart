@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class PutItemRequestModel {
   PutItemRequestModel({
     required this.Name,
@@ -63,7 +65,7 @@ class PutItemRequestModel {
     DetailDesc = json['Detail_Desc'];
     Modifier = json['Modifier'];
     Modifier_Machine = json['Modifier_Machine'];
-    Photo = json['Photo'];
+    Photo = json['Photo'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
@@ -87,7 +89,7 @@ class PutItemRequestModel {
     _data['Detail_Desc'] = DetailDesc;
     _data['Modifier'] = Modifier;
     _data['Modifier_Machine'] = Modifier_Machine;
-    _data['Photo'] = Photo;
+    _data['Photo'] = this.Photo;
     return _data;
   }
 }

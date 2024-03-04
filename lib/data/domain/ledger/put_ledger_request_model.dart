@@ -36,8 +36,8 @@ class PutLedgerRequestModel {
   String? panCardImage;
   String? adharCardImage;
   String? gstImage;
-  String? creator;
-  String? creatorMachine;
+  String? modifier;
+  String? modifierMachine;
 
   PutLedgerRequestModel({
     this.name,
@@ -77,8 +77,8 @@ class PutLedgerRequestModel {
     this.panCardImage,
     this.adharCardImage,
     this.gstImage,
-    this.creator,
-    this.creatorMachine,
+    this.modifier,
+    this.modifierMachine,
   });
 
   Map<String, dynamic> toJson() {
@@ -120,8 +120,8 @@ class PutLedgerRequestModel {
       'PAN_Card_Image': panCardImage ?? '',
       'Adhar_Card_Image': adharCardImage ?? '',
       'GST_Image': gstImage ?? '',
-      'Creator': creator ?? '',
-      'Creator_Machine': creatorMachine ?? '',
+      'Modifier': modifier ?? '',
+      'Modifier_Machine': modifierMachine ?? '',
     };
   }
 }

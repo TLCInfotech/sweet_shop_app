@@ -11,5 +11,5 @@ class ApiConstants {
   String country = "Country";
   String state = "State";
   String ledger_group = "LedgerGroup";
-
+  String measuring_unit="MeasuringUnit";
 }

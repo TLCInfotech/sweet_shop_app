@@ -43,7 +43,7 @@ class PostItemRequestModel {
   late final String? DetailDesc;
   late final String? Creator;
   late final String? CreatorMachine;
-  late final String? Photo;
+  late final List<int>? Photo;
 
   PostItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];
@@ -65,7 +65,7 @@ class PostItemRequestModel {
     DetailDesc = json['Detail_Desc'];
     Creator = json['Creator'];
     CreatorMachine = json['Creator_Machine'];
-    Photo = json['Photo'];
+    Photo = json['Photo'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
@@ -89,7 +89,7 @@ class PostItemRequestModel {
     _data['Detail_Desc'] = DetailDesc;
     _data['Creator'] = Creator;
     _data['Creator_Machine'] = CreatorMachine;
-    _data['Photo'] = Photo;
+    _data['Photo'] = this.Photo;
     return _data;
   }
 }

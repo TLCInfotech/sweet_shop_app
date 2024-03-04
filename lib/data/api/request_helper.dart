@@ -445,37 +445,30 @@ class ApiRequestHelper {
         required Function(dynamic error) onFailure,
         required Function(dynamic error) onException,
         required Function(dynamic error) sessionExpire}) async {
-    //  try {
-    //  headers.addAll({'session-token': sessionToken});
-    // print("apiUrl    $apiUrl");
-    // print("requestBody    $requestBody");
 
 
     Map<String, dynamic> cleanedData = {};
+
     requestBody.forEach((key, value) {
-      print(value);
-      if (value != null) {
-        cleanedData[key] = value;
+      if (value != null && value!="" && value.toString()!="[]") {
+        cleanedData[key] = jsonDecode(jsonEncode(value));
       }
     });
 
+    String jsonString = json.encode(cleanedData);
 
-    print("NEW BODY##############333");
-    // print(jsonEncode(cleanedData));
-
-    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-    String prettyprint =  encoder.convert(json.decode(json.encode(cleanedData)));
-    debugPrint(prettyprint);
+    print(apiUrl);
 
     Response response = await http.put(
         Uri.parse(apiUrl),
-        body: cleanedData,
-
+        body: jsonString,
         headers: {
           'Authorization': '$sessionToken',
+          'Content-Type': 'application/json',
         }
     );
 
+    print(response.statusCode);
     switch (response.statusCode) {
     /*response of api status id zero when something is wrong*/
       case 400:
@@ -549,22 +542,22 @@ class ApiRequestHelper {
     //  headers.addAll({'session-token': sessionToken});
     print("apiUrl    $apiUrl");
 
-
     Map<String, dynamic> cleanedData = {};
+
     requestBody.forEach((key, value) {
       print(value);
-
-      if (value != null && value!="") {
-        cleanedData[key] = value;
+      if (value != null && value!="" && value.toString()!="[]") {
+        cleanedData[key] = jsonDecode(jsonEncode(value));
       }
     });
-    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-    String prettyprint =  encoder.convert(json.decode(json.encode(cleanedData)));
-    debugPrint(prettyprint);
+    print("##########33");
+    print(cleanedData['Photo']);
 
+    String jsonString = json.encode(cleanedData);
     Response response = await http.post(
       Uri.parse(apiUrl),
-      body: cleanedData,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonString,
     );
 
 

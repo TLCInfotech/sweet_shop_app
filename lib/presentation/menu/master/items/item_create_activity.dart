@@ -80,8 +80,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   setData()async{
     if(widget.editItem!=null){
-      print(widget.editItem['Photo']['data']);
-      File f=await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      File ?f=null;
+      if(widget.editItem['Photo']!=null&&widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      }
+
       setState(()  {
         picImage=f;
         itemNameController.text=widget.editItem['Name'];
@@ -93,6 +96,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
          unitThreeBaseController.text=widget.editItem['Unit3_Base']!=null?(widget.editItem['Unit3_Base']).toString():unitThreeBaseController.text;
          unitThreefactorController.text=widget.editItem['Unit3_Factor']!=null?(widget.editItem['Unit3_Factor']).toString():unitTwofactorController.text;
          packSizeController.text=widget.editItem['Pack_Size']!=null?(widget.editItem['Pack_Size']).toString():packSizeController.text;
+        rateController.text=widget.editItem['Rate']!=null?(widget.editItem['Rate']).toString():rateController.text;
          minController.text=widget.editItem['Min_Stock']!=null?(widget.editItem['Min_Stock']).toString():minController.text;
         maxController.text=widget.editItem['Max_Stock']!=null?(widget.editItem['Max_Stock']).toString():maxController.text;
         hsnNoController.text=widget.editItem['HSN_No']!=null?widget.editItem['HSN_No']:hsnNoController.text;
@@ -108,7 +112,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   File? panFile ;
   File? gstFile ;
 
-
+  final rateController = TextEditingController();
+  final _rateFocus = FocusNode();
   final minController = TextEditingController();
   final _minFocus = FocusNode();
   final maxController = TextEditingController();
@@ -136,7 +141,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   String unitThreeName="";
   String measuringUnit="";
 
-  dynamic picImageBytes;
+  List<int> picImageBytes=[];
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
@@ -351,6 +356,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                       getUnitTwoLayout(parentHeight, parentWidth),
                       getUnitThreeLayout(parentHeight, parentWidth),
                       getPackSizeLayout(parentHeight, parentWidth),
+                      getRateLayout(parentHeight, parentWidth),
                       getHSNNOLayout(parentHeight, parentWidth),
                       getDefaultStoreLayout(parentHeight, parentWidth),
                       getMinStockLayout(parentHeight, parentWidth),
@@ -768,6 +774,32 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   }
 
+
+  /* Widget for rate text from field layout */
+  Widget getRateLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pack_size")!;
+        }
+        return null;
+      },
+      controller: rateController,
+      focuscontroller: _rateFocus,
+      focusnext: _hsnNoFocus,
+      title: ApplicationLocalizations.of(context)!.translate("rate")!,
+      callbackOnchage: (value) {
+        setState(() {
+          rateController.text = value;
+        });
+      },
+      textInput: TextInputType.numberWithOptions(decimal: true),
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+    );
+
+  }
+
   /* Widget for max text from field layout */
   Widget getHSNNOLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
@@ -874,16 +906,15 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 setState(() {
                   disableColor = true;
                 });
-                Uint8List? bytes = await picImage?.readAsBytes();
-                List<int> img=[];
-                if( bytes!=null){
-                  img=(bytes).whereType<int>().toList();
+
+                if(picImage!=null) {
+                  Uint8List? bytes = await picImage?.readAsBytes();
+
+                  setState(() {
+                    picImageBytes = (bytes)!.whereType<int>().toList();
+                  });
+                  print("IMGE1 : ${picImageBytes.length}");
                 }
-                setState(() {
-                  picImageBytes=img;
-
-                });
-
                 if(widget.editItem!=null){
                   await callUpdateItem();
                 }
@@ -943,16 +974,19 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           Unit3Base:unitThreeBaseController.text.trim(),
           Unit3Factor: unitThreefactorController.text.trim(),
           PackSize: packSizeController.text.trim(),
-          Rate: "",
+          Rate: rateController.text.trim(),
           MinStock: minController.text.trim(),
           MaxStock:maxController.text.trim(),
           HSNNo:hsnNoController.text.trim(),
           ExtName: extNameController.text.trim(),
           DefaultStore:defaultStoreController.text.trim(),
           DetailDesc: descController.text.trim(),
-          Photo: picImageBytes.toString(),
+          Photo: picImageBytes,
           Unit: measuringUnit
         );
+
+
+      print("IMGE2 : ${(model.Photo)?.length}");
 
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -1004,14 +1038,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             Unit3Base:unitThreeBaseController.text.trim(),
             Unit3Factor: unitThreefactorController.text.trim(),
             PackSize: packSizeController.text.trim(),
-            Rate: "",
+            Rate: rateController.text.trim(),
             MinStock: minController.text.trim(),
             MaxStock:maxController.text.trim(),
             HSNNo:hsnNoController.text.trim(),
             ExtName: extNameController.text.trim(),
             DefaultStore:defaultStoreController.text.trim(),
             DetailDesc: descController.text.trim(),
-            Photo: null,
+            Photo: picImageBytes,
             Unit: measuringUnit
         );
 
