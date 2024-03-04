@@ -1296,9 +1296,9 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           pinCodeController.text = value;
         });
       },
-      textInput: TextInputType.text,
+      textInput: TextInputType.number,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pin_code")!;
@@ -1835,7 +1835,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   }
 
   @override
-  selectCategory(int id, String name) {
+  selectCategory(int id, String name,String nature) {
     // TODO: implement selectCategory
     setState(() {
       parentCategory=name;

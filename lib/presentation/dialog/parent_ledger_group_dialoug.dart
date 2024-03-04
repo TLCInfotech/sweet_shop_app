@@ -193,7 +193,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
               child: GestureDetector(
                 onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectCategory(expense_group[index]['ID'],expense_group[index]['Name']);
+                    widget.mListener.selectCategory(expense_group[index]['ID'],expense_group[index]['Name'],expense_group[index]['Group_Nature']);
                   }
                   Navigator.pop(context);
                 },
@@ -342,5 +342,5 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
 
 
 abstract class LedegerGroupDialogInterface{
-  selectCategory(int id,String name);
+  selectCategory(int id,String name,String gp_nature);
 }

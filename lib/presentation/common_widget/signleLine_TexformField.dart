@@ -99,7 +99,6 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                         FocusScope.of(context).requestFocus(widget.focusnext);
                       }
                     },
-
                     style: text_field_textStyle,
                   ),
                 ),

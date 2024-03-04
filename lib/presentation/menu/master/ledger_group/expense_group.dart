@@ -53,6 +53,10 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   bool isPagination = true;
   ScrollController _scrollController = new ScrollController();
 
+  List group_nature= ['Asset','Liability','Income','Expense'];
+
+  var selectedgroup=null;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -196,6 +200,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                         parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
                         parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
                         sequenseNoName.text=expense_group[index]['Seq_No'].toString();
+                        selectedgroup=expense_group[index]['Group_Nature'].toString();
                         sequenseNatureName.text=expense_group[index]['Group_Nature'].toString();
                         print("ggfhfghgfhvg  $parentCategory");
                       });
@@ -276,74 +281,78 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   Future<dynamic> add_category_layout(BuildContext context) {
     return showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
-          return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-            child: Opacity(
-              opacity: a1.value,
-              child: Material(
-                color: Colors.transparent,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-                      child: Container(
-                        height: SizeConfig.screenHeight*0.6,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFfffff5),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      transitionBuilder: (context, a1, a2, widget) {
+        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Transform(
+              transform:
+              Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+              child: Opacity(
+                opacity: a1.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                        child: Container(
+                          height: SizeConfig.screenHeight*0.6,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFfffff5),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                            ),
                           ),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: [
-                            Container(
-                              height: SizeConfig.screenHeight*.03,
-                              child: Center(
-                                child: Text(
-                                    ApplicationLocalizations.of(context)!.translate("add_ledger_group")!,
-                                    style: page_heading_textStyle
+                          padding: const EdgeInsets.all(10),
+                          child: ListView(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            children: [
+                              Container(
+                                height: SizeConfig.screenHeight*.03,
+                                child: Center(
+                                  child: Text(
+                                      ApplicationLocalizations.of(context)!.translate("add_ledger_group")!,
+                                      style: page_heading_textStyle
+                                  ),
                                 ),
                               ),
-                            ),
-                            getGroupNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                              getGroupNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                            getParentGroupLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                            // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_no")!),
-                            getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                            // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_nature")!),
-                            getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                              getParentGroupLayout(SizeConfig.screenHeight, SizeConfig.screenWidth, setState),
+                              // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_no")!),
+                              getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                              // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_nature")!),
+                              getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                            const SizedBox(height: 20,),
+                              const SizedBox(height: 20,),
 
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  ],
+                      getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 200),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation2, animation1) {
-          throw Exception('No widget to return in pageBuilder');
-        });
+            );
+          },
+        );
+      },pageBuilder: (context, animation2, animation1) {
+      throw Exception('No widget to return in pageBuilder');
+      }
+    );
   }
+
 
   /* widget for Category layout */
   Widget getGroupNameLayout(double parentHeight, double parentWidth) {
@@ -395,27 +404,53 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
   /* widget for Category layout */
   Widget getSequenceNatureLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
-      validation: (value) {
-        if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("sequence_nature")!;
-        }
-        return null;
-      },
-      controller: sequenseNatureName,
-      focuscontroller: _sequenceNatureFocus,
-      focusnext: _sequenceNatureFocus,
-      title: ApplicationLocalizations.of(context)!.translate("group_nature")!,
-      callbackOnchage: (value) {
-        setState(() {
-          sequenseNatureName.text = value;
-        });
-      },
-      textInput: TextInputType.text,
-      maxlines: 1,
-      maxlength: 2,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z]')),
-    );
+    return parentCategoryId==0?Padding(
+          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("group_nature")!,
+            style: item_heading_textStyle,
+          ),
+          Container(
+            height: parentHeight * .055,
+            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(left: 10, right: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: DropdownButton<dynamic>(
+              hint: Text(
+                ApplicationLocalizations.of(context)!.translate("group_nature")!, style: hint_textfield_Style,),
+              underline: SizedBox(),
+              isExpanded: true,
+              value: selectedgroup,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedgroup = newValue!;
+                });
+              },
+              items: group_nature.map((dynamic val) {
+                return DropdownMenuItem<dynamic>(
+                  value: val,
+                  child: Text(val.toString(), style: item_regular_textStyle),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    ):Container();
 
   }
 
@@ -431,22 +466,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     );
   }
 
-  PostData()async{
-  var data=  {
-    "Name" : groupName.text,
-    "Parent_ID" : ParentGroupid,
-    "Seq_No" : sequenseNoName.text,
-    "Group_Nature" :sequenseNatureName.text,
-    "Creator" : "System",
-    "Creator_Machine": "TLC1"
-    } ;
-    expense_group.add(data);
-    setState(() {
-      expense_group=expense_group;
-    });
-    print(expense_group);
-
-  }
 
   Widget getCloseButton(double parentHeight, double parentWidth){
     return Padding(
@@ -526,7 +545,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
 
   /* Widget For Category Layout */
-  Widget getParentGroupLayout(double parentHeight, double parentWidth){
+  Widget getParentGroupLayout(double parentHeight, double parentWidth,StateSetter setState){
     return Padding(
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
       child: Column(
@@ -538,74 +557,102 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           ),
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child: Container(
-              height: (SizeConfig.screenHeight) * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  if (context != null) {
-                    showGeneralDialog(
-                        barrierColor: Colors.black.withOpacity(0.5),
-                        transitionBuilder: (context, a1, a2, widget) {
-                          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                              1.0;
-                          return Transform(
-                            transform:
-                            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                            child: Opacity(
-                              opacity: a1.value,
-                              child: LedegerGroupDialog(
-                                mListener: this,
-
-                              ),
-                            ),
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        barrierLabel: '',
-                        context: context,
-                        pageBuilder: (context, animation2, animation1) {
-                          throw Exception('No widget to return in pageBuilder');
-                        });
-                  }
-                },
-                child: Container(
-                    height: 50,
-                    padding: EdgeInsets.only(left: 10, right: 10),
+            child:  Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: (SizeConfig.screenHeight) * .055,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: CommonColor.WHITE_COLOR,
+                      borderRadius: BorderRadius.circular(4),
                       boxShadow: [
                         BoxShadow(
                           offset: Offset(0, 1),
                           blurRadius: 5,
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withOpacity(0.01),
                         ),
                       ],
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory,
-                          style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
-                        FaIcon(FontAwesomeIcons.caretDown,
-                          color: Colors.black87.withOpacity(0.8), size: 16,)
-                      ],
-                    )
+                    child:  GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        if (context != null) {
+                          showGeneralDialog(
+                              barrierColor: Colors.black.withOpacity(0.5),
+                              transitionBuilder: (context, a1, a2, widget) {
+                                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+                                    1.0;
+                                return Transform(
+                                  transform:
+                                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                                  child: Opacity(
+                                    opacity: a1.value,
+                                    child: LedegerGroupDialog(
+                                      mListener: this,
+
+                                    ),
+                                  ),
+                                );
+                              },
+                              transitionDuration: Duration(milliseconds: 200),
+                              barrierDismissible: true,
+                              barrierLabel: '',
+                              context: context,
+                              pageBuilder: (context, animation2, animation1) {
+                                throw Exception('No widget to return in pageBuilder');
+                              });
+                        }
+                      },
+                      child: Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(0, 1),
+                                blurRadius: 5,
+                                color: Colors.black.withOpacity(0.1),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory,
+                                style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
+                              FaIcon(FontAwesomeIcons.caretDown,
+                                color: Colors.black87.withOpacity(0.8), size: 16,)
+                            ],
+                          )
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  height: (SizeConfig.screenHeight) * .055,
+                  margin: EdgeInsets.only(left: 5),
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.05),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(onPressed: (){
+                    setState(() {
+                      parentCategoryId=0;
+                      parentCategory="";
+                      selectedgroup=null;
+                    });
+                  }, icon: Icon(Icons.clear,color: Colors.red,)),
+                )
+              ],
             ),
           )
         ],
@@ -754,7 +801,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callPostLedgerGroup() async {
     String seqNoText = sequenseNoName.text.trim();
     String groupNameText = groupName.text.trim();
-    String seqNatureText = sequenseNatureName.text.trim();
+    String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -766,7 +813,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           name: groupNameText,
           seqNo:seqNoText ,
           parentId:parentCategoryId.toString() ,
-          groupNature: seqNatureText,
+          groupNature: seqNatureText.substring(0,1),
           creator: creatorName,
           creatorMachine: deviceId,
         );
@@ -777,6 +824,9 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
+                sequenseNoName.clear();
+                groupName.clear();
+                selectedgroup=null;
                 callGetLedgerGroup(page);
               });
               Navigator.pop(context);
@@ -818,7 +868,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callUpdateLadgerGroup() async {
     String seqNoText = sequenseNoName.text.trim();
     String groupNameText = groupName.text.trim();
-    String seqNatureText = sequenseNatureName.text.trim();
+    String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -845,6 +895,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 parentCategoryId=0;
                 sequenseNoName.clear();
                 sequenseNatureName.clear();
+                selectedgroup=null;
               });
               var snackBar = SnackBar(content: Text('Item Category Updated Successfully'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -878,11 +929,12 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
 
   @override
-  selectCategory(int id, String name) {
+  selectCategory(int id, String name,String nature) {
     // TODO: implement selectCategory
   setState(() {
     parentCategory=name;
     parentCategoryId=id;
+    selectedgroup=nature;
   });
   }
 
