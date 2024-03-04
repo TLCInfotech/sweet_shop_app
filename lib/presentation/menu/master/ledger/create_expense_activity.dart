@@ -122,6 +122,13 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
+
+  List<int> picImageBytes=[];
+
+  List<int> adharImageBytes=[];
+  List<int> panImageBytes=[];
+  List<int> gstImageBytes=[];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -132,30 +139,61 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   File? panFile ;
   File? gstFile ;
 
-setData()async{
+  setData()async{
   if(widget.ledgerList!=null){
-    nameController.text=await widget.ledgerList['Name'];
-    contactPersonController.text= await widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
-    addressController.text=await widget.ledgerList['Address']!=null?widget.ledgerList['Address']:addressController.text;
-    pinCodeController.text=await widget.ledgerList['Pin_Code']!=null?widget.ledgerList['Pin_Code']:pinCodeController.text;
-    contactController.text= await widget.ledgerList['Contact_No']!=null?widget.ledgerList['Contact_No']:contactController.text;
-    emailController.text=await widget.ledgerList['EMail']!=null?widget.ledgerList['EMail']: emailController.text;
-    outstandingLimitController.text=await widget.ledgerList['Outstanding_Limit']!=null?widget.ledgerList['Outstanding_Limit'].toString():outstandingLimitController.text;
-    extNameController.text=widget.ledgerList['Ext_Name']!=null?widget.ledgerList['Ext_Name'].toString(): extNameController.text;
-    adharNoController.text=widget.ledgerList['Adhar_No']!=null?widget.ledgerList['Adhar_No'].toString():adharNoController.text;
-    panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
-    gstNoController.text=widget.ledgerList['GST_No']!=null?widget.ledgerList['GST_No'].toString():gstNoController.text;
-    hsnNoController.text=widget.ledgerList['HSN_No']!=null?widget.ledgerList['HSN_No'].toString():hsnNoController.text;
-    taxRateController.text=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString():taxRateController.text;
-    CGSTController.text=widget.ledgerList['CGST_Rate']!=null?widget.ledgerList['CGST_Rate'].toString():CGSTController.text;
-    SGSTController.text=widget.ledgerList['SGST_Rate']!=null?widget.ledgerList['SGST_Rate'].toString():SGSTController.text;
-    cessController.text=widget.ledgerList['Cess_Rate']!=null?widget.ledgerList['Cess_Rate'].toString():cessController.text;
-    addCessController.text=widget.ledgerList['Add_Cess_Rate']!=null?widget.ledgerList['Add_Cess_Rate'].toString():addCessController.text;
-    bankNameController.text=widget.ledgerList['Bank_Name']!=null?widget.ledgerList['Bank_Name'].toString():bankNameController.text;
-    bankBranchController.text=widget.ledgerList['Bank_Branch']!=null?widget.ledgerList['Bank_Branch'].toString():bankBranchController.text;
-    IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
-    accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
-    aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
+    File ?f=null;
+    File ?a=null;
+    File ?p=null;
+    File ?g=null;
+    if(widget.ledgerList['Photo']!=null&&widget.ledgerList['Photo']['data']!=null && widget.ledgerList['Photo']['data'].length>10) {
+      f = await CommonWidget.convertBytesToFile(widget.ledgerList['Photo']['data']);
+    }
+    if(widget.ledgerList['Adhar_Card_Image']!=null&&widget.ledgerList['Adhar_Card_Image']['data']!=null && widget.ledgerList['Adhar_Card_Image']['data'].length>10) {
+      a = await CommonWidget.convertBytesToFile(widget.ledgerList['Adhar_Card_Image']['data']);
+    }
+    if(widget.ledgerList['PAN_Card_Image']!=null&&widget.ledgerList['PAN_Card_Image']['data']!=null && widget.ledgerList['PAN_Card_Image']['data'].length>10) {
+      p = await CommonWidget.convertBytesToFile(widget.ledgerList['PAN_Card_Image']['data']);
+    }
+    if(widget.ledgerList['GST_Image']!=null&&widget.ledgerList['GST_Image']['data']!=null && widget.ledgerList['GST_Image']['data'].length>10) {
+      g = await CommonWidget.convertBytesToFile(widget.ledgerList['GST_Image']['data']);
+    }
+
+      setState(()  {
+      picImageBytes=(widget.ledgerList['Photo']!=null && widget.ledgerList['Photo']['data']!=null && widget.ledgerList['Photo']['data'].length>10)?(widget.ledgerList['Photo']['data']).whereType<int>().toList():[];
+      picImage=f!=null?f:picImage;
+      adharImageBytes=(widget.ledgerList['Adhar_Card_Image']!=null&&widget.ledgerList['Adhar_Card_Image']['data']!=null && widget.ledgerList['Adhar_Card_Image']['data'].length>10)?(widget.ledgerList['Adhar_Card_Image']['data']).whereType<int>().toList():[];
+      adharFile=a!=null?a:adharFile;
+      panImageBytes=(widget.ledgerList['PAN_Card_Image']!=null&&widget.ledgerList['PAN_Card_Image']['data']!=null && widget.ledgerList['PAN_Card_Image']['data'].length>10)?(widget.ledgerList['PAN_Card_Image']['data']).whereType<int>().toList():[];
+      panFile=p!=null?p:panFile;
+      gstImageBytes=(widget.ledgerList['GST_Image']!=null&&widget.ledgerList['GST_Image']['data']!=null && widget.ledgerList['GST_Image']['data'].length>10)?(widget.ledgerList['GST_Image']['data']).whereType<int>().toList():[];
+      gstFile=g!=null?g:gstFile;
+      parentCategory= widget.ledgerList['Group_Name'];
+      parentCategoryId= widget.ledgerList['Group_ID'].toString();
+      nameController.text= widget.ledgerList['Name'];
+      contactPersonController.text=  widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
+      addressController.text= widget.ledgerList['Address']!=null?widget.ledgerList['Address']:addressController.text;
+      pinCodeController.text= widget.ledgerList['Pin_Code']!=null?widget.ledgerList['Pin_Code']:pinCodeController.text;
+      contactController.text=  widget.ledgerList['Contact_No']!=null?widget.ledgerList['Contact_No']:contactController.text;
+      emailController.text= widget.ledgerList['EMail']!=null?widget.ledgerList['EMail']: emailController.text;
+      outstandingLimitController.text= widget.ledgerList['Outstanding_Limit']!=null?widget.ledgerList['Outstanding_Limit'].toString():outstandingLimitController.text;
+      extNameController.text=widget.ledgerList['Ext_Name']!=null?widget.ledgerList['Ext_Name'].toString(): extNameController.text;
+      adharNoController.text=widget.ledgerList['Adhar_No']!=null?widget.ledgerList['Adhar_No'].toString():adharNoController.text;
+      panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
+      gstNoController.text=widget.ledgerList['GST_No']!=null?widget.ledgerList['GST_No'].toString():gstNoController.text;
+      hsnNoController.text=widget.ledgerList['HSN_No']!=null?widget.ledgerList['HSN_No'].toString():hsnNoController.text;
+      taxRateController.text=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString():taxRateController.text;
+      CGSTController.text=widget.ledgerList['CGST_Rate']!=null?widget.ledgerList['CGST_Rate'].toString():CGSTController.text;
+      SGSTController.text=widget.ledgerList['SGST_Rate']!=null?widget.ledgerList['SGST_Rate'].toString():SGSTController.text;
+      cessController.text=widget.ledgerList['Cess_Rate']!=null?widget.ledgerList['Cess_Rate'].toString():cessController.text;
+      addCessController.text=widget.ledgerList['Add_Cess_Rate']!=null?widget.ledgerList['Add_Cess_Rate'].toString():addCessController.text;
+      bankNameController.text=widget.ledgerList['Bank_Name']!=null?widget.ledgerList['Bank_Name'].toString():bankNameController.text;
+      bankBranchController.text=widget.ledgerList['Bank_Branch']!=null?widget.ledgerList['Bank_Branch'].toString():bankBranchController.text;
+      IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
+      accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
+      aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
+
+    });
+
 
   }
 }
@@ -186,7 +224,12 @@ setData()async{
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-                    title:  Text(
+                    title: widget.ledgerList!=null?
+                    Text(
+                      ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("ledger")!,
+                      style: appbar_text_style,
+                    )
+                        : Text(
                       ApplicationLocalizations.of(context)!.translate("ledger_new")!,
                       style: appbar_text_style,
                     ),
@@ -297,10 +340,13 @@ setData()async{
                             adharNoController.text=value;
                           });
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file) async{
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             adharFile=file;
+                            adharImageBytes = (bytes)!.whereType<int>().toList();
                           });
+                          print("IMGE1 : ${adharImageBytes.length}");
                         },
                         title: ApplicationLocalizations.of(context)!.translate("adhar_number")!, 
                         documentFile: adharFile,
@@ -315,10 +361,14 @@ setData()async{
                             panNoController.text=value;
                           });
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file)async {
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             panFile=file;
+                            panImageBytes = (bytes)!.whereType<int>().toList();
                           });
+                          print("IMGE1 : ${panImageBytes.length}");
+
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("pan_number")! ,
                         documentFile: panFile,
@@ -333,10 +383,14 @@ setData()async{
                             gstNoController.text=value;
                           });
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file) async{
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             gstFile=file;
+                            gstImageBytes = (bytes)!.whereType<int>().toList();
                           });
+                          print("IMGE1 : ${gstImageBytes.length}");
+
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("gst_number")!,
                         documentFile: gstFile,
@@ -407,10 +461,14 @@ setData()async{
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
-        callbackFile: (file){
+        callbackFile: (file)async{
+          Uint8List? bytes = await file?.readAsBytes();
+
           setState(() {
             picImage=file;
+            picImageBytes = (bytes)!.whereType<int>().toList();
           });
+          print("IMGE1 : ${picImageBytes.length}");
         }
     );
 
@@ -869,6 +927,7 @@ setData()async{
   /* Widget for HSN text from field layout */
   Widget getHSNLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      capital: true,
       parentWidth: parentWidth,
       validation: (value) {
 
@@ -888,7 +947,7 @@ setData()async{
       },
       textInput: TextInputType.text,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
 
 
@@ -1476,7 +1535,10 @@ setData()async{
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child:  Text(
+                    child: widget.ledgerList!=null? Text(
+                      ApplicationLocalizations.of(context)!.translate("update")!,
+                      style: page_heading_textStyle,
+                    ): Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
@@ -1530,6 +1592,7 @@ setData()async{
     String accountNo = accountNoController.text.trim();
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
+
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1537,7 +1600,7 @@ setData()async{
           isLoaderShow=true;
         });
         PostLedgerRequestModel model = PostLedgerRequestModel(
-        name: name,
+            name: name,
           groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
@@ -1546,31 +1609,35 @@ setData()async{
           pinCode: pinCode,
           country: countryId,
           contactNo: contactNo,
-          email: emailAdd,
-          panNo: panNo,
+          eMail: emailAdd,
+          pANNo: panNo,
           adharNo: adharNo,
-          gstNo: gstNo,
-          cinNo: "",
-          fssaiNo: "",
+          gSTNo: gstNo,
+          cINNo: "",
+          fSSAINo: "",
           outstandingLimit: outLimit,
           bankName: bankName,
           bankBranch: bankBranch,
-          ifscCode: ifscCode,
+          iFSCCode: ifscCode,
             accountNo: accountNo,
-            acHolderName: aCHName,
-            hsnNo: hsnNo,
-            gstRate: "",
-            cgstRate: cgstNo,
-            sgstRate: sgstNo,
+            aCHolderName: aCHName,
+            hSNNo: hsnNo,
+            gSTRate: "",
+            cGSTRate: cgstNo,
+            sGSTRate: sgstNo,
             cessRate: cess,
             addCessRate: addCess,
             taxCategory: "",//drop
-            gstType: "",
-            tcsApplicable: "",
+            gSTType: "",
+            tCSApplicable: "",
             extName: extName,
             remark: "",
+            adharCardImage: adharImageBytes,
+            pANCardImage: panImageBytes,
+            gSTImage: gstImageBytes,
+            photo: picImageBytes,
             creator: creatorName,
-          creatorMachine: deviceId
+            creatorMachine: deviceId
         );
         String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -1634,6 +1701,7 @@ setData()async{
     String bankBranch = bankBranchController.text.trim();
     String ifscCode = IFSCCodeController.text.trim();
     String accountNo = accountNoController.text.trim();
+
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -1672,14 +1740,18 @@ setData()async{
             tcsApplicable: "",
             extName: extName,
             remark: "",
-            creator: creatorName,
-            creatorMachine: deviceId
+            adharCardImage: adharImageBytes.toString(),
+            panCardImage: panImageBytes.toString(),
+            gstImage: gstImageBytes.toString(),
+            photo: picImageBytes.toString(),
+            modifier: creatorName,
+            modifierMachine: deviceId
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger+"/"+editedItem['ID'].toString();
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString();
         print(apiUrl);
-        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{
               print("  Put Call :   $value ");
               setState(() {

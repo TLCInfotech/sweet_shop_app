@@ -1,4 +1,6 @@
 
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -108,11 +110,16 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
+              onPressed: () async{
                 //   add_item_layout(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+               await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                   mListener: this,
                 )));
+
+                setState(() {
+                  page=1;
+                });
+                await callGetLedger(page);
               }),
           body: Stack(
             alignment: Alignment.center,
@@ -172,6 +179,12 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             itemCount: ledgerList.length,
             controller: _scrollController,
             itemBuilder: (BuildContext context, int index) {
+              List<int> img=[];
+              if( ledgerList[index]['Photo']!=null){
+                img=(ledgerList[index]['Photo']['data']).whereType<int>().toList();
+                print("#################sd ${ledgerList[index]['Photo']['data']}");
+              }
+
               return  AnimationConfiguration.staggeredList(
                 position: index,
                 duration:
@@ -181,17 +194,22 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                   child: FadeInAnimation(
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+                      onTap: ()async{
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                           mListener: this,
                           ledgerList: ledgerList[index],
                         )));
+                        setState(() {
+                          ledgerList=[];
+                          page=1;
+                        });
+                         callGetLedger(page);
                       },
                       child: Card(
                         child: Row(
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 10),
+                            ledgerList[index]['Photo']==null? Container(
+                              margin: const EdgeInsets.only(left: 10),
                               width:SizeConfig.imageBlockFromCardWidth,
                               height: 80,
                               decoration: const BoxDecoration(
@@ -201,7 +219,21 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(10))
                               ),
-                            ),
+
+                            ): Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width:SizeConfig.imageBlockFromCardWidth,
+                              height: 80,
+                              decoration:  BoxDecoration(
+                                  image: DecorationImage(
+                                    image: MemoryImage(Uint8List.fromList(img)), // Replace with your image asset path
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(10))
+                              ),
+
+                            )
+                            ,
                             Expanded(
                                 child: Stack(
                                   children: [
