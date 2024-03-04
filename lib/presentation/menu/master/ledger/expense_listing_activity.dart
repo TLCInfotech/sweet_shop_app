@@ -427,6 +427,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   createPostLedger() {
     // TODO: implement createPostLedger
   setState(() {
+    ledgerList.clear();
     callGetLedger(0);
   });
   Navigator.pop(context);
@@ -436,6 +437,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   updatePostLedger() {
     // TODO: implement updatePostLedger
     setState(() {
+      ledgerList.clear();
       callGetLedger(0);
     });
     Navigator.pop(context);

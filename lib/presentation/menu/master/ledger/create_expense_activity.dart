@@ -971,9 +971,23 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       focusnext: _SGSTFocus,
       title: ApplicationLocalizations.of(context)!.translate("cgst_percent")!,
       callbackOnchage: (value) {
-        setState(() {
-          CGSTController.text = value;
-        });
+     var val= double.parse(value);
+          //CGSTController.text = value;
+
+          var v=double.parse(value);
+          if(v>100.00){
+            var snackBar = SnackBar(content: Text('value should be less than 100.00'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          else {
+            setState(() {
+              CGSTController.text = value;
+            });
+          }
+         // CGSTController.text=(val.toStringAsFixed(2)).toString();
+  // String    formattedText = formatDecimal(value);
+  //print("formateedddd   $formattedText");
+
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
@@ -981,6 +995,16 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     );
 
   }
+
+  String formatDecimal(String value) {
+    // Remove existing dots and commas
+    value = value.replaceAll('.', '').replaceAll(',', '');
+
+    // Add a dot after every two digits
+    RegExp regex = RegExp(r'\B(?=(\d{2})+(?!\d))');
+    return value.replaceAllMapped(regex, (match) => '.');
+  }
+
 
 /* Widget for cess text from field layout */
   Widget getCessLayout(double parentHeight, double parentWidth) {
@@ -999,7 +1023,18 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       title: ApplicationLocalizations.of(context)!.translate("cess_percent")!,
       callbackOnchage: (value) {
         setState(() {
-          cessController.text = value;
+         // cessController.text = value;
+
+          var v=double.parse(value);
+          if(v>100.00){
+            var snackBar = SnackBar(content: Text('value should be less than 100.00'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          else {
+            setState(() {
+              cessController.text = value;
+            });
+          }
         });
       },
       textInput:  TextInputType.numberWithOptions(decimal: true),
@@ -1157,7 +1192,17 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       title: ApplicationLocalizations.of(context)!.translate("sgst_percent")!,
       callbackOnchage: (value) {
         setState(() {
-          SGSTController.text = value;
+        //  SGSTController.text = value;
+          var v=double.parse(value);
+          if(v>100.00){
+            var snackBar = SnackBar(content: Text('value should be less than 100.00'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          else {
+            setState(() {
+              SGSTController.text = value;
+            });
+          }
         });
       },
       textInput:  TextInputType.numberWithOptions(decimal: true),
@@ -1186,7 +1231,17 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       title: ApplicationLocalizations.of(context)!.translate("add_cess_percent")!,
       callbackOnchage: (value) {
         setState(() {
-          addCessController.text = value;
+          //addCessController.text = value;
+          var v=double.parse(value);
+          if(v>100.00){
+            var snackBar = SnackBar(content: Text('value should be less than 100.00'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          else {
+            setState(() {
+              addCessController.text = value;
+            });
+          }
         });
       },
       textInput:  TextInputType.numberWithOptions(decimal: true),

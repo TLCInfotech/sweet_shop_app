@@ -288,7 +288,7 @@ bool isLoaderShow=false;
         }
         return null;
       },
-      readOnly: editedItem!=null?false:true,
+    //  readOnly: editedItem!=null?false:true,
       controller: categoryName,
       focuscontroller: null,
       focusnext: null,
@@ -710,6 +710,7 @@ bool isLoaderShow=false;
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
             modifier: creatorName,
+            name:catName ,
             modifierMachine: deviceId
         );
         if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
