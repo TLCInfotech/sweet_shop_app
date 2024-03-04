@@ -89,6 +89,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         picImage=f;
         itemNameController.text=widget.editItem['Name'];
         categoryName=widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:categoryName;
+        categoryId=widget.editItem['Category_ID']!=null?widget.editItem['Category_ID']:categoryId;
          unitTwoId=widget.editItem['Unit2']!=null?widget.editItem['Unit2']:unitTwoId;
           unitTwofactorController.text=widget.editItem['Unit2_Factor']!=null?(widget.editItem['Unit2_Factor']).toString():unitTwofactorController.text;
            unitTwoBaseController.text=widget.editItem['Unit2_Base']!=null?(widget.editItem['Unit2_Base']).toString():unitTwoBaseController.text;

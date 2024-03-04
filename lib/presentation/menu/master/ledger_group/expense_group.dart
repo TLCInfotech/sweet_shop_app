@@ -200,10 +200,30 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                         parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
                         parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
                         sequenseNoName.text=expense_group[index]['Seq_No'].toString();
-                        selectedgroup=expense_group[index]['Group_Nature'].toString();
-                        sequenseNatureName.text=expense_group[index]['Group_Nature'].toString();
                         print("ggfhfghgfhvg  $parentCategory");
                       });
+                      // selectedgroup=expense_group[index]['Group_Nature'].toString();
+                      if(expense_group[index]['Group_Nature'].toString()=="A"){
+                        setState(() {
+                          selectedgroup="Asset";
+                        });
+                      }
+
+                      else if(expense_group[index]['Group_Nature'].toString()=="L"){
+                        setState(() {
+                          selectedgroup="Liability";
+                        });
+                      }
+                      else if(expense_group[index]['Group_Nature'].toString()=="I"){
+                        setState(() {
+                          selectedgroup="Income";
+                        });
+                      }
+                      else if(expense_group[index]['Group_Nature'].toString()=="E"){
+                        setState(() {
+                          selectedgroup="Expense";
+                        });
+                      }
 
                       add_category_layout(context);
                     },
@@ -404,7 +424,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
   /* widget for Category layout */
   Widget getSequenceNatureLayout(double parentHeight, double parentWidth) {
-    return parentCategoryId==0?Padding(
+    return Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,7 +449,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 ),
               ],
             ),
-            child: DropdownButton<dynamic>(
+            child: parentCategoryId==0?DropdownButton<dynamic>(
               hint: Text(
                 ApplicationLocalizations.of(context)!.translate("group_nature")!, style: hint_textfield_Style,),
               underline: SizedBox(),
@@ -446,11 +466,15 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                   child: Text(val.toString(), style: item_regular_textStyle),
                 );
               }).toList(),
-            ),
+            ):
+            Container(
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(color:CommonColor.TexField_COLOR),
+                child: Text("$selectedgroup",style: item_regular_textStyle,)),
           ),
         ],
       ),
-    ):Container();
+    );
 
   }
 
