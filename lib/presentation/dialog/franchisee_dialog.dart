@@ -5,6 +5,12 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
+
 class FranchiseeDialog extends StatefulWidget {
   final FranchiseeDialogInterface mListener;
 
@@ -15,21 +21,18 @@ class FranchiseeDialog extends StatefulWidget {
 }
 
 class _FranchiseeDialogState extends State<FranchiseeDialog>{
-
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
-
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
-
-
+    callGetFranchisee();
   }
-  List franchisee_list= ['F1', 'F2', 'F3','F4'];
+  List<dynamic> franchisee_list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +169,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectedFranchisee(index.toString(),franchisee_list.elementAt(index));
+                    widget.mListener.selectedFranchisee(franchisee_list[index]['ID'].toString(),franchisee_list[index]['Name']);
                   }
                   Navigator.pop(context);
                 },
@@ -185,7 +188,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        franchisee_list.elementAt(index),
+                        franchisee_list[index]['Name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
@@ -229,6 +232,38 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
   }
 
 
+
+  callGetFranchisee() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee+"?Company_ID=27";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            setState(() {
+              franchisee_list=data;
+            });
+            // franchisee_list.addAll(data.map((arrData) =>
+            // new EmailPhoneRegistrationModel.fromJson(arrData)));
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 
 }
