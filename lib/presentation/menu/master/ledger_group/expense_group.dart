@@ -156,6 +156,16 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     );
   }
 
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await callGetLedgerGroup(page);
+
+  }
+
 
   /*widget for no data*/
   Widget getNoData(double parentHeight,double parentWidth){
@@ -179,123 +189,130 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   Expanded get_expense_group_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: expense_group.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
+        child: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: expense_group.length,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
 
-                      print(expense_group[index]);
-                      setState(() {
-                        editedItem=expense_group[index];
-                        groupName.text=expense_group[index]['Name'];
-                        parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
-                        parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
-                        sequenseNoName.text=expense_group[index]['Seq_No'].toString();
-                        print("ggfhfghgfhvg  $parentCategory");
-                      });
-                      // selectedgroup=expense_group[index]['Group_Nature'].toString();
-                      if(expense_group[index]['Group_Nature'].toString()=="A"){
+                        print(expense_group[index]);
                         setState(() {
-                          selectedgroup="Asset";
+                          editedItem=expense_group[index];
+                          groupName.text=expense_group[index]['Name'];
+                          parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
+                          parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
+                          sequenseNoName.text=expense_group[index]['Seq_No'].toString();
+                          print("ggfhfghgfhvg  $parentCategory");
                         });
-                      }
+                        // selectedgroup=expense_group[index]['Group_Nature'].toString();
+                        if(expense_group[index]['Group_Nature'].toString()=="A"){
+                          setState(() {
+                            selectedgroup="Asset";
+                          });
+                        }
 
-                      else if(expense_group[index]['Group_Nature'].toString()=="L"){
-                        setState(() {
-                          selectedgroup="Liability";
-                        });
-                      }
-                      else if(expense_group[index]['Group_Nature'].toString()=="I"){
-                        setState(() {
-                          selectedgroup="Income";
-                        });
-                      }
-                      else if(expense_group[index]['Group_Nature'].toString()=="E"){
-                        setState(() {
-                          selectedgroup="Expense";
-                        });
-                      }
+                        else if(expense_group[index]['Group_Nature'].toString()=="L"){
+                          setState(() {
+                            selectedgroup="Liability";
+                          });
+                        }
+                        else if(expense_group[index]['Group_Nature'].toString()=="I"){
+                          setState(() {
+                            selectedgroup="Income";
+                          });
+                        }
+                        else if(expense_group[index]['Group_Nature'].toString()=="E"){
+                          setState(() {
+                            selectedgroup="Expense";
+                          });
+                        }
 
-                      add_category_layout(context);
-                    },
-                    onDoubleTap: (){},
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width:80,
-                            height: 70,
-                            decoration:  BoxDecoration(
-                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
-                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                        add_category_layout(context);
+                      },
+                      onDoubleTap: (){},
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width:80,
+                              height: 70,
+                              decoration:  BoxDecoration(
+                                  color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))
+                              ),
+                              alignment: Alignment.center,
+                              child: const FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
                             ),
-                            alignment: Alignment.center,
-                            child: const FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
-                                        Text("${expense_group[index]['Parent_Name']}",style: item_regular_textStyle,),
-                                        Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
-                                      ],
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
+                                          Text("${expense_group[index]['Parent_Name']}",style: item_regular_textStyle,),
+                                          Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-                                            print("##############$response");
-                                            await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
-                                          }
-                                        },
-                                      )
-                                      // IconButton(
-                                      //   icon:  const FaIcon(
-                                      //     FontAwesomeIcons.trash,
-                                      //     size: 18,
-                                      //     color: Colors.redAccent,
-                                      //   ),
-                                      //   onPressed: (){
-                                      //     callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
-                                      //   },
-                                      // )
-                                  )
-                                ],
-                              )
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                            }
+                                          },
+                                        )
+                                        // IconButton(
+                                        //   icon:  const FaIcon(
+                                        //     FontAwesomeIcons.trash,
+                                        //     size: 18,
+                                        //     color: Colors.redAccent,
+                                        //   ),
+                                        //   onPressed: (){
+                                        //     callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                        //   },
+                                        // )
+                                    )
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 

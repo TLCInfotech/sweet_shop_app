@@ -95,11 +95,14 @@ void initState() {
 List<dynamic> itemList = [];
 //FUNC: REFRESH LIST
 Future<void> refreshList() async {
+  print("Here");
   await Future.delayed(Duration(seconds: 2));
-  page = 0;
+  setState(() {
+    page=1;
+  });
   isPagination = true;
-  callGetItem(page);
-  return ;
+  await callGetItem(page);
+
 }
 
   @override
@@ -199,10 +202,9 @@ Expanded get_items_list_layout() {
     return Expanded(
         child:   RefreshIndicator(
           color: CommonColor.THEME_COLOR,
-          onRefresh: () {
-            return refreshList();
-          },
+          onRefresh: () => refreshList(),
           child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: itemList.length,
             controller: _scrollController,

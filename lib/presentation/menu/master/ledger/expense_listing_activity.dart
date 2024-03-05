@@ -64,11 +64,12 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   List<dynamic> ledgerList = [];
 //FUNC: REFRESH LIST
   Future<void> refreshList() async {
-    await Future.delayed(const Duration(seconds: 2));
-    page = 0;
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
     isPagination = true;
-    callGetLedger(page);
-    return ;
+    await callGetLedger(page);
   }
 
 
@@ -173,6 +174,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             return refreshList();
           },
           child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: ledgerList.length,
             controller: _scrollController,

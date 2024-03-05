@@ -59,7 +59,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   FocusNode searchFocus = FocusNode() ;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-   fetchShows (searchstring) async {
+  fetchShows (searchstring) async {
     String sessionToken = await AppPreferences.getSessionToken();
    await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(

@@ -61,15 +61,16 @@ bool isLoaderShow=false;
 
   List<dynamic> _arrListNew = [];
 
-
-  //FUNC: REFRESH LIST
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
-    page = 0;
+    setState(() {
+      page=1;
+    });
     isPagination = true;
-    callGetItemCategory(page);
-    return ;
+    await callGetItemCategory(page);
+
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -119,32 +120,26 @@ bool isLoaderShow=false;
                 add_category_layout(context);
 
               }),
-          body:RefreshIndicator(
-            color: CommonColor.THEME_COLOR,
-            onRefresh: () {
-              return refreshList();
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: .5,
-                      ),
-                      get_category_items_list_layout()
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_category_items_list_layout()
 
-                    ],
-                  ),
+                  ],
                 ),
-                // Visibility(
-                //     visible: expense_group.isEmpty && isApiCall  ? true : false,
-                //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-              ],
-            ),
+              ),
+              // Visibility(
+              //     visible: expense_group.isEmpty && isApiCall  ? true : false,
+              //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -387,110 +382,119 @@ bool isLoaderShow=false;
     );
   }
 
+
+
   Expanded get_category_items_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: _arrListNew.length,
-          controller: _scrollController,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: ()async{
+        child:RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: _arrListNew.length,
+            controller: _scrollController,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: ()async{
 
-                      print(_arrListNew[index]);
-                      setState(() {
-                        editedItem=_arrListNew[index];
-                        categoryName.text=_arrListNew[index]['Name'];
-                        parentCategory=_arrListNew[index]['Parent_Name']==null?"":_arrListNew[index]['Parent_Name'];
-                        parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
-                        seqNo.text=_arrListNew[index]['Seq_No'].toString();
-                      });
-                      add_category_layout(context);
-                    },
-                    child: Card(
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 10,top: 5,bottom: 5),
-                            width:60,
-                            height: 40,
-                            decoration:  BoxDecoration(
-                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
-                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                        print(_arrListNew[index]);
+                        setState(() {
+                          editedItem=_arrListNew[index];
+                          categoryName.text=_arrListNew[index]['Name'];
+                          parentCategory=_arrListNew[index]['Parent_Name']==null?"":_arrListNew[index]['Parent_Name'];
+                          parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
+                          seqNo.text=_arrListNew[index]['Seq_No'].toString();
+                        });
+                        add_category_layout(context);
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 10,top: 5,bottom: 5),
+                              width:60,
+                              height: 40,
+                              decoration:  BoxDecoration(
+                                  color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))
+                              ),
+                              alignment: Alignment.center,
+                              child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
                             ),
-                            alignment: Alignment.center,
-                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
-                                          child: Text(_arrListNew[index]['Name'],style: item_heading_textStyle,),
-                                        ),
-                                        _arrListNew[index]['Parent_Name']!=null? Container(
-                                          child: Text(_arrListNew[index]['Parent_Name'],style: item_regular_textStyle,),
-                                        ):Container(),
-                                      ],
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            // margin: const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 2),
+                                            child: Text(_arrListNew[index]['Name'],style: item_heading_textStyle,),
+                                          ),
+                                          _arrListNew[index]['Parent_Name']!=null? Container(
+                                            child: Text(_arrListNew[index]['Parent_Name'],style: item_regular_textStyle,),
+                                          ):Container(),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-                                            print("##############$response");
-                                            await callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
-                                          }
-                                        },
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                            }
+                                          },
 
-                                      )
-                                      // IconButton(
-                                      //   icon:  const FaIcon(
-                                      //     FontAwesomeIcons.trash,
-                                      //     size: 18,
-                                      //     color: Colors.redAccent,
-                                      //   ),
-                                      //   onPressed: ()async{
-                                      //     var val= await CommonWidget.deleteDialog(context);
-                                      //     print("##########33");
-                                      //     print(val);
-                                      //     // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
-                                      //   },
-                                      // )
-                                  )
-                                ],
-                              )
+                                        )
+                                        // IconButton(
+                                        //   icon:  const FaIcon(
+                                        //     FontAwesomeIcons.trash,
+                                        //     size: 18,
+                                        //     color: Colors.redAccent,
+                                        //   ),
+                                        //   onPressed: ()async{
+                                        //     var val= await CommonWidget.deleteDialog(context);
+                                        //     print("##########33");
+                                        //     print(val);
+                                        //     // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
+                                        //   },
+                                        // )
+                                    )
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 
