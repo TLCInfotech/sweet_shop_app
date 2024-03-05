@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -59,8 +60,15 @@ class _MenuActivityState extends State<MenuActivity>
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLocal();
   }
+String companyId="";
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
 
+    });
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -93,7 +101,7 @@ class _MenuActivityState extends State<MenuActivity>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            offset:   Offset(0, 5),
+            offset:   const Offset(0, 5),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.1),
           ),
@@ -112,7 +120,7 @@ class _MenuActivityState extends State<MenuActivity>
               child: Container(
                 color: Colors.transparent,
                 child: Padding(
-                  padding:   EdgeInsets.all(4.0),
+                  padding:   const EdgeInsets.all(4.0),
                   child: Icon(
                     Icons.clear,
                     size: parentHeight * .035,
@@ -132,7 +140,7 @@ class _MenuActivityState extends State<MenuActivity>
     return ListView(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
-      physics:   AlwaysScrollableScrollPhysics(),
+      physics:   const AlwaysScrollableScrollPhysics(),
       children: [
         openTransactionDropDown==false?getAddTransactionLayout(parentHeight, parentWidth):
         getTransactionSubLayout(parentHeight, parentWidth),
@@ -211,7 +219,7 @@ class _MenuActivityState extends State<MenuActivity>
                 ApplicationLocalizations.of(context)!.translate("master")!,
                 style:page_heading_textStyle,
               ),
-                Icon(
+                const Icon(
                 Icons.arrow_drop_down_sharp,
                 size: 30,
               ),
@@ -251,7 +259,7 @@ class _MenuActivityState extends State<MenuActivity>
                     ApplicationLocalizations.of(context)!.translate("master")!,
                     style: page_heading_textStyle,
                   ),
-                    Icon(
+                    const Icon(
                     Icons.arrow_drop_up,
                     size: 30,
                   ),
@@ -281,7 +289,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getFranchiseeSaleRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   FranchiseeSaleRate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const FranchiseeSaleRate()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -289,7 +297,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-              Padding(
+              const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -310,7 +318,7 @@ class _MenuActivityState extends State<MenuActivity>
     return  GestureDetector(
       onTap: (){
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   FranchiseePurchaseRate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const FranchiseePurchaseRate()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -318,7 +326,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -351,7 +359,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -371,7 +379,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   UsersList()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UsersList()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -379,7 +387,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -399,7 +407,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   UnitsActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UnitsActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -407,7 +415,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -427,7 +435,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getExpenseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ExpenseListingActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseListingActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -435,7 +443,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -455,7 +463,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getExpensceGroupLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ExpenseGroup()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseGroup()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -463,7 +471,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -483,7 +491,9 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getCompanyInfoLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   CompanyCreate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
+          companyId: companyId,
+        )));
         },
       onDoubleTap: (){},
       child: Padding(
@@ -491,7 +501,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -511,7 +521,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal()));
         },
       onDoubleTap: (){},
       child: Padding(
@@ -519,7 +529,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -539,7 +549,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   LedgerOpeningBal()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerOpeningBal()));
         },
       onDoubleTap: (){},
       child: Padding(
@@ -547,7 +557,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -567,7 +577,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getCategoryLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemCategoryActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemCategoryActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -575,7 +585,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -595,7 +605,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getItemLayout(double parentHeight, double parentWidth){
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemsActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemsActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -603,7 +613,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -645,7 +655,7 @@ class _MenuActivityState extends State<MenuActivity>
                 ApplicationLocalizations.of(context)!.translate("report")!,
                 style:page_heading_textStyle,
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_drop_down_sharp,
                 size: 30,
               ),
@@ -686,7 +696,7 @@ class _MenuActivityState extends State<MenuActivity>
                     ApplicationLocalizations.of(context)!.translate("report")!,
                     style: page_heading_textStyle,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.arrow_drop_up,
                     size: 30,
                   ),
@@ -710,7 +720,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getSellReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   SaleReportActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const SaleReportActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -718,7 +728,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -738,7 +748,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getPurchaseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   PurchaseReportActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const PurchaseReportActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -746,7 +756,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -766,7 +776,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getExpenseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ExpenseReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -775,7 +785,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -795,7 +805,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getPaymentReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   PaymentReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const PaymentReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -804,7 +814,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -824,7 +834,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getReciptReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   RecieptReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const RecieptReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -833,7 +843,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -853,7 +863,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   MisReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const MisReportActivity(
         )));
       },
       onDoubleTap: (){},
@@ -862,7 +872,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -906,7 +916,7 @@ class _MenuActivityState extends State<MenuActivity>
                 ApplicationLocalizations.of(context)!.translate("transaction")!,
                 style:page_heading_textStyle,
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_drop_down_sharp,
                 size: 30,
               ),
@@ -946,7 +956,7 @@ class _MenuActivityState extends State<MenuActivity>
                     ApplicationLocalizations.of(context)!.translate("transaction")!,
                     style: page_heading_textStyle,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.arrow_drop_up,
                     size: 30,
                   ),
@@ -980,7 +990,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1008,7 +1018,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1037,7 +1047,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1065,7 +1075,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1093,7 +1103,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1136,7 +1146,7 @@ class _MenuActivityState extends State<MenuActivity>
                 ApplicationLocalizations.of(context)!.translate("setting")!,
                 style:page_heading_textStyle,
               ),
-                Icon(
+                const Icon(
                 Icons.arrow_drop_down_sharp,
                 size: 30,
               ),
@@ -1176,7 +1186,7 @@ class _MenuActivityState extends State<MenuActivity>
                     ApplicationLocalizations.of(context)!.translate("setting")!,
                     style: page_heading_textStyle,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.arrow_drop_up,
                     size: 30,
                   ),
@@ -1195,7 +1205,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getChangePassword(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   ChangePasswordActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ChangePasswordActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1203,7 +1213,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
@@ -1223,7 +1233,7 @@ class _MenuActivityState extends State<MenuActivity>
   Widget getDomainLink(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   DomainLinkActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const DomainLinkActivity()));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1231,7 +1241,7 @@ class _MenuActivityState extends State<MenuActivity>
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),

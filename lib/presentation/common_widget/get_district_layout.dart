@@ -29,7 +29,6 @@ class GetDistrictLayout extends StatefulWidget{
   @override
   State<GetDistrictLayout> createState() => _GetDistrictLayoutState();
 }
-
 class _GetDistrictLayoutState extends State<GetDistrictLayout> with SingleTickerProviderStateMixin, DistrictDialogInterface {
 
   @override
@@ -130,6 +129,7 @@ class _GetDistrictLayoutState extends State<GetDistrictLayout> with SingleTicker
   selectDistrict(String id, String name) {
     // TODO: implement selectDistrict
     widget.callback(name,id);
+    print("frbfbjjfbjb  $name");
   }
 
 }

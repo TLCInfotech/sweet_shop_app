@@ -80,7 +80,6 @@ class _CountryDialogState extends State<CountryDialog>{
                       Visibility(
                           visible: state_list.isEmpty  ? true : false,
                           child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
                     ],
                   ),
 

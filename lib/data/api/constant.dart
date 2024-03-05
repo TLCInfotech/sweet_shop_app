@@ -17,5 +17,6 @@ class ApiConstants {
   String tax_category = "TaxCategory";
   String tax_type = "TaxType";
   String franchisee="Franchisee";
+  String company = "Company";
 
 }

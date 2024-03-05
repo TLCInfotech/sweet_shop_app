@@ -2,27 +2,38 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/company/put_company_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_country_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_district_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_state_value.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/company/post_compnay_request_model.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../dashboard/dashboard_activity.dart';
+import '../../../dialog/district_dialog.dart';
 
 class CompanyCreate extends StatefulWidget {
-  const CompanyCreate({super.key});
+  final companyId;
+  const CompanyCreate({super.key, this.companyId});
 
   @override
   State<CompanyCreate> createState() => _CompanyCreateState();
 }
 
-class _CompanyCreateState extends State<CompanyCreate> {
+class _CompanyCreateState extends State<CompanyCreate> with DistrictDialogInterface{
 
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
@@ -38,6 +49,12 @@ class _CompanyCreateState extends State<CompanyCreate> {
 
   final _contactFocus = FocusNode();
   final contactController = TextEditingController();
+
+  final _ifscFocus = FocusNode();
+  final ifscController = TextEditingController();
+
+  final _fssaiFocus = FocusNode();
+  final fssaiController = TextEditingController();
 
   final _extNameFocus = FocusNode();
   final extNameController = TextEditingController();
@@ -67,6 +84,8 @@ class _CompanyCreateState extends State<CompanyCreate> {
   String countryName = "";
   String countryId = "";
   String stateName = "";
+  String cityId = "";
+  String cityName = "";
   String stateId = "";
   Color currentColor = CommonColor.THEME_COLOR;
   final ScrollController _scrollController = ScrollController();
@@ -75,62 +94,122 @@ class _CompanyCreateState extends State<CompanyCreate> {
   File? adharFile;
   File? panFile;
   File? gstFile;
+bool isLoaderShow=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<int> picImageBytes=[];
+  List comapny = [];
+   @override
+  initState(){
+     super.initState();
+     getApiCall();
+   }
+   String companyId="";
+  List<dynamic> _arrList = [];
+   getApiCall()async{
+     companyId=await AppPreferences.getCompanyId();
+print("hjthghh  $companyId");
+     setState(() {
+     });
+     if(companyId!=""){
+       getCompany();
+
+       print("jfjfjbf ${companyId}");
+     }else{
+       print("emtyyyyy   $companyId");
+     }
+   }
+  setData()async{
+    if(_arrList[0]!=null){
+      File ?f=null;
+      if(_arrList[0]['Photo']!=null&&_arrList[0]['Photo']['data']!=null && _arrList[0]['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(_arrList[0]['Photo']['data']);
+      }
+        nameController.text=_arrList[0]['Name'] ?? nameController.text;
+      contactPersonController.text=_arrList[0]['Contact_Person'] ?? contactPersonController.text;
+   addressController.text=_arrList[0]['Address'] ?? addressController.text;
+   cityName=_arrList[0]['District'] ?? cityName;
+   pinCodeController.text=_arrList[0]['Pin_Code'] ?? pinCodeController.text;
+   stateId=_arrList[0]['State'] ?? stateId;
+   stateName=_arrList[0]['State'] ?? stateName;
+   countryId=_arrList[0]['Country'] ?? countryId;
+   countryName=_arrList[0]['Country'] ?? countryName;
+   contactController.text=_arrList[0]['Contact_No'] ?? contactController.text;
+   emailController.text=_arrList[0]['EMail'] ?? emailController.text;
+   addTwoController.text=_arrList[0]['Address2'] ?? addTwoController.text;
+   defaultBankController.text=_arrList[0]['Bank_Name'] ?? defaultBankController.text;
+   extNameController.text=_arrList[0]['Ext_Name'] ?? extNameController.text;
+   adharNoController.text=_arrList[0]['Adhar_No'] ?? adharNoController.text;
+   panNoController.text=_arrList[0]['PAN_No'] ?? panNoController.text;
+   gstNoController.text=_arrList[0]['GST_No'] ?? gstNoController.text;
+        cinNoController.text=_arrList[0]['CIN_No'] ?? cinNoController.text;
+        jurisdictionController.text=_arrList[0]['Jurisdiction'] ?? jurisdictionController.text;
+        invoiceController.text=_arrList[0]['Declaration'] ?? invoiceController.text;
+      fssaiController.text=_arrList[0]['FSSAI_No'] ?? fssaiController.text;
+      }
+    }
+
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        backgroundColor: CommonColor.BACKGROUND_COLOR,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              color: Colors.transparent,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                backgroundColor: Colors.white,
-                title:  Text(
-    ApplicationLocalizations.of(context)!.translate("company")! ,
-                  style: appbar_text_style,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                  child: getAllTextFormFieldLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            backgroundColor: CommonColor.BACKGROUND_COLOR,
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Colors.transparent,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+        ApplicationLocalizations.of(context)!.translate("company")! ,
+                      style: appbar_text_style,
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      child: getAllTextFormFieldLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -142,9 +221,11 @@ class _CompanyCreateState extends State<CompanyCreate> {
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
-        callbackFile: (file){
-          setState(() {
+        callbackFile: (file)async{
+          List<int> bytes = (await file?.readAsBytes()) as List<int>;
+          setState(()  {
             picImage=file;
+            picImageBytes=bytes;
           });
         }
     );
@@ -454,6 +535,31 @@ class _CompanyCreateState extends State<CompanyCreate> {
   }
 
   /* Widget for cin no  text from field layout */
+  Widget getFssciNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("cin_no")!;
+          }
+          return null;
+        },
+      controller: fssaiController,
+      focuscontroller: _fssaiFocus,
+      focusnext: _cinNoFocus,
+      title:ApplicationLocalizations.of(context)!.translate("cin_no")!,
+      callbackOnchage: (value) {
+        setState(() {
+          fssaiController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+
+  }
+
+  /* Widget for cin no  text from field layout */
   Widget getCINNoLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
       validation: (value) {
@@ -580,14 +686,91 @@ class _CompanyCreateState extends State<CompanyCreate> {
 
   /* Widget for distric text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
-    return GetDistrictLayout(
-        title: ApplicationLocalizations.of(context)!.translate("city")!,
-        callback: (name,id){
-          setState(() {
-            districtController.text=name!;
-          });
-        },
-        districtName: districtController.text);
+    return Container(
+      width: (SizeConfig.screenWidth) * .4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("select_city")!,
+            style: item_heading_textStyle,
+          ),
+          GestureDetector(
+            onTap: () {
+              showGeneralDialog(
+                  barrierColor: Colors.black.withOpacity(0.5),
+                  transitionBuilder: (context, a1, a2, widget) {
+                    final curvedValue =
+                        Curves.easeInOutBack.transform(a1.value) - 1.0;
+                    return Transform(
+                      transform: Matrix4.translationValues(
+                          0.0, curvedValue * 200, 0.0),
+                      child: Opacity(
+                        opacity: a1.value,
+                        child: DistrictDialog(
+                          mListener: this,
+                        ),
+                      ),
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  context: context,
+                  pageBuilder: (context, animation2, animation1) {
+                    throw Exception('No widget to return in pageBuilder');
+                  });
+            },
+            onDoubleTap: () {},
+            child: Padding(
+              padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+              child: Container(
+                height: (SizeConfig.screenHeight) * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width:((SizeConfig.screenWidth) * .4 )- 40,
+                        child: Text(
+                          cityName == "" ? ApplicationLocalizations.of(context)!.translate("select_city")!  : cityName,
+                          style: cityName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                        ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 20,
+                        color: /*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*/
+                        CommonColor.BLACK_COLOR,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /* Widget for state text from field layout */
@@ -597,6 +780,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
         callback: (name,id){
           setState(() {
             stateName=name!;
+            stateId=id!;
           });
         },
         stateName: stateName);
@@ -634,6 +818,7 @@ class _CompanyCreateState extends State<CompanyCreate> {
         callback: (name,id){
           setState(() {
             countryName=name!;
+            countryId=id!;
           });
         },
         countryName: countryName);
@@ -650,10 +835,24 @@ class _CompanyCreateState extends State<CompanyCreate> {
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
+            onTap: () async{
+              if(picImage!=null) {
+                Uint8List? bytes = await picImage?.readAsBytes();
+
+                setState(() {
+                  picImageBytes = (bytes)!.whereType<int>().toList();
+                });
+                print("IMGE1 : ${picImageBytes.length}");
+              }
+              if(companyId!=""){
+                callCompanyUpdate();
+              }else{
+                callCompany();
+              }
               if (mounted) {
                 setState(() {
                   disableColor = true;
+
                 });
               }
             },
@@ -685,4 +884,226 @@ class _CompanyCreateState extends State<CompanyCreate> {
     );
   }
 
+
+getCompany()async{
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().company}/$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+
+                  _arrList=data;
+                  setData();
+                }else{
+               //   isApiCall=true;
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+
+  callCompany() async {
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      CompanyRequestModel model = CompanyRequestModel(
+        name:nameController.text,
+        contactPerson: contactPersonController.text,
+        address: addressController.text,
+        address2: addTwoController.text,
+        district: cityName,
+        state: stateName,
+        pinCode:pinCodeController.text,
+        country: countryName,
+        bankName: defaultBankController.text ,
+        ifscCode: "",
+        contactNo: contactController.text,
+        email:  emailController.text,
+        panNo:  panNoController.text,
+        photo: picImageBytes,
+        extName: extNameController.text,
+        adharNo:  adharNoController.text,
+        gstImage: "",
+        gstNo: gstNoController.text,
+        fssaiNo: fssaiController.text,
+        declaration:   invoiceController.text,
+        jurisdiction:  jurisdictionController.text,
+        cinNo: cinNoController.text,
+        panCardImage: "",
+        adharCardImage: "",
+        creatorMachine: deviceId,
+        creator: creatorName
+      );
+      //  print("IMGE2 : ${(model.Photo)?.length}");
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().company;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+             AppPreferences.setCompanyId(data['ID'].toString());
+              print("jhjjhjhhjjh  ${data['ID']}");
+              isLoaderShow=false;
+            });
+            var snackBar = SnackBar(content: Text('company created succesfully'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+          });
+
+    });
+  }
+
+  callCompanyUpdate() async {
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PutCompanyRequestModel model = PutCompanyRequestModel(
+          name:nameController.text,
+          contactPerson: contactPersonController.text,
+          address: addressController.text,
+          address2: addTwoController.text,
+          district: cityName,
+          state: stateName,
+          pinCode:pinCodeController.text,
+          country: countryName,
+          bankName: defaultBankController.text ,
+          ifscCode: "",
+          contactNo: contactController.text,
+          email:  emailController.text,
+          panNo:  panNoController.text,
+          photo: picImageBytes,
+          extName: extNameController.text,
+          adharNo:  adharNoController.text,
+          gstImage: "",
+          gstNo: gstNoController.text,
+          fssaiNo: fssaiController.text,
+          declaration:   invoiceController.text,
+          jurisdiction:  jurisdictionController.text,
+          cinNo: cinNoController.text,
+          panCardImage: "",
+          adharCardImage: "",
+          creatorMachine: deviceId,
+          creator: creatorName
+      );
+
+
+      //  print("IMGE2 : ${(model.Photo)?.length}");
+
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().company}/$companyId"/*+"/"+_arrList[0]['ID'].toString()*/;
+      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            var snackBar = SnackBar(content: Text('company updated succesfully'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+          });
+
+    });
+  }
+
+  @override
+  selectDistrict(String id, String name) {
+    // TODO: implement selectDistrict
+setState(() {
+  cityName=name;
+  cityId=id;
+});
+  }
 }

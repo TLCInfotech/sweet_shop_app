@@ -36,6 +36,18 @@ class AppPreferences {
     print("uId   $uId");
     prefs.setString("uId", uId);
   }
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getCompanyId() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("cId") ?? "";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setCompanyId(String cId) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    print("cId   $cId");
+    prefs.setString("cId", cId);
+  }
 
   /*set getAppVersion value in SharedPreferences*/
   static Future<String> getSessionToken() async {

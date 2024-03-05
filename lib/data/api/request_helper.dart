@@ -590,7 +590,12 @@ class ApiRequestHelper {
           ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
           apiResponse =
               ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
-          onSuccess(apiResponse.msg!);
+         if(apiResponse.data!=null){
+           onSuccess(apiResponse.data!);
+         }else{
+           onSuccess(apiResponse.msg!);
+         }
+
 
           break;
       /*response of api status id Two when session has expired */
@@ -613,15 +618,15 @@ class ApiRequestHelper {
           onFailure(apiResponse.msg);
           //  CommonWidget.gotoLoginPage(buildContext);
           break;
-      /*    case 403:
-          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          case 404:
+            ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
           apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
+              ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
 
-          onFailure(apiResponse.message);
+          onFailure(apiResponse.msg);
           // AppPreferences.clearAppPreference();
           // sessionExpire("gdgdgd");
-          break;*/
+          break;
         case 403:
           AppPreferences.clearAppPreference();
           sessionExpire("jhhh");
