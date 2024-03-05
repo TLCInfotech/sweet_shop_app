@@ -12,9 +12,13 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
+import 'package:sweet_shop_app/data/domain/franchisee/post_franchisee_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 
+import '../../../../core/app_preferance.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
 import '../../../common_widget/get_country_layout.dart';
 import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
@@ -23,6 +27,9 @@ import '../../../common_widget/signleLine_TexformField.dart';
 
 
 class CreateFranchisee extends StatefulWidget {
+  final editItem;
+  const CreateFranchisee({super.key,this.editItem});
+
   @override
   _CreateFranchiseeState createState() => _CreateFranchiseeState();
 }
@@ -60,6 +67,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   TextEditingController franchiseeAadharNo = TextEditingController();
   TextEditingController franchiseeGSTNO = TextEditingController();
   TextEditingController franchiseePanNo = TextEditingController();
+  final _franchiseefssaiNo = FocusNode();
+  final franchiseefssaiNo = TextEditingController();
 
   TextEditingController franchiseeOutstandingLimit = TextEditingController();
   final _franchiseeOutstandingLimitFocus = FocusNode();
@@ -77,20 +86,18 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   final _bankNameFocus = FocusNode();
   final bankNameController = TextEditingController();
   bool disableColor = false;
-String countryName="";
-String stateName="";
 
+  String countryName="";
+  String countryId = "";
+  String stateId = "";
+
+  String stateName="";
+  String cityId = "";
   String selectedState = ""; // Initial dummy data
 
   String selectedCity = ""; // Initial dummy data
 
   String selectedCountry = "";
-
-  File? aadharCardFile;
-
-  File? panCardFile;
-
-  File? gstCardFile;
 
   List<String> LimitDataUnit = ["Cr","Dr"];
 
@@ -99,13 +106,75 @@ String stateName="";
   File? panFile ;
   File? gstFile ;
 
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<int> picImageBytes=[];
+
+  List<int> adharImageBytes=[];
+  List<int> panImageBytes=[];
+  List<int> gstImageBytes=[];
+
+  bool isLoaderShow=false;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    setData();
   }
+
+  setData()async{
+    if(widget.editItem!=null){
+      File ?f=null;
+      File ?a=null;
+      File ?p=null;
+      File ?g=null;
+      if(widget.editItem['Photo']!=null&&widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      }
+      if(widget.editItem['Adhar_Card_Image']!=null&&widget.editItem['Adhar_Card_Image']['data']!=null && widget.editItem['Adhar_Card_Image']['data'].length>10) {
+        a = await CommonWidget.convertBytesToFile(widget.editItem['Adhar_Card_Image']['data']);
+      }
+      if(widget.editItem['PAN_Card_Image']!=null&&widget.editItem['PAN_Card_Image']['data']!=null && widget.editItem['PAN_Card_Image']['data'].length>10) {
+        p = await CommonWidget.convertBytesToFile(widget.editItem['PAN_Card_Image']['data']);
+      }
+      if(widget.editItem['GST_Image']!=null&&widget.editItem['GST_Image']['data']!=null && widget.editItem['GST_Image']['data'].length>10) {
+        g = await CommonWidget.convertBytesToFile(widget.editItem['GST_Image']['data']);
+      }
+      setState(()  {
+        picImageBytes=(widget.editItem['Photo']!=null && widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10)?(widget.editItem['Photo']['data']).whereType<int>().toList():[];
+        picImage=f!=null?f:picImage;
+        adharImageBytes=(widget.editItem['Adhar_Card_Image']!=null&&widget.editItem['Adhar_Card_Image']['data']!=null && widget.editItem['Adhar_Card_Image']['data'].length>10)?(widget.editItem['Adhar_Card_Image']['data']).whereType<int>().toList():[];
+        adharFile=a!=null?a:adharFile;
+        panImageBytes=(widget.editItem['PAN_Card_Image']!=null&&widget.editItem['PAN_Card_Image']['data']!=null && widget.editItem['PAN_Card_Image']['data'].length>10)?(widget.editItem['PAN_Card_Image']['data']).whereType<int>().toList():[];
+        panFile=p!=null?p:panFile;
+        gstImageBytes=(widget.editItem['GST_Image']!=null&&widget.editItem['GST_Image']['data']!=null && widget.editItem['GST_Image']['data'].length>10)?(widget.editItem['GST_Image']['data']).whereType<int>().toList():[];
+        gstFile=g!=null?g:gstFile;
+        adharNoController.text=widget.editItem['Adhar_No']!=null?widget.editItem['Adhar_No'].toString():adharNoController.text;
+        panNoController.text=widget.editItem['PAN_No']!=null?widget.editItem['PAN_No'].toString():panNoController.text;
+        gstNoController.text=widget.editItem['GST_No']!=null?widget.editItem['GST_No'].toString():gstNoController.text;
+        bankNameController.text=widget.editItem['Bank_Name']!=null?widget.editItem['Bank_Name'].toString():bankNameController.text;
+        bankBranchController.text=widget.editItem['Bank_Branch']!=null?widget.editItem['Bank_Branch'].toString():bankBranchController.text;
+        IFSCCodeController.text=widget.editItem['IFSC_Code']!=null?widget.editItem['IFSC_Code'].toString():IFSCCodeController.text;
+        accountNoController.text=widget.editItem['Account_No']!=null?widget.editItem['Account_No'].toString():accountNoController.text;
+        aCHolderNameController.text=widget.editItem['AC_Holder_Name']!=null?widget.editItem['AC_Holder_Name'].toString(): aCHolderNameController.text;
+        franchiseeName.text=widget.editItem['Name']!=null?widget.editItem['Name'].toString(): franchiseeName.text;
+        franchiseeContactPerson.text=widget.editItem['Contact_Person']!=null?widget.editItem['Contact_Person'].toString(): franchiseeContactPerson.text;
+        franchiseeAddress.text=widget.editItem['Address']!=null?widget.editItem['Address'].toString(): franchiseeAddress.text;
+        selectedCity=widget.editItem['District']!=null?widget.editItem['District'].toString(): selectedCity;
+        stateName=widget.editItem['State']!=null?widget.editItem['State'].toString(): stateName;
+        pincode.text=widget.editItem['Pin_Code']!=null?widget.editItem['Pin_Code'].toString(): pincode.text;
+        countryName=widget.editItem['Country']!=null?widget.editItem['Country'].toString(): countryName;
+        franchiseeMobileNo.text=widget.editItem['Contact_No']!=null?widget.editItem['Contact_No'].toString(): franchiseeMobileNo.text;
+       franchiseeEmail.text=widget.editItem['EMail']!=null?widget.editItem['EMail'].toString(): franchiseeEmail.text;
+      franchiseefssaiNo.text=widget.editItem['FSSAI_No']!=null?widget.editItem['FSSAI_No'].toString(): franchiseefssaiNo.text;
+        franchiseeOutstandingLimit.text=widget.editItem['Outstanding_Limit']!=null?widget.editItem['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
+         selectedLimitUnit=widget.editItem['Outstanding_Limit_Type']!=null?widget.editItem['Outstanding_Limit_Type'].toString(): selectedLimitUnit;
+         franchiseePaymentDays.text=widget.editItem['Payment_Days']!=null?widget.editItem['Payment_Days'].toString(): franchiseePaymentDays.text;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +210,11 @@ String stateName="";
                 ),
 
                 backgroundColor: Colors.white,
-                title: Text(
+                title: widget.editItem!=null?
+                Text(
+                  ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("franchisee")!,
+                  style: appbar_text_style,
+                ) :Text(
                   ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
                   style: appbar_text_style,),
               ),
@@ -191,19 +264,17 @@ String stateName="";
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
               if (mounted) {
                 setState(() {
                   disableColor = true;
+                  if(widget.editItem!=null){
+                    String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString();
+                    callPostFranchisee(apiRequestHelper.callAPIsForPutAPI,apiUrl);
+                    // callUpdateFranchisee();
+                  }else{
+                    String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee;
+                    callPostFranchisee(apiRequestHelper.callAPIsForDynamicPI,apiUrl);
+                  }
                 });
               }
             },
@@ -221,7 +292,12 @@ String stateName="";
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child:  Text(
+                    child:widget.editItem!=null?
+                    Text(
+                      ApplicationLocalizations.of(context)!.translate("update")!,
+                      style: page_heading_textStyle,
+                    )
+                        :  Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
@@ -298,10 +374,13 @@ String stateName="";
                           setState(() {
                             adharNoController.text=value;
                           });
+
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file)async {
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             adharFile=file;
+                            adharImageBytes = (bytes)!.whereType<int>().toList();
                           });
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("adhar_number")!,
@@ -317,9 +396,11 @@ String stateName="";
                             panNoController.text=value;
                           });
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file) async{
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             panFile=file;
+                            panImageBytes = (bytes)!.whereType<int>().toList();
                           });
                         },
                         title:  ApplicationLocalizations.of(context)!.translate("pan_number")!,
@@ -335,9 +416,11 @@ String stateName="";
                             gstNoController.text=value;
                           });
                         },
-                        callbackFile: (File? file) {
+                        callbackFile: (File? file) async{
+                          Uint8List? bytes = await file?.readAsBytes();
                           setState(() {
                             gstFile=file;
+                            gstImageBytes = (bytes)!.whereType<int>().toList();
                           });
                         },
                         title:  ApplicationLocalizations.of(context)!.translate("gst_number")!,
@@ -346,6 +429,7 @@ String stateName="";
                         focuscontroller: _gstNoFocus,
                         focusnext: _franchiseePaymentDaysFocus,
                       ),
+                      getFSSAINoLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                       getPaymentDaysLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                     ],
                     ),
@@ -373,13 +457,9 @@ String stateName="";
                           getPincodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                          getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        ],
-                      ),
+                      getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+
+                      getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                       getMobileNoLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
 
@@ -524,6 +604,7 @@ String stateName="";
         callback: (name,id){
           setState(() {
             countryName=name!;
+            countryId=id!;
           });
         },
         countryName: countryName);
@@ -537,6 +618,7 @@ String stateName="";
         callback: (name,id){
           setState(() {
             stateName=name!;
+            stateId=id!;
           });
         },
         stateName: stateName);
@@ -548,9 +630,11 @@ String stateName="";
         height: parentHeight * .15,
         width: parentHeight * .15,
         picImage: picImage,
-        callbackFile: (file){
-          setState(() {
-            picImage=file;
+        callbackFile: (file)async{
+          List<int> bytes = (await file?.readAsBytes()) as List<int>;
+          setState(()  {
+          picImage=file;
+          picImageBytes=bytes;
           });
         }
     );
@@ -567,6 +651,33 @@ String stateName="";
         style: page_heading_textStyle,
       ),
     );
+  }
+
+
+
+  /* widget for franchisee fssai layout */
+  Widget getFSSAINoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      controller: franchiseefssaiNo,
+      focuscontroller: _franchiseefssaiNo,
+      focusnext: _franchiseePaymentDaysFocus,
+      title: ApplicationLocalizations.of(context)!.translate("fssai")!,
+      callbackOnchage: (value) {
+        setState(() {
+          franchiseefssaiNo.text = value;
+        });
+      },
+      textInput: TextInputType.streetAddress,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("payment_days")!;
+        }
+        return null;
+      },
+    );
+
   }
 
 
@@ -681,7 +792,7 @@ String stateName="";
       },
       textInput: TextInputType.emailAddress,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z \.\@]')),
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("email_address")!;
@@ -762,6 +873,7 @@ String stateName="";
         callback: (name,id){
           setState(() {
             selectedCity=name!;
+            cityId =id!;
           });
         },
         districtName: selectedCity);
@@ -774,7 +886,7 @@ String stateName="";
       controller: franchiseeContactPerson,
       focuscontroller: _franchiseeContactPersonFocus,
       focusnext: _franchiseeAddressFocus,
-      title: ApplicationLocalizations.of(context)!.translate("user_name")!,
+      title: ApplicationLocalizations.of(context)!.translate("contact_person")!,
       callbackOnchage: (value) {
         setState(() {
           franchiseeContactPerson.text = value;
@@ -805,9 +917,9 @@ String stateName="";
           franchiseeAddress.text = value;
         });
       },
-      textInput: TextInputType.text,
+      textInput: TextInputType.streetAddress,
       maxlines: 3,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z \,]')),
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("address")!;
@@ -841,10 +953,88 @@ String stateName="";
         return null;
       }),
     );
-
   }
 
+  callPostFranchisee(callmethod,apiUrl) async {
 
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostFranchiseeRequestModel model = PostFranchiseeRequestModel(
+            name: franchiseeName.text.trim(),
+            companyID: 27,
+            startDate: null,
+            contactPerson: franchiseeContactPerson.text.trim(),
+            address: franchiseeAddress.text.trim(),
+            district: selectedCity,
+            state:stateName,
+            pinCode: pincode.text.trim(),
+            country: countryName,
+            contactNo: franchiseeMobileNo.text.trim(),
+            eMail: franchiseeEmail.text.trim(),
+            pANNo: panNoController.text.trim(),
+            photo: picImageBytes,
+            extName: "cscddc",
+            adharNo: adharNoController.text.trim(),
+            gSTNo: gstNoController.text.trim(),
+            fSSAINo: franchiseefssaiNo.text.trim(),
+            outstandingLimit:franchiseeOutstandingLimit.text!=""?int.parse( franchiseeOutstandingLimit.text.trim()):null,
+            outstandingLimitType: selectedLimitUnit,
+            paymentDays:franchiseePaymentDays.text!=""?int.parse(franchiseePaymentDays.text.trim()):null,
+            bankName: bankNameController.text.trim(),
+            bankBranch: bankBranchController.text.trim(),
+            iFSCCode: IFSCCodeController.text.trim(),
+            aCHolderName:aCHolderNameController.text.trim() ,
+            accountNo: accountNoController.text.trim(),
+            declaration: "rrr",
+            cINNo: "145",
+            pANCardImage: panImageBytes,
+            adharCardImage: adharImageBytes,
+            gSTImage: gstImageBytes,
+      );
+      if(widget.editItem!=null){
+        model.modifier=creatorName;
+        model.modifierMachine=deviceId;
+      }
+      else{
+      model.creator= creatorName;
+      model.creatorMachine=deviceId;
+      }
+
+
+
+      callmethod(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 }
 

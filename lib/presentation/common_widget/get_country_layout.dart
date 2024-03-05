@@ -36,7 +36,6 @@ class _GetCountryLayoutState extends State<GetCountryLayout> with SingleTickerPr
     return    Padding(
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
       child: Container(
-        width: (SizeConfig.screenWidth) * .4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

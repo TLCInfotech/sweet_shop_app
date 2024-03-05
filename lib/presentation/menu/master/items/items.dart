@@ -33,43 +33,8 @@ class ItemsActivity extends StatefulWidget {
 class _ItemsActivityState extends State<ItemsActivity> {
 bool isLoaderShow=false;
 bool isApiCall = false;
-  List<dynamic> item_category=[
-    {
-      "name":"Category 1",
-      "id":123
-    },
-    {
-      "name":"Category 2",
-      "id":123
-    },
-    {
-      "name":"Category 3",
-      "id":123
-    },
-  ];
 
-  String? selectedCategory="choose";
-
-
-  List<dynamic> measuring_unit=[
-    {
-      "name":"kg",
-      "id":123
-    },
-    {
-      "name":"Ltr",
-      "id":123
-    },
-    {
-      "name":"Gram",
-      "id":123
-    },
-  ];
 ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-String parentCategory="";
-int parentCategoryId=0;
-
-var editedItem=null;
 
 int page = 1;
 bool isPagination = true;

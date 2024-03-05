@@ -16,5 +16,6 @@ class ApiConstants {
   String city = "City";
   String tax_category = "TaxCategory";
   String tax_type = "TaxType";
+  String franchisee="Franchisee";
 
 }

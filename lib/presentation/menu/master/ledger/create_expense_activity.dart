@@ -315,6 +315,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                           getRightLayout(parentHeight, parentWidth),
                         ],
                       ),
+                      getStateLayout(parentHeight, parentWidth),
+                      getCountryLayout(parentHeight, parentWidth),
                       getContactNoLayout(parentHeight, parentWidth),
                       getEmilLayout(parentHeight, parentWidth),
                       getOutstandingLimitLayout(parentHeight, parentWidth),
@@ -684,7 +686,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       child: Column(
         children: [
           getDistrictCityLayout(parentHeight, parentWidth),
-          getStateLayout(parentHeight, parentWidth),
+
         ],
       ),
     );
@@ -697,7 +699,6 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       child: Column(
         children: [
           getPinCodeLayout(parentHeight, parentWidth),
-          getCountryLayout(parentHeight, parentWidth),
         ],
       ),
     );
