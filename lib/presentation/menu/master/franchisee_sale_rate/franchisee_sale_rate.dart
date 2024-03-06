@@ -383,7 +383,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
           GetFranchiseeLayout(
               titleIndicator:false,
               title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
-              callback: (name){
+              callback: (name,id){
                 setState(() {
                   selectedCopyFranchiseeName=name!;
                 });

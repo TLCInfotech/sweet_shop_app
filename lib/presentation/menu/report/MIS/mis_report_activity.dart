@@ -191,7 +191,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
         title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             franchisee.text=name!;
           });

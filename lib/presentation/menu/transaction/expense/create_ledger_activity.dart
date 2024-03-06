@@ -279,7 +279,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     return  GetFranchiseeLayout(
         titleIndicator: false,
         title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
           });

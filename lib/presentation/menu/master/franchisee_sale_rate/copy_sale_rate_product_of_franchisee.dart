@@ -27,7 +27,7 @@ class _CopySaleRateProductOfFranchiseeState extends State<CopySaleRateProductOfF
   Widget build(BuildContext context) {
     return GetFranchiseeLayout(
         title:    ApplicationLocalizations.of(context)!.translate("franchisee")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedCopyFranchiseeName=name!;
           });

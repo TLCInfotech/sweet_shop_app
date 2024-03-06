@@ -375,7 +375,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     return  GetFranchiseeLayout(
         titleIndicator: false,
         title:ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
           });

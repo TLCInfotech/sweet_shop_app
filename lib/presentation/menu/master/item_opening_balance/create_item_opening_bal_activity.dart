@@ -386,7 +386,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
     return GetFranchiseeLayout(
       titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
           });

@@ -377,7 +377,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           GetFranchiseeLayout(
               titleIndicator:false,
           title:      ApplicationLocalizations.of(context)!.translate("franchisee")!,
-              callback: (name){
+              callback: (name,id){
             setState(() {
               selectedCopyFranchiseeName=name!;
             });

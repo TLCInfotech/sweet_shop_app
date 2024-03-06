@@ -189,7 +189,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
         title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
           });

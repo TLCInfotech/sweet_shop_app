@@ -39,6 +39,8 @@ class _UserCreateState extends State<UserCreate> {
   File? picImage;
   String countryName = "";
   String countryId = "";
+  String franchiseeName = "";
+  String franchiseeId = "";
   String stateName = "";
   String stateId = "";
   final ScrollController _scrollController = ScrollController();
@@ -222,12 +224,13 @@ class _UserCreateState extends State<UserCreate> {
   Widget getFranchiseeLayout(double parentHeight, double parentWidth) {
     return GetFranchiseeLayout(
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
-            afranchiseController.text=name!;
+            franchiseeName=name!;
+            franchiseeId=id!;
           });
         },
-        franchiseeName: afranchiseController.text);
+        franchiseeName: franchiseeName);
   }
 
 
@@ -419,13 +422,15 @@ class _UserCreateState extends State<UserCreate> {
     String workingDay=workingdaysController.text.trim();
     String userName=userController.text.trim();
     String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
       });
       PostUserRequestModel model = PostUserRequestModel(
         uid: userName,
-        ledgerID: "",
+        Company_ID: companyId,
+        ledgerID: franchiseeId,
         workingDays: workingDay,
         active: checkActiveValue,
         resetPassword: checkPasswordValue,

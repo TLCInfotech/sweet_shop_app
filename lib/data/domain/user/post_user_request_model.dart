@@ -1,5 +1,6 @@
 class PostUserRequestModel {
   String uid;
+  String Company_ID;
   String? ledgerID;
   String? workingDays;
   bool? active;
@@ -9,6 +10,7 @@ class PostUserRequestModel {
 
   PostUserRequestModel({
     required this.uid,
+    required this.Company_ID,
     this.ledgerID,
     this.workingDays,
     this.active,
@@ -20,6 +22,7 @@ class PostUserRequestModel {
   Map<String, dynamic> toJson() {
     return {
       'UID': uid,
+      'Company_ID': Company_ID,
       'Ledger_ID': ledgerID,
       'Working_Days': workingDays,
       'Active': active,

@@ -403,7 +403,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     return  GetFranchiseeLayout(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name){
+        callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
           });

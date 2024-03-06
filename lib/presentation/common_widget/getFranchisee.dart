@@ -19,7 +19,7 @@ import '../dialog/franchisee_dialog.dart';
 class GetFranchiseeLayout extends StatefulWidget{
    final title;
   final franchiseeName;
-  final Function(String?) callback;
+  final Function(String?,String?) callback;
   final titleIndicator;
 
   GetFranchiseeLayout({required this.title, required this.callback, required this.franchiseeName,   this.titleIndicator});
@@ -118,6 +118,6 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
   @override
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
-    widget.callback(name);
+    widget.callback(name,id);
   }
 }
