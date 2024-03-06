@@ -6,17 +6,19 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
-
+import '../../../../core/app_preferance.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/user/post_user_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class UserCreate extends StatefulWidget {
-  const UserCreate({super.key});
+  const UserCreate({super.key, required this.mListener});
 
-  // final UserCreateInterface mListener;
+   final UserCreateInterface mListener;
 
   @override
   State<UserCreate> createState() => _UserCreateState();
@@ -41,70 +43,78 @@ class _UserCreateState extends State<UserCreate> {
   String stateId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  bool isLoaderShow=false;
+  bool isApiCall=false;
   final _formkey=GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        backgroundColor: CommonColor.BACKGROUND_COLOR,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("user_new")!,
-                  style: appbar_text_style,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                  child: Form(
-                    key: _formkey,
-                    child: getAllTextFormFieldLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                  )),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            backgroundColor: CommonColor.BACKGROUND_COLOR,
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Colors.transparent,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("user_new")!,
+                      style: appbar_text_style,
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      child: Form(
+                        key: _formkey,
+                        child: getAllTextFormFieldLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      )),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
+
  Widget getImageLayout(double parentHeight, double parentWidth) {
     return  GetSingleImage(
         height: parentHeight * .25,
@@ -373,8 +383,8 @@ class _UserCreateState extends State<UserCreate> {
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-
-              _formkey.currentState?.validate();
+              callPostItem();
+             // _formkey.currentState?.validate();
             },
             onDoubleTap: () {},
             child: Container(
@@ -404,7 +414,100 @@ class _UserCreateState extends State<UserCreate> {
     );
   }
 
+
+  callPostItem() async {
+    String workingDay=workingdaysController.text.trim();
+    String userName=userController.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostUserRequestModel model = PostUserRequestModel(
+        uid: userName,
+        ledgerID: "",
+        workingDays: workingDay,
+        active: checkActiveValue,
+        resetPassword: checkPasswordValue,
+        creator: creatorName,
+        creatorMachine: deviceId
+      );
+
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().users;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+          });
+
+    });
+  }
+
+/*  callUpdateItem() async {
+
+    String creatorName = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        PutUserRequestModel model = PutUserRequestModel(
+            Modifier: creatorName,
+            Modifier_Machine: deviceId,
+        );
+
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().users+"/"+widget.editItem['ID'].toString();
+
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(value)async{
+              print("  Put Call :   $value ");
+              var snackBar = SnackBar(content: Text('Item  Updated Successfully'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+              Navigator.pop(context);
+
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }*/
+
 }
 
-// abstract class UserCreateInterface {
-// }
+abstract class UserCreateInterface {
+}

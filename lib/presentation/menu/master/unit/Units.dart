@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
+import '../../../../core/common.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/measuring_unit/delete_measuring_unit_request_model.dart';
+import '../../../../data/domain/measuring_unit/post_measuring_unit_request_model.dart';
+import '../../../../data/domain/measuring_unit/put_measuring_unit_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 
@@ -21,67 +32,89 @@ class UnitsActivity extends StatefulWidget {
 class _UnitsActivityState extends State<UnitsActivity> {
   final _formkey=GlobalKey<FormState>();
   TextEditingController unitName = TextEditingController();
-
+  int page = 1;
+  bool isPagination = true;
+  List<dynamic> measuring_unit = [];
+  //List measuringUnit = [];
+  ScrollController _scrollController = new ScrollController();
+  bool isLoaderShow=false;
+  bool isApiCall=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  var editedItem=null;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMeasuringUnit();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Colors.white.withOpacity(0.95),
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          // backgroundColor: Colors.white.withOpacity(0.95),
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title: Text(
+                    ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
+                    style: appbar_text_style,),
+                ),
               ),
-
-              backgroundColor: Colors.white,
-              title: Text(
-                ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
-                style: appbar_text_style,),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                add_unit_layout(context);
+              }),
+          body: Container(
+            margin: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                get_unit_list_layout()
+              ],
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFBE404),
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            add_unit_layout(context);
-          }),
-      body: Container(
-        margin: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            get_unit_list_layout()
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
+  String mesuringText="";
+  
   Expanded get_unit_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
+          itemCount: measuring_unit.length,
           itemBuilder: (BuildContext context, int index) {
+            print("hhjjhhjjh ${ measuring_unit[index]}");
             return  AnimationConfiguration.staggeredList(
               position: index,
               duration:
@@ -89,44 +122,58 @@ class _UnitsActivityState extends State<UnitsActivity> {
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          width:60,
-                          height: 40,
-                          decoration:  BoxDecoration(
-                              color: index %2==0?Color(0xFFEC9A32):Color(0xFF7BA33C),
-                              borderRadius: BorderRadius.all(Radius.circular(10))
-                          ),
-                          alignment: Alignment.center,
-                          child: Text("${(index+1).toString().padLeft(2, '0')}",style: TextStyle(),),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin:  EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
-                                  child: Text(ApplicationLocalizations.of(context)!.translate("measuring_unit")!,style: item_heading_textStyle,),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                  delay: const Duration(microseconds: 1500),
+                  child: GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        editedItem=measuring_unit[index];
+                        unitName.text=measuring_unit[index];
+                        mesuringText=measuring_unit[index];
+                      });
 
-                        )
-                      ],
+                      add_unit_layout(context);
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            width:60,
+                            height: 40,
+                            decoration:  BoxDecoration(
+                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                            ),
+                            alignment: Alignment.center,
+                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin:  const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                    child: measuring_unit[index]!=null? Text(
+                                      measuring_unit[index],style: item_heading_textStyle,):Container(),
+                                  ),
+
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: DeleteDialogLayout(
+                                    callback: (response ) async{
+                                      if(response=="yes"){
+                                        print("##############$response");
+                                        await callDeleteMeasuringUnit(measuring_unit[index],index);
+
+                                      }
+                                    },
+                                  ))
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -134,7 +181,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
+            return const SizedBox(
               height: 5,
             );
           },
@@ -163,14 +210,14 @@ class _UnitsActivityState extends State<UnitsActivity> {
                       padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
                       child: Container(
                         height: SizeConfig.screenHeight*0.25,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color(0xFFfffff5),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),
                           ),
                         ),
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
                             Container(
@@ -215,7 +262,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -258,15 +305,20 @@ class _UnitsActivityState extends State<UnitsActivity> {
           ),
           GestureDetector(
             onTap: () {
-
-              Navigator.pop(context);
+              if(editedItem!=null){
+                print("jgbgbgbggn");
+                updateMeasuringUnit();
+              }else{
+                postMeasuringUnit();
+              }
+            //  Navigator.pop(context);
 
             },
             onDoubleTap: () {},
             child: Container(
               height: parentHeight * .05,
               width: parentWidth*.45,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: CommonColor.THEME_COLOR,
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(5),
@@ -288,4 +340,221 @@ class _UnitsActivityState extends State<UnitsActivity> {
       ),
     );
   }
+
+
+
+
+  getMeasuringUnit()async{
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().measuring_unit}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  print("responseeee   $data");
+                  measuring_unit=data;
+                  print("hjfjf  ${measuring_unit.length}");
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  postMeasuringUnit() async {
+    String unitMName=unitName.text.trim();
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostMeasuringUnitRequestModel model = PostMeasuringUnitRequestModel(
+        code: unitMName,
+          creatorMachine: deviceId,
+          creator: creatorName
+      );
+      //  print("IMGE2 : ${(model.Photo)?.length}");
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().measuring_unit;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+        
+              isLoaderShow=false;
+            });
+            getMeasuringUnit();
+            Navigator.pop(context);
+            }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+          });
+
+    });
+  }
+
+  updateMeasuringUnit() async {
+    String creatorName = await AppPreferences.getUId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PutMeasuringUnitRequestModel model = PutMeasuringUnitRequestModel(
+          code: mesuringText,
+          newCode: unitName.text,
+          modifier:creatorName ,
+          modifierMachine: deviceId
+      );
+      //  print("IMGE2 : ${(model.Photo)?.length}");
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().measuring_unit}";
+      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            getMeasuringUnit();
+            var snackBar = const SnackBar(content: Text('measuring unit updated succesfully'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+             Navigator.pop(context);
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+          });
+
+    });
+  }
+
+
+  callDeleteMeasuringUnit(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        DeleteMeasuringUnitRequestModel model = DeleteMeasuringUnitRequestModel(
+            code:removeId,
+            modifier: uid,
+            modifierMachine: deviceId
+        );
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().measuring_unit;
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                measuring_unit.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
 }

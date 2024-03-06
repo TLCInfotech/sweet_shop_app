@@ -1061,10 +1061,7 @@ getCompany()async{
           creatorMachine: deviceId,
           creator: creatorName
       );
-
-
       //  print("IMGE2 : ${(model.Photo)?.length}");
-
       String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().company}/$companyId"/*+"/"+_arrList[0]['ID'].toString()*/;
       apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
