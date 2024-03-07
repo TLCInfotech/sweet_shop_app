@@ -61,6 +61,18 @@ class AppPreferences {
     prefs.setString("sessionToken", sessionToken);
   }
 
+  /*set getAppVersion value in SharedPreferences*/
+  static Future<String> getDomainLink() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("domainLink") ?? "";
+  }
+
+/*get setUserEmail value form SharedPreferences*/
+  static setDomainLink(String domainLink) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("domainLink", domainLink);
+  }
+
 
 
 

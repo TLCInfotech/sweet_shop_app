@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -9,14 +10,17 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/user/post_user_request_model.dart';
+import '../../../../data/domain/user/put_user_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class UserCreate extends StatefulWidget {
-  const UserCreate({super.key, required this.mListener});
+ final editUser;
+  const UserCreate({super.key, required this.mListener, this.editUser});
 
    final UserCreateInterface mListener;
 
@@ -30,6 +34,9 @@ class _UserCreateState extends State<UserCreate> {
 
   final _workingdaysFocus = FocusNode();
   final workingdaysController = TextEditingController();
+
+  final _passwordFocus = FocusNode();
+  final passwordController = TextEditingController();
 
   final _franchiseFocus = FocusNode();
   final afranchiseController = TextEditingController();
@@ -49,7 +56,36 @@ class _UserCreateState extends State<UserCreate> {
   bool isLoaderShow=false;
   bool isApiCall=false;
   final _formkey=GlobalKey<FormState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setData();
+    localData();
+  }
+  String companyIds="";
+  localData()async{
+    companyIds = await AppPreferences.getCompanyId();
+    print("newwww  $companyIds");
+    setState(() {
 
+    });
+  }
+
+String oldUid="";
+  setData()async{
+    if(widget.editUser!=null){
+      userController.text=widget.editUser["UID"];
+      oldUid=widget.editUser["UID"];
+      print("jhjfhjf  ${widget.editUser["Working_Days"].toString()}  $oldUid");
+      workingdaysController.text=widget.editUser["Working_Days"].toString();
+      franchiseeId=widget.editUser["Ledger_ID"].toString();
+      franchiseeName=widget.editUser["LedgerName"];
+      checkActiveValue=widget.editUser["Active"];
+      checkPasswordValue=widget.editUser["Reset_Password"];
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -156,9 +192,11 @@ class _UserCreateState extends State<UserCreate> {
                   getImageLayout(parentHeight, parentWidth),
                   getNameLayout(parentHeight, parentWidth),
                   getWorkingDaysLayout(parentHeight, parentWidth),
+                 // widget.editUser!=null? getPasswordLayout(parentHeight, parentWidth):
+                 //  Container(),
                   getFranchiseeLayout(parentHeight, parentWidth),
-                  getResetPswwordLayout(parentHeight, parentWidth),
-                  getActiveLayout(parentHeight, parentWidth),
+                  widget.editUser==null?Container():  getResetPswwordLayout(parentHeight, parentWidth),
+                  widget.editUser==null?Container():getActiveLayout(parentHeight, parentWidth),
                 ],
               ),
             ),
@@ -204,11 +242,36 @@ class _UserCreateState extends State<UserCreate> {
         },
       controller: workingdaysController,
       focuscontroller: _workingdaysFocus,
-      focusnext: _franchiseFocus,
+      focusnext: _passwordFocus,
       title: ApplicationLocalizations.of(context)!.translate("working_days")!,
       callbackOnchage: (value) {
         setState(() {
           workingdaysController.text = value;
+        });
+      },
+      textInput: TextInputType.number,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+    );
+
+  }
+
+  /* Widget for password  text from field layout */
+  Widget getPasswordLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+          if (value!.isEmpty) {
+            return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("password")!;
+          }
+          return null;
+        },
+      controller: passwordController,
+      focuscontroller: _passwordFocus,
+      focusnext: _passwordFocus,
+      title: ApplicationLocalizations.of(context)!.translate("password")!,
+      callbackOnchage: (value) {
+        setState(() {
+          passwordController.text = value;
         });
       },
       textInput: TextInputType.number,
@@ -245,15 +308,17 @@ class _UserCreateState extends State<UserCreate> {
           GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              if (mounted) {
-                setState(() {
-                  if (!checkPasswordValue) {
-                    checkPasswordValue = true;
-                  } else {
-                    checkPasswordValue = false;
-                  }
-                });
-              }
+           if( widget.editUser!=null){
+             setState(() {
+               if (!checkPasswordValue) {
+                 checkPasswordValue = true;
+               } else {
+                 checkPasswordValue = false;
+               }
+             });
+           } else{
+
+           }
             },
             child: Padding(
               padding: EdgeInsets.only(top: parentHeight * .01),
@@ -315,15 +380,20 @@ class _UserCreateState extends State<UserCreate> {
           GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              if (mounted) {
-                setState(() {
-                  if (!checkActiveValue) {
-                    checkActiveValue = true;
-                  } else {
-                    checkActiveValue = false;
-                  }
-                });
-              }
+    if( widget.editUser!=null){
+      setState(() {
+        if (!checkActiveValue) {
+          checkActiveValue = true;
+        } else {
+          checkActiveValue = false;
+        }
+      });
+    }else{
+
+    }
+
+
+
             },
             child: Padding(
               padding: EdgeInsets.only(top: parentHeight * .01),
@@ -386,7 +456,11 @@ class _UserCreateState extends State<UserCreate> {
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              callPostItem();
+              if(widget.editUser!=null){
+                callUpdateItem();
+              }else{
+                callPostItem();
+              }
              // _formkey.currentState?.validate();
             },
             onDoubleTap: () {},
@@ -404,7 +478,7 @@ class _UserCreateState extends State<UserCreate> {
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
                     child:  Text(
-                      ApplicationLocalizations.of(context)!.translate("save")!,
+                     widget.editUser!=null?ApplicationLocalizations.of(context)!.translate("update")!: ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),
@@ -432,8 +506,8 @@ class _UserCreateState extends State<UserCreate> {
         Company_ID: companyId,
         ledgerID: franchiseeId,
         workingDays: workingDay,
-        active: checkActiveValue,
-        resetPassword: checkPasswordValue,
+        active: true,
+        resetPassword: true,
         creator: creatorName,
         creatorMachine: deviceId
       );
@@ -445,8 +519,7 @@ class _UserCreateState extends State<UserCreate> {
             setState(() {
               isLoaderShow=false;
             });
-            Navigator.pop(context);
-
+            widget.mListener.createUser();
           }, onFailure: (error) {
             setState(() {
               isLoaderShow=false;
@@ -469,27 +542,34 @@ class _UserCreateState extends State<UserCreate> {
     });
   }
 
-/*  callUpdateItem() async {
-
+  callUpdateItem() async {
+    String workingDay=workingdaysController.text.trim();
+    String userName=userController.text.trim();
     String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutUserRequestModel model = PutUserRequestModel(
-            Modifier: creatorName,
-            Modifier_Machine: deviceId,
+          uid: oldUid,
+          uidNew: userName,
+          Company_ID: companyIds,
+          ledgerID: franchiseeId,
+          workingDays: workingDay,
+          active: checkActiveValue,
+          resetPassword: checkPasswordValue,
+            creator: creatorName,
+            creatorMachine: deviceId,
         );
-
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().users+"/"+widget.editItem['ID'].toString();
-
+        print("jfhjfhjjhrjhr  $companyId ${model.toJson()}");
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{
               print("  Put Call :   $value ");
-              var snackBar = SnackBar(content: Text('Item  Updated Successfully'));
+              var snackBar = SnackBar(content: Text('User  Updated Successfully'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-              Navigator.pop(context);
+              widget.mListener.updateUser();
 
             }, onFailure: (error) {
               CommonWidget.errorDialog(context, error.toString());
@@ -498,7 +578,6 @@ class _UserCreateState extends State<UserCreate> {
 
             },sessionExpire: (e) {
               CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
             });
       });
     }else{
@@ -510,9 +589,11 @@ class _UserCreateState extends State<UserCreate> {
       CommonWidget.noInternetDialogNew(context);
     }
 
-  }*/
+  }
 
 }
 
 abstract class UserCreateInterface {
+  createUser();
+  updateUser();
 }

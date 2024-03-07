@@ -237,7 +237,9 @@
   "error_message":"Error Occured",
   "internet_msg": "Check your internet connection!",
   "delete_msg": "Do you want to delete record?",
-  "fssai":"FSSAI No."
+  "fssai":"FSSAI No.",
+  "company_id":"Company Id",
+  "password":"Password"
 
 }
 

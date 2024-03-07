@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -8,6 +9,8 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../core/localss/application_localizations.dart';
+import '../../common_widget/signleLine_TexformField.dart';
+import '../../dashboard/dashboard_activity.dart';
 
 class DomainLinkActivity extends StatefulWidget {
   const DomainLinkActivity({super.key});
@@ -21,7 +24,9 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
 
 
   final _domainLinkFocus = FocusNode();
+  final _companyIdFocus = FocusNode();
   final domainLinkController = TextEditingController();
+  final companyId = TextEditingController();
 
   bool disableColor = false;
 
@@ -29,8 +34,15 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    localData();
   }
+ localData()async{
+    companyId.text=await AppPreferences.getCompanyId();
+    domainLinkController.text=await AppPreferences.getDomainLink();
+    setState(() {
 
+    });
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +131,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                 ),
                 child: Column(children: [
                   getDomainLinkLayout(parentHeight, parentWidth),
+                  getCompanyId(parentHeight, parentWidth),
                 ],
                 ),
               ),
@@ -178,7 +191,16 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: domainLinkController,
+                    validator: (value){
+                      setState(() {
+                        domainLinkController.text=value!;
+                    print("hdghghdgh  $value");
+
+                      });
+                    },
                     onEditingComplete: () {
+
+
                       _domainLinkFocus.unfocus();
                     },
                     style: text_field_textStyle,
@@ -193,7 +215,29 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
   }
 
 
-
+Widget getCompanyId(double parentHeight, double parentWidth){
+    return    SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("company_id")!;
+        }
+        return null;
+      },
+      readOnly: true,
+      controller: companyId,
+      focuscontroller: _companyIdFocus,
+      focusnext: _companyIdFocus,
+      title:     ApplicationLocalizations.of(context)!.translate("company_id")!,
+      callbackOnchage: (value) {
+        setState(() {
+          companyId.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+}
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
@@ -210,6 +254,10 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
               if (mounted) {
                 setState(() {
                   disableColor = true;
+                  AppPreferences.setDomainLink(domainLinkController.text);
+                  var snackBar = SnackBar(content: Text('domain link save succesfully'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
                 });
               }
             },

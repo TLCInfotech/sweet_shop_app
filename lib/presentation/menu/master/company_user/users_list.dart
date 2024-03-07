@@ -1,21 +1,20 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
-
 import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
-import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-
+import '../../../../data/domain/user/delete_user_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 
 class UsersList extends StatefulWidget {
   const UsersList({super.key});
@@ -24,75 +23,95 @@ class UsersList extends StatefulWidget {
   State<UsersList> createState() => _UsersListState();
 }
 
-class _UsersListState extends State<UsersList>with UserCreateInterface {
+class _UsersListState extends State<UsersList> with UserCreateInterface {
   int page = 1;
   bool isPagination = true;
-  List<dynamic> measuring_unit = [];
-  //List measuringUnit = [];
-  ScrollController _scrollController = new ScrollController();
-  bool isLoaderShow=false;
-  bool isApiCall=false;
+  List<dynamic> userList = [];
+  final ScrollController _scrollController = new ScrollController();
+  bool isLoaderShow = false;
+  bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-  var editedItem=null;
+  var editedItem = null;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetUser(page);
   }
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetUser(page);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
         Scaffold(
-          backgroundColor: Color(0xFFfffff5),
+          backgroundColor: const Color(0xFFfffff5),
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: SafeArea(
-              child:  Card(
+              child: Card(
                 elevation: 3,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+                    borderRadius: BorderRadius.circular(25)),
                 color: Colors.transparent,
                 // color: Colors.red,
-                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: AppBar(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  ),
-
+                      borderRadius: BorderRadius.circular(25)),
                   backgroundColor: Colors.white,
                   title: Text(
                     ApplicationLocalizations.of(context)!.translate("user")!,
-                    style: appbar_text_style,),
+                    style: appbar_text_style,
+                  ),
                 ),
               ),
             ),
           ),
           floatingActionButton: FloatingActionButton(
-              backgroundColor: Color(0xFFFBE404),
-              child: Icon(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
                 Icons.add,
                 size: 30,
                 color: Colors.black87,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserCreate(
-                  mListener: this,
-                )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserCreate(
+                              mListener: this,
+                            )));
               }),
           body: Container(
-            margin: EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            margin: const EdgeInsets.all(15),
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-
-                SizedBox(
-                  height: 10,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    get_users_list_layout()
+                  ],
                 ),
-                get_users_list_layout()
-
+                Visibility(
+                    visible: userList.isEmpty && isApiCall ? true : false,
+                    child: getNoData(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
               ],
             ),
           ),
@@ -102,19 +121,56 @@ class _UsersListState extends State<UsersList>with UserCreateInterface {
     );
   }
 
+  /*widget for no data*/
+  Widget getNoData(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
   Expanded get_users_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
+        child: RefreshIndicator(
+      color: CommonColor.THEME_COLOR,
+      onRefresh: () {
+        return refreshList();
+      },
+      child: ListView.separated(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: userList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return AnimationConfiguration.staggeredList(
+            position: index,
+            duration: const Duration(milliseconds: 500),
+            child: SlideAnimation(
+              verticalOffset: -44.0,
+              child: FadeInAnimation(
+                delay: const Duration(microseconds: 1500),
+                child: GestureDetector(
+                  onTap: () {
+                    editedItem = userList[index];
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserCreate(
+                                  editUser: userList[index],
+                                  mListener: this,
+                                )));
+                  },
                   child: Card(
                     child: Row(
                       children: [
@@ -122,136 +178,125 @@ class _UsersListState extends State<UsersList>with UserCreateInterface {
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
                               radius: 35,
-                              backgroundColor: (index)%2==0?Colors.green:Colors.blueAccent,
-                              child:  FaIcon(
+                              backgroundColor: (index) % 2 == 0
+                                  ? Colors.green
+                                  : Colors.blueAccent,
+                              child: const FaIcon(
                                 FontAwesomeIcons.user,
                                 color: Colors.white,
-                              )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                          ),
+                              )),
                         ),
                         Expanded(
                             child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Mr. User Name ",style: item_heading_textStyle,),
-                                      SizedBox(height: 5,),
-                                      Text("Mr Franchisee Name",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                      Text("Working Days: 10 Days",overflow: TextOverflow.clip,style: item_regular_textStyle,)
-
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
-
-                        )
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 40, bottom: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${userList[index]['UID']}",
+                                      style: item_heading_textStyle),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                      "Working Days: ${userList[index]['Working_Days']}",
+                                      overflow: TextOverflow.clip,
+                                      style: item_regular_textStyle)
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                                top: 0,
+                                right: 0,
+                                child: DeleteDialogLayout(
+                                  callback: (response) async {
+                                    if (response == "yes") {
+                                      print("##############$response");
+                                      await callDeleteUser(
+                                          userList[index]['UID'].toString(),
+                                          index);
+                                    }
+                                  },
+                                ))
+                          ],
+                        ))
                       ],
                     ),
                   ),
                 ),
               ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 5,
-            );
-          },
-        ));
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(
+            height: 5,
+          );
+        },
+      ),
+    ));
   }
 
-/*
-  callGetItem(int page) async {
+  callGetUser(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if (netStatus == InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().users}?pageNumber=$page&pageSize=12";
+        TokenRequestModel model =
+            TokenRequestModel(token: sessionToken, page: page.toString());
+        String apiUrl =
+            "${ApiConstants().baseUrl}${ApiConstants().users}?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              setState(() {
-
-                isLoaderShow=false;
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  _arrList=data;
-                  if (_arrList.length < 10) {
-                    if (mounted) {
-                      setState(() {
-                        isPagination = false;
-                      });
-                    }
-                  }
-                  if (page == 1) {
-                    setDataToList(_arrList);
-                  } else {
-                    setMoreDataToList(_arrList);
-                  }
-                }else{
-                  isApiCall=true;
+            onSuccess: (data) {
+          setState(() {
+            isLoaderShow = false;
+            if (data != null) {
+              List<dynamic> _arrList = [];
+              userList.clear();
+              _arrList = data;
+              if (_arrList.length < 10) {
+                if (mounted) {
+                  setState(() {
+                    isPagination = false;
+                  });
                 }
-
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              print("Here2=> $e");
-
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
               }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+              if (page == 1) {
+                setDataToList(_arrList);
+              } else {
+                setMoreDataToList(_arrList);
+              }
+            } else {
+              isApiCall = true;
+            }
+          });
+          print("  LedgerLedger  $data ");
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          print("Here2=> $e");
+          setState(() {
+            isLoaderShow = false;
+          });
+          var val = CommonWidget.errorDialog(context, e);
+          if (val == "yes") {
+            print("Retry");
+          }
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+        });
       });
-    }
-    else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -262,10 +307,10 @@ class _UsersListState extends State<UsersList>with UserCreateInterface {
   }
 
   setDataToList(List<dynamic> _list) {
-    if (itemList.isNotEmpty) itemList.clear();
+    if (userList.isNotEmpty) userList.clear();
     if (mounted) {
       setState(() {
-        itemList.addAll(_list);
+        userList.addAll(_list);
       });
     }
   }
@@ -273,53 +318,47 @@ class _UsersListState extends State<UsersList>with UserCreateInterface {
   setMoreDataToList(List<dynamic> _list) {
     if (mounted) {
       setState(() {
-        itemList.addAll(_list);
+        userList.addAll(_list);
       });
     }
   }
 
-  callDeleteItem(String removeId,int index) async {
+  callDeleteUser(String removeId, int index) async {
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if (netStatus == InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        DeleteIRequestModel model = DeleteIRequestModel(
-            id:removeId,
-            modifier: uid,
-            modifierMachine: deviceId
-        );
+        DeleteIUserRequestModel model = DeleteIUserRequestModel(
+            id: removeId, modifier: uid, modifierMachine: deviceId);
         String apiUrl = ApiConstants().baseUrl + ApiConstants().users;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              setState(() {
-                isLoaderShow=false;
-                itemList.removeAt(index);
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-
-            }, onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-
+            onSuccess: (data) {
+          setState(() {
+            isLoaderShow = false;
+            userList.removeAt(index);
+          });
+          print("  LedgerLedger  $data ");
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, e.toString());
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+        });
       });
-    }else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -327,7 +366,30 @@ class _UsersListState extends State<UsersList>with UserCreateInterface {
       }
       CommonWidget.noInternetDialogNew(context);
     }
+  }
 
-  }*/
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page = 1;
+    });
+    isPagination = true;
+    await callGetUser(0);
+  }
 
+  @override
+  createUser() {
+    // TODO: implement createUser
+    userList.clear();
+    callGetUser(0);
+    Navigator.pop(context);
+  }
+
+  @override
+  updateUser() {
+    // TODO: implement updateUser
+    userList.clear();
+    callGetUser(0);
+    Navigator.pop(context);
+  }
 }

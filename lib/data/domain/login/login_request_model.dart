@@ -12,7 +12,7 @@ class LoginRequestModel {
   LoginRequestModel.fromJson(dynamic json) {
     _Password = json['Password'];
     _UID = json['UID'];
-    _Machine_Name = json['Machine_Name'];
+    _Machine_Name = json['Modifier_Machine'];
   }
   String? _Password;
   String? _UID;
@@ -26,7 +26,7 @@ class LoginRequestModel {
     final map = <String, dynamic>{};
     map['Password'] = _Password;
     map['UID'] = _UID;
-    map['Machine_Name'] = _Machine_Name;
+    map['Modifier_Machine'] = _Machine_Name;
     return map;
   }
 

@@ -1,13 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../core/app_preferance.dart';
+import '../../../core/internet_check.dart';
 import '../../../core/localss/application_localizations.dart';
+import '../../../data/api/constant.dart';
+import '../../../data/api/request_helper.dart';
+import '../../../data/domain/user/put_user_request_model.dart';
+import '../../dashboard/dashboard_activity.dart';
 
 class ChangePasswordActivity extends StatefulWidget {
   const ChangePasswordActivity({super.key});
@@ -26,7 +33,7 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
   final _confirmPasswordFocus = FocusNode();
   final confirmPasswordController = TextEditingController();
 
-
+bool isLoaderShow=false;
 
 
   @override
@@ -36,63 +43,70 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
 
   }
 
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        backgroundColor: CommonColor.BACKGROUND_COLOR,
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("change_password")!,
-                  style: appbar_text_style,
-                ),
-              ),
-            ),
-          ),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                  child: getAllTextFormFieldLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            backgroundColor: CommonColor.BACKGROUND_COLOR,
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("change_password")!,
+                      style: appbar_text_style,
                     ),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      child: getAllTextFormFieldLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -294,7 +308,14 @@ bool disableColor=false;
             onTap: () {
               if (mounted) {
                 setState(() {
-                  disableColor = true;
+     print("hkjfjhhfj  ${newPasswordController.text.isNotEmpty}");
+                  if(newPasswordController.text == confirmPasswordController.text&&newPasswordController.text.isNotEmpty){
+                    disableColor = true;
+                    callUpdateItem();
+                  }else{
+                    var snackBar = SnackBar(content: Text('please add  both password same.'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
                 });
               }
             },
@@ -326,7 +347,54 @@ bool disableColor=false;
     );
   }
 
+  callUpdateItem() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        PutUserRequestModel model = PutUserRequestModel(
+          uid: creatorName,
+          uidNew: "",
+          Password: newPasswordController.text,
+          ConfirmPassword: confirmPasswordController.text,
+          Company_ID: companyId,
+          ledgerID: "",
+          workingDays: "",
+          active: true,
+          resetPassword: true,
+          creator: creatorName,
+          creatorMachine: deviceId,
+        );
+        print("jfhjfhjjhrjhr  $companyId ${model.toJson()}");
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(value)async{
+              print("  Put Call :   $value ");
+              var snackBar = SnackBar(content: Text('password  Updated Successfully'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
 
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+
+  }
 }
 
 // abstract class ChangePasswordActivityInterface {

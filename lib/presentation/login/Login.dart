@@ -142,10 +142,12 @@ class _LoginActivityState extends State<LoginActivity> {
         setState(() {
           isLoaderShow=true;
         });
+
         LoginRequestModel model = LoginRequestModel(
             Password: passwordText,
             UID: userName,
-            Machine_Name: deviceId
+            Machine_Name: deviceId,
+           // modifire: "myMachine",
         );
         String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",

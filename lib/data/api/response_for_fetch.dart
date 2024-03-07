@@ -28,7 +28,7 @@ class ApiResponseForFetch {
     _data = json['data'];
     _msg = json['msg'];
     _token = json['token'];
-    _Machine_Name = json['Machine_Name'];
+    _Machine_Name = json['Modifier_Machine'];
     _code = json['code'];
     _UID = json['UID'];
     _s3_url = json['s3_url'];
@@ -63,7 +63,7 @@ class ApiResponseForFetch {
     }
     map['msg'] = _msg;
     map['token'] = _token;
-    map['Machine_Name'] = _Machine_Name;
+    map['Modifier_Machine'] = _Machine_Name;
     map['code'] = _code;
     map['UID'] = _UID;
     map['s3_url'] = _s3_url;
