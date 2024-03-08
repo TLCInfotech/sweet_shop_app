@@ -77,10 +77,10 @@ String oldUid="";
     if(widget.editUser!=null){
       userController.text=widget.editUser["UID"];
       oldUid=widget.editUser["UID"];
-      print("jhjfhjf  ${widget.editUser["Working_Days"].toString()}  $oldUid");
+      print("jhjfhjf  ${widget.editUser["Active"]}  $oldUid");
       workingdaysController.text=widget.editUser["Working_Days"].toString();
       franchiseeId=widget.editUser["Ledger_ID"].toString();
-      franchiseeName=widget.editUser["LedgerName"];
+      franchiseeName=widget.editUser["Ledger_Name"];
       checkActiveValue=widget.editUser["Active"];
       checkPasswordValue=widget.editUser["Reset_Password"];
     }
@@ -547,6 +547,7 @@ String oldUid="";
     String userName=userController.text.trim();
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String tokan = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -561,10 +562,10 @@ String oldUid="";
             creator: creatorName,
             creatorMachine: deviceId,
         );
-        print("jfhjfhjjhrjhr  $companyId ${model.toJson()}");
+        print("jfhjfhjjhrjhr  $companyId ");
         String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
         print(apiUrl);
-        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokan,
             onSuccess:(value)async{
               print("  Put Call :   $value ");
               var snackBar = SnackBar(content: Text('User  Updated Successfully'));

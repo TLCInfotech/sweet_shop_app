@@ -240,6 +240,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
 
   callGetUser(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -249,7 +250,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${ApiConstants().baseUrl}${ApiConstants().users}?pageNumber=$page&pageSize=12";
+            "${ApiConstants().baseUrl}${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {
