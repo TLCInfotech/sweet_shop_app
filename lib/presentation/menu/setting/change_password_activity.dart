@@ -13,6 +13,7 @@ import '../../../core/internet_check.dart';
 import '../../../core/localss/application_localizations.dart';
 import '../../../data/api/constant.dart';
 import '../../../data/api/request_helper.dart';
+import '../../../data/domain/confirmPassword/create_login_user_upadte_request_model.dart';
 import '../../../data/domain/user/put_user_request_model.dart';
 import '../../dashboard/dashboard_activity.dart';
 
@@ -146,7 +147,6 @@ bool isLoaderShow=false;
                     ],
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -353,21 +353,14 @@ bool disableColor=false;
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
-        PutUserRequestModel model = PutUserRequestModel(
+        LoginUserRequestModel model = LoginUserRequestModel(
           uid: creatorName,
-          uidNew: "",
-          Password: newPasswordController.text,
-          ConfirmPassword: confirmPasswordController.text,
-          Company_ID: companyId,
-          ledgerID: "",
-          workingDays: "",
-          active: true,
-          resetPassword: true,
-          creator: creatorName,
-          creatorMachine: deviceId,
+          password: confirmPasswordController.text,
+          modifier: creatorName,
+          modifierMachine: deviceId,
         );
         print("jfhjfhjjhrjhr  $companyId ${model.toJson()}");
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
+        String apiUrl = ApiConstants().baseUrl + ApiConstants().updateuer;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{

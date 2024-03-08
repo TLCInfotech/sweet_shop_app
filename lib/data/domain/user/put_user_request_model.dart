@@ -1,9 +1,7 @@
 class PutUserRequestModel {
   String uid;
-  String? uidNew;
+  //String? uidNew;
   String? ledgerID;
-  String? Password;
-  String? ConfirmPassword;
   String? Company_ID;
   String? workingDays;
   bool? active;
@@ -13,9 +11,7 @@ class PutUserRequestModel {
 
   PutUserRequestModel({
     required this.uid,
-     this.uidNew,
-     this.Password,
-     this.ConfirmPassword,
+  //   this.uidNew,
     required this.Company_ID,
     this.ledgerID,
     this.workingDays,
@@ -28,9 +24,7 @@ class PutUserRequestModel {
   Map<String, dynamic> toJson() {
     return {
       'UID': uid,
-      'NewUID': uidNew,
-      'Password': Password,
-      'ConfirmPassword': ConfirmPassword,
+      //'NewUID': uidNew,
       'Ledger_ID': ledgerID,
       'Company_ID': Company_ID,
       'Working_Days': workingDays,

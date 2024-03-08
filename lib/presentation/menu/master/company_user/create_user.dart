@@ -34,7 +34,7 @@ class _UserCreateState extends State<UserCreate> {
 
   final _workingdaysFocus = FocusNode();
   final workingdaysController = TextEditingController();
-
+  List<int> picImageBytes=[];
   final _passwordFocus = FocusNode();
   final passwordController = TextEditingController();
 
@@ -83,6 +83,8 @@ String oldUid="";
       franchiseeName=widget.editUser["Ledger_Name"];
       checkActiveValue=widget.editUser["Active"];
       checkPasswordValue=widget.editUser["Reset_Password"];
+      picImageBytes=(widget.editUser['Photo']!=null && widget.editUser['Photo']['data']!=null && widget.editUser['Photo']['data'].length>10)?(widget.editUser['Photo']['data']).whereType<int>().toList():[];
+
     }
 
   }
@@ -158,13 +160,16 @@ String oldUid="";
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
-        callbackFile: (file){
+        callbackFile: (file)async{
+          Uint8List? bytes = await file?.readAsBytes();
+
           setState(() {
             picImage=file;
+            picImageBytes = (bytes)!.whereType<int>().toList();
           });
+          print("IMGE1 : ${picImageBytes.length}");
         }
     );
-
   }
 
 
@@ -503,6 +508,7 @@ String oldUid="";
       });
       PostUserRequestModel model = PostUserRequestModel(
         uid: userName,
+        photo:picImageBytes.toString(),
         Company_ID: companyId,
         ledgerID: franchiseeId,
         workingDays: workingDay,
@@ -552,8 +558,7 @@ String oldUid="";
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutUserRequestModel model = PutUserRequestModel(
-          uid: oldUid,
-          uidNew: userName,
+          uid: userName,
           Company_ID: companyIds,
           ledgerID: franchiseeId,
           workingDays: workingDay,
@@ -562,7 +567,7 @@ String oldUid="";
             creator: creatorName,
             creatorMachine: deviceId,
         );
-        print("jfhjfhjjhrjhr  $companyId ");
+        print("jfhjfhjjhrjhr  $companyId  ${model.toJson()} ");
         String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokan,

@@ -1,5 +1,6 @@
 class PostUserRequestModel {
   String uid;
+  String? photo;
   String Company_ID;
   String? ledgerID;
   String? workingDays;
@@ -12,6 +13,7 @@ class PostUserRequestModel {
     required this.uid,
     required this.Company_ID,
     this.ledgerID,
+    this.photo,
     this.workingDays,
     this.active,
     required this.resetPassword,
@@ -24,6 +26,7 @@ class PostUserRequestModel {
       'UID': uid,
       'Company_ID': Company_ID,
       'Ledger_ID': ledgerID,
+      'Photo': photo,
       'Working_Days': workingDays,
       'Active': active,
       'Reset_Password': resetPassword,

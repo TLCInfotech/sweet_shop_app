@@ -1,12 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 
+import '../../core/internet_check.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/dynamic_respose.dart';
+import '../../data/api/request_helper.dart';
+import 'package:http/http.dart' as http;
 class LogOutDialog extends StatefulWidget {
   final LogOutDialogInterface mListener;
 
@@ -130,8 +136,8 @@ class _LogOutDialogState extends State<LogOutDialog> {
       child: GestureDetector(
         onTap: ()  {
           setState(() {
-            AppPreferences.clearAppPreference();
-            CommonWidget.gotoLoginScreen(context);
+            logout();
+
           });
 
         },
@@ -167,7 +173,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
   Widget getAddCancelButtonLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pop(context);//Logout
       },
       onDoubleTap: () {},
       child: Padding(
@@ -198,7 +204,36 @@ class _LogOutDialogState extends State<LogOutDialog> {
     );
   }
 
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+
+  Future<void> logout() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName');
+
+    try {
+      final response = await http.post(url);
+      print("hhjfjhfjhf  $url");
+      if (response.statusCode == 200) {
+        // Logout successful, you can handle the response accordingly
+        AppPreferences.clearAppPreference();
+        CommonWidget.gotoLoginScreen(context);
+        print('Logout successful');
+      } else {
+        // Logout failed, handle the error
+        print('Logout failed with status code: ${response.statusCode}');
+        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+        apiResponse =
+            ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+        print("@@@@@@@@@@@@@@@ ${apiResponse.msg}");
+
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print('Error during logout: $e');
+    }
+  }
 
 
 

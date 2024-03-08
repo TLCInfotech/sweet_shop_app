@@ -19,5 +19,7 @@ class ApiConstants {
   String franchisee="Franchisee";
   String company = "Company";
   String users = "Users";
+  String logout = "Logout";
+  String updateuer = "UpdatePassword";
 
 }
