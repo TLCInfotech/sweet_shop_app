@@ -209,11 +209,14 @@ class _LogOutDialogState extends State<LogOutDialog> {
 
   Future<void> logout() async {
     String creatorName = await AppPreferences.getUId();
+    String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName');
 
     try {
-      final response = await http.post(url);
+      final response = await http.post(url,headers: {
+        'Authorization': 'Bearer $tokenId',
+      });
       print("hhjfjhfjhf  $url");
       if (response.statusCode == 200) {
         // Logout successful, you can handle the response accordingly

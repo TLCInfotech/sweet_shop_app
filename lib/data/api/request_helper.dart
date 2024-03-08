@@ -457,13 +457,14 @@ class ApiRequestHelper {
 
     String jsonString = json.encode(cleanedData);
 
-    print(apiUrl);
+    print("     sessionTokennnnn  $sessionToken");
 
     Response response = await http.put(
         Uri.parse(apiUrl),
         body: jsonString,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer $sessionToken',
         }
     );
 

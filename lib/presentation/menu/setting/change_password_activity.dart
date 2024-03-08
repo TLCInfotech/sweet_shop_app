@@ -349,6 +349,7 @@ bool disableColor=false;
 
   callUpdateItem() async {
     String creatorName = await AppPreferences.getUId();
+    String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -359,10 +360,10 @@ bool disableColor=false;
           modifier: creatorName,
           modifierMachine: deviceId,
         );
-        print("jfhjfhjjhrjhr  $companyId ${model.toJson()}");
+        print("jfhjfhjjhrjhr  $tokenId ${model.toJson()}");
         String apiUrl = ApiConstants().baseUrl + ApiConstants().updateuer;
         print(apiUrl);
-        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokenId,
             onSuccess:(value)async{
               print("  Put Call :   $value ");
               var snackBar = SnackBar(content: Text('password  Updated Successfully'));
