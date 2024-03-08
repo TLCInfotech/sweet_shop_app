@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/franchisee_sale_rate.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_category/Item_Category.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance_for_company/item_opening_bal_for_company.dart';
 import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger_group/expense_group.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/expense_listing_activity.dart';
@@ -276,6 +277,7 @@ String companyId="";
             getExpenseLayout(parentHeight,parentWidth),
             getExpensceGroupLayout(parentHeight,parentWidth),
             getCompanyInfoLayout(parentHeight,parentWidth),
+            getOpeningBalanceForCompanyLayout(parentHeight,parentWidth),
             getOpeningBalanceLayout(parentHeight,parentWidth),
             getLeaderOpeningLayout(parentHeight,parentWidth),
           ],
@@ -507,6 +509,34 @@ String companyId="";
             ),
             Text(
               ApplicationLocalizations.of(context)!.translate("company_info")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* Widget for item opening balance Layout */
+  Widget getOpeningBalanceForCompanyLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreateItemOpeningBalForCompany(dateNew: DateTime.now().toString())));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

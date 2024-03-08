@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../core/app_preferance.dart';
+import '../../core/common.dart';
 import '../../core/localss/application_localizations.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
+import '../menu/master/item_opening_balance/add_or_edit_item_opening_bal.dart';
 
 class ItemDialog extends StatefulWidget {
   final ItemDialogInterface mListener;
@@ -20,15 +28,64 @@ class _ItemDialogState extends State<ItemDialog>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
-
-
   }
-  List Items=["Barfi","Pedha","cake","pav",];
+
+  var itemsList = [];
+
+  fetchShows (searchstring) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().search_item+"?name=${searchstring}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+    }
+    return _list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,27 +167,32 @@ class _ItemDialogState extends State<ItemDialog>{
                     )),
               ),
               Expanded(
-                child: TextFormField(
-                  textInputAction: TextInputAction.done,
-                  // autofillHints: const [AutofillHints.email],
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _textController,
-                  textAlignVertical: TextAlignVertical.center,
-                  focusNode: searchFocus,
-                  style: text_field_textStyle,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    counterText: '',
-                    border: InputBorder.none,
-                    hintText: ApplicationLocalizations.of(context)!.translate("search")!,
-                    hintStyle: TextStyle(
-                        color: CommonColor.SEARCH_TEXT_COLOR,
-                        fontSize: SizeConfig.blockSizeHorizontal * 4.2,
-                        fontFamily: 'Inter_Medium_Font',
-                        fontWeight: FontWeight.w400),
-                  ),
-                  // onChanged: _onChangeHandler,
-                ),
+                child: TextFieldSearch(
+                    label: 'Item',
+                    controller: _textController,
+                    decoration: textfield_decoration.copyWith(
+                      hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+                      prefixIcon: Container(
+                          width: 50,
+                          padding: EdgeInsets.all(10),
+                          alignment: Alignment.centerLeft,
+                          child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+                    ),
+                    textStyle: item_regular_textStyle,
+                    getSelectedValue: (v) {
+                      if(widget.mListener!=null){
+                        widget.mListener.selectedItem(v['ID'],v['Name']);
+                      }
+                      Navigator.pop(context);
+                      setState(() {
+                        itemsList = [];
+                      });
+                    },
+                    future: () {
+                      if (_textController.text != "")
+                        return fetchSimpleData(
+                            _textController.text.trim());
+                    }),
               ),
               Visibility(
                 visible: _textController.text.isNotEmpty,
@@ -161,14 +223,14 @@ class _ItemDialogState extends State<ItemDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: Items.length,
+          itemCount: itemsList.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
                 onTap: (){
                   if(widget.mListener!=null){
-                    widget.mListener.selectedItem(index.toString(),Items.elementAt(index));
+                    widget.mListener.selectedItem(index.toString(),itemsList.elementAt(index));
                   }
                   Navigator.pop(context);
                 },
@@ -187,7 +249,7 @@ class _ItemDialogState extends State<ItemDialog>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        Items.elementAt(index),
+                        itemsList[index]['Name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -15,22 +16,23 @@ import 'package:sweet_shop_app/data/domain/itemOpeningbalForCompany/item_opening
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
-import 'add_or_edit_item_opening_bal.dart';
+import 'add_or_edit_company_item_opening.dart';
 
-class CreateItemOpeningBal extends StatefulWidget {
-  final CreateItemOpeningBalInterface mListener;
+class CreateItemOpeningBalForCompany extends StatefulWidget {
   final String dateNew;
 
-  const CreateItemOpeningBal({super.key, required this.dateNew, required this.mListener});
+  const CreateItemOpeningBalForCompany({super.key, required this.dateNew});
   @override
-  State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalState();
+  State<CreateItemOpeningBalForCompany> createState() => _CreateItemOpeningBalForCompanyState();
 }
 
-class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with SingleTickerProviderStateMixin,AddOrEditItemOpeningBalInterface {
+class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalForCompany> with SingleTickerProviderStateMixin,AddOrEditItemOpeningBalForCompanyInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -50,16 +52,96 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
   List<dynamic> Item_list=[];
 
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
 
   bool isLoaderShow=false;
 
+
+  callGetItemOpeningList(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=3081&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+
+                  setState(() {
+                    Item_list=_arrList;
+                  });
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    callGetItemOpeningList(0);
     calculateTotalAmt();
   }
 
@@ -98,7 +180,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
                 backgroundColor: Colors.white,
                 title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                  ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -150,7 +232,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
               child: Column(
                 children: [
 
-              //    getFieldTitleLayout("Invoice Detail"),
+                  //    getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
@@ -189,7 +271,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
                   SizedBox(height: 10,),
 
-                     //:Container(),
+                  //:Container(),
                 ],
               ),
             ),
@@ -285,6 +367,21 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
+                                          if(Item_list[index]['Seq_No']!=0){
+                                             var deletedItem=   {
+                                                  "Seq_No": Item_list[index]['seq_No'],
+                                                  "Item_ID": Item_list[index]['Item_ID']
+                                                };
+                                               Deleted_list.add(deletedItem);
+                                               setState(() {
+                                                 Deleted_list=Deleted_list;
+                                               });
+                                          }
+                                          var contain = Inserted_list.where((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                          if(contain.length>0){
+                                            print("REMOVE");
+                                            Inserted_list.remove(Inserted_list.indexOf(contain));
+                                          }
                                           Item_list.remove(Item_list[index]);
                                           setState(() {
                                             Item_list=Item_list;
@@ -330,29 +427,12 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width:(SizeConfig.screenWidth)*.32,
+              width:(SizeConfig.screenWidth)*0.87,
               child: getPurchaseDateLayout()),
-
-        SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
         ],
       ),
     );
   }
-
-  /* widget for button layout */
-  Widget getFieldTitleLayout(String title) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
-      child: Text(
-        "$title",
-        style: page_heading_textStyle,
-      ),
-    );
-  }
-
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
@@ -371,64 +451,6 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
   }
 
 
-  /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-      titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
-        callback: (name,id){
-          setState(() {
-            selectedFranchiseeName=name!;
-          });
-        },
-        franchiseeName: selectedFranchiseeName);
-
-  }
-
-  /* Widget for Invoice No text from field layout */
-  Widget getInvoiceNoLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(top: parentHeight * 0.02),
-      child: Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFormField(
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.words,
-          focusNode: _InvoiceNoFocus,
-          keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
-          cursorColor: CommonColor.BLACK_COLOR,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(
-                left: parentWidth * .04, right: parentWidth * .02),
-            border: InputBorder.none,
-            counterText: '',
-            isDense: true,
-            hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-            hintStyle: hint_textfield_Style,
-          ),
-          controller: InvoiceNoController,
-          onEditingComplete: () {
-            _InvoiceNoFocus.unfocus();
-          },
-          style: text_field_textStyle,
-        ),
-      ),
-    );
-  }
-
   Future<Object?> goToAddOrEditItem(product) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
@@ -440,13 +462,13 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditItemOpeningBal(
+              child: AddOrEditItemOpeningBalForCompany(
                 mListener: this,
                 editproduct:product,
               ),
             ),
           );
-        }, 
+        },
         transitionDuration: Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
@@ -497,7 +519,7 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
                 setState(() {
                   disableColor = true;
                 });
-              await  callPostItemOpeningBal();
+                await  callPostItemOpeningBal();
               }
             },
             onDoubleTap: () {},
@@ -533,12 +555,15 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
 
 
   @override
-  AddOrEditItemOpeningBalDetail(item)async {
+  AddOrEditItemOpeningBalForCompanyDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
-    if(item['Seq_No']!=0){
-      var index=Item_list.indexWhere((element) => item['Seq_No']==element['Seq_No']);
+    var contain = itemLlist.where((element) => element['Item_ID'] ==item['Item_ID']);
+    print("CONTAIN $contain");
+    if(contain.length>0){
+      var index=Item_list.indexWhere((element) => item['Item_ID']==element['Item_ID']);
       setState(() {
+        Item_list[index]['Seq_No']=item['seq_No'];
         Item_list[index]['Item_ID']=item['Item_ID'];
         Item_list[index]['Item_Name']=item['Item_Name'];
         Item_list[index]['Quantity']=item['Quantity'];
@@ -546,16 +571,26 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
         Item_list[index]['Rate']=item['Rate'];
         Item_list[index]['Amount']=item['Amount'];
       });
+      if(item['Seq_No']!=0) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
     }
     else
     {
-      if (itemLlist.contains(item)) {
-        print("Already Exist");
+      if (contain.length>0) {
+
       }
       else {
         // item.add(Seq_No:itemLlist.length+1);
-        item['Seq_No']=itemLlist.length+1;
+        // item['Seq_No']=itemLlist.length+1;
         itemLlist.add(item);
+        Inserted_list.add(item);
+        setState(() {
+          Inserted_list=Inserted_list;
+        });
         print(itemLlist);
       }
       setState(() {
@@ -563,6 +598,10 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
       });
     }
     await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
   }
 
   calculateTotalAmt()async{
@@ -592,16 +631,14 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
         isLoaderShow=true;
       });
       PostItemOpeningRequestModel model = PostItemOpeningRequestModel(
-        companyID: "27",
-        date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-        modifier: creatorName,
-        modifierMachine: deviceId,
-        iNSERT: Item_list.toList(),
-        uPDATE: [],
-        dELETE: []
+          companyID: companyId,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
       );
-
-
 
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_opening;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -636,5 +673,5 @@ class _CreateItemOpeningBalState extends State<CreateItemOpeningBal> with Single
   }
 }
 
-abstract class CreateItemOpeningBalInterface {
+abstract class CreateItemOpeningBalForCompanyInterface {
 }

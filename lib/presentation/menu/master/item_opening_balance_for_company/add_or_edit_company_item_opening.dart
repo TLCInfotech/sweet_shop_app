@@ -30,16 +30,16 @@ class TestItem {
     return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",rate:"${json['rate']}");
   }
 }
-class AddOrEditItemOpeningBal extends StatefulWidget {
-  final AddOrEditItemOpeningBalInterface mListener;
+class AddOrEditItemOpeningBalForCompany extends StatefulWidget {
+  final AddOrEditItemOpeningBalForCompanyInterface mListener;
   final dynamic editproduct;
 
-  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct});
+  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct});
   @override
-  State<AddOrEditItemOpeningBal> createState() => _AddOrEditItemOpeningBalState();
+  State<AddOrEditItemOpeningBalForCompany> createState() => _AddOrEditItemOpeningBalForCompanyState();
 }
 
-class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
+class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpeningBalForCompany> {
 
   bool isLoaderShow = false;
 
@@ -64,7 +64,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   fetchShows (searchstring) async {
     String sessionToken = await AppPreferences.getSessionToken();
-   await AppPreferences.getDeviceId().then((deviceId) {
+    await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
@@ -73,9 +73,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           onSuccess:(data)async{
             if(data!=null) {
               var topShowsJson = (data) as List;
-               setState(() {
-                 itemsList=  topShowsJson.map((show) => (show)).toList();
-               });
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
@@ -127,7 +127,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         quantity.text=widget.editproduct['Quantity'].toString();
         rate.text=widget.editproduct['Rate'].toString();
         amount.text=widget.editproduct['Amount'].toString();
-
       });
       await calculateRates();
     }
@@ -171,7 +170,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                     SizedBox(height: 10,)
                   ],
@@ -237,44 +236,44 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFieldSearch(
-          label: 'Item',
-          controller: _textController,
-          decoration: textfield_decoration.copyWith(
-            hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-            prefixIcon: Container(
-                width: 50,
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.centerLeft,
-                child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-          ),
-          textStyle: item_regular_textStyle,
-          getSelectedValue: (v) {
-            setState(() {
-              selectedItemID = v.value;
-              unit.text=v.unit;
-              rate.text=v.rate;
-              itemsList = [];
-            });
-          },
-          future: () {
-            if (_textController.text != "")
-              return fetchSimpleData(
-                  _textController.text.trim());
-          })
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedItemID = v.value;
+                unit.text=v.unit;
+                rate.text=v.rate;
+                itemsList = [];
+              });
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
 
 
       // TextFormField(
@@ -344,19 +343,19 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         ),
         GestureDetector(
           onTap: (){
-          var item= {
-            "Seq_No": widget.editproduct!=null?widget.editproduct['Seq_No']:0,
-            "Item_ID": selectedItemID,
-            "Item_Name":_textController.text,
-            "Store_ID": null,
-            "Batch_ID": null,
-            "Quantity":int.parse(quantity.text),
-            "Unit": unit.text,
-            "Rate": rate.text,
-            "Amount": amount.text
-          };
+            var item= {
+              "Seq_No": widget.editproduct!=null?widget.editproduct['seq_No']:0,
+              "Item_ID": selectedItemID,
+              "Item_Name":_textController.text,
+              "Store_ID": null,
+              "Batch_ID": null,
+              "Quantity":int.parse(quantity.text),
+              "Unit": unit.text,
+              "Rate": rate.text,
+              "Amount": amount.text
+            };
             if(widget.mListener!=null){
-              widget.mListener.AddOrEditItemOpeningBalDetail(item);
+              widget.mListener.AddOrEditItemOpeningBalForCompanyDetail(item);
               Navigator.pop(context);
             }
           },
@@ -403,6 +402,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
 }
 
-abstract class AddOrEditItemOpeningBalInterface{
-  AddOrEditItemOpeningBalDetail(dynamic item);
+abstract class AddOrEditItemOpeningBalForCompanyInterface{
+  AddOrEditItemOpeningBalForCompanyDetail(dynamic item);
 }

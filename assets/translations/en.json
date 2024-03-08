@@ -239,7 +239,8 @@
   "delete_msg": "Do you want to delete record?",
   "fssai":"FSSAI No.",
   "company_id":"Company Id",
-  "password":"Password"
+  "password":"Password",
+  "company_item_opening": "Company Item Opening Bal"
 
 }
 
