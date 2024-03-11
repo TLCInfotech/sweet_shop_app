@@ -366,7 +366,7 @@ bool disableColor=false;
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokenId,
             onSuccess:(value)async{
               print("  Put Call :   $value ");
-              var snackBar = SnackBar(content: Text('password  Updated Successfully'));
+              var snackBar = SnackBar(content: Text('password s Updated Successfully'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
 

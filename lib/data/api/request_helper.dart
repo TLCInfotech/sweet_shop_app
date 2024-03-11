@@ -82,34 +82,21 @@ class ApiRequestHelper {
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
         apiResponse =
             ApiResponseForFetch.fromJson(json.decode(response.body));
-        // AppPreferences.clearAppPreference();
-        // sessionExpire("errere");
         onFailure(apiResponse.msg);
-        //  CommonWidget.gotoLoginPage(buildContext);
         break;
-    /*    case 403:
-          ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
-
-          onFailure(apiResponse.message);
-          // AppPreferences.clearAppPreference();
-          // sessionExpire("gdgdgd");
-          break;*/
+      case 401:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg);
+        break;
       case 403:
         AppPreferences.clearAppPreference();
         sessionExpire("jhhh");
         break;
     //    }
     }
-    /*  } catch (e) {
-      print("e callAPIsForPostFetchAPI   $e");
-      onException(e);
-    }*/
   }
-
-
-
 
   void callAPIsForPostAPI(
       String apiUrl, dynamic requestBody, String sessionToken,
@@ -158,9 +145,6 @@ class ApiRequestHelper {
         break;
     /*response of api status id Two when session has expired */
       case 500:
-      //  AppPreferences.clearAppPreference();
-      // sessionExpire("errere");
-      //  CommonWidget.gotoLoginPage(buildContext);
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
         apiResponse =
             ApiResponseForFetch.fromJson(json.decode(response.body));
@@ -170,33 +154,21 @@ class ApiRequestHelper {
         ApiResponseForFetch apiResponse = ApiResponseForFetch();
         apiResponse =
             ApiResponseForFetch.fromJson(json.decode(response.body));
-        // AppPreferences.clearAppPreference();
-        // sessionExpire("errere");
         onFailure(apiResponse.msg);
-        //  CommonWidget.gotoLoginPage(buildContext);
         break;
-    /*    case 403:
-          ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
-
-          onFailure(apiResponse.message);
-          // AppPreferences.clearAppPreference();
-          // sessionExpire("gdgdgd");
-          break;*/
+      case 401:
+        ApiResponseForFetch apiResponse = ApiResponseForFetch();
+        apiResponse =
+            ApiResponseForFetch.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg);
+        break;
       case 403:
         AppPreferences.clearAppPreference();
         sessionExpire("jhhh");
         break;
     //    }
     }
-    /*  } catch (e) {
-      print("e callAPIsForPostFetchAPI   $e");
-      onException(e);
-    }*/
   }
-
-
 
 
   void callAPIsForPostMsgAPI(
@@ -249,10 +221,13 @@ class ApiRequestHelper {
         ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
         apiResponse =
             ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
-        // AppPreferences.clearAppPreference();
-        // sessionExpire("errere");
         onFailure(apiResponse.msg);
-        //  CommonWidget.gotoLoginPage(buildContext);
+        break;
+      case 401:
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse =
+            ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg);
         break;
     /*    case 403:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
@@ -316,6 +291,13 @@ class ApiRequestHelper {
               ApiResponseForFetch.fromJson(json.decode(response.body));
           onFailure(apiResponse.msg);
           break;
+        case 401:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          print("newww  ${apiResponse.msg}");
+          break;
         case 403:
           AppPreferences.clearAppPreference();
           sessionExpire("jhhh");
@@ -378,6 +360,14 @@ class ApiRequestHelper {
               ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
           onFailure(apiResponse.msg);
           break;
+
+
+        case 401:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          break;
         case 403:
           AppPreferences.clearAppPreference();
           sessionExpire("jhhh");
@@ -423,8 +413,15 @@ class ApiRequestHelper {
         apiResponse =
             ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
         onException(apiResponse.msg!);
+
         break;
       case 400:
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse =
+            ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+        onFailure(apiResponse.msg);
+        break;
+      case 401:
         ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
         apiResponse =
             ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
@@ -508,28 +505,19 @@ class ApiRequestHelper {
         onFailure(apiResponse.msg);
         //  CommonWidget.gotoLoginPage(buildContext);
         break;
-    /*    case 403:
-          ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
-
-          onFailure(apiResponse.message);
-          // AppPreferences.clearAppPreference();
-          // sessionExpire("gdgdgd");
-          break;*/
+      case 401:
+        ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+        apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+    onFailure(apiResponse.msg);
+        break;
       case 403:
         AppPreferences.clearAppPreference();
         sessionExpire("jhhh");
         break;
-        //    }
+
     }
-    /*  } catch (e) {
-      print("e callAPIsForPostFetchAPI   $e");
-      onException(e);
-    }*/
+
   }
-
-
 
 
   void callAPIsForDynamicPI(
@@ -601,9 +589,6 @@ class ApiRequestHelper {
           break;
       /*response of api status id Two when session has expired */
         case 500:
-        //  AppPreferences.clearAppPreference();
-        // sessionExpire("errere");
-        //  CommonWidget.gotoLoginPage(buildContext);
           ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
           apiResponse =
               ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
@@ -614,10 +599,13 @@ class ApiRequestHelper {
           ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
           apiResponse =
               ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
-          // AppPreferences.clearAppPreference();
-          // sessionExpire("errere");
           onFailure(apiResponse.msg);
-          //  CommonWidget.gotoLoginPage(buildContext);
+          break;
+        case 401:
+          ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+          apiResponse =
+              ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
           break;
           case 404:
             ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();

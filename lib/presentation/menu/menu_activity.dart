@@ -235,7 +235,7 @@ String companyId="";
   Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .62,
+      height: parentHeight * .65,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
