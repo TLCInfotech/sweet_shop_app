@@ -88,7 +88,6 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                       isDense: true,
                       hintText: widget.title,
                       hintStyle: hint_textfield_Style,
-
                       suffix: widget.suffix!=null?widget.suffix:Container(height: 2,width: 2,),
                     ),
                     controller: widget.controller,

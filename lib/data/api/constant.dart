@@ -23,4 +23,6 @@ class ApiConstants {
   String logout = "Logout";
   String updateuer = "UpdatePassword";
   String item_opening="ItemOpeningBalance";
+  String franchisee_item_opening="FranchiseeItemOpeningBalance";
+  String ledger_opening_bal="LedgerOpeningBalance";
 }

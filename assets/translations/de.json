@@ -236,6 +236,8 @@
  "fssai":"FSSAI No.",
  "company_id":"Company Id",
  "password":"Password",
- "company_item_opening": "Company Item Opening Bal"
+ "company_item_opening": "Company Item Opening Bal",
+ "batch_id": "Batch ID"
+
 
 }

@@ -161,72 +161,82 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
                   delay: const Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child:  const FaIcon(
-                                FontAwesomeIcons.moneyCheck,
-                                color: Colors.white,
-                              )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                          ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-
-                                    ],
-                                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                        dateNew:CommonWidget.getDateLayout(invoiceDate),
+                        editedItem:index,
+                        //DateFormat('dd-MM-yyyy').format(invoiceDate),
+                        mListener: this,
+                      )));
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(5)
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                                child:  const FaIcon(
+                                  FontAwesomeIcons.moneyCheck,
+                                  color: Colors.white,
+                                )
+                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                            ),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
 
-                        )
-                      ],
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){},
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

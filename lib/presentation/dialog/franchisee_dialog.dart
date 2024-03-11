@@ -242,12 +242,12 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
       String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee+"?Company_ID=27";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
-            setState(() {
-              franchisee_list=data;
-            });
-            // franchisee_list.addAll(data.map((arrData) =>
-            // new EmailPhoneRegistrationModel.fromJson(arrData)));
-            print("  LedgerLedger  $data ");
+            if(data!=null) {
+              setState(() {
+                franchisee_list = data;
+              });
+              print("  LedgerLedger  $data ");
+            }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
 
