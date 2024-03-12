@@ -128,6 +128,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       setState(() {
         selectedItemID=widget.editproduct['Item_ID'];
         _textController.text=widget.editproduct['Item_Name'];
+        batchno.text=widget.editproduct['Batch_ID'];
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
         rate.text=widget.editproduct['Rate'].toString();

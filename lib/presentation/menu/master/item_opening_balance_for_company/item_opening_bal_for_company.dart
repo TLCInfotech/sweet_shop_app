@@ -69,6 +69,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   callGetItemOpeningList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String companyId = await AppPreferences.getCompanyId();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -78,7 +79,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=74&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=$companyId&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -642,7 +643,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         isLoaderShow=true;
       });
       PostItemOpeningRequestModel model = PostItemOpeningRequestModel(
-          companyID: "74",
+          companyID: companyId,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,

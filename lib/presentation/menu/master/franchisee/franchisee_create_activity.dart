@@ -958,13 +958,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   callPostFranchisee(callmethod,apiUrl) async {
 
     String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
       });
       PostFranchiseeRequestModel model = PostFranchiseeRequestModel(
             name: franchiseeName.text.trim(),
-            companyID: 27,
+            companyID: int.parse(companyId),
             startDate: null,
             contactPerson: franchiseeContactPerson.text.trim(),
             address: franchiseeAddress.text.trim(),

@@ -262,6 +262,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
 
   callGetFranchisee(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -272,7 +273,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee}?Company_ID=27&pageNumber=$page&pageSize=12";
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
