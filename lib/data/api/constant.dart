@@ -30,7 +30,5 @@ class ApiConstants {
   String ledger_opening_bal="LedgerOpeningBalance";
   String franchisee_item_opening_list="getAllFranchaiseeItemCount";
   String ledger_list="LedgerList";
-  getBaseUrl()async{
-    return await AppPreferences.getDomainLink();
-  }
+
 }
