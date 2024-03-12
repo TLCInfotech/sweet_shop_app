@@ -956,7 +956,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   }
 
   callPostItem() async {
-
+    String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
@@ -989,7 +989,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
       print("IMGE2 : ${(model.Photo)?.length}");
 
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
+      String apiUrl = baseurl + ApiConstants().item;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -1022,7 +1022,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   }
 
   callUpdateItem() async {
-
+    String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -1050,7 +1050,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             Unit: measuringUnit
         );
 
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().item+"/"+widget.editItem['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString();
 
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

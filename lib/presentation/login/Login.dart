@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../core/internet_check.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/login/login_request_model.dart';
@@ -111,27 +112,43 @@ class _LoginActivityState extends State<LoginActivity> {
   }
   /* widget for button layout */
   Widget getButtonLayout(){
-  return Container(
-    width: 200,
-    child: ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
-      onPressed: () async{
-        bool? isvalid=_formkey.currentState?.validate();
-        print(isvalid);
-        if(isvalid!) {
-          callLogin();
-        }
-       //             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
-      },
-      child:  Text(StringEn.LOG_IN,
-        style: button_text_style),
-    ),
+  return Column(
+    children: [
+      Container(
+        width: 200,
+        child: ElevatedButton(
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
+          onPressed: () async{
+            bool? isvalid=_formkey.currentState?.validate();
+            print(isvalid);
+            if(isvalid!) {
+              callLogin();
+            }
+           //             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+          },
+          child:  Text(StringEn.LOG_IN,
+            style: button_text_style),
+        ),
+      ),
+      Container(
+        width: 200,
+        child: ElevatedButton(
+          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
+          onPressed: () async{
+            Navigator.of(context).pushReplacementNamed('/domainLinkActivity');
+          },
+          child:  Text( ApplicationLocalizations.of(context)!.translate("domain")!,
+              style: button_text_style),
+        ),
+      ),
+    ],
   );
   }
 
 
 
   callLogin() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String userName = username.text.trim();
     String passwordText = password.text.trim();
     String deviceId = await AppPreferences.getDeviceId();
@@ -149,7 +166,7 @@ class _LoginActivityState extends State<LoginActivity> {
             Machine_Name: deviceId,
            // modifire: "myMachine",
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().login;
+        String apiUrl = baseurl + ApiConstants().login;
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
             onSuccess:(token,uid){
               setState(() {

@@ -287,6 +287,7 @@ Expanded get_items_list_layout() {
 
 
   callGetItem(int page) async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -298,7 +299,7 @@ Expanded get_items_list_layout() {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -387,6 +388,7 @@ Expanded get_items_list_layout() {
   }
 
   callDeleteItem(String removeId,int index) async {
+    String baseurl=await AppPreferences.getDomainLink();
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -399,7 +401,7 @@ Expanded get_items_list_layout() {
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().item;
+        String apiUrl = baseurl + ApiConstants().item;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

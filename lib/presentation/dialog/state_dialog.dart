@@ -232,6 +232,7 @@ class _StateDialogState extends State<StateDialog>{
   }
 
   callGetState() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -243,7 +244,7 @@ class _StateDialogState extends State<StateDialog>{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().state}";
+        String apiUrl = "${baseurl}${ApiConstants().state}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

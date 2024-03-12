@@ -265,6 +265,7 @@ class _CountryDialogState extends State<CountryDialog>{
   }
 
   callGetCountry() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -276,7 +277,7 @@ class _CountryDialogState extends State<CountryDialog>{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().country}";
+        String apiUrl = "${baseurl}${ApiConstants().country}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

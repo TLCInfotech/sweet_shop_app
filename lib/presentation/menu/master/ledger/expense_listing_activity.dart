@@ -285,6 +285,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   callGetLedger(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -294,7 +295,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().ledger}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().ledger}?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -376,6 +377,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
 
   callDeleteItem(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -387,7 +389,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger;
+        String apiUrl = baseurl + ApiConstants().ledger;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

@@ -83,6 +83,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   callGetFranchiseeItemOpeningList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -92,7 +93,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee_item_opening}?Franchisee_ID=3084&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Group_ID=2";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?Franchisee_ID=3084&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Group_ID=2";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -667,6 +668,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -682,7 +684,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           dELETE: Deleted_list.toList()
       );
 
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee_item_opening;
+      String apiUrl =baseurl + ApiConstants().franchisee_item_opening;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             print("  ITEM  $data ");

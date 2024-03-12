@@ -263,16 +263,18 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
+            onTap: () async{
               if (mounted) {
+                String baseurl=await AppPreferences.getDomainLink();
                 setState(() {
                   disableColor = true;
+
                   if(widget.editItem!=null){
-                    String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString();
+                    String apiUrl = baseurl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString();
                     callPostFranchisee(apiRequestHelper.callAPIsForPutAPI,apiUrl);
                     // callUpdateFranchisee();
                   }else{
-                    String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee;
+                    String apiUrl = baseurl + ApiConstants().franchisee;
                     callPostFranchisee(apiRequestHelper.callAPIsForDynamicPI,apiUrl);
                   }
                 });

@@ -263,6 +263,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
   callGetFranchisee(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -273,7 +274,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -362,6 +363,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
 
   callDeleteFranchisee(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -373,7 +375,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().franchisee;
+        String apiUrl = baseurl + ApiConstants().franchisee;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

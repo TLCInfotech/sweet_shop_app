@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sweet_shop_app/presentation/menu/setting/domain_link_activity.dart';
 import 'core/app_preferance.dart';
 import 'presentation/menu/master/item_category/Item_Category.dart';
 import 'presentation/menu/master/unit/Units.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         '/category': (BuildContext context) =>   ItemCategoryActivity(),
         '/unit': (BuildContext context) =>   UnitsActivity(),
         '/loginActivity': (BuildContext context) =>   const LoginActivity(),
+        '/domainLinkActivity': (BuildContext context) =>   const DomainLinkActivity(),
         '/dashboard': (BuildContext context) =>   DashboardActivity(),
       },
     );
@@ -95,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       deviceInfo.androidInfo.then((androidInfo) {
         AppPreferences.setDeviceId(androidInfo.id);
-print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
+        print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
       });
 
     }
@@ -136,22 +138,13 @@ print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
   }
 
 
-  void navigateUnit() {
-    Navigator.of(context).pushReplacementNamed('/unit');
-  }
-
-
-  void navigateItemCategory() {
-    Navigator.of(context).pushReplacementNamed('/category');
-  }
-
-
   void navigateDashboard() {
     Navigator.of(context).pushReplacementNamed('/dashboard');
   }
 
-
-
+  void navigateDomainLink() {
+    Navigator.of(context).pushReplacementNamed('/domainLinkActivity');
+  }
 
   /* Timer */
   startTimer() async {
@@ -159,16 +152,22 @@ print("ttttttttttt  ${androidInfo.id}      ${androidInfo.product}");
     try {
       String accessToken ="1";
       String sessionToken =await AppPreferences.getSessionToken();
+      String companyId =await AppPreferences.getCompanyId();
+      String domainLink =await AppPreferences.getDomainLink();
+      print(domainLink);
+      print(companyId);
         print("grhrgeghreghre  $sessionToken");
       if (sessionToken!="") {
         return Timer(duration, navigateDashboard);
-
       }else{
-        return Timer(duration, navigateLogin);
+        if(domainLink!="" && companyId!="")
+          return Timer(duration, navigateLogin);
+        else
+          return Timer(duration, navigateDomainLink);
       }
     } catch (e) {
     }
-    return Timer(duration, navigateLogin);
+    return Timer(duration, navigateDomainLink);
 
   }
 

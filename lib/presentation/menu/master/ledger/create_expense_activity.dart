@@ -1649,7 +1649,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     String accountNo = accountNoController.text.trim();
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
-
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1697,7 +1697,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             creator: creatorName,
             creatorMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger;
+        String apiUrl = baseurl + ApiConstants().ledger;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -1763,6 +1763,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutLedgerRequestModel model = PutLedgerRequestModel(
@@ -1807,7 +1808,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString();
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{

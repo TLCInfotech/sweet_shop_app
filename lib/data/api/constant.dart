@@ -1,7 +1,9 @@
+import '../../core/app_preferance.dart';
+
 class ApiConstants {
+
+
   String baseUrl = "http://61.2.227.173:3000/"; // UAT URL
-
-
 
   String login = "login";
   String item_category = "ItemCategory";
@@ -25,4 +27,8 @@ class ApiConstants {
   String item_opening="ItemOpeningBalance";
   String franchisee_item_opening="FranchiseeItemOpeningBalance";
   String ledger_opening_bal="LedgerOpeningBalance";
+
+  getBaseUrl()async{
+    return await AppPreferences.getDomainLink();
+  }
 }

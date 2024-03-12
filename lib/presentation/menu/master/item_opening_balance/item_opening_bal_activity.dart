@@ -39,6 +39,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   callGetFranchiseeItemOpeningList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -48,7 +49,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee_item_opening}?date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&item_ID=5&seq_No=2";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&item_ID=5&seq_No=2";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

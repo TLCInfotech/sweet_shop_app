@@ -264,6 +264,7 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
   }
 
   callGetTaxType() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -276,7 +277,7 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().workunder}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().workunder}?Company_ID=$companyId";
         print("ghghg  $apiUrl");
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){

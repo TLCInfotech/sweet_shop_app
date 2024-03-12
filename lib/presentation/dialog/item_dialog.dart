@@ -40,12 +40,13 @@ class _ItemDialogState extends State<ItemDialog>{
   var itemsList = [];
 
   fetchShows (searchstring) async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().search_item+"?name=${searchstring}";
+      String apiUrl = baseurl + ApiConstants().search_item+"?name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {

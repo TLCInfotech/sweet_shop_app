@@ -570,6 +570,7 @@ String oldUid="";
     String userName=userController.text.trim();
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -586,7 +587,7 @@ String oldUid="";
         creatorMachine: deviceId
       );
 
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().users;
+      String apiUrl = baseurl + ApiConstants().users;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -617,6 +618,7 @@ String oldUid="";
   }
 
   callUpdateItem() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String workingDay=workingdaysController.text.trim();
     String userName=userController.text.trim();
     String creatorName = await AppPreferences.getUId();
@@ -636,7 +638,7 @@ String oldUid="";
             creatorMachine: deviceId,
         );
         print("jfhjfhjjhrjhr  $companyId  ${model.toJson()} ");
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
+        String apiUrl = baseurl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokan,
             onSuccess:(value)async{

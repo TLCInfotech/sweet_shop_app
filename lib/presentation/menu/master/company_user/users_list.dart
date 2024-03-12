@@ -241,6 +241,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   callGetUser(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -250,7 +251,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${ApiConstants().baseUrl}${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
+            "${baseurl}${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {
@@ -326,6 +327,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
 
   callDeleteUser(String removeId, int index) async {
     String uid = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -334,7 +336,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         DeleteIUserRequestModel model = DeleteIUserRequestModel(
             id: removeId, modifier: uid, modifierMachine: deviceId);
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().users;
+        String apiUrl = baseurl + ApiConstants().users;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {

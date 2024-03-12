@@ -240,12 +240,14 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
   callGetItemCategory() async {
+
     String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
     AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+      String apiUrl = baseurl + ApiConstants().item_category;
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {

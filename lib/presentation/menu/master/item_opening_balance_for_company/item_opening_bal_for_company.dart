@@ -67,6 +67,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
 
   callGetItemOpeningList(int page) async {
+    String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String companyId = await AppPreferences.getCompanyId();
@@ -79,7 +80,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=$companyId&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().item_opening}?Company_ID=$companyId&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -634,7 +635,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
 
   callPostItemOpeningBal() async {
-
+    String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     //var model={};
@@ -652,7 +653,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
           dELETE: Deleted_list.toList()
       );
 
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().item_opening;
+      String apiUrl = baseurl + ApiConstants().item_opening;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             print("  ITEM  $data ");

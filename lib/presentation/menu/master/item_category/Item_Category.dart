@@ -501,6 +501,7 @@ bool isLoaderShow=false;
   callGetItemCategory(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -510,7 +511,7 @@ bool isLoaderShow=false;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -595,6 +596,7 @@ bool isLoaderShow=false;
   callDeleteItemCategory(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -605,7 +607,7 @@ bool isLoaderShow=false;
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+        String apiUrl = baseurl + ApiConstants().item_category;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -649,6 +651,7 @@ bool isLoaderShow=false;
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -663,7 +666,7 @@ bool isLoaderShow=false;
         );
 
         //  widget.mListener.loaderShow(true);
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category;
+        String apiUrl = baseurl + ApiConstants().item_category;
         apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print("  LedgerLedger  $data ");
@@ -710,6 +713,7 @@ bool isLoaderShow=false;
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
@@ -727,7 +731,7 @@ bool isLoaderShow=false;
 
         print("MODAL");
         print(model.toJson());
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
+        String apiUrl =baseurl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
 
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

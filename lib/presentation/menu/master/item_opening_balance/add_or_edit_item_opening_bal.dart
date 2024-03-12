@@ -68,11 +68,12 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   fetchShows (searchstring) async {
     String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().search_item+"?name=${searchstring}";
+      String apiUrl = baseurl + ApiConstants().search_item+"?name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
