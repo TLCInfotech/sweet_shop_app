@@ -3,13 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'create_item_opening_bal_activity.dart';
 
 class ItemOpeningBal extends StatefulWidget {
@@ -20,7 +27,88 @@ class ItemOpeningBal extends StatefulWidget {
 }
 
 class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+  bool isLoaderShow=false;
+
+  List<dynamic> Franchisee_list=[];
+
+  callGetFranchiseeItemOpeningList(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().franchisee_item_opening}?date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&item_ID=5&seq_No=2";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+
+                  setState(() {
+                    Franchisee_list=_arrList;
+                  });
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

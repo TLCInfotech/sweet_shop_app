@@ -1,5 +1,5 @@
 class PostFranchiseeItemOpeningRequestModel {
-  String? franchiseeID;
+  String? companyID;
   String? date;
   String? modifier;
   String? modifierMachine;
@@ -8,7 +8,7 @@ class PostFranchiseeItemOpeningRequestModel {
   List<dynamic>? dELETE;
 
   PostFranchiseeItemOpeningRequestModel(
-      {this.franchiseeID,
+      {this.companyID,
         this.date,
         this.modifier,
         this.modifierMachine,
@@ -17,7 +17,7 @@ class PostFranchiseeItemOpeningRequestModel {
         this.dELETE});
 
   PostFranchiseeItemOpeningRequestModel.fromJson(Map<String, dynamic> json) {
-    franchiseeID = json['Franchisee_ID'];
+    companyID = json['Franchisee_ID'];
     date = json['Date'];
     modifier = json['Modifier'];
     modifierMachine = json['Modifier_Machine'];
@@ -43,7 +43,7 @@ class PostFranchiseeItemOpeningRequestModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Franchisee_ID'] = this.franchiseeID;
+    data['Franchisee_ID'] = this.companyID;
     data['Date'] = this.date;
     data['Modifier'] = this.modifier;
     data['Modifier_Machine'] = this.modifierMachine;

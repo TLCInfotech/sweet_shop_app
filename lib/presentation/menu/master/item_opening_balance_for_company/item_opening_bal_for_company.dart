@@ -63,6 +63,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
   bool isLoaderShow=false;
 
+  var editedItemIndex=null;
+
 
   callGetItemOpeningList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
@@ -76,7 +78,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=3081&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_opening}?Company_ID=74&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -89,6 +91,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                   setState(() {
                     Item_list=_arrList;
                   });
+                  calculateTotalAmt();
                 }
 
               });
@@ -142,7 +145,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
     // TODO: implement initState
     super.initState();
     callGetItemOpeningList(0);
-    calculateTotalAmt();
+
   }
 
   @override
@@ -300,6 +303,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -368,14 +374,14 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                         ),
                                         onPressed: ()async{
                                           if(Item_list[index]['Seq_No']!=0){
-                                             var deletedItem=   {
-                                                  "Seq_No": Item_list[index]['seq_No'],
-                                                  "Item_ID": Item_list[index]['Item_ID']
-                                                };
-                                               Deleted_list.add(deletedItem);
-                                               setState(() {
-                                                 Deleted_list=Deleted_list;
-                                               });
+                                            var deletedItem=   {
+                                              "Seq_No": Item_list[index]['Seq_No'],
+                                              "Item_ID": Item_list[index]['Item_ID']
+                                            };
+                                            Deleted_list.add(deletedItem);
+                                            setState(() {
+                                              Deleted_list=Deleted_list;
+                                            });
                                           }
                                           var contain = Inserted_list.where((element) => element['Item_ID']== Item_list[index]['Item_ID']);
                                           if(contain.length>0){
@@ -441,9 +447,16 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         titleIndicator: false,
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
-          setState(() {
-            invoiceDate=date!;
-          });
+          if(date!=null) {
+            setState(() {
+              invoiceDate = date!;
+              Item_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+              Inserted_list=[];
+            });
+            callGetItemOpeningList(0);
+          }
         },
         applicablefrom: invoiceDate
     );
@@ -558,20 +571,22 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   AddOrEditItemOpeningBalForCompanyDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
-    var contain = itemLlist.where((element) => element['Item_ID'] ==item['Item_ID']);
-    print("CONTAIN $contain");
-    if(contain.length>0){
-      var index=Item_list.indexWhere((element) => item['Item_ID']==element['Item_ID']);
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
         Item_list[index]['Seq_No']=item['seq_No'];
         Item_list[index]['Item_ID']=item['Item_ID'];
+        Item_list[index]['Batch_ID']=item['Batch_ID'];
         Item_list[index]['Item_Name']=item['Item_Name'];
         Item_list[index]['Quantity']=item['Quantity'];
         Item_list[index]['Unit']=item['Unit'];
         Item_list[index]['Rate']=item['Rate'];
         Item_list[index]['Amount']=item['Amount'];
       });
-      if(item['Seq_No']!=0) {
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['Seq_No']!=null) {
         Updated_list.add(item);
         setState(() {
           Updated_list = Updated_list;
@@ -580,28 +595,24 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
     }
     else
     {
-      if (contain.length>0) {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
 
-      }
-      else {
-        // item.add(Seq_No:itemLlist.length+1);
-        // item['Seq_No']=itemLlist.length+1;
-        itemLlist.add(item);
-        Inserted_list.add(item);
-        setState(() {
-          Inserted_list=Inserted_list;
-        });
-        print(itemLlist);
-      }
       setState(() {
         Item_list = itemLlist;
       });
     }
+    setState(() {
+      editedItemIndex=null;
+    });
     await calculateTotalAmt();
     print("List");
     print(Inserted_list);
     print(Updated_list);
-
   }
 
   calculateTotalAmt()async{
@@ -631,7 +642,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         isLoaderShow=true;
       });
       PostItemOpeningRequestModel model = PostItemOpeningRequestModel(
-          companyID: companyId,
+          companyID: "74",
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,
@@ -642,12 +653,16 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
       String apiUrl = ApiConstants().baseUrl + ApiConstants().item_opening;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
-          onSuccess:(data){
+          onSuccess:(data)async{
             print("  ITEM  $data ");
             setState(() {
-              isLoaderShow=false;
+              isLoaderShow=true;
+              Item_list=[];
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
             });
-            Navigator.pop(context);
+            await callGetItemOpeningList(0);
 
           }, onFailure: (error) {
             setState(() {

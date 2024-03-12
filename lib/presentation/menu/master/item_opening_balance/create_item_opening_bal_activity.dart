@@ -190,7 +190,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
                 backgroundColor: Colors.white,
                 title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
+                  ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -673,7 +673,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         isLoaderShow=true;
       });
       PostFranchiseeItemOpeningRequestModel model = PostFranchiseeItemOpeningRequestModel(
-          franchiseeID: selectedFranchiseeID,
+          companyID: selectedFranchiseeID,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,
