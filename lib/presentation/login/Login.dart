@@ -156,6 +156,7 @@ class _LoginActivityState extends State<LoginActivity> {
                 isLoaderShow=false;
               });
               AppPreferences.setSessionToken(token);
+              AppPreferences.setCompanyId("74");
               AppPreferences.setUId(uid);
               Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
             }, onFailure: (error) {

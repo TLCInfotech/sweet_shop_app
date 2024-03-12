@@ -235,7 +235,7 @@ String companyId="";
   Widget getAddMasterSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .65,
+      //height: parentHeight * .68,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -243,7 +243,7 @@ String companyId="";
         ),
       ),
       child: Padding(
-        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01,bottom: parentHeight*.015),
         child: Column(
           children: [
             GestureDetector(
@@ -535,11 +535,13 @@ String companyId="";
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
-            Text(
-              ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
-              style: page_heading_textStyle,
-              textAlign: TextAlign.start,
-
+            Expanded(
+              child: Text(
+                ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
+                style: page_heading_textStyle,
+                textAlign: TextAlign.start,
+              
+              ),
             ),
           ],
         ),

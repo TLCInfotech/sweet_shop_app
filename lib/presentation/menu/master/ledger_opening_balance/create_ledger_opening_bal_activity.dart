@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../../../core/app_preferance.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_model.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_ledger_opening_bal.dart';
@@ -41,11 +46,25 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   String selectedFranchiseeName="";
 
   String TotalAmount="0.00";
+
+  List<dynamic> Item_list=[];
+
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  bool isLoaderShow=false;
   double TotalCr=0.00;
 
   double TotalDr=0.00;
 
 
+/*
   List<dynamic> Item_list=[
     {
       "id":1,
@@ -61,6 +80,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
     },
   ];
+*/
 
 
   @override
@@ -80,68 +100,74 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   }
 
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: Color(0xFFfffff5),
-        // borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Color(0xFFfffff5),
+            // borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Scaffold(
+            backgroundColor: Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
 
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
-                  style: appbar_text_style,),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                height: SizeConfig.safeUsedHeight * .12,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -553,6 +579,55 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
   }
 
+  callPostItemOpeningBal() async {
+
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
+          companyID: companyId,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+      );
+
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_opening_bal;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 
 }
 

@@ -672,7 +672,7 @@ setState(() {
   franchiseeName=name;
   franchiseeId=id;
 });
-print("oneee $name");
+print("oneee $name  $id  $franchiseeId");
   }
 
 }

@@ -994,6 +994,8 @@ getCompany()async{
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
       String apiUrl = ApiConstants().baseUrl + ApiConstants().company;
+
+      print("CompanyRequestModel       ${model.toJson()}  $apiUrl");
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
