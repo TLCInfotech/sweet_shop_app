@@ -7,10 +7,24 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_amt_type.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+class TestItem {
+  String label;
+  dynamic value;
+  TestItem({required this.label, this.value});
 
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value']);
+  }
+}
 class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
   final dynamic editproduct;
@@ -51,6 +65,62 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   //   print('hello world from search . the value is $value');
   // }
 
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  var itemsList = [];
+  var selectedItemID =null;
+
+  final _formkey=GlobalKey<FormState>();
+
+  fetchShows (searchstring) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId&name=${searchstring}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+    }
+    return _list;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -61,9 +131,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['itemName'];
-        amount.text=widget.editproduct['amt'].toString();
-        selectedType=widget.editproduct['amtType'];
+        _textController.text=widget.editproduct['Ledger_Name'];
+        amount.text=widget.editproduct['Amount'].toString();
+        selectedType=widget.editproduct['Amnt_Type'];
       });
     }
   }
@@ -120,6 +190,49 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     );
   }
 
+  Widget getAddSearchLayout(double parentHeight, double parentWidth){
+    return Container(
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedItemID = v.value;
+                itemsList = [];
+              });
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
+
+    );
+  }
+
+/*
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
@@ -156,6 +269,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
       ),
     );
   }
+*/
 
 
   Widget getAmount(double parentHeight, double parentWidth){
@@ -242,13 +356,22 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
         ),
         GestureDetector(
           onTap: () {
+            print("jhgtghh  ${_textController.text}");
+
+         /*   Item_list[index]['Seq_No']=item['seq_No'];
+            Item_list[index]['Ledger_ID']=item['Ledger_ID'];
+            Item_list[index]['Amount']=item['Amount'];
+            Item_list[index]['Amnt_Type']=item['Amnt_Type'];
+            Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];*/
             var item={
-              "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "itemName":_textController.text,
-              "amt":double.parse(amount.text),
-              "amtType":selectedType
+             // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
+              "Ledger_Name":_textController.text,
+              "Ledger_ID":selectedItemID,
+              "Amount":double.parse(amount.text),
+              "Amnt_Type":selectedType
 
             };
+
             if(widget.mListener!=null){
 
               widget.mListener.AddOrEditItemOpeningBalDetail(item);

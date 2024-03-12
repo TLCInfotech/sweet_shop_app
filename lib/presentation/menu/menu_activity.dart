@@ -540,7 +540,6 @@ String companyId="";
                 ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
                 style: page_heading_textStyle,
                 textAlign: TextAlign.start,
-              
               ),
             ),
           ],

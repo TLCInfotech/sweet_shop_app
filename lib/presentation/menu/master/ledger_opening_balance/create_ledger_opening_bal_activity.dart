@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
@@ -62,7 +59,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   double TotalCr=0.00;
 
   double TotalDr=0.00;
-
+  var editedItemIndex=null;
 
 /*
   List<dynamic> Item_list=[
@@ -186,13 +183,13 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               child: Column(
                 children: [
 
-                //  getFieldTitleLayout("Invoice Detail"),
+                  //  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                    //  Item_list.isNotEmpty?getFieldTitleLayout("Ledger Detail"):Container(),
+                      //  Item_list.isNotEmpty?getFieldTitleLayout("Ledger Detail"):Container(),
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -252,6 +249,9 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -285,14 +285,14 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Text("${(Item_list[index]['amt']).toStringAsFixed(2)} ${Item_list[index]['amtType']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue)),
+                                            Text("${(Item_list[index]['Amount']).toStringAsFixed(2)} ${Item_list[index]['Amnt_Type']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue)),
                                           ),
                                         ],
                                       ),
@@ -468,7 +468,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
             ),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
               //   )));
@@ -484,6 +484,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                   disableColor = true;
                 });
               }
+              await  callLedgerOpeningBal();
             },
             onDoubleTap: () {},
             child: Container(
@@ -522,6 +523,50 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   AddOrEditItemOpeningBalDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
+      setState(() {
+        Item_list[index]['Seq_No']=item['seq_No'];
+        Item_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Amnt_Type']=item['Amnt_Type'];
+        Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
+
+
+    /*
     if(item['id']!=""){
       var index=Item_list.indexWhere((element) => item['id']==element['id']);
       setState(() {
@@ -541,7 +586,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
         Item_list = itemLlist;
       });
     }
-    await calculateTotalAmt();
+    await calculateTotalAmt();*/
   }
 
   calculateTotalAmt()async{
@@ -550,12 +595,12 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
     var totalcr=0.00;
     var totaldr=0.00;
     for(var item  in Item_list ){
-      total=total+item['amt'];
-      if(item['amtType']=="Cr"){
-        totalcr=totalcr+item['amt'];
+      total=total+item['Amount'];
+      if(item['Amnt_Type']=="Cr"){
+        totalcr=totalcr+item['Amount'];
       }
-      else  if(item['amtType']=="Dr"){
-        totaldr=totaldr+item['amt'];
+      else  if(item['Amnt_Type']=="Dr"){
+        totaldr=totaldr+item['Amount'];
       }
     }
     if(totalcr>totaldr){
@@ -579,8 +624,8 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
 
   }
 
-  callPostItemOpeningBal() async {
-    String baseurl=await AppPreferences.getDomainLink();
+  callLedgerOpeningBal() async {
+
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
@@ -589,15 +634,16 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
       });
       PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
           companyID: companyId,
-          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          date: widget.dateNew,
           modifier: creatorName,
           modifierMachine: deviceId,
           iNSERT: Inserted_list.toList(),
           uPDATE: Updated_list.toList(),
           dELETE: Deleted_list.toList()
       );
-
-      String apiUrl = baseurl + ApiConstants().ledger_opening_bal;
+      print("PostILedgerOpeningRequestModel    ${model.toJson()}");
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_opening_bal;
+      print("urlll  $apiUrl");
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");

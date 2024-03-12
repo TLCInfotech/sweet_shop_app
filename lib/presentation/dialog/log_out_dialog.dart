@@ -229,6 +229,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
         ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
         apiResponse =
             ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+        CommonWidget.errorDialog(context, apiResponse.msg!);
         print("@@@@@@@@@@@@@@@ ${apiResponse.msg}");
 
       }
