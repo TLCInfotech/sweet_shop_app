@@ -42,6 +42,8 @@ class AddOrEditItemOpeningBal extends StatefulWidget {
 class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   bool isLoaderShow = false;
 
+  var oldItemID=null;
+
   var itemsList = [];
   var selectedItemID =null;
 
@@ -67,13 +69,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   final _formkey=GlobalKey<FormState>();
 
   fetchShows (searchstring) async {
+    String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().search_item+"?name=${searchstring}";
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
@@ -126,6 +129,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
+        oldItemID=widget.editproduct['Item_ID'];
         selectedItemID=widget.editproduct['Item_ID'];
         _textController.text=widget.editproduct['Item_Name'];
         unit.text=widget.editproduct['Unit'].toString();
@@ -371,24 +375,40 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
               if (isValid == true && selectedItemID != null) {
                 var item = {};
                 if (widget.editproduct != null) {
-                  item = {
-                    "Seq_No": widget.editproduct['Seq_No'],
-                    "Item_ID": selectedItemID,
-                    "Item_Name": _textController.text,
-                    "Store_ID": null,
-                    "Batch_ID": batchno.text == "" ? null : batchno.text,
-                    "Quantity": int.parse(quantity.text),
-                    "Unit": unit.text,
-                    "Rate": rate.text,
-                    "Amount": amount.text
-                  };
+                  if(oldItemID!=selectedItemID){
+                    item = {
+                      "Seq_No": widget.editproduct['Seq_No'],
+                      "Item_ID": oldItemID,
+                      "New_Item_ID":selectedItemID,
+                      "Item_Name": _textController.text,
+                      "Store_ID": null,
+                      "Batch_ID": batchno.text == "" ? null : batchno.text,
+                      "Quantity": int.parse(quantity.text),
+                      "Unit": unit.text,
+                      "Rate": rate.text,
+                      "Amount": amount.text
+                    };
+                  }
+                  else {
+                    item = {
+                      "Seq_No": widget.editproduct['Seq_No'],
+                      "Item_ID": selectedItemID,
+                      "Item_Name": _textController.text,
+                      "Store_ID": null,
+                      "Batch_ID": batchno.text == "" ? null : batchno.text,
+                      "Quantity": int.parse(quantity.text),
+                      "Unit": unit.text,
+                      "Rate": rate.text,
+                      "Amount": amount.text
+                    };
+                  }
                 }
                 else {
                   item = {
                     "Item_ID": selectedItemID,
                     "Item_Name": _textController.text,
                     "Store_ID": null,
-                    "Batch_ID": null,
+                    "Batch_ID": batchno.text,
                     "Quantity": int.parse(quantity.text),
                     "Unit": unit.text,
                     "Rate": rate.text,
@@ -396,7 +416,8 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                   };
                 }
                 if (widget.mListener != null) {
-                  widget.mListener.AddOrEditItemOpeningBalDetail(item);
+                  widget.mListener.AddOrEditItemOpeningBalDetail(
+                      item);
                   Navigator.pop(context);
                 }
               }

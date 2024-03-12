@@ -74,11 +74,18 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(editedItemIndex!=null) {
-      callGetFranchiseeItemOpeningList(0);
+    if(widget.editedItem!=null) {
+      setData();
     }
   }
 
+  setData()async{
+    setState(() {
+      selectedFranchiseeID=widget.editedItem['Franchisee_ID'];
+      selectedFranchiseeName=widget.editedItem['Name'];
+    });
+    await callGetFranchiseeItemOpeningList(0);
+  }
 
   callGetFranchiseeItemOpeningList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
@@ -93,7 +100,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?Franchisee_ID=3084&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Group_ID=2";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?Franchisee_ID=$selectedFranchiseeID&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -300,7 +307,6 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         physics: NeverScrollableScrollPhysics(),
         itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
-          print(Item_list[index]['Amount']);
           return  AnimationConfiguration.staggeredList(
             position: index,
             duration:
@@ -391,15 +397,18 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                               Deleted_list=Deleted_list;
                                             });
                                           }
-                                          var contain = Inserted_list.where((element) => element['Item_ID']== Item_list[index]['Item_ID']);
-                                          if(contain.length>0){
+                                          var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                          print(contain);
+                                          if(contain>=0){
                                             print("REMOVE");
-                                            Inserted_list.remove(Inserted_list.indexOf(contain));
+                                            Inserted_list.remove(Inserted_list[contain]);
                                           }
                                           Item_list.remove(Item_list[index]);
                                           setState(() {
                                             Item_list=Item_list;
+                                            Inserted_list=Inserted_list;
                                           });
+                                          print(Inserted_list);
                                           await calculateTotalAmt();
                                         },
                                       )
@@ -473,7 +482,33 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return GetDateLayout(
+    return Container(
+        height: 42,
+        margin: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(CommonWidget.getDateLayout(invoiceDate),
+              //DateFormat('dd-MM-yyyy').format(applicablefrom),
+              style: item_regular_textStyle,),
+            FaIcon(FontAwesomeIcons.calendar,
+              color: Colors.black87, size: 16,)
+          ],
+        )
+    );
+
+      GetDateLayout(
 
         titleIndicator: false,
         title:ApplicationLocalizations.of(context)!.translate("date")!,

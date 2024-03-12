@@ -707,6 +707,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callGetLedgerGroup(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -716,7 +717,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().ledger_group}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -790,6 +791,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callDeleteLedgerGroup(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -800,7 +802,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group;
+        String apiUrl = baseurl + ApiConstants().ledger_group;
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -844,6 +846,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     String groupNameText = groupName.text.trim();
     String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -860,7 +863,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         );
 
         //  widget.mListener.loaderShow(true);
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group;
+        String apiUrl = baseurl + ApiConstants().ledger_group;
         apiRequestHelper.callAPIsForPostMsgAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -911,6 +914,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     String groupNameText = groupName.text.trim();
     String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -924,7 +928,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString();
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{

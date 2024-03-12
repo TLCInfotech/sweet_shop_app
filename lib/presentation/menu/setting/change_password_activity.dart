@@ -348,6 +348,7 @@ bool disableColor=false;
   }
 
   callUpdateItem() async {
+    String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -361,7 +362,7 @@ bool disableColor=false;
           modifierMachine: deviceId,
         );
         print("jfhjfhjjhrjhr  $tokenId ${model.toJson()}");
-        String apiUrl = ApiConstants().baseUrl + ApiConstants().updateuer;
+        String apiUrl = baseurl + ApiConstants().updateuer;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokenId,
             onSuccess:(value)async{

@@ -37,6 +37,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   List<dynamic> Franchisee_list=[];
 
   callGetFranchiseeItemOpeningList(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -49,7 +50,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&item_ID=5&seq_No=2";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening_list}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -108,6 +109,13 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
       }
       CommonWidget.noInternetDialogNew(context);
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callGetFranchiseeItemOpeningList(0);
   }
 
 
@@ -215,6 +223,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           setState(() {
             invoiceDate=date!;
           });
+          callGetFranchiseeItemOpeningList(0);
         },
         applicablefrom: invoiceDate
     );
@@ -240,7 +249,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
+          itemCount:Franchisee_list.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -251,13 +260,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 child: FadeInAnimation(
                   delay: const Duration(microseconds: 1500),
                   child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                    onTap: ()async{
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                         dateNew:CommonWidget.getDateLayout(invoiceDate),
-                        editedItem:index,
+                        editedItem:Franchisee_list[index],
                         //DateFormat('dd-MM-yyyy').format(invoiceDate),
                         mListener: this,
                       )));
+                      callGetFranchiseeItemOpeningList(0);
                     },
                     child: Card(
                       child: Row(
@@ -286,23 +296,23 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
+                                         Text("${Franchisee_list[index]['Name']}",style: item_heading_textStyle,),
+                                        //  SizedBox(height: 5,),
+                                        // Row(
+                                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                                        //   children: [
+                                        //     FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                        //     const SizedBox(width: 10,),
+                                        //      Expanded(child: Text("${Franchisee_list[index]['itemCount']} Items",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                        //   ],
+                                        // ),
                                         const SizedBox(height: 5,),
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                             const SizedBox(width: 10,),
-                                            Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            Expanded(child: Text(CommonWidget.getCurrencyFormat(Franchisee_list[index]['Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                           ],
                                         ),
 

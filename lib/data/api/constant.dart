@@ -26,7 +26,9 @@ class ApiConstants {
   String updateuer = "UpdatePassword";
   String item_opening="ItemOpeningBalance";
   String franchisee_item_opening="FranchiseeItemOpeningBalance";
+  String item_list="ItemList";
   String ledger_opening_bal="LedgerOpeningBalance";
+  String franchisee_item_opening_list="getAllFranchaiseeItemCount";
 
   getBaseUrl()async{
     return await AppPreferences.getDomainLink();

@@ -385,15 +385,18 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                               Deleted_list=Deleted_list;
                                             });
                                           }
-                                          var contain = Inserted_list.where((element) => element['Item_ID']== Item_list[index]['Item_ID']);
-                                          if(contain.length>0){
+                                          var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                          print(contain);
+                                          if(contain>=0){
                                             print("REMOVE");
-                                            Inserted_list.remove(Inserted_list.indexOf(contain));
+                                            Inserted_list.remove(Inserted_list[contain]);
                                           }
                                           Item_list.remove(Item_list[index]);
                                           setState(() {
                                             Item_list=Item_list;
+                                            Inserted_list=Inserted_list;
                                           });
+                                          print(Inserted_list);
                                           await calculateTotalAmt();
                                         },
                                       )
@@ -586,8 +589,14 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         Item_list[index]['Rate']=item['Rate'];
         Item_list[index]['Amount']=item['Amount'];
       });
-      print("#############3");
-      print(item['Seq_No']);
+      if(item['New_Item_ID']!=null){
+        print("#############3");
+        print("present");
+        setState(() {
+          Item_list[index]['Item_ID']=item['Item_ID'];
+          Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+        });
+      }
       if(item['Seq_No']!=null) {
         Updated_list.add(item);
         setState(() {
@@ -612,8 +621,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
       editedItemIndex=null;
     });
     await calculateTotalAmt();
-    print("List");
-    print(Inserted_list);
+
     print(Updated_list);
   }
 

@@ -7,6 +7,8 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/presentation/login/Login.dart';
 
 import '../../../core/localss/application_localizations.dart';
 import '../../common_widget/signleLine_TexformField.dart';
@@ -38,7 +40,8 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
   }
  localData()async{
     companyId.text=await AppPreferences.getCompanyId();
-    domainLinkController.text=await AppPreferences.getDomainLink();
+    // domainLinkController.text=await AppPreferences.getDomainLink();
+    domainLinkController.text=ApiConstants().baseUrl;
     setState(() {
 
     });
@@ -250,15 +253,28 @@ Widget getCompanyId(double parentHeight, double parentWidth){
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
-              if (mounted) {
+            onTap: () async{
+              if (mounted && companyId.text!="" && domainLinkController.text!="") {
+                String sessionToken =await AppPreferences.getSessionToken();
                 setState(() {
                   disableColor = true;
                   AppPreferences.setDomainLink(domainLinkController.text);
-                  var snackBar = SnackBar(content: Text('domain link save succesfully'));
+                  AppPreferences.setCompanyId(companyId.text);
+                  var snackBar = SnackBar(content: Text('Domain save succesfully!'));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
+                  if(sessionToken!="") {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => DashboardActivity()));
+                  }
+                  else{
+                    Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) => LoginActivity()));
+                  }
                 });
+              }
+              else{
+                var snackBar = SnackBar(content: Text('Fill all the necessary field!'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
             onDoubleTap: () {},

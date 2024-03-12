@@ -580,7 +580,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   }
 
   callPostItemOpeningBal() async {
-
+    String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
@@ -597,7 +597,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
           dELETE: Deleted_list.toList()
       );
 
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_opening_bal;
+      String apiUrl = baseurl + ApiConstants().ledger_opening_bal;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
