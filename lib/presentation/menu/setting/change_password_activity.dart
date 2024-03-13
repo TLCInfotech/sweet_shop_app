@@ -360,6 +360,7 @@ bool disableColor=false;
           password: confirmPasswordController.text,
           modifier: creatorName,
           modifierMachine: deviceId,
+          companyId: companyId,
         );
         print("jfhjfhjjhrjhr  $tokenId ${model.toJson()}");
         String apiUrl = baseurl + ApiConstants().updateuer;
