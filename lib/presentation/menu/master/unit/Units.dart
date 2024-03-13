@@ -345,6 +345,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
 
   getMeasuringUnit()async{
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -357,7 +358,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${baseurl}${ApiConstants().measuring_unit}";
+        String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -418,6 +419,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
 
   postMeasuringUnit() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String unitMName=unitName.text.trim();
     String creatorName = await AppPreferences.getUId();
@@ -428,7 +430,8 @@ class _UnitsActivityState extends State<UnitsActivity> {
       PostMeasuringUnitRequestModel model = PostMeasuringUnitRequestModel(
         code: unitMName,
           creatorMachine: deviceId,
-          creator: creatorName
+          creator: creatorName,
+          companyId: companyId
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
       String apiUrl = baseurl + ApiConstants().measuring_unit;
@@ -464,6 +467,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
   }
 
   updateMeasuringUnit() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     AppPreferences.getDeviceId().then((deviceId) {
@@ -471,13 +475,14 @@ class _UnitsActivityState extends State<UnitsActivity> {
         isLoaderShow=true;
       });
       PutMeasuringUnitRequestModel model = PutMeasuringUnitRequestModel(
+          companyId:companyId ,
           code: mesuringText,
           newCode: unitName.text,
           modifier:creatorName ,
           modifierMachine: deviceId
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
-      String apiUrl = "${baseurl}${ApiConstants().measuring_unit}";
+      String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId";
       apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -512,6 +517,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
 
   callDeleteMeasuringUnit(String removeId,int index) async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -523,9 +529,10 @@ class _UnitsActivityState extends State<UnitsActivity> {
         DeleteMeasuringUnitRequestModel model = DeleteMeasuringUnitRequestModel(
             code:removeId,
             modifier: uid,
-            modifierMachine: deviceId
+            modifierMachine: deviceId,
+            companyId: companyId
         );
-        String apiUrl = baseurl + ApiConstants().measuring_unit;
+        String apiUrl = baseurl + ApiConstants().measuring_unit+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

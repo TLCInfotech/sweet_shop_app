@@ -638,7 +638,7 @@ String oldUid="";
             creatorMachine: deviceId,
         );
         print("jfhjfhjjhrjhr  $companyId  ${model.toJson()} ");
-        String apiUrl = baseurl + ApiConstants().users/*+"/"+widget.editItem['ID'].toString()*/;
+        String apiUrl = baseurl + ApiConstants().users+"?Company_ID=$companyId"/*+"/"+widget.editItem['ID'].toString()*/;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokan,
             onSuccess:(value)async{

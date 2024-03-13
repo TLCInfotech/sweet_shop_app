@@ -267,6 +267,7 @@ class _TaxDialogState extends State<TaxDialog>{
   }
 
   callGetTaxType() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -279,7 +280,7 @@ class _TaxDialogState extends State<TaxDialog>{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${baseurl}${ApiConstants().tax_type}";
+        String apiUrl = "${baseurl}${ApiConstants().tax_type}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

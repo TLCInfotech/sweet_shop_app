@@ -1032,6 +1032,7 @@ getCompany()async{
   }
 
   callCompanyUpdate() async {
+    String companyId = await AppPreferences.getCompanyId();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
     AppPreferences.getDeviceId().then((deviceId) {

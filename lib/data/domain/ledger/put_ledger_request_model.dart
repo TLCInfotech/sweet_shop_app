@@ -38,6 +38,7 @@ class PutLedgerRequestModel {
   String? gstImage;
   String? modifier;
   String? modifierMachine;
+  String? companyId;
 
   PutLedgerRequestModel({
     this.name,
@@ -79,10 +80,12 @@ class PutLedgerRequestModel {
     this.gstImage,
     this.modifier,
     this.modifierMachine,
+    this.companyId,
   });
 
   Map<String, dynamic> toJson() {
     return {
+      'Company_ID':companyId??'',
       'Name': name ?? '',
       'Group_ID': groupID ?? '',
       'Contact_Person': contactPerson ?? '',

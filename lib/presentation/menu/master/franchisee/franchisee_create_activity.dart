@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -24,6 +25,7 @@ import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../dialog/amount_type_dialog.dart';
 
 
 class CreateFranchisee extends StatefulWidget {
@@ -34,7 +36,7 @@ class CreateFranchisee extends StatefulWidget {
   _CreateFranchiseeState createState() => _CreateFranchiseeState();
 }
 
-class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerProviderStateMixin
+class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerProviderStateMixin,AmountTypeDialogInterface
 {
 
 
@@ -101,7 +103,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   List<String> LimitDataUnit = ["Cr","Dr"];
 
-  String ?selectedLimitUnit = null;
+  var selectedLimitUnit = null;
   File? adharFile ;
   File? panFile ;
   File? gstFile ;
@@ -169,8 +171,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
        franchiseeEmail.text=widget.editItem['EMail']!=null?widget.editItem['EMail'].toString(): franchiseeEmail.text;
       franchiseefssaiNo.text=widget.editItem['FSSAI_No']!=null?widget.editItem['FSSAI_No'].toString(): franchiseefssaiNo.text;
         franchiseeOutstandingLimit.text=widget.editItem['Outstanding_Limit']!=null?widget.editItem['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
-         selectedLimitUnit=widget.editItem['Outstanding_Limit_Type']!=null?widget.editItem['Outstanding_Limit_Type'].toString(): selectedLimitUnit;
-         franchiseePaymentDays.text=widget.editItem['Payment_Days']!=null?widget.editItem['Payment_Days'].toString(): franchiseePaymentDays.text;
+        selectedLimitUnit= widget.editItem['Outstanding_Limit_Type']!=null?widget.editItem['Outstanding_Limit_Type'].toString():selectedLimitUnit;
+          franchiseePaymentDays.text=widget.editItem['Payment_Days']!=null?widget.editItem['Payment_Days'].toString(): franchiseePaymentDays.text;
       });
     }
   }
@@ -266,11 +268,12 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             onTap: () async{
               if (mounted) {
                 String baseurl=await AppPreferences.getDomainLink();
+                String companyId = await AppPreferences.getCompanyId();
                 setState(() {
                   disableColor = true;
 
                   if(widget.editItem!=null){
-                    String apiUrl = baseurl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString();
+                    String apiUrl = baseurl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
                     callPostFranchisee(apiRequestHelper.callAPIsForPutAPI,apiUrl);
                     // callUpdateFranchisee();
                   }else{
@@ -741,41 +744,74 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       )
         ),
         Container(
-          height: parentHeight * .055,
-          width: 100,
-          margin: EdgeInsets.only(left: 10,top: 40),
-          padding: EdgeInsets.only(left: 10, right: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.WHITE_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: DropdownButton<dynamic>(
-            hint: Text(
-              ApplicationLocalizations.of(context)!.translate("unit")!, style: hint_textfield_Style,),
-            underline: SizedBox(),
-            isExpanded: true,
-            value: selectedLimitUnit,
-            onChanged: (newValue) {
-              setState(() {
-                selectedLimitUnit = newValue!;
-              });
+          height: 50,
+          width: 130,
+          margin: EdgeInsets.only(left: 5,top: 30),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              if (context != null) {
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue =
+                          Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                      return Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: AmountTypeDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception(
+                          'No widget to return in pageBuilder');
+                    });
+              }
             },
-            items: LimitDataUnit.map((dynamic limit) {
-              return DropdownMenuItem<dynamic>(
-                value: limit,
-                child: Text(limit.toString(), style: item_regular_textStyle),
-              );
-            }).toList(),
+            child: Container(
+                height: parentHeight * .055,
+                margin: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      selectedLimitUnit == null ? ApplicationLocalizations.of(context)!.translate("amount_type")!
+                          : selectedLimitUnit,
+                      style: selectedLimitUnit == null ? item_regular_textStyle : text_field_textStyle,
+                    ),
+                    FaIcon(
+                      FontAwesomeIcons.caretDown,
+                      color: Colors.black87.withOpacity(0.8),
+                      size: 16,
+                    )
+                  ],
+                )),
           ),
         )
+
       ],
     );
   }
@@ -1036,6 +1072,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             // widget.mListener.loaderShow(false);
           });
 
+    });
+  }
+
+  @override
+  selectedAmountType(String name) {
+    // TODO: implement selectedAmountType
+    setState(() {
+      selectedLimitUnit=name;
     });
   }
 

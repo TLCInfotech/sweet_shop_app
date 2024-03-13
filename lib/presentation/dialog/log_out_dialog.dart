@@ -211,7 +211,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
     String creatorName = await AppPreferences.getUId();
     String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
-    final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName');
+    final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName&Company_ID=$companyId');
 
     try {
       final response = await http.post(url,headers: {

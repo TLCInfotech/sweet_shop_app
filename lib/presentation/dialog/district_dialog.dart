@@ -271,6 +271,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
   }
 
   callGetCity() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -283,7 +284,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${baseurl}${ApiConstants().city}";
+        String apiUrl = "${baseurl}${ApiConstants().city}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

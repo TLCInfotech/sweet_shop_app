@@ -1,93 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:textfield_search/textfield_search.dart';
-
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
-import '../../core/localss/application_localizations.dart';
+import '../../core/internet_check.dart';
 import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/commonRequest/get_toakn_request.dart';
-import '../menu/master/item_opening_balance/add_or_edit_item_opening_bal.dart';
 
-class ItemDialog extends StatefulWidget {
-  final ItemDialogInterface mListener;
-
-  const ItemDialog({super.key, required this.mListener});
+class GroupNatureDialog extends StatefulWidget {
+  final GroupNatureDialogInterface mListener;
+  const GroupNatureDialog({super.key, required this.mListener,});
 
   @override
-  State<ItemDialog> createState() => _ItemDialogState();
+  State<GroupNatureDialog> createState() => _LedegerGroupDialogState();
 }
 
-class _ItemDialogState extends State<ItemDialog>{
+class _LedegerGroupDialogState extends State<GroupNatureDialog>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
-
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  bool isApiCall = false;
+  late InternetConnectionStatus internetStatus;
+
+  var editedItem=null;
+
+  int page = 1;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetGroupNature(page);
   }
 
-  var itemsList = [];
-
-  fetchShows (searchstring) async {
-    String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    String sessionToken = await AppPreferences.getSessionToken();
-    await AppPreferences.getDeviceId().then((deviceId) {
-      TokenRequestModel model = TokenRequestModel(
-        token: sessionToken,
-      );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}";
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data)async{
-            if(data!=null) {
-              var topShowsJson = (data) as List;
-              setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
-              });
-            }
-          }, onFailure: (error) {
-            CommonWidget.errorDialog(context, error);
-            return [];
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            CommonWidget.errorDialog(context, e);
-            return [];
-
-          },sessionExpire: (e) {
-            CommonWidget.gotoLoginScreen(context);
-            return [];
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
-  }
-
-  Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
-
-    List _list = <dynamic>[];
-    print(itemsList);
-    //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
-      _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetGroupNature(page);
+      }
     }
-    return _list;
   }
+  List<dynamic> group_nature = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +75,12 @@ class _ItemDialogState extends State<ItemDialog>{
               ),
               child: Column(
                 children: [
-                  SizedBox(
+                  Container(
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          ApplicationLocalizations.of(context)!.translate("select_category")!,                        style: TextStyle(
+                        ApplicationLocalizations.of(context)!.translate("group_nature")!,
+                        style: TextStyle(
                           fontFamily: "Montserrat_Bold",
                           fontSize: SizeConfig.blockSizeHorizontal * 5.0,
                           color: Colors.black,
@@ -124,9 +90,9 @@ class _ItemDialogState extends State<ItemDialog>{
                     ),
                   ),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  SizedBox(
+                  Container(
                       height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                      child: group_nature.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
                 ],
               ),
             ),
@@ -169,32 +135,27 @@ class _ItemDialogState extends State<ItemDialog>{
                     )),
               ),
               Expanded(
-                child: TextFieldSearch(
-                    label: 'Item',
-                    controller: _textController,
-                    decoration: textfield_decoration.copyWith(
-                      hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-                      prefixIcon: Container(
-                          width: 50,
-                          padding: EdgeInsets.all(10),
-                          alignment: Alignment.centerLeft,
-                          child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-                    ),
-                    textStyle: item_regular_textStyle,
-                    getSelectedValue: (v) {
-                      if(widget.mListener!=null){
-                        widget.mListener.selectedItem(v['ID'],v['Name']);
-                      }
-                      Navigator.pop(context);
-                      setState(() {
-                        itemsList = [];
-                      });
-                    },
-                    future: () {
-                      if (_textController.text != "")
-                        return fetchSimpleData(
-                            _textController.text.trim());
-                    }),
+                child: TextFormField(
+                  textInputAction: TextInputAction.done,
+                  // autofillHints: const [AutofillHints.email],
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _textController,
+                  textAlignVertical: TextAlignVertical.center,
+                  focusNode: searchFocus,
+                  style: text_field_textStyle,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    counterText: '',
+                    border: InputBorder.none,
+                    hintText:ApplicationLocalizations.of(context)!.translate("search")!,
+                    hintStyle: TextStyle(
+                        color: CommonColor.SEARCH_TEXT_COLOR,
+                        fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+                        fontFamily: 'Inter_Medium_Font',
+                        fontWeight: FontWeight.w400),
+                  ),
+                  // onChanged: _onChangeHandler,
+                ),
               ),
               Visibility(
                 visible: _textController.text.isNotEmpty,
@@ -225,14 +186,14 @@ class _ItemDialogState extends State<ItemDialog>{
       child: ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
-          itemCount: itemsList.length,
+          itemCount:group_nature.length,
           itemBuilder:(BuildContext context, int index){
             return Padding(
               padding:EdgeInsets.only(left: parentWidth*.1,right: parentWidth*.1),
               child: GestureDetector(
-                onTap: (){
+                onTap: (){//_arrListNew[index]['Name']
                   if(widget.mListener!=null){
-                    widget.mListener.selectedItem(index.toString(),itemsList.elementAt(index));
+                    widget.mListener.selctedGroupNature(group_nature[index]['code'],group_nature[index]['name']);
                   }
                   Navigator.pop(context);
                 },
@@ -250,12 +211,12 @@ class _ItemDialogState extends State<ItemDialog>{
                   child:Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        itemsList[index]['Name'],
+                      group_nature[index]['name']!=null? Text(
+                        group_nature[index]['name'],
                         style: text_field_textStyle,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ),
@@ -266,12 +227,11 @@ class _ItemDialogState extends State<ItemDialog>{
   }
 
   Widget getCloseButton(double parentHeight, double parentWidth){
-    return  Padding(
+    return Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
-      child: GestureDetector(
-        onTap: (){
+      child:GestureDetector(
+        onTap:(){
           Navigator.pop(context);
-          // Scaffold.of(context).openDrawer();
         },
         child: Container(
           height: parentHeight*.065,
@@ -282,9 +242,10 @@ class _ItemDialogState extends State<ItemDialog>{
               bottomRight: Radius.circular(7),
             ),
           ),
-          child: Center(
+          child:Center(
             child: Text(
               ApplicationLocalizations.of(context)!.translate("close")!,
+              // StringEn.CLOSE,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),
@@ -295,11 +256,93 @@ class _ItemDialogState extends State<ItemDialog>{
   }
 
 
+  callGetGroupNature(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().group_nature}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  print("responseeee   $data");
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
 
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
 
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (group_nature.isNotEmpty) group_nature.clear();
+    if (mounted) {
+      setState(() {
+        group_nature.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        group_nature.addAll(_list);
+      });
+    }
+  }
 }
 
 
-abstract class ItemDialogInterface{
-  selectedItem(String id,String name);
+abstract class GroupNatureDialogInterface{
+  selctedGroupNature(String code,String name,);
 }

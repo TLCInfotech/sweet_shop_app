@@ -1025,12 +1025,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   }
 
   callUpdateItem() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemRequestModel model = PutItemRequestModel(
+            CompanyId: companyId,
             Modifier: creatorName,
             Modifier_Machine: deviceId,
             Name: itemNameController.text.trim(),
@@ -1050,10 +1052,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             DefaultStore:defaultStoreController.text.trim(),
             DetailDesc: descController.text.trim(),
             Photo: picImageBytes,
-            Unit: measuringUnit
+            Unit: measuringUnit,
         );
 
-        String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
 
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

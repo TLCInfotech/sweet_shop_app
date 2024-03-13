@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/dialog/group_nature_dialog.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/internet_check.dart';
@@ -31,7 +32,7 @@ class ExpenseGroup extends StatefulWidget {
   State<ExpenseGroup> createState() => _ExpenseGroupState();
 }
 
-class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInterface{
+class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInterface,GroupNatureDialogInterface{
   TextEditingController groupName = TextEditingController();
   TextEditingController sequenseNoName = TextEditingController();
   TextEditingController sequenseNatureName = TextEditingController();
@@ -100,11 +101,9 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  title: Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("ledger_group")!,
-                      style: appbar_text_style,),
-                  ),
+                  title: Text(
+                    ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+                    style: appbar_text_style,),
                 ),
               ),
             ),
@@ -450,6 +449,69 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             ApplicationLocalizations.of(context)!.translate("group_nature")!,
             style: item_heading_textStyle,
           ),
+          parentCategoryId==0?GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              if (context != null) {
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue =
+                          Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                      return Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: GroupNatureDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception(
+                          'No widget to return in pageBuilder');
+                    });
+              }
+            },
+            child: Container(
+                height: parentHeight * .055,
+                margin: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      selectedgroup == null ? ApplicationLocalizations.of(context)!.translate("group_nature")!
+                          : selectedgroup,
+                      style: selectedgroup == null ? item_regular_textStyle : text_field_textStyle,
+                    ),
+                    FaIcon(
+                      FontAwesomeIcons.caretDown,
+                      color: Colors.black87.withOpacity(0.8),
+                      size: 16,
+                    )
+                  ],
+                )),
+          ):
           Container(
             height: parentHeight * .055,
             margin: EdgeInsets.only(top: 10),
@@ -466,25 +528,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 ),
               ],
             ),
-            child: parentCategoryId==0?DropdownButton<dynamic>(
-              hint: Text(
-                ApplicationLocalizations.of(context)!.translate("group_nature")!, style: hint_textfield_Style,),
-              underline: SizedBox(),
-              isExpanded: true,
-              value: selectedgroup,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedgroup = newValue!;
-                });
-              },
-              items: group_nature.map((dynamic val) {
-                return DropdownMenuItem<dynamic>(
-                  value: val,
-                  child: Text(val.toString(), style: item_regular_textStyle),
-                );
-              }).toList(),
-            ):
-            Container(
+            child:Container(
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(color:CommonColor.TexField_COLOR),
                 child: Text("$selectedgroup",style: item_regular_textStyle,)),
@@ -661,7 +705,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory,
+                              Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory.toString(),
                                 style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
                               FaIcon(FontAwesomeIcons.caretDown,
                                 color: Colors.black87.withOpacity(0.8), size: 16,)
@@ -701,8 +745,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     );
 
   }
-
-
 
   callGetLedgerGroup(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -791,6 +833,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   callDeleteLedgerGroup(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -799,11 +842,12 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           isLoaderShow=true;
         });
         DeleteIRequestModel model = DeleteIRequestModel(
+          companyId: companyId,
             id:removeId,
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = baseurl + ApiConstants().ledger_group;
+        String apiUrl = baseurl + ApiConstants().ledger_group+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -859,7 +903,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           companyID:companyId,
           name: groupNameText,
           seqNo:seqNoText ,
-          parentId:parentCategoryId.toString() ,
+          parentId:parentCategoryId==0?null:parentCategoryId.toString() ,
           groupNature: seqNatureText.substring(0,1),
           creator: creatorName,
           creatorMachine: deviceId,
@@ -913,6 +957,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
 
   callUpdateLadgerGroup() async {
+    String companyId = await AppPreferences.getCompanyId();
     String seqNoText = sequenseNoName.text.trim();
     String groupNameText = groupName.text.trim();
     String seqNatureText = selectedgroup.substring(0).trim();
@@ -924,14 +969,15 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         PutLedgerGroupRequestModel model = PutLedgerGroupRequestModel(
             name:groupNameText ,
             seqNo:seqNoText ,
-            parentId:parentCategoryId.toString() ,
-            groupNature:seqNatureText ,
+            parentId:parentCategoryId==0?null:parentCategoryId.toString() ,
+            groupNature:seqNatureText.substring(0,1) ,
             Modifier: creatorName,
-            creatorMachine: deviceId
+            creatorMachine: deviceId,
+            companuId: companyId,
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = baseurl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{
@@ -984,6 +1030,14 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     parentCategoryId=id;
     selectedgroup=nature;
   });
+  }
+
+  @override
+  selctedGroupNature(String code, String name) {
+    // TODO: implement selctedGroupNature
+   setState(() {
+     selectedgroup=name;
+   });
   }
 
 

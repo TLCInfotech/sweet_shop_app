@@ -30,5 +30,9 @@ class ApiConstants {
   String ledger_opening_bal="LedgerOpeningBalance";
   String franchisee_item_opening_list="getAllFranchaiseeItemCount";
   String ledger_list="LedgerList";
+  String group_nature="GroupNature";
+  String amount_type="AmountType";
+  String default_bank="DefaultBank";
+  String franchisee_items="getFranchaiseeItemList";
 
 }

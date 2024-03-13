@@ -381,19 +381,33 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
   }
 
   /* Widget to get add Invoice date Layout */
+  /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return  GetDateLayout(
-
-        titleIndicator: false,
-        title:ApplicationLocalizations.of(context)!.translate("date")!,
-        callback: (date){
-          setState(() {
-            invoiceDate=date!;
-          });
-        },
-        applicablefrom: invoiceDate
+    return Container(
+        height: 42,
+        margin: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(CommonWidget.getDateLayout(invoiceDate),
+              //DateFormat('dd-MM-yyyy').format(applicablefrom),
+              style: item_regular_textStyle,),
+            FaIcon(FontAwesomeIcons.calendar,
+              color: Colors.black87, size: 16,)
+          ],
+        )
     );
-
 
   }
 

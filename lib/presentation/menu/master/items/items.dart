@@ -390,6 +390,7 @@ Expanded get_items_list_layout() {
 
   callDeleteItem(String removeId,int index) async {
     String baseurl=await AppPreferences.getDomainLink();
+    String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -400,9 +401,10 @@ Expanded get_items_list_layout() {
         DeleteIRequestModel model = DeleteIRequestModel(
             id:removeId,
             modifier: uid,
-            modifierMachine: deviceId
+            modifierMachine: deviceId,
+            companyId: companyId,
         );
-        String apiUrl = baseurl + ApiConstants().item;
+        String apiUrl = baseurl + ApiConstants().item+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

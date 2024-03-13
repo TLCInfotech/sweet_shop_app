@@ -153,6 +153,7 @@ class _LoginActivityState extends State<LoginActivity> {
     String passwordText = password.text.trim();
     String deviceId = await AppPreferences.getDeviceId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -166,7 +167,7 @@ class _LoginActivityState extends State<LoginActivity> {
             Machine_Name: deviceId,
            // modifire: "myMachine",
         );
-        String apiUrl = baseurl + ApiConstants().login;
+        String apiUrl = baseurl + ApiConstants().login+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
             onSuccess:(token,uid){
               setState(() {

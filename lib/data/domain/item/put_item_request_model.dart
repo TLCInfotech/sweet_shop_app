@@ -4,6 +4,7 @@ class PutItemRequestModel {
   PutItemRequestModel({
     required this.Name,
     required this.CategoryID,
+    required this.CompanyId,
     this.Unit,
     this.Unit2,
     this.Unit2Factor,
@@ -26,6 +27,7 @@ class PutItemRequestModel {
 
   late final String Name;
   late final String? CategoryID;
+  late final String? CompanyId;
   late final String? Unit;
   late final String? Unit2;
   late final String? Unit2Factor;
@@ -46,6 +48,7 @@ class PutItemRequestModel {
   late final List<int>? Photo;
 
   PutItemRequestModel.fromJson(Map<String, dynamic> json){
+    CompanyId=json['Comapny_ID'];
     Name = json['Name'];
     CategoryID = json['Category_ID'];
     Unit = json['Unit'];
@@ -72,6 +75,7 @@ class PutItemRequestModel {
     final _data = <String, dynamic>{};
     _data['Name'] = Name;
     _data['Category_ID'] = CategoryID;
+    _data['Company_ID']=CompanyId;
     _data['Unit'] = Unit;
     _data['Unit2'] = Unit2;
     _data['Unit2_Factor'] = Unit2Factor;

@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
+import 'package:sweet_shop_app/presentation/dialog/amount_type_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_type_dialog.dart';
 import '../../../../core/app_preferance.dart';
@@ -39,7 +40,7 @@ class CreateExpenseActivity extends StatefulWidget {
 
 class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     with
-        SingleTickerProviderStateMixin, TaxDialogInterface , TaxCategoryDialogInterface, LedegerGroupDialogInterface {
+        SingleTickerProviderStateMixin, TaxDialogInterface , TaxCategoryDialogInterface, LedegerGroupDialogInterface,AmountTypeDialogInterface {
   bool checkActiveValue = false;
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
@@ -177,6 +178,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       contactController.text=  widget.ledgerList['Contact_No']!=null?widget.ledgerList['Contact_No']:contactController.text;
       emailController.text= widget.ledgerList['EMail']!=null?widget.ledgerList['EMail']: emailController.text;
       outstandingLimitController.text= widget.ledgerList['Outstanding_Limit']!=null?widget.ledgerList['Outstanding_Limit'].toString():outstandingLimitController.text;
+      selectedLimitUnit= widget.ledgerList['Outstanding_Limit_Type']!=null?widget.ledgerList['Outstanding_Limit_Type'].toString():selectedLimitUnit;
       extNameController.text=widget.ledgerList['Ext_Name']!=null?widget.ledgerList['Ext_Name'].toString(): extNameController.text;
       adharNoController.text=widget.ledgerList['Adhar_No']!=null?widget.ledgerList['Adhar_No'].toString():adharNoController.text;
       panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
@@ -270,7 +272,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   List<String> LimitDataUnit = ["Cr","Dr"];
 
-  String ?selectedLimitUnit = null;
+  var selectedLimitUnit = null;
 
   double opacityLevel = 1.0;
 
@@ -786,41 +788,74 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
         ),
         Container(
-          height: parentHeight * .055,
-          width: 100,
-          margin: EdgeInsets.only(left: 10,top: 40),
-          padding: EdgeInsets.only(left: 10, right: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.WHITE_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          ),
-          child: DropdownButton<dynamic>(
-            hint: Text(
-              ApplicationLocalizations.of(context)!.translate("unit")!, style: hint_textfield_Style,),
-            underline: SizedBox(),
-            isExpanded: true,
-            value: selectedLimitUnit,
-            onChanged: (newValue) {
-              setState(() {
-                selectedLimitUnit = newValue!;
-              });
+          height: 50,
+          width: 130,
+          margin: EdgeInsets.only(left: 5,top: 30),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              if (context != null) {
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue =
+                          Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                      return Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: AmountTypeDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception(
+                          'No widget to return in pageBuilder');
+                    });
+              }
             },
-            items: LimitDataUnit.map((dynamic limit) {
-              return DropdownMenuItem<dynamic>(
-                value: limit,
-                child: Text(limit.toString(), style: item_regular_textStyle),
-              );
-            }).toList(),
+            child: Container(
+                height: parentHeight * .055,
+                margin: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      selectedLimitUnit == null ? ApplicationLocalizations.of(context)!.translate("amount_type")!
+                          : selectedLimitUnit,
+                      style: selectedLimitUnit == null ? item_regular_textStyle : text_field_textStyle,
+                    ),
+                    FaIcon(
+                      FontAwesomeIcons.caretDown,
+                      color: Colors.black87.withOpacity(0.8),
+                      size: 16,
+                    )
+                  ],
+                )),
           ),
         )
+
       ],
     );
 
@@ -1650,6 +1685,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1657,6 +1693,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           isLoaderShow=true;
         });
         PostLedgerRequestModel model = PostLedgerRequestModel(
+          companyId: companyId,
             name: name,
           groupID: parentCategoryId,
           contactPerson: contactPerson,
@@ -1673,6 +1710,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           cINNo: "",
           fSSAINo: "",
           outstandingLimit: outLimit,
+         outstandingLimitType: selectedLimitUnit,
           bankName: bankName,
           bankBranch: bankBranch,
           iFSCCode: ifscCode,
@@ -1762,11 +1800,13 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutLedgerRequestModel model = PutLedgerRequestModel(
+          companyId: companyId,
             name: name,
             groupID: parentCategoryId,
             contactPerson: contactPerson,
@@ -1783,6 +1823,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             cinNo: "",
             fssaiNo: "",
             outstandingLimit: outLimit,
+            outstandingLimitType: selectedLimitUnit,
             bankName: bankName,
             bankBranch: bankBranch,
             ifscCode: ifscCode,
@@ -1808,7 +1849,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString();
+        String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString()+"?Company_ID=$companyId";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{
@@ -1845,6 +1886,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       parentCategory=name;
       parentCategoryId=id.toString();
     });
+  }
+
+  @override
+  selectedAmountType(String name) {
+    // TODO: implement selectedAmountType
+   setState(() {
+     selectedLimitUnit=name;
+   });
   }
 
 

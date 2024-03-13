@@ -88,6 +88,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   }
 
   callGetFranchiseeItemOpeningList(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -100,7 +101,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening}?Franchisee_ID=$selectedFranchiseeID&date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -353,7 +354,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
 
@@ -452,6 +453,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           });
           print(selectedFranchiseeID);
           print(selectedFranchiseeName);
+          callGetFranchiseeItemOpeningList(0);
         },
         franchiseeName: selectedFranchiseeName);
 
@@ -644,7 +646,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         Item_list[index]['Seq_No']=item['seq_No'];
         Item_list[index]['Item_ID']=item['Item_ID'];
         Item_list[index]['Batch_ID']=item['Batch_ID'];
-        Item_list[index]['Item_Name']=item['Item_Name'];
+        Item_list[index]['Name']=item['Name'];
         Item_list[index]['Quantity']=item['Quantity'];
         Item_list[index]['Unit']=item['Unit'];
         Item_list[index]['Rate']=item['Rate'];

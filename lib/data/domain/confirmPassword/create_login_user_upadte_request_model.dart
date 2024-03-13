@@ -3,8 +3,10 @@ class LoginUserRequestModel {
   String password;
   String modifier;
   String modifierMachine;
+  String companyId;
 
   LoginUserRequestModel({
+    required this.companyId,
     required this.uid,
     required this.password,
     required this.modifier,
@@ -13,6 +15,7 @@ class LoginUserRequestModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'Company_ID':companyId,
       'UID': uid,
       'Password': password,
       'Modifier': modifier,

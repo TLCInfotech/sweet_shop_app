@@ -595,6 +595,7 @@ bool isLoaderShow=false;
   }
 
   callDeleteItemCategory(String removeId,int index) async {
+    print("DELETE");
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -605,11 +606,12 @@ bool isLoaderShow=false;
           isLoaderShow=true;
         });
         DeleteIRequestModel model = DeleteIRequestModel(
+            companyId: companyId,
             id:removeId,
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = baseurl + ApiConstants().item_category;
+        String apiUrl = baseurl + ApiConstants().item_category+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -721,6 +723,7 @@ bool isLoaderShow=false;
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
+          companyId: companyId,
             modifier: creatorName,
             name:catName ,
             modifierMachine: deviceId,
@@ -736,7 +739,7 @@ bool isLoaderShow=false;
 
         print("MODAL");
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().item_category+"/"+editedItem['ID'].toString();
+        String apiUrl =baseurl + ApiConstants().item_category+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId";
 
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

@@ -5,6 +5,7 @@ class PutLedgerGroupRequestModel {
   String groupNature;
   String Modifier;
   String creatorMachine;
+  String companuId;
 
   PutLedgerGroupRequestModel({
     required this.name,
@@ -13,10 +14,12 @@ class PutLedgerGroupRequestModel {
     required this.groupNature,
     required this.Modifier,
     required this.creatorMachine,
+    required this.companuId
   });
 
   factory PutLedgerGroupRequestModel.fromJson(Map<String, dynamic> json) {
     return PutLedgerGroupRequestModel(
+      companuId: json['Company_ID'],
       name: json['Name'],
       seqNo: json['Seq_no'],
       parentId: json['Parent_ID'],
@@ -28,6 +31,7 @@ class PutLedgerGroupRequestModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'Company_ID':companuId,
       'Name': name,
       'Seq_no': seqNo,
       'Parent_ID': parentId,

@@ -39,6 +39,7 @@ class PostLedgerRequestModel {
   List<int>? gSTImage;
   String? creator;
   String? creatorMachine;
+  String? companyId;
 
   PostLedgerRequestModel(
       {this.name,
@@ -80,9 +81,12 @@ class PostLedgerRequestModel {
         this.adharCardImage,
         this.gSTImage,
         this.creator,
-        this.creatorMachine});
+        this.creatorMachine,
+        this.companyId
+      });
 
   PostLedgerRequestModel.fromJson(Map<String, dynamic> json) {
+    companyId=json['Company_ID'];
     name = json['Name'];
     groupID = json['Group_ID'];
     contactPerson = json['Contact_Person'];
@@ -127,6 +131,7 @@ class PostLedgerRequestModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Company_ID'] = this.companyId;
     data['Name'] = this.name;
     data['Group_ID'] = this.groupID;
     data['Contact_Person'] = this.contactPerson;

@@ -326,6 +326,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   }
 
   callDeleteUser(String removeId, int index) async {
+    String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -335,8 +336,9 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
           isLoaderShow = true;
         });
         DeleteIUserRequestModel model = DeleteIUserRequestModel(
+          companyId: companyId,
             id: removeId, modifier: uid, modifierMachine: deviceId);
-        String apiUrl = baseurl + ApiConstants().users;
+        String apiUrl = baseurl + ApiConstants().users+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {

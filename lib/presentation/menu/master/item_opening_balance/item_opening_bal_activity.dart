@@ -54,7 +54,6 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
-
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
@@ -154,13 +153,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             size: 30,
             color: Colors.black87,
           ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+          onPressed: () async{
+            await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
               dateNew:CommonWidget.getDateLayout(invoiceDate),
 
               //DateFormat('dd-MM-yyyy').format(invoiceDate),
               mListener: this,
             )));
+            callGetFranchiseeItemOpeningList(0);
           }),
       body: Container(
         margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
@@ -183,7 +183,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   }
 
   Widget getTotalCountAndAmount() {
-    return Container(
+    return Franchisee_list.length>0?Container(
       margin: const EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
@@ -206,12 +206,12 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("10 ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
+               Text("${Franchisee_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
       ),
-    );
+    ):Container();
   }
 
   /* Widget to get add Invoice date Layout */

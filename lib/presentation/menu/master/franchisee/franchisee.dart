@@ -364,6 +364,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
   callDeleteFranchisee(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -371,11 +372,13 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
           isLoaderShow=true;
         });
         DeleteIRequestModel model = DeleteIRequestModel(
+
             id:removeId,
             modifier: uid,
-            modifierMachine: deviceId
+            modifierMachine: deviceId,
+            companyId: companyId
         );
-        String apiUrl = baseurl + ApiConstants().franchisee;
+        String apiUrl = baseurl + ApiConstants().franchisee+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
