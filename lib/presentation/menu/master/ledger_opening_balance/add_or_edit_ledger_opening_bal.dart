@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -15,6 +16,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 class TestItem {
   String label;
@@ -28,8 +30,9 @@ class TestItem {
 class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
   final dynamic editproduct;
-
-  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct});
+  final String dateNew;
+  final  dateApi;
+  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi});
   @override
   State<AddOrEditLedgerOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -128,6 +131,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     setVal();
   }
 
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
@@ -321,7 +329,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     );
   }
 
-
+  List<dynamic> Item_list=[];
   /* Widget for Buttons Layout0 */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
     return Row(
@@ -369,14 +377,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
               "Ledger_ID":selectedItemID,
               "Amount":double.parse(amount.text),
               "Amnt_Type":selectedType
-
             };
+            Inserted_list.add(item);
+            callLedgerOpeningBal(Inserted_list,"");
 
-            if(widget.mListener!=null){
-
-              widget.mListener.AddOrEditItemOpeningBalDetail(item);
-              Navigator.pop(context);
-            }
           },
           onDoubleTap: () {},
           child: Container(
@@ -404,7 +408,63 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     );
   }
 
+  callLedgerOpeningBal(item,editItem) async {
 
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+   // DateTime date = DateTime.parse(widget.dateNew);
+ //   print("hfhefhhfhef  $date   ");
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
+          companyID: companyId,
+          date:widget.dateApi,
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: item.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+      );
+      print("PostILedgerOpeningRequestModel    ${model.toJson()}");
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_opening_bal;
+      print("urlll  $apiUrl");
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+            });
+            if(widget.mListener!=null){
+
+              widget.mListener.AddOrEditItemOpeningBalDetail(item);
+              Navigator.pop(context);
+            }
+           // Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
 }
 
 abstract class AddOrEditItemOpeningBalInterface{

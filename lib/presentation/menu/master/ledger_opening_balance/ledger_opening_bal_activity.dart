@@ -2,12 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
+import 'add_or_edit_ledger_opening_bal.dart';
 import 'create_ledger_opening_bal_activity.dart';
 
 class LedgerOpeningBal extends StatefulWidget {
@@ -17,65 +25,111 @@ class LedgerOpeningBal extends StatefulWidget {
   State<LedgerOpeningBal> createState() => _ItemOpeningBalState();
 }
 
-class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpeningBalInterface{
+class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpeningBalInterface, CreateItemOpeningBalInterface{
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+  bool isApiCall = false;
+  bool isLoaderShow = false;
+  var editedItem=null;
+
+  int page = 1;
+  bool isPagination = true;
+  ScrollController _scrollController = new ScrollController();
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetLedgerOB(page);
+      }
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    callGetLedgerOB(page);
+  }
+
+  List<dynamic> ledgerList = [];
+//FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await callGetLedgerOB(page);
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  backgroundColor: Colors.white,
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
+                    style: appbar_text_style,),
+                ),
               ),
-              backgroundColor: Colors.white,
-              title:  Text(
-                ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
-                style: appbar_text_style,),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                goToAddOrEditItem("");
+             /*   Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
+                  dateNew: CommonWidget.getDateLayout(invoiceDate),
+                  //DateFormat('dd-MM-yyyy').format(invoiceDate),
+                  mListener: this,
+                )));*/
+              }),
+          body: Container(
+            margin: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getPurchaseDateLayout(),
+                const SizedBox(
+                  height: 5,
+                ),
+                getTotalCountAndAmount(),
+                const SizedBox(
+                  height: .5,
+                ),
+                get_purchase_list_layout()
+              ],
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
-              dateNew: CommonWidget.getDateLayout(invoiceDate),
-              //DateFormat('dd-MM-yyyy').format(invoiceDate),
-              mListener: this,
-            )));
-          }),
-      body: Container(
-        margin: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 5,
-            ),
-            getTotalCountAndAmount(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_purchase_list_layout()
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -140,8 +194,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
   Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [
-            1, 2, 3, 4, 5, 6].length,
+          itemCount: ledgerList.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -151,72 +204,77 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
                   delay: const Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child:  const FaIcon(
-                                FontAwesomeIcons.moneyCheck,
-                                color: Colors.white,
-                              )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                          ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-
-                                    ],
-                                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      goToAddOrEditItem(ledgerList[index]);
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(5)
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                                child:  const FaIcon(
+                                  FontAwesomeIcons.moneyCheck,
+                                  color: Colors.white,
+                                )
+                            ),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                         Text(ledgerList[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            Expanded(child: Text("${(ledgerList[index]['Amount']).toStringAsFixed(2)} ${ledgerList[index]['Amount_Type']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            //Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
 
-                        )
-                      ],
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:IconButton(
+                                        icon:  const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                        onPressed: (){},
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -231,5 +289,135 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with CreateItemOpenin
         ));
   }
 
+  Future<Object?> goToAddOrEditItem(product) {
+    return showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
+              1.0;
+          return Transform(
+            transform:
+            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AddOrEditLedgerOpeningBal(
+                mListener: this,
+                editproduct:product,
+                dateNew:CommonWidget.getDateLayout(invoiceDate) ,
+                dateApi:DateFormat('yyyy-MM-dd').format(invoiceDate) ,
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation2, animation1) {
+          throw Exception('No widget to return in pageBuilder');
+        });
+  }
 
+  callGetLedgerOB(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&pageSize=10";
+          print("newwww  $apiUrl   $baseurl ");
+        //  "?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList.clear();
+                  _arrList=data;
+                  print("ledger opening data....  $data");
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setDataToList(List<dynamic> _list) {
+    if (ledgerList.isNotEmpty) ledgerList.clear();
+    if (mounted) {
+      setState(() {
+        ledgerList.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        ledgerList.addAll(_list);
+      });
+    }
+  }
+
+  @override
+  AddOrEditItemOpeningBalDetail(item) {
+    // TODO: implement AddOrEditItemOpeningBalDetail
+
+  }
 }

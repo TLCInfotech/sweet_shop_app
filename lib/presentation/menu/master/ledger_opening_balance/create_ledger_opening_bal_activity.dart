@@ -21,6 +21,7 @@ class CreateLedgerOpeningBal extends StatefulWidget {
   final CreateItemOpeningBalInterface mListener;
   final String dateNew;
 
+
   const CreateLedgerOpeningBal({super.key, required this.dateNew, required this.mListener});
   @override
   State<CreateLedgerOpeningBal> createState() => _CreateItemOpeningBalState();
@@ -425,6 +426,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               child: AddOrEditLedgerOpeningBal(
                 mListener: this,
                 editproduct:product,
+                dateNew: "",
               ),
             ),
           );

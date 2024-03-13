@@ -285,7 +285,7 @@ class ApiRequestHelper {
               ApiResponseForFetch.fromJson(json.decode(response.body));
           onException(apiResponse.msg!);
           break;
-        case 400:
+        case 404:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
           apiResponse =
               ApiResponseForFetch.fromJson(json.decode(response.body));
