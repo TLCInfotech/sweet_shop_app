@@ -5,6 +5,7 @@ class PostLedgerGroupRequestModel {
   String groupNature;
   String creator;
   String creatorMachine;
+  String companyID;
 
   PostLedgerGroupRequestModel({
     required this.name,
@@ -13,10 +14,12 @@ class PostLedgerGroupRequestModel {
     required this.groupNature,
     required this.creator,
     required this.creatorMachine,
+    required this.companyID,
   });
 
   factory PostLedgerGroupRequestModel.fromJson(Map<String, dynamic> json) {
     return PostLedgerGroupRequestModel(
+      companyID: json['Company_ID'],
       name: json['Name'],
       seqNo: json['Seq_no'],
       parentId: json['Parent_ID'],
@@ -28,6 +31,7 @@ class PostLedgerGroupRequestModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'Company_ID':companyID,
       'Name': name,
       'Seq_no': seqNo,
       'Parent_ID': parentId,

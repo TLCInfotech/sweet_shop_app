@@ -705,6 +705,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
 
   callGetLedgerGroup(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -717,7 +718,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -842,6 +843,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     }
   }
   callPostLedgerGroup() async {
+    String companyId = await AppPreferences.getCompanyId();
     String seqNoText = sequenseNoName.text.trim();
     String groupNameText = groupName.text.trim();
     String seqNatureText = selectedgroup.substring(0).trim();
@@ -854,6 +856,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           isLoaderShow=true;
         });
         PostLedgerGroupRequestModel model = PostLedgerGroupRequestModel(
+          companyID:companyId,
           name: groupNameText,
           seqNo:seqNoText ,
           parentId:parentCategoryId.toString() ,

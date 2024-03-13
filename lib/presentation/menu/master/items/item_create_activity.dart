@@ -956,6 +956,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   }
 
   callPostItem() async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     //var model={};
@@ -964,6 +965,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         isLoaderShow=true;
       });
       PostItemRequestModel model = PostItemRequestModel(
+          CompanyID: companyId,
           Name: itemNameController.text.trim(),
           CategoryID: categoryId.toString(),
           Creator: creatorName,
@@ -983,7 +985,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           DefaultStore:defaultStoreController.text.trim(),
           DetailDesc: descController.text.trim(),
           Photo: picImageBytes,
-          Unit: measuringUnit
+          Unit: measuringUnit,
+
         );
 
 

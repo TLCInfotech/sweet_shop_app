@@ -287,6 +287,7 @@ Expanded get_items_list_layout() {
 
 
   callGetItem(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -299,7 +300,7 @@ Expanded get_items_list_layout() {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

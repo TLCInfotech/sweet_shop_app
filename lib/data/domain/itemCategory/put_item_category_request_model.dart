@@ -4,11 +4,13 @@ class PutItemCategoryRequestModel {
   String? seqNo;
   String? modifier;
   String? modifierMachine;
+  // String? companyId;
 
   PutItemCategoryRequestModel({
      this.name,
      this.parentId,
      this.seqNo,
+    // required this.companyId,
     required this.modifier,
     required this.modifierMachine,
   });
@@ -20,6 +22,7 @@ class PutItemCategoryRequestModel {
       seqNo: json['Seq_No'],
       modifier: json['Modifier'],
       modifierMachine: json['Modifier_Machine'],
+      // companyId: json['Company_ID'],
     );
   }
 
@@ -30,6 +33,7 @@ class PutItemCategoryRequestModel {
       'Seq_No': seqNo,
       'Modifier': modifier,
       'Modifier_Machine': modifierMachine,
+      // 'Company_ID':companyId
     };
   }
 }

@@ -4,6 +4,7 @@ class PostItemRequestModel {
   PostItemRequestModel({
     required this.Name,
     required this.CategoryID,
+    required this.CompanyID,
      this.Unit,
      this.Unit2,
      this.Unit2Factor,
@@ -26,6 +27,7 @@ class PostItemRequestModel {
 
   late final String Name;
   late final String? CategoryID;
+  late final String? CompanyID;
   late final String? Unit;
   late final String? Unit2;
   late final String? Unit2Factor;
@@ -48,6 +50,7 @@ class PostItemRequestModel {
   PostItemRequestModel.fromJson(Map<String, dynamic> json){
     Name = json['Name'];
     CategoryID = json['Category_ID'];
+    CompanyID=json['Company_ID'];
     Unit = json['Unit'];
     Unit2 = json['Unit2'];
     Unit2Factor = json['Unit2_Factor'];
@@ -72,6 +75,7 @@ class PostItemRequestModel {
     final _data = <String, dynamic>{};
     _data['Name'] = Name;
     _data['Category_ID'] = CategoryID;
+    _data['Company_ID']=CompanyID;
     _data['Unit'] = Unit;
     _data['Unit2'] = Unit2;
     _data['Unit2_Factor'] = Unit2Factor;

@@ -499,6 +499,7 @@ bool isLoaderShow=false;
   }
 
   callGetItemCategory(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -511,7 +512,7 @@ bool isLoaderShow=false;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item_category}?pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().item_category}?Company_ID=$companyId&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -594,6 +595,7 @@ bool isLoaderShow=false;
   }
 
   callDeleteItemCategory(String removeId,int index) async {
+    String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -646,7 +648,9 @@ bool isLoaderShow=false;
 
 
   }
+
   callPostItemCategory() async {
+    String companyId = await AppPreferences.getCompanyId();
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
@@ -658,6 +662,7 @@ bool isLoaderShow=false;
           isLoaderShow=true;
         });
         PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
+            CompanyId: companyId,
             Name: catName,
             Parent_ID:parentCategoryId.toString(),
             Seq_No: seqNoText,
@@ -706,9 +711,8 @@ bool isLoaderShow=false;
     }
   }
 
-
-
   callUpdateItemCategory() async {
+    String companyId = await AppPreferences.getCompanyId();
     String catName = categoryName.text.trim();
     String seqNoText = seqNo.text.trim();
     String creatorName = await AppPreferences.getUId();
@@ -719,7 +723,8 @@ bool isLoaderShow=false;
         PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
             modifier: creatorName,
             name:catName ,
-            modifierMachine: deviceId
+            modifierMachine: deviceId,
+            // companyId: companyId
         );
         if(editedItem['Parent_ID']!=parentCategoryId && parentCategoryId!=0){
           model.parentId=parentCategoryId.toString();

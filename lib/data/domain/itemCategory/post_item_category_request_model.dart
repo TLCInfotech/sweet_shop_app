@@ -4,6 +4,7 @@ class PostItemCategoryRequestModel {
   String? _Seq_No;
   String? _Creator;
   String? _Creator_Machine;
+  String? _CompanyId;
 
   PostItemCategoryRequestModel({
     String? Name,
@@ -11,12 +12,14 @@ class PostItemCategoryRequestModel {
     String? Seq_No,
     String? Creator,
     String? Creator_Machine,
+    String? CompanyId,
   }) {
     _Name = Name;
     _Parent_ID = Parent_ID;
     _Seq_No = Seq_No;
     _Creator = Creator;
     _Creator_Machine = Creator_Machine;
+    _CompanyId=CompanyId;
   }
 
   PostItemCategoryRequestModel.fromJson(dynamic json) {
@@ -25,6 +28,7 @@ class PostItemCategoryRequestModel {
     _Seq_No = json['Seq_No'];
     _Creator = json['Creator'];
     _Creator_Machine = json['Creator_Machine'];
+    _CompanyId=json['Company_ID'];
   }
 
   String? get Name => _Name;
@@ -32,6 +36,7 @@ class PostItemCategoryRequestModel {
   String? get Seq_No => _Seq_No;
   String? get Creator => _Creator;
   String? get Creator_Machine => _Creator_Machine;
+  String? get Company_ID=>_CompanyId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -40,6 +45,7 @@ class PostItemCategoryRequestModel {
     map['Seq_No'] = _Seq_No;
     map['Creator'] = _Creator;
     map['Creator_Machine'] = _Creator_Machine;
+    map['Company_ID']=_CompanyId;
     return map;
   }
 }
