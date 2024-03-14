@@ -6,16 +6,35 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+
+class TestItem {
+  String label;
+  dynamic value;
+  dynamic unit;
+  dynamic gst;
+  TestItem({required this.label, this.value,this.unit,this.gst});
+
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",gst:"${json['gst']}");
+  }
+}
 
 class AddProductPurchaseRate extends StatefulWidget {
   final AddProductPurchaseRateInterface mListener;
   final dynamic editproduct;
+  final date;
 
-  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct});
+  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct, this.date});
 
   @override
   State<AddProductPurchaseRate> createState() => _AddProductPurchaseRateState();
@@ -24,13 +43,72 @@ class AddProductPurchaseRate extends StatefulWidget {
 class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
   bool isLoaderShow = false;
+  var oldItemID=null;
+  var itemsList = [];
+  var selectedItemID =null;
+
   TextEditingController _textController = TextEditingController();
   TextEditingController rate = TextEditingController();
   TextEditingController gst = TextEditingController();
   TextEditingController net = TextEditingController();
   TextEditingController gstAmt = TextEditingController();
+  String unit="";
 
   FocusNode searchFocus = FocusNode() ;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  final _formkey1=GlobalKey<FormState>();
+
+  fetchShows (searchstring) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"gst":ele['GST_Rate']}));
+    }
+    return _list;
+  }
 
   @override
   void initState() {
@@ -42,11 +120,14 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   setVal(){
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['pname'];
-        rate.text=widget.editproduct['rate'].toString();
-        gst.text=widget.editproduct['gst'].toString();
-        net.text=widget.editproduct['net'].toString();
-        gstAmt.text=widget.editproduct['gstAmt'].toString();
+        oldItemID=widget.editproduct['Item_ID'];
+        selectedItemID=widget.editproduct['Item_ID'];
+        unit=widget.editproduct['Unit'];
+        _textController.text=widget.editproduct['Name'];
+        rate.text=widget.editproduct['Rate'].toString();
+        gst.text=widget.editproduct['GST'].toString();
+        net.text=widget.editproduct['Net_Rate'].toString();
+        gstAmt.text=widget.editproduct['GST_Amount'].toString();
 
       });
     }
@@ -57,51 +138,54 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
     SizeConfig().init(context);
     return Material(
       color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*0.7,
-              decoration: BoxDecoration(
-                color: Color(0xFFfffff5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+      child: Form(
+        key: _formkey1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+              child: Container(
+                height: SizeConfig.screenHeight*0.7,
+                decoration: BoxDecoration(
+                  color: Color(0xFFfffff5),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                  ),
                 ),
-              ),
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("add_item")!,
-                          style: page_heading_textStyle
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Container(
+                      height: SizeConfig.screenHeight*.08,
+                      child: Center(
+                        child: Text(
+                            ApplicationLocalizations.of(context)!.translate("add_item")!,
+                            style: page_heading_textStyle
+                        ),
                       ),
                     ),
-                  ),
-                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("item")!,    ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("item")!,    ),
+                    getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getProductGSTLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getGstAmountLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                  getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                ],
+                    getProductNetLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+              child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -201,7 +285,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
       validation: (value) {
         if (value!.isEmpty) {
-          return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("purchase_rate")!;
+          return  ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("purchase_rate")!;
         }
         return null;
       },
@@ -225,38 +309,46 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.emailAddress,
-        controller: _textController,
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: searchFocus,
-        style: text_field_textStyle,
-        decoration: textfield_decoration.copyWith(
-          hintText:  ApplicationLocalizations.of(context)!.translate("item_name")!,
-          prefixIcon: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    return  Container(
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
         ),
-        // onChanged: _onChangeHandler,
-      ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedItemID = v.value;
+                unit=v.unit;
+                gst.text=v.gst=="null"?gst.text:v.gst;
+                itemsList = [];
+              });
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
+
     );
   }
   
@@ -307,17 +399,64 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         ),
         GestureDetector(
           onTap: () {
-            var item={
-              "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "pname":_textController.text,
-              "rate":double.parse(rate.text),
-              "gst":double.parse(gst.text),
-              "net":double.parse(net.text)
-            };
-            if(widget.mListener!=null){
 
-              widget.mListener.addProductPurchaseRateDetail(item);
-              Navigator.pop(context);
+            if(selectedItemID==null){
+              var snackBar = const SnackBar(content: Text('Select Item Fisrt'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else {
+              var isValid = _formkey1.currentState?.validate();
+
+              print(isValid);
+
+              if (isValid == true && selectedItemID != null) {
+                var item = {};
+                if (widget.editproduct != null) {
+                  if(oldItemID!=selectedItemID){
+                    item = {
+                      "Seq_No": widget.editproduct['Seq_No'],
+                      "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
+                      "Unit":unit,
+                      "Name":_textController.text,
+                      "New_Item_ID":selectedItemID,
+                      "Disc_Percent": null,
+                      "Rate":double.parse(rate.text),
+                      "GST":double.parse(gst.text),
+                      "GST_Amount":double.parse(gstAmt.text),
+                      "Net_Rate":double.parse(net.text)
+                    };
+                  }
+                  else {
+                    item = {
+                      "Seq_No": widget.editproduct['Seq_No'],
+                      "Unit":widget.editproduct['Unit'],
+                      "Item_ID": selectedItemID,
+                      "Name":_textController.text,
+                      "Disc_Percent": null,
+                      "Rate":double.parse(rate.text),
+                      "GST":double.parse(gst.text),
+                      "GST_Amount":double.parse(gstAmt.text),
+                      "Net_Rate":double.parse(net.text)
+                    };
+                  }
+                }
+                else {
+                  item = {
+                    "Unit":unit,
+                    "Item_ID": selectedItemID,
+                    "Disc_Percent": null,
+                    "Name":_textController.text,
+                    "Rate":double.parse(rate.text),
+                    "GST":double.parse(gst.text),
+                    "GST_Amount":double.parse(gstAmt.text),
+                    "Net_Rate":double.parse(net.text)
+                  };
+                }
+                if (widget.mListener != null) {
+                  widget.mListener.addProductPurchaseRateDetail(item);
+                  Navigator.pop(context);
+                }
+              }
             }
           },
           onDoubleTap: () {},

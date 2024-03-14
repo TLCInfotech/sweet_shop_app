@@ -898,7 +898,8 @@ getCompany()async{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "$baseurl${ApiConstants().company}/$companyId";
+        String apiUrl = "$baseurl${ApiConstants().company}/$companyId?Company_ID=$companyId";
+
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -998,6 +999,7 @@ getCompany()async{
       String apiUrl = baseurl + ApiConstants().company;
 
       print("CompanyRequestModel       ${model.toJson()}  $apiUrl");
+
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -1068,8 +1070,8 @@ getCompany()async{
           creator: creatorName
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
-      String apiUrl = "${baseurl}${ApiConstants().company}/$companyId"/*+"/"+_arrList[0]['ID'].toString()*/;
-      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+      String apiUrl = "${baseurl}${ApiConstants().company}/$companyId?Company_ID=$companyId"/*+"/"+_arrList[0]['ID'].toString()*/;
+      apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(),"",
           onSuccess:(data){
             print("  ITEM  $data ");
             setState(() {

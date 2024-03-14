@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -12,7 +14,13 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_model.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -27,36 +35,131 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   final _formkey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-  String selectedFranchiseeName="";
   String selectedProductCategory="";
-  DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  var selectedCategoryID=null;
+
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   String selectedCopyFranchiseeName="";
 
-  List<dynamic> product_list=[
-    {
-      "id":1,
-      "pname":"Gulakand Burfi",
-      "rate":1000.00,
-      "gst":12,
-      "gstAmt":120,
-      "net":1120.00,
-    },
-    {
-      "id":2,
-      "pname":"Mango Burfi",
-      "rate":800.00,
-      "gst":12,
-      "gstAmt":96,
-      "net":896.00,
-    },
-  ];
+  List<dynamic> Item_list=[];
+
+  String selectedFranchiseeName="";
+  var selectedFranchiseeID=null;
+
+  String TotalAmount="0.00";
+
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  bool isLoaderShow=false;
+
+  var editedItemIndex=null;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    calculateTotalAmt();
+
   }
+
+  getPurchaseList(){
+    setState(() {
+      Item_list=[];
+      Updated_list=[];
+      Deleted_list=[];
+      Inserted_list=[];
+    });
+    if(selectedFranchiseeID!=null){
+      callGetFranchiseeItemOpeningList(0);
+    }
+  }
+
+  callGetFranchiseeItemOpeningList(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        // &Category_ID=$selectedCategoryID
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+               setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+
+                  setState(() {
+                    Item_list=_arrList;
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +232,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${product_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 ],
           ),
         ),
@@ -149,6 +252,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               setState(() {
                 disableColor = true;
               });
+              if(selectedFranchiseeID!=null){
+                callPostIFranchiseetemOpeningBal();
+              }
+              else{
+                var snackBar = const SnackBar(content: Text('Select Franchisee !'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
           },
           onDoubleTap: () {},
@@ -233,7 +343,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                       )
                     ],
                   ),
-                  product_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
+                  Item_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
                   SizedBox(height: 10,),
                 ],
               ),
@@ -250,7 +360,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: product_list.length,
+        itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -262,9 +372,12 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditProduct(product_list[index]);
+                      goToAddOrEditProduct(Item_list[index]);
                     }
                   },
                   child: Card(
@@ -294,7 +407,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
 
@@ -305,10 +418,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
-                                                //Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
+                                                Text("${(Item_list[index]['Rate']).toStringAsFixed(2)}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
+                                                //Text("${(Item_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                Text("${(Item_list[index]['Net_Rate']).toStringAsFixed(2)}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
                                               ],
                                             ),
@@ -332,10 +445,28 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
-                                          product_list.remove(product_list[index]);
+                                          if(Item_list[index]['Seq_No']!=0){
+                                            var deletedItem=   {
+                                              "Seq_No": Item_list[index]['Seq_No'],
+                                              "Item_ID": Item_list[index]['Item_ID']
+                                            };
+                                            Deleted_list.add(deletedItem);
+                                            setState(() {
+                                              Deleted_list=Deleted_list;
+                                            });
+                                          }
+                                          var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                          print(contain);
+                                          if(contain>=0){
+                                            print("REMOVE");
+                                            Inserted_list.remove(Inserted_list[contain]);
+                                          }
+                                          Item_list.remove(Item_list[index]);
                                           setState(() {
-                                            product_list=product_list;
+                                            Item_list=Item_list;
+                                            Inserted_list=Inserted_list;
                                           });
+                                          print(Inserted_list);
                                           await calculateTotalAmt();
                                         },
                                       )
@@ -380,7 +511,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               callback: (name,id){
             setState(() {
               selectedCopyFranchiseeName=name!;
+              selectedFranchiseeID=id;
             });
+            getPurchaseList();
           },
           franchiseeName: selectedCopyFranchiseeName),
           // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -420,6 +553,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   child: AddProductPurchaseRate(
                     mListener: this,
                     editproduct:product,
+                    date:invoiceDate
                   ),
                 ),
               );
@@ -440,10 +574,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         title:      ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
-            applicablefrom=name!;
+            invoiceDate=name!;
           });
         },
-        applicablefrom: applicablefrom);
+        applicablefrom: invoiceDate);
 
   }
 
@@ -455,18 +589,18 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         callback: (name,id){
           setState(() {
             selectedProductCategory=name!;
+            selectedCategoryID=id;
           });
         },
         selectedProductCategory: selectedProductCategory);
   }
 
-  String TotalAmount="0.00";
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
-    for(var item  in product_list ){
-      total=total+item['net'];
-      print("hjfhjfeefbh  ${item['net']}");
+    for(var item  in Item_list ){
+      total=total+item['Net_Rate'];
+      print("hjfhjfeefbh  ${item['Net_Rate']}");
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -476,29 +610,131 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   @override
   addProductPurchaseRateDetail( dynamic item)async {
     // TODO: implement addProductDetail
-    print(item);
-    var productList=product_list;
-    if(item['id']!=""){
-      var index=product_list.indexWhere((element) => item['id']==element['id']);
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
-        product_list[index]['pname']=item['pname'];
-        product_list[index]['rate']=item['rate'];
-        product_list[index]['gst']=item['gst'];
-        product_list[index]['net']=item['net'];
+        Item_list[index]['Seq_No']=item['seq_No'];
+        Item_list[index]['Item_ID']=item['Item_ID'];
+        Item_list[index]['Name']=item['Name'];
+        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
+        Item_list[index]['Rate']=item['Rate'];
+        Item_list[index]['GST']=item['GST'];
+        Item_list[index]['GST_Amount']=item['GST_Amount'];
+        Item_list[index]['Net_Rate']=item['Net_Rate'];
+        Item_list[index]['Unit']=item['Unit'];
+      });
+      if(item['New_Item_ID']!=null){
+        print("#############3");
+        print("present");
+        setState(() {
+          Item_list[index]['Item_ID']=item['Item_ID'];
+          Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+        });
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
       });
     }
-    else {
-      if (productList.contains(item)) {
-        print("Already Exist");
-      }
-      else {
-        productList.add(item);
-      }
-      setState(() {
-        product_list = productList;
-      });
-    }
+    setState(() {
+      editedItemIndex=null;
+    });
     await calculateTotalAmt();
+
+    print(Updated_list);
+  }
+
+  // calculateTotalAmt()async{
+  //   print("Here");
+  //   var total=0.00;
+  //   for(var item  in Item_list ){
+  //     print(item['Amount']);
+  //     if(item['Amount']!=null||item['Amount']!="") {
+  //       total = total + double.parse(item['Amount'].toString());
+  //       print(item['Amount']);
+  //     }
+  //   }
+  //   setState(() {
+  //     TotalAmount=total.toStringAsFixed(2) ;
+  //   });
+  //
+  // }
+
+
+
+  callPostIFranchiseetemOpeningBal() async {
+
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    //var model={};
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      FranchiseeSaleRequest model = FranchiseeSaleRequest(
+          companyID: companyId,
+          Franchisee_ID:selectedFranchiseeID,
+          Txn_Type: 'P',
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+      );
+
+      String apiUrl =baseurl + ApiConstants().franchisee_item_rate;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=true;
+              Item_list=[];
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+            });
+            await callGetFranchiseeItemOpeningList(0);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
   }
 
 }

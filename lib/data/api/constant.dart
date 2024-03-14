@@ -34,5 +34,7 @@ class ApiConstants {
   String amount_type="AmountType";
   String default_bank="DefaultBank";
   String franchisee_items="getFranchaiseeItemList";
+  String franchisee_item_rate_list="getFranchaiseeItemRateList";
+  String franchisee_item_rate="franchiseeItemRate";
 
 }

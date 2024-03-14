@@ -354,7 +354,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                               children: [
                                                 Text("${(Item_list[index]['Quantity'])}.00${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                                 Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Item_list[index]['Amount']!=""?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
+                                                Item_list[index]['Amount']!=null?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
                                               ],
                                             ),
 
@@ -483,6 +483,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
               child: AddOrEditItemOpeningBalForCompany(
                 mListener: this,
                 editproduct:product,
+                date:invoiceDate.toString()
               ),
             ),
           );
@@ -629,7 +630,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
     print("Here");
     var total=0.00;
     for(var item  in Item_list ){
-      print(item['Amount']);
+
       if(item['Amount']!=null||item['Amount']!="") {
         total = total + double.parse(item['Amount'].toString());
         print(item['Amount']);

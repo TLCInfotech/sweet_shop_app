@@ -367,7 +367,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                               children: [
                                                 Text("${(Item_list[index]['Quantity'])}.00${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                                 Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Item_list[index]['Amount']!=""?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
+                                                Item_list[index]['Amount']!=null?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Text("00.00",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                               ],
                                             ),
 
@@ -546,6 +546,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               child: AddOrEditItemOpeningBal(
                 mListener: this,
                 editproduct:product,
+                date: invoiceDate.toString(),
               ),
             ),
           );
@@ -684,18 +685,17 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   }
 
   calculateTotalAmt()async{
-    print("Here");
-    var total=0.00;
-    for(var item  in Item_list ){
-      print(item['Amount']);
-      if(item['Amount']!=null||item['Amount']!="") {
-        total = total + double.parse(item['Amount'].toString());
-        print(item['Amount']);
-      }
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
+    // print("Here");
+    // var total=0.00;
+    // for(var item  in Item_list ){
+    //   if(item['Amount']!=null||item['Amount']!="") {
+    //     total = total + double.parse(item['Amount'].toString());
+    //     print(item['Amount']);
+    //   }
+    // }
+    // setState(() {
+    //   TotalAmount=total.toStringAsFixed(2) ;
+    // });
 
   }
 
@@ -712,7 +712,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         isLoaderShow=true;
       });
       PostFranchiseeItemOpeningRequestModel model = PostFranchiseeItemOpeningRequestModel(
-          companyID: selectedFranchiseeID,
+
+          franchiseeID:selectedFranchiseeID.toString() ,
+          companyID: companyId ,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,

@@ -33,8 +33,9 @@ class TestItem {
 class AddOrEditItemOpeningBalForCompany extends StatefulWidget {
   final AddOrEditItemOpeningBalForCompanyInterface mListener;
   final dynamic editproduct;
+  final date;
 
-  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct});
+  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct, this.date});
   @override
   State<AddOrEditItemOpeningBalForCompany> createState() => _AddOrEditItemOpeningBalForCompanyState();
 }
@@ -77,7 +78,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?name=${searchstring}";
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
