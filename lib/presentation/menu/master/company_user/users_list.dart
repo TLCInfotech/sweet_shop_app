@@ -250,15 +250,14 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
-        String apiUrl =
-            "${baseurl}${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {
             isLoaderShow = false;
             if (data != null) {
               List<dynamic> _arrList = [];
-              userList.clear();
+             // userList.clear();
               _arrList = data;
               if (_arrList.length < 10) {
                 if (mounted) {
@@ -379,14 +378,14 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
       page = 1;
     });
     isPagination = true;
-    await callGetUser(0);
+    await callGetUser(1);
   }
 
   @override
   createUser() {
     // TODO: implement createUser
     userList.clear();
-    callGetUser(0);
+    callGetUser(1);
     Navigator.pop(context);
   }
 
@@ -394,7 +393,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   updateUser() {
     // TODO: implement updateUser
     userList.clear();
-    callGetUser(0);
+    callGetUser(1);
     Navigator.pop(context);
   }
 }

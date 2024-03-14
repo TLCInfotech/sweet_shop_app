@@ -14,6 +14,8 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_ledger_opening_bal.dart';
 import 'create_ledger_opening_bal_activity.dart';
@@ -103,7 +105,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 color: Colors.black87,
               ),
               onPressed: () {
-                goToAddOrEditItem("");
+                goToAddOrEditItem(null);
              /*   Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
                   dateNew: CommonWidget.getDateLayout(invoiceDate),
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
@@ -171,7 +173,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("10 ${ApplicationLocalizations.of(context)!.translate("ledgers")!}", style: subHeading_withBold,),
+               Text("${ledgerList.length} ${ApplicationLocalizations.of(context)!.translate("ledgers")!}", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
             ],
           )
@@ -261,14 +263,21 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                   Positioned(
                                       top: 0,
                                       right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: (){},
-                                      ) )
+                                      child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            var deletedItem=   {
+                                              "Ledger_ID": ledgerList[index]['Ledger_ID'],
+                                            };
+                                            Deleted_list.add(deletedItem);
+                                            setState(() {
+                                              Deleted_list=Deleted_list;
+                                            });
+                                            await  callLedgerOpeningBal(Deleted_list,index);
+                                          }
+                                        },
+                                      ))
                                 ],
                               )
 
@@ -341,7 +350,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList.clear();
+                  //ledgerList.clear();
                   _arrList=data;
                   print("ledger opening data....  $data");
                   if (_arrList.length < 10) {
@@ -419,5 +428,64 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
   AddOrEditItemOpeningBalDetail(item) {
     // TODO: implement AddOrEditItemOpeningBalDetail
 
+    setState(() {
+      ledgerList.clear();
+    });
+    callGetLedgerOB(1);
+  }
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+  callLedgerOpeningBal(itemDelete,index) async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
+          companyID: companyId,
+          date:DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+      );
+      print("PostILedgerOpeningRequestModel    ${model.toJson()}");
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_opening_bal;
+      print("urlll  $apiUrl");
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data){
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+              ledgerList.removeAt(index);
+            });
+            // Navigator.pop(context);
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
   }
 }

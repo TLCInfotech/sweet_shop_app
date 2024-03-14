@@ -18,6 +18,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../dialog/amount_type_dialog.dart';
 class TestItem {
   String label;
   dynamic value;
@@ -37,7 +38,7 @@ class AddOrEditLedgerOpeningBal extends StatefulWidget {
   State<AddOrEditLedgerOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
 
-class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
+class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal>with AmountTypeDialogInterface {
   List<String> AmountType = ["Cr","Dr"];
 
   String ?selectedType = null;
@@ -47,7 +48,8 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   FocusNode itemFocus = FocusNode() ;
 
   TextEditingController amount = TextEditingController();
-
+String amountType="";
+String amountTypeId="";
 
   FocusNode searchFocus = FocusNode() ;
   //
@@ -140,8 +142,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     if(widget.editproduct!=null){
       setState(() {
         _textController.text=widget.editproduct['Ledger_Name'];
+        selectedItemID=widget.editproduct['Ledger_ID'];
         amount.text=widget.editproduct['Amount'].toString();
-        selectedType=widget.editproduct['Amnt_Type'];
+        amountType=widget.editproduct['Amount_Type'];
       });
     }
   }
@@ -305,14 +308,69 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
   }
 
   Widget getAmtType(double parentHeight, double parentWidth){
-    return GetAmountTypeCrDr(
-        title: ApplicationLocalizations.of(context)!.translate("amount_type")!,
-        callback: (type){
-          setState(() {
-            selectedType=type;
-          });
-        },
-        selectedType: selectedType);
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        if (context != null) {
+          showGeneralDialog(
+              barrierColor: Colors.black.withOpacity(0.5),
+              transitionBuilder: (context, a1, a2, widget) {
+                final curvedValue =
+                    Curves.easeInOutBack.transform(a1.value) -
+                        1.0;
+                return Transform(
+                  transform: Matrix4.translationValues(
+                      0.0, curvedValue * 200, 0.0),
+                  child: Opacity(
+                    opacity: a1.value,
+                    child: AmountTypeDialog(
+                      mListener: this,
+                    ),
+                  ),
+                );
+              },
+              transitionDuration: Duration(milliseconds: 200),
+              barrierDismissible: true,
+              barrierLabel: '',
+              context: context,
+              pageBuilder: (context, animation2, animation1) {
+                throw Exception(
+                    'No widget to return in pageBuilder');
+              });
+        }
+      },
+      child: Container(
+          height: parentHeight * .055,
+          margin: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: CommonColor.WHITE_COLOR,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                amountType == "" ? ApplicationLocalizations.of(context)!.translate("amount_type")!
+                    : amountType,
+                style: amountType == "" ? item_regular_textStyle : text_field_textStyle,
+              ),
+              FaIcon(
+                FontAwesomeIcons.caretDown,
+                color: Colors.black87.withOpacity(0.8),
+                size: 16,
+              )
+            ],
+          )),
+    );
 
   }
 
@@ -371,15 +429,28 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
             Item_list[index]['Amount']=item['Amount'];
             Item_list[index]['Amnt_Type']=item['Amnt_Type'];
             Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];*/
+
             var item={
-             // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
+              // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
               "Ledger_Name":_textController.text,
               "Ledger_ID":selectedItemID,
               "Amount":double.parse(amount.text),
-              "Amnt_Type":selectedType
+              "Amount_Type":amountType
             };
-            Inserted_list.add(item);
-            callLedgerOpeningBal(Inserted_list,"");
+            if(widget.editproduct!=null){
+              print("#############3");
+              Updated_list.add(item);
+              setState(() {
+                Updated_list = Updated_list;
+              });
+            }else{
+              Inserted_list.add(item);
+              setState(() {
+                Inserted_list = Inserted_list;
+              });
+              print("erererre  ${Inserted_list}");
+            }
+            callLedgerOpeningBal(Inserted_list,Updated_list);
 
           },
           onDoubleTap: () {},
@@ -414,6 +485,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
     String companyId = await AppPreferences.getCompanyId();
    // DateTime date = DateTime.parse(widget.dateNew);
  //   print("hfhefhhfhef  $date   ");
+    print('newlistttt...  ${Inserted_list.toList()}');
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -424,7 +496,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
           modifier: creatorName,
           modifierMachine: deviceId,
           iNSERT: item.toList(),
-          uPDATE: Updated_list.toList(),
+          uPDATE: editItem.toList(),
           dELETE: Deleted_list.toList()
       );
       print("PostILedgerOpeningRequestModel    ${model.toJson()}");
@@ -464,6 +536,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal> {
           });
 
     });
+  }
+
+  @override
+  selectedAmountType(String name) {
+    // TODO: implement selectedAmountType
+   setState(() {
+     amountType=name;
+   });
   }
 }
 
