@@ -1,22 +1,35 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-
+import 'package:textfield_search/textfield_search.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+class TestItem {
+  String label;
+  dynamic value;
+  dynamic gst;
+  dynamic rate;
+  TestItem({required this.label, this.value,this.gst,this.rate});
 
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value'],gst:"${json['gst']}",rate:"${json['rate']}");
+  }
+}
 class AddProductSaleRate extends StatefulWidget {
   final AddProductSaleRateInterface mListener;
   final dynamic editproduct;
+  final String dateNew;
 
-  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct});
+  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew});
 
   @override
   State<AddProductSaleRate> createState() => _AddProductSaleRateState();
@@ -39,15 +52,66 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
     super.initState();
     setVal();
   }
+  ScrollController _scrollController = new ScrollController();
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+  fetchShows (searchstring) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_list}?Company_ID=$companyId&name=${searchstring}&Date=${widget.dateNew}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              print("newwwww   $data");
+              var topShowsJson = (data) as List;
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+          });
+    });
+  }
+
+  var itemsList = [];
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}", 'gst': "${ele['GST_Rate']}", 'rate': "${ele['Rate']}"}));
+    }
+    return _list;
+  }
+
+  var selectedItemID =null;
   setVal(){
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['pname'];
-        rate.text=widget.editproduct['rate'].toString();
-        gst.text=widget.editproduct['gst'].toString();
-        net.text=widget.editproduct['net'].toString();
-        gstAmt.text=widget.editproduct['gstAmt'].toString();
+        _textController.text=widget.editproduct['Name'];
+        selectedItemID=widget.editproduct['Item_ID'];
+        rate.text=widget.editproduct['Rate'].toString();
+        gst.text=widget.editproduct['GST'].toString();
+        net.text=widget.editproduct['Net_Rate'].toString();
+        gstAmt.text=widget.editproduct['GSt_Amount'].toString();
 
       });
     }
@@ -222,7 +286,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
   }
 
-  Widget getAddSearchLayout(double parentHeight, double parentWidth){
+/*  Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
       height: parentHeight * .055,
       alignment: Alignment.center,
@@ -256,8 +320,52 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         // onChanged: _onChangeHandler,
       ),
     );
-  }
+  }*/
 
+
+  Widget getAddSearchLayout(double parentHeight, double parentWidth){
+    return Container(
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedItemID = v.value;
+                gst.text=v.gst;
+                rate.text=v.rate;
+                itemsList = [];
+              });
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
+
+    );
+  }
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -336,14 +444,15 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         GestureDetector(
           onTap: () {
             var item={
-              "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "pname":_textController.text,
-              "rate":double.parse(rate.text),
-              "gst":double.parse(gst.text),
-              "net":double.parse(net.text)
+              "New_Item_ID":widget.editproduct!=null?widget.editproduct['New_Item_ID']:"",
+              "Name":_textController.text,
+              "Item_ID":selectedItemID,
+              "Rate":double.parse(rate.text),
+              "GST":double.parse(gst.text),
+              "GST_Amount":double.parse(gstAmt.text),
+              "Net_Rate":double.parse(net.text)
             };
             if(widget.mListener!=null){
-
               widget.mListener.addProductSaleRateDetail(item);
               Navigator.pop(context);
             }

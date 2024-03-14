@@ -1,15 +1,22 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -30,8 +37,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   String selectedProductCategory="";
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   String selectedCopyFranchiseeName="";
+  String selectedCopyFranchiseeId="";
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  List<dynamic> product_list=[
+/*  List<dynamic> Item_list=[
     {
       "id":1,
       "pname":"Gulakand Burfi",
@@ -48,67 +57,84 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       "gstAmt":96,
       "net":896.00,
     },
-  ];
+  ];*/
+  List<dynamic> Item_list=[];
+  List<dynamic> Updated_list=[];
+  var editedItemIndex=null;
+  List<dynamic> Inserted_list=[];
 
+  List<dynamic> Deleted_list=[];
+  bool isLoaderShow=false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     calculateTotalAmt();
+    if(selectedCopyFranchiseeId!=""){
+      callGetFrenchisee();
+    }
+
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child: Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-
-              backgroundColor: Colors.white,
-              title: Text(
-                ApplicationLocalizations.of(context)!.translate("franchisee_sale_rate")!,
-                style: appbar_text_style,),
-            ),
-          ),
-        ),
-      ),
-      body:  Column(
-        children: [
-          Expanded(
-            child: Container(
-              // color: CommonColor.DASHBOARD_BACKGROUND,
-                child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          ),
-          Container(
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.black.withOpacity(0.08),
-                    width: 1.0,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child: Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
                   ),
+
+                  backgroundColor: Colors.white,
+                  title: Text(
+                    ApplicationLocalizations.of(context)!.translate("franchisee_sale_rate")!,
+                    style: appbar_text_style,),
                 ),
               ),
-              height: SizeConfig.safeUsedHeight * .08,
-              child: getSaveAndFinishButtonLayout(
-                  SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          CommonWidget.getCommonPadding(
-              SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+            ),
+          ),
+          body:  Column(
+            children: [
+              Expanded(
+                child: Container(
+                  // color: CommonColor.DASHBOARD_BACKGROUND,
+                    child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              ),
+              Container(
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.black.withOpacity(0.08),
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  height: SizeConfig.safeUsedHeight * .08,
+                  child: getSaveAndFinishButtonLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              CommonWidget.getCommonPadding(
+                  SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-        ],
-      ),
+            ],
+          ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+
+      ],
     );
   }
 
@@ -128,7 +154,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${product_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
                 ],
           ),
         ),
@@ -149,6 +175,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 disableColor = true;
               });
             }
+            callPostItemOpeningBal();
           },
           onDoubleTap: () {},
           child: Container(
@@ -206,10 +233,12 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditProduct(null);
-                            }
-                          },
+                      if(selectedCopyFranchiseeId!=""){
+                        goToAddOrEditProduct(null);
+                      }else{
+                        CommonWidget.errorDialog(context, "Select franchisee first.");
+                      }
+                      },
                           child: Container(
                               width: 140,
                               padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
@@ -232,7 +261,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                       )
                     ],
                   ),
-                  product_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
+                  Item_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
                   SizedBox(height: 10,),
                 ],
               ),
@@ -249,7 +278,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: product_list.length,
+        itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -261,10 +290,14 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditProduct(product_list[index]);
+                      goToAddOrEditProduct(Item_list[index]);
                     }
+
                   },
                   child: Card(
                     child: Row(
@@ -293,7 +326,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${product_list[index]['pname']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
                                           /*  Container(
@@ -310,11 +343,11 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text("${(product_list[index]['rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
-                                                //Text("${(product_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Text("${(product_list[index]['net']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                Text("${(Item_list[index]['Rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
+                                                //Text("${(Item_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                                Text("${(Item_list[index]['Net_Rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
-                                                //  Text(CommonWidget.getCurrencyFormat(product_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                //  Text(CommonWidget.getCurrencyFormat(Item_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
                                               ],
                                             ),
@@ -331,28 +364,36 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
-                                      child:IconButton(
-                                        icon:  FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          product_list.remove(product_list[index]);
-                                          setState(() {
-                                            product_list=product_list;
-                                          });
-                                          await calculateTotalAmt();
-                                        },
-                                      )
+                                      child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            var deletedItem=   {
+                                              "Item_ID": Inserted_list[index]['Item_ID'],
+                                            };
+                                            Deleted_list.add(deletedItem);
+                                            setState(() {
+                                              Deleted_list=Deleted_list;
+                                            });
+                                            var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                            print(contain);
+                                            if(contain>=0){
+                                              print("REMOVE");
+                                              Inserted_list.remove(Inserted_list[contain]);
+                                            }
+                                            Item_list.remove(Item_list[index]);
+                                            setState(() {
+                                              Item_list=Item_list;
+                                              Inserted_list=Inserted_list;
+                                            });
+                                            print(Inserted_list);
+                                            await calculateTotalAmt();  }
+                                        })
                                   ),
                                 ],
                               )
                           ),
-                        )
-
-
-                      ],
+                        )],
                     ),
                   ),
                 ),
@@ -369,6 +410,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     );
   }
 
+  // String getFrenchiseeItemRateList="getFranchaiseeItemRateList";
+  // String frenchiseeItemRate="franchiseeItemRate";
   Container InvoiceInfo() {
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -386,6 +429,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
               callback: (name,id){
                 setState(() {
                   selectedCopyFranchiseeName=name!;
+                  selectedCopyFranchiseeId=id!;
+                  callGetFrenchisee();
                 });
               },
               franchiseeName: selectedCopyFranchiseeName),
@@ -426,6 +471,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
               child: AddProductSaleRate(
                 mListener: this,
                 editproduct:product,
+                dateNew:DateFormat('yyyy-MM-dd').format(applicablefrom),
               ),
             ),
           );
@@ -447,6 +493,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         callback: (name){
           setState(() {
             applicablefrom=name!;
+
           });
         },
         applicablefrom: applicablefrom);
@@ -471,9 +518,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
-    for(var item  in product_list ){
-      total=total+item['net'];
-      print("hjfhjfeefbh  ${item['net']}");
+    for(var item  in Item_list ){
+      total=total+item['Net_Rate'];
+      print("hjfhjfeefbh  ${item['Net_Rate']}");
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -486,14 +533,66 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   addProductSaleRateDetail( dynamic item)async {
     // TODO: implement addProductDetail
     print(item);
-    var productList=product_list;
-    if(item['id']!=""){
-      var index=product_list.indexWhere((element) => item['id']==element['id']);
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
-        product_list[index]['pname']=item['pname'];
-        product_list[index]['rate']=item['rate'];
-        product_list[index]['gst']=item['gst'];
-        product_list[index]['net']=item['net'];
+        Item_list[index]['Item_ID']=item['Item_ID'];
+        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+        Item_list[index]['Name']=item['Name'];
+        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
+        Item_list[index]['Rate']=item['Rate'];
+        Item_list[index]['GST']=item['GST'];
+        Item_list[index]['GST_Amount']=item['GST_Amount'];
+        Item_list[index]['Net_Rate']=item['Net_Rate'];
+      });
+      if(item['New_Item_ID']!=null){
+        print("#############3");
+        print("present");
+        setState(() {
+          Item_list[index]['Item_ID']=item['Item_ID'];
+          Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+        });
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+
+    print(Updated_list);
+
+
+
+    /*
+    var productList=Item_list;
+    if(item['id']!=""){
+      var index=Item_list.indexWhere((element) => item['id']==element['id']);
+      setState(() {
+        Item_list[index]['pname']=item['pname'];
+        Item_list[index]['rate']=item['rate'];
+        Item_list[index]['gst']=item['gst'];
+        Item_list[index]['net']=item['net'];
       });
     }
     else {
@@ -504,14 +603,135 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         productList.add(item);
       }
       setState(() {
-        product_list = productList;
+        Item_list = productList;
       });
     }
-    await calculateTotalAmt();
+    await calculateTotalAmt();*/
   }
 
 
+  callPostItemOpeningBal() async {
+    String baseurl=await AppPreferences.getDomainLink();
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      FranchiseeSaleRequest model = FranchiseeSaleRequest(
+          companyID: companyId,
+          Franchisee_ID: selectedCopyFranchiseeId,
+          Txn_Type:"S",
+          date: DateFormat('yyyy-MM-dd').format(applicablefrom),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+      );
+print("mosdeemmm  ${model.toJson()}");
+      String apiUrl = baseurl + ApiConstants().franchisee_item_rate;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=false;
+              Item_list=[];
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+            });
+            await callGetFrenchisee();
 
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
 
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  bool isApiCall = false;
+  callGetFrenchisee() async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: ""
+        );
+        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+        print("newwww  $apiUrl   $baseurl ");
+        //  "?pageNumber=$page&pageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  Item_list=data;
+                  print("ledger opening data....  $data");
+
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }
 
