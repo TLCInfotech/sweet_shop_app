@@ -65,7 +65,7 @@ class _CountryDialogState extends State<CountryDialog>{
                     height: SizeConfig.screenHeight*.08,
                     child: Center(
                       child: Text(
-                          ApplicationLocalizations.of(context)!.translate("select_state")!,
+                          ApplicationLocalizations.of(context)!.translate("select_country")!,
                           style: page_heading_textStyle
                       ),
                     ),

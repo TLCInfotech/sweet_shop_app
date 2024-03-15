@@ -241,7 +241,8 @@
   "company_id":"Company Id",
   "password":"Password",
   "company_item_opening": "Company Item Opening Balance",
-  "batch_id": "Batch ID"
+  "batch_id": "Batch ID",
+  "exit_screen": "Do you want to exit from screen without changes?"
 
 }
 

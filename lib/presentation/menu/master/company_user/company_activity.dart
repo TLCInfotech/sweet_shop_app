@@ -23,6 +23,7 @@ import '../../../../data/domain/company/post_compnay_request_model.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dashboard/dashboard_activity.dart';
+import '../../../dialog/default_bank_dialog.dart';
 import '../../../dialog/district_dialog.dart';
 
 class CompanyCreate extends StatefulWidget {
@@ -33,7 +34,7 @@ class CompanyCreate extends StatefulWidget {
   State<CompanyCreate> createState() => _CompanyCreateState();
 }
 
-class _CompanyCreateState extends State<CompanyCreate> with DistrictDialogInterface{
+class _CompanyCreateState extends State<CompanyCreate> with DistrictDialogInterface,DefaultBankDialogInterface{
 
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
@@ -104,6 +105,8 @@ bool isLoaderShow=false;
      getApiCall();
    }
    String companyId="";
+   String defaultBankName="";
+   String defaultBankId="";
   List<dynamic> _arrList = [];
    getApiCall()async{
      companyId=await AppPreferences.getCompanyId();
@@ -136,7 +139,7 @@ print("hjthghh  $companyId");
    contactController.text=_arrList[0]['Contact_No'] ?? contactController.text;
    emailController.text=_arrList[0]['EMail'] ?? emailController.text;
    addTwoController.text=_arrList[0]['Address2'] ?? addTwoController.text;
-   defaultBankController.text=_arrList[0]['Bank_Name'] ?? defaultBankController.text;
+      defaultBankName=_arrList[0]['Bank_Name'] ?? defaultBankName;
    extNameController.text=_arrList[0]['Ext_Name'] ?? extNameController.text;
    adharNoController.text=_arrList[0]['Adhar_No'] ?? adharNoController.text;
    panNoController.text=_arrList[0]['PAN_No'] ?? panNoController.text;
@@ -271,6 +274,10 @@ print("hjthghh  $companyId");
                             getRightLayout(parentHeight, parentWidth),
                           ],
                         ),
+                        getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+
+                        getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+
                         getContactNoLayout(parentHeight, parentWidth),
                         getEmilLayout(parentHeight, parentWidth),
                         getAddressTwoLayout(parentHeight, parentWidth),
@@ -440,11 +447,11 @@ print("hjthghh  $companyId");
       child: Column(
         children: [
           getDistrictCityLayout(parentHeight, parentWidth),
-          getStateLayout(parentHeight, parentWidth),
         ],
       ),
     );
   }
+
 
   /* Widget for getting pincode and country layout */
   Widget getRightLayout(double parentHeight, double parentWidth) {
@@ -453,7 +460,6 @@ print("hjthghh  $companyId");
       child: Column(
         children: [
           getPinCodeLayout(parentHeight, parentWidth),
-          getCountryLayout(parentHeight, parentWidth),
         ],
       ),
     );
@@ -611,7 +617,86 @@ print("hjthghh  $companyId");
 
   /* Widget for default bank text from field layout */
   Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return Container(
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("default_bank")!,
+            style: item_heading_textStyle,
+          ),
+          GestureDetector(
+            onTap: () {
+              showGeneralDialog(
+                  barrierColor: Colors.black.withOpacity(0.5),
+                  transitionBuilder: (context, a1, a2, widget) {
+                    final curvedValue =
+                        Curves.easeInOutBack.transform(a1.value) - 1.0;
+                    return Transform(
+                      transform: Matrix4.translationValues(
+                          0.0, curvedValue * 200, 0.0),
+                      child: Opacity(
+                        opacity: a1.value,
+                        child: DefaultBankDialog(
+                          mListener: this,
+                        ),
+                      ),
+                    );
+                  },
+                  transitionDuration: Duration(milliseconds: 200),
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  context: context,
+                  pageBuilder: (context, animation2, animation1) {
+                    throw Exception('No widget to return in pageBuilder');
+                  });
+            },
+            onDoubleTap: () {},
+            child: Padding(
+              padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+              child: Container(
+                height: (SizeConfig.screenHeight) * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        defaultBankName == "" ? ApplicationLocalizations.of(context)!.translate("default_bank")!  :defaultBankName,
+                        style: defaultBankName == ""
+                            ? hint_textfield_Style
+                            : text_field_textStyle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: (SizeConfig.screenHeight) * .03,
+                        color:
+                        CommonColor.BLACK_COLOR,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ); /*SingleLineEditableTextFormField(
       validation: (value) {
           if (value!.isEmpty) {
             return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("default_bank")!;
@@ -630,7 +715,7 @@ print("hjthghh  $companyId");
       textInput: TextInputType.text,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[ A-Z a-z]')),
-    );
+    );*/
 
   }
 
@@ -976,7 +1061,7 @@ getCompany()async{
         state: stateName,
         pinCode:pinCodeController.text,
         country: countryName,
-        bankName: defaultBankController.text ,
+        bankName: defaultBankName ,
         ifscCode: "",
         contactNo: contactController.text,
         email:  emailController.text,
@@ -1050,7 +1135,7 @@ getCompany()async{
           state: stateName,
           pinCode:pinCodeController.text,
           country: countryName,
-          bankName: defaultBankController.text ,
+          bankName:defaultBankName ,
           ifscCode: "",
           contactNo: contactController.text,
           email:  emailController.text,
@@ -1110,5 +1195,14 @@ setState(() {
   cityName=name;
   cityId=id;
 });
+  }
+
+  @override
+  selctedBank(int id, String name) {
+    // TODO: implement selctedBank
+    setState(() {
+      defaultBankName=name;
+      defaultBankId=id.toString();
+    });
   }
 }

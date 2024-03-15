@@ -840,6 +840,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       controller: descController,
       focuscontroller: _descFocus,
       focusnext: _branchNameFocus,
+      maxlength: 500,
       title: ApplicationLocalizations.of(context)!.translate("item_description")!,
       callbackOnchage: (value) {
         setState(() {

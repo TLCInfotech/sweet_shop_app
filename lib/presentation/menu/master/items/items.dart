@@ -234,10 +234,9 @@ Expanded get_items_list_layout() {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(itemList[index]['Name']+" ${index+1}",style: item_heading_textStyle,),
-                                          const Text("The descreption related to sweet if available.",style: item_regular_textStyle,),
-                                          const Text("500.00/kg",style: item_heading_textStyle,),
-
+                                          Text(itemList[index]['Name'],style: item_heading_textStyle,),
+                                          itemList[index]['Detail_Desc']!=null? Text(itemList[index]['Detail_Desc'],style: item_regular_textStyle,):Container(),
+                                          itemList[index]['Unit']!=null?   Text(itemList[index]['Rate'].toString()+"/"+itemList[index]['Unit'],style: item_heading_textStyle,):Container(),
                                         ],
                                       ),
                                     ),

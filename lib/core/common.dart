@@ -241,7 +241,7 @@ class CommonWidget {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: date as DateTime,
-      firstDate: DateTime.now(),
+      firstDate: DateTime(2020, 12, 31),
       lastDate: DateTime(2030, 12, 31),
       builder: (context, child) {
         return Theme(

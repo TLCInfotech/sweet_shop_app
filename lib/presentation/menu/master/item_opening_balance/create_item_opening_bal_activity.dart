@@ -23,6 +23,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeItemOpeningBal/franchisee_item_opening_bal_req_body.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../dialog/exit_screen_dialog.dart';
 import 'add_or_edit_item_opening_bal.dart';
 
 class CreateItemOpeningBal extends StatefulWidget {
@@ -166,7 +167,27 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   @override
   Widget build(BuildContext context) {
-    return contentBox(context);
+    return WillPopScope(
+        onWillPop: ()async{
+          print("${Deleted_list.length} ${Updated_list.length} ${Inserted_list.length}");
+          if(Inserted_list.length!=0||Deleted_list.length!=0||Updated_list.length!=0){
+            print("Without saving");
+            showCupertinoDialog(
+              context: context,
+              useRootNavigator: true,
+              barrierDismissible: true,
+              builder: (context) {
+                return ExitScreenDialog(
+                  isDialogType: "1",
+                );
+              },
+            );
+            return false;
+          }
+          else {
+            return true;
+          }
+        },child: contentBox(context));
   }
 
   Widget contentBox(BuildContext context) {
@@ -478,7 +499,6 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           Container(
               width:(SizeConfig.screenWidth)*.32,
               child: getPurchaseDateLayout()),
-
           SizedBox(width: 5,),
           Expanded(
               child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),

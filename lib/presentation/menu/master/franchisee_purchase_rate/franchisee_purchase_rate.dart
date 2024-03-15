@@ -231,57 +231,63 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           return true;
         }
       },
-      child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
-
-                backgroundColor: Colors.white,
-                title: Text(
-                  ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
-                  style: appbar_text_style,),
-              ),
-            ),
-          ),
-        ),
-        body:  Column(
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Scaffold(
+            backgroundColor: Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
                     ),
+
+                    backgroundColor: Colors.white,
+                    title: Text(
+                      ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
+                      style: appbar_text_style,),
                   ),
                 ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ),
+            ),
+            body:  Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-          ],
-        ),
+              ],
+            ),
+          ),
+          Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+        ],
       ),
     );
   }
@@ -389,7 +395,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                             setState(() {
                               editedItemIndex=null;
                             });
-                            if(selectedFranchiseeID!=""){
+                            if(selectedFranchiseeID!=null){
                               goToAddOrEditProduct(null);
                             }else{
                               CommonWidget.errorDialog(context, "Select franchisee first.");

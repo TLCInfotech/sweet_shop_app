@@ -121,68 +121,74 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                    style: appbar_text_style,),
+                ),
               ),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () async{
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                  dateNew:CommonWidget.getDateLayout(invoiceDate),
 
-              backgroundColor: Colors.white,
-              title:  Text(
-                ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
-                style: appbar_text_style,),
+                  //DateFormat('dd-MM-yyyy').format(invoiceDate),
+                  mListener: this,
+                )));
+                setState(() {
+                  Franchisee_list=[];
+                });
+                callGetFranchiseeItemOpeningList(1);
+              }),
+          body: Container(
+            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getPurchaseDateLayout(),
+                const SizedBox(
+                  height: 5,
+                ),
+                getTotalCountAndAmount(),
+                const SizedBox(
+                  height: .5,
+                ),
+                get_purchase_list_layout()
+              ],
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () async{
-            await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-              dateNew:CommonWidget.getDateLayout(invoiceDate),
-
-              //DateFormat('dd-MM-yyyy').format(invoiceDate),
-              mListener: this,
-            )));
-            setState(() {
-              Franchisee_list=[];
-            });
-            callGetFranchiseeItemOpeningList(1);
-          }),
-      body: Container(
-        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 5,
-            ),
-            getTotalCountAndAmount(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_purchase_list_layout()
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 

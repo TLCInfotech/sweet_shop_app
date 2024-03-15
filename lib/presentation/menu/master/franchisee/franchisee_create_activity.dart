@@ -632,8 +632,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   /* widget for image layout */
   Widget getImageLayout(double parentHeight, double parentWidth) {
     return  GetSingleImage(
-        height: parentHeight * .15,
-        width: parentHeight * .15,
+        height: parentHeight * .25,
+        width: parentHeight * .25,
         picImage: picImage,
         callbackFile: (file)async{
           List<int> bytes = (await file?.readAsBytes()) as List<int>;
