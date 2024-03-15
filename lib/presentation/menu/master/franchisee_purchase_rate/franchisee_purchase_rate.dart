@@ -23,6 +23,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_model.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../dialog/exit_screen_dialog.dart';
 
 class FranchiseePurchaseRate extends StatefulWidget {
   const FranchiseePurchaseRate({super.key});
@@ -214,6 +215,16 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         print("${Deleted_list.length} ${Updated_list.length} ${Inserted_list.length}");
         if(Inserted_list.length!=0||Deleted_list.length!=0||Updated_list.length!=0){
           print("Without saving");
+          showCupertinoDialog(
+            context: context,
+            useRootNavigator: true,
+            barrierDismissible: true,
+            builder: (context) {
+              return ExitScreenDialog(
+                isDialogType: "1",
+              );
+            },
+          );
           return false;
         }
         else {
