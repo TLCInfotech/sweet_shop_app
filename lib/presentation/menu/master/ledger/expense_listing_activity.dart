@@ -244,7 +244,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(ledgerList[index]['Name'],style: item_heading_textStyle,),
-                                          const Text("Leadger group name",
+                                           Text("${ledgerList[index]['Group_Name']}",
                                             style: item_regular_textStyle,),
                                         ],
                                       ),

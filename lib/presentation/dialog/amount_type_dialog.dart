@@ -13,7 +13,9 @@ import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class AmountTypeDialog extends StatefulWidget {
   final AmountTypeDialogInterface mListener;
-  const AmountTypeDialog({super.key, required this.mListener,});
+  final selectedType;
+  final width;
+  const AmountTypeDialog({super.key, required this.mListener, required this.selectedType,required this.width});
 
   @override
   State<AmountTypeDialog> createState() => _LedegerGroupDialogState();
@@ -38,6 +40,8 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
+      selctedAmtType=widget.selectedType;
+
     _scrollController.addListener(_scrollListener);
     callGetAmountType(page);
   }
@@ -52,12 +56,61 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
     }
   }
   List<dynamic> amount_type = [];
+  var selctedAmtType=null;
 
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
+    return Container(
+        height: 45,
+        width: double.parse(widget.width.toString()),
+        margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:40): EdgeInsets.only(left: 5,top:10),
+        padding: EdgeInsets.only(left: 10, right: 10),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 1),
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.1),
+              ),
+            ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5)
+        ),
+        child: DropdownButton<dynamic>(
+          menuMaxHeight: 200,
+          hint: Text(
+            ApplicationLocalizations.of(context)!.translate("amount_type")!,
+          ),
+          value: selctedAmtType,
+          icon:  Icon(
+            Icons.arrow_drop_down,
+          ),
+          iconSize: 20,
+          isExpanded: true,
+          underline:Container(),
+          onChanged: (dynamic? newValue) {
+            setState(() {
+              selctedAmtType = newValue!;
+            });
+            if(widget.mListener!=null){
+              widget.mListener.selectedAmountType(newValue);
+            }
+          },
+          items: amount_type.map<
+              DropdownMenuItem<dynamic>>(
+                  (dynamic value) {
+                return DropdownMenuItem<dynamic>(
+                  value: value,
+                  child: Text(
+                    value.toString(),
+                  ),
+                );
+              }).toList(),
+        ));
+
+      Material(
       color: Colors.transparent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

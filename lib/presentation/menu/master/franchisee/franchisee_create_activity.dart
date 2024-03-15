@@ -743,74 +743,75 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         },
       )
         ),
-        Container(
-          height: 50,
-          width: 130,
-          margin: EdgeInsets.only(left: 5,top: 30),
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              if (context != null) {
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue =
-                          Curves.easeInOutBack.transform(a1.value) -
-                              1.0;
-                      return Transform(
-                        transform: Matrix4.translationValues(
-                            0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: AmountTypeDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception(
-                          'No widget to return in pageBuilder');
-                    });
-              }
-            },
-            child: Container(
-                height: parentHeight * .055,
-                margin: EdgeInsets.only(top: 10),
-                padding: EdgeInsets.only(left: 10, right: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      selectedLimitUnit == null ? ApplicationLocalizations.of(context)!.translate("amount_type")!
-                          : selectedLimitUnit,
-                      style: selectedLimitUnit == null ? item_regular_textStyle : text_field_textStyle,
-                    ),
-                    FaIcon(
-                      FontAwesomeIcons.caretDown,
-                      color: Colors.black87.withOpacity(0.8),
-                      size: 16,
-                    )
-                  ],
-                )),
-          ),
-        )
+        AmountTypeDialog(mListener: this,selectedType: selectedLimitUnit,width:130,)
+        // Container(
+        //   height: 50,
+        //   width: 130,
+        //   margin: EdgeInsets.only(left: 5,top: 30),
+        //   child: GestureDetector(
+        //     onTap: () {
+        //       FocusScope.of(context).requestFocus(FocusNode());
+        //       if (context != null) {
+        //         showGeneralDialog(
+        //             barrierColor: Colors.black.withOpacity(0.5),
+        //             transitionBuilder: (context, a1, a2, widget) {
+        //               final curvedValue =
+        //                   Curves.easeInOutBack.transform(a1.value) -
+        //                       1.0;
+        //               return Transform(
+        //                 transform: Matrix4.translationValues(
+        //                     0.0, curvedValue * 200, 0.0),
+        //                 child: Opacity(
+        //                   opacity: a1.value,
+        //                   child: AmountTypeDialog(
+        //                     mListener: this,
+        //                   ),
+        //                 ),
+        //               );
+        //             },
+        //             transitionDuration: Duration(milliseconds: 200),
+        //             barrierDismissible: true,
+        //             barrierLabel: '',
+        //             context: context,
+        //             pageBuilder: (context, animation2, animation1) {
+        //               throw Exception(
+        //                   'No widget to return in pageBuilder');
+        //             });
+        //       }
+        //     },
+        //     child: Container(
+        //         height: parentHeight * .055,
+        //         margin: EdgeInsets.only(top: 10),
+        //         padding: EdgeInsets.only(left: 10, right: 10),
+        //         alignment: Alignment.center,
+        //         decoration: BoxDecoration(
+        //           color: CommonColor.WHITE_COLOR,
+        //           borderRadius: BorderRadius.circular(4),
+        //           boxShadow: [
+        //             BoxShadow(
+        //               offset: Offset(0, 1),
+        //               blurRadius: 5,
+        //               color: Colors.black.withOpacity(0.1),
+        //             ),
+        //           ],
+        //         ),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             Text(
+        //               selectedLimitUnit == null ? ApplicationLocalizations.of(context)!.translate("amount_type")!
+        //                   : selectedLimitUnit,
+        //               style: selectedLimitUnit == null ? item_regular_textStyle : text_field_textStyle,
+        //             ),
+        //             FaIcon(
+        //               FontAwesomeIcons.caretDown,
+        //               color: Colors.black87.withOpacity(0.8),
+        //               size: 16,
+        //             )
+        //           ],
+        //         )),
+        //   ),
+        // )
 
       ],
     );
