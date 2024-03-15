@@ -368,13 +368,17 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                                         callback: (response ) async{
                                           if(response=="yes"){
                                             print("##############$response");
-                                            var deletedItem=   {
-                                              "Item_ID": Inserted_list[index]['Item_ID'],
-                                            };
-                                            Deleted_list.add(deletedItem);
-                                            setState(() {
-                                              Deleted_list=Deleted_list;
-                                            });
+                                            if(Item_list[index]['ID']!=0){
+                                              var deletedItem=   {
+                                                "Item_ID": Item_list[index]['Item_ID'],
+                                                "ID": Item_list[index]['ID'],
+                                              };
+                                              Deleted_list.add(deletedItem);
+                                              setState(() {
+                                                Deleted_list=Deleted_list;
+                                              });
+                                            }
+
                                             var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
                                             print(contain);
                                             if(contain>=0){
@@ -538,6 +542,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
+        Item_list[index]['ID']=item['ID'];
         Item_list[index]['Item_ID']=item['Item_ID'];
         Item_list[index]['New_Item_ID']=item['New_Item_ID'];
         Item_list[index]['Name']=item['Name'];
@@ -555,7 +560,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
           Item_list[index]['New_Item_ID']=item['New_Item_ID'];
         });
       }
-      if(item['Seq_No']!=null) {
+      if(item['ID']!=null) {
         Updated_list.add(item);
         setState(() {
           Updated_list = Updated_list;

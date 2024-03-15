@@ -443,15 +443,29 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         ),
         GestureDetector(
           onTap: () {
-            var item={
-              "New_Item_ID":widget.editproduct!=null?widget.editproduct['New_Item_ID']:"",
-              "Name":_textController.text,
-              "Item_ID":selectedItemID,
-              "Rate":double.parse(rate.text),
-              "GST":double.parse(gst.text),
-              "GST_Amount":double.parse(gstAmt.text),
-              "Net_Rate":double.parse(net.text)
-            };
+            var item={};
+            if(widget.editproduct!=null){
+               item={
+                "Item_ID":widget.editproduct['Item_ID'],
+                "ID": widget.editproduct['ID'],
+                "Name":_textController.text,
+                "New_Item_ID":selectedItemID,
+                "Rate":double.parse(rate.text),
+                "GST":double.parse(gst.text),
+                "GST_Amount":double.parse(gstAmt.text),
+                "Net_Rate":double.parse(net.text)
+              };
+            }else{
+               item={
+                "Name":_textController.text,
+                "Item_ID":selectedItemID,
+                "Rate":double.parse(rate.text),
+                "GST":double.parse(gst.text),
+                "GST_Amount":double.parse(gstAmt.text),
+                "Net_Rate":double.parse(net.text)
+              };
+            }
+
             if(widget.mListener!=null){
               widget.mListener.addProductSaleRateDetail(item);
               Navigator.pop(context);
