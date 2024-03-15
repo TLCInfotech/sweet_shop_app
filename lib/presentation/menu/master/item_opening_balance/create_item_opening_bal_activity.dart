@@ -450,10 +450,15 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           setState(() {
             selectedFranchiseeName=name!;
             selectedFranchiseeID=id;
+            Item_list=[];
+            Updated_list=[];
+            Deleted_list=[];
+            Inserted_list=[];
           });
           print(selectedFranchiseeID);
           print(selectedFranchiseeName);
-          callGetFranchiseeItemOpeningList(0);
+
+          callGetFranchiseeItemOpeningList(1);
         },
         franchiseeName: selectedFranchiseeName);
 
@@ -685,17 +690,17 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   }
 
   calculateTotalAmt()async{
-    // print("Here");
-    // var total=0.00;
-    // for(var item  in Item_list ){
-    //   if(item['Amount']!=null||item['Amount']!="") {
-    //     total = total + double.parse(item['Amount'].toString());
-    //     print(item['Amount']);
-    //   }
-    // }
-    // setState(() {
-    //   TotalAmount=total.toStringAsFixed(2) ;
-    // });
+    print("Here");
+    var total=0.00;
+    for(var item  in Item_list ){
+      if(item['Amount']!=null||item['Amount']!="") {
+        total = total + double.parse(item['Amount'].toString());
+        print(item['Amount']);
+      }
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
 
   }
 

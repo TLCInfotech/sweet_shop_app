@@ -452,8 +452,13 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 setState(() {
                   selectedCopyFranchiseeName=name!;
                   selectedCopyFranchiseeId=id!;
-                  callGetFrenchisee(1);
                 });
+                setState(() {
+                  Item_list=[];
+                  Updated_list=[];
+                  Inserted_list=[];
+                  Deleted_list=[];
+                });    callGetFrenchisee(1);
               },
               franchiseeName: selectedCopyFranchiseeName),
           // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -515,8 +520,16 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
         callback: (name){
           setState(() {
             applicablefrom=name!;
-
           });
+          if(selectedCopyFranchiseeId!=""){
+            setState(() {
+              Item_list=[];
+              Updated_list=[];
+              Inserted_list=[];
+              Deleted_list=[];
+            });
+            callGetFrenchisee(1);
+          }
         },
         applicablefrom: applicablefrom);
 
@@ -605,31 +618,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
     print(Updated_list);
 
-
-
-    /*
-    var productList=Item_list;
-    if(item['id']!=""){
-      var index=Item_list.indexWhere((element) => item['id']==element['id']);
-      setState(() {
-        Item_list[index]['pname']=item['pname'];
-        Item_list[index]['rate']=item['rate'];
-        Item_list[index]['gst']=item['gst'];
-        Item_list[index]['net']=item['net'];
-      });
-    }
-    else {
-      if (productList.contains(item)) {
-        print("Already Exist");
-      }
-      else {
-        productList.add(item);
-      }
-      setState(() {
-        Item_list = productList;
-      });
-    }
-    await calculateTotalAmt();*/
   }
 
 

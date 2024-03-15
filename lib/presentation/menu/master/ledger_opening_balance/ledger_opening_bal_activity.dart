@@ -121,7 +121,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 const SizedBox(
                   height: 5,
                 ),
-                getTotalCountAndAmount(),
+                ledgerList.isNotEmpty?getTotalCountAndAmount():Container(),
                 const SizedBox(
                   height: .5,
                 ),
@@ -135,6 +135,15 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
     );
   }
 
+  removeData(){
+    setState(() {
+      Updated_list=[];
+      Inserted_list=[];
+      Deleted_list=[];
+      ledgerList=[];
+    });
+  }
+
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
@@ -144,6 +153,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
           setState(() {
             invoiceDate=date!;
           });
+          removeData();
+          callGetLedgerOB(1);
         },
         applicablefrom: invoiceDate
     );
@@ -174,7 +185,12 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
                Text("${ledgerList.length} ${ApplicationLocalizations.of(context)!.translate("ledgers")!}", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Row(
+                children: [
+                  Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: subHeading_withBold,),
+                  Text(TotalCr>TotalDr?" Cr":" Dr",style: subHeading_withBold,)
+                ],
+              )
             ],
           )
       ),
@@ -240,7 +256,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                       children: [
                                          Text(ledgerList[index]["Ledger_Name"],style: item_heading_textStyle,),
                                         const SizedBox(height: 5,),
-                                        Row(
+                                     /*   Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
@@ -248,7 +264,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                             const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                           ],
                                         ),
-                                        const SizedBox(height: 5,),
+                                        const SizedBox(height: 5,),*/
                                         Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -329,6 +345,44 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
         });
   }
 
+  double TotalCr=0.00;
+  String TotalAmount="0.00";
+  double TotalDr=0.00;
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    var totalcr=0.00;
+    var totaldr=0.00;
+    for(var item  in ledgerList ){
+      total=total+item['Amount'];
+      if(item['Amount_Type']=="CR"){
+        totalcr=totalcr+item['Amount'];
+      }
+      else  if(item['Amount_Type']=="DR"){
+        totaldr=totaldr+item['Amount'];
+      }
+    }
+    if(totalcr>totaldr){
+      var total=totalcr-totaldr;
+      setState(() {
+        TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
+        TotalCr=totalcr;
+        TotalDr=totaldr;
+      });
+
+    }
+    if(totalcr<=totaldr){
+      var total=totalcr-totaldr;
+      setState(() {
+        TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
+        TotalCr=totalcr;
+        TotalDr=totaldr;
+      });
+
+    }
+
+  }
+
   callGetLedgerOB(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -352,8 +406,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  //ledgerList.clear();
                   _arrList=data;
+
                   print("ledger opening data....  $data");
                   if (_arrList.length < 10) {
                     if (mounted) {
@@ -367,6 +421,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                   } else {
                     setMoreDataToList(_arrList);
                   }
+                  calculateTotalAmt();
                 }else{
                   isApiCall=true;
                 }
@@ -466,8 +521,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
               isLoaderShow=false;
               ledgerList.removeAt(index);
             });
-            // Navigator.pop(context);
-
+            callGetLedgerOB(1);
           }, onFailure: (error) {
             setState(() {
               isLoaderShow=false;

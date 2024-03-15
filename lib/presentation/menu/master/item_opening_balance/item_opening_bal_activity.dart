@@ -60,10 +60,11 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                   _arrList=data;
 
                   setState(() {
+
                     Franchisee_list=_arrList;
                   });
                 }
-
+                calculateTotalAmt();
               });
 
               // _arrListNew.addAll(data.map((arrData) =>
@@ -114,7 +115,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   void initState() {
     // TODO: implement initState
     super.initState();
-    callGetFranchiseeItemOpeningList(0);
+    callGetFranchiseeItemOpeningList(1);
   }
 
 
@@ -160,7 +161,10 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               //DateFormat('dd-MM-yyyy').format(invoiceDate),
               mListener: this,
             )));
-            callGetFranchiseeItemOpeningList(0);
+            setState(() {
+              Franchisee_list=[];
+            });
+            callGetFranchiseeItemOpeningList(1);
           }),
       body: Container(
         margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
@@ -207,7 +211,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
                Text("${Franchisee_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: subHeading_withBold,)
             ],
           )
       ),
@@ -222,6 +226,9 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
         callback: (date){
           setState(() {
             invoiceDate=date!;
+          });
+          setState(() {
+            Franchisee_list=[];
           });
           callGetFranchiseeItemOpeningList(0);
         },
@@ -350,5 +357,20 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
         ));
   }
 
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    print("Here");
+    var total=0.00;
+    for(var item  in Franchisee_list ){
+      if(item['Amount']!=null||item['Amount']!="") {
+        total = total + double.parse(item['Amount'].toString());
+        print(item['Amount']);
+      }
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
 
 }

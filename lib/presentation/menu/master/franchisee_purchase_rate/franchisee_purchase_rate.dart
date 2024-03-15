@@ -578,6 +578,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               selectedCopyFranchiseeName=name!;
               selectedFranchiseeID=id;
             });
+
             getPurchaseList();
           },
           franchiseeName: selectedCopyFranchiseeName),
@@ -641,6 +642,17 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           setState(() {
             invoiceDate=name!;
           });
+          if(selectedFranchiseeID!=null){
+            setState(() {
+              Item_list=[];
+              Updated_list=[];
+              Inserted_list=[];
+              Deleted_list=[];
+            });
+            callGetFranchiseeItemOpeningList(1);
+          }else{
+
+          }
         },
         applicablefrom: invoiceDate);
 
