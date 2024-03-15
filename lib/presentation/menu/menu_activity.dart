@@ -564,11 +564,13 @@ String companyId="";
               padding: EdgeInsets.all(5.0),
               child:  Text('●'),
             ),
-            Text(
-              ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
-              style: page_heading_textStyle,
-              textAlign: TextAlign.start,
-
+            Expanded(
+              child: Text(
+                ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                style: page_heading_textStyle,
+                textAlign: TextAlign.start,
+              
+              ),
             ),
           ],
         ),

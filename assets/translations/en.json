@@ -175,7 +175,7 @@
   "domain" : "Domain",
   "total" : "Total",
   "total_invoice" : "Total Invoice",
-  "item_opening_balance" : "Item Opening Balance",
+  "item_opening_balance" : "Franchisee Item Opening Balance",
   "ledger_opening_balance" : "Ledger Opening Balance",
   "action" : "Action",
   "receipt_report" : "Receipt Report",
@@ -240,7 +240,7 @@
   "fssai":"FSSAI No.",
   "company_id":"Company Id",
   "password":"Password",
-  "company_item_opening": "Company Item Opening Bal",
+  "company_item_opening": "Company Item Opening Balance",
   "batch_id": "Batch ID"
 
 }

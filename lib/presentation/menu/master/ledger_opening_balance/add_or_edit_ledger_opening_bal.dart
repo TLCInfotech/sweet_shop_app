@@ -176,7 +176,7 @@ String amountTypeId="";
                       height: SizeConfig.screenHeight*.08,
                       child:  Center(
                         child: Text(
-                            ApplicationLocalizations.of(context)!.translate("ledger_detail")!,
+                            ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
                             style: page_heading_textStyle
                         ),
                       ),
@@ -220,7 +220,7 @@ String amountTypeId="";
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              hintText: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
               prefixIcon: Container(
                   width: 50,
                   padding: EdgeInsets.all(10),
@@ -308,68 +308,80 @@ String amountTypeId="";
   }
 
   Widget getAmtType(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          showGeneralDialog(
-              barrierColor: Colors.black.withOpacity(0.5),
-              transitionBuilder: (context, a1, a2, widget) {
-                final curvedValue =
-                    Curves.easeInOutBack.transform(a1.value) -
-                        1.0;
-                return Transform(
-                  transform: Matrix4.translationValues(
-                      0.0, curvedValue * 200, 0.0),
-                  child: Opacity(
-                    opacity: a1.value,
-                    child: AmountTypeDialog(
-                      mListener: this,
-                    ),
-                  ),
-                );
-              },
-              transitionDuration: Duration(milliseconds: 200),
-              barrierDismissible: true,
-              barrierLabel: '',
-              context: context,
-              pageBuilder: (context, animation2, animation1) {
-                throw Exception(
-                    'No widget to return in pageBuilder');
-              });
-        }
-      },
-      child: Container(
-          height: parentHeight * .055,
-          margin: EdgeInsets.only(top: 10),
-          padding: EdgeInsets.only(left: 10, right: 10),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: CommonColor.WHITE_COLOR,
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
+    return Padding(
+      padding:  EdgeInsets.only(top: parentHeight*.02),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("amount_type")!,
+            style: item_heading_textStyle,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                amountType == "" ? ApplicationLocalizations.of(context)!.translate("amount_type")!
-                    : amountType,
-                style: amountType == "" ? item_regular_textStyle : text_field_textStyle,
-              ),
-              FaIcon(
-                FontAwesomeIcons.caretDown,
-                color: Colors.black87.withOpacity(0.8),
-                size: 16,
-              )
-            ],
-          )),
+          GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              if (context != null) {
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue =
+                          Curves.easeInOutBack.transform(a1.value) -
+                              1.0;
+                      return Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: AmountTypeDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception(
+                          'No widget to return in pageBuilder');
+                    });
+              }
+            },
+            child: Container(
+                height: parentHeight * .055,
+                margin: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      amountType == "" ? ApplicationLocalizations.of(context)!.translate("amount_type")!
+                          : amountType,
+                      style: amountType == "" ? item_regular_textStyle : text_field_textStyle,
+                    ),
+                    FaIcon(
+                      FontAwesomeIcons.caretDown,
+                      color: Colors.black87.withOpacity(0.8),
+                      size: 16,
+                    )
+                  ],
+                )),
+          ),
+        ],
+      ),
     );
 
   }
