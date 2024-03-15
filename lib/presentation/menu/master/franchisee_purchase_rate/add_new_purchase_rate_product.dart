@@ -127,9 +127,9 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         rate.text=widget.editproduct['Rate'].toString();
         gst.text=widget.editproduct['GST'].toString();
         net.text=widget.editproduct['Net_Rate'].toString();
-        gstAmt.text=widget.editproduct['GST_Amount'].toString();
-
+        gstAmt.text=widget.editproduct['ID']!=null?widget.editproduct['GSt_Amount'].toString():widget.editproduct['GST_Amount'].toString();
       });
+
     }
   }
 
@@ -414,7 +414,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                 if (widget.editproduct != null) {
                   if(oldItemID!=selectedItemID){
                     item = {
-                      "Seq_No": widget.editproduct['Seq_No'],
+                      "ID": widget.editproduct['ID'],
                       "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
                       "Unit":unit,
                       "Name":_textController.text,
@@ -428,7 +428,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                   }
                   else {
                     item = {
-                      "Seq_No": widget.editproduct['Seq_No'],
+                      "ID": widget.editproduct['ID'],
                       "Unit":widget.editproduct['Unit'],
                       "Item_ID": selectedItemID,
                       "Name":_textController.text,
@@ -442,6 +442,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                 }
                 else {
                   item = {
+                    "ID": 0,
                     "Unit":unit,
                     "Item_ID": selectedItemID,
                     "Disc_Percent": null,

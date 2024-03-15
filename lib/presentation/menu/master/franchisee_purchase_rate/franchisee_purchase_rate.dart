@@ -162,56 +162,68 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child: Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: AppBar(
+    return WillPopScope(
+      onWillPop: ()async{
+        print("${Deleted_list.length} ${Updated_list.length} ${Inserted_list.length}");
+        if(Inserted_list.length!=0||Deleted_list.length!=0||Updated_list.length!=0){
+          print("Without saving");
+          return false;
+        }
+        else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xFFfffff5),
+        appBar: PreferredSize(
+          preferredSize: AppBar().preferredSize,
+          child: SafeArea(
+            child: Card(
+              elevation: 3,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)
               ),
+              color: Colors.transparent,
+              // color: Colors.red,
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: AppBar(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
 
-              backgroundColor: Colors.white,
-              title: Text(
-                ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
-                style: appbar_text_style,),
+                backgroundColor: Colors.white,
+                title: Text(
+                  ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
+                  style: appbar_text_style,),
+              ),
             ),
           ),
         ),
-      ),
-      body:  Column(
-        children: [
-          Expanded(
-            child: Container(
-              // color: CommonColor.DASHBOARD_BACKGROUND,
-                child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          ),
-          Container(
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.black.withOpacity(0.08),
-                    width: 1.0,
+        body:  Column(
+          children: [
+            Expanded(
+              child: Container(
+                // color: CommonColor.DASHBOARD_BACKGROUND,
+                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+            ),
+            Container(
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black.withOpacity(0.08),
+                      width: 1.0,
+                    ),
                   ),
                 ),
-              ),
-              height: SizeConfig.safeUsedHeight * .08,
-              child: getSaveAndFinishButtonLayout(
-                  SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          CommonWidget.getCommonPadding(
-              SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+                height: SizeConfig.safeUsedHeight * .08,
+                child: getSaveAndFinishButtonLayout(
+                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
+            CommonWidget.getCommonPadding(
+                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -316,6 +328,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
                       GestureDetector(
                           onTap: (){
+                            setState(() {
+                              editedItemIndex=null;
+                            });
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
                               goToAddOrEditProduct(null);
@@ -445,9 +460,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
-                                          if(Item_list[index]['Seq_No']!=0){
+                                          if(Item_list[index]['ID']!=null){
                                             var deletedItem=   {
-                                              "Seq_No": Item_list[index]['Seq_No'],
+                                              "ID": Item_list[index]['ID'],
                                               "Item_ID": Item_list[index]['Item_ID']
                                             };
                                             Deleted_list.add(deletedItem);
@@ -615,7 +630,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['Seq_No']=item['seq_No'];
+        Item_list[index]['ID']=item['ID'];
         Item_list[index]['Item_ID']=item['Item_ID'];
         Item_list[index]['Name']=item['Name'];
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
@@ -633,7 +648,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           Item_list[index]['New_Item_ID']=item['New_Item_ID'];
         });
       }
-      if(item['Seq_No']!=null) {
+      if(item['ID']!=null) {
         Updated_list.add(item);
         setState(() {
           Updated_list = Updated_list;
