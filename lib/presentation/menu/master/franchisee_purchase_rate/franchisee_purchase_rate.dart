@@ -66,7 +66,22 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
 
+  int page = 1;
+  bool isPagination = true;
+  bool isApiCall = false;
+
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetFranchiseeItemOpeningList(page);
+      }
+    }
   }
 
   getPurchaseList(){
@@ -77,7 +92,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       Inserted_list=[];
     });
     if(selectedFranchiseeID!=null){
-      callGetFranchiseeItemOpeningList(0);
+      callGetFranchiseeItemOpeningList(1);
     }
   }
 
@@ -96,7 +111,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             page: page.toString()
         );
         // &Category_ID=$selectedCategoryID
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
                setState(() {
@@ -106,11 +121,27 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   List<dynamic> _arrList = [];
                   _arrList=data;
 
-                  setState(() {
+
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+              /*    setState(() {
                     Item_list=_arrList;
                   });
                   calculateTotalAmt();
-                }
+                }*/
 
               });
 
@@ -159,6 +190,22 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   }
 
 
+  setDataToList(List<dynamic> _list) {
+    if (Item_list.isNotEmpty) Item_list.clear();
+    if (mounted) {
+      setState(() {
+        Item_list.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        Item_list.addAll(_list);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -331,10 +378,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                             setState(() {
                               editedItemIndex=null;
                             });
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
+                            if(selectedFranchiseeID!=""){
                               goToAddOrEditProduct(null);
+                            }else{
+                              CommonWidget.errorDialog(context, "Select franchisee first.");
                             }
+                            FocusScope.of(context).requestFocus(FocusNode());
+
                           },
                           child: Container(
                               width: 140,
@@ -695,7 +745,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
 
   callPostIFranchiseetemOpeningBal() async {
-
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
@@ -715,7 +764,6 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           uPDATE: Updated_list.toList(),
           dELETE: Deleted_list.toList()
       );
-
       String apiUrl =baseurl + ApiConstants().franchisee_item_rate;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
@@ -727,7 +775,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               Updated_list=[];
               Deleted_list=[];
             });
-            await callGetFranchiseeItemOpeningList(0);
+            await callGetFranchiseeItemOpeningList(1);
 
           }, onFailure: (error) {
             setState(() {
@@ -740,13 +788,11 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               isLoaderShow=false;
             });
             CommonWidget.errorDialog(context, e.toString());
-
           },sessionExpire: (e) {
             setState(() {
               isLoaderShow=false;
             });
             CommonWidget.gotoLoginScreen(context);
-            // widget.mListener.loaderShow(false);
           });
 
     });

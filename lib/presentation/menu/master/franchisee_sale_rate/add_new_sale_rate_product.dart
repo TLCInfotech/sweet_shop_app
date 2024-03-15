@@ -353,8 +353,9 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
             getSelectedValue: (v) {
               setState(() {
                 selectedItemID = v.value;
-                gst.text=v.gst;
-                rate.text=v.rate;
+                //gst.text=v.gst;
+                //rate.text=v.rate;
+                gst.text=v.gst=="null"?gst.text:v.gst;
                 itemsList = [];
               });
             },

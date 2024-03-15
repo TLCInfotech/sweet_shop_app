@@ -197,6 +197,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
     return Expanded(
         child: ListView.separated(
           itemCount: ledgerList.length,
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -341,7 +343,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&pageSize=10";
+        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&pageNumber=$page&pageSize=10";
           print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",

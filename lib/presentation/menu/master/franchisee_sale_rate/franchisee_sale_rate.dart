@@ -70,10 +70,25 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     // TODO: implement initState
     super.initState();
     calculateTotalAmt();
+    _scrollController.addListener(_scrollListener);
     if(selectedCopyFranchiseeId!=""){
-      callGetFrenchisee();
+      callGetFrenchisee(page);
     }
 
+  }
+
+  int page = 1;
+  bool isPagination = true;
+
+
+  _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        callGetFrenchisee(page);
+      }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -233,6 +248,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              editedItemIndex=null;
+                            });
                       if(selectedCopyFranchiseeId!=""){
                         goToAddOrEditProduct(null);
                       }else{
@@ -434,7 +452,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                 setState(() {
                   selectedCopyFranchiseeName=name!;
                   selectedCopyFranchiseeId=id!;
-                  callGetFrenchisee();
+                  callGetFrenchisee(1);
                 });
               },
               franchiseeName: selectedCopyFranchiseeName),
@@ -646,7 +664,7 @@ print("mosdeemmm  ${model.toJson()}");
               Updated_list=[];
               Deleted_list=[];
             });
-            await callGetFrenchisee();
+            await callGetFrenchisee(1);
 
           }, onFailure: (error) {
             setState(() {
@@ -672,7 +690,7 @@ print("mosdeemmm  ${model.toJson()}");
   }
 
   bool isApiCall = false;
-  callGetFrenchisee() async {
+  callGetFrenchisee(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -686,7 +704,7 @@ print("mosdeemmm  ${model.toJson()}");
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S&pageNumber=$page&pageSize=10";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
@@ -694,9 +712,24 @@ print("mosdeemmm  ${model.toJson()}");
               setState(() {
                 isLoaderShow=false;
                 if(data!=null){
-                  Item_list=data;
+                 // Item_list=data;
                   print("ledger opening data....  $data");
 
+                  List<dynamic> _arrList = [];
+                //  _arrList.clear();
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
                 }else{
                   isApiCall=true;
                 }
@@ -738,5 +771,25 @@ print("mosdeemmm  ${model.toJson()}");
       CommonWidget.noInternetDialogNew(context);
     }
   }
+
+
+
+  setDataToList(List<dynamic> _list) {
+    if (Item_list.isNotEmpty) Item_list.clear();
+    if (mounted) {
+      setState(() {
+        Item_list.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        Item_list.addAll(_list);
+      });
+    }
+  }
+
 }
 
