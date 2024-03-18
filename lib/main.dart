@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /* Timer */
   startTimer() async {
-    var duration =   const Duration(seconds: 3);
+    var duration =   const Duration(seconds: 1);
     try {
       String accessToken ="1";
       String sessionToken =await AppPreferences.getSessionToken();

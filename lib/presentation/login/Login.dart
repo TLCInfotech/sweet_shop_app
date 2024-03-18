@@ -56,11 +56,11 @@ class _LoginActivityState extends State<LoginActivity> {
                          StringEn.SIGN_IN,
                           style: big_title_style
                         ),
-                        const SizedBox(height: 5.0),
+                      /*  const SizedBox(height: 5.0),
                         const Text(
                           StringEn.LOGIN_SUB_TEXT,
                           style: subHeading_withBold
-                        ),
+                        ),*/
                         const SizedBox(height: 40.0),
                         getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                         const SizedBox(height: 10.0),
@@ -130,7 +130,7 @@ class _LoginActivityState extends State<LoginActivity> {
             style: button_text_style),
         ),
       ),
-      Container(
+    /*  Container(
         width: 200,
         child: ElevatedButton(
           style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CommonColor.THEME_COLOR)),
@@ -140,7 +140,7 @@ class _LoginActivityState extends State<LoginActivity> {
           child:  Text( ApplicationLocalizations.of(context)!.translate("domain")!,
               style: button_text_style),
         ),
-      ),
+      ),*/
     ],
   );
   }
