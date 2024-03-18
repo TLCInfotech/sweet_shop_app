@@ -34,21 +34,19 @@ class _LoginActivityState extends State<LoginActivity> {
       alignment: Alignment.center,
       children: [
         Scaffold(
-          body: Form(
-            key: _formkey,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/Login_Background.jpg',
+                  fit: BoxFit.cover,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
+              ),
+              Container(
+                padding:  EdgeInsets.all(16.0),
+                child: Center(
+                  child: Form(
+                    key: _formkey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -71,8 +69,8 @@ class _LoginActivityState extends State<LoginActivity> {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),

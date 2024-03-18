@@ -2,6 +2,7 @@ import 'dart:async';
 // import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+
 class InternetChecker {
   static late StreamSubscription<InternetConnectionStatus> mListener;
 
