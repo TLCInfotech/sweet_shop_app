@@ -36,5 +36,7 @@ class ApiConstants {
   String franchisee_items="getFranchaiseeItemList";
   String franchisee_item_rate_list="getFranchaiseeItemRateList";
   String franchisee_item_rate="franchiseeItemRate";
+  String expense_voucher="ExpenseVoucher";
+  String getExpenseVoucherDetails="getExpenseVoucherDetails";
 
 }

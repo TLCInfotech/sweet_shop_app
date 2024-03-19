@@ -147,7 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void navigateDomainLink() {
     Navigator.of(context).pushReplacementNamed('/domainLinkActivity');
   }
-
   /* Timer */
   startTimer() async {
     var duration =   const Duration(seconds: 1);

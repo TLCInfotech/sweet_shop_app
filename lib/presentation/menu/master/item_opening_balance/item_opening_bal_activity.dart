@@ -28,12 +28,12 @@ class ItemOpeningBal extends StatefulWidget {
 
 class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
 
-  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
-
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> Franchisee_list=[];
 
   callGetFranchiseeItemOpeningList(int page) async {

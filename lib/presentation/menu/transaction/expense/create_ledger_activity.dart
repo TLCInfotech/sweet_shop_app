@@ -3,12 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/franchiseeItemOpeningBal/franchisee_item_opening_bal_req_body.dart';
+import '../../../../data/domain/transaction/expense/post_expense_invoice_request_model.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -17,8 +26,9 @@ import 'add_edit_ledger_for_ledger.dart';
 class CreateLedger extends StatefulWidget {
   final CreateLedgerInterface mListener;
   final String dateNew;
-
-  const CreateLedger({super.key, required this.mListener, required this.dateNew});
+  final String voucherNo;
+final come;
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo, this.come});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -39,34 +49,50 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 
   String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
 
 
   String TotalAmount="0.00";
+//  List<dynamic> Item_list=[];
+  List<dynamic> Item_list=[];
 
-  List<dynamic> Ledger_list=[
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  bool isLoaderShow=false;
+
+  var editedItemIndex=null;
+
+/*  List<dynamic> Item_list=[
     {
       "id":1,
-      "ledgerName":"Breakfast",
+      "Ledger_Name":"Breakfast",
       "currentBal":10,
-      "amount":200.00,
-      "narration":"Breakfast for two people."
+      "Amount":200.00,
+      "Narration":"Breakfast for two people."
 
     },
     {
       "id":2,
-      "ledgerName":"Medical Expenase",
+      "Ledger_Name":"Medical Expenase",
       "currentBal":20,
-      "amount":400.00,
-      "narration":"Charges for medical."
+      "Amount":400.00,
+      "Narration":"Charges for medical."
     },
     {
       "id":3,
-      "ledgerName":"Electricity Expense",
+      "Ledger_Name":"Electricity Expense",
       "currentBal":20,
-      "amount":1000.00,
-      "narration":"Charges for electricity"
+      "Amount":1000.00,
+      "Narration":"Charges for electricity"
     },
-  ];
+  ];*/
 
 
   @override
@@ -78,13 +104,17 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    if(widget.voucherNo!=""){
+      getExpInvoice(1);
+    }
+
   }
 
   calculateTotalAmt()async{
     var total=0.00;
-    for(var item  in Ledger_list ){
-      total=total+item['amount'];
-      print(item['amount']);
+    for(var item  in Item_list ){
+      total=total+item['Amount'];
+      print(item['Amount']);
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -208,7 +238,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       )
                     ],
                   ),
-                  Ledger_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                   const SizedBox(height: 10,),
                 ],
               ),
@@ -268,7 +298,15 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         callback: (date){
           setState(() {
             invoiceDate=date!;
+            Item_list=[];
+            Updated_list=[];
+            Deleted_list=[];
+            Inserted_list=[];
           });
+
+          if(widget.voucherNo!=""){
+            getExpInvoice(1);
+          }
         },
         applicablefrom: invoiceDate
     );
@@ -282,7 +320,18 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         callback: (name,id){
           setState(() {
             selectedFranchiseeName=name!;
+            selectedFranchiseeId=id!;
+            Item_list=[];
+            Updated_list=[];
+            Deleted_list=[];
+            Inserted_list=[];
           });
+          print(selectedFranchiseeId);
+          print(selectedFranchiseeName);
+
+          if(widget.voucherNo!=""){
+            getExpInvoice(1);
+          }
         },
         franchiseeName: selectedFranchiseeName);
   }
@@ -295,7 +344,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       height: parentHeight*.6,
       child: ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: Ledger_list.length,
+        itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -307,9 +356,12 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                 delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Ledger_list[index]);
+                      goToAddOrEditItem(Item_list[index]);
                     }
                   },
                   child: Card(
@@ -340,20 +392,20 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
                                           const SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
                                           const SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
-                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                            child: Text("${Item_list[index]['Narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                           ),
 
 
@@ -373,9 +425,9 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
-                                          Ledger_list.remove(Ledger_list[index]);
+                                          Item_list.remove(Item_list[index]);
                                           setState(() {
-                                            Ledger_list=Ledger_list;
+                                            Item_list=Item_list;
                                           });
                                           await calculateTotalAmt();
                                         },
@@ -420,7 +472,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Ledger_list.length}${StringEn.LEDGERS}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${Item_list.length}${StringEn.LEDGERS}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
           Text( "${StringEn.ROUND_OFF} ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
           const SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
@@ -434,6 +486,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                 disableColor = true;
               });
             }
+            callPostExpense();
           },
           onDoubleTap: () {},
           child: Container(
@@ -520,16 +573,59 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   /* Widget for add or edit ledger function */
   @override
-  AddOrEditLedgerForLedgerDetail(item) {
+  AddOrEditLedgerForLedgerDetail(item)async {
     // TODO: implement AddOrEditItemDetail
-    var itemLlist=Ledger_list;
-    if(item['id']!=""){
-      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
-        Ledger_list[index]['ledgerName']=item['ledgerName'];
-        Ledger_list[index]['currentBal']=item['currentBal'];
-        Ledger_list[index]['amount']=item['amount'];
-        Ledger_list[index]['narration']=item['narration'];
+        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Item_list[index]['currentBal']=item['currentBal'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Narration']=item['Narration'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
+
+
+/*
+    var itemLlist=Item_list;
+    if(item['id']!=""){
+      var index=Item_list.indexWhere((element) => item['id']==element['id']);
+      setState(() {
+        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Item_list[index]['currentBal']=item['currentBal'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Narration']=item['Narration'];
       });
     }
     else {
@@ -540,15 +636,162 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         itemLlist.add(item);
       }
       setState(() {
-        Ledger_list = itemLlist;
+        Item_list = itemLlist;
       });
     }
 
-    calculateTotalAmt();
+    calculateTotalAmt();*/
+  }
+  //http://localhost:3000/getExpenseVoucherDetails?Company_ID=18&Voucher_No=21&Date=2024-03-18
+
+  getExpInvoice(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getExpenseVoucherDetails}?Company_ID=$companyId&Voucher_No=${widget.voucherNo}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+
+                  setState(() {
+                    Item_list=_arrList;
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
+  callPostExpense() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
+    double roundOffAmtInt = double.parse(roundOffAmt);
+   // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+    AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
+      PostExpenseInvoiceRequestModel model = PostExpenseInvoiceRequestModel(
+          Ledger_ID:selectedFranchiseeId ,
+          companyID: companyId ,
+        Voucher_Name: "Expense",
+        Round_Off:roundOffAmtInt ,
+          Total_Amount:TotalAmountInt ,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+      );
 
+      String apiUrl =baseurl + ApiConstants().expense_voucher;
+      apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            print("  ITEM  $data ");
+            setState(() {
+              isLoaderShow=true;
+              Item_list=[];
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+            });
+            widget.mListener.backToList();
+
+          }, onFailure: (error) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, error.toString());
+          },
+          onException: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.errorDialog(context, e.toString());
+
+          },sessionExpire: (e) {
+            setState(() {
+              isLoaderShow=false;
+            });
+            CommonWidget.gotoLoginScreen(context);
+            // widget.mListener.loaderShow(false);
+          });
+
+    }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }
 
 abstract class CreateLedgerInterface {
+  backToList();
 }

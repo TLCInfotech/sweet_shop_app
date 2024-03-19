@@ -59,6 +59,7 @@ class _LoginActivityState extends State<LoginActivity> {
                           StringEn.LOGIN_SUB_TEXT,
                           style: subHeading_withBold
                         ),*/
+
                         const SizedBox(height: 40.0),
                         getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                         const SizedBox(height: 10.0),
