@@ -18,6 +18,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeItemOpeningBal/franchisee_item_opening_bal_req_body.dart';
 import '../../../../data/domain/transaction/expense/post_expense_invoice_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -69,30 +70,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   var editedItemIndex=null;
 
-/*  List<dynamic> Item_list=[
-    {
-      "id":1,
-      "Ledger_Name":"Breakfast",
-      "currentBal":10,
-      "Amount":200.00,
-      "Narration":"Breakfast for two people."
-
-    },
-    {
-      "id":2,
-      "Ledger_Name":"Medical Expenase",
-      "currentBal":20,
-      "Amount":400.00,
-      "Narration":"Charges for medical."
-    },
-    {
-      "id":3,
-      "Ledger_Name":"Electricity Expense",
-      "currentBal":20,
-      "Amount":1000.00,
-      "Narration":"Charges for electricity"
-    },
-  ];*/
 
 
   @override
@@ -321,17 +298,17 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           setState(() {
             selectedFranchiseeName=name!;
             selectedFranchiseeId=id!;
-            Item_list=[];
-            Updated_list=[];
-            Deleted_list=[];
-            Inserted_list=[];
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
           });
           print(selectedFranchiseeId);
           print(selectedFranchiseeName);
 
-          if(widget.voucherNo!=""){
-            getExpInvoice(1);
-          }
+          // if(widget.voucherNo!=""){
+          //   getExpInvoice(1);
+          // }
         },
         franchiseeName: selectedFranchiseeName);
   }
@@ -392,7 +369,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Item_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Expense_Name']}",style: item_heading_textStyle,),
 
                                           const SizedBox(height: 3,),
                                           Container(
@@ -405,7 +382,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
-                                            child: Text("${Item_list[index]['Narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                            child:
+                                            Item_list[index]['Remark']!=null?Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,):Container(),
                                           ),
 
 
@@ -418,20 +396,35 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          Item_list.remove(Item_list[index]);
-                                          setState(() {
-                                            Item_list=Item_list;
-                                          });
-                                          await calculateTotalAmt();
-                                        },
-                                      )
+                                      child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              if(Item_list[index]['Seq_No']!=null){
+                                                var deletedItem=   {
+                                                  "Expense_ID": Item_list[index]['Expense_ID'],
+                                                  "Seq_No": Item_list[index]['Seq_No'],
+                                                };
+                                                Deleted_list.add(deletedItem);
+                                                setState(() {
+                                                  Deleted_list=Deleted_list;
+                                                });
+                                              }
+
+                                              var contain = Inserted_list.indexWhere((element) => element['Expense_ID']== Item_list[index]['Expense_ID']);
+                                              print(contain);
+                                              if(contain>=0){
+                                                print("REMOVE");
+                                                Inserted_list.remove(Inserted_list[contain]);
+                                              }
+                                              Item_list.remove(Item_list[index]);
+                                              setState(() {
+                                                Item_list=Item_list;
+                                                Inserted_list=Inserted_list;
+                                              });
+                                              print(Inserted_list);
+                                              await calculateTotalAmt();  }
+                                          })
                                   ),
                                 ],
                               )
@@ -459,7 +452,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
@@ -486,7 +479,15 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                 disableColor = true;
               });
             }
-            callPostExpense();
+            print(widget.voucherNo);
+            if(widget.voucherNo=="") {
+             print("#######");
+              callPostExpense();
+            }
+            else {
+              print("dfsdf");
+              updatecallPostExpense();
+            }
           },
           onDoubleTap: () {},
           child: Container(
@@ -580,13 +581,18 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
-        Item_list[index]['currentBal']=item['currentBal'];
+        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+        Item_list[index]['Expense_Name']=item['Expense_Name'];
+        Item_list[index]['Expense_ID']=item['Expense_ID'];
         Item_list[index]['Amount']=item['Amount'];
-        Item_list[index]['Narration']=item['Narration'];
+        Item_list[index]['Remark']=item['Remark'];
+        Item_list[index]['Seq_No']=item['Seq_No'];
       });
       print("#############3");
       print(item['Seq_No']);
+      if(item['New_Expense_ID']!=null){
+        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+      }
       if(item['Seq_No']!=null) {
         Updated_list.add(item);
         setState(() {
@@ -661,15 +667,17 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         String apiUrl = "${baseurl}${ApiConstants().getExpenseVoucherDetails}?Company_ID=$companyId&Voucher_No=${widget.voucherNo}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
+          print(data);
               setState(() {
-
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList=data;
+                  _arrList=(data['expenseDetails']);
 
                   setState(() {
                     Item_list=_arrList;
+                    selectedFranchiseeName=data['voucherDetails']['Ledger_Name'];
+                    selectedFranchiseeId=data['voucherDetails']['Ledger_ID'].toString();
                   });
                   calculateTotalAmt();
                 }
@@ -738,12 +746,12 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       PostExpenseInvoiceRequestModel model = PostExpenseInvoiceRequestModel(
           Ledger_ID:selectedFranchiseeId ,
           companyID: companyId ,
-        Voucher_Name: "Expense",
-        Round_Off:roundOffAmtInt ,
+          Voucher_Name: "Expense",
+          Round_Off:roundOffAmtInt ,
           Total_Amount:TotalAmountInt ,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-          modifier: creatorName,
-          modifierMachine: deviceId,
+          creater: creatorName,
+          createrMachine: deviceId,
           iNSERT: Inserted_list.toList(),
       );
 
@@ -781,6 +789,93 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           });
 
     }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  // calculateTotalInsertAmt()async{
+  //   var total=0.00;
+  //   for(var item  in Inserted_list ){
+  //     total=total+item['Amount'];
+  //     print(item['Amount']);
+  //   }
+  //   return total;
+  // }
+
+
+  updatecallPostExpense() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
+    double roundOffAmtInt = double.parse(roundOffAmt);
+    // double updatedamt= await calculateTotalInsertAmt();
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        PostExpenseInvoiceRequestModel model = PostExpenseInvoiceRequestModel(
+          Ledger_ID:selectedFranchiseeId ,
+          voucher_No:widget.voucherNo ,
+          companyID: companyId ,
+          Voucher_Name: "Expense",
+          Round_Off:roundOffAmtInt ,
+          Total_Amount:TotalAmountInt ,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          dELETE: Deleted_list.toList(),
+          uPDATE: Updated_list.toList(),
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().expense_voucher;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
     else{
       if (mounted) {
         setState(() {

@@ -290,20 +290,24 @@ class ApiRequestHelper {
         Uri.parse(apiUrl),
       );
       print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
+
       switch (response.statusCode) {
       /*response of api status id zero when something is wrong*/
         case 400:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
+          apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
           onFailure(apiResponse.msg!);
           print("response.data  0 400 ${apiResponse.msg}");
           break;
         case 200:
-          ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
-          onSuccess(apiResponse.data);
+          try {
+            // ApiResponseForFetch apiResponse = ApiResponseForFetch();
+            // apiResponse = ApiResponseForFetch.fromJson(json.decode((response.body)));
+            onSuccess(json.decode((response.body))['data']);
+          }
+          catch(e){
+            print(e);
+          }
           break;
         case 500:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();

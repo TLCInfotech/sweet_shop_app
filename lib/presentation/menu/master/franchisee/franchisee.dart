@@ -183,61 +183,61 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                               ),
                             ),
                             Expanded(
-                                child: Stack(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(franchiseeList[index]['Name'],style: item_heading_textStyle,),
-                                          SizedBox(height: 5,),
-                                          franchiseeList[index]['Contact_No']!=null? Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.phone,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(child: Text(franchiseeList[index]['Contact_No'],overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ):Container(),
-                                          SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.locationDot,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(
-                                                child: Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      franchiseeList[index]['Address']!=null?TextSpan(text:"${franchiseeList[index]['Address']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
-                                                      franchiseeList[index]['District']!=null?TextSpan(text:"${franchiseeList[index]['District']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
-                                                      franchiseeList[index]['State']!=null?TextSpan(text:"${franchiseeList[index]['State']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
-                                                      franchiseeList[index]['Pin_Code']!=null?TextSpan(text:"- ${franchiseeList[index]['Pin_Code']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
-
-                                                    ],
+                                     Expanded(
+                                       child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(franchiseeList[index]['Name'],style: item_heading_textStyle,),
+                                            SizedBox(height: 5,),
+                                            franchiseeList[index]['Contact_No']!=null? Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.phone,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                SizedBox(width: 10,),
+                                                Expanded(child: Text(franchiseeList[index]['Contact_No'],overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ):Container(),
+                                            SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.locationDot,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                SizedBox(width: 10,),
+                                                Expanded(
+                                                  child: Text.rich(
+                                                    TextSpan(
+                                                      children: [
+                                                        franchiseeList[index]['Address']!=null?TextSpan(text:"${franchiseeList[index]['Address']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
+                                                        franchiseeList[index]['District']!=null?TextSpan(text:"${franchiseeList[index]['District']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
+                                                        franchiseeList[index]['State']!=null?TextSpan(text:"${franchiseeList[index]['State']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
+                                                        franchiseeList[index]['Pin_Code']!=null?TextSpan(text:"- ${franchiseeList[index]['Pin_Code']} ",style: item_regular_textStyle,):TextSpan(text: 'Hello '),
+                                       
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-
-                                            ],
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child:DeleteDialogLayout(
-                                          callback: (response ) async{
-                                            if(response=="yes"){
-                                              print("##############$response");
-                                              await  callDeleteFranchisee(franchiseeList[index]['ID'].toString(),index);
-                                            }
-                                          },
-                                        ))
+                                                )
+                                       
+                                              ],
+                                            ),
+                                       
+                                          ],
+                                        ),
+                                                                           ),
+                                     ),
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await  callDeleteFranchisee(franchiseeList[index]['ID'].toString(),index);
+                                        }
+                                      },
+                                    )
                                   ],
                                 )
 

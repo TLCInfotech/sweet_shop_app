@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
@@ -22,6 +30,30 @@ class PaymentActivity extends StatefulWidget {
 class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInterface {
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+  bool isLoaderShow=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<dynamic> expense_list=[];
+  int page = 1;
+  bool isPagination = true;
+  final ScrollController _scrollController =  ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    getPayment(page);
+  }
+  _scrollListener() {
+    if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        getPayment(page);
+      }
+    }
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,11 +75,9 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
               ),
 
               backgroundColor: Colors.white,
-              title:  Center(
-                child: Text(
-                  ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
-                  style: appbar_text_style,),
-              ),
+              title:  Text(
+                ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+                style: appbar_text_style,),
               automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
@@ -178,48 +208,48 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                           ),
                         ),
                         Expanded(
-                            child: Stack(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Payment No: - 23",style: item_heading_textStyle,),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          const Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Payment No: - 23",style: item_heading_textStyle,),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            const Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            const SizedBox(width: 10,),
+                                            Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                          ],
+                                        ),
 
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
+                                DeleteDialogLayout(
+                                  callback: (response ) async{
+                                    if(response=="yes"){
+                                      print("##############$response");
+                                      await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
+                                    }
+                                  },
+                                )
                               ],
                             )
 
@@ -237,5 +267,130 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             );
           },
         ));
+  }
+
+
+  getPayment(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  setState(() {
+                    expense_list=_arrList;
+                  });
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  
+  callDeleteExpense(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        var model= {
+          "Voucher_No": removeId,
+          "Modifier": uid,
+          "Modifier_Machine": deviceId
+        };
+        String apiUrl = baseurl + ApiConstants().expense_voucher+"?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                expense_list.removeAt(index);
+               
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  @override
+  backToList() {
+    // TODO: implement backToList
+    // getPayment(1);
+    Navigator.pop(context);
   }
 }

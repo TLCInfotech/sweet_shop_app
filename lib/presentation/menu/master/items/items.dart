@@ -200,7 +200,8 @@ Expanded get_items_list_layout() {
                         child: Row(
                           children: [
                             itemList[index]['Photo']==null? Container(
-                              margin: const EdgeInsets.only(left: 10),
+                              margin: EdgeInsets.all(5),
+                              // margin: const EdgeInsets.only(left: 10),
                               width:SizeConfig.imageBlockFromCardWidth,
                               height: 80,
                               decoration: const BoxDecoration(
@@ -226,43 +227,31 @@ Expanded get_items_list_layout() {
                             )
                             ,
                             Expanded(
-                                child: Stack(
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(itemList[index]['Name'],style: item_heading_textStyle,),
-                                          itemList[index]['Detail_Desc']!=null? Text(itemList[index]['Detail_Desc'],style: item_regular_textStyle,):Container(),
-                                          itemList[index]['Unit']!=null?   Text(itemList[index]['Rate'].toString()+"/"+itemList[index]['Unit'],style: item_heading_textStyle,):Container(),
-                                        ],
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(itemList[index]['Name'],style: item_heading_textStyle,),
+                                            itemList[index]['Detail_Desc']!=null? Text(itemList[index]['Detail_Desc'],style: item_regular_textStyle,):Container(),
+                                            itemList[index]['Unit']!=null?   Text(itemList[index]['Rate'].toString()+"/"+itemList[index]['Unit'],style: item_heading_textStyle,):Container(),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child:DeleteDialogLayout(
-                                          callback: (response ) async{
-                                            if(response=="yes"){
-                                              print("##############$response");
-                                              await  callDeleteItem(itemList[index]['ID'].toString(),index);
-                                            }
-                                          },
-                                        )
-
-                                        // IconButton(
-                                        //   icon:  const FaIcon(
-                                        //     FontAwesomeIcons.trash,
-                                        //     size: 18,
-                                        //     color: Colors.redAccent,
-                                        //   ),
-                                        //   onPressed: (){
-                                        //     callDeleteItem(itemList[index]['ID'].toString(),index);
-                                        //     },
-                                        // )
-                                       )
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await  callDeleteItem(itemList[index]['ID'].toString(),index);
+                                        }
+                                      },
+                                    )
                                   ],
                                 )
 

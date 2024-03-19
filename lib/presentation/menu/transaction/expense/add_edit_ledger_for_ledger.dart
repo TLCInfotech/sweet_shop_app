@@ -51,8 +51,8 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   var itemsList = [];
   var selectedItemID =null;
+  var oldItemId=0;
 
-  final _formkey=GlobalKey<FormState>();
 
   fetchShows (searchstring) async {
     String sessionToken = await AppPreferences.getSessionToken();
@@ -110,12 +110,15 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   }
 
   setVal(){
+    print(widget.editproduct);
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['ledgerName'];
-        amount.text=widget.editproduct['amount'].toString();
-        narration.text=widget.editproduct['narration'].toString();
+        selectedItemID=widget.editproduct['Expense_ID']!=null?widget.editproduct['Expense_ID']:null;
+        _textController.text=widget.editproduct['Expense_Name'];
+        amount.text=widget.editproduct['Amount'].toString();
+        narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
       });
+      print(oldItemId);
     }
   }
 
@@ -310,23 +313,28 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         ),
         GestureDetector(
           onTap: () {
-            var item={
-              // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
-              "Ledger_Name":_textController.text,
-              "currentBal":100,
-              "Seq_No":"1",
-              "Expense_ID":selectedItemID,
-             // "Ledger_ID":selectedItemID,
-              "Amount":double.parse(amount.text),
-              "Narration":narration.text,
-            };
-       /*     var item={
-             "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "ledgerName":_textController.text,
-              "currentBal":100,
-              "amount":double.parse(amount.text),
-              "narration":narration.text,
-            };*/
+
+            var item={};
+            if(widget.editproduct!=null){
+              item = {
+                "New_Expense_ID": selectedItemID,
+                "Expense_Name": _textController.text,
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                "Expense_ID": widget.editproduct['Expense_ID'],
+                "Amount": double.parse(amount.text),
+                "Remark": narration.text,
+              };
+            }
+            else {
+               item = {
+                "Expense_Name": _textController.text,
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                "Expense_ID": selectedItemID,
+                "Amount": double.parse(amount.text),
+                "Remark": narration.text,
+              };
+            }
+
             if(widget.mListener!=null){
               widget.mListener.AddOrEditLedgerForLedgerDetail(item);
               Navigator.pop(context);

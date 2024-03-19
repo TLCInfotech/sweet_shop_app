@@ -258,41 +258,30 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                               child: const FaIcon(FontAwesomeIcons.peopleGroup,color: Colors.white,),
                             ),
                             Expanded(
-                                child: Stack(
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
-                                          Text("${expense_group[index]['Parent_Name']}",style: item_regular_textStyle,),
-                                          Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
-                                        ],
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("${expense_group[index]['Name']}",style: item_heading_textStyle,),
+                                            expense_group[index]['Parent_Name']!=null?Text("${expense_group[index]['Parent_Name']}",style: item_regular_textStyle,):Container(),
+                                            Text("${expense_group[index]['Group_Nature']}",style: item_regular_textStyle,),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child:DeleteDialogLayout(
-                                          callback: (response ) async{
-                                            if(response=="yes"){
-                                              print("##############$response");
-                                              await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
-                                            }
-                                          },
-                                        )
-                                        // IconButton(
-                                        //   icon:  const FaIcon(
-                                        //     FontAwesomeIcons.trash,
-                                        //     size: 18,
-                                        //     color: Colors.redAccent,
-                                        //   ),
-                                        //   onPressed: (){
-                                        //     callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
-                                        //   },
-                                        // )
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
+                                        }
+                                      },
                                     )
                                   ],
                                 )

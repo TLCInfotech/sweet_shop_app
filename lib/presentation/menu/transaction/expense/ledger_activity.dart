@@ -77,10 +77,9 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("expense_invoice")!,
-                      style: appbar_text_style,)),
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("expense_invoice")!,
+                    style: appbar_text_style,),
                   automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
@@ -226,48 +225,48 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                             ),
                           ),
                           Expanded(
-                              child: Stack(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                         Text(expense_list[index]["Ledger_Name"],style: item_heading_textStyle,),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                             Expanded(child: Text("Voucher No. - ${expense_list[index]["Fin_Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            Expanded(child: Text("${CommonWidget.getCurrencyFormat(expense_list[index]["Total_Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-
-                                      ],
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                           Text(expense_list[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                          const SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                               Expanded(child: Text("Voucher No. - ${expense_list[index]["Fin_Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(expense_list[index]["Total_Amount"])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                            ],
+                                          ),
+                                    
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-                                            print("##############$response");
-                                            await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
-                                          }
-                                        },
-                                      ) )
+                                  DeleteDialogLayout(
+                                    callback: (response ) async{
+                                      if(response=="yes"){
+                                        print("##############$response");
+                                        await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
+                                      }
+                                    },
+                                  )
                                 ],
                               )
 
@@ -418,6 +417,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
       CommonWidget.noInternetDialogNew(context);
     }
   }
+
   @override
   backToList() {
     // TODO: implement backToList
