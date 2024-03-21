@@ -124,11 +124,11 @@
   "sale_invoice" : "Sale Invoice",
   "purchase_invoice" : "Purchase Invoice",
   "payment" : "Payment",
-  "payment_invoice" : "Payment Invoice",
+  "payment_invoice" : "Payment",
   "payment_detail" : "Payment Detail",
-  "receipt_detail" : "Receipt Detail",
+  "receipt_detail" : "Receipt",
   "receipt" : "Receipt",
-  "receipt_invoice" : "Receipt Invoice",
+  "receipt_invoice" : "Receipt",
   "parent_group" : "Parent Group",
   "company_name" : "Company Name",
   "tax" : "Tax:",
@@ -137,7 +137,7 @@
   "create_company" : "Create Company",
   "sale_invoice_new" : "Sale Invoice - New",
   "create_receipt" : "Create Receipt",
-  "receipt_invoice_new" : "Receipt Invoice - New",
+  "receipt_invoice_new" : "Receipt - New",
   "company" : "Company",
   "date" : "Date",
   "invoice_no" : "Invoice No",
@@ -161,7 +161,7 @@
   "ledger_name" : "Ledger Name",
   "amount" : "Amount",
   "narration" : "Narration",
-  "payment_invoice_new" : "Payment Invoice - New",
+  "payment_invoice_new" : "Payment - New",
   "item_sale" : "Item Sale",
   "taxable_amount" : "Taxable Amount",
   "gst_amount" : "GST Amount",
@@ -242,7 +242,8 @@
   "password":"Password",
   "company_item_opening": "Company Item Opening Balance",
   "batch_id": "Batch ID",
-  "exit_screen": "Do you want to exit from screen without changes?"
-
+  "exit_screen": "Do you want to exit from screen without changes?",
+  "contra": "Contra",
+  "contra_new": "Contra - New"
 }
 

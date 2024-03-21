@@ -23,6 +23,7 @@ import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
@@ -964,7 +965,6 @@ String companyId="";
   Widget getTransactionSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .3,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -972,7 +972,7 @@ String companyId="";
         ),
       ),
       child: Padding(
-        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01),
+        padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01,bottom: parentHeight*.01),
         child: Column(
           children: [
             GestureDetector(
@@ -1001,6 +1001,7 @@ String companyId="";
             getExpensseLayout(parentHeight,parentWidth),
             getPaymentLayout(parentHeight,parentWidth),
             getReceptLayout(parentHeight,parentWidth),
+            getContraLayout(parentHeight,parentWidth),
           ],
         ),
       ),
@@ -1114,6 +1115,34 @@ String companyId="";
             ),
             Text(
               ApplicationLocalizations.of(context)!.translate("receipt_detail")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* Widget for contra transaction Layout */
+  Widget getContraLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this)));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("contra")!,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
