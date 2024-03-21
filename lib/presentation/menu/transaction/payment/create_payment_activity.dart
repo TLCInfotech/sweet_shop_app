@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -24,7 +25,14 @@ import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/transaction/payment_reciept_contra_journal/payment_recipt_contra_journal_req_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -34,8 +42,9 @@ import 'add_edit_ledger_for_payment.dart';
 class CreatePayment extends StatefulWidget {
   final CreatePaymentInterface mListener;
   final String dateNew;
+  final String voucherNo;
 
-  const CreatePayment({super.key,required this.mListener, required this.dateNew});
+  const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
   @override
   _CreatePaymentState createState() => _CreatePaymentState();
 }
@@ -56,42 +65,26 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   String selectedbankCashLedger="";
   var selectedBankLedgerID=null;
 
-  List<dynamic> Ledger_list=[
-    {
-      "id":1,
-      "ledgerName":"Mahesh Kirana Store",
-      "currentBal":10,
-      "amount":780.00,
-      "narration":"narration1"
+  List<dynamic> Ledger_list=[];
 
-    },
-    {
-      "id":2,
-      "ledgerName":"Rajesh Furnicture",
-      "currentBal":20,
-      "amount":5300.00,
-      "narration":"narration2"
-
-    },
-  ];
 
 
   String TotalAmount="0.00";
+//  List<dynamic> Item_list=[];
 
-/* calculate total amount function*/
-  calculateTotalAmt()async{
-    var total=0.00;
-    for(var item  in Ledger_list ){
-      total=total+item['amount'];
-      print(item['amount']);
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
+  List<dynamic> Updated_list=[];
 
-  }
+  List<dynamic> Inserted_list=[];
 
-/* initialise the function and value */
+  List<dynamic> Deleted_list=[];
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  bool isLoaderShow=false;
+
+  var editedItemIndex=null;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -101,8 +94,23 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    if(widget.voucherNo!=""){
+      getExpInvoice(1);
+    }
+
   }
 
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in Ledger_list ){
+      total=total+item['Amount'];
+      print(item['Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     return contentBox(context);
@@ -304,20 +312,20 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                          Text("${Ledger_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
                                           const SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
                                           const SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
-                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                            child: Text("${Ledger_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                           ),
 
 
@@ -330,20 +338,35 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          Ledger_list.remove(Ledger_list[index]);
-                                          setState(() {
-                                            Ledger_list=Ledger_list;
-                                          });
-                                          await calculateTotalAmt();
-                                        },
-                                      )
+                                      child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              if(Ledger_list[index]['Seq_No']!=null){
+                                                var deletedItem=   {
+                                                  "Ledger_ID": Ledger_list[index]['Ledger_ID'],
+                                                  "Seq_No": Ledger_list[index]['Seq_No'],
+                                                };
+                                                Deleted_list.add(deletedItem);
+                                                setState(() {
+                                                  Deleted_list=Deleted_list;
+                                                });
+                                              }
+
+                                              var contain = Inserted_list.indexWhere((element) => element['Ledger_ID']== Ledger_list[index]['Ledger_ID']);
+                                              print(contain);
+                                              if(contain>=0){
+                                                print("REMOVE");
+                                                Inserted_list.remove(Inserted_list[contain]);
+                                              }
+                                              Ledger_list.remove(Ledger_list[index]);
+                                              setState(() {
+                                                Ledger_list=Ledger_list;
+                                                Inserted_list=Inserted_list;
+                                              });
+                                              print(Inserted_list);
+                                              await calculateTotalAmt();  }
+                                          })
                                   ),
                                 ],
                               )
@@ -445,6 +468,15 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 disableColor = true;
               });
             }
+            print(widget.voucherNo);
+            if(widget.voucherNo=="") {
+              print("#######");
+              callPostBankLedgerPayment();
+            }
+            else {
+              print("dfsdf");
+              updatecallPostBankLedgerPayment();
+            }
           },
           onDoubleTap: () {},
           child: Container(
@@ -490,6 +522,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               child: AddOrEditLedgerForPayment(
                 mListener: this,
                 editproduct:product,
+                newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
               ),
             ),
           );
@@ -509,38 +542,285 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     // TODO: implement selectedFranchisee
     setState(() {
       selectedbankCashLedger=name;
+      selectedBankLedgerID=id;
     });
   }
 
   /* Widget for add or edit ledger function */
   @override
-  AddOrEditLedgerForPaymentDetail(item) {
+  AddOrEditLedgerForPaymentDetail(item)async {
     // TODO: implement AddOrEditItemDetail
     var itemLlist=Ledger_list;
-    if(item['id']!=""){
-      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
-        Ledger_list[index]['ledgerName']=item['ledgerName'];
-        Ledger_list[index]['currentBal']=item['currentBal'];
-        Ledger_list[index]['amount']=item['amount'];
-        Ledger_list[index]['narration']=item['narration'];
+        Ledger_list[index]['Date']=item['Date'];
+        Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+        Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Ledger_list[index]['Amount']=item['Amount'];
+        Ledger_list[index]['Remark']=item['Remark'];
+        Ledger_list[index]['Seq_No']=item['Seq_No'];
       });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['New_Ledger_ID']!=null){
+        Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
     }
-    else {
-      if (itemLlist.contains(item)) {
-        print("Already Exist");
-      }
-      else {
-        itemLlist.add(item);
-      }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
       setState(() {
         Ledger_list = itemLlist;
       });
     }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
   }
 
+
+
+  getExpInvoice(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVoucherDetail}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Payment&Voucher_No=${widget.voucherNo}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=(data['accountDetails']);
+
+                  setState(() {
+                    Ledger_list=_arrList;
+                    selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
+                    selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  
+  callPostBankLedgerPayment() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
+          ledgerID:selectedBankLedgerID ,
+          companyID: companyId ,
+          voucherName: "Payment",
+          totalAmount: TotalAmountInt,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          creator: creatorName,
+          creatorMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Ledger_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  updatecallPostBankLedgerPayment() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
+          voucherNo: widget.voucherNo,
+          ledgerID:selectedBankLedgerID ,
+          companyID: companyId ,
+          voucherName: "Payment",
+          totalAmount: TotalAmountInt,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          creator: creatorName,
+          creatorMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          uPDATE: Updated_list.toList(),
+          dELETE: Deleted_list.toList()
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Ledger_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 }
 
 abstract class CreatePaymentInterface {
+  backToList();
 }

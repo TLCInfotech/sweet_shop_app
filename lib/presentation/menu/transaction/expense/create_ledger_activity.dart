@@ -800,16 +800,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   }
 
 
-  // calculateTotalInsertAmt()async{
-  //   var total=0.00;
-  //   for(var item  in Inserted_list ){
-  //     total=total+item['Amount'];
-  //     print(item['Amount']);
-  //   }
-  //   return total;
-  // }
-
-
   updatecallPostExpense() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();

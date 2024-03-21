@@ -7,15 +7,33 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+
+class TestItem {
+  String label;
+  dynamic value;
+  TestItem({required this.label, this.value});
+
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value']);
+  }
+}
 
 class AddOrEditLedgerForPayment extends StatefulWidget {
   final AddOrEditLedgerForPaymentInterface mListener;
   final dynamic editproduct;
+  final newdate;
 
-  const AddOrEditLedgerForPayment({super.key, required this.mListener, required this.editproduct});
+
+  const AddOrEditLedgerForPayment({super.key, required this.mListener, required this.editproduct,required this.newdate});
 
   @override
   State<AddOrEditLedgerForPayment> createState() => _AddOrEditLedgerForPaymentState();
@@ -35,7 +53,64 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
 
   FocusNode searchFocus = FocusNode() ;
 
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  var bankLedgerList = [];
+
+  var selectedBankLedgerID =null;
+
+  var oldItemId=0;
+
+
+  fetchShows (searchstring) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&name=${searchstring}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+              setState(() {
+                bankLedgerList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(const Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(bankLedgerList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in bankLedgerList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+    }
+    return _list;
+  }
   /* initialise the value*/
+
   @override
   void initState() {
     // TODO: implement initState
@@ -47,9 +122,9 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   setVal(){
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['ledgerName'];
-        amount.text=widget.editproduct['amount'].toString();
-        narration.text=widget.editproduct['narration'].toString();
+        _textController.text=widget.editproduct['Ledger_Name'];
+        amount.text=widget.editproduct['Amount'].toString();
+        narration.text=widget.editproduct['Remark'].toString();
       });
     }
   }
@@ -161,36 +236,42 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   /* widget for ledger search layout */
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        textInputAction: TextInputAction.done,
-        keyboardType: TextInputType.text,
-        controller: _textController,
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: searchFocus,
-        style: text_field_textStyle,
-        decoration: textfield_decoration.copyWith(
-          hintText:  ApplicationLocalizations.of(context)!.translate("ledger_name")!,
-          prefixIcon: Container(
-              width: 50,
-              padding: const EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
         ),
-        // onChanged: _onChangeHandler,
-      ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedBankLedgerID = v.value;
+                bankLedgerList = [];
+              });
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
     );
   }
 
@@ -239,15 +320,31 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         ),
         GestureDetector(
           onTap: () {
-            var item={
-             "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "ledgerName":_textController.text,
-              "currentBal":100,
-              "amount":double.parse(amount.text),
-              "narration":narration.text,
-            };
-            if(widget.mListener!=null){
 
+            var item={};
+            if(widget.editproduct!=null){
+              item = {
+                "Date":widget.newdate,
+                "New_Ledger_ID": selectedBankLedgerID,
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                "Ledger_Name": _textController.text,
+                "Ledger_ID": widget.editproduct['Ledger_ID'],
+                "Amount": double.parse(amount.text),
+                "Remark": narration.text,
+              };
+            }
+            else {
+              item = {
+                "Date":widget.newdate,
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
+                "Ledger_Name": _textController.text,
+                "Ledger_ID": selectedBankLedgerID,
+                "Amount": double.parse(amount.text),
+                "Remark": narration.text,
+              };
+            }
+
+            if(widget.mListener!=null){
               widget.mListener.AddOrEditLedgerForPaymentDetail(item);
               Navigator.pop(context);
             }

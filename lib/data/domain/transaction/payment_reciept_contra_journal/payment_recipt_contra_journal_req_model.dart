@@ -1,11 +1,11 @@
 class postPaymentRecieptRequestModel {
-  int? companyID;
+  String? companyID;
   String? date;
-  int? ledgerID;
-  int? voucherNo;
+  String? ledgerID;
+  String? voucherNo;
   int? seqNo;
   String? voucherName;
-  int? totalAmount;
+  double? totalAmount;
   String? remark;
   String? creator;
   String? creatorMachine;
@@ -80,13 +80,13 @@ class postPaymentRecieptRequestModel {
     data['Modifier'] = this.modifier;
     data['Modifier_Machine'] = this.modifierMachine;
     if (this.iNSERT != null) {
-      data['INSERT'] = this.iNSERT!.map((v) => v.toJson()).toList();
+      data['INSERT'] = this.iNSERT!.map((v) => v).toList();
     }
-    if (this.uPDATE != null) {
-      data['UPDATE'] = this.uPDATE!.map((v) => v.toJson()).toList();
+    if (uPDATE != null) {
+      data['UPDATE'] = uPDATE!.map((v) => v).toList();
     }
-    if (this.dELETE != null) {
-      data['DELETE'] = this.dELETE!.map((v) => v.toJson()).toList();
+    if (dELETE != null) {
+      data['DELETE'] = dELETE!.map((v) => v).toList();
     }
     return data;
   }
