@@ -26,6 +26,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_le
 
 import '../../../../core/localss/application_localizations.dart';
 import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
 import 'add_edit_ledger_for_payment.dart';
@@ -52,7 +53,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
 
-  String selectedFranchiseeName="";
+  String selectedbankCashLedger="";
+  var selectedBankLedgerID=null;
 
   List<dynamic> Ledger_list=[
     {
@@ -400,15 +402,16 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  GetFranchiseeLayout(
+    return  GetBankCashLedger(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){
           setState(() {
-            selectedFranchiseeName=name!;
+            selectedbankCashLedger=name!;
+            selectedBankLedgerID=id;
           });
         },
-        franchiseeName: selectedFranchiseeName);
+        bankCashLedger: selectedbankCashLedger);
   }
 
 
@@ -505,7 +508,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   selectedFranchisee(String id, String name) {
     // TODO: implement selectedFranchisee
     setState(() {
-      selectedFranchiseeName=name;
+      selectedbankCashLedger=name;
     });
   }
 

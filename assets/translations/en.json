@@ -244,6 +244,8 @@
   "batch_id": "Batch ID",
   "exit_screen": "Do you want to exit from screen without changes?",
   "contra": "Contra",
-  "contra_new": "Contra - New"
+  "contra_new": "Contra - New",
+  "bank_cash_ledger": "Bank Cash Ledger",
+  "ledger_without_bank_cash": "Ledger Without Bank Cash"
 }
 

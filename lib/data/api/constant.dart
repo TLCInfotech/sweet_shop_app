@@ -38,5 +38,8 @@ class ApiConstants {
   String franchisee_item_rate="franchiseeItemRate";
   String expense_voucher="ExpenseVoucher";
   String getExpenseVoucherDetails="getExpenseVoucherDetails";
-
+  String getPaymentVouvher="AccountingVoucher";
+  String getPaymentVoucherDetail="AccountingVoucherDetails";
+  String getBankCashLedger="BankCashLedger";
+  String getLedgerWithoutBankCash="LedgerWithoutBankCash"; 
 }
