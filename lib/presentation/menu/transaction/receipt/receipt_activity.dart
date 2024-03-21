@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
@@ -20,6 +28,27 @@ class ReceiptActivity extends StatefulWidget {
 class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInterface {
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
+  bool isLoaderShow=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<dynamic> recipt_list=[];
+  int page = 1;
+  bool isPagination = true;
+  final ScrollController _scrollController =  ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    getRecipt(page);
+  }
+  _scrollListener() {
+    if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
+      if (isPagination) {
+        page = page + 1;
+        getRecipt(page);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +87,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
               mListener: this,
+              newDate: newDate,
+              voucherNo: null,
               dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
@@ -91,7 +122,9 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
         callback: (date){
           setState(() {
             newDate=date!;
+            recipt_list=[];
           });
+          getRecipt(1);
         },
         applicablefrom: newDate
     );
@@ -121,8 +154,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text("${recipt_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),
@@ -145,7 +178,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
+          itemCount: recipt_list.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -155,72 +188,82 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
                   delay: Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child:  FaIcon(
-                                FontAwesomeIcons.moneyCheck,
-                                color: Colors.white,
-                              )
-                            // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                          ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Recipt No: - 23",style: item_heading_textStyle,),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          SizedBox(width: 10,),
-                                          Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-
-                                    ],
-                                  ),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
+                        mListener: this,
+                        newDate: newDate,
+                        voucherNo: recipt_list[index]["Voucher_No"],
+                        dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
+                      )));
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(5)
                                 ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                                child:  FaIcon(
+                                  FontAwesomeIcons.moneyCheck,
+                                  color: Colors.white,
+                                )
+                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                            ),
+                          ),
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${recipt_list[index]["Ledger_Name"]}",style: item_heading_textStyle,),
+                                        SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            SizedBox(width: 10,),
+                                            Expanded(child: Text("Voucher No: - ${recipt_list[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
+                                        SizedBox(height: 5,),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                            SizedBox(width: 10,),
+                                            Expanded(child: Text("${CommonWidget.getCurrencyFormat(recipt_list[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          ],
+                                        ),
 
-                        )
-                      ],
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child:    DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            await   callDeleteRecipt(recipt_list[index]['Voucher_No'].toString(),index);
+                                          }
+                                        },
+                                      ) )
+                                ],
+                              )
+
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -234,4 +277,147 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           },
         ));
   }
+
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in recipt_list ){
+      total=total+item['Amount'];
+      print(item['Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
+  }
+
+  getRecipt(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  setState(() {
+                    recipt_list=_arrList;
+                  });
+                }
+                calculateTotalAmt();
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  callDeleteRecipt(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        var model= {
+          "Voucher_No": removeId,
+          "Voucher_Name": "Receipt",
+          "Modifier": uid,
+          "Modifier_Machine": deviceId
+        };
+        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                recipt_list.removeAt(index);
+                calculateTotalAmt();
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  @override
+  backToList() {
+    // TODO: implement backToList
+    getRecipt(1);
+    Navigator.pop(context);
+  }
+
+
+
 }

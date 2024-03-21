@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -11,15 +13,25 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/transaction/payment_reciept_contra_journal/payment_recipt_contra_journal_req_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
+import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
 class CreateReceipt extends StatefulWidget {
   final CreateReceiptInterface mListener;
   final String dateNew;
-  const CreateReceipt({super.key,required this.mListener, required this.dateNew});
+  final  voucherNo;
+  final  newDate;
+  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate});
   @override
   _CreateReceiptState createState() => _CreateReceiptState();
 }
@@ -39,8 +51,18 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
 
   String selectedFranchiseeName="";
+  String TotalAmount="0.00";
 
-  List<dynamic> Ledger_list=[
+  List<dynamic> Item_list=[];
+
+  List<dynamic> Updated_list=[];
+
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+bool isLoaderShow=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+/*  List<dynamic> Item_list=[
     {
       "id":1,
       "ledgerName":"Mahesh Kirana Store",
@@ -57,16 +79,16 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       "narration":"narration2"
 
     },
-  ];
+  ];*/
 
-  String TotalAmount="0.00";
+
 
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
-    for(var item  in Ledger_list ){
-      total=total+item['amount'];
-      print(item['amount']);
+    for(var item  in Item_list ){
+      total=total+item['Amount'];
+      print(item['Amount']);
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -82,6 +104,9 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    if(widget.voucherNo!=null){
+      getRecipt(1);
+    }
     calculateTotalAmt();
   }
 
@@ -182,7 +207,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
-                              goToAddOrEditItem(null);
+                              goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
                             }
                           },
                           child: Container(
@@ -208,8 +233,8 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                       )
                     ],
                   ),
-                  Ledger_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  // Ledger_list.length>0? getLedgerListLayout():Container(),
+                  Item_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                  // Item_list.length>0? getLedgerListLayout():Container(),
                   SizedBox(height: 10,),
                 ],
               ),
@@ -228,7 +253,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       height: parentHeight*.6,
       child: ListView.separated(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: Ledger_list.length,
+        itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -240,9 +265,12 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Ledger_list[index]);
+                      goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate));
                     }
                   },
                   child: Card(
@@ -273,20 +301,20 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Ledger_list[index]['ledgerName']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                            Text(CommonWidget.getCurrencyFormat(Item_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
                                           SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
-                                            child: Text("${Ledger_list[index]['narration']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                            child: Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                           ),
 
 
@@ -299,20 +327,48 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
-                                      child:IconButton(
+                                      child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              if(Item_list[index]['Seq_No']!=null){
+                                                var deletedItem=   {
+                                                  "Expense_ID": Item_list[index]['Expense_ID'],
+                                                  "Seq_No": Item_list[index]['Seq_No'],
+                                                };
+                                                Deleted_list.add(deletedItem);
+                                                setState(() {
+                                                  Deleted_list=Deleted_list;
+                                                });
+                                              }
+
+                                              var contain = Inserted_list.indexWhere((element) => element['Expense_ID']== Item_list[index]['Expense_ID']);
+                                              print(contain);
+                                              if(contain>=0){
+                                                print("REMOVE");
+                                                Inserted_list.remove(Inserted_list[contain]);
+                                              }
+                                              Item_list.remove(Item_list[index]);
+                                              setState(() {
+                                                Item_list=Item_list;
+                                                Inserted_list=Inserted_list;
+                                              });
+                                              print(Inserted_list);
+                                              await calculateTotalAmt();  }
+                                          })/*IconButton(
                                         icon:  FaIcon(
                                           FontAwesomeIcons.trash,
                                           size: 15,
                                           color: Colors.redAccent,
                                         ),
                                         onPressed: ()async{
-                                          Ledger_list.remove(Ledger_list[index]);
+                                          Item_list.remove(Item_list[index]);
                                           setState(() {
-                                            Ledger_list=Ledger_list;
+                                            Item_list=Item_list;
                                           });
                                           await calculateTotalAmt();
                                         },
-                                      )
+                                      )*/
                                   ),
                                 ],
                               )
@@ -392,17 +448,20 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
   }
 
 
+  String selectedbankCashLedger="";
+  var selectedBankLedgerID=null;
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
+    return  GetBankCashLedger(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){
           setState(() {
-            selectedFranchiseeName=name!;
+            selectedbankCashLedger=name!;
+            selectedBankLedgerID=id;
           });
         },
-        franchiseeName: selectedFranchiseeName);
+        bankCashLedger: selectedbankCashLedger);
   }
 
   /* Widget to get add Product Layout */
@@ -411,7 +470,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null);
+          goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
         }
       },
       child: Container(
@@ -434,7 +493,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,dateee) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -448,6 +507,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
               child: AddOrEditLedger(
                 mListener: this,
                 editproduct:product,
+                newDate:dateee,
               ),
             ),
           );
@@ -481,7 +541,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
 
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
@@ -489,21 +549,20 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         ):Container(),
         GestureDetector(
           onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
             if (mounted) {
               setState(() {
                 disableColor = true;
               });
             }
+            if(widget.voucherNo=="") {
+              print("#######");
+              callPostReceipt();
+            }
+            else {
+              print("dfsdf");
+              updatecallPostReceipt();
+            }
+        
           },
           onDoubleTap: () {},
           child: Container(
@@ -534,18 +593,64 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
     );
   }
 
-
+  var editedItemIndex=null;
   @override
-  AddOrEditLedgerDetail(item) {
+  AddOrEditLedgerDetail(item)async {
     // TODO: implement AddOrEditItemDetail
-    var itemLlist=Ledger_list;
-    if(item['id']!=""){
-      var index=Ledger_list.indexWhere((element) => item['id']==element['id']);
+
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
-        Ledger_list[index]['ledgerName']=item['ledgerName'];
-        Ledger_list[index]['currentBal']=item['currentBal'];
-        Ledger_list[index]['amount']=item['amount'];
-        Ledger_list[index]['narration']=item['narration'];
+        Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Item_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Remark']=item['Remark'];
+        Item_list[index]['Seq_No']=item['Seq_No'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['New_Expense_ID']!=null){
+        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+    
+/*    var itemLlist=Item_list;
+    if(item['id']!=""){
+      var index=Item_list.indexWhere((element) => item['id']==element['id']);
+      setState(() {
+        Item_list[index]['ledgerName']=item['ledgerName'];
+        Item_list[index]['currentBal']=item['currentBal'];
+        Item_list[index]['amount']=item['amount'];
+        Item_list[index]['narration']=item['narration'];
       });
     }
     else {
@@ -556,13 +661,231 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
         itemLlist.add(item);
       }
       setState(() {
-        Ledger_list = itemLlist;
+        Item_list = itemLlist;
       });
     }
-    calculateTotalAmt();
+    calculateTotalAmt();*/
+  }
+
+  getRecipt(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVoucherDetail}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(widget.newDate)}&Voucher_Name=Receipt&Voucher_No=${widget.voucherNo}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  print("data     $data   $_arrList");
+                  _arrList=(data['accountDetails']);
+
+                  setState(() {
+                    Item_list=_arrList;
+                    selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
+                    selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  newwwwww  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  callPostReceipt() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
+          ledgerID:selectedBankLedgerID ,
+          companyID: companyId ,
+          voucherName: "Receipt",
+          totalAmount:TotalAmountInt ,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+        creator: creatorName,
+          creatorMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+        );
+print("hufhfhjufr  ${Inserted_list.toList()} ");
+
+print("newwwww   ${model.toJson()}");
+        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+
+
+  updatecallPostReceipt() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
+          ledgerID:selectedBankLedgerID ,
+          companyID: companyId ,
+          voucherNo: widget.voucherNo,
+          voucherName: "Receipt",
+          totalAmount:TotalAmountInt ,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          dELETE: Deleted_list.toList(),
+          uPDATE: Updated_list.toList(),
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
 }
 
 abstract class CreateReceiptInterface {
+  backToList();
 }
