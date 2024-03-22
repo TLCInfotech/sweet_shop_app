@@ -24,6 +24,7 @@ import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/journal/journal_voucher_list.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
@@ -1002,6 +1003,7 @@ String companyId="";
             getPaymentLayout(parentHeight,parentWidth),
             getReceptLayout(parentHeight,parentWidth),
             getContraLayout(parentHeight,parentWidth),
+            getJournalLayout(parentHeight,parentWidth),
           ],
         ),
       ),
@@ -1115,6 +1117,35 @@ String companyId="";
             ),
             Text(
               ApplicationLocalizations.of(context)!.translate("receipt_detail")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for journal transaction Layout */
+  Widget getJournalLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this)));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("journal")!,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

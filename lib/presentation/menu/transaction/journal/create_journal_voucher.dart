@@ -37,21 +37,21 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
-import 'add_edit_ledger_for_payment.dart';
+import 'add_edit_journal_voucher.dart';
 
-class CreatePayment extends StatefulWidget {
-  final CreatePaymentInterface mListener;
+class CreateJournals extends StatefulWidget {
+  final CreateJournalInterface mListener;
   final String dateNew;
   final String voucherNo;
 
-  const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
+  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
   @override
-  _CreatePaymentState createState() => _CreatePaymentState();
+  _CreateJournalsState createState() => _CreateJournalsState();
 }
 
 
 
-class _CreatePaymentState extends State<CreatePayment> with SingleTickerProviderStateMixin,AddOrEditLedgerForPaymentInterface {
+class _CreateJournalsState extends State<CreateJournals> with SingleTickerProviderStateMixin,AddOrEditLedgerForJournalsInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -148,7 +148,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
                 backgroundColor: Colors.white,
                 title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("payment_invoice_new")!,
+                 ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -182,7 +182,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-   children: [
+      children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
           child: Container(
@@ -190,7 +190,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               key: _formkey,
               child: Column(
                 children: [
-                  PaymentInfo(),
+                  journalInfo(),
                   const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -237,7 +237,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   }
 
 /* Widget for payment info layout*/
-  Container PaymentInfo() {
+  Container journalInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
@@ -522,7 +522,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditLedgerForPayment(
+              child: AddOrEditLedgerForJournals(
                 mListener: this,
                 editproduct:product,
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
@@ -551,7 +551,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   /* Widget for add or edit ledger function */
   @override
-  AddOrEditLedgerForPaymentDetail(item)async {
+  AddOrEditLedgerForJournalsDetail(item)async {
     // TODO: implement AddOrEditItemDetail
     var itemLlist=Ledger_list;
 
@@ -680,7 +680,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       CommonWidget.noInternetDialogNew(context);
     }
   }
-  
+
   callPostBankLedgerPayment() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
@@ -763,18 +763,18 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           isLoaderShow=true;
         });
         postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
-          voucherNo: widget.voucherNo,
-          ledgerID:selectedBankLedgerID ,
-          companyID: companyId ,
-          remark: "UPDATED",
-          voucherName: "Payment",
-          totalAmount: TotalAmountInt,
-          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-          modifier: creatorName,
-          modifierMachine: deviceId,
-          iNSERT: Inserted_list.toList(),
-          uPDATE: Updated_list.toList(),
-          dELETE: Deleted_list.toList()
+            voucherNo: widget.voucherNo,
+            ledgerID:selectedBankLedgerID ,
+            companyID: companyId ,
+            remark: "UPDATED",
+            voucherName: "Payment",
+            totalAmount: TotalAmountInt,
+            date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+            modifier: creatorName,
+            modifierMachine: deviceId,
+            iNSERT: Inserted_list.toList(),
+            uPDATE: Updated_list.toList(),
+            dELETE: Deleted_list.toList()
         );
 
         print(model.toJson());
@@ -823,8 +823,10 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     }
   }
 
+
+
 }
 
-abstract class CreatePaymentInterface {
+abstract class CreateJournalInterface {
   backToList();
 }

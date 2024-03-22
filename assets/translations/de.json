@@ -242,5 +242,7 @@
  "contra": "Contra",
  "contra_new": "Contra - New",
  "bank_cash_ledger": "Bank Cash Ledger",
- "ledger_without_bank_cash": "Ledger Without Bank Cash"
+ "ledger_without_bank_cash": "Ledger Without Bank Cash",
+ "journal": "Journal",
+ "journal_voucher": "Journal Voucher"
 }
