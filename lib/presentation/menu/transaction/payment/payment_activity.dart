@@ -115,7 +115,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                     const SizedBox(
                       height: 10,
                     ),
-                    getTotalCountAndAmount(),
+                    payment_list.isNotEmpty?getTotalCountAndAmount():
+                    Container(),
                     const SizedBox(
                       height: .5,
                     ),
@@ -191,8 +192,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+               Text("${payment_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),
@@ -329,7 +330,18 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           ),
         ));
   }
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in payment_list ){
+      total=total+item['Total_Amount'];
+      print(item['Total_Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
 
+  }
 
   getPayment(int page) async {
     String companyId = await AppPreferences.getCompanyId();

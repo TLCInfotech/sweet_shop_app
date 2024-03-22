@@ -6,7 +6,6 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:textfield_search/textfield_search.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -85,7 +84,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
+    await Future.delayed(const Duration(milliseconds: 0));
     await fetchShows(searchstring) ;
 
     List _list = <dynamic>[];
@@ -147,7 +146,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                   topRight: Radius.circular(8),
                 ),
               ),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Container(
@@ -228,7 +227,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
           amount.text = value;
         });
       },
-      textInput: TextInputType.numberWithOptions(decimal: true),
+      textInput: const TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
     );
@@ -243,7 +242,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
           borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
-              offset: Offset(0, 1),
+              offset: const Offset(0, 1),
               blurRadius: 5,
               color: Colors.black.withOpacity(0.1),
             ),
@@ -256,9 +255,9 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
               hintText: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
               prefixIcon: Container(
                   width: 50,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+                  child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
             ),
             textStyle: item_regular_textStyle,
             getSelectedValue: (v) {
@@ -355,7 +354,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
           child: Container(
             height: parentHeight * .05,
             width: parentWidth*.45,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(5),

@@ -191,11 +191,6 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      // padding: EdgeInsets.only(
-      //     left: parentWidth * 0.04,
-      //     right: parentWidth * 0.04,
-      //     top: parentHeight * 0.01,
-      //     bottom: parentHeight * 0.02),
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -240,7 +235,6 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     ],
                   ),
                   Item_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  // Item_list.length>0? getLedgerListLayout():Container(),
                   SizedBox(height: 10,),
                 ],
               ),

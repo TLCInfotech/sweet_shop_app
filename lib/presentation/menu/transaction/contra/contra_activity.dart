@@ -118,12 +118,12 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     getPurchaseDateLayout(),
                     const SizedBox(
                       height: 10,
                     ),
-                    getTotalCountAndAmount(),
+                  contraList.isNotEmpty?getTotalCountAndAmount():
+                    Container(),
                     const SizedBox(
                       height: .5,
                     ),
@@ -133,9 +133,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
               ),
               Visibility(
                   visible: contraList.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
-            ],
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -200,8 +198,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+               Text("${contraList.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),

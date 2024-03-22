@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +9,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -21,7 +18,6 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/transaction/payment_reciept_contra_journal/payment_recipt_contra_journal_req_model.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -176,7 +172,6 @@ bool isLoaderShow=false;
                         SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
               ],
             ),
           ),

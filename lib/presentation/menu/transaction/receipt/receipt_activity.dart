@@ -109,7 +109,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                     const SizedBox(
                       height: 10,
                     ),
-                    getTotalCountAndAmount(),
+                    recipt_list.isNotEmpty? getTotalCountAndAmount()
+                    :Container(),
                     const SizedBox(
                       height: .5,
                     ),
@@ -120,7 +121,6 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
               Visibility(
                   visible: recipt_list.isEmpty && isApiCall  ? true : false,
                   child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
             ],
           ),
         ),
