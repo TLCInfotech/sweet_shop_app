@@ -104,65 +104,71 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   }
 
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: Color(0xFFfffff5),
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Color(0xFFfffff5),
+          ),
+          child: Scaffold(
+            backgroundColor: const Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
 
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("expense_invoice_new")!,
-                  style: appbar_text_style,),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("expense_invoice_new")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                height: SizeConfig.safeUsedHeight * .12,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 

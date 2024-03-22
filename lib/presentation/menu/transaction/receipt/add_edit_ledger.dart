@@ -140,7 +140,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
             padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*0.7,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8),

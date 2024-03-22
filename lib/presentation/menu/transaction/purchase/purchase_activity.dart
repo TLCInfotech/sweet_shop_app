@@ -5,6 +5,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -69,26 +70,52 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
-      body: Container(
-        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 10,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getPurchaseDateLayout(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getTotalCountAndAmount(),
+                const SizedBox(
+                  height: .5,
+                ),
+                get_purchase_list_layout()
+              ],
             ),
-            getTotalCountAndAmount(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_purchase_list_layout()
-          ],
-        ),
+          ),
+          // Visibility(
+          //     visible: purc.isEmpty && isApiCall  ? true : false,
+          //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+        ],
       ),
     );
   }
-
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   /* Widget to get add purchase date Layout */
   Widget getPurchaseDateLayout(){
     return  GetDateLayout(

@@ -119,59 +119,65 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
 /* Widget for build context layout*/
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: const Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(0.0),
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: const Color(0xFFfffff5),
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Scaffold(
+            backgroundColor: const Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
 
-                backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("payment_invoice_new")!,
-                  style: appbar_text_style,),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                      ApplicationLocalizations.of(context)!.translate("payment_invoice_new")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: const BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-
-                ),
-                height: SizeConfig.safeUsedHeight * .12,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 

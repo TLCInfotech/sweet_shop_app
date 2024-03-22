@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
@@ -32,6 +33,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
+  bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> payment_list=[];
   int page = 1;
@@ -56,65 +58,98 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+                    style: appbar_text_style,),
+                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
+                ),
               ),
-
-              backgroundColor: Colors.white,
-              title:  Text(
-                ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
-                style: appbar_text_style,),
-              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
-              mListener: this,
-              dateNew:   CommonWidget.getDateLayout(newDate),
-              voucherNo: "",//DateFormat('dd-MM-yyyy').format(newDate),
-            )));
-          }),
-      body: Container(
-        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
+                  mListener: this,
+                  dateNew:   CommonWidget.getDateLayout(newDate),
+                  voucherNo: "",//DateFormat('dd-MM-yyyy').format(newDate),
+                )));
+              }),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 10,
-            ),
-            getTotalCountAndAmount(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_payment_list_layout()
-          ],
+                    getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    getTotalCountAndAmount(),
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_payment_list_layout()
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: payment_list.isEmpty && isApiCall  ? true : false,
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
+    );
+  }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
@@ -176,106 +211,122 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       ),
     );
   }
-
+//FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await getPayment(1);
+  }
   /* Widget to get add payment list Layout */
   Expanded get_payment_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: payment_list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
-                        mListener: this,
-                        dateNew:   CommonWidget.getDateLayout(newDate),
-                        voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
-                      )));
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
+        child:RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            itemCount: payment_list.length,
+            controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
+                          mListener: this,
+                          dateNew:   CommonWidget.getDateLayout(newDate),
+                          voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                        )));
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                              ),
                             ),
-                          ),
-                          Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                           Text("${payment_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                               Expanded(child: Text("Voucher No: - ${payment_list[index]['Voucher_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(payment_list[index]['Amount'])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                            ],
-                                          ),
+                            Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                             Text("${payment_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                 Expanded(child: Text("Voucher No: - ${payment_list[index]['Voucher_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                Expanded(child: Text("${CommonWidget.getCurrencyFormat(payment_list[index]['Amount'])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                              ],
+                                            ),
 
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  DeleteDialogLayout(
-                                    callback: (response ) async{
-                                      if(response=="yes"){
-                                        print("##############$response");
-                                        await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
-                                      }
-                                    },
-                                  )
-                                ],
-                              )
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
+                                        }
+                                      },
+                                    )
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 
@@ -294,17 +345,29 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
+                  _arrList.clear();
                   _arrList=data;
-                  setState(() {
-                    payment_list=_arrList;
-                  });
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
                 }
               });
               print("  LedgerLedger  $data ");
@@ -340,7 +403,22 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       CommonWidget.noInternetDialogNew(context);
     }
   }
-  
+  setDataToList(List<dynamic> _list) {
+    if (payment_list.isNotEmpty) payment_list.clear();
+    if (mounted) {
+      setState(() {
+        payment_list.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        payment_list.addAll(_list);
+      });
+    }
+  }
   callDeleteExpense(String removeId,String seqNo,int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
