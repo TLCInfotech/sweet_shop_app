@@ -354,7 +354,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
         });
         var model= {
           "Voucher_No": removeId,
-          "Voucher_Name": "Payment",
+          "Voucher_Name": "Journal",
           "Seq_No":seqNo,
           "Modifier": uid,
           "Modifier_Machine": deviceId

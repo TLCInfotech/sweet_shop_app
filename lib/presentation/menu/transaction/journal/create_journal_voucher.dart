@@ -370,6 +370,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                                 var deletedItem=   {
                                                   "Ledger_ID": Ledger_list[index]['Ledger_ID'],
                                                   "Seq_No": Ledger_list[index]['Seq_No'],
+                                                  "Amnt_Type":Ledger_list[index]['Amnt_Type'],
+                                                  "Date":DateFormat('yyyy-MM-dd').format(invoiceDate)//"2024-03-26"
                                                 };
                                                 Deleted_list.add(deletedItem);
                                                 setState(() {
@@ -588,8 +590,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        // Ledger_list[index]['Date']=item['Date'];
-        Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+        Ledger_list[index]['Date']=item['Date'];
+        // Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
         Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
         Ledger_list[index]['Amount']=item['Amount'];
@@ -603,7 +605,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+        Updated_list.add(Ledger_list[index]);
         setState(() {
           Updated_list = Updated_list;
         });
@@ -791,13 +793,10 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         setState(() {
           isLoaderShow=true;
         });
-        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
+        postJournalRequestModel model = postJournalRequestModel(
             voucherNo: widget.voucherNo,
-            ledgerID:selectedBankLedgerID ,
             companyID: companyId ,
-            remark: "UPDATED",
-            voucherName: "Payment",
-            totalAmount: TotalAmountInt,
+            voucherName: "Journal",
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
             modifier: creatorName,
             modifierMachine: deviceId,
@@ -807,7 +806,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         );
 
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        String apiUrl =baseurl + ApiConstants().getJournalVouchers;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{

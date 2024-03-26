@@ -334,8 +334,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   calculateTotalAmt()async{
     var total=0.00;
     for(var item  in payment_list ){
-      total=total+item['Total_Amount'];
-      print(item['Total_Amount']);
+      total=total+item['Amount'];
+      print(item['Amount']);
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -378,6 +378,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                   } else {
                     setMoreDataToList(_arrList);
                   }
+
+                  calculateTotalAmt();
                 }else{
                   isApiCall=true;
                 }

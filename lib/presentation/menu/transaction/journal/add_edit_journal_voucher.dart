@@ -335,7 +335,8 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             var item={};
             if(widget.editproduct!=null){
               item = {
-                // "Date":widget.newdate,
+                "Date":widget.newdate,
+                "New_Date":widget.newdate,
                 "New_Ledger_ID": selectedBankLedgerID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_Name": _textController.text,
@@ -347,7 +348,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             }
             else {
               item = {
-                // "Date":widget.newdate,
+                "Date":widget.newdate,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
                 "Ledger_Name": _textController.text,
                 "Ledger_ID": selectedBankLedgerID,
