@@ -503,7 +503,7 @@ class ApiRequestHelper {
     Map<String, dynamic> cleanedData = {};
 
     requestBody.forEach((key, value) {
-      if (value != null && value!=""  && value!="null" && value.toString()!="[]") {
+      if (value != null && value!="" && value.toString()!="[]") {
         cleanedData[key] = jsonDecode(jsonEncode(value));
       }
     });
@@ -555,7 +555,6 @@ class ApiRequestHelper {
           ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
           apiResponse = ApiResponseForFetchStringDynamic.fromJson(
               json.decode(response.body));
-          print(response.body);
           onException(apiResponse.msg);
           break;
         case 404:

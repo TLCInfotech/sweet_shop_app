@@ -547,7 +547,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       var index=editedItemIndex;
       setState(() {
         Ledger_list[index]['Date']=item['Date'];
-        Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+        // Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
         Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
         Ledger_list[index]['Amount']=item['Amount'];
@@ -560,7 +560,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
         Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+        Updated_list.add( Ledger_list[index]);
         setState(() {
           Updated_list = Updated_list;
         });
