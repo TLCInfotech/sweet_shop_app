@@ -126,6 +126,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
         _textController.text=widget.editproduct['Ledger_Name'];
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark'].toString();
+        selectedLimitUnit=widget.editproduct['Amnt_Type'].toString();
       });
     }
   }
@@ -334,22 +335,24 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             var item={};
             if(widget.editproduct!=null){
               item = {
-                "Date":widget.newdate,
+                // "Date":widget.newdate,
                 "New_Ledger_ID": selectedBankLedgerID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_Name": _textController.text,
                 "Ledger_ID": widget.editproduct['Ledger_ID'],
                 "Amount": double.parse(amount.text),
+                "Amnt_Type": selectedLimitUnit,
                 "Remark": narration.text,
               };
             }
             else {
               item = {
-                "Date":widget.newdate,
+                // "Date":widget.newdate,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
                 "Ledger_Name": _textController.text,
                 "Ledger_ID": selectedBankLedgerID,
                 "Amount": double.parse(amount.text),
+                "Amnt_Type": selectedLimitUnit,
                 "Remark": narration.text,
               };
             }
