@@ -1,38 +1,51 @@
-class postJournalRequestModel {
+
+class PostJournalRequestModel {
   String? companyID;
   String? date;
-  String? voucherName;
+  String? ledgerID;
   String? voucherNo;
+  int? seqNo;
+  String? voucherName;
+  double? totalAmount;
+  String? remark;
   String? creator;
   String? creatorMachine;
-  String? modifierMachine;
   String? modifier;
+  String? modifierMachine;
   List<dynamic>? iNSERT;
-  List<dynamic>? dELETE;
   List<dynamic>? uPDATE;
+  List<dynamic>? dELETE;
 
-  postJournalRequestModel(
+  PostJournalRequestModel(
       {this.companyID,
         this.date,
-        this.voucherName,
+        this.ledgerID,
         this.voucherNo,
+        this.seqNo,
+        this.voucherName,
+        this.totalAmount,
+        this.remark,
         this.creator,
         this.creatorMachine,
-        this.modifierMachine,
         this.modifier,
+        this.modifierMachine,
         this.iNSERT,
-        this.dELETE,
-        this.uPDATE});
+        this.uPDATE,
+        this.dELETE});
 
-  postJournalRequestModel.fromJson(Map<String, dynamic> json) {
+  PostJournalRequestModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     date = json['Date'];
-    voucherName = json['Voucher_Name'];
+    ledgerID = json['Ledger_ID'];
     voucherNo = json['Voucher_No'];
+    seqNo = json['Seq_No'];
+    voucherName = json['Voucher_Name'];
+    totalAmount = json['Total_Amount'];
+    remark = json['Remark'];
     creator = json['Creator'];
     creatorMachine = json['Creator_Machine'];
-    modifierMachine = json['Modifier_Machine'];
     modifier = json['Modifier'];
+    modifierMachine = json['Modifier_Machine'];
     if (json['INSERT'] != null) {
       iNSERT = <dynamic>[];
       json['INSERT'].forEach((v) {
@@ -57,12 +70,16 @@ class postJournalRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
-    data['Voucher_Name'] = this.voucherName;
+    data['Ledger_ID'] = this.ledgerID;
     data['Voucher_No'] = this.voucherNo;
+    data['Seq_No'] = this.seqNo;
+    data['Voucher_Name'] = this.voucherName;
+    data['Total_Amount'] = this.totalAmount;
+    data['Remark'] = this.remark;
     data['Creator'] = this.creator;
     data['Creator_Machine'] = this.creatorMachine;
-    data['Modifier_Machine'] = this.modifierMachine;
     data['Modifier'] = this.modifier;
+    data['Modifier_Machine'] = this.modifierMachine;
     if (this.iNSERT != null) {
       data['INSERT'] = this.iNSERT!.map((v) => v).toList();
     }
@@ -75,3 +92,5 @@ class postJournalRequestModel {
     return data;
   }
 }
+
+

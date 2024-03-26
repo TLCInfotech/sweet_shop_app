@@ -503,14 +503,14 @@ class ApiRequestHelper {
     Map<String, dynamic> cleanedData = {};
 
     requestBody.forEach((key, value) {
-      if (value != null && value!="" && value.toString()!="[]") {
+      if (value != null && value!="") {
         cleanedData[key] = jsonDecode(jsonEncode(value));
       }
     });
 
     String jsonString = json.encode(cleanedData);
 
-    print("     sessionTokennnnn  $sessionToken");
+    print("sessionTokennnnn  $sessionToken");
 
     try {
       Response response = await http.put(
@@ -521,13 +521,11 @@ class ApiRequestHelper {
             'Authorization': 'Bearer $sessionToken',
           }
       );
-
       print(response.statusCode);
       switch (response.statusCode) {
       /*response of api status id zero when something is wrong*/
         case 400:
           ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
-
           apiResponse = ApiResponseForFetchStringDynamic.fromJson(
               json.decode(response.body));
 

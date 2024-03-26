@@ -619,7 +619,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         Inserted_list=Inserted_list;
       });
       print(itemLlist);
-
       setState(() {
         Ledger_list = itemLlist;
       });
@@ -724,7 +723,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         setState(() {
           isLoaderShow=true;
         });
-        postJournalRequestModel model = postJournalRequestModel(
+        PostJournalRequestModel model = PostJournalRequestModel(
           // ledgerID:selectedBankLedgerID ,
           companyID: companyId ,
           voucherName: "Journal",
@@ -793,7 +792,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         setState(() {
           isLoaderShow=true;
         });
-        postJournalRequestModel model = postJournalRequestModel(
+        PostJournalRequestModel model = PostJournalRequestModel(
             voucherNo: widget.voucherNo,
             companyID: companyId ,
             voucherName: "Journal",
