@@ -31,6 +31,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/transaction/journals/postJournalRequestBody.dart';
 import '../../../../data/domain/transaction/payment_reciept_contra_journal/payment_recipt_contra_journal_req_model.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
@@ -70,6 +71,9 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
 
   String TotalAmount="0.00";
+  double TotalCr=0.00;
+  double TotalDr=0.00;
+
 //  List<dynamic> Item_list=[];
 
   List<dynamic> Updated_list=[];
@@ -109,6 +113,23 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
     });
+    var totalamt=0.00;
+    var totalcr=0.00;
+    var totaldr=0.00;
+    for(var item  in Ledger_list ){
+      total=total+item['Amount'];
+      if(item['Amnt_Type']=="CR"){
+        totalcr=totalcr+item['Amount'];
+      }
+      else  if(item['Amnt_Type']=="DR"){
+        totaldr=totaldr+item['Amount'];
+      }
+    }
+      setState(() {
+        // TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
+        TotalCr=totalcr;
+        TotalDr=totaldr;
+      });
 
   }
   @override
@@ -248,13 +269,13 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
+          Expanded(
+              // width:(SizeConfig.screenWidth),
               child: getReceiptDateLayout()),
 
-          SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+          // SizedBox(width: 5,),
+          // Expanded(
+          //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
         ],
       ),
     );
@@ -321,8 +342,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
-                                            child:
-                                            Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                            child: Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount'])+" ${Ledger_list[index]['Amnt_Type']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          // +" ${Ledger_list[index]['Amnt_Type']}"
                                           ),
                                           const SizedBox(height: 2 ,),
                                           Container(
@@ -396,7 +417,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   }
 
 
-
   /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -454,15 +474,15 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
+          child: Ledger_list.length>0?Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
-
+              // Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text("Total Cr : ${CommonWidget.getCurrencyFormat((TotalCr).ceilToDouble())} CR",style: item_heading_textStyle,),
+              Text("Total Dr : ${CommonWidget.getCurrencyFormat((TotalDr).ceilToDouble())} DR",style: item_heading_textStyle,),
             ],
-          ),
+          ):Container(),
         ),
         GestureDetector(
           onTap: () {
@@ -472,13 +492,23 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
               });
             }
             print(widget.voucherNo);
-            if(widget.voucherNo=="") {
-              print("#######");
-              callPostBankLedgerPayment();
+            if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()) {
+              if (widget.voucherNo == "") {
+                print("#######");
+                callPostBankLedgerPayment();
+              }
+              else {
+                print("dfsdf");
+                updatecallPostBankLedgerPayment();
+              }
             }
             else {
-              print("dfsdf");
-              updatecallPostBankLedgerPayment();
+              var snackBar = SnackBar(
+                  content: Text('Match Total Credit and Debit!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              setState(() {
+                disableColor = false;
+              });
             }
           },
           onDoubleTap: () {},
@@ -558,11 +588,12 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Ledger_list[index]['Date']=item['Date'];
+        // Ledger_list[index]['Date']=item['Date'];
         Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
         Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
         Ledger_list[index]['Amount']=item['Amount'];
+        Ledger_list[index]['Amnt_Type']=item['Amnt_Type'];
         Ledger_list[index]['Remark']=item['Remark'];
         Ledger_list[index]['Seq_No']=item['Seq_No'];
       });
@@ -617,7 +648,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVoucherDetail}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Payment&Voucher_No=${widget.voucherNo}";
+        String apiUrl = "${baseurl}${ApiConstants().getJournalVouchers}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Journal&Voucher_No=${widget.voucherNo}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -625,14 +656,12 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList=(data['accountDetails']);
+                  _arrList=(data['details']);
 
                   setState(() {
                     Ledger_list=_arrList;
-                    selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
-                    selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
                   });
-                  calculateTotalAmt();
+                 calculateTotalAmt();
                 }
 
               });
@@ -693,11 +722,11 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         setState(() {
           isLoaderShow=true;
         });
-        postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
-          ledgerID:selectedBankLedgerID ,
+        postJournalRequestModel model = postJournalRequestModel(
+          // ledgerID:selectedBankLedgerID ,
           companyID: companyId ,
-          voucherName: "Payment",
-          totalAmount: TotalAmountInt,
+          voucherName: "Journal",
+          // totalAmount: TotalAmountInt,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           creator: creatorName,
           creatorMachine: deviceId,
@@ -705,7 +734,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         );
 
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().getPaymentVouvher;
+        String apiUrl =baseurl + ApiConstants().getJournalVouchers;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               print("  ITEM  $data ");
