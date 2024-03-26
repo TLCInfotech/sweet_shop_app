@@ -16,6 +16,7 @@ import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'create_contra_activity.dart';
 
@@ -107,7 +108,9 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
                   mListener: this,
-                  dateNew:   CommonWidget.getDateLayout(newDate),//DateFormat('dd-MM-yyyy').format(newDate),
+                  newDate: newDate,
+                  voucherNo: null,
+                  dateNew:  CommonWidget.getDateLayout(newDate),//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
           body: Stack(
@@ -240,71 +243,81 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                            ),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text("Payment No: - 23",style: item_heading_textStyle,),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            const Expanded(child: Text("Voucher No: - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            Expanded(child: Text("${CommonWidget.getCurrencyFormat(3000)}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
+                    child:GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
+                          mListener: this,
+                          newDate: newDate,
+                          voucherNo: contraList[index]["Voucher_No"],
+                          dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
+                        )));
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
                                   ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: (){},
-                                      ) )
-                                ],
-                              )
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                              ),
+                            ),
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                           Text(contraList[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                          const SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                               Expanded(child: Text("Voucher No: - ${contraList[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(contraList[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
 
-                          )
-                        ],
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await   callDeleteContra(contraList[index]['Voucher_No'].toString(),index);
+                                            }
+                                          },
+                                        ) )
+                                  ],
+                                )
+
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -325,8 +338,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
   calculateTotalAmt()async{
     var total=0.00;
     for(var item  in contraList ){
-      total=total+item['Total_Amount'];
-      print(item['Total_Amount']);
+      total=total+item['Amount'];
+      print(item['Amount']);
     }
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
@@ -425,7 +438,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
     }
   }
 
-  callDeleteExpense(String removeId,int index) async {
+  callDeleteContra(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();

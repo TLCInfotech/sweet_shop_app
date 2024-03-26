@@ -555,7 +555,7 @@ bool isLoaderShow=false;
                 disableColor = true;
               });
             }
-            if(widget.voucherNo=="") {
+            if(widget.voucherNo==null) {
               print("#######");
               callPostReceipt();
             }

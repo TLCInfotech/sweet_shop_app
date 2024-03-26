@@ -26,7 +26,8 @@ class AddOrEditLedgerForContra extends StatefulWidget {
   final AddOrEditLedgerForContraInterface mListener;
   final dynamic editproduct;
   final newDate;
-  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate});
+  final franId;
+  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate, this.franId});
   @override
   State<AddOrEditLedgerForContra> createState() => _AddOrEditLedgerForContraState();
 }
@@ -58,7 +59,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&name=${searchstring}";
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().getBankCashLedger+"?Company_ID=$companyId&name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
@@ -263,6 +264,10 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
             getSelectedValue: (v) {
               setState(() {
                 selectedItemID = v.value;
+                if(widget.franId==selectedItemID){
+                  CommonWidget.errorDialog(context, "You can not select same ledger.");
+                }
+                print("newwww  ${widget.franId}   $selectedItemID");
                 itemsList = [];
               });
             },

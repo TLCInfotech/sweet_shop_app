@@ -24,6 +24,7 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import 'add_edit_ledger_for_contra.dart';
 
 
 class CreateContra extends StatefulWidget {
@@ -36,7 +37,7 @@ class CreateContra extends StatefulWidget {
   _CreateContraState createState() => _CreateContraState();
 }
 
-class _CreateContraState extends State<CreateContra> with SingleTickerProviderStateMixin,AddOrEditLedgerInterface {
+class _CreateContraState extends State<CreateContra> with SingleTickerProviderStateMixin,AddOrEditLedgerForContraInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -84,7 +85,6 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
 
 
   calculateTotalAmt()async{
-    print("Here");
     var total=0.00;
     for(var item  in Item_list ){
       total=total+item['Amount'];
@@ -122,13 +122,13 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         Container(
           height: SizeConfig.safeUsedHeight,
           width: SizeConfig.screenWidth,
-          padding: EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
             shape: BoxShape.rectangle,
             color: Color(0xFFfffff5),
           ),
           child: Scaffold(
-            backgroundColor: Color(0xFFfffff5),
+            backgroundColor: const Color(0xFFfffff5),
             appBar: PreferredSize(
               preferredSize: AppBar().preferredSize,
               child: SafeArea(
@@ -139,7 +139,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                   ),
                   color: Colors.transparent,
                   // color: Colors.red,
-                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)
@@ -147,7 +147,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
 
                     backgroundColor: Colors.white,
                     title: Text(
-                      ApplicationLocalizations.of(context)!.translate("receipt_invoice_new")!,
+                      ApplicationLocalizations.of(context)!.translate("contra_new")!,
                       style: appbar_text_style,),
                   ),
                 ),
@@ -200,21 +200,25 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
               child: Column(
                 children: [
                   ReceiptInfo(),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
+                            if(selectedBankLedgerID!=null){
+                              if (context != null) {
+                                goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
+                              }
+                            }else{
+                              CommonWidget.errorDialog(context, "Select bank name first.");
                             }
                           },
                           child: Container(
                               width: 140,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                   color: CommonColor.THEME_COLOR,
                                   border: Border.all(color: Colors.grey.withOpacity(0.5))
@@ -225,7 +229,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                   Text(
                                     ApplicationLocalizations.of(context)!.translate("add_ledger")!,
                                     style: item_heading_textStyle,),
-                                  FaIcon(FontAwesomeIcons.plusCircle,
+                                  const FaIcon(FontAwesomeIcons.plusCircle,
                                     color: Colors.black87, size: 20,)
                                 ],
                               )
@@ -235,7 +239,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     ],
                   ),
                   Item_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                 ],
               ),
             ),
@@ -252,7 +256,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     return Container(
       height: parentHeight*.6,
       child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
@@ -262,7 +266,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             child: SlideAnimation(
               verticalOffset: -44.0,
               child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
+                delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
                     setState(() {
@@ -270,7 +274,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate));
+                      goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
                     }
                   },
                   child: Card(
@@ -294,7 +298,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
 
                                   Expanded(
                                     child: Container(
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: const EdgeInsets.only(left: 10),
                                       width: parentWidth*.70,
                                       //  height: parentHeight*.1,
                                       child:  Column(
@@ -303,14 +307,14 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                         children: [
                                           Text("${Item_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 3,),
+                                          const SizedBox(height: 3,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
                                             child:
                                             Text(CommonWidget.getCurrencyFormat(Item_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                           ),
-                                          SizedBox(height: 2 ,),
+                                          const SizedBox(height: 2 ,),
                                           Container(
                                             alignment: Alignment.centerLeft,
                                             width: SizeConfig.screenWidth,
@@ -333,7 +337,8 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                               print("##############$response");
                                               if(Item_list[index]['Seq_No']!=null){
                                                 var deletedItem=   {
-                                                  "Expense_ID": Item_list[index]['Expense_ID'],
+                                                 // "Expense_ID": Item_list[index]['Expense_ID'],
+                                                 // "Expense_ID": Item_list[index]['Expense_ID'],
                                                   "Seq_No": Item_list[index]['Seq_No'],
                                                 };
                                                 Deleted_list.add(deletedItem);
@@ -386,7 +391,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
+          return const SizedBox(
             height: 5,
           );
         },
@@ -398,8 +403,8 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
 
   Container ReceiptInfo() {
     return  Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(bottom: 10,left: 5,right: 5,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
@@ -411,7 +416,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
               width:(SizeConfig.screenWidth)*.32,
               child: getReceiptDateLayout()),
 
-          SizedBox(width: 5,),
+          const SizedBox(width: 5,),
           Expanded(
               child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
         ],
@@ -470,17 +475,17 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
+          goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
         }
       },
       child: Container(
           height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR,
               border: Border.all(color: Colors.grey.withOpacity(0.5))
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Add New Ledger",
@@ -493,7 +498,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product,dateee) {
+  Future<Object?> goToAddOrEditItem(product,dateee,fid) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -504,15 +509,16 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditLedger(
+              child: AddOrEditLedgerForContra(
                 mListener: this,
                 editproduct:product,
                 newDate:dateee,
+                franId: fid,
               ),
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -532,7 +538,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
+          padding: const EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
@@ -554,7 +560,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 disableColor = true;
               });
             }
-            if(widget.voucherNo=="") {
+            if(widget.voucherNo==null) {
               print("#######");
               callPostContra();
             }
@@ -881,6 +887,55 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       }
       CommonWidget.noInternetDialogNew(context);
     }
+  }
+
+  @override
+  AddOrEditLedgerForContraDetail(item)async {
+    // TODO: implement AddOrEditLedgerForContraDetail
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
+      setState(() {
+        Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+        Item_list[index]['Ledger_Name']=item['Ledger_Name'];
+        Item_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Remark']=item['Remark'];
+        Item_list[index]['Seq_No']=item['Seq_No'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['New_Expense_ID']!=null){
+        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(item);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
   }
 
 }
