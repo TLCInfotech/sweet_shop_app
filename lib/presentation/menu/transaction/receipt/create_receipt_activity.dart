@@ -249,8 +249,6 @@ bool isLoaderShow=false;
 
   }
 
-
-
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return Container(
       height: parentHeight*.6,

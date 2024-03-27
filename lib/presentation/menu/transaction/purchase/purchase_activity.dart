@@ -76,76 +76,83 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
 
-              backgroundColor: Colors.white,
-              title:  Center(
-                child: Text(
-                  ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
-                  style: appbar_text_style,),
+                  backgroundColor: Colors.white,
+                  title:  Center(
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+                      style: appbar_text_style,),
+                  ),
+                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
+                ),
               ),
-              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    CreatePurchaseInvoice(
+                      dateNew:CommonWidget.getDateLayout(invoiceDate),
+                      Invoice_No: "",
+                      mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
+                    )));
+              }),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    saleInvoice_list.isNotEmpty?getTotalCountAndAmount()
+                        :Container(),
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_purchase_list_layout()
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: saleInvoice_list.isEmpty && isApiCall  ? true : false,
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+            ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                CreatePurchaseInvoice(
-                  dateNew:CommonWidget.getDateLayout(invoiceDate),
-                  Invoice_No: "",
-                  mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
-                )));
-          }),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getPurchaseDateLayout(),
-                const SizedBox(
-                  height: 10,
-                ),
-                getTotalCountAndAmount(),
-                const SizedBox(
-                  height: .5,
-                ),
-                get_purchase_list_layout()
-              ],
-            ),
-          ),
-          // Visibility(
-          //     visible: purc.isEmpty && isApiCall  ? true : false,
-          //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
-        ],
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
   /*widget for no data*/
@@ -356,7 +363,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -432,7 +439,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().getSaleInvoice+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getPurchaseInvoice+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {

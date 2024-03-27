@@ -111,68 +111,74 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
 
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: Color(0xFFfffff5),
-        // borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.all(16.0),
+          decoration: const BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Color(0xFFfffff5),
+            // borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Scaffold(
+            backgroundColor: Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
 
-                backgroundColor: Colors.white,
-                title: Text(
-                  ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
-                  style: appbar_text_style,),
+                    backgroundColor: Colors.white,
+                    title: Text(
+                      ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                height: SizeConfig.safeUsedHeight * .12,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -193,7 +199,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              Text("Round off: $roundoff",style: item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
@@ -246,6 +252,42 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
 
 
+  var roundoff="0.00";
+
+
+ /* calculateRoundOffAmt()async{
+    var amt = double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)).toStringAsFixed(3);
+
+    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
+      setState(() {
+        roundoff="0.00";
+      });
+    }
+    else {
+      if (double.parse(amt) < 0.50) {
+        print("Here");
+        var total=double.parse(TotalAmount).floorToDouble();
+        setState(() {
+          TotalAmount=total.toString();
+        });
+        setState(() {
+          roundoff=   "0.8";//(-(double.parse(amt))).toString();
+        });
+      }
+      else {
+        var amt1 =await  1- (double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
+        print("Rounsj $amt1");
+        var total=double.parse(TotalAmount).ceilToDouble();
+        setState(() {
+          roundoff=((( amt1).ceilToDouble())).toString();
+          TotalAmount=total.toString();
+        });
+        print("Here1");
+      }
+
+    }
+
+  }*/
 
   double calculateRoundOffAmt(){
     print(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)));

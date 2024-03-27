@@ -190,7 +190,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             ),
           ),
         ),
-       // Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+       Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
   }
@@ -214,7 +214,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
               Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
           ),
         ):Container(),
@@ -272,18 +272,25 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       return 0.00;
     }
     else {
-      var amt = (1 - double.parse(
-          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
-      print(amt);
+      var amt = (1 - double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
+      print("mvmnvmfnvfmv   $amt");
       if (amt == 0.00) {
         return 0.00;
       }
       if (amt < 0.50) {
-        print((-1 * amt).toStringAsFixed(2));
+        print("godddddddddd ${(-1 * amt).toStringAsFixed(2)}");
+        var totalList=double.parse(TotalAmount).floorToDouble();
+        setState(() {
+          TotalAmount=totalList.toString();
+        });
         return amt;
       }
       else {
         print((amt).toStringAsFixed(2));
+        var totalList=double.parse(TotalAmount).ceilToDouble();
+        setState(() {
+          TotalAmount=totalList.toString();
+        });
         return (-1 * amt);
       }
     }
@@ -772,23 +779,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 }
 
               });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
-
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              print("Here2=> $e");
-
+                    }, onException: (e) {
+                  print("Here2=> $e");
               setState(() {
                 isLoaderShow=false;
               });
@@ -803,7 +801,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 isLoaderShow=false;
               });
               CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
             });
       });
     }
@@ -823,8 +820,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     String baseurl=await AppPreferences.getDomainLink();
     String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
     double roundOffAmtInt = double.parse(roundOffAmt);
-    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+ double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
     print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -833,10 +829,10 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            saleLedger:selectedLedgerId ,
+            purchaseLedger:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             companyID: companyId ,
-            voucherName: "Sale",
+            voucherName: "Purchase",
             roundOff:roundOffAmtInt ,
             totalAmount:TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
@@ -907,11 +903,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            saleLedger:selectedLedgerId ,
+            purchaseLedger:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             invoiceNo:widget.Invoice_No ,
             companyID: companyId ,
-            voucherName: "Sale",
+            voucherName: "Purchase",
             roundOff:roundOffAmtInt,
             totalAmount:TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
