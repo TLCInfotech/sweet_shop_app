@@ -20,12 +20,13 @@ import '../../../../data/domain/transaction/payment_reciept_contra_journal/payme
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import 'add_edit_ledger_for_payment.dart';
 
 class CreatePayment extends StatefulWidget {
   final CreatePaymentInterface mListener;
   final String dateNew;
-  final String voucherNo;
+  final  voucherNo;
 
   const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
   @override
@@ -77,8 +78,9 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
-    if(widget.voucherNo!=""){
+    if(widget.voucherNo!=null){
       getExpInvoice(1);
+      voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
 
   }
@@ -225,7 +227,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   }
 
 /* Widget for payment info layout*/
-  Container PaymentInfo() {
+  Widget PaymentInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
@@ -233,16 +235,28 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
-              child: getReceiptDateLayout()),
+          widget.voucherNo==null? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                // width:(SizeConfig.screenWidth),
+                  child: getReceiptDateLayout()),
 
-          SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              // SizedBox(width: 5,),
+              // Expanded(
+              //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
+          ):Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              getReceiptDateLayout(),
+              getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+            ],
+          ),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
       ),
     );
@@ -402,8 +416,9 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   /* Widget to receipt dateLayout */
   Widget getReceiptDateLayout(){
     return GetDateLayout(
-
+        comeFor: widget.voucherNo==null?"newOne":"",
         titleIndicator: false,
+        parentWidth:widget.voucherNo!=null? (SizeConfig.screenWidth ):null,
         title:   ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
@@ -414,6 +429,33 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     );
   }
 
+  final voucherNoController = TextEditingController();
+  final _voucherNoFocus = FocusNode();
+  /* Widget for voucher no text from field layout */
+  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      controller: voucherNoController,
+      focuscontroller: _voucherNoFocus,
+      focusnext: _voucherNoFocus,
+      title: "",
+      callbackOnchage: (value) {
+        setState(() {
+          voucherNoController.text = value;
+        });
+      },
+      readOnly: false,
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
+        }
+        return null;
+      },
+      parentWidth: (SizeConfig.screenWidth ),
+    );
+  }
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  GetBankCashLedger(
@@ -460,7 +502,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
               });
             }
             print(widget.voucherNo);
-            if(widget.voucherNo=="") {
+            if(widget.voucherNo==null) {
               print("#######");
               callPostBankLedgerPayment();
             }
@@ -704,7 +746,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -778,7 +820,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -814,5 +856,5 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 }
 
 abstract class CreatePaymentInterface {
-  backToList();
+  backToList(DateTime updateDate);
 }

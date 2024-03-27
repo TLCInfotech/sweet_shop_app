@@ -38,11 +38,11 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
+      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          widget.title==""?Container():  Text(
             widget.title,
             style: item_heading_textStyle,
           ),

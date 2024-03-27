@@ -134,52 +134,58 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*0.7,
-              decoration: const BoxDecoration(
-                color: Color(0xFFfffff5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child:  Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("add_ledger")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*0.7,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFfffff5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight*.08,
+                        child:  Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("add_ledger")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
 
-                  getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
 
-                  getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+              ),        ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          ),        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -335,8 +341,8 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             var item={};
             if(widget.editproduct!=null){
               item = {
-                "Date":widget.newdate,
-                "New_Date":widget.newdate,
+                // "Date":widget.newdate,
+                // "New_Date":widget.newdate,
                 "New_Ledger_ID": selectedBankLedgerID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_Name": _textController.text,
@@ -348,7 +354,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             }
             else {
               item = {
-                "Date":widget.newdate,
+               // "Date":widget.newdate,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
                 "Ledger_Name": _textController.text,
                 "Ledger_ID": selectedBankLedgerID,

@@ -18,11 +18,13 @@ import '../dialog/franchisee_dialog.dart';
 
 class GetDateLayout extends StatefulWidget{
   final title;
+  final comeFor;
   final applicablefrom;
+  final parentWidth;
   final Function(DateTime?) callback;
   final titleIndicator;
 
-  GetDateLayout({required this.title, required this.callback, required this.applicablefrom,   this.titleIndicator});
+  GetDateLayout({required this.title, required this.callback, required this.applicablefrom,   this.titleIndicator,  this.parentWidth, this.comeFor});
 
   @override
   State<GetDateLayout> createState() => _GetDateLayoutState();
@@ -44,6 +46,7 @@ class _GetDateLayoutState extends State<GetDateLayout> {
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
             child: Container(
+              width:  widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
               height: (SizeConfig.screenHeight) * .055,
               alignment: Alignment.center,
               decoration: BoxDecoration(
@@ -60,14 +63,19 @@ class _GetDateLayoutState extends State<GetDateLayout> {
               child:  GestureDetector(
                 onTap: () async{
                   FocusScope.of(context).requestFocus(FocusNode());
-                  if (Platform.isIOS) {
-                    var date= await CommonWidget.startDate(context,widget.applicablefrom);
-                     widget.callback(date);
-                    // startDateIOS(context);
-                  } else if (Platform.isAndroid) {
-                    var date= await CommonWidget.startDate(context,widget.applicablefrom) ;
-                    widget.callback(date);
+                  if(widget.comeFor!="newOne"){
+                    if (Platform.isIOS) {
+                      var date= await CommonWidget.startDate(context,widget.applicablefrom);
+                      widget.callback(date);
+                      // startDateIOS(context);
+                    } else if (Platform.isAndroid) {
+                      var date= await CommonWidget.startDate(context,widget.applicablefrom) ;
+                      widget.callback(date);
+                    }
+                  }else{
+                    print("Voucher Number blank???????");
                   }
+
                 },
                 child: Container(
                     height: 50,

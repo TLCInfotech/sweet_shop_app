@@ -171,7 +171,9 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
         callback: (date){
           setState(() {
             newDate=date!;
+            contraList=[];
           });
+          getContra(1);
         },
         applicablefrom: newDate
     );
@@ -496,8 +498,12 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+    setState(() {
+      contraList=[];
+      newDate=updateDate;
+    });
     getContra(1);
     Navigator.pop(context);
   }

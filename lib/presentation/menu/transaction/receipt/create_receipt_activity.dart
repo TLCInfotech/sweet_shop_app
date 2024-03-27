@@ -20,6 +20,7 @@ import '../../../../data/domain/transaction/payment_reciept_contra_journal/payme
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 
 
 class CreateReceipt extends StatefulWidget {
@@ -102,6 +103,7 @@ bool isLoaderShow=false;
     );
     if(widget.voucherNo!=null){
       getRecipt(1);
+      voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
     calculateTotalAmt();
   }
@@ -397,7 +399,7 @@ bool isLoaderShow=false;
 
 
 
-  Container ReceiptInfo() {
+  Widget ReceiptInfo() {
     return  Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
@@ -405,16 +407,28 @@ bool isLoaderShow=false;
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
-              child: getReceiptDateLayout()),
+          widget.voucherNo==null? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                // width:(SizeConfig.screenWidth),
+                  child: getReceiptDateLayout()),
 
-          SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              // SizedBox(width: 5,),
+              // Expanded(
+              //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
+          ):Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              getReceiptDateLayout(),
+              getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+            ],
+          ),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
       ),
     );
@@ -436,8 +450,9 @@ bool isLoaderShow=false;
   /* Widget to get add Invoice date Layout */
   Widget getReceiptDateLayout(){
     return  GetDateLayout(
-
+        comeFor: widget.voucherNo==null?"newOne":"",
         titleIndicator: false,
+        parentWidth:widget.voucherNo!=null? (SizeConfig.screenWidth ):null,
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
@@ -447,7 +462,33 @@ bool isLoaderShow=false;
         applicablefrom: invoiceDate
     );
   }
+  final voucherNoController = TextEditingController();
 
+  /* Widget for voucher no text from field layout */
+  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      controller: voucherNoController,
+      focuscontroller: _voucherNoFocus,
+      focusnext: _voucherNoFocus,
+      title: "",
+      callbackOnchage: (value) {
+        setState(() {
+          voucherNoController.text = value;
+        });
+      },
+      readOnly: false,
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
+        }
+        return null;
+      },
+      parentWidth: (SizeConfig.screenWidth ),
+    );
+  }
 
   String selectedbankCashLedger="";
   var selectedBankLedgerID=null;
@@ -777,7 +818,7 @@ print("newwwww   ${model.toJson()}");
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -852,7 +893,7 @@ print("newwwww   ${model.toJson()}");
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -888,5 +929,5 @@ print("newwwww   ${model.toJson()}");
 }
 
 abstract class CreateReceiptInterface {
-  backToList();
+  backToList(DateTime updateDate);
 }

@@ -99,7 +99,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                   mListener: this,
                   dateNew:   CommonWidget.getDateLayout(newDate),
-                  voucherNo: "",//DateFormat('dd-MM-yyyy').format(newDate),
+                  voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
           body: Stack(
@@ -161,8 +161,10 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            payment_list=[];
             newDate=date!;
           });
+          getPayment(1);
         },
         applicablefrom: newDate
     );
@@ -492,8 +494,13 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+    setState(() {
+      payment_list=[];
+      newDate=updateDate;
+      print("ijjrjje  $newDate");
+    });
     getPayment(1);
     Navigator.pop(context);
   }

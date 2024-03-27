@@ -103,7 +103,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                   mListener: this,
-                  voucherNo: "",
+                  voucherNo: null,
                   dateNew:     CommonWidget.getDateLayout(newDate),
                  // DateFormat('dd-MM-yyyy').format(newDate),
                 )));
@@ -491,8 +491,12 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+    setState(() {
+      expense_list=[];
+      newDate=updateDate;
+    });
     getExpense(1);
     Navigator.pop(context);
   }

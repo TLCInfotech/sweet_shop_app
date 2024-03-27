@@ -37,13 +37,14 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
 import 'add_edit_journal_voucher.dart';
 
 class CreateJournals extends StatefulWidget {
   final CreateJournalInterface mListener;
   final String dateNew;
-  final String voucherNo;
+  final  voucherNo;
 
   const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
   @override
@@ -98,8 +99,9 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
-    if(widget.voucherNo!=""){
+    if(widget.voucherNo!=null){
       getExpInvoice(1);
+      voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
 
   }
@@ -140,59 +142,65 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
 /* Widget for build context layout*/
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: const Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(0.0),
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: const Color(0xFFfffff5),
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Scaffold(
+            backgroundColor: const Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: AppBar(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
 
-                backgroundColor: Colors.white,
-                title:  Text(
-                 ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
-                  style: appbar_text_style,),
+                    backgroundColor: Colors.white,
+                    title:  Text(
+                     ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
+                      style: appbar_text_style,),
+                  ),
+                ),
               ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Container(
+                    decoration: const BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-
-                ),
-                height: SizeConfig.safeUsedHeight * .12,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -266,16 +274,18 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
+      child:     widget.voucherNo==null? Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
+     Expanded(
               // width:(SizeConfig.screenWidth),
               child: getReceiptDateLayout()),
-
-          // SizedBox(width: 5,),
-          // Expanded(
-          //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+ ],
+      ):Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          getReceiptDateLayout(),
+          getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
         ],
       ),
     );
@@ -436,8 +446,9 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   /* Widget to receipt dateLayout */
   Widget getReceiptDateLayout(){
     return GetDateLayout(
-
+        comeFor: widget.voucherNo==null?"newOne":"",
         titleIndicator: false,
+        parentWidth:widget.voucherNo!=null? (SizeConfig.screenWidth ):null,
         title:   ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
@@ -447,7 +458,33 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         applicablefrom: invoiceDate
     );
   }
-
+  final voucherNoController = TextEditingController();
+  final _voucherNoFocus = FocusNode();
+  /* Widget for voucher no text from field layout */
+  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      controller: voucherNoController,
+      focuscontroller: _voucherNoFocus,
+      focusnext: _voucherNoFocus,
+      title: "",
+      callbackOnchage: (value) {
+        setState(() {
+          voucherNoController.text = value;
+        });
+      },
+      readOnly: false,
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
+        }
+        return null;
+      },
+      parentWidth: (SizeConfig.screenWidth ),
+    );
+  }
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  GetBankCashLedger(
@@ -495,7 +532,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             }
             print(widget.voucherNo);
             if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()) {
-              if (widget.voucherNo == "") {
+              if (widget.voucherNo == null) {
                 print("#######");
                 callPostBankLedgerPayment();
               }
@@ -590,7 +627,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Ledger_list[index]['Date']=item['Date'];
+       // Ledger_list[index]['Date']=item['Date'];
         // Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
         Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
@@ -746,7 +783,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -817,7 +854,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -836,7 +873,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 isLoaderShow=false;
               });
               CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
             });
 
       }); }
@@ -855,5 +891,5 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 }
 
 abstract class CreateJournalInterface {
-  backToList();
+  backToList(DateTime date);
 }

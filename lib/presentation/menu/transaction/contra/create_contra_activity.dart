@@ -24,6 +24,7 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import 'add_edit_ledger_for_contra.dart';
 
 
@@ -158,7 +159,6 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
               children: [
                 Expanded(
                   child: Container(
-                    // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
                 Container(
@@ -360,20 +360,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                               });
                                               print(Inserted_list);
                                               await calculateTotalAmt();  }
-                                          })/*IconButton(
-                                        icon:  FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          Item_list.remove(Item_list[index]);
-                                          setState(() {
-                                            Item_list=Item_list;
-                                          });
-                                          await calculateTotalAmt();
-                                        },
-                                      )*/
+                                          })
                                   ),
                                 ],
                               )
@@ -409,18 +396,63 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
+      child: widget.voucherNo==null? Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
-              child: getReceiptDateLayout()),
-
-          const SizedBox(width: 5,),
           Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            // width:(SizeConfig.screenWidth),
+              child: getReceiptDateLayout()),
+        ],
+      ):Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          getReceiptDateLayout(),
+          getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
         ],
       ),
+    );
+  }
+
+  /* Widget to receipt dateLayout */
+  Widget getReceiptDateLayout(){
+    return GetDateLayout(
+        comeFor: widget.voucherNo==null?"newOne":"",
+        titleIndicator: false,
+        parentWidth:widget.voucherNo!=null? (SizeConfig.screenWidth ):null,
+        title:   ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            invoiceDate=date!;
+          });
+        },
+        applicablefrom: invoiceDate
+    );
+  }
+  final voucherNoController = TextEditingController();
+
+  /* Widget for voucher no text from field layout */
+  Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      controller: voucherNoController,
+      focuscontroller: _voucherNoFocus,
+      focusnext: _voucherNoFocus,
+      title: "",
+      callbackOnchage: (value) {
+        setState(() {
+          voucherNoController.text = value;
+        });
+      },
+      readOnly: false,
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
+        }
+        return null;
+      },
+      parentWidth: (SizeConfig.screenWidth ),
     );
   }
 
@@ -437,20 +469,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
   }
 
 
-  /* Widget to get add Invoice date Layout */
-  Widget getReceiptDateLayout(){
-    return  GetDateLayout(
 
-        titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("date")!,
-        callback: (date){
-          setState(() {
-            invoiceDate=date!;
-          });
-        },
-        applicablefrom: invoiceDate
-    );
-  }
 
 
   String selectedbankCashLedger="";
@@ -782,7 +801,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -856,7 +875,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -941,5 +960,5 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
 }
 
 abstract class CreateContraInterface {
-  backToList();
+  backToList(DateTime updateDate);
 }

@@ -490,8 +490,12 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+    setState(() {
+      recipt_list=[];
+      newDate=updateDate;
+    });
     getRecipt(1);
     Navigator.pop(context);
   }

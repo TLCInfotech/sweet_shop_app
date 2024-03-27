@@ -212,7 +212,6 @@ class _LogOutDialogState extends State<LogOutDialog> {
     String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName&Company_ID=$companyId');
-
     try {
       final response = await http.post(url,headers: {
         'Authorization': 'Bearer $tokenId',
@@ -225,12 +224,14 @@ class _LogOutDialogState extends State<LogOutDialog> {
         print('Logout successful');
       } else {
         // Logout failed, handle the error
+        AppPreferences.clearAppPreference();
+        CommonWidget.gotoLoginScreen(context);
         print('Logout failed with status code: ${response.statusCode}');
-        ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
-        apiResponse =
-            ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
-        CommonWidget.errorDialog(context, apiResponse.msg!);
-        print("@@@@@@@@@@@@@@@ ${apiResponse.msg}");
+        // ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
+        // apiResponse =
+        //     ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
+        // CommonWidget.errorDialog(context, apiResponse.msg!);
+        // print("@@@@@@@@@@@@@@@ ${apiResponse.msg}");
 
       }
     } catch (e) {

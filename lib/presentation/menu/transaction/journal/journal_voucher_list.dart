@@ -95,7 +95,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
               mListener: this,
               dateNew:   CommonWidget.getDateLayout(newDate),
-              voucherNo: "",//DateFormat('dd-MM-yyyy').format(newDate),
+              voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
       body: Container(
@@ -108,7 +108,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             const SizedBox(
               height: 10,
             ),
-            getTotalCountAndAmount(),
+            payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
             const SizedBox(
               height: .5,
             ),
@@ -127,9 +127,12 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
         callback: (date){
           setState(() {
             newDate=date!;
+            payment_list=[];
           });
+          getJournals(1);
         },
         applicablefrom: newDate
+
     );
   }
 
@@ -401,8 +404,12 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   }
 
   @override
-  backToList() {
+  backToList(DateTime date) {
     // TODO: implement backToList
+    setState(() {
+      payment_list=[];
+      newDate=date;
+    });
     getJournals(1);
     Navigator.pop(context);
   }
