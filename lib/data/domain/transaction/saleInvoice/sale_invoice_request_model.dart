@@ -4,6 +4,7 @@ class postSaleInvoiceRequestModel {
   String? vendorID;
   String? voucherName;
   String? saleLedger;
+  String? purchaseLedger;
   double? totalAmount;
   double? roundOff;
   String? remark;
@@ -22,6 +23,7 @@ class postSaleInvoiceRequestModel {
         this.vendorID,
         this.voucherName,
         this.saleLedger,
+        this.purchaseLedger,
         this.totalAmount,
         this.roundOff,
         this.remark,
@@ -40,6 +42,7 @@ class postSaleInvoiceRequestModel {
     vendorID = json['Vendor_ID'];
     voucherName = json['Voucher_Name'];
     saleLedger = json['Sale_Ledger'];
+    purchaseLedger=json['Purchase_Ledger'];
     totalAmount = json['Total_Amount'];
     roundOff = json['Round_Off'];
     remark = json['Remark'];
@@ -75,6 +78,7 @@ class postSaleInvoiceRequestModel {
     data['Vendor_ID'] = this.vendorID;
     data['Voucher_Name'] = this.voucherName;
     data['Sale_Ledger'] = this.saleLedger;
+    data['Purchase_Ledger']=this.purchaseLedger;
     data['Total_Amount'] = this.totalAmount;
     data['Round_Off'] = this.roundOff;
     data['Remark'] = this.remark;

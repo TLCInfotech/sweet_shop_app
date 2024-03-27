@@ -45,4 +45,6 @@ class ApiConstants {
   String getJournalVouchers="JournalVoucher";
   String getSaleInvoice="SaleInvoice";
   String getSaleInvoiceDetails="getSaleInvoiceDetails";
+  String getPurchaseInvoice="PurchaseInvoice";
+  String getPurchaseInvoiceDetails="getPurchaseInvoiceDetails";
 }
