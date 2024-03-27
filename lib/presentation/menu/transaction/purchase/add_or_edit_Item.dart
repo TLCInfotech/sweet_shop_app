@@ -7,16 +7,35 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:textfield_search/textfield_search.dart';
 
+import '../../../../core/app_preferance.dart';
+import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+
+class TestItem {
+  String label;
+  dynamic value;
+  dynamic unit;
+  dynamic rate;
+  TestItem({required this.label, this.value,this.unit,this.rate});
+
+  factory TestItem.fromJson(Map<String, dynamic> json) {
+    return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",rate:"${json['rate']}");
+  }
+}
 
 class AddOrEditItem extends StatefulWidget {
   final AddOrEditItemInterface mListener;
   final dynamic editproduct;
+  final date;
 
-  const AddOrEditItem({super.key, required this.mListener, required this.editproduct});
+  const AddOrEditItem({super.key, required this.mListener, required this.editproduct, required this.date});
 
   @override
   State<AddOrEditItem> createState() => _AddOrEditItemState();
@@ -52,26 +71,13 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   TextEditingController netRate = TextEditingController();
 
   TextEditingController netAmount = TextEditingController();
+  var selectedItemID =null;
+  var oldItemId=0;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
 
   FocusNode searchFocus = FocusNode() ;
-  //
-  // _onChangeHandler(value ) {
-  //   const duration = Duration(milliseconds:800); // set the duration that you want call search() after that.
-  //   if (searchOnStoppedTyping != null) {
-  //     setState(() => searchOnStoppedTyping.cancel()); // clear timer
-  //   }
-  //   setState(() => searchOnStoppedTyping =  Timer(duration, () => search(value)));
-  // }
-  //
-  // search(value) {
-  //   searchFocus.unfocus();
-  //   isApiCall = false;
-  //   page = 0;
-  //   isPagination = true;
-  //   callGetNoticeListingApi(page,value,true);
-  //   print('hello world from search . the value is $value');
-  // }
+
 
   @override
   void initState() {
@@ -83,24 +89,75 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['itemName'];
-        unit.text=widget.editproduct['unit'].toString();
-        quantity.text=widget.editproduct['quantity'].toString();
-        rate.text=widget.editproduct['rate'].toString();
-        amount.text=widget.editproduct['amount'].toString();
-        discount.text=widget.editproduct['discount']==null?"0":widget.editproduct['discount'].toString();
-        discountAmt.text=widget.editproduct['discountAmt'].toString();
-        taxableAmt.text=widget.editproduct['taxableAmt'].toString();
-        gst.text=widget.editproduct['gst'].toString();
-        gstAmount.text=widget.editproduct['gstAmt'].toString();
-        netRate.text=widget.editproduct['netRate'].toString();
-        netAmount.text=widget.editproduct['netAmt'].toString();
-
-
+        selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:null;
+        _textController.text=widget.editproduct['Item_Name'];
+        unit.text=widget.editproduct['Unit'].toString();
+        quantity.text=widget.editproduct['Quantity'].toString();
+        rate.text=widget.editproduct['Rate'].toString();
+        amount.text=widget.editproduct['Amount'].toString();
+        discount.text=widget.editproduct['Disc_Percent']==null?"0":widget.editproduct['Disc_Percent'].toString();
+        discountAmt.text=widget.editproduct['Disc_Amount'].toString();
+        taxableAmt.text=widget.editproduct['Taxable_Amount'].toString();
+        gst.text=widget.editproduct['CGST_Rate'].toString();
+        gstAmount.text=widget.editproduct['CGST_Amount'].toString();
+        netRate.text=widget.editproduct['Net_Rate'].toString();
+        netAmount.text=widget.editproduct['Net_Amount'].toString();
       });
       await calculateRates();
     }
   }
+  var itemsList = [];
+
+  fetchShows (searchstring) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
+    await AppPreferences.getDeviceId().then((deviceId) {
+      TokenRequestModel model = TokenRequestModel(
+        token: sessionToken,
+      );
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+          onSuccess:(data)async{
+            if(data!=null) {
+              var topShowsJson = (data) as List;
+              setState(() {
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+              });
+            }
+          }, onFailure: (error) {
+            CommonWidget.errorDialog(context, error);
+            return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
+          }, onException: (e) {
+            CommonWidget.errorDialog(context, e);
+            return [];
+
+          },sessionExpire: (e) {
+            CommonWidget.gotoLoginScreen(context);
+            return [];
+            // widget.mListener.loaderShow(false);
+          });
+
+    });
+  }
+
+  Future<List> fetchSimpleData(searchstring) async {
+    await Future.delayed(Duration(milliseconds: 0));
+    await fetchShows(searchstring) ;
+
+    List _list = <dynamic>[];
+    print(itemsList);
+    //  for (var ele in data) _list.add(ele['TestName'].toString());
+    for (var ele in itemsList) {
+      _list.add(new TestItem.fromJson(
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate']}));
+    }
+    return _list;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -134,18 +191,10 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                         ),
                       ),
                     ),
-                    getFieldTitleLayout(  ApplicationLocalizations.of(context)!.translate("item_name")!),
+                    getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("item_name")!),
                     getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                    getFieldTitleLayout(  ApplicationLocalizations.of(context)!.translate("quantity")!),
                     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    //     getUnitLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
-                    //   ],
-                    // ),
 
                     getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
@@ -169,40 +218,49 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       ),
     );
   }
-//franchisee name
+  //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Container(
-      height: parentHeight * .055,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        textInputAction: TextInputAction.done,
-        // autofillHints: const [AutofillHints.email],
-        keyboardType: TextInputType.text,
-        controller: _textController,
-        textAlignVertical: TextAlignVertical.center,
-        focusNode: searchFocus,
-        style: text_field_textStyle,
-        decoration: textfield_decoration.copyWith(
-          hintText: "Item Name",
-          prefixIcon: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+        height: parentHeight * .055,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: CommonColor.WHITE_COLOR,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
         ),
-        // onChanged: _onChangeHandler,
-      ),
+        child: TextFieldSearch(
+            label: 'Item',
+            controller: _textController,
+            decoration: textfield_decoration.copyWith(
+              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+              prefixIcon: Container(
+                  width: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+            ),
+            textStyle: item_regular_textStyle,
+            getSelectedValue: (v) {
+              setState(() {
+                selectedItemID = v.value;
+                unit.text=v.unit;
+                rate.text=v.rate;
+                itemsList = [];
+              });
+              calculateRates();
+            },
+            future: () {
+              if (_textController.text != "")
+                return fetchSimpleData(
+                    _textController.text.trim());
+            })
+
     );
   }
 
@@ -219,7 +277,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
-      title:  ApplicationLocalizations.of(context)!.translate("quantity")!,
+      title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
           quantity.text = value;
@@ -280,7 +338,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         children: [
           GetDisableTextFormField(
               parentWidth: (parentWidth),
-              title:  ApplicationLocalizations.of(context)!.translate("rate")!,
+              title: ApplicationLocalizations.of(context)!.translate("rate")!,
               controller: rate
           ),
           GetDisableTextFormField(
@@ -308,7 +366,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
           controller: discount,
           focuscontroller: null,
           focusnext: null,
-          title:  ApplicationLocalizations.of(context)!.translate("disc_percent")!,
+          title: ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value)async {
             setState(() {
               discount.text = value;
@@ -333,7 +391,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   /* widget for product gst layout */
   Widget getTaxableAmtLayout(double parentHeight, double parentWidth) {
     return  GetDisableTextFormField(
-        title:   ApplicationLocalizations.of(context)!.translate("taxable_amount")!,
+        title:  ApplicationLocalizations.of(context)!.translate("taxable_amount")!,
         controller: taxableAmt
     );
   }
@@ -354,7 +412,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
           controller: gst,
           focuscontroller: null,
           focusnext: null,
-          title:  ApplicationLocalizations.of(context)!.translate("gst_percent")!,
+          title: ApplicationLocalizations.of(context)!.translate("gst_percent")!,
           callbackOnchage: (value)async {
             setState(() {
               gst.text = value;
@@ -368,7 +426,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title:  ApplicationLocalizations.of(context)!.translate("gst_amount")!,
+            title: ApplicationLocalizations.of(context)!.translate("gst_amount")!,
             controller: gstAmount
         ),
 
@@ -383,12 +441,12 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       children: [
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title:  ApplicationLocalizations.of(context)!.translate("net_rate")!,
+            title: ApplicationLocalizations.of(context)!.translate("net_rate")!,
             controller: netRate
         ),
         GetDisableTextFormField(
             parentWidth: (parentWidth),
-            title:  ApplicationLocalizations.of(context)!.translate("net_amount")!,
+            title: ApplicationLocalizations.of(context)!.translate("net_amount")!,
             controller: netAmount
         ),
       ],
@@ -444,21 +502,44 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         ),
         GestureDetector(
           onTap: () {
-            var item={
-              "id":widget.editproduct!=null?widget.editproduct['id']:"",
-              "itemName":_textController.text,
-              "quantity":int.parse(quantity.text),
-              "unit":"kg",
-              "rate":double.parse(rate.text),
-              "amt":double.parse(amount.text),
-              "discount":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
-              "discountAmt":double.parse(discountAmt.text),
-              "taxableAmt":double.parse(taxableAmt.text),
-              "gst":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
-              "gstAmt":double.parse(gstAmount.text),
-              "netRate":double.parse(netRate.text),
-              "netAmount":double.parse(netAmount.text)
-            };
+              var item={};
+            if(widget.editproduct!=null){
+              item = {
+                "New_Item_ID": selectedItemID,
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
+                "Item_Name":_textController.text,
+                "Quantity":int.parse(quantity.text),
+                "Unit":"kg",
+                "Rate":double.parse(rate.text),
+                "Amount":double.parse(amount.text),
+                "Disc_Percent":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
+                "Disc_Amount":double.parse(discountAmt.text),
+                "Taxable_Amount":double.parse(taxableAmt.text),
+                "CGST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
+                "CGST_Amount":double.parse(gstAmount.text),
+                "Net_Rate":double.parse(netRate.text),
+                "Net_Amount":double.parse(netAmount.text),
+              };
+            }
+            else {
+              item={
+                "Item_ID":selectedItemID,
+                "Item_Name":_textController.text,
+                "Quantity":int.parse(quantity.text),
+                "Unit":"kg",
+                "Rate":double.parse(rate.text),
+                "Amount":double.parse(amount.text),
+                "Disc_Percent":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
+                "Disc_Amount":double.parse(discountAmt.text),
+                "Taxable_Amount":double.parse(taxableAmt.text),
+                "CGST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
+                "CGST_Amount":double.parse(gstAmount.text),
+                "Net_Rate":double.parse(netRate.text),
+                "Net_Amount":double.parse(netAmount.text),
+                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+              };
+            }
             if(widget.mListener!=null){
 
               widget.mListener.AddOrEditItemDetail(item);
@@ -551,6 +632,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     }
 
   }
+
 
 
 }

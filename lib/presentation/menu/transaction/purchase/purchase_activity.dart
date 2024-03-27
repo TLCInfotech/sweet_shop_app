@@ -15,6 +15,7 @@ import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
@@ -29,107 +30,122 @@ class PurchaseActivity extends StatefulWidget {
 
 class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseInvoiceInterface {
 
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   bool isLoaderShow=false;
+
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-  List<dynamic> purchaseList=[];
+
+  List<dynamic> saleInvoice_list=[];
   int page = 1;
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
+  bool isApiCall=false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
-    getPurchase(page);
+    gerSaleInvoice(page);
   }
-  bool isApiCall=false;
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        getPurchase(page);
+        gerSaleInvoice(page);
       }
     }
   }
+  setDataToList(List<dynamic> _list) {
+    if (saleInvoice_list.isNotEmpty) saleInvoice_list.clear();
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Scaffold(
-          backgroundColor: const Color(0xFFfffff5),
-          appBar: PreferredSize(
-            preferredSize: AppBar().preferredSize,
-            child: SafeArea(
-              child:  Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
-                color: Colors.transparent,
-                // color: Colors.red,
-                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-                child: AppBar(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  ),
-
-                  backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
-                      style: appbar_text_style,),
-                  ),
-                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
-                ),
+    return Scaffold(
+      backgroundColor: const Color(0xFFfffff5),
+      appBar: PreferredSize(
+        preferredSize: AppBar().preferredSize,
+        child: SafeArea(
+          child:  Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25)
+            ),
+            color: Colors.transparent,
+            // color: Colors.red,
+            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+            child: AppBar(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)
               ),
+
+              backgroundColor: Colors.white,
+              title:  Center(
+                child: Text(
+                  ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+                  style: appbar_text_style,),
+              ),
+              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: const Color(0xFFFBE404),
-              child: const Icon(
-                Icons.add,
-                size: 30,
-                color: Colors.black87,
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    CreatePurchaseInvoice(
-                      dateNew:CommonWidget.getDateLayout(newDate),
-                      mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
-                )));
-              }),
-          body: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getPurchaseDateLayout(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getTotalCountAndAmount(),
-                    const SizedBox(
-                      height: .5,
-                    ),
-                    get_purchase_list_layout()
-                  ],
-                ),
-              ),
-              Visibility(
-                  visible: purchaseList.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
-            ],
-          ),
         ),
-        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
-      ],
+      ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xFFFBE404),
+          child: const Icon(
+            Icons.add,
+            size: 30,
+            color: Colors.black87,
+          ),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                CreatePurchaseInvoice(
+                  dateNew:CommonWidget.getDateLayout(invoiceDate),
+                  Invoice_No: "",
+                  mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
+                )));
+          }),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getPurchaseDateLayout(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getTotalCountAndAmount(),
+                const SizedBox(
+                  height: .5,
+                ),
+                get_purchase_list_layout()
+              ],
+            ),
+          ),
+          // Visibility(
+          //     visible: purc.isEmpty && isApiCall  ? true : false,
+          //     child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+        ],
+      ),
     );
   }
   /*widget for no data*/
@@ -150,36 +166,22 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       ],
     );
   }
-  /* Widget to get add purchase date Layout */
-  Widget getPurchaseDateLayout(){
-    return  GetDateLayout(
-        titleIndicator: false,
-        title:ApplicationLocalizations.of(context)!.translate("date")!,
-        callback: (date){
-          setState(() {
-            newDate=date!;
-          });
-        },
-        applicablefrom: newDate
-    );
-  }
 
-  /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
-      margin: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
           // width: SizeConfig.halfscreenWidth,
           width: SizeConfig.screenWidth*0.9,
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.green,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: const Offset(0, 1),
+                  offset: Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -189,31 +191,57 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("${purchaseList.length} Invoices", style: subHeading_withBold,),
+              Text("${saleInvoice_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),
     );
   }
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in saleInvoice_list ){
+      total=total+item['Total_Amount'];
+      print(item['Total_Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
 
-  /* widget for title layout */
+  }
+
+  /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 5, bottom: 5,),
       child: Text(
-        title,
+        "$title",
         style: page_heading_textStyle,
       ),
     );
   }
 
-  /* Widget to get purchase list Layout */
+
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GetDateLayout(
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            invoiceDate=date!;
+          });
+        },
+        applicablefrom: invoiceDate
+    );
+  }
+
   Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: purchaseList.length,
+          itemCount: saleInvoice_list.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -222,72 +250,83 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child:  const FaIcon(
-                                FontAwesomeIcons.moneyCheck,
-                                color: Colors.white,
-                              )
-                         ),
-                        ),
-                        Expanded(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
-                                      const SizedBox(height: 5,),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          const Expanded(child: Text("Invoice No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5,),
-                                      Row(
+                  delay: Duration(microseconds: 1500),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          CreatePurchaseInvoice(
+                            dateNew:CommonWidget.getDateLayout(invoiceDate),
+                            Invoice_No: "",
+                            mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
+                          )));
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(5)
+                                ),
+                                child:  const FaIcon(
+                                  FontAwesomeIcons.moneyCheck,
+                                  color: Colors.white,
+                                )
+                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                            ),
+                          ),
+                          Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                          const SizedBox(width: 10,),
-                                          Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          Text("${saleInvoice_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              SizedBox(width: 10,),
+                                              Expanded(child: Text("Invoice No. - ${saleInvoice_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              SizedBox(width: 10,),
+                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
+
                                         ],
                                       ),
-
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child:IconButton(
-                                      icon:  const FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 18,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: (){},
-                                    ) )
-                              ],
-                            )
+                                  DeleteDialogLayout(
+                                    callback: (response ) async{
+                                      if(response=="yes"){
+                                        print("##############$response");
+                                        await   callDeleteSaleInvoice(saleInvoice_list[index]['Invoice_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
+                                      }
+                                    },
+                                  )
+                                ],
+                              )
 
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -295,7 +334,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
+            return SizedBox(
               height: 5,
             );
           },
@@ -303,20 +342,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   }
 
 
-  String TotalAmount="0.00";
-  calculateTotalAmt()async{
-    var total=0.00;
-    for(var item  in purchaseList ){
-      total=total+item['Amount'];
-      print(item['Amount']);
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
-
-  }
-
-  getPurchase(int page) async {
+  gerSaleInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -330,7 +356,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Sale&pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -351,10 +377,11 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   } else {
                     setMoreDataToList(_arrList);
                   }
+
+                  calculateTotalAmt();
                 }else{
                   isApiCall=true;
                 }
-                calculateTotalAmt();
               });
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
@@ -389,25 +416,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       CommonWidget.noInternetDialogNew(context);
     }
   }
-  setDataToList(List<dynamic> _list) {
-    if (purchaseList.isNotEmpty) purchaseList.clear();
-    if (mounted) {
-      setState(() {
-        purchaseList.addAll(_list);
-      });
-    }
-  }
 
-  setMoreDataToList(List<dynamic> _list) {
-    if (mounted) {
-      setState(() {
-        purchaseList.addAll(_list);
-      });
-    }
-  }
-
-
-  callDeletePurchase(String removeId,int index) async {
+  callDeleteSaleInvoice(String removeId,String seqNo,int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -418,8 +428,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           isLoaderShow=true;
         });
         var model= {
-          "Voucher_No": removeId,
-          "Voucher_Name": "Sale",
+          "Invoice_No": removeId,
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
@@ -428,16 +437,24 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
-                purchaseList.removeAt(index);
-                calculateTotalAmt();
+                saleInvoice_list.removeAt(index);
               });
+              if(saleInvoice_list.length==0){
+                setState(() {
+                  TotalAmount="0.00";
+                });
+              }
+              calculateTotalAmt();
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
-        }, onException: (e) {
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
               setState(() {
                 isLoaderShow=false;
               });
@@ -464,11 +481,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   @override
   backToList() {
     // TODO: implement backToList
-    getPurchase(1);
+    gerSaleInvoice(1);
     Navigator.pop(context);
   }
-
-
-
-
 }

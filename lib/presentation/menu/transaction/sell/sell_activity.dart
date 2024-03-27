@@ -432,8 +432,13 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
               setState(() {
                 isLoaderShow=false;
                 saleInvoice_list.removeAt(index);
-
               });
+              if(saleInvoice_list.length==0){
+                setState(() {
+                  TotalAmount="0.00";
+                });
+              }
+              calculateTotalAmt();
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
