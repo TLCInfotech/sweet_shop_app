@@ -43,4 +43,6 @@ class ApiConstants {
   String getBankCashLedger="BankCashLedger";
   String getLedgerWithoutBankCash="LedgerWithoutBankCash";
   String getJournalVouchers="JournalVoucher";
+  String getSaleInvoice="SaleInvoice";
+  String getSaleInvoiceDetails="getSaleInvoiceDetails";
 }
