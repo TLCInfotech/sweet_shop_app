@@ -4,13 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
+import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
+import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
@@ -19,8 +28,9 @@ import '../../../dialog/franchisee_dialog.dart';
 class CreateSellInvoice extends StatefulWidget {
   final CreateSellInvoiceInterface mListener;
   final String dateNew;
-
-  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener});
+  final String Invoice_No;
+  
+  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
   @override
   _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
@@ -35,46 +45,30 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  final InvoiceNoController = TextEditingController();
+  final _voucherNoFocus = FocusNode();
+  final VoucherNoController = TextEditingController();
 
 
   String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+
 
   String TotalAmount="0.00";
+//  List<dynamic> Item_list=[];
+  List<dynamic> Item_list=[];
 
-  List<dynamic> Item_list=[
-    {
-      "id":1,
-      "itemName":"Gulakand Burfi ",
-      "quantity":10,
-      "unit":"Kg",
-      "rate":200,
-      "amt":2000.00,
-      "discount":5,
-      "discountAmt":100.00,
-      "taxableAmt":1900.00,
-      "gst":18,
-      "gstAmt":342.00,
-      "netRate":242.00,
-      "netAmount":2242.00
-    },
-    {
-      "id":2,
-      "itemName":" Mango Burfi",
-      "quantity":25,
-      "unit":"Kg",
-      "rate":500,
-      "amt":12500.00,
-      "discount":10,
-      "discountAmt":1250.00,
-      "taxableAmt":11250.00,
-      "gst":18,
-      "gstAmt":2025.00,
-      "netRate":531.00,
-      "netAmount":13275.00
-    },
-  ];
+  List<dynamic> Updated_list=[];
 
+  List<dynamic> Inserted_list=[];
+
+  List<dynamic> Deleted_list=[];
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+
+
+  bool isLoaderShow=false;
+
+  var editedItemIndex=null;
 
   @override
   void initState() {
@@ -85,6 +79,22 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    if(widget.Invoice_No!=""){
+      gerSaleInvoice(1);
+    }
+
+  }
+
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in Item_list ){
+      total=total+item['Amount'];
+      print(item['Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
   }
 
   @override
@@ -188,6 +198,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 disableColor = true;
               });
             }
+            print(widget.Invoice_No);
+            if(widget.Invoice_No=="") {
+              print("#######");
+              callPostSaleInvoice();
+            }
+            // else {
+            //   print("dfsdf");
+            //   updatecallPostSaleInvoice();
+            // }
           },
           onDoubleTap: () {},
           child: Container(
@@ -325,6 +344,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
+                  
+                    setState(() {
+                      editedItemIndex=index;
+                    });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -358,7 +381,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Item_list[index]['itemName']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
                                           Row(
@@ -366,12 +389,12 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                             children: [
                                               Container(
                                                   alignment: Alignment.centerRight,
-                                                  child: Text("${(Item_list[index]['quantity'])}.00${Item_list[index]['unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                  child: Text("${(Item_list[index]['Quantity'])}.00${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
 
                                               Container(
                                                 alignment: Alignment.centerLeft,
                                                 child:
-                                                Text(CommonWidget.getCurrencyFormat(Item_list[index]['netAmount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                               ),
                                             ],
                                           ),
@@ -384,20 +407,35 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
-                                      child:IconButton(
-                                        icon:  FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          Item_list.remove(Item_list[index]);
-                                          setState(() {
-                                            Item_list=Item_list;
-                                          });
-                                          await calculateTotalAmt();
-                                        },
-                                      )
+                                      child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              if(Item_list[index]['Seq_No']!=null){
+                                                var deletedItem=   {
+                                                  "Expense_ID": Item_list[index]['Expense_ID'],
+                                                  "Seq_No": Item_list[index]['Seq_No'],
+                                                };
+                                                Deleted_list.add(deletedItem);
+                                                setState(() {
+                                                  Deleted_list=Deleted_list;
+                                                });
+                                              }
+
+                                              var contain = Inserted_list.indexWhere((element) => element['Expense_ID']== Item_list[index]['Expense_ID']);
+                                              print(contain);
+                                              if(contain>=0){
+                                                print("REMOVE");
+                                                Inserted_list.remove(Inserted_list[contain]);
+                                              }
+                                              Item_list.remove(Item_list[index]);
+                                              setState(() {
+                                                Item_list=Item_list;
+                                                Inserted_list=Inserted_list;
+                                              });
+                                              print(Inserted_list);
+                                              await calculateTotalAmt();  }
+                                          })
                                   ),
                                 ],
                               )
@@ -465,6 +503,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               child: AddOrEditItemSell(
                 mListener: this,
                 editproduct:product,
+                date: invoiceDate.toString(),
               ),
             ),
           );
@@ -526,7 +565,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           callback: (date){
             setState(() {
               invoiceDate=date!;
+              Item_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+              Inserted_list=[];
             });
+
+            if(widget.Invoice_No!=""){
+              gerSaleInvoice(1);
+            }
           },
           applicablefrom: invoiceDate
       );
@@ -541,6 +588,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           callback: (name,id){
             setState(() {
               selectedFranchiseeName=name!;
+              selectedFranchiseeId=id!;
+              // Item_list=[];
+              // Updated_list=[];
+              // Deleted_list=[];
+              // Inserted_list=[];
             });
           },
           franchiseeName: selectedFranchiseeName);
@@ -549,52 +601,294 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   @override
   AddOrEditItemSellDetail(item)async {
-    // TODO: implement AddOrEditItemSellDetail
-    var itemLlist=Item_list;
-    if(item['id']!=""){
-      var index=Item_list.indexWhere((element) => item['id']==element['id']);
+    // TODO: implement AddOrEditItemDetail
+      var itemLlist=Item_list;
+
+      if(editedItemIndex!=null){
+        var index=editedItemIndex;
       setState(() {
-        Item_list[index]['itemName']=item['itemName'];
-        Item_list[index]['quantity']=item['quantity'];
-        Item_list[index]['unit']=item['unit'];
-        Item_list[index]['rate']=item['rate'];
-        Item_list[index]['amt']=item['amt'];
-        Item_list[index]['discount']=item['discount'];
-        Item_list[index]['discountAmt']=item['discountAmt'];
-        Item_list[index]['taxableAmt']=item['taxableAmt'];
-        Item_list[index]['gst']=item['gst'];
-        Item_list[index]['gstAmt']=item['gstAmt'];
-        Item_list[index]['netRate']=item['netRate'];
-        Item_list[index]['netAmount']=item['netAmount'];
+        Item_list[index]['Item_Name']=item['Item_Name'];
+        Item_list[index]['Quantity']=item['Quantity'];
+        Item_list[index]['Unit']=item['Unit'];
+        Item_list[index]['Rate']=item['Rate'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
+        Item_list[index]['Disc_Amount']=item['Disc_Amount'];
+        Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
+        Item_list[index]['CGST_Rate']=item['CGST_Rate'];
+        Item_list[index]['CGST_Amount']=item['CGST_Amount'];
+        Item_list[index]['Net_Rate']=item['Net_Rate'];
+        Item_list[index]['Net_Amount']=item['Net_Amount'];
       });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['New_Item_ID']!=null){
+        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(Item_list[index]);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
     }
-    else {
-      if (itemLlist.contains(item)) {
-        print("Already Exist");
-      }
-      else {
-        itemLlist.add(item);
-      }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
       setState(() {
         Item_list = itemLlist;
       });
     }
-    await calculateTotalAmt();
-  }
-
-  calculateTotalAmt()async{
-    print("Here");
-    var total=0.00;
-    for(var item  in Item_list ){
-      total=total+item['netAmount'];
-      print(item['netAmount']);
-    }
     setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
+      editedItemIndex=null;
     });
+    await calculateTotalAmt();
+    await calculateRoundOffAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
 
   }
+
+
+  gerSaleInvoice(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&pageNumber=$page&pageSize=10";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=(data['expenseDetails']);
+
+                  setState(() {
+                    Item_list=_arrList;
+                    selectedFranchiseeName=data['voucherDetails']['Ledger_Name'];
+                    selectedFranchiseeId=data['voucherDetails']['Ledger_ID'].toString();
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  callPostSaleInvoice() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
+    double roundOffAmtInt = double.parse(roundOffAmt);
+    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
+          saleLedger:selectedFranchiseeId ,
+          vendorID:selectedFranchiseeId ,
+          companyID: companyId ,
+          voucherName: "Sale",
+          roundOff:roundOffAmtInt ,
+          totalAmount:TotalAmountInt,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          creator: creatorName,
+          creatorMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          remark: "Inserted"
+        );
+
+        String apiUrl =baseurl + ApiConstants().getSaleInvoice;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  updatecallPostSaleInvoice() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
+    double roundOffAmtInt = double.parse(roundOffAmt);
+    // double updatedamt= await calculateTotalInsertAmt();
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
+          saleLedger:selectedFranchiseeId ,
+          vendorID:selectedFranchiseeId ,
+          invoiceNo:widget.Invoice_No ,
+          companyID: companyId ,
+          voucherName: "Sale",
+          roundOff:roundOffAmtInt,
+          totalAmount:TotalAmountInt,
+          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          dELETE: Deleted_list.toList(),
+          uPDATE: Updated_list.toList(),
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().getSaleInvoice;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
 }
 
 abstract class CreateSellInvoiceInterface {
+  backToList();
 }
