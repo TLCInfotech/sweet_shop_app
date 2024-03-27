@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dialog/ledger_dialog.dart';
 
 import '../../core/colors.dart';
 import '../../core/common.dart';
@@ -16,19 +17,19 @@ import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../dialog/franchisee_dialog.dart';
 
-class GetFranchiseeLayout extends StatefulWidget{
-   final title;
-  final franchiseeName;
+class GetLedgerLayout extends StatefulWidget{
+  final title;
+  final ledgerName;
   final Function(String?,String?) callback;
   final titleIndicator;
 
-  GetFranchiseeLayout({required this.title, required this.callback, required this.franchiseeName,   this.titleIndicator});
+  GetLedgerLayout({required this.title, required this.callback, required this.ledgerName,this.titleIndicator});
 
   @override
-  State<GetFranchiseeLayout> createState() => _SingleLineEditableTextFormFieldState();
+  State<GetLedgerLayout> createState() => _SingleLineEditableTextFormFieldState();
 }
 
-class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> with     SingleTickerProviderStateMixin,FranchiseeDialogInterface {
+class _SingleLineEditableTextFormFieldState extends State<GetLedgerLayout> with  SingleTickerProviderStateMixin,LedgerDialogInterface {
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         widget.titleIndicator!=false? Text(
+          widget.titleIndicator!=false? Text(
             widget.title,
             style: item_heading_textStyle,
           ):Container(),
@@ -54,7 +55,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
                         Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
                         child: Opacity(
                           opacity: a1.value,
-                          child:FranchiseeDialog(
+                          child:LedgerDialog(
                             mListener: this,
                           ),
                         ),
@@ -88,15 +89,13 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(widget.franchiseeName == "" ? ApplicationLocalizations.of(context)!.translate("franchisee_name")!  : widget.franchiseeName,
-                          style: widget.franchiseeName == ""
-                              ? hint_textfield_Style
-                              : text_field_textStyle,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          // textScaleFactor: 1.02,
-                        ),
+                      Text(widget.ledgerName == "" ? ApplicationLocalizations.of(context)!.translate("ledger")!  : widget.ledgerName,
+                        style: widget.ledgerName == ""
+                            ? hint_textfield_Style
+                            : text_field_textStyle,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        // textScaleFactor: 1.02,
                       ),
                       Icon(
                         Icons.keyboard_arrow_down,
@@ -118,8 +117,8 @@ class _SingleLineEditableTextFormFieldState extends State<GetFranchiseeLayout> w
   }
 
   @override
-  selectedFranchisee(String id, String name) {
-    // TODO: implement selectedFranchisee
+  selectedLedger(String id, String name) {
+    // TODO: implement selectedLedger
     widget.callback(name,id);
   }
 }

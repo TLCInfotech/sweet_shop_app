@@ -249,6 +249,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                 rate.text=v.rate;
                 itemsList = [];
               });
+              calculateRates();
             },
             future: () {
               if (_textController.text != "")

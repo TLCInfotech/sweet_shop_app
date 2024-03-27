@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
@@ -36,6 +37,8 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
   int page = 1;
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
+  bool isApiCall=false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -51,7 +54,23 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       }
     }
   }
-  
+  setDataToList(List<dynamic> _list) {
+    if (saleInvoice_list.isNotEmpty) saleInvoice_list.clear();
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,23 +116,48 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                   mListener:this,
             )));
           }),
-      body: Container(
-        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 10,
+      body: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getPurchaseDateLayout(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getTotalCountAndAmount(),
+                const SizedBox(
+                  height: .5,
+                ),
+                get_purchase_list_layout()
+              ],
             ),
-            getTotalCountAndAmount(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_purchase_list_layout()
-          ],
-        ),
+          ),
+          Visibility(
+              visible: saleInvoice_list.isEmpty && isApiCall  ? true : false,
+              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+        ],
       ),
+    );
+  }
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
@@ -141,12 +185,24 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("10 ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
-              Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text("${saleInvoice_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),
     );
+  }
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in saleInvoice_list ){
+      total=total+item['Total_Amount'];
+      print(item['Total_Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+
   }
 
   /* widget for button layout */
@@ -179,7 +235,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
   Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: [1, 2, 3, 4, 5, 6].length,
+          itemCount: saleInvoice_list.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -194,7 +250,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreateSellInvoice(
                             dateNew:   CommonWidget.getDateLayout(invoiceDate),
-                            Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                            Invoice_No: saleInvoice_list[index]['Invoice_No'].toString(),//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
                           )));
                     },
@@ -227,14 +283,14 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("Mr. Franchisee Name ",style: item_heading_textStyle,),
+                                          Text("${saleInvoice_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
                                           SizedBox(height: 5,),
                                           Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
                                               SizedBox(width: 10,),
-                                              Expanded(child: Text("Invoice No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              Expanded(child: Text("Invoice No. - ${saleInvoice_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                             ],
                                           ),
                                           SizedBox(height: 5,),
@@ -243,7 +299,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                             children: [
                                               FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
                                               SizedBox(width: 10,),
-                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                             ],
                                           ),
 
@@ -301,10 +357,24 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
+                  _arrList.clear();
                   _arrList=data;
-                  setState(() {
-                    saleInvoice_list=_arrList;
-                  });
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+
+                  calculateTotalAmt();
+                }else{
+                  isApiCall=true;
                 }
               });
               print("  LedgerLedger  $data ");

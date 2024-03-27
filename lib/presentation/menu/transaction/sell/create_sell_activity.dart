@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
+import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -22,6 +23,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
 
 
@@ -48,10 +50,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   final _voucherNoFocus = FocusNode();
   final VoucherNoController = TextEditingController();
 
+  TextEditingController invoiceNo=TextEditingController();
 
   String selectedFranchiseeName="";
   String selectedFranchiseeId="";
 
+  String selectedLedgerName="";
+  String selectedLedgerId="";
 
   String TotalAmount="0.00";
 //  List<dynamic> Item_list=[];
@@ -81,6 +86,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     calculateTotalAmt();
     if(widget.Invoice_No!=""){
       gerSaleInvoice(1);
+      setState(() {
+        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+      });
     }
 
   }
@@ -132,7 +140,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
                 backgroundColor: Colors.white,
                 title: Text(
-                  ApplicationLocalizations.of(context)!.translate("sale_invoice_new")!,
+                  ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
                   style: appbar_text_style,),
               ),
             ),
@@ -203,10 +211,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               print("#######");
               callPostSaleInvoice();
             }
-            // else {
-            //   print("dfsdf");
-            //   updatecallPostSaleInvoice();
-            // }
+            else {
+              print("dfsdf");
+              updatecallPostSaleInvoice();
+            }
           },
           onDoubleTap: () {},
           child: Container(
@@ -413,7 +421,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                               print("##############$response");
                                               if(Item_list[index]['Seq_No']!=null){
                                                 var deletedItem=   {
-                                                  "Expense_ID": Item_list[index]['Expense_ID'],
+                                                  "Item_ID": Item_list[index]['Item_ID'],
                                                   "Seq_No": Item_list[index]['Seq_No'],
                                                 };
                                                 Deleted_list.add(deletedItem);
@@ -422,7 +430,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                                 });
                                               }
 
-                                              var contain = Inserted_list.indexWhere((element) => element['Expense_ID']== Item_list[index]['Expense_ID']);
+                                              var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
                                               print(contain);
                                               if(contain>=0){
                                                 print("REMOVE");
@@ -526,21 +534,55 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
-              child: getPurchaseDateLayout()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  width:widget.Invoice_No!=""?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
+                  child: getPurchaseDateLayout()),
 
-          SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              SizedBox(width: 5,),
+              Expanded(
+                  child:widget.Invoice_No!=""?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
+          ),
+          widget.Invoice_No!=""?Row(
+            children: [
+                Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
+              SizedBox(width: 5,),
+               Expanded(child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth))
+            ],
+          ):
+          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
         ],
       ),
     );
   }
 
+  Widget getInvoiceNo(double parentHeight, double parentWidth) {
+    return   Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(left: 10),
+      width:parentWidth,
+      height: (SizeConfig.screenHeight) * .055,
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        color:CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: Text("${invoiceNo.text}",style:text_field_textStyle ,),
+    );
+
+  }
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -594,10 +636,29 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               // Deleted_list=[];
               // Inserted_list=[];
             });
+            print(selectedFranchiseeId);
           },
           franchiseeName: selectedFranchiseeName);
   }
 
+  /* Widget to get sale ledger Name Layout */
+  Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
+    return GetLedgerLayout(
+          titleIndicator: false,
+          title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+          callback: (name,id){
+            setState(() {
+              selectedLedgerName=name!;
+              selectedLedgerId=id!;
+              // Item_list=[];
+              // Updated_list=[];
+              // Deleted_list=[];
+              // Inserted_list=[];
+            });
+            print(selectedLedgerId);
+          },
+        ledgerName: selectedLedgerName);
+  }
 
   @override
   AddOrEditItemSellDetail(item)async {
@@ -680,12 +741,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList=(data['expenseDetails']);
+                  _arrList=(data['itemDetails']);
 
                   setState(() {
                     Item_list=_arrList;
-                    selectedFranchiseeName=data['voucherDetails']['Ledger_Name'];
-                    selectedFranchiseeId=data['voucherDetails']['Ledger_ID'].toString();
+                    selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
+                    selectedLedgerName=data['voucherDetails']['Sale_Ledger_Name'];
+                    selectedLedgerId=data['voucherDetails']['Sale_Ledger'].toString();
+
                   });
                   calculateTotalAmt();
                 }
@@ -752,7 +816,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-          saleLedger:selectedFranchiseeId ,
+          saleLedger:selectedLedgerId ,
           vendorID:selectedFranchiseeId ,
           companyID: companyId ,
           voucherName: "Sale",
@@ -826,7 +890,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-          saleLedger:selectedFranchiseeId ,
+          saleLedger:selectedLedgerId ,
           vendorID:selectedFranchiseeId ,
           invoiceNo:widget.Invoice_No ,
           companyID: companyId ,
@@ -839,6 +903,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           iNSERT: Inserted_list.toList(),
           dELETE: Deleted_list.toList(),
           uPDATE: Updated_list.toList(),
+          remark:"Modified"
         );
 
         print(model.toJson());
