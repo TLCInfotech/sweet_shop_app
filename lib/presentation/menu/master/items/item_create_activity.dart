@@ -175,15 +175,20 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
+                    leadingWidth: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-                    title: widget.editItem!=null?Text(
-    ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("item")!,
-    style: appbar_text_style,
-    ): Text(
-                      ApplicationLocalizations.of(context)!.translate("create_item")!,
-                      style: appbar_text_style,
+                    title: widget.editItem!=null?Center(
+                      child: Text(
+                          ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("item")!,
+                          style: appbar_text_style,
+                          ),
+                    ): Center(
+                      child: Text(
+                        ApplicationLocalizations.of(context)!.translate("create_item")!,
+                        style: appbar_text_style,
+                      ),
                     ),
                   ),
                 ),

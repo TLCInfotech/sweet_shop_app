@@ -101,6 +101,7 @@ String oldUid="";
           child: Scaffold(
             backgroundColor: CommonColor.BACKGROUND_COLOR,
             appBar: PreferredSize(
+
               preferredSize: AppBar().preferredSize,
               child: SafeArea(
                 child: Card(
@@ -110,12 +111,15 @@ String oldUid="";
                   color: Colors.transparent,
                   margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
+                    leadingWidth: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-                    title:  Text(
-                      ApplicationLocalizations.of(context)!.translate("user_new")!,
-                      style: appbar_text_style,
+                    title:  Center(
+                      child: Text(
+                        ApplicationLocalizations.of(context)!.translate("user_new")!,
+                        style: appbar_text_style,
+                      ),
                     ),
                   ),
                 ),

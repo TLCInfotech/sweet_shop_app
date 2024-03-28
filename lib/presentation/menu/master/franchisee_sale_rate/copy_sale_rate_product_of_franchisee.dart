@@ -15,7 +15,6 @@ class CopySaleRateProductOfFranchisee extends StatefulWidget {
 
 class _CopySaleRateProductOfFranchiseeState extends State<CopySaleRateProductOfFranchisee>  {
 
-
   String selectedCopyFranchiseeName="";
 
   @override

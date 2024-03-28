@@ -97,13 +97,16 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 // color: Colors.red,
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
                 child: AppBar(
+                  leadingWidth: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  title: Text(
-                    ApplicationLocalizations.of(context)!.translate("ledger_group")!,
-                    style: appbar_text_style,),
+                  title: Center(
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+                      style: appbar_text_style,),
+                  ),
                 ),
               ),
             ),

@@ -223,18 +223,23 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
+                    leadingWidth: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
                     title: widget.ledgerList!=null?
-                    Text(
-                      ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("ledger")!,
-                      style: appbar_text_style,
+                    Center(
+                      child: Text(
+                        ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("ledger")!,
+                        style: appbar_text_style,
+                      ),
                     )
-                        : Text(
-                      ApplicationLocalizations.of(context)!.translate("ledger_new")!,
-                      style: appbar_text_style,
-                    ),
+                        : Center(
+                          child: Text(
+                                                ApplicationLocalizations.of(context)!.translate("ledger_new")!,
+                                                style: appbar_text_style,
+                                              ),
+                        ),
                   ),
                 ),
               ),

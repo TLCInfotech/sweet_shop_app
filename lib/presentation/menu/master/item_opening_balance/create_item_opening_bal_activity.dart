@@ -214,14 +214,17 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               // color: Colors.red,
               margin: EdgeInsets.only(top: 10, left: 10, right: 10),
               child: AppBar(
+                leadingWidth: 20,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)
                 ),
 
                 backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
-                  style: appbar_text_style,),
+                title:  Center(
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                    style: appbar_text_style,),
+                ),
               ),
             ),
           ),
