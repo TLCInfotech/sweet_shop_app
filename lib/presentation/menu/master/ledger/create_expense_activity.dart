@@ -1843,10 +1843,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             tcsApplicable: "",
             extName: extName,
             remark: "",
-            adharCardImage: adharImageBytes.toString(),
-            panCardImage: panImageBytes.toString(),
-            gstImage: gstImageBytes.toString(),
-            photo: picImageBytes.toString(),
+            adharCardImage:adharImageBytes.length==0?null: adharImageBytes.toString(),
+            panCardImage:panImageBytes.length==0?null: panImageBytes.toString(),
+            gstImage:gstImageBytes.length==0?null: gstImageBytes.toString(),
+            photo:  picImageBytes.length==0?null:picImageBytes.toString(),
             modifier: creatorName,
             modifierMachine: deviceId
         );
@@ -1864,11 +1864,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               var snackBar = SnackBar(content: Text('ledger Updated Successfully'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }, onFailure: (error) {
+            print(error.toString());
               CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
+          print(e.toString());
               CommonWidget.errorDialog(context, e.toString());
 
             },sessionExpire: (e) {
+              print(e.toString());
               CommonWidget.gotoLoginScreen(context);
             });
       });

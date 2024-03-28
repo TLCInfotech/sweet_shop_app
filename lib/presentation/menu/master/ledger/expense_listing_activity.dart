@@ -400,18 +400,21 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 ledgerList.removeAt(index);
               });
             }, onFailure: (error) {
+            print(error.toString());
               setState(() {
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
 
             }, onException: (e) {
+              print(e.toString());
               setState(() {
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, e.toString());
 
             },sessionExpire: (e) {
+              print(e.toString());
               setState(() {
                 isLoaderShow=false;
               });

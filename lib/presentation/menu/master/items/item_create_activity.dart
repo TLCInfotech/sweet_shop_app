@@ -79,6 +79,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   }
 
   setData()async{
+    print(widget.editItem);
     if(widget.editItem!=null){
       File ?f=null;
       if(widget.editItem['Photo']!=null&&widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10) {
@@ -1052,13 +1053,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             ExtName: extNameController.text.trim(),
             DefaultStore:defaultStoreController.text.trim(),
             DetailDesc: descController.text.trim(),
-            Photo: picImageBytes,
+            Photo: picImageBytes.length==0?null:picImageBytes,
             Unit: measuringUnit,
         );
 
         String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
 
         print(apiUrl);
+        print(model.toJson());
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{
               print("  Put Call :   $value ");
@@ -1068,11 +1070,15 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               Navigator.pop(context);
 
             }, onFailure: (error) {
+
+              print(error.toString());
               CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
+              print(e.toString());
               CommonWidget.errorDialog(context, e.toString());
 
             },sessionExpire: (e) {
+              print(e.toString());
               CommonWidget.gotoLoginScreen(context);
               // widget.mListener.loaderShow(false);
             });
