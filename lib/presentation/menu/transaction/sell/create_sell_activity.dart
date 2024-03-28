@@ -30,7 +30,7 @@ import '../../../dialog/franchisee_dialog.dart';
 class CreateSellInvoice extends StatefulWidget {
   final CreateSellInvoiceInterface mListener;
   final  dateNew;
-  final String Invoice_No;
+  final  Invoice_No;
   
   const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
   @override
@@ -85,7 +85,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
     calculateTotalAmt();
     invoiceDate=widget.dateNew;
-    if(widget.Invoice_No!=""){
+    if(widget.Invoice_No!=null){
       gerSaleInvoice(1);
       setState(() {
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
@@ -557,15 +557,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  width:widget.Invoice_No!=""?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
+                  width:widget.Invoice_No!=null?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
                   child: getPurchaseDateLayout()),
 
               SizedBox(width: 5,),
               Expanded(
-                  child:widget.Invoice_No!=""?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:widget.Invoice_No!=null?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
             ],
           ),
-          widget.Invoice_No!=""?Row(
+          widget.Invoice_No!=null?Row(
             children: [
                 Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
               SizedBox(width: 5,),
@@ -630,7 +630,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               Inserted_list=[];
             });
 
-            if(widget.Invoice_No!=""){
+            if(widget.Invoice_No!=null){
               gerSaleInvoice(1);
             }
           },

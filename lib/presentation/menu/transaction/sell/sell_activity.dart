@@ -113,7 +113,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateSellInvoice(
                       dateNew:   invoiceDate,
-                      Invoice_No: "",//DateFormat('dd-MM-yyyy').format(newDate),
+                      Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                 )));
               }),
@@ -231,8 +231,12 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            saleInvoice_list.clear();
+          });
+          setState(() {
             invoiceDate=date!;
           });
+          gerSaleInvoice(1);
         },
         applicablefrom: invoiceDate
     );
@@ -256,7 +260,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreateSellInvoice(
                             dateNew: invoiceDate,
-                            Invoice_No: saleInvoice_list[index]['Invoice_No'].toString(),//DateFormat('dd-MM-yyyy').format(newDate),
+                            Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
                           )));
                     },
@@ -359,6 +363,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         String apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
+
               setState(() {
                 isLoaderShow=false;
                 if(data!=null){
@@ -482,6 +487,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
   backToList() {
     // TODO: implement backToList
     gerSaleInvoice(1);
+    setState(() {
+      saleInvoice_list.clear();
+    });
     Navigator.pop(context);
   }
 }
