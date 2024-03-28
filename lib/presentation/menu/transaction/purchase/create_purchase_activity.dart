@@ -186,13 +186,16 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   color: Colors.transparent,
                   margin: const EdgeInsets.only(top: 10, left: 5, right: 10),
                   child: AppBar(
+                    leadingWidth: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)
                     ),
                     backgroundColor: Colors.white,
-                    title:  Text(
-                      ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
-                      style: appbar_text_style,),
+                    title:  Center(
+                      child: Text(
+                        ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+                        style: appbar_text_style,),
+                    ),
                   ),
                 ),
               ),
