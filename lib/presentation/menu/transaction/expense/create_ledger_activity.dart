@@ -87,7 +87,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   }
 
-  calculateTotalAmt()async{
+/*  calculateTotalAmt()async{
     var total=0.00;
     for(var item  in Item_list ){
       total=total+item['Amount'];
@@ -97,7 +97,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       TotalAmount=total.toStringAsFixed(2) ;
     });
 
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     return contentBox(context);
@@ -241,17 +241,28 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.grey,width: 1),
         ),
-        child:  widget.voucherNo==null? Row(
+        child:   Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-                child: getReceiptDateLayout()),
-          ],
-        ):Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            getReceiptDateLayout(),
-            getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+            widget.voucherNo==null? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  // width:(SizeConfig.screenWidth),
+                    child: getReceiptDateLayout()),
+
+                // SizedBox(width: 5,),
+                // Expanded(
+                //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              ],
+            ):Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getReceiptDateLayout(),
+                getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+              ],
+            ),
+            getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
           ],
         ),
       );
@@ -499,8 +510,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length}${StringEn.LEDGERS}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-          Text( "${StringEn.ROUND_OFF} ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
-          const SizedBox(height: 4,),
+              Text("Round off: $roundoff",style:item_regular_textStyle.copyWith(fontSize: 17),),
+              const SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
           ),
@@ -552,7 +563,52 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   }
 
 
-    /* calculate round off amount function */
+
+  var roundoff="0.00";
+
+  calculateTotalAmt()async{
+    setState(() {
+      TotalAmount="0.00";
+      roundoff="0.00";
+    });
+    var total=0.00;
+    for(var item  in Item_list ){
+      total=total+item['Amount'];
+      // print(item['Amount']);
+    }
+    // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
+    double amt = total % 1;
+
+    print("%%%%%%%%%%%%%%%%%%%%% $amt");
+    if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
+      setState(() {
+        roundoff="0.00";
+      });
+    }
+    else {
+      if ((amt) < 0.50) {
+        print("Here");
+        var total1=(total).floorToDouble();
+        var roff=total1-(total);
+        setState(() {
+          TotalAmount=total1.toStringAsFixed(2) ;
+          roundoff=roff.toStringAsFixed(2);
+        });
+      }
+      else if ((amt) >= 0.50){
+        setState(() {
+          roundoff=(1-amt).toStringAsFixed(2);
+          TotalAmount=(total.ceilToDouble()).toStringAsFixed(2) ;
+        });
+      }
+
+    }
+
+  }
+
+/*
+
+    *//* calculate round off amount function *//*
   double calculateRoundOffAmt(){
     if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
       return 0.00;
@@ -573,7 +629,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         return (-1 * amt);
       }
     }
-  }
+  }*/
 
 
 /* Widget for add and edit button layout*/
@@ -765,11 +821,11 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
+    // String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
+    // double roundOffAmtInt = double.parse(roundOffAmt);
    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+    //print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
     AppPreferences.getDeviceId().then((deviceId) {
@@ -780,7 +836,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           Ledger_ID:selectedFranchiseeId ,
           companyID: companyId ,
           Voucher_Name: "Expense",
-          Round_Off:roundOffAmtInt ,
+        Round_Off:double.parse(roundoff) ,
           Total_Amount:TotalAmountInt ,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           creater: creatorName,
@@ -837,11 +893,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
-    // double updatedamt= await calculateTotalInsertAmt();
+
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -853,7 +906,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           voucher_No:widget.voucherNo ,
           companyID: companyId ,
           Voucher_Name: "Expense",
-          Round_Off:roundOffAmtInt ,
+          Round_Off:double.parse(roundoff) ,
           Total_Amount:TotalAmountInt ,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,

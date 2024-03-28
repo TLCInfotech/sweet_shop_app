@@ -396,18 +396,28 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: widget.voucherNo==null? Row(
+      child:  Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            // width:(SizeConfig.screenWidth),
-              child: getReceiptDateLayout()),
-        ],
-      ):Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          getReceiptDateLayout(),
-          getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+          widget.voucherNo==null? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                // width:(SizeConfig.screenWidth),
+                  child: getReceiptDateLayout()),
+
+              // SizedBox(width: 5,),
+              // Expanded(
+              //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
+          ):Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              getReceiptDateLayout(),
+              getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+            ],
+          ),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
       ),
     );
@@ -568,7 +578,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             children: [
               Text("${Item_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
 
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
           ),
         ):Container(),
@@ -770,7 +780,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    double TotalAmountInt= double.parse(TotalAmount);
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -842,7 +852,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
 
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    double TotalAmountInt= double.parse(TotalAmount);
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
