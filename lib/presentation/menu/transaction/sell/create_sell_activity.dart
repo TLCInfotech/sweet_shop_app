@@ -243,7 +243,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
               });
             }
             print(widget.Invoice_No);
-            if(widget.Invoice_No=="") {
+            if(widget.Invoice_No==null) {
               print("#######");
               callPostSaleInvoice();
             }
@@ -855,7 +855,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -931,7 +931,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -967,5 +967,5 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 }
 
 abstract class CreateSellInvoiceInterface {
-  backToList();
+  backToList(DateTime updateDate);
 }

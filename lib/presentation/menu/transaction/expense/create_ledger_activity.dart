@@ -79,6 +79,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    invoiceDate=widget.dateNew;
     calculateTotalAmt();
     if(widget.voucherNo!=null){
       getExpInvoice(1);

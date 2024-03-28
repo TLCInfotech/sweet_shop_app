@@ -484,12 +484,14 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
-    gerSaleInvoice(1);
+
     setState(() {
       saleInvoice_list.clear();
+      invoiceDate=updateDate;
     });
+    gerSaleInvoice(1);
     Navigator.pop(context);
   }
 }

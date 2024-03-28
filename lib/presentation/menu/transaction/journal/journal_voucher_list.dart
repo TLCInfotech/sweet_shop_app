@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/journal/create_jour
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
@@ -33,6 +34,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
+  bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> payment_list=[];
   int page = 1;
@@ -57,68 +59,100 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFfffff5),
-      appBar: PreferredSize(
-        preferredSize: AppBar().preferredSize,
-        child: SafeArea(
-          child:  Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
-            color: Colors.transparent,
-            // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-            child: AppBar(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFFfffff5),
+          appBar: PreferredSize(
+            preferredSize: AppBar().preferredSize,
+            child: SafeArea(
+              child:  Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                color: Colors.transparent,
+                // color: Colors.red,
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                  backgroundColor: Colors.white,
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
+                    style: appbar_text_style,),
+                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
+                ),
               ),
-
-              backgroundColor: Colors.white,
-              title:  Text(
-                ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
-                style: appbar_text_style,),
-              automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
             ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFFBE404),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.black87,
-          ),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-              mListener: this,
-              dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
-              voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
-            )));
-          }),
-      body: Container(
-        margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFFBE404),
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
+                  mListener: this,
+                  dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
+                  voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
+                )));
+              }),
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-            getPurchaseDateLayout(),
-            const SizedBox(
-              height: 10,
-            ),
-            payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
-            const SizedBox(
-              height: .5,
-            ),
-            get_payment_list_layout()
-          ],
+                    getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_payment_list_layout()
+                  ],
+                ),
+              ),
+              Visibility(
+                  visible: payment_list.isEmpty && isApiCall  ? true : false,
+                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+            ],
+          ),
         ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
-
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   /* Widget to get add purchase date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
@@ -309,6 +343,8 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                   setState(() {
                     payment_list=_arrList;
                   });
+                }else{
+                  isApiCall=true;
                 }
               });
               print("  LedgerLedger  $data ");

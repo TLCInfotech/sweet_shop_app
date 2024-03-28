@@ -43,8 +43,10 @@ import 'add_or_edit_Item.dart';
 class CreatePurchaseInvoice extends StatefulWidget {
   final CreatePurchaseInvoiceInterface mListener;
   final  dateNew;
-  final String Invoice_No;
-  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No});
+  final  Invoice_No;
+  final  ledgerName;
+  final  franchiseeName;
+  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName});
 
   @override
   _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
@@ -101,7 +103,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
     calculateTotalAmt();
     invoiceDate=widget.dateNew;
-    if(widget.Invoice_No!=""){
+    if(widget.Invoice_No!=null){
       gerSaleInvoice(1);
       setState(() {
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
@@ -258,7 +260,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               });
             }
             print(widget.Invoice_No);
-            if(widget.Invoice_No=="") {
+            if(widget.Invoice_No==null) {
               print("#######");
               callPostSaleInvoice();
             }
@@ -567,15 +569,15 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  width:widget.Invoice_No!=""?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
+                  width:widget.Invoice_No!=null?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
                   child: getPurchaseDateLayout()),
 
               SizedBox(width: 5,),
               Expanded(
-                  child:widget.Invoice_No!=""?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:widget.Invoice_No!=null?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
             ],
           ),
-          widget.Invoice_No!=""?Row(
+          widget.Invoice_No!=null?Row(
             children: [
               Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
               SizedBox(width: 5,),
@@ -640,7 +642,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               Inserted_list=[];
             });
 
-            if(widget.Invoice_No!=""){
+            if(widget.Invoice_No!=null){
               gerSaleInvoice(1);
             }
           },
@@ -771,8 +773,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
-                    selectedLedgerName=data['voucherDetails']['Sale_Ledger_Name'];
-                    selectedLedgerId=data['voucherDetails']['Sale_Ledger'].toString();
+                    selectedLedgerName=data['voucherDetails']['Purchase_Ledger_Name'];
+                    selectedLedgerId=data['voucherDetails']['Purchase_Ledger'].toString();
 
                   });
                   calculateTotalAmt();
@@ -851,7 +853,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -902,7 +904,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
             purchaseLedger:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
-            invoiceNo:widget.Invoice_No ,
+            invoiceNo:widget.Invoice_No.toString() ,
             companyID: companyId ,
             voucherName: "Purchase",
             roundOff:double.parse(roundoff) ,
@@ -929,7 +931,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 Updated_list=[];
                 Deleted_list=[];
               });
-              widget.mListener.backToList();
+              widget.mListener.backToList(invoiceDate);
 
             }, onFailure: (error) {
               setState(() {
@@ -967,5 +969,5 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 }
 
 abstract class CreatePurchaseInvoiceInterface {
-  backToList();
+  backToList(DateTime updateDate);
 }

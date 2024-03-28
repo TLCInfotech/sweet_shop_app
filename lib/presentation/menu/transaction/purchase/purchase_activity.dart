@@ -117,7 +117,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreatePurchaseInvoice(
                       dateNew:invoiceDate,
-                      Invoice_No: "",
+                      Invoice_No: null,
                       mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                     )));
               }),
@@ -261,7 +261,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreatePurchaseInvoice(
                             dateNew:invoiceDate,
-                            Invoice_No: "",
+                            Invoice_No: saleInvoice_list[index]['Invoice_No'],
                             mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                           )));
                     },
@@ -484,8 +484,12 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   }
 
   @override
-  backToList() {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+    setState(() {
+      saleInvoice_list=[];
+      invoiceDate=updateDate;
+    });
     gerSaleInvoice(1);
     Navigator.pop(context);
   }
