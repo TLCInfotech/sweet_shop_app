@@ -94,11 +94,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
-                      style: appbar_text_style,),
-                  ),
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
+                    style: appbar_text_style,),
                   automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),

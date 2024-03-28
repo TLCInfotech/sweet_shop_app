@@ -94,16 +94,45 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
 
   calculateTotalAmt()async{
+    setState(() {
+      TotalAmount="0.00";
+      roundoff="0.00";
+    });
     var total=0.00;
     for(var item  in Item_list ){
       total=total+item['Amount'];
-      print(item['Amount']);
+      // print(item['Amount']);
     }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
+    // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
+    double amt = total % 1;
+
+    print("%%%%%%%%%%%%%%%%%%%%% $amt");
+    if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
+      setState(() {
+        roundoff="0.00";
+      });
+    }
+    else {
+      if ((amt) < 0.50) {
+        print("Here");
+        var total1=(total).floorToDouble();
+        var roff=total1-(total);
+        setState(() {
+          TotalAmount=total1.toStringAsFixed(2) ;
+          roundoff=roff.toStringAsFixed(2);
+        });
+      }
+      else if ((amt) >= 0.50){
+        setState(() {
+          roundoff=(1-amt).toStringAsFixed(2);
+          TotalAmount=(total.ceilToDouble()).toStringAsFixed(2) ;
+        });
+      }
+
+    }
 
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -255,62 +284,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   var roundoff="0.00";
 
 
- /* calculateRoundOffAmt()async{
-    var amt = double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)).toStringAsFixed(3);
 
-    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
-      setState(() {
-        roundoff="0.00";
-      });
-    }
-    else {
-      if (double.parse(amt) < 0.50) {
-        print("Here");
-        var total=double.parse(TotalAmount).floorToDouble();
-        setState(() {
-          TotalAmount=total.toString();
-        });
-        setState(() {
-          roundoff=   "0.8";//(-(double.parse(amt))).toString();
-        });
-      }
-      else {
-        var amt1 =await  1- (double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
-        print("Rounsj $amt1");
-        var total=double.parse(TotalAmount).ceilToDouble();
-        setState(() {
-          roundoff=((( amt1).ceilToDouble())).toString();
-          TotalAmount=total.toString();
-        });
-        print("Here1");
-      }
-
-    }
-
-  }*/
-
-  double calculateRoundOffAmt(){
-    print(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)));
-    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
-      return 0.00;
-    }
-    else {
-      var amt = (1 - double.parse(
-          TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
-      print(amt);
-      if (amt == 0.00) {
-        return 0.00;
-      }
-      if (amt < 0.50) {
-        print((-1 * amt).toStringAsFixed(2));
-        return amt;
-      }
-      else {
-        print((amt).toStringAsFixed(2));
-        return (-1 * amt);
-      }
-    }
-  }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
@@ -752,7 +726,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       editedItemIndex=null;
     });
     await calculateTotalAmt();
-    await calculateRoundOffAmt();
     print("List");
     print(Inserted_list);
     print(Updated_list);
@@ -846,11 +819,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
+
     // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -862,7 +834,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           vendorID:selectedFranchiseeId ,
           companyID: companyId ,
           voucherName: "Sale",
-          roundOff:roundOffAmtInt ,
+          roundOff:double.parse(roundoff) ,
           totalAmount:TotalAmountInt,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           creator: creatorName,
@@ -920,11 +892,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
-    // double updatedamt= await calculateTotalInsertAmt();
+
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -937,7 +906,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           invoiceNo:widget.Invoice_No ,
           companyID: companyId ,
           voucherName: "Sale",
-          roundOff:roundOffAmtInt,
+          roundOff:double.parse(roundoff),
           totalAmount:TotalAmountInt,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,

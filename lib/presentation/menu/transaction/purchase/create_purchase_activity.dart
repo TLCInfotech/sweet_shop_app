@@ -109,17 +109,48 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   }
 
+  var roundoff="0.00";
+
   calculateTotalAmt()async{
+    setState(() {
+      TotalAmount="0.00";
+      roundoff="0.00";
+    });
     var total=0.00;
     for(var item  in Item_list ){
       total=total+item['Amount'];
-      print(item['Amount']);
+      // print(item['Amount']);
     }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
+    // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
+    double amt = total % 1;
+
+    print("%%%%%%%%%%%%%%%%%%%%% $amt");
+    if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
+      setState(() {
+        roundoff="0.00";
+      });
+    }
+    else {
+      if ((amt) < 0.50) {
+        print("Here");
+        var total1=(total).floorToDouble();
+        var roff=total1-(total);
+        setState(() {
+          TotalAmount=total1.toStringAsFixed(2) ;
+          roundoff=roff.toStringAsFixed(2);
+        });
+      }
+      else if ((amt) >= 0.50){
+        setState(() {
+          roundoff=(1-amt).toStringAsFixed(2);
+          TotalAmount=(total.ceilToDouble()).toStringAsFixed(2) ;
+        });
+      }
+
+    }
 
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -150,14 +181,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                       borderRadius: BorderRadius.circular(25)
                   ),
                   color: Colors.transparent,
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 10, left: 5, right: 10),
                   child: AppBar(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)
                     ),
                     backgroundColor: Colors.white,
                     title:  Text(
-                      ApplicationLocalizations.of(context)!.translate("purchase_invoice_new")!,
+                      ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
                       style: appbar_text_style,),
                   ),
                 ),
@@ -212,7 +243,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: ${calculateRoundOffAmt().toStringAsFixed(2)}",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              Text("Round off: $roundoff",style:item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
@@ -264,37 +295,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
-
-
-  double calculateRoundOffAmt(){
-    print(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length)));
-    if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.0){
-      return 0.00;
-    }
-    else {
-      var amt = (1 - double.parse(TotalAmount.substring(TotalAmount.length - 3, TotalAmount.length)));
-      print("mvmnvmfnvfmv   $amt");
-      if (amt == 0.00) {
-        return 0.00;
-      }
-      if (amt < 0.50) {
-        print("godddddddddd ${(-1 * amt).toStringAsFixed(2)}");
-        var totalList=double.parse(TotalAmount).floorToDouble();
-        setState(() {
-          TotalAmount=totalList.toString();
-        });
-        return amt;
-      }
-      else {
-        print((amt).toStringAsFixed(2));
-        var totalList=double.parse(TotalAmount).ceilToDouble();
-        setState(() {
-          TotalAmount=totalList.toString();
-        });
-        return (-1 * amt);
-      }
-    }
-  }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
@@ -736,7 +736,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       editedItemIndex=null;
     });
     await calculateTotalAmt();
-    await calculateRoundOffAmt();
     print("List");
     print(Inserted_list);
     print(Updated_list);
@@ -818,10 +817,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
  double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+ 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -833,7 +830,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             vendorID:selectedFranchiseeId ,
             companyID: companyId ,
             voucherName: "Purchase",
-            roundOff:roundOffAmtInt ,
+            roundOff:double.parse(roundoff) ,
             totalAmount:TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
             creator: creatorName,
@@ -891,11 +888,10 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
-    double roundOffAmtInt = double.parse(roundOffAmt);
+
     // double updatedamt= await calculateTotalInsertAmt();
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    print("fjfjhgjgj  $roundOffAmtInt  $TotalAmountInt");
+
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -908,7 +904,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             invoiceNo:widget.Invoice_No ,
             companyID: companyId ,
             voucherName: "Purchase",
-            roundOff:roundOffAmtInt,
+            roundOff:double.parse(roundoff) ,
             totalAmount:TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
             modifier: creatorName,

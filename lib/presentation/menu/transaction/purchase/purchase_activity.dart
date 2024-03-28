@@ -98,11 +98,9 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   ),
 
                   backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
-                      style: appbar_text_style,),
-                  ),
+                  title:  Text(
+                    ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+                    style: appbar_text_style,),
                   automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
