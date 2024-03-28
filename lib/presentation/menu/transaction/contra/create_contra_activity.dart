@@ -30,7 +30,7 @@ import 'add_edit_ledger_for_contra.dart';
 
 class CreateContra extends StatefulWidget {
   final CreateContraInterface mListener;
-  final String dateNew;
+  final dateNew;
   final  voucherNo;
   final  newDate;
   const CreateContra({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate});
@@ -105,8 +105,10 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    invoiceDate=widget.dateNew;
     if(widget.voucherNo!=null){
       getContra(1);
+      voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
     calculateTotalAmt();
   }

@@ -25,7 +25,7 @@ import '../../../common_widget/signleLine_TexformField.dart';
 
 class CreateReceipt extends StatefulWidget {
   final CreateReceiptInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final  voucherNo;
   final  newDate;
   const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate});
@@ -101,6 +101,7 @@ bool isLoaderShow=false;
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    invoiceDate=widget.newDate;
     if(widget.voucherNo!=null){
       getRecipt(1);
       voucherNoController.text="Voucher No: ${widget.voucherNo}";

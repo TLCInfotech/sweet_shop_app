@@ -116,7 +116,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreatePurchaseInvoice(
-                      dateNew:CommonWidget.getDateLayout(invoiceDate),
+                      dateNew:invoiceDate,
                       Invoice_No: "",
                       mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                     )));
@@ -260,7 +260,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreatePurchaseInvoice(
-                            dateNew:CommonWidget.getDateLayout(invoiceDate),
+                            dateNew:invoiceDate,
                             Invoice_No: "",
                             mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                           )));

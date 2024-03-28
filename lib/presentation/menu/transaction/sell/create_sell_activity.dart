@@ -29,7 +29,7 @@ import '../../../dialog/franchisee_dialog.dart';
 
 class CreateSellInvoice extends StatefulWidget {
   final CreateSellInvoiceInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final String Invoice_No;
   
   const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
@@ -84,6 +84,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=""){
       gerSaleInvoice(1);
       setState(() {

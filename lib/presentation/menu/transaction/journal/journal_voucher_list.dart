@@ -94,7 +94,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
               mListener: this,
-              dateNew:   CommonWidget.getDateLayout(newDate),
+              dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
               voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
             )));
           }),
@@ -199,7 +199,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                         mListener: this,
-                        dateNew:   CommonWidget.getDateLayout(newDate),
+                        dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
                         voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                       )));
                     },

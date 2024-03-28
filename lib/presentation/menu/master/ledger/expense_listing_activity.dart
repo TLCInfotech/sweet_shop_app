@@ -399,6 +399,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 isLoaderShow=false;
                 ledgerList.removeAt(index);
               });
+              callGetLedger(1);
             }, onFailure: (error) {
             print(error.toString());
               setState(() {
@@ -438,7 +439,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
     // TODO: implement createPostLedger
   setState(() {
     ledgerList.clear();
-    callGetLedger(0);
+    callGetLedger(1);
   });
   Navigator.pop(context);
   }
@@ -448,7 +449,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
     // TODO: implement updatePostLedger
     setState(() {
       ledgerList.clear();
-      callGetLedger(0);
+      callGetLedger(1);
     });
     Navigator.pop(context);
   }

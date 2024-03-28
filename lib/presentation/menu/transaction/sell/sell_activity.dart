@@ -112,7 +112,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateSellInvoice(
-                      dateNew:   CommonWidget.getDateLayout(invoiceDate),
+                      dateNew:   invoiceDate,
                       Invoice_No: "",//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                 )));
@@ -255,7 +255,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreateSellInvoice(
-                            dateNew:   CommonWidget.getDateLayout(invoiceDate),
+                            dateNew: invoiceDate,
                             Invoice_No: saleInvoice_list[index]['Invoice_No'].toString(),//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
                           )));

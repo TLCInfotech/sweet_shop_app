@@ -104,7 +104,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                   mListener: this,
                   voucherNo: null,
-                  dateNew:     CommonWidget.getDateLayout(newDate),
+                  dateNew:    newDate,
                  // DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
@@ -245,7 +245,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                           mListener: this,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
-                          dateNew:     CommonWidget.getDateLayout(newDate),
+                          dateNew: newDate,
                           // DateFormat('dd-MM-yyyy').format(newDate),
                         )));
                       },

@@ -450,7 +450,7 @@ class ApiRequestHelper {
           apiResponse = ApiResponseForFetchStringDynamic.fromJson(
               json.decode(response.body));
           onSuccess(apiResponse.msg!);
-          print("responeseee  ");
+          print("responeseee  ${apiResponse.msg}");
           break;
         case 500:
           ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();

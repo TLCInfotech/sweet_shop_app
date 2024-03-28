@@ -43,7 +43,7 @@ import 'add_edit_journal_voucher.dart';
 
 class CreateJournals extends StatefulWidget {
   final CreateJournalInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final  voucherNo;
 
   const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
@@ -99,6 +99,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    invoiceDate=widget.dateNew;
     if(widget.voucherNo!=null){
       getExpInvoice(1);
       voucherNoController.text="Voucher No: ${widget.voucherNo}";
@@ -833,7 +834,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             voucherNo: widget.voucherNo,
             companyID: companyId ,
             voucherName: "Journal",
-            date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+           dateNew:DateFormat('yyyy-MM-dd').format(invoiceDate),
+            date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
             modifier: creatorName,
             modifierMachine: deviceId,
             iNSERT: Inserted_list.toList(),

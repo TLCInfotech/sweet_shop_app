@@ -42,7 +42,7 @@ import 'add_or_edit_Item.dart';
 
 class CreatePurchaseInvoice extends StatefulWidget {
   final CreatePurchaseInvoiceInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final String Invoice_No;
   const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No});
 
@@ -100,6 +100,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=""){
       gerSaleInvoice(1);
       setState(() {

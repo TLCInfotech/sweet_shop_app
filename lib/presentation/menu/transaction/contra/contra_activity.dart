@@ -110,7 +110,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   mListener: this,
                   newDate: newDate,
                   voucherNo: null,
-                  dateNew:  CommonWidget.getDateLayout(newDate),//DateFormat('dd-MM-yyyy').format(newDate),
+                  dateNew:newDate,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
           body: Stack(
@@ -251,7 +251,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                           mListener: this,
                           newDate: newDate,
                           voucherNo: contraList[index]["Voucher_No"],
-                          dateNew:  CommonWidget.getDateLayout(newDate),// DateFormat('dd-MM-yyyy').format(newDate),
+                          dateNew:newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                         )));
                       },
                       child: Card(

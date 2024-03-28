@@ -25,7 +25,7 @@ import 'add_edit_ledger_for_ledger.dart';
 
 class CreateLedger extends StatefulWidget {
   final CreateLedgerInterface mListener;
-  final String dateNew;
+  final dateNew;
   final  voucherNo;
   final come;
   const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo, this.come});

@@ -362,7 +362,7 @@ bool disableColor=false;
           modifierMachine: deviceId,
           companyId: companyId,
         );
-        print("jfhjfhjjhrjhr  $tokenId ${model.toJson()}");
+        print("jfhjfhjjhrjhr   ${model.toJson()}");
         String apiUrl = baseurl + ApiConstants().updateuer;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokenId,
