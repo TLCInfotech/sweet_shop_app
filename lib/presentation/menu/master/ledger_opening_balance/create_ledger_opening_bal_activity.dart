@@ -123,18 +123,35 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                   color: Colors.transparent,
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: AppBar(
-                    leadingWidth: 20,
+                 child: AppBar(
+                  leadingWidth: 0,
+                  automaticallyImplyLeading: false,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)
                     ),
 
                     backgroundColor: Colors.white,
-                    title:  Center(
-                      child: Text(
-                        ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
-                        style: appbar_text_style,),
-                    ),
+                   title: Container(
+                     width: SizeConfig.screenWidth,
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         GestureDetector(
+                           onTap: () {
+                             Navigator.pop(context);
+                           },
+                           child: FaIcon(Icons.arrow_back),
+                         ),
+                         Expanded(
+                           child: Center(
+                             child: Text(
+                               ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
+                               style: appbar_text_style,),
+                           ),
+                         ),
+                       ],
+                     ),
+                   ),
                   ),
                 ),
               ),

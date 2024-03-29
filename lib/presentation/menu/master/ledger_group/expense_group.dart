@@ -96,7 +96,9 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 color: Colors.transparent,
                 // color: Colors.red,
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-                child: AppBar(
+               child: AppBar(
+                  leadingWidth: 0,
+                  automaticallyImplyLeading: false,
                   title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(

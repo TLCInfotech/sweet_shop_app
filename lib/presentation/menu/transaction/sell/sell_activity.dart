@@ -89,7 +89,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                 color: Colors.transparent,
                 // color: Colors.red,
                 margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-                child: AppBar(
+               child: AppBar(
+                  leadingWidth: 0,
+                  automaticallyImplyLeading: false,
                   title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
@@ -115,7 +117,6 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
             ),

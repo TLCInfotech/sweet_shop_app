@@ -80,7 +80,9 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                 color: Colors.transparent,
                 // color: Colors.red,
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-                child: AppBar(
+               child: AppBar(
+                  leadingWidth: 0,
+                  automaticallyImplyLeading: false,
                   title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
@@ -106,7 +108,6 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
-                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
             ),

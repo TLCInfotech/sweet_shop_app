@@ -166,7 +166,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   color: Colors.transparent,
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: AppBar(
+                 child: AppBar(
+                  leadingWidth: 0,
+                  automaticallyImplyLeading: false,
                     title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
