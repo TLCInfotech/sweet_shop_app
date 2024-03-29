@@ -871,7 +871,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
           voucherNo: widget.voucherNo,
           voucherName: "Contra",
           totalAmount:TotalAmountInt ,
-          dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+          dateNew:matchDate==0?null:DateFormat('yyyy-MM-dd').format(invoiceDate),
           date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
           modifier: creatorName,
           modifierMachine: deviceId,

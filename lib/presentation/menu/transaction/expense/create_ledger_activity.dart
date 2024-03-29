@@ -913,7 +913,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
           Voucher_Name: "Expense",
           Round_Off:double.parse(roundoff) ,
           Total_Amount:TotalAmountInt ,
-          dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+          dateNew:matchDate==0?null:DateFormat('yyyy-MM-dd').format(invoiceDate),
           date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
           modifier: creatorName,
           modifierMachine: deviceId,
