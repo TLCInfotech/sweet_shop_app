@@ -11,7 +11,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/debit_note_voucher_request_model.dart';
+import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_credit_debit_reuest_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
@@ -833,8 +833,8 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         setState(() {
           isLoaderShow=true;
         });
-        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            saleLedger:selectedLedgerId ,
+        postCreditDebitNoterequestModel model = postCreditDebitNoterequestModel(
+            ledgerID:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             companyID: companyId ,
             voucherName: "Sale",
@@ -905,8 +905,8 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         setState(() {
           isLoaderShow=true;
         });
-        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            saleLedger:selectedLedgerId ,
+        postCreditDebitNoterequestModel model = postCreditDebitNoterequestModel(
+            ledgerID:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             invoiceNo:widget.Invoice_No.toString() ,
             companyID: companyId ,
