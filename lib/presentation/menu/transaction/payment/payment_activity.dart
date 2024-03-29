@@ -75,17 +75,35 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 // color: Colors.red,
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
                 child: AppBar(
+                  leading: Container(),
                   leadingWidth: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
                   ),
 
                   backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
-                      style: appbar_text_style,),
+                  title:  Container(
+                    width: SizeConfig.screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        widget.comeFor=="dash"?Container():GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: FaIcon(Icons.arrow_back),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+                              style: appbar_text_style,),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
                   automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
