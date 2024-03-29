@@ -68,16 +68,30 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                 // color: Colors.red,
                 margin:  EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: AppBar(
-                  leadingWidth: 0,
+                  title:  Container(
+                      width: SizeConfig.screenWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: FaIcon(Icons.arrow_back),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                ApplicationLocalizations.of(context)!.translate("user")!,
+                                style: appbar_text_style,),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)),
                   backgroundColor: Colors.white,
-                  title:  Center(
-                    child: Text(
-                      ApplicationLocalizations.of(context)!.translate("user")!,
-                      style: appbar_text_style,
-                    ),
-                  ),
                 ),
               ),
             ),

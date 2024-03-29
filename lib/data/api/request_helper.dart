@@ -554,6 +554,7 @@ class ApiRequestHelper {
           apiResponse = ApiResponseForFetchStringDynamic.fromJson(
               json.decode(response.body));
           onException(apiResponse.msg);
+          print("onException    ${apiResponse.msg}");
           break;
         case 404:
           ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();

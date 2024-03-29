@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -174,16 +175,31 @@ print("hjthghh  $companyId");
                   color: Colors.transparent,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
-                    leadingWidth: 0,
+                    title:  Container(
+                      width: SizeConfig.screenWidth,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: FaIcon(Icons.arrow_back),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                ApplicationLocalizations.of(context)!.translate("company")! ,
+                                style: appbar_text_style,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-                    title:  Center(
-                      child: Text(
-                              ApplicationLocalizations.of(context)!.translate("company")! ,
-                        style: appbar_text_style,
-                      ),
-                    ),
                   ),
                 ),
               ),
