@@ -248,6 +248,10 @@
   "bank_cash_ledger": "Bank Cash Ledger",
   "ledger_without_bank_cash": "Ledger Without Bank Cash",
   "journal": "Journal",
-  "journal_voucher": "Journal Voucher"
+  "journal_voucher": "Journal Voucher",
+  "credit_note_voucher": "Credit Note Voucher",
+  "debit_note_voucher": "Debit Note Voucher",
+  "credit_note": "Credit Note",
+  "debit_note": "Debit Note"
 }
 

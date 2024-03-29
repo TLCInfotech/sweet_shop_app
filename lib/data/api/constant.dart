@@ -47,4 +47,5 @@ class ApiConstants {
   String getSaleInvoiceDetails="getSaleInvoiceDetails";
   String getPurchaseInvoice="PurchaseInvoice";
   String getPurchaseInvoiceDetails="getPurchaseInvoiceDetails";
+  String getVoucherNote="VoucherNoteHeader";
 }

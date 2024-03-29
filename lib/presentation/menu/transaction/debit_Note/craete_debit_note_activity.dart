@@ -11,7 +11,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
+import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/debit_note_voucher_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
@@ -27,17 +27,17 @@ import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
 
 
-class CreateSellInvoice extends StatefulWidget {
-  final CreateSellInvoiceInterface mListener;
+class CreateDebitNote extends StatefulWidget {
+  final CreateDebitNoteInterface mListener;
   final  dateNew;
   final  Invoice_No;
-  
-  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
+
+  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
   @override
-  _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
+  _CreateDebitNoteState createState() => _CreateDebitNoteState();
 }
 
-class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTickerProviderStateMixin,AddOrEditItemSellInterface {
+class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProviderStateMixin,AddOrEditItemSellInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -175,7 +175,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                     backgroundColor: Colors.white,
                     title: Center(
                       child: Text(
-                        ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
+                        ApplicationLocalizations.of(context)!.translate("debit_note")!,
                         style: appbar_text_style,),
                     ),
                   ),
@@ -372,7 +372,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
-                  
+
                     setState(() {
                       editedItemIndex=index;
                     });
@@ -570,9 +570,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           ),
           widget.Invoice_No!=null?Row(
             children: [
-                Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
+              Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
               SizedBox(width: 5,),
-               Expanded(child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth))
+              Expanded(child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth))
             ],
           ):
           getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
@@ -664,29 +664,29 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return GetLedgerLayout(
-          titleIndicator: false,
-          title: ApplicationLocalizations.of(context)!.translate("ledger")!,
-          callback: (name,id){
-            setState(() {
-              selectedLedgerName=name!;
-              selectedLedgerId=id!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
-            });
-            print(selectedLedgerId);
-          },
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+        callback: (name,id){
+          setState(() {
+            selectedLedgerName=name!;
+            selectedLedgerId=id!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedLedgerId);
+        },
         ledgerName: selectedLedgerName);
   }
 
   @override
   AddOrEditItemSellDetail(item)async {
     // TODO: implement AddOrEditItemDetail
-      var itemLlist=Item_list;
+    var itemLlist=Item_list;
 
-      if(editedItemIndex!=null){
-        var index=editedItemIndex;
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
       setState(() {
         Item_list[index]['Item_Name']=item['Item_Name'];
         Item_list[index]['Quantity']=item['Quantity'];
@@ -834,17 +834,17 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-          saleLedger:selectedLedgerId ,
-          vendorID:selectedFranchiseeId ,
-          companyID: companyId ,
-          voucherName: "Sale",
-          roundOff:double.parse(roundoff) ,
-          totalAmount:TotalAmountInt,
-          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-          creator: creatorName,
-          creatorMachine: deviceId,
-          iNSERT: Inserted_list.toList(),
-          remark: "Inserted"
+            saleLedger:selectedLedgerId ,
+            vendorID:selectedFranchiseeId ,
+            companyID: companyId ,
+            voucherName: "Sale",
+            roundOff:double.parse(roundoff) ,
+            totalAmount:TotalAmountInt,
+            date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+            creator: creatorName,
+            creatorMachine: deviceId,
+            iNSERT: Inserted_list.toList(),
+            remark: "Inserted"
         );
 
         String apiUrl =baseurl + ApiConstants().getSaleInvoice;
@@ -906,21 +906,21 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           isLoaderShow=true;
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-          saleLedger:selectedLedgerId ,
-          vendorID:selectedFranchiseeId ,
-          invoiceNo:widget.Invoice_No.toString() ,
-          companyID: companyId ,
-          voucherName: "Sale",
-          roundOff:double.parse(roundoff),
-          totalAmount:TotalAmountInt,
-          dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
-          date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
-          modifier: creatorName,
-          modifierMachine: deviceId,
-          iNSERT: Inserted_list.toList(),
-          dELETE: Deleted_list.toList(),
-          uPDATE: Updated_list.toList(),
-          remark:"Modified"
+            saleLedger:selectedLedgerId ,
+            vendorID:selectedFranchiseeId ,
+            invoiceNo:widget.Invoice_No.toString() ,
+            companyID: companyId ,
+            voucherName: "Sale",
+            roundOff:double.parse(roundoff),
+            totalAmount:TotalAmountInt,
+            dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+            date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
+            modifier: creatorName,
+            modifierMachine: deviceId,
+            iNSERT: Inserted_list.toList(),
+            dELETE: Deleted_list.toList(),
+            uPDATE: Updated_list.toList(),
+            remark:"Modified"
         );
 
         print(model.toJson());
@@ -971,6 +971,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
 }
 
-abstract class CreateSellInvoiceInterface {
+abstract class CreateDebitNoteInterface {
   backToList(DateTime updateDate);
 }
