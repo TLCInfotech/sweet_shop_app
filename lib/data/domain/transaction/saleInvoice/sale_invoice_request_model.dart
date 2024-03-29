@@ -1,6 +1,7 @@
 class postSaleInvoiceRequestModel {
   String? companyID;
   String? date;
+  String? dateNew;
   String? vendorID;
   String? voucherName;
   String? saleLedger;
@@ -20,6 +21,7 @@ class postSaleInvoiceRequestModel {
   postSaleInvoiceRequestModel(
       {this.companyID,
         this.date,
+        this.dateNew,
         this.vendorID,
         this.voucherName,
         this.saleLedger,
@@ -39,6 +41,7 @@ class postSaleInvoiceRequestModel {
   postSaleInvoiceRequestModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     date = json['Date'];
+    dateNew = json['New_Date'];
     vendorID = json['Vendor_ID'];
     voucherName = json['Voucher_Name'];
     saleLedger = json['Sale_Ledger'];
@@ -75,6 +78,7 @@ class postSaleInvoiceRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['New_Date'] = this.dateNew;
     data['Vendor_ID'] = this.vendorID;
     data['Voucher_Name'] = this.voucherName;
     data['Sale_Ledger'] = this.saleLedger;

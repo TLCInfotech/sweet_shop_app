@@ -25,7 +25,7 @@ import 'add_edit_ledger_for_payment.dart';
 
 class CreatePayment extends StatefulWidget {
   final CreatePaymentInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final  voucherNo;
 
   const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
@@ -78,6 +78,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       duration: const Duration(milliseconds: 500),
     );
     calculateTotalAmt();
+    invoiceDate=widget.dateNew;
     if(widget.voucherNo!=null){
       getExpInvoice(1);
       voucherNoController.text="Voucher No: ${widget.voucherNo}";
@@ -788,7 +789,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     double TotalAmountInt= double.parse(TotalAmount);
-
+    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
+    print("dfsdf    $matchDate");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -802,7 +804,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
           remark: "UPDATED",
           voucherName: "Payment",
           totalAmount: TotalAmountInt,
-          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+            dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+            date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
           modifier: creatorName,
           modifierMachine: deviceId,
           iNSERT: Inserted_list.toList(),

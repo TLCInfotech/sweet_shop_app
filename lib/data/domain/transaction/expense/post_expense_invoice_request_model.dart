@@ -6,6 +6,7 @@ class PostExpenseInvoiceRequestModel {
   double? Total_Amount;
   double? Round_Off;
   String? date;
+  String? dateNew;
   String? creater;
   String? createrMachine;
   String? modifier;
@@ -22,6 +23,7 @@ class PostExpenseInvoiceRequestModel {
         this.Total_Amount,
         this.Round_Off,
         this.date,
+        this.dateNew,
         this.creater,
         this.createrMachine,
         this.modifier,
@@ -38,6 +40,7 @@ class PostExpenseInvoiceRequestModel {
 Total_Amount = json['Total_Amount'];
 Round_Off = json['Round_Off'];
     date = json['Date'];
+    dateNew = json['New_Date'];
     creater = json['Creator'];
     createrMachine = json['Creator_Machine'];
     modifier = json['Modifier'];
@@ -71,6 +74,7 @@ Round_Off = json['Round_Off'];
     data['Total_Amount'] = this.Total_Amount;
     data['Round_Off'] = this.Round_Off;
     data['Date'] = this.date;
+    data['New_Date'] = this.dateNew;
     data['Creator'] = this.creater;
     data['Creator_Machine'] = this.createrMachine;
     data['Modifier'] = this.modifier;

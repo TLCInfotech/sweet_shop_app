@@ -896,7 +896,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-
+    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
+    print("newOne    $matchDate");
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -912,7 +913,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           voucherName: "Sale",
           roundOff:double.parse(roundoff),
           totalAmount:TotalAmountInt,
-          date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+          dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+          date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
           modifier: creatorName,
           modifierMachine: deviceId,
           iNSERT: Inserted_list.toList(),

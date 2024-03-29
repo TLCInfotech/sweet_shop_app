@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -535,13 +533,15 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
               });
             }
             print(widget.voucherNo);
+
             if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()) {
               if (widget.voucherNo == null) {
                 print("#######");
                 callPostBankLedgerPayment();
               }
               else {
-                print("dfsdf");
+
+
                 updatecallPostBankLedgerPayment();
               }
             }
@@ -826,7 +826,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-
+    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
+    print("dfsdf    $matchDate");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -837,7 +838,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             voucherNo: widget.voucherNo,
             companyID: companyId ,
             voucherName: "Journal",
-           dateNew:DateFormat('yyyy-MM-dd').format(invoiceDate),
+            dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
             date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
             modifier: creatorName,
             modifierMachine: deviceId,

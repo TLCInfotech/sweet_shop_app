@@ -101,7 +101,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                   mListener: this,
-                  dateNew:   CommonWidget.getDateLayout(newDate),
+                  dateNew:newDate,
                   voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
@@ -251,7 +251,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
-                          dateNew:   CommonWidget.getDateLayout(newDate),
+                          dateNew: newDate,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                         )));
                       },
