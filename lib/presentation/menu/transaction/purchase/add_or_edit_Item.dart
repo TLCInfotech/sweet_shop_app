@@ -98,8 +98,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         discount.text=widget.editproduct['Disc_Percent']==null?"0":widget.editproduct['Disc_Percent'].toString();
         discountAmt.text=widget.editproduct['Disc_Amount'].toString();
         taxableAmt.text=widget.editproduct['Taxable_Amount'].toString();
-        gst.text=widget.editproduct['CGST_Rate'].toString();
-        gstAmount.text=widget.editproduct['CGST_Amount'].toString();
+        gst.text=widget.editproduct['GST_Rate'].toString();
+        gstAmount.text=widget.editproduct['GST_Amount'].toString();
         netRate.text=widget.editproduct['Net_Rate'].toString();
         netAmount.text=widget.editproduct['Net_Amount'].toString();
       });
@@ -516,8 +516,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 "Disc_Percent":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
                 "Disc_Amount":double.parse(discountAmt.text),
                 "Taxable_Amount":double.parse(taxableAmt.text),
-                "CGST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
-                "CGST_Amount":double.parse(gstAmount.text),
+                "GST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
+                "GST_Amount":double.parse(gstAmount.text),
                 "Net_Rate":double.parse(netRate.text),
                 "Net_Amount":double.parse(netAmount.text),
               };
@@ -533,8 +533,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 "Disc_Percent":discount.text==""||discount.text==null?double.parse("00.00"):double.parse(discount.text),
                 "Disc_Amount":double.parse(discountAmt.text),
                 "Taxable_Amount":double.parse(taxableAmt.text),
-                "CGST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
-                "CGST_Amount":double.parse(gstAmount.text),
+                "GST_Rate":gst.text==""||gst.text==null?double.parse("00.00"):double.parse(gst.text),
+                "GST_Amount":double.parse(gstAmount.text),
                 "Net_Rate":double.parse(netRate.text),
                 "Net_Amount":double.parse(netAmount.text),
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,

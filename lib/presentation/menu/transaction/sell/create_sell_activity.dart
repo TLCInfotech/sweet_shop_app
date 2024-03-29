@@ -101,7 +101,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+item['Amount'];
+      total=total+item['Net_Amount'];
       // print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);

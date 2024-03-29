@@ -86,7 +86,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
     calculateTotalAmt();
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
-      gerSaleInvoice(1);
+      getDebitNote(1);
       setState(() {
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
       });
@@ -101,7 +101,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+item['Amount'];
+      total=total+item['Net_Amount'];
       // print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
@@ -166,9 +166,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                   color: Colors.transparent,
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                 child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
+                  child: AppBar(
                     title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
@@ -650,7 +648,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             });
 
             if(widget.Invoice_No!=null){
-              gerSaleInvoice(1);
+              getDebitNote(1);
             }
           },
           applicablefrom: invoiceDate
@@ -712,8 +710,8 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
         Item_list[index]['Disc_Amount']=item['Disc_Amount'];
         Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
-        Item_list[index]['CGST_Rate']=item['CGST_Rate'];
-        Item_list[index]['CGST_Amount']=item['CGST_Amount'];
+        Item_list[index]['GST_Rate']=item['GST_Rate'];
+        Item_list[index]['GST_Amount']=item['GST_Amount'];
         Item_list[index]['Net_Rate']=item['Net_Rate'];
         Item_list[index]['Net_Amount']=item['Net_Amount'];
       });
@@ -754,7 +752,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
   }
 
 
-  gerSaleInvoice(int page) async {
+  getDebitNote(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -768,7 +766,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&pageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getVoucherNoteHeaderDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -863,7 +861,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             remark: "Inserted"
         );
 
-        String apiUrl =baseurl + ApiConstants().getSaleInvoice;
+        String apiUrl =baseurl + ApiConstants().getVoucherNote;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               print("  ITEM  $data ");
@@ -940,7 +938,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         );
 
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().getSaleInvoice;
+        String apiUrl =baseurl + ApiConstants().getVoucherNote;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{

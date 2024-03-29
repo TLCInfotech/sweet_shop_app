@@ -89,35 +89,34 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                 color: Colors.transparent,
                 // color: Colors.red,
                 margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-               child: AppBar(
+                child: AppBar(
                   leadingWidth: 0,
-                  automaticallyImplyLeading: false,
-                  leading: Container(),
-                  title:  Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: FaIcon(Icons.arrow_back),
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
-                                style: appbar_text_style,),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
                   ),
                   backgroundColor: Colors.white,
+                  title:  Container(
+                    width: SizeConfig.screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: FaIcon(Icons.arrow_back),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
+                              style: appbar_text_style,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  automaticallyImplyLeading:widget.comeFor=="dash"? false:true,
                 ),
               ),
             ),

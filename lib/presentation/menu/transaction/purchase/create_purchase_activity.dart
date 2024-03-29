@@ -121,7 +121,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+item['Amount'];
+      total=total+item['Net_Amount'];
       // print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
@@ -726,8 +726,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
         Item_list[index]['Disc_Amount']=item['Disc_Amount'];
         Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
-        Item_list[index]['CGST_Rate']=item['CGST_Rate'];
-        Item_list[index]['CGST_Amount']=item['CGST_Amount'];
+        Item_list[index]['GST_Rate']=item['GST_Rate'];
+        Item_list[index]['GST_Amount']=item['GST_Amount'];
         Item_list[index]['Net_Rate']=item['Net_Rate'];
         Item_list[index]['Net_Amount']=item['Net_Amount'];
       });
