@@ -236,6 +236,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         ),
         child: TextFieldSearch(
             label: 'Item',
+            minStringLength: 0,
             controller: _textController,
             decoration: textfield_decoration.copyWith(
               hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,

@@ -284,6 +284,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                 bankLedgerList = [];
               });
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(

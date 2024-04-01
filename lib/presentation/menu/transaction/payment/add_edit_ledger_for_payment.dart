@@ -264,6 +264,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                 bankLedgerList = [];
               });
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(

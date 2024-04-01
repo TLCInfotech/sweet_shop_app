@@ -251,6 +251,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
               });
               calculateRates();
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(

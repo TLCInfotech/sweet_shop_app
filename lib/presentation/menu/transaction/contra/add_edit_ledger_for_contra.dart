@@ -271,6 +271,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
                 itemsList = [];
               });
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(

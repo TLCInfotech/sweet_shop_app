@@ -251,6 +251,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
               });
               calculateRates();
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(

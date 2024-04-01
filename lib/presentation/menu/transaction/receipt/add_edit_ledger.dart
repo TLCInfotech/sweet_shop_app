@@ -266,6 +266,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                 itemsList = [];
               });
             },
+            minStringLength: 0,
             future: () {
               if (_textController.text != "")
                 return fetchSimpleData(
