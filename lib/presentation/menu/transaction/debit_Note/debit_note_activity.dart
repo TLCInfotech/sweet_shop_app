@@ -91,6 +91,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                 margin: EdgeInsets.only(top: 10,left: 10,right: 10),
                 child: AppBar(
                   leadingWidth: 0,
+                  leading: Container(),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
                   ),

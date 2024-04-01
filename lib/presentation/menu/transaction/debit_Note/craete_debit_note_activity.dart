@@ -167,6 +167,8 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
+                    leading: Container(),
+                    leadingWidth: 0,
                     title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
@@ -780,8 +782,8 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
-                    selectedLedgerName=data['voucherDetails']['Sale_Ledger_Name'];
-                    selectedLedgerId=data['voucherDetails']['Sale_Ledger'].toString();
+                    selectedLedgerName=data['voucherDetails']['Ledger_Name'];
+                    selectedLedgerId=data['voucherDetails']['Ledger_ID'].toString();
 
                   });
                   calculateTotalAmt();
@@ -851,7 +853,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             ledgerID:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             companyID: companyId ,
-            voucherName: "Sale",
+            voucherName: "Debit Note",
             roundOff:double.parse(roundoff) ,
             totalAmount:TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
@@ -924,7 +926,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             vendorID:selectedFranchiseeId ,
             invoiceNo:widget.Invoice_No.toString() ,
             companyID: companyId ,
-            voucherName: "Sale",
+            voucherName: "Debit Note",
             roundOff:double.parse(roundoff),
             totalAmount:TotalAmountInt,
             dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
