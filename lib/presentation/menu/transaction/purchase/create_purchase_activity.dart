@@ -586,7 +586,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       ),
       child: Column(
         children: [
-          Row(
+          widget.Invoice_No!=null? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
@@ -595,17 +595,13 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
               SizedBox(width: 5,),
               Expanded(
-                  child:widget.Invoice_No!=null?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
             ],
-          ),
-          widget.Invoice_No!=null?Row(
-            children: [
-              Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
-              SizedBox(width: 5,),
-              Expanded(child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth))
-            ],
-          ):
-          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+          ):getPurchaseDateLayout(),
+          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          // SizedBox(width: 5,),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)
+
         ],
       ),
     );

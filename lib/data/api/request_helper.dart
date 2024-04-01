@@ -542,7 +542,7 @@ class ApiRequestHelper {
               json.decode(response.body));
 
 
-          onSuccess(apiResponse.data!);
+          onSuccess(apiResponse.msg!);
 
           break;
       /*response of api status id Two when session has expired */
@@ -578,6 +578,7 @@ class ApiRequestHelper {
       }
     }
     catch(e){
+      print(e.toString());
       if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
         onException("Server Not Reachable!Please contact to Admin.");
       }

@@ -102,10 +102,13 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
        });
       await calculateRates();
     }
+    await fetchItems();
   }
   var itemsList = [];
+  var filteredItemsList = [];
 
-  fetchShows (searchstring) async {
+
+  fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
@@ -113,13 +116,14 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
               var topShowsJson = (data) as List;
               setState(() {
                 itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=topShowsJson.map((show) => (show)).toList();
               });
             }
           }, onFailure: (error) {
@@ -142,18 +146,39 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
+    for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
           {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate']}));
     }
     return _list;
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +256,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
           ],
         ),
         child: TextFieldSearch(
+          minStringLength: 0,
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(
