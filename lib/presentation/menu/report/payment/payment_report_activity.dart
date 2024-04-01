@@ -67,10 +67,27 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("payment_report")!,
-                  style: appbar_text_style,
-                ),
+               title:  Container(
+                 width: SizeConfig.screenWidth,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     GestureDetector(
+                       onTap: () {
+                         Navigator.pop(context);
+                       },
+                       child: FaIcon(Icons.arrow_back),
+                     ),
+                     Expanded(
+                       child: Center(
+                         child: Text(
+                           ApplicationLocalizations.of(context)!.translate("payment_report")!,
+                           style: appbar_text_style,),
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
               ),
             ),
           ),

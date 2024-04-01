@@ -55,17 +55,34 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
              child: AppBar(
                   leadingWidth: 0,
                   automaticallyImplyLeading: false,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title: const Text(
-                  StringEn.SALE_REPORT,
-                  style: appbar_text_style,
-                ),
+               title:  Container(
+                 width: SizeConfig.screenWidth,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     GestureDetector(
+                       onTap: () {
+                         Navigator.pop(context);
+                       },
+                       child: const FaIcon(Icons.arrow_back),
+                     ),
+                     const Expanded(
+                       child: Center(
+                         child: Text(
+                           StringEn.SALE_REPORT,
+                           style: appbar_text_style,),
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
               ),
             ),
           ),

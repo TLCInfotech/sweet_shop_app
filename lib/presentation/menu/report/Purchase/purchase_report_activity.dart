@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -59,10 +60,27 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("purchase_report")!,
-                  style: appbar_text_style,
-                ),
+               title:  Container(
+                 width: SizeConfig.screenWidth,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     GestureDetector(
+                       onTap: () {
+                         Navigator.pop(context);
+                       },
+                       child: FaIcon(Icons.arrow_back),
+                     ),
+                     Expanded(
+                       child: Center(
+                         child: Text(
+                           ApplicationLocalizations.of(context)!.translate("purchase_report")!,
+                           style: appbar_text_style,),
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
               ),
             ),
           ),

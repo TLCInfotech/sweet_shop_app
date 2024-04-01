@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -59,10 +60,27 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-                title:  Text(
-                  ApplicationLocalizations.of(context)!.translate("expense_report")!,
-                  style: appbar_text_style,
-                ),
+               title:  Container(
+                 width: SizeConfig.screenWidth,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     GestureDetector(
+                       onTap: () {
+                         Navigator.pop(context);
+                       },
+                       child: FaIcon(Icons.arrow_back),
+                     ),
+                     Expanded(
+                       child: Center(
+                         child: Text(
+                           ApplicationLocalizations.of(context)!.translate("expense_report")!,
+                           style: appbar_text_style,),
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
               ),
             ),
           ),

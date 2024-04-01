@@ -24,6 +24,7 @@ import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/debit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/journal/journal_voucher_list.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
@@ -1006,6 +1007,7 @@ String companyId="";
             getContraLayout(parentHeight,parentWidth),
             getJournalLayout(parentHeight,parentWidth),
             getDebitLayout(parentHeight,parentWidth),
+            getCreditLayout(parentHeight,parentWidth),
           ],
         ),
       ),
@@ -1147,6 +1149,33 @@ String companyId="";
             ),
             Text(
               ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  /* Widget for credit transaction Layout */
+  Widget getCreditLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("credit_note_voucher")!,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
