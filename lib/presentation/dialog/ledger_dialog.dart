@@ -37,49 +37,73 @@ class _LedgerDialogState extends State<LedgerDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("ledger")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("ledger")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
 
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
-
+  bool isApiCall=false;
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Padding(
       padding:  EdgeInsets.only(bottom: parentHeight*.015,left: parentWidth*.04,right: parentWidth*.04),
@@ -130,7 +154,7 @@ class _LedgerDialogState extends State<LedgerDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -138,6 +162,7 @@ class _LedgerDialogState extends State<LedgerDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetLedger();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -231,22 +256,51 @@ class _LedgerDialogState extends State<LedgerDialog>{
     );
   }
 
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
 
+      results = ledger_list
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
 
+    // Refresh the UI
+    setState(() {
+      ledger_list = results;
+    });
+    return _list;
+  }
   callGetLedger() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().ledger+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
+            isLoaderShow=false;
             if(data!=null) {
               setState(() {
                 ledger_list = data;
+                filteredStates=ledger_list;
               });
               print("  LedgerLedger  $data ");
             }

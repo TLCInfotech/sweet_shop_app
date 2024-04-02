@@ -3,8 +3,6 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../data/api/constant.dart';
@@ -39,53 +37,78 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                        ApplicationLocalizations.of(context)!.translate("select_measuring_unit_caps")!,
-                        style: TextStyle(
-                          fontFamily: "Montserrat_Bold",
-                          fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                            ApplicationLocalizations.of(context)!.translate("select_measuring_unit_caps")!,
+                            style: TextStyle(
+                              fontFamily: "Montserrat_Bold",
+                              fontSize: SizeConfig.blockSizeHorizontal * 5.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
 
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
+  bool isApiCall=false;
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Padding(
@@ -137,7 +160,7 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -145,6 +168,7 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetUnit();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -236,13 +260,38 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
       ),
     );
   }
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
 
+      results = _arrListNew
+          .where((state) => state.toLowerCase().contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      _arrListNew = results;
+    });
+    return _list;
+  }
 
   callGetUnit() async {
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
@@ -250,7 +299,9 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {
+                isLoaderShow=false;
               _arrListNew=data;
+              filteredStates=_arrListNew;
             });
             // _arrListNew.addAll(data.map((arrData) =>
             // new EmailPhoneRegistrationModel.fromJson(arrData)));

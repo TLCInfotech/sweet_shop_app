@@ -41,53 +41,59 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Stack(
-                    alignment: Alignment.center,
+                  child: Column(
                     children: [
                       Container(
-                          height: SizeConfig.screenHeight*.32,
-                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                      Visibility(
-                          visible: workingUnserList.isEmpty  ? true : false,
-                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                              height: SizeConfig.screenHeight*.32,
+                              child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                          Visibility(
+                              visible: workingUnserList.isEmpty  ? true : false,
+                              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        ],
+                      ),
+
                     ],
                   ),
-
-                ],
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -162,7 +168,7 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -170,6 +176,7 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetTaxType();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -262,6 +269,32 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
       ),
     );
   }
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
+
+      results = filteredStates
+          .where((user) =>
+          user["name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      workingUnserList = results;
+    });
+    return _list;
+  }
 
   callGetTaxType() async {
     String baseurl=await AppPreferences.getDomainLink();
@@ -285,6 +318,7 @@ class _WorkingUnderDialogState extends State<WorkingUnderDialog>{
                 isLoaderShow=false;
                 if(data!=null){
                   workingUnserList=data;
+                  filteredStates=workingUnserList;
                   print("ghfghgfg  $data");
                 }else{
                   // isApiCall=true;

@@ -39,53 +39,77 @@ class _CategoryDialogState extends State<CategoryDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("select_category")!,
-                      style: TextStyle(
-                          fontFamily: "Montserrat_Bold",
-                          fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: _arrListNew.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
-                ],
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("select_category")!,
+                          style: TextStyle(
+                              fontFamily: "Montserrat_Bold",
+                              fontSize: SizeConfig.blockSizeHorizontal * 5.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: _arrListNew.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
-
+  bool isApiCall=false;
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Padding(
       padding:  EdgeInsets.only(bottom: parentHeight*.015,left: parentWidth*.04,right: parentWidth*.04),
@@ -239,11 +263,41 @@ class _CategoryDialogState extends State<CategoryDialog>{
 
 
 
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
+
+      results = _arrListNew
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      _arrListNew = results;
+    });
+    return _list;
+  }
+
   callGetItemCategory() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
     AppPreferences.getDeviceId().then((deviceId) {
+      setState(() {
+        isLoaderShow=true;
+      });
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
@@ -251,7 +305,9 @@ class _CategoryDialogState extends State<CategoryDialog>{
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {
+              isLoaderShow=false;
               _arrListNew=data;
+              filteredStates=_arrListNew;
             });
             // _arrListNew.addAll(data.map((arrData) =>
             // new EmailPhoneRegistrationModel.fromJson(arrData)));

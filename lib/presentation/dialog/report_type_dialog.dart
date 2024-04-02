@@ -5,6 +5,8 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
+import '../../core/common.dart';
+
 class ReportTypeDialog extends StatefulWidget {
   final ReportTypeDialogInterface mListener;
 
@@ -30,52 +32,99 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
 
   }
   List franchisee_list= ['R1', 'R2', 'R3','R4','R4','R5','R6','R7','R8'];
+  List filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
 
+      results = franchisee_list
+          .where((state) => state.toLowerCase().contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      franchisee_list = results;
+    });
+    return _list;
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("report_type")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("report_type")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Container(
+                          height: SizeConfig.screenHeight*.32,
+                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
 
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
+  bool isApiCall=false;
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Padding(
@@ -127,7 +176,7 @@ class _ReportTypeDialogState extends State<ReportTypeDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(

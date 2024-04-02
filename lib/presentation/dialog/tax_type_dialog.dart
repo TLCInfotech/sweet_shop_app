@@ -44,53 +44,59 @@ class _TaxDialogState extends State<TaxDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("tax_type")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Stack(
-                    alignment: Alignment.center,
+                  child: Column(
                     children: [
                       Container(
-                          height: SizeConfig.screenHeight*.32,
-                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                      Visibility(
-                          visible: taxTypeList.isEmpty  ? true : false,
-                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        height: SizeConfig.screenHeight*.08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("tax_type")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                              height: SizeConfig.screenHeight*.32,
+                              child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                          Visibility(
+                              visible: taxTypeList.isEmpty  ? true : false,
+                              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        ],
+                      ),
+
                     ],
                   ),
-
-                ],
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -165,7 +171,7 @@ class _TaxDialogState extends State<TaxDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -173,6 +179,7 @@ class _TaxDialogState extends State<TaxDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetTaxType();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -265,7 +272,32 @@ class _TaxDialogState extends State<TaxDialog>{
       ),
     );
   }
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
 
+      results = filteredStates
+          .where((user) =>
+          user["name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      taxTypeList = results;
+    });
+    return _list;
+  }
   callGetTaxType() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
@@ -287,6 +319,7 @@ class _TaxDialogState extends State<TaxDialog>{
                 isLoaderShow=false;
                 if(data!=null){
                   taxTypeList=data;
+                  filteredStates=taxTypeList;
                   print("ghfghgfg  $data");
                 }else{
                   // isApiCall=true;

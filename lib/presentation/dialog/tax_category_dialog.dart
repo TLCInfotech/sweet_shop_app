@@ -42,53 +42,59 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child:  Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("tax_category")!,
-                          style: page_heading_textStyle
-                      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+                child: Container(
+                  height: SizeConfig.screenHeight*.5,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Stack(
-                    alignment: Alignment.center,
+                  child: Column(
                     children: [
                       Container(
-                          height: SizeConfig.screenHeight*.32,
-                          child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                      Visibility(
-                          visible: taxCtegoryList.isEmpty  ? true : false,
-                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        height: SizeConfig.screenHeight*.08,
+                        child:  Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("tax_category")!,
+                              style: page_heading_textStyle
+                          ),
+                        ),
+                      ),
+                      getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                              height: SizeConfig.screenHeight*.32,
+                              child: getList(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                          Visibility(
+                              visible: taxCtegoryList.isEmpty  ? true : false,
+                              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        ],
+                      ),
+
                     ],
                   ),
-
-                ],
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -163,7 +169,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                  onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -171,6 +177,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetTaxCtegory();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -263,7 +270,32 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
       ),
     );
   }
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
 
+      results = filteredStates
+          .where((user) =>
+          user["name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      taxCtegoryList = results;
+    });
+    return _list;
+  }
   callGetTaxCtegory() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
@@ -285,6 +317,7 @@ class _TaxCategoryDialogState extends State<TaxCategoryDialog>{
                 isLoaderShow=false;
                 if(data!=null){
                   taxCtegoryList=data;
+                  filteredStates=taxCtegoryList;
                   print("ghfghgfg  $data");
                 }else{
                   // isApiCall=true;

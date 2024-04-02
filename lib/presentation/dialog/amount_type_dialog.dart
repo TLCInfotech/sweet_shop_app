@@ -40,7 +40,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
-      selctedAmtType=widget.selectedType;
+    selctedAmtType=widget.selectedType;
 
     _scrollController.addListener(_scrollListener);
     callGetAmountType(page);
@@ -62,101 +62,78 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Container(
-        height: 45,
-        width: double.parse(widget.width.toString()),
-        margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:40): EdgeInsets.only(left: 5,top:10),
-        padding: EdgeInsets.only(left: 10, right: 10),
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ],
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5)
-        ),
-        child: DropdownButton<dynamic>(
-          menuMaxHeight: 200,
-          hint: Text(
-            ApplicationLocalizations.of(context)!.translate("amount_type")!,
-          ),
-          value: selctedAmtType,
-          icon:  Icon(
-            Icons.arrow_drop_down,
-          ),
-          iconSize: 20,
-          isExpanded: true,
-          underline:Container(),
-          onChanged: (dynamic? newValue) {
-            setState(() {
-              selctedAmtType = newValue!;
-            });
-            if(widget.mListener!=null){
-              widget.mListener.selectedAmountType(newValue);
-            }
-          },
-          items: amount_type.map<
-              DropdownMenuItem<dynamic>>(
-                  (dynamic value) {
-                return DropdownMenuItem<dynamic>(
-                  value: value,
-                  child: Text(
-                    value.toString(),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+            height: 45,
+            width: double.parse(widget.width.toString()),
+            margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:40): EdgeInsets.only(left: 5,top:10),
+            padding: EdgeInsets.only(left: 10, right: 10),
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
                   ),
-                );
-              }).toList(),
-        ));
-
-      Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: Container(
-              height: SizeConfig.screenHeight*.5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight*.08,
-                    child: Center(
-                      child: Text(
-                        ApplicationLocalizations.of(context)!.translate("amount_type")!,
-                        style: TextStyle(
-                          fontFamily: "Montserrat_Bold",
-                          fontSize: SizeConfig.blockSizeHorizontal * 5.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  Container(
-                      height: SizeConfig.screenHeight*.32,
-                      child: amount_type.isNotEmpty?getList(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()),
                 ],
-              ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5)
             ),
-          ),
-          getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
-        ],
-      ),
+            child: DropdownButton<dynamic>(
+              menuMaxHeight: 200,
+              hint: Text(
+                ApplicationLocalizations.of(context)!.translate("amount_type")!,
+              ),
+              value: selctedAmtType,
+              icon:  Icon(
+                Icons.arrow_drop_down,
+              ),
+              iconSize: 20,
+              isExpanded: true,
+              underline:Container(),
+              onChanged: (dynamic? newValue) {
+                setState(() {
+                  selctedAmtType = newValue!;
+                });
+                if(widget.mListener!=null){
+                  widget.mListener.selectedAmountType(newValue);
+                }
+              },
+              items: amount_type.map<
+                  DropdownMenuItem<dynamic>>(
+                      (dynamic value) {
+                    return DropdownMenuItem<dynamic>(
+                      value: value,
+                      child: Text(
+                        value.toString(),
+                      ),
+                    );
+                  }).toList(),
+            )),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
-
-
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return Padding(
       padding:  EdgeInsets.only(bottom: parentHeight*.015,left: parentWidth*.04,right: parentWidth*.04),
@@ -207,7 +184,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                  onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -215,6 +192,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetAmountType(1);
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -308,6 +286,28 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
     );
   }
 
+  var filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
+
+      results = amount_type
+          .where((state) => state.toLowerCase().contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+    // Refresh the UI
+    setState(() {
+      amount_type = results;
+    });
+    return _list;
+  }
 
   callGetAmountType(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -324,7 +324,6 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
             page: page.toString()
         );
         String apiUrl = "${baseurl}${ApiConstants().amount_type}?Company_ID=$companyId";
-        print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -332,19 +331,14 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                 if(data!=null){
                   print("responseeee   $data");
                   List<dynamic> _arrList = [];
-                  _arrList=data;
-                  if (_arrList.length < 10) {
-                    if (mounted) {
-                      setState(() {
-                        isPagination = false;
-                      });
-                    }
-                  }
-                  if (page == 1) {
-                    setDataToList(_arrList);
-                  } else {
-                    setMoreDataToList(_arrList);
-                  }
+                  amount_type=data;
+                  filteredStates=amount_type;
+                  // if (_arrList.length < 10) {    }
+                  // if (page == 1) {
+                  //   setDataToList(_arrList);
+                  // } else {
+                  //   setMoreDataToList(_arrList);
+                  // }
                 }else{
                   isApiCall=true;
                 }

@@ -41,55 +41,61 @@ class _DistrictDialogState extends State<DistrictDialog> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                left: SizeConfig.screenWidth * .05,
-                right: SizeConfig.screenWidth * .05),
-            child: Container(
-              height: SizeConfig.screenHeight * .5,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight * .08,
-                    child: Center(
-                      child: Text(
-                          ApplicationLocalizations.of(context)!.translate("select_state")!,
-                          style: page_heading_textStyle),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    left: SizeConfig.screenWidth * .05,
+                    right: SizeConfig.screenWidth * .05),
+                child: Container(
+                  height: SizeConfig.screenHeight * .5,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                   ),
-                  getAddSearchLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth),
-                  Stack(
-                    alignment: Alignment.center,
+                  child: Column(
                     children: [
                       Container(
-                          height: SizeConfig.screenHeight * .32,
-                          child: getList(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                      Visibility(
-                          visible: city_list.isEmpty  ? true : false,
-                          child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        height: SizeConfig.screenHeight * .08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!.translate("select_state")!,
+                              style: page_heading_textStyle),
+                        ),
+                      ),
+                      getAddSearchLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                              height: SizeConfig.screenHeight * .32,
+                              child: getList(
+                                  SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                          Visibility(
+                              visible: city_list.isEmpty  ? true : false,
+                              child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+              getCloseButton(SizeConfig.screenHeight, SizeConfig.screenWidth),
+            ],
           ),
-          getCloseButton(SizeConfig.screenHeight, SizeConfig.screenWidth),
-        ],
-      ),
+        ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -167,7 +173,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
                         fontFamily: 'Inter_Medium_Font',
                         fontWeight: FontWeight.w400),
                   ),
-                  // onChanged: _onChangeHandler,
+                   onChanged: fetchSimpleData,
                 ),
               ),
               Visibility(
@@ -175,6 +181,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
                 child: GestureDetector(
                   onTap: () {
                     _textController.clear();
+                    callGetCity();
                   },
                   child: Container(
                       color: Colors.transparent,
@@ -269,6 +276,29 @@ class _DistrictDialogState extends State<DistrictDialog> {
       ),
     );
   }
+  List filteredStates = [];
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredStates;
+    } else {
+
+      results = city_list
+          .where((state) => state.toLowerCase().contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filteredStates");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      city_list = results;
+    });
+    return _list;
+  }
 
   callGetCity() async {
     String companyId = await AppPreferences.getCompanyId();
@@ -291,6 +321,7 @@ class _DistrictDialogState extends State<DistrictDialog> {
                 isLoaderShow=false;
                 if(data!=null){
                   city_list=data;
+                  filteredStates=city_list;
                   print("ghfghgfg  $data");
                 }else{
                   // isApiCall=true;

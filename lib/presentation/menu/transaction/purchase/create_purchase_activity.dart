@@ -18,11 +18,6 @@ import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/core/util.dart';
-import 'package:sweet_shop_app/presentation/dialog/city_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/country_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/state_dialog.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
