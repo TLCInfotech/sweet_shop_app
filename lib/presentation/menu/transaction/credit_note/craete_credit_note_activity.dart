@@ -235,7 +235,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
@@ -257,19 +257,33 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
         ):Container(),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
+            if(selectedLedgerId=="" ){
+              var snackBar = SnackBar(content: Text('Select Account Ledger!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            print(widget.Invoice_No);
-            if(widget.Invoice_No==null) {
-              print("#######");
-              addCreditNote();
+            else if(selectedFranchiseeId==""){
+              var snackBar=SnackBar(content: Text("Select Party Name !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else {
-              print("dfsdf");
-              updateCreditNote();
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+              print(widget.Invoice_No);
+              if(widget.Invoice_No==null) {
+                print("#######");
+                addCreditNote();
+              }
+              else {
+                print("dfsdf");
+                updateCreditNote();
+              }
             }
           },
           onDoubleTap: () {},
@@ -573,7 +587,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
       ),
       child: Column(
         children: [
-          Row(
+          widget.Invoice_No!=null? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
@@ -582,17 +596,12 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
 
               SizedBox(width: 5,),
               Expanded(
-                  child:widget.Invoice_No!=null?getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth): getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
             ],
-          ),
-          widget.Invoice_No!=null?Row(
-            children: [
-              Expanded(child: getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
-              SizedBox(width: 5,),
-              Expanded(child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth))
-            ],
-          ):
-          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+          ):getPurchaseDateLayout(),
+          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          // SizedBox(width: 5,),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)
         ],
       ),
     );
@@ -660,7 +669,26 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return
+    return GetLedgerLayout(
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("party")!,
+        callback: (name,id){
+          if(selectedLedgerId==id){
+            var snack=SnackBar(content: Text("Account Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          }
+          else {
+            setState(() {
+              selectedFranchiseeName = name!;
+              selectedFranchiseeId = id!;
+              // Item_list=[];
+              // Updated_list=[];
+              // Deleted_list=[];
+              // Inserted_list=[];
+            });
+          }
+        },
+        ledgerName: selectedFranchiseeName);
       GetFranchiseeLayout(
           titleIndicator: false,
           title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
@@ -682,19 +710,40 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return GetLedgerLayout(
         titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+        title: ApplicationLocalizations.of(context)!.translate("account_ledger")!,
         callback: (name,id){
-          setState(() {
-            selectedLedgerName=name!;
-            selectedLedgerId=id!;
-            // Item_list=[];
-            // Updated_list=[];
-            // Deleted_list=[];
-            // Inserted_list=[];
-          });
+          if(selectedFranchiseeId==id){
+            var snack=SnackBar(content: Text("Acoount Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          }
+          else {
+            setState(() {
+              selectedLedgerName = name!;
+              selectedLedgerId = id!;
+              // Item_list=[];
+              // Updated_list=[];
+              // Deleted_list=[];
+              // Inserted_list=[];
+            });
+          }
           print(selectedLedgerId);
         },
         ledgerName: selectedLedgerName);
+    // GetLedgerLayout(
+    //     titleIndicator: false,
+    //     title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+    //     callback: (name,id){
+    //       setState(() {
+    //         selectedLedgerName=name!;
+    //         selectedLedgerId=id!;
+    //         // Item_list=[];
+    //         // Updated_list=[];
+    //         // Deleted_list=[];
+    //         // Inserted_list=[];
+    //       });
+    //       print(selectedLedgerId);
+    //     },
+    //     ledgerName: selectedLedgerName);
   }
 
   @override

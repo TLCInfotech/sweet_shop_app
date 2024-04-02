@@ -89,7 +89,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetLedgerLayout> with 
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(widget.ledgerName == "" ? ApplicationLocalizations.of(context)!.translate("ledger")!  : widget.ledgerName,
+                      Text(widget.ledgerName == "" ? widget.title : widget.ledgerName,
                         style: widget.ledgerName == ""
                             ? hint_textfield_Style
                             : text_field_textStyle,

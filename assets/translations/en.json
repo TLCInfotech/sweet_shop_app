@@ -252,6 +252,8 @@
   "credit_note_voucher": "Credit Note Voucher",
   "debit_note_voucher": "Debit Note Voucher",
   "credit_note": "Credit Note",
-  "debit_note": "Debit Note"
+  "debit_note": "Debit Note",
+  "sale_ledger": "Sale Ledger",
+  "account_ledger": "Account Ledger"
 }
 

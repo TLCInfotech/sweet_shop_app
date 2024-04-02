@@ -235,7 +235,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
@@ -257,20 +257,35 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         ):Container(),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
+            if(selectedLedgerId=="" ){
+              var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            print(widget.Invoice_No);
-            if(widget.Invoice_No==null) {
-              print("#######");
-              callPostSaleInvoice();
+            else if(selectedFranchiseeId==""){
+              var snackBar=SnackBar(content: Text("Select Party Name !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else {
-              print("dfsdf");
-              updatecallPostSaleInvoice();
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
+           else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+             if (mounted) {
+               setState(() {
+                 disableColor = true;
+               });
+             }
+             print(widget.Invoice_No);
+             if(widget.Invoice_No==null) {
+               print("#######");
+               callPostSaleInvoice();
+             }
+             else {
+               print("dfsdf");
+               updatecallPostSaleInvoice();
+             }
+           }
+
           },
           onDoubleTap: () {},
           child: Container(
@@ -615,6 +630,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
 
   }
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -655,38 +671,49 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return
-      GetFranchiseeLayout(
-          titleIndicator: false,
-          title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-          callback: (name,id){
+    return GetLedgerLayout(
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("party")!,
+        callback: (name,id){
+          if(selectedLedgerId==id){
+            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          }
+          else {
             setState(() {
-              selectedFranchiseeName=name!;
-              selectedFranchiseeId=id!;
+              selectedFranchiseeName = name!;
+              selectedFranchiseeId = id!;
               // Item_list=[];
               // Updated_list=[];
               // Deleted_list=[];
               // Inserted_list=[];
             });
-            print(selectedFranchiseeId);
-          },
-          franchiseeName: selectedFranchiseeName);
+          }
+        },
+        ledgerName: selectedFranchiseeName);
+
   }
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return GetLedgerLayout(
           titleIndicator: false,
-          title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+          title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
           callback: (name,id){
-            setState(() {
-              selectedLedgerName=name!;
-              selectedLedgerId=id!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
-            });
+            if(selectedFranchiseeId==id){
+              var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+              ScaffoldMessenger.of(context).showSnackBar(snack);
+            }
+            else {
+              setState(() {
+                selectedLedgerName = name!;
+                selectedLedgerId = id!;
+                // Item_list=[];
+                // Updated_list=[];
+                // Deleted_list=[];
+                // Inserted_list=[];
+              });
+            }
             print(selectedLedgerId);
           },
         ledgerName: selectedLedgerName);
