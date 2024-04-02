@@ -345,8 +345,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
+                            }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Sale Ledger and Party !");
                             }
                           },
                           child: Container(

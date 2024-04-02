@@ -61,21 +61,23 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
 
   var oldItemId=0;
 
-
-  fetchShows (searchstring) async {
+  var filteredItemsList = [];
+  fetchShows () async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&name=${searchstring}";
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
               var topShowsJson = (data) as List;
               setState(() {
                 bankLedgerList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=  topShowsJson.map((show) => (show)).toList();
+
               });
             }
           }, onFailure: (error) {
@@ -98,10 +100,28 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(const Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      bankLedgerList = results;
+    });
+
     print(bankLedgerList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in bankLedgerList) {
@@ -120,7 +140,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
   }
 
   /* get the value layout*/
-  setVal(){
+  setVal()async{
     if(widget.editproduct!=null){
       setState(() {
         _textController.text=widget.editproduct['Ledger_Name'];
@@ -129,6 +149,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
         selectedLimitUnit=widget.editproduct['Amnt_Type'].toString();
       });
     }
+    await fetchShows();
   }
 
   @override

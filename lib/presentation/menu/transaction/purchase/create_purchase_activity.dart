@@ -352,9 +352,15 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Purchase Ledger and Party !");
+                            }
+
                           },
                           child: Container(
                               width: 120,

@@ -344,9 +344,15 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Account Ledger and Party !");
+                            }
+
                           },
                           child: Container(
                               width: 120,

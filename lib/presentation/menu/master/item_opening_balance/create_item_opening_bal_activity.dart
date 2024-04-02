@@ -302,9 +302,15 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedFranchiseeID!=null) {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Franchisee !");
+                            }
+
                           },
                           child: Container(
                               width: 120,

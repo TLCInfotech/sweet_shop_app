@@ -209,9 +209,15 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedBankLedgerID!=null) {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Bank !");
+                            }
+
                           },
                           child: Container(
                               width: 140,

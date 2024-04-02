@@ -146,7 +146,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("expense_invoice_new")!,
+                                ApplicationLocalizations.of(context)!.translate("expense_invoice")!,
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -214,9 +214,15 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null);
+                            if(selectedFranchiseeId!="") {
+                              if (context != null) {
+                                goToAddOrEditItem(null);
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Franchisee!");
+                            }
+
                           },
                           child: Container(
                               width: 140,

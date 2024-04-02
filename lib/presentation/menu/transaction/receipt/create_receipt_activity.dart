@@ -230,9 +230,15 @@ bool isLoaderShow=false;
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if (context != null) {
-                              goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
+                            if(selectedBankLedgerID!=null) {
+                              if (context != null) {
+                                goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
+                              }
                             }
+                            else{
+                              CommonWidget.errorDialog(context, "Select Bank !");
+                            }
+
                           },
                           child: Container(
                               width: 140,

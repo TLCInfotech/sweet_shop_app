@@ -50,21 +50,23 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   var selectedItemID =null;
   var oldItemId=0;
 
+  var filteredItemsList = [];
 
-  fetchShows (searchstring) async {
+  fetchShows () async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&name=${searchstring}";
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
               var topShowsJson = (data) as List;
               setState(() {
                 itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=  topShowsJson.map((show) => (show)).toList();
               });
             }
           }, onFailure: (error) {
@@ -84,11 +86,27 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(const Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
-    print(itemsList);
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in itemsList) {
       _list.add( TestItem.fromJson(
@@ -104,7 +122,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
     setVal();
   }
 
-  setVal(){
+  setVal()async{
     print(widget.editproduct);
     if(widget.editproduct!=null){
       setState(() {
@@ -115,6 +133,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       });
       print(oldItemId);
     }
+    await fetchShows();
   }
 
 /*  setVal(){
