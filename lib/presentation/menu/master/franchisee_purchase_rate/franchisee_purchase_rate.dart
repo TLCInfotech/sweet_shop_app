@@ -343,18 +343,23 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
             //   )));
             // }
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-              if(selectedFranchiseeID!=null){
-                callPostIFranchiseetemOpeningBal();
-              }
-              else{
-                var snackBar = const SnackBar(content: Text('Select Franchisee !'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+            if(selectedFranchiseeID==null){
+              var snackBar=SnackBar(content: Text("Select Franchisee Id !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(selectedFranchiseeID!=null && Item_list.length>0) {
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+              callPostIFranchiseetemOpeningBal();
+            }
+
           },
           onDoubleTap: () {},
           child: Container(

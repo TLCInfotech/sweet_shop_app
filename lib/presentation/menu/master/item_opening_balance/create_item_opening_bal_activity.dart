@@ -642,11 +642,21 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
               //   )));
               // }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-                await  callPostIFranchiseetemOpeningBal();
+              if(selectedFranchiseeID==null){
+                var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if(Item_list.length==0){
+                var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if(selectedFranchiseeID!=null && Item_list.length>0) {
+                if (mounted) {
+                  setState(() {
+                    disableColor = true;
+                  });
+                  await callPostIFranchiseetemOpeningBal();
+                }
               }
             },
             onDoubleTap: () {},
