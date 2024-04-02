@@ -324,6 +324,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
             page: page.toString()
         );
         String apiUrl = "${baseurl}${ApiConstants().amount_type}?Company_ID=$companyId";
+        print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

@@ -538,20 +538,31 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         ):Container(),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
+            if(selectedFranchiseeId==""){
+            var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            print(widget.voucherNo);
-            if(widget.voucherNo==null) {
-             print("#######");
-              callPostExpense();
+            else if(Item_list.length==0){
+            var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else {
-              print("dfsdf");
-              updatecallPostExpense();
+            else if(selectedFranchiseeId!="" &&Item_list.length>0) {
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+              print(widget.voucherNo);
+              if (widget.voucherNo == null) {
+                print("#######");
+                callPostExpense();
+              }
+              else {
+                print("dfsdf");
+                updatecallPostExpense();
+              }
             }
+
           },
           onDoubleTap: () {},
           child: Container(
