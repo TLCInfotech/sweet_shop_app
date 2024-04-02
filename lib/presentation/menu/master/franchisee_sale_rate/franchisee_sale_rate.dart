@@ -227,12 +227,23 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
             //   )));
             // }
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
+
+            if(selectedCopyFranchiseeId==""){
+              var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            callPostItemOpeningBal();
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(selectedCopyFranchiseeId!="" && Item_list.length>0) {
+              if (mounted) {
+                setState(() {
+                  disableColor = true;
+                });
+              }
+              callPostItemOpeningBal();
+            }
           },
           onDoubleTap: () {},
           child: Container(

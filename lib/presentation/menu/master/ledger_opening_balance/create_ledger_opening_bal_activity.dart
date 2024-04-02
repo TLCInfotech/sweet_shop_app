@@ -139,7 +139,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                          GestureDetector(
                            onTap: () {
                              Navigator.pop(context);
-                           },
+                            },
                            child: FaIcon(Icons.arrow_back),
                          ),
                          Expanded(
