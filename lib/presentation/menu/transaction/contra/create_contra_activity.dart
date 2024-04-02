@@ -584,7 +584,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
@@ -605,19 +605,29 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         ):Container(),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
+            if(selectedBankLedgerID==null){
+              var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            if(widget.voucherNo==null) {
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(selectedBankLedgerID!=null &&Item_list.length>0) {
+              if (mounted) {
+              setState(() {
+              disableColor = true;
+              });
+              }
+              if(widget.voucherNo==null) {
               print("#######");
               callPostContra();
-            }
-            else {
+              }
+              else {
               print("dfsdf");
               updatecallPostContra();
-            }
+              }
+              }
 
           },
           onDoubleTap: () {},

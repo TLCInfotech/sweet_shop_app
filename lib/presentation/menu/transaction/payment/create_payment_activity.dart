@@ -495,7 +495,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           width: SizeConfig.halfscreenWidth,
@@ -516,20 +516,31 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
         ),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
-                disableColor = true;
-              });
-            }
-            print(widget.voucherNo);
-            if(widget.voucherNo==null) {
-              print("#######");
-              callPostBankLedgerPayment();
-            }
-            else {
-              print("dfsdf");
-              updatecallPostBankLedgerPayment();
-            }
+              if(selectedBankLedgerID==null){
+              var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if(Ledger_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if(selectedBankLedgerID!=null &&Ledger_list.length>0) {
+                if (mounted) {
+                  setState(() {
+                    disableColor = true;
+                  });
+                }
+                print(widget.voucherNo);
+                if (widget.voucherNo == null) {
+                  print("#######");
+                  callPostBankLedgerPayment();
+                }
+                else {
+                  print("dfsdf");
+                  updatecallPostBankLedgerPayment();
+                }
+
+          }
           },
           onDoubleTap: () {},
           child: Container(

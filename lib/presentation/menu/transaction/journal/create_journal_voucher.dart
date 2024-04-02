@@ -550,7 +550,22 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             }
             print(widget.voucherNo);
 
-            if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()) {
+            if(Ledger_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one ledger!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              setState(() {
+                disableColor = false;
+              });
+            }
+            else if((TotalCr).ceilToDouble()!=(TotalDr).ceilToDouble()){
+              var snackBar = SnackBar(
+                  content: Text('Match Total Credit and Debit!'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              setState(() {
+                disableColor = false;
+              });
+            }
+            else if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()&&Ledger_list.length>0) {
               if (widget.voucherNo == null) {
                 print("#######");
                 callPostBankLedgerPayment();
@@ -561,14 +576,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 updatecallPostBankLedgerPayment();
               }
             }
-            else {
-              var snackBar = SnackBar(
-                  content: Text('Match Total Credit and Debit!'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              setState(() {
-                disableColor = false;
-              });
-            }
+
           },
           onDoubleTap: () {},
           child: Container(

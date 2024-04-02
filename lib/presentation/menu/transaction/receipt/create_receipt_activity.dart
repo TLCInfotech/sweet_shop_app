@@ -589,7 +589,7 @@ bool isLoaderShow=false;
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
@@ -610,19 +610,29 @@ bool isLoaderShow=false;
         ):Container(),
         GestureDetector(
           onTap: () {
-            if (mounted) {
-              setState(() {
+            if(selectedBankLedgerID==null){
+              var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(Item_list.length==0){
+              var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            else if(selectedBankLedgerID!=null &&Item_list.length>0) {
+                if (mounted) {
+                setState(() {
                 disableColor = true;
-              });
-            }
-            if(widget.voucherNo==null) {
-              print("#######");
-              callPostReceipt();
-            }
-            else {
-              print("dfsdf");
-              updatecallPostReceipt();
-            }
+                });
+                }
+                if(widget.voucherNo==null) {
+                print("#######");
+                callPostReceipt();
+                }
+                else {
+                print("dfsdf");
+                updatecallPostReceipt();
+             }
+    }
         
           },
           onDoubleTap: () {},

@@ -263,9 +263,15 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
             textStyle: item_regular_textStyle,
             getSelectedValue: (v) {
               setState(() {
-                selectedItemID = v.value;
-                if(widget.franId==selectedItemID){
+
+                if(widget.franId==v.value){
+                  _textController.clear();
                   CommonWidget.errorDialog(context, "You can not select same ledger.");
+                }
+                else{
+                  setState(() {
+                    selectedItemID = v.value;
+                  });
                 }
                 print("newwww  ${widget.franId}   $selectedItemID");
                 itemsList = [];
