@@ -269,7 +269,6 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
           child:Center(
             child: Text(
               ApplicationLocalizations.of(context)!.translate("close")!,
-              // StringEn.CLOSE,
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

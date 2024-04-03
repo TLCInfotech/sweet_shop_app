@@ -577,6 +577,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate.toString(),
+                id: selectedFranchiseeId,
+                dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
               ),
             ),
           );
@@ -613,9 +615,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   child:getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
             ],
           ):getPurchaseDateLayout(),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)
 
         ],
       ),

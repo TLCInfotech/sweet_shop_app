@@ -13,6 +13,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_credit_debit_reuest_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/add_or_edit_item.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -37,7 +38,7 @@ class CreateDebitNote extends StatefulWidget {
   _CreateDebitNoteState createState() => _CreateDebitNoteState();
 }
 
-class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProviderStateMixin,AddOrEditItemSellInterface {
+class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProviderStateMixin,AddOrEditItemDebitInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -563,7 +564,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditItemSell(
+              child: AddOrEditItemDebit(
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate.toString(),
@@ -738,56 +739,6 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
   @override
   AddOrEditItemSellDetail(item)async {
     // TODO: implement AddOrEditItemDetail
-    var itemLlist=Item_list;
-
-    if(editedItemIndex!=null){
-      var index=editedItemIndex;
-      setState(() {
-        Item_list[index]['Item_Name']=item['Item_Name'];
-        Item_list[index]['Quantity']=item['Quantity'];
-        Item_list[index]['Unit']=item['Unit'];
-        Item_list[index]['Rate']=item['Rate'];
-        Item_list[index]['Amount']=item['Amount'];
-        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
-        Item_list[index]['Disc_Amount']=item['Disc_Amount'];
-        Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
-        Item_list[index]['GST_Rate']=item['GST_Rate'];
-        Item_list[index]['GST_Amount']=item['GST_Amount'];
-        Item_list[index]['Net_Rate']=item['Net_Rate'];
-        Item_list[index]['Net_Amount']=item['Net_Amount'];
-      });
-      print("#############3");
-      print(item['Seq_No']);
-      if(item['New_Item_ID']!=null){
-        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
-      }
-      if(item['Seq_No']!=null) {
-        Updated_list.add(Item_list[index]);
-        setState(() {
-          Updated_list = Updated_list;
-        });
-      }
-    }
-    else
-    {
-      itemLlist.add(item);
-      Inserted_list.add(item);
-      setState(() {
-        Inserted_list=Inserted_list;
-      });
-      print(itemLlist);
-
-      setState(() {
-        Item_list = itemLlist;
-      });
-    }
-    setState(() {
-      editedItemIndex=null;
-    });
-    await calculateTotalAmt();
-    print("List");
-    print(Inserted_list);
-    print(Updated_list);
 
 
   }
@@ -1022,6 +973,62 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
       }
       CommonWidget.noInternetDialogNew(context);
     }
+  }
+
+  @override
+  AddOrEditItemDebitDetail(item) async {
+    // TODO: implement AddOrEditItemDebitDetail
+    var itemLlist=Item_list;
+
+    if(editedItemIndex!=null){
+      var index=editedItemIndex;
+      setState(() {
+        Item_list[index]['Item_Name']=item['Item_Name'];
+        Item_list[index]['Quantity']=item['Quantity'];
+        Item_list[index]['Unit']=item['Unit'];
+        Item_list[index]['Rate']=item['Rate'];
+        Item_list[index]['Amount']=item['Amount'];
+        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
+        Item_list[index]['Disc_Amount']=item['Disc_Amount'];
+        Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
+        Item_list[index]['GST_Rate']=item['GST_Rate'];
+        Item_list[index]['GST_Amount']=item['GST_Amount'];
+        Item_list[index]['Net_Rate']=item['Net_Rate'];
+        Item_list[index]['Net_Amount']=item['Net_Amount'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if(item['New_Item_ID']!=null){
+        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+      }
+      if(item['Seq_No']!=null) {
+        Updated_list.add(Item_list[index]);
+        setState(() {
+          Updated_list = Updated_list;
+        });
+      }
+    }
+    else
+    {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list=Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex=null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+
   }
 
 }

@@ -30,8 +30,9 @@ class AddOrEditItemSell extends StatefulWidget {
   final AddOrEditItemSellInterface mListener;
   final dynamic editproduct;
   final date;
-
-  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct,required this.date});
+  final id;
+  final dateFinal;
+  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct,required this.date, this.id, this.dateFinal});
 
   @override
   State<AddOrEditItemSell> createState() => _AddOrEditItemSellState();
@@ -115,7 +116,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.dateFinal}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {

@@ -34,8 +34,10 @@ class AddOrEditItem extends StatefulWidget {
   final AddOrEditItemInterface mListener;
   final dynamic editproduct;
   final date;
+  final id;
+  final dateFinal;
 
-  const AddOrEditItem({super.key, required this.mListener, required this.editproduct, required this.date});
+  const AddOrEditItem({super.key, required this.mListener, required this.editproduct, required this.date, this.id, this.dateFinal});
 
   @override
   State<AddOrEditItem> createState() => _AddOrEditItemState();
@@ -110,7 +112,6 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
   var itemsList = [];
   var filteredItemsList = [];
-
   fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -119,7 +120,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId";
+      String apiUrl = "${baseurl}${ApiConstants().purchasePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.dateFinal}";
+     print("neeeeeee    $apiUrl");
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
@@ -163,6 +165,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
               .toLowerCase()
               .contains(searchstring.toLowerCase()))
           .toList();
+      print("jfvnfjvnj  $results");
       // we use the toLowerCase() method to make it case-insensitive
     }
 

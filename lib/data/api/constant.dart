@@ -50,4 +50,6 @@ class ApiConstants {
   String getVoucherNote="VoucherNoteHeader";
   String getVoucherNoteHeaderDetails="getVoucherNoteHeaderDetails";
   String ledgerWithoutImage="LedgerWithoutImage";
+  String purchasePartyItem="purchasePartyItem";
+  String salePartyItem="salePartyItem";
 }

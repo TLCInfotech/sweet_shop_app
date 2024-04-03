@@ -27,18 +27,18 @@ class TestItem {
     return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",rate:"${json['rate']}");
   }
 }
-class AddOrEditItemSell extends StatefulWidget {
-  final AddOrEditItemSellInterface mListener;
+class AddOrEditItemDebit extends StatefulWidget {
+  final AddOrEditItemDebitInterface mListener;
   final dynamic editproduct;
   final date;
 
-  const AddOrEditItemSell({super.key, required this.mListener, required this.editproduct,required this.date});
+  const AddOrEditItemDebit({super.key, required this.mListener, required this.editproduct,required this.date});
 
   @override
-  State<AddOrEditItemSell> createState() => _AddOrEditItemSellState();
+  State<AddOrEditItemDebit> createState() => _AddOrEditItemDebitState();
 }
 
-class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
+class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
@@ -561,7 +561,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
 
             if(widget.mListener!=null){
 
-              widget.mListener.AddOrEditItemSellDetail(item);
+              widget.mListener.AddOrEditItemDebitDetail(item);
               Navigator.pop(context);
             }
           },
@@ -658,6 +658,6 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
 }
 
 
-abstract class AddOrEditItemSellInterface{
-  AddOrEditItemSellDetail(dynamic item);
+abstract class AddOrEditItemDebitInterface{
+  AddOrEditItemDebitDetail(dynamic item);
 }
