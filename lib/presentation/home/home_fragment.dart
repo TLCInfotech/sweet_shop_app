@@ -67,78 +67,16 @@ class _HomeFragmentState extends State<HomeFragment> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // getFieldTitleLayout("Sale,Expense,Return,Recipt"),
-                // salepurchasegraph(),
-                // const SizedBox(
-                //   height: 10,
-                // ),
+
                 getFieldTitleLayout(" Explore"),
 
-                // const SizedBox(
-                //   height: 10,
-                // ),
                 sale_purchase_expense_container(),
                 const SizedBox(
                   height: 10,
                 ),
 
-                // getFieldTitleLayout("Weekly Sale :"),
-                Container(
-                  height: 400,
-                  width: SizeConfig.screenWidth,
-                  child: SfCartesianChart(
-                    title: ChartTitle(text: 'Weekly Sales analysis',alignment: ChartAlignment.near),
-                    // Enable legend
-                    // legend: Legend(isVisible: true),
-                    primaryXAxis: CategoryAxis(),
-                    primaryYAxis: NumericAxis(title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle )),
-                    series: <ChartSeries>[
-                      ColumnSeries<SalesData, String>(
-                        dataSource: [
-                          SalesData('Mon', 30),
-                          SalesData('Tue', 40),
-                          SalesData('Wed', 35),
-                          SalesData('Thu', 50),
-                          SalesData('Fri', 45),
-                          SalesData('Sat', 60),
-                          SalesData('Sun', 55),
-                        ],
-                        xValueMapper: (SalesData sales, _) => sales.day,
-                        yValueMapper: (SalesData sales, _) => sales.sales,
-                        dataLabelSettings: DataLabelSettings(isVisible: true),
-                      )
-                    ],
-                  ),
-                ),
-                // getFieldTitleLayout("Yearly Report"),
-                Container(
-                  height: 400,
-                  width: 400,
-                  child: SfCircularChart(
-                    title: ChartTitle(text: 'Expense analysis',alignment: ChartAlignment.near),
-                    series: <CircularSeries>[
-                      PieSeries<ExpenseData, String>(
-                        dataSource: [
-                          ExpenseData('Food', 300),
-                          ExpenseData('Rent', 600),
-                          ExpenseData('Transport', 200),
-                          ExpenseData('Utilities', 150),
-                        ],
-                        xValueMapper: (ExpenseData data, _) => data.category,
-                        yValueMapper: (ExpenseData data, _) => data.amount,
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true,
-                          connectorLineSettings: ConnectorLineSettings(
-                            color: Colors.blue,
-                            length: '8%',
-                            type: ConnectorType.line,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                // yearly_report_graph(),
+                weeklySalegraph(),
+                yearly_report_graph(),
               ],
             ),
           ),
@@ -146,26 +84,33 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Container yearly_report_graph() {
-    return Container(
-                height: 180,
-                width: SizeConfig.screenWidth,
-                margin: const EdgeInsets.only(
-                  top: 10,
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                    ],
-                    image: const DecorationImage(
-                        image:
-                            AssetImage("assets/images/home_page_pichart.png"),
-                        fit: BoxFit.fill)),
-              );
+    return   Container(
+      height: 400,
+      width: 400,
+      child: SfCircularChart(
+        title: ChartTitle(text: 'Expense analysis',alignment: ChartAlignment.near),
+        series: <CircularSeries>[
+          PieSeries<ExpenseData, String>(
+            dataSource: [
+              ExpenseData('Food', 300),
+              ExpenseData('Rent', 600),
+              ExpenseData('Transport', 200),
+              ExpenseData('Utilities', 150),
+            ],
+            xValueMapper: (ExpenseData data, _) => data.category,
+            yValueMapper: (ExpenseData data, _) => data.amount,
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+              connectorLineSettings: ConnectorLineSettings(
+                color: Colors.blue,
+                length: '8%',
+                type: ConnectorType.line,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
    sale_purchase_expense_container() {
@@ -176,7 +121,6 @@ class _HomeFragmentState extends State<HomeFragment> {
                     children: [
                       getSellPurchaseExpenseLayout(Colors.green, "10000", "Sale"),
                       getSellPurchaseExpenseLayout(Colors.orange, "10000", "Expense"),
-                      // getSellPurchaseExpenseLayout(Colors.deepPurple, "10000", "Return"),
                     ],
                   ),
         SizedBox(height: 10,),
@@ -191,27 +135,34 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-  Container salepurchasegraph() {
-    return Container(
-                height: 150,
-                width: SizeConfig.screenWidth,
-                margin: const EdgeInsets.only(
-                  top: 10,
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                    ],
-                    image: const DecorationImage(
-                        image:
-                            AssetImage("assets/images/home_page_graph1.png"),
-                        fit: BoxFit.cover)),
-              );
+  Container weeklySalegraph() {
+    return  Container(
+      height: 400,
+      width: SizeConfig.screenWidth,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Weekly Sales analysis',alignment: ChartAlignment.near),
+        // Enable legend
+        // legend: Legend(isVisible: true),
+        primaryXAxis: CategoryAxis(),
+        primaryYAxis: NumericAxis(title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle )),
+        series: <ChartSeries>[
+          ColumnSeries<SalesData, String>(
+            dataSource: [
+              SalesData('Mon', 30),
+              SalesData('Tue', 40),
+              SalesData('Wed', 35),
+              SalesData('Thu', 50),
+              SalesData('Fri', 45),
+              SalesData('Sat', 60),
+              SalesData('Sun', 55),
+            ],
+            xValueMapper: (SalesData sales, _) => sales.day,
+            yValueMapper: (SalesData sales, _) => sales.sales,
+            dataLabelSettings: DataLabelSettings(isVisible: true),
+          )
+        ],
+      ),
+    );
   }
 
   /* widget for button layout */

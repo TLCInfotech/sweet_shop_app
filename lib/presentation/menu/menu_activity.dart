@@ -77,22 +77,31 @@ String companyId="";
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: Colors.white,
-      child: Container(
-        width: SizeConfig.screenWidth * .8,
-        child: Column(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight * .05,
-            ),
-            getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
-            Container(
-              height: SizeConfig.screenHeight * .85,
-              child: getAllFieldLayout(
-                  SizeConfig.screenHeight, SizeConfig.screenWidth),
-            ),
-          ],
+    return SafeArea(
+      child: Material(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20)
+          ),
+        ),
+        child: Container(
+          width: SizeConfig.screenWidth * .8,
+
+          child: Column(
+            children: [
+              // Container(
+              //   height: SizeConfig.screenHeight * .05,
+              // ),
+              getTopBar(SizeConfig.screenHeight, SizeConfig.screenWidth),
+              Container(
+                height: SizeConfig.screenHeight * .85,
+                child: getAllFieldLayout(
+                    SizeConfig.screenHeight, SizeConfig.screenWidth),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -101,9 +110,13 @@ String companyId="";
   /* Widget for Top Bar Layout */
   Widget getTopBar(double parentHeight, double parentWidth) {
     return Container(
-      height: SizeConfig.screenHeight * .06,
+      height: SizeConfig.screenHeight * .08,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CommonColor.THEME_COLOR,
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            // bottomLeft: Radius.circular(10)
+        ),
         boxShadow: [
           BoxShadow(
             offset:   const Offset(0, 5),
@@ -115,8 +128,16 @@ String companyId="";
       child: Padding(
         padding: EdgeInsets.only(right: parentWidth * .03),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image(
+                width: SizeConfig.screenHeight * .15,
+                image: const AssetImage('assets/images/Shop_Logo.png'),
+                // fit: BoxFit.contain,
+              ),
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);

@@ -23,10 +23,11 @@ class TestItem {
   dynamic value;
   dynamic unit;
   dynamic rate;
-  TestItem({required this.label, this.value,this.unit,this.rate});
+  dynamic gst;
+  TestItem({required this.label, this.value,this.unit,this.rate,this.gst});
 
   factory TestItem.fromJson(Map<String, dynamic> json) {
-    return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",rate:"${json['rate']}");
+    return TestItem(label: json['label'], value: json['value'],unit:"${json['unit']}",rate:"${json['rate']}",gst:"${json['gst']}");
   }
 }
 
@@ -178,7 +179,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate']}));
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
     }
     return _list;
   }
@@ -278,6 +279,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 unit.text=v.unit;
                 rate.text=v.rate;
                 itemsList = [];
+                gst.text=v.gst!="null"?v.gst:"";
               });
               calculateRates();
             },
@@ -652,9 +654,9 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   calculateRates()async{
     if(quantity.text!=""&&rate.text!="") {
       await calculateAmt();
+      await calculateGstAmt();
       await calculateDiscountAmt();
       await calculateTaxableAmt();
-      await calculateGstAmt();
       await calculateNetAmt();
       await calculateNetRate();
       if(discount.text!="") {

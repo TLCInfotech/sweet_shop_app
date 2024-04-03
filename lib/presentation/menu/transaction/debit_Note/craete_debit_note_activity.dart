@@ -604,9 +604,10 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                   child:getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
             ],
           ):getPurchaseDateLayout(),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)
+
         ],
       ),
     );
