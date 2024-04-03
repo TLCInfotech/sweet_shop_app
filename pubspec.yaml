@@ -22,6 +22,7 @@ dependencies:
   textfield_search:
   intl: ^0.18.1
   syncfusion_flutter_calendar: ^20.3.56
+  syncfusion_flutter_charts:
   flutter_localizations:
     sdk: flutter
   json_annotation:
