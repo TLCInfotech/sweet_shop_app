@@ -606,53 +606,62 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   }
 
   calculateDiscountAmt(){
-    var disAmt=double.parse(amount.text)*(double.parse(discount.text)/100);
+    double amt=amount.text==""?0.0:double.parse(amount.text);
+    double disAmts=discount.text==""?0.0:double.parse(discount.text);
+    var disAmt=amt*(disAmts/100);
     setState(() {
       discountAmt.text=disAmt.toStringAsFixed(2);
     });
   }
 
   calculateTaxableAmt(){
-    var taxAmt=double.parse(amount.text)-double.parse(discountAmt.text);
+    double amt=amount.text==""?0.0:double.parse(amount.text);
+    double disAmt=discountAmt.text==""?0.0:double.parse(discountAmt.text);
+    var taxAmt=amt-disAmt;
     setState(() {
       taxableAmt.text=taxAmt.toStringAsFixed(2);
     });
   }
 
   calculateGstAmt(){
-    var gstAmt=double.parse(taxableAmt.text)*(double.parse(gst.text)/100);
+    double taxbleAmunt=taxableAmt.text==""?0.0:double.parse(taxableAmt.text);
+    double gstText=gst.text==""?0.0:double.parse(gst.text);
+    var gstAmt= taxbleAmunt*(gstText/100);
     setState(() {
       gstAmount.text=gstAmt.toStringAsFixed(2);
     });
   }
 
   calculateNetAmt(){
-    var netamt=double.parse(taxableAmt.text)+double.parse(gstAmount.text);
+    double taxbleAmunt=taxableAmt.text==""?0.0:double.parse(taxableAmt.text);
+    double gstAmt=gstAmount.text==""?0.0:double.parse(gstAmount.text);
+    var netamt=taxbleAmunt+gstAmt;
     setState(() {
       netAmount.text=netamt.toStringAsFixed(2);
     });
   }
 
   calculateNetRate(){
-    var netRates=double.parse(netAmount.text)/int.parse(quantity.text);
+    double netAmt=netAmount.text==""?0.0:double.parse(netAmount.text);
+    double quantityAmt=quantity.text==""?0.0:double.parse(quantity.text);
+    var netRates=netAmt/quantityAmt;
     setState(() {
       netRate.text=netRates.toStringAsFixed(2);
     });
   }
-
   calculateRates()async{
     if(quantity.text!=""&&rate.text!="") {
       await calculateAmt();
-
+      await calculateDiscountAmt();
+      await calculateTaxableAmt();
+      await calculateGstAmt();
+      await calculateNetAmt();
+      await calculateNetRate();
       if(discount.text!="") {
-        await calculateDiscountAmt();
-        await calculateTaxableAmt();
 
         if(gst.text!="")
         {
-          await calculateGstAmt();
-          await calculateNetAmt();
-          await calculateNetRate();
+
         }
       }
     }
