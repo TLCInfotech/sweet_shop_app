@@ -52,4 +52,5 @@ class ApiConstants {
   String ledgerWithoutImage="LedgerWithoutImage";
   String purchasePartyItem="purchasePartyItem";
   String salePartyItem="salePartyItem";
+  String getDashboardData="getDashboardAmount";
 }

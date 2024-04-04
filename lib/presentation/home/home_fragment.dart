@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../core/app_preferance.dart';
 import '../../core/common_style.dart';
+import '../../core/internet_check.dart';
 import '../../core/string_en.dart';
+import '../../data/api/constant.dart';
+import '../../data/api/request_helper.dart';
+import '../../data/domain/commonRequest/get_toakn_request.dart';
 
 class HomeFragment extends StatefulWidget {
   final HomeFragmentInterface mListener;
@@ -17,6 +24,98 @@ class HomeFragment extends StatefulWidget {
 }
 
 class _HomeFragmentState extends State<HomeFragment> {
+  bool isLoaderShow=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  bool isApiCall=false;
+
+  List<SalesData> _saleData = [];
+
+  var statistics=[];
+
+  var saleAmt=0;
+  var expenseAmt=0;
+  var returnAmt=0;
+  var receiptAmt=0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDashboardData();
+  }
+  getDashboardData() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+
+                    if (mounted) {
+                      for (var item in data['DashboardSaleDateWise']) {
+                        _saleData.add(SalesData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount']));
+                      }
+                    }
+                    _saleData=_saleData;
+                    saleAmt=data['DashboardMainData'][0]['Sale_Amount'];
+                    expenseAmt=data['DashboardMainData'][0]['Expense_Amount'];
+                    returnAmt=data['DashboardMainData'][0]['Return_Amount'];
+                    receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
+
+                    print(statistics);
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,16 +218,16 @@ class _HomeFragmentState extends State<HomeFragment> {
         Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      getSellPurchaseExpenseLayout(Colors.green, "10000", "Sale"),
-                      getSellPurchaseExpenseLayout(Colors.orange, "10000", "Expense"),
+                      getSellPurchaseExpenseLayout(Colors.green, "${saleAmt}", "Sale"),
+                      getSellPurchaseExpenseLayout(Colors.orange, "${expenseAmt}", "Expense"),
                     ],
                   ),
         SizedBox(height: 10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            getSellPurchaseExpenseLayout(Colors.blue, "10000", "Return"),
-            getSellPurchaseExpenseLayout(Colors.deepPurple, "10000", "Receipt"),
+            getSellPurchaseExpenseLayout(Colors.blue, "${returnAmt}", "Return"),
+            getSellPurchaseExpenseLayout(Colors.deepPurple, "${receiptAmt}", "Receipt"),
           ],
         ),
       ],
@@ -147,18 +246,10 @@ class _HomeFragmentState extends State<HomeFragment> {
         primaryYAxis: NumericAxis(title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle )),
         series: <ChartSeries>[
           ColumnSeries<SalesData, String>(
-            dataSource: [
-              SalesData('Mon', 30),
-              SalesData('Tue', 40),
-              SalesData('Wed', 35),
-              SalesData('Thu', 50),
-              SalesData('Fri', 45),
-              SalesData('Sat', 60),
-              SalesData('Sun', 55),
-            ],
-            xValueMapper: (SalesData sales, _) => sales.day,
-            yValueMapper: (SalesData sales, _) => sales.sales,
-            dataLabelSettings: DataLabelSettings(isVisible: true),
+            dataSource: _saleData,
+            xValueMapper: (SalesData sales, _) => sales.Date,
+            yValueMapper: (SalesData sales, _) => sales.Amount,
+            dataLabelSettings: DataLabelSettings(isVisible: true,labelAlignment: ChartDataLabelAlignment.outer),
           )
         ],
       ),
@@ -271,15 +362,15 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 abstract class HomeFragmentInterface {}
 class SalesData {
-  final String day;
-  final int sales;
+  final String Date;
+  final int Amount;
 
-  SalesData(this.day, this.sales);
+  SalesData(this.Date, this.Amount);
 }
 
 class ExpenseData {
   final String category;
-  final double amount;
+  final int amount;
 
   ExpenseData(this.category, this.amount);
 }
