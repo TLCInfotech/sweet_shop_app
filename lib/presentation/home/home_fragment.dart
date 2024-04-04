@@ -242,14 +242,22 @@ class _HomeFragmentState extends State<HomeFragment> {
         title: ChartTitle(text: 'Weekly Sales analysis',alignment: ChartAlignment.near),
         // Enable legend
         // legend: Legend(isVisible: true),
-        primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle )),
+        primaryXAxis: CategoryAxis( labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
+        primaryYAxis: NumericAxis(
+            title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle, )
+        ),
         series: <ChartSeries>[
           ColumnSeries<SalesData, String>(
             dataSource: _saleData,
             xValueMapper: (SalesData sales, _) => sales.Date,
             yValueMapper: (SalesData sales, _) => sales.Amount,
-            dataLabelSettings: DataLabelSettings(isVisible: true,labelAlignment: ChartDataLabelAlignment.outer),
+            dataLabelSettings: DataLabelSettings(
+              alignment: ChartAlignment.far,
+                angle: 270,
+                isVisible: true,
+                labelAlignment: ChartDataLabelAlignment.outer,
+                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+            ),
           )
         ],
       ),
