@@ -14,7 +14,8 @@ import '../../core/string_en.dart';
 import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/commonRequest/get_toakn_request.dart';
-
+import 'home_skeleton.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 class HomeFragment extends StatefulWidget {
   final HomeFragmentInterface mListener;
   const HomeFragment({Key? key, required this.mListener}) : super(key: key);
@@ -43,6 +44,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     super.initState();
     getDashboardData();
   }
+  bool isShowSkeleton = true;
   getDashboardData() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -63,8 +65,8 @@ class _HomeFragmentState extends State<HomeFragment> {
 
               setState(() {
                 isLoaderShow=false;
+                isShowSkeleton=false;
                 if(data!=null){
-
                     if (mounted) {
                       for (var item in data['DashboardSaleDateWise']) {
                         _saleData.add(SalesData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount']));
@@ -118,7 +120,11 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isShowSkeleton? SkeletonAnimation(
+        curve: Curves.easeIn,
+        child: Container(
+            color: CommonColor.MAIN_BG,
+            child: HomeSkeleton())):Scaffold(
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(

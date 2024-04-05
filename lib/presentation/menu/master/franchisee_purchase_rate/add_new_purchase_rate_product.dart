@@ -97,7 +97,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
+    await Future.delayed(const Duration(milliseconds: 0));
     await fetchShows(searchstring) ;
 
     List _list = <dynamic>[];
@@ -147,14 +147,14 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
               padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
               child: Container(
                 height: SizeConfig.screenHeight*0.7,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFfffff5),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
                   ),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
                     Container(
@@ -243,7 +243,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   /* widget for product gst layout */
   Widget getProductGSTLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
-      suffix:Text("%"),
+      suffix:const Text("%"),
       validation: (value) {
         if (value!.isEmpty) {
           return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("gst_percent")!;
@@ -317,7 +317,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
           borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
-              offset: Offset(0, 1),
+              offset: const Offset(0, 1),
               blurRadius: 5,
               color: Colors.black.withOpacity(0.1),
             ),
@@ -330,9 +330,9 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
               hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
               prefixIcon: Container(
                   width: 50,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+                  child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
             ),
             textStyle: item_regular_textStyle,
             getSelectedValue: (v) {
@@ -464,7 +464,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
           child: Container(
             height: parentHeight * .05,
             width: parentWidth*.45,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(5),
