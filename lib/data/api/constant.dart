@@ -54,4 +54,11 @@ class ApiConstants {
   String salePartyItem="salePartyItem";
   String getDashboardData="getDashboardAmount";
   String getDashboardExpense="getDashboardExpensewise";
+  String getDashboardExpensePartywise="getDashboardExpensePartywise";
+  String getDashboardReceiptBankwise="getDashboardReceiptBankwise";
+  String getDashboardReceipPartywise="getDashboardReceipPartywise";
+  String getDashboardSaleItemwise="getDashboardSaleItemwise";
+  String getDashboardSalePartywise="getDashboardSalePartywise";
+  String getDashboardSaleReturnItemwise="getDashboardSaleReturnItemwise";
+  String getDashboardSaleReturnPartywise="getDashboardSaleReturnPartywise";
 }
