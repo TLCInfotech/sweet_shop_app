@@ -10,10 +10,12 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common_style.dart';
 import '../../core/internet_check.dart';
+import '../../core/localss/application_localizations.dart';
 import '../../core/string_en.dart';
 import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/commonRequest/get_toakn_request.dart';
+import '../common_widget/get_date_layout.dart';
 import 'home_skeleton.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 class HomeFragment extends StatefulWidget {
@@ -38,6 +40,8 @@ class _HomeFragmentState extends State<HomeFragment> {
   var returnAmt=0;
   var receiptAmt=0;
 
+  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,17 +63,18 @@ class _HomeFragmentState extends State<HomeFragment> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
               setState(() {
+                _saleData=[];
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
                     if (mounted) {
                       for (var item in data['DashboardSaleDateWise']) {
-                        _saleData.add(SalesData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount']));
+                        _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
                       }
                     }
                     _saleData=_saleData;
@@ -88,12 +93,14 @@ class _HomeFragmentState extends State<HomeFragment> {
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
+                isShowSkeleton=false;
               });
               CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
               print("Here2=> $e");
               setState(() {
                 isLoaderShow=false;
+                isShowSkeleton=false;
               });
               var val= CommonWidget.errorDialog(context, e);
               print("YES");
@@ -103,6 +110,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             },sessionExpire: (e) {
               setState(() {
                 isLoaderShow=false;
+                isShowSkeleton=false;
               });
               CommonWidget.gotoLoginScreen(context);
             });
@@ -173,7 +181,9 @@ class _HomeFragmentState extends State<HomeFragment> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                getFieldTitleLayout(" Explore"),
+                getFieldTitleLayout("Statistics Of : "),
+                getPurchaseDateLayout(),
+                SizedBox(height: 10,),
 
                 sale_purchase_expense_container(),
                 const SizedBox(
@@ -187,7 +197,20 @@ class _HomeFragmentState extends State<HomeFragment> {
           ),
         ));
   }
-
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GetDateLayout(
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            saleDate=date!;
+          });
+          getDashboardData();
+        },
+        applicablefrom: saleDate
+    );
+  }
   Container yearly_report_graph() {
     return   Container(
       height: 400,
@@ -224,16 +247,16 @@ class _HomeFragmentState extends State<HomeFragment> {
         Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      getSellPurchaseExpenseLayout(Colors.green, "${saleAmt}", "Sale"),
-                      getSellPurchaseExpenseLayout(Colors.orange, "${expenseAmt}", "Expense"),
+                      getSellPurchaseExpenseLayout(Colors.green, "${CommonWidget.getCurrencyFormat(saleAmt)}", "Sale"),
+                      getSellPurchaseExpenseLayout(Colors.orange, "${CommonWidget.getCurrencyFormat((expenseAmt))}", "Expense"),
                     ],
                   ),
         SizedBox(height: 10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            getSellPurchaseExpenseLayout(Colors.blue, "${returnAmt}", "Return"),
-            getSellPurchaseExpenseLayout(Colors.deepPurple, "${receiptAmt}", "Receipt"),
+            getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return"),
+            getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
           ],
         ),
       ],
@@ -245,12 +268,15 @@ class _HomeFragmentState extends State<HomeFragment> {
       height: 400,
       width: SizeConfig.screenWidth,
       child: SfCartesianChart(
-        title: ChartTitle(text: 'Weekly Sales analysis',alignment: ChartAlignment.near),
+        title: ChartTitle(text: 'Weekly Sale',alignment: ChartAlignment.near),
         // Enable legend
         // legend: Legend(isVisible: true),
-        primaryXAxis: CategoryAxis( labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
+        primaryXAxis: CategoryAxis(labelRotation: 270, labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
         primaryYAxis: NumericAxis(
-            title: AxisTitle(text: "Sale Amount ",textStyle: item_regular_textStyle, )
+            // numberFormat: NumberFormat('#,##0'),
+            // numberFormat: NumberFormat.compact(),
+          numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
         ),
         series: <ChartSeries>[
           ColumnSeries<SalesData, String>(
@@ -270,11 +296,13 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
+
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      padding: const EdgeInsets.only(top: 0, bottom: 0,),
       child: Text(
         "$title",
         style: item_heading_textStyle,
@@ -301,7 +329,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                 color: boxcolor, borderRadius: BorderRadius.circular(5)),
             alignment: Alignment.center,
             child: Text(
-              CommonWidget.getCurrencyFormat(double.parse(amount)),
+              amount,
               style: subHeading_withBold.copyWith(fontSize:18 ),
             ),
           ),
