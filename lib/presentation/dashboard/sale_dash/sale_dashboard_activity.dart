@@ -66,6 +66,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             onSuccess:(data){
 
               setState(() {
+                _saleData=[];
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
@@ -135,6 +136,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             onSuccess:(data){
 
               setState(() {
+                _saleItem=[];
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
@@ -227,8 +229,9 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            toggleLayout(),
             getPurchaseDateLayout(),
+            toggleLayout(),
+
             isPartyWise?partywisegraph():itemwisegraph()
           ],
         ),
@@ -237,63 +240,66 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   }
   var isPartyWise=true;
   toggleLayout(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: ()async{
-            setState(() {
-              isPartyWise=true;
-            });
-            await getSalePartyWise();
-          },
-          child: Container(
-            height: 45,
-            width: SizeConfig.halfscreenWidth,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              // border: Border.all(color: Colors.black87),
-              color: isPartyWise?CommonColor.THEME_COLOR:Colors.white,
-              // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
+    return Padding(
+      padding:  EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: ()async{
+              setState(() {
+                isPartyWise=true;
+              });
+              await getSalePartyWise();
+            },
+            child: Container(
+              height: 45,
+              width: SizeConfig.halfscreenWidth,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                // border: Border.all(color: Colors.black87),
+                color: isPartyWise?CommonColor.THEME_COLOR:Colors.white,
+                // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child: Text("Partwise",style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
             ),
-            child: Text("Partwise",style: isPartyWise?subHeading_withBold:subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
           ),
-        ),
-        GestureDetector(
-          onTap: ()async{
-            setState(() {
-              isPartyWise=false;
-            });
-            await getSaleItemWise();
-          },
-          child: Container(
-            height: 45,
-            width: SizeConfig.halfscreenWidth,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isPartyWise==false?CommonColor.THEME_COLOR:Colors.white,
-              // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
+          GestureDetector(
+            onTap: ()async{
+              setState(() {
+                isPartyWise=false;
+              });
+              await getSaleItemWise();
+            },
+            child: Container(
+              height: 45,
+              width: SizeConfig.halfscreenWidth,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isPartyWise==false?CommonColor.THEME_COLOR:Colors.white,
+                // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child: Text("Itemwise",style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
             ),
-            child: Text("Itemwise",style: isPartyWise==false?subHeading_withBold:subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -320,68 +326,87 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
     );
   }
 
-  Container partywisegraph() {
-    return  Container(
-     // height: 400,
-      margin: const EdgeInsets.symmetric(vertical:5),
-      width: SizeConfig.screenWidth,
-      child: SfCartesianChart(
-        title: ChartTitle(text: 'Sales analysis',alignment: ChartAlignment.near),
-        primaryXAxis: CategoryAxis(
-            maximumLabelWidth: 50,
-            labelIntersectAction: AxisLabelIntersectAction.rotate90,
-            labelPlacement: LabelPlacement.betweenTicks),
-        primaryYAxis: NumericAxis(
-
-            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
-        ),
-        series: <ChartSeries>[
-          BarSeries<SalesDataDash, String>(
-            width: 0.2,
-            dataSource: _saleData,
-            xValueMapper: (SalesDataDash sales, _) => sales.Vendor_Name,
-            yValueMapper: (SalesDataDash sales, _) => sales.Amount,
-            dataLabelSettings: DataLabelSettings(
-                alignment: ChartAlignment.far,
-                angle: 270,
-                isVisible: true,
-                labelAlignment: ChartDataLabelAlignment.outer,
-                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+  Widget partywisegraph() {
+    return  Expanded(
+      child: SingleChildScrollView(
+        child: Container(
+          height: _saleData.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*100,
+          margin: const EdgeInsets.symmetric(vertical:5),
+          width: SizeConfig.screenWidth,
+          child: SfCartesianChart(
+            title: ChartTitle(text: 'Sales analysis',
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: .1
+                ),
+                alignment: ChartAlignment.near),
+            primaryXAxis: CategoryAxis(
+                maximumLabelWidth: 50,
+                labelIntersectAction: AxisLabelIntersectAction.rotate90,
+                labelPlacement: LabelPlacement.betweenTicks),
+            primaryYAxis: NumericAxis(
+      
+                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
             ),
-          )
-        ],
+            series: <ChartSeries>[
+              BarSeries<SalesDataDash, String>(
+                width: 0.2,
+                dataSource: _saleData,
+                xValueMapper: (SalesDataDash sales, _) => sales.Vendor_Name,
+                yValueMapper: (SalesDataDash sales, _) => sales.Amount,
+                dataLabelSettings: DataLabelSettings(
+                    alignment: ChartAlignment.far,
+                    angle: 270,
+                    isVisible: true,
+                    labelAlignment: ChartDataLabelAlignment.outer,
+                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Container itemwisegraph() {
-    return  Container(
-      // height: 400,
-      margin: const EdgeInsets.symmetric(vertical:0),
-      width: SizeConfig.screenWidth,
-      child: SfCartesianChart(
-        title: ChartTitle(text: 'Itemwise Sale',alignment: ChartAlignment.near),
-        primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.betweenTicks),
-        primaryYAxis: NumericAxis(
-            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
-        ),
-        series: <ChartSeries>[
-          BarSeries<SalesItemWise, String>(
-            width: 0.2,
-            dataSource: _saleItem,
-            xValueMapper: (SalesItemWise sales, _) => sales.Item_Name,
-            yValueMapper: (SalesItemWise sales, _) => sales.Amount,
-            dataLabelSettings: DataLabelSettings(
-                alignment: ChartAlignment.far,
-                angle: 270,
-                isVisible: true,
-                labelAlignment: ChartDataLabelAlignment.outer,
-                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+  Widget itemwisegraph() {
+    return  Expanded(
+      child: SingleChildScrollView(
+        child: Container(
+           //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
+          height: _saleItem.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*100,
+          margin: const EdgeInsets.symmetric(vertical:0),
+          width: SizeConfig.screenWidth,
+          child: SfCartesianChart(
+            title: ChartTitle(text: 'Sales analysis',
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: .1
+                ),
+                alignment: ChartAlignment.near),
+            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.betweenTicks),
+            primaryYAxis: NumericAxis(
+                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
             ),
-          )
-        ],
+            series: <ChartSeries>[
+              BarSeries<SalesItemWise, String>(
+                width: 0.2,
+                dataSource: _saleItem,
+                xValueMapper: (SalesItemWise sales, _) => sales.Item_Name,
+                yValueMapper: (SalesItemWise sales, _) => sales.Amount,
+                dataLabelSettings: DataLabelSettings(
+                    alignment: ChartAlignment.far,
+                    angle: 270,
+                    isVisible: true,
+                    labelAlignment: ChartDataLabelAlignment.outer,
+                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
