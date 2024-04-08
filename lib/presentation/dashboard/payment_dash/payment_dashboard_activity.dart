@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../core/app_preferance.dart';
@@ -137,7 +138,7 @@ class _PaymentDashActivityState extends State<PaymentDashActivity> {
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+                    ApplicationLocalizations.of(context)!.translate("payment")!,
                     style: appbar_text_style,),
                 ),
               ),
@@ -152,8 +153,31 @@ class _PaymentDashActivityState extends State<PaymentDashActivity> {
       ),
       backgroundColor: const Color(0xFFfffff5),
       body: SingleChildScrollView(
-        child:   weeklySalegraph(),
+        child:   Column(
+          children: [
+            getPurchaseDateLayout(),
+            weeklySalegraph(),
+          ],
+        ),
       ),
+    );
+  }
+
+  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+
+
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GetDateLayout(
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            saleDate=date!;
+          });
+          getDashboardExpense();
+        },
+        applicablefrom: saleDate
     );
   }
 

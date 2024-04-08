@@ -12,6 +12,7 @@ import '../../../core/size_config.dart';
 import '../../../data/api/constant.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../common_widget/get_date_layout.dart';
 import '../home/home_fragment.dart';
 
 class LedgerDashActivity extends StatefulWidget {
@@ -56,7 +57,7 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=02-04-2024";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -137,7 +138,7 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+                    ApplicationLocalizations.of(context)!.translate("ledger")!,
                     style: appbar_text_style,),
                 ),
               ),
@@ -152,8 +153,35 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
       ),
       backgroundColor: const Color(0xFFfffff5),
       body: SingleChildScrollView(
-        child:   weeklySalegraph(),
+        child:  Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getPurchaseDateLayout(),
+              weeklySalegraph(),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+
+
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GetDateLayout(
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            saleDate=date!;
+          });
+          getDashboardExpense();
+        },
+        applicablefrom: saleDate
     );
   }
 
@@ -162,7 +190,7 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
       height: 400,
       width: SizeConfig.screenWidth,
       child: SfCartesianChart(
-        title: ChartTitle(text: 'Weekly Sales analysis',alignment: ChartAlignment.near),
+        title: ChartTitle(text: 'Ledger',alignment: ChartAlignment.near),
         // Enable legend
         // legend: Legend(isVisible: true),
         primaryXAxis: CategoryAxis( labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),

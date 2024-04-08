@@ -8,6 +8,10 @@ import 'package:sweet_shop_app/core/constant.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/dashboard/ledger_dash/ledger_dashboard_activity.dart';
+import 'package:sweet_shop_app/presentation/dashboard/payment_dash/payment_dashboard_activity.dart';
+import 'package:sweet_shop_app/presentation/dashboard/purchase_dash/purchase_dashboard_activity.dart';
+import 'package:sweet_shop_app/presentation/dashboard/sale_dash/sale_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
@@ -169,9 +173,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                SellActivity(
-                  comeFor: "dash",
-                  mListener: this,
+                SaleDashboardActivity(
                 ),
                 Constant.SELL);
 
@@ -210,9 +212,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                PurchaseActivity(
-                  mListener: this,
-                  comeFor: "dash",
+                PurchaseDashActivity(
                 ),
                 Constant.PURCHASE);
 
@@ -251,9 +251,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                LedgerActivity(
-                  comeFor: "dash",
-                  mListener: this,
+                LedgerDashActivity(
                 ),
                 Constant.EXPENSE);
 
@@ -293,9 +291,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
-                PaymentActivity(
-                  comeFor: "dash",
-                  mListener: this,
+                PaymentDashActivity(
                 ),
                 Constant.PAYMENT);
 
