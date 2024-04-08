@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/home_fragment.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -30,6 +31,8 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
 
   List<SalesDataDash> _saleData = [];
 
+  List<SalesItemWise> _saleItem = [];
+
   var statistics=[];
 
   var saleAmt=0;
@@ -41,10 +44,10 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDashboardSale();
+    getSalePartyWise();
   }
   bool isShowSkeleton = true;
-  getDashboardSale() async {
+  getSalePartyWise() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -113,6 +116,76 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
     }
   }
 
+  getSaleItemWise() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleItemwise}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+                if(data!=null){
+                  if (mounted) {
+                    for (var item in data['DashboardSaleItemwise']) {
+                      _saleItem.add(SalesItemWise(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Item_Name']));
+                    }
+                  }
+                  _saleItem=_saleItem;
+
+                  print(statistics);
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +227,76 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
+            toggleLayout(),
             getPurchaseDateLayout(),
-            weeklySalegraph()
+            isPartyWise?partywisegraph():itemwisegraph()
           ],
         ),
       ),
     );
   }
+  var isPartyWise=true;
+  toggleLayout(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: ()async{
+            setState(() {
+              isPartyWise=true;
+            });
+            await getSalePartyWise();
+          },
+          child: Container(
+            height: 45,
+            width: SizeConfig.halfscreenWidth,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              // border: Border.all(color: Colors.black87),
+              color: isPartyWise?CommonColor.THEME_COLOR:Colors.white,
+              // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Text("Partwise",style: isPartyWise?subHeading_withBold:subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+          ),
+        ),
+        GestureDetector(
+          onTap: ()async{
+            setState(() {
+              isPartyWise=false;
+            });
+            await getSaleItemWise();
+          },
+          child: Container(
+            height: 45,
+            width: SizeConfig.halfscreenWidth,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isPartyWise==false?CommonColor.THEME_COLOR:Colors.white,
+              // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Text("Itemwise",style: isPartyWise==false?subHeading_withBold:subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+          ),
+        ),
+      ],
+    );
+  }
+
   DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
 
@@ -173,22 +309,32 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
           setState(() {
             saleDate=date!;
           });
-          getDashboardSale();
+          if(isPartyWise){
+            getSalePartyWise();
+          }
+          else{
+            getSaleItemWise();
+          }
         },
         applicablefrom: saleDate
     );
   }
 
-  Container weeklySalegraph() {
+  Container partywisegraph() {
     return  Container(
      // height: 400,
       margin: const EdgeInsets.symmetric(vertical:5),
       width: SizeConfig.screenWidth,
       child: SfCartesianChart(
         title: ChartTitle(text: 'Sales analysis',alignment: ChartAlignment.near),
-        primaryXAxis: CategoryAxis( labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
+        primaryXAxis: CategoryAxis(
+            maximumLabelWidth: 50,
+            labelIntersectAction: AxisLabelIntersectAction.rotate90,
+            labelPlacement: LabelPlacement.betweenTicks),
         primaryYAxis: NumericAxis(
-            title: AxisTitle(text: "Party ",textStyle: item_regular_textStyle, )
+
+            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
         ),
         series: <ChartSeries>[
           BarSeries<SalesDataDash, String>(
@@ -208,6 +354,38 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
       ),
     );
   }
+
+  Container itemwisegraph() {
+    return  Container(
+      // height: 400,
+      margin: const EdgeInsets.symmetric(vertical:0),
+      width: SizeConfig.screenWidth,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Itemwise Sale',alignment: ChartAlignment.near),
+        primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.betweenTicks),
+        primaryYAxis: NumericAxis(
+            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
+        ),
+        series: <ChartSeries>[
+          BarSeries<SalesItemWise, String>(
+            width: 0.2,
+            dataSource: _saleItem,
+            xValueMapper: (SalesItemWise sales, _) => sales.Item_Name,
+            yValueMapper: (SalesItemWise sales, _) => sales.Amount,
+            dataLabelSettings: DataLabelSettings(
+                alignment: ChartAlignment.far,
+                angle: 270,
+                isVisible: true,
+                labelAlignment: ChartDataLabelAlignment.outer,
+                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 }
 class SalesDataDash {
   final String Date;
@@ -215,4 +393,12 @@ class SalesDataDash {
   final int Amount;
 
   SalesDataDash(this.Date, this.Amount, this.Vendor_Name);
+}
+
+class SalesItemWise {
+  final String Date;
+  final String Item_Name;
+  final int Amount;
+
+  SalesItemWise(this.Date, this.Amount, this.Item_Name);
 }
