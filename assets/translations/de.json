@@ -252,5 +252,9 @@
  "sale_ledger": "Sale Ledger",
  "purchase_ledger": "Purchase Ledger",
  "party": "Party Name",
- "account_ledger": "Account Ledger"
+ "account_ledger": "Account Ledger",
+ "return": "Return",
+ "party_wise": "Partywise",
+ "item_wise": "Itemwise"
+
 }

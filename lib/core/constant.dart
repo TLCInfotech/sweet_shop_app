@@ -7,4 +7,5 @@ class Constant{
   static const String EXPENSE = "Expense";
   static const String PAYMENT = "Payment";
   static const String RECEIPT = "Receipt";
+  static const String RETURN = "Return";
 }

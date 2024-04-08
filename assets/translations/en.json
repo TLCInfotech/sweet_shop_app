@@ -254,6 +254,9 @@
   "credit_note": "Credit Note",
   "debit_note": "Debit Note",
   "sale_ledger": "Sale Ledger",
-  "account_ledger": "Account Ledger"
+  "account_ledger": "Account Ledger",
+  "return": "Return",
+  "party_wise": "Partywise",
+  "item_wise": "Itemwise"
 }
 

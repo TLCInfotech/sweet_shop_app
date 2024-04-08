@@ -33,12 +33,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
 
   List<SalesItemWise> _saleItem = [];
 
-  var statistics=[];
 
-  var saleAmt=0;
-  var expenseAmt=0;
-  var returnAmt=0;
-  var receiptAmt=0;
 
   @override
   void initState() {
@@ -78,7 +73,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                   }
                   _saleData=_saleData;
 
-                  print(statistics);
+
 
                 }else{
                   isApiCall=true;
@@ -147,8 +142,6 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                     }
                   }
                   _saleItem=_saleItem;
-
-                  print(statistics);
 
                 }else{
                   isApiCall=true;
@@ -248,6 +241,25 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
       ),
     );
   }
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
   var isPartyWise=true;
   toggleLayout(){
     return Padding(
@@ -279,7 +291,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                   ),
                 ],
               ),
-              child: Text("Partwise",style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+              child: Text(ApplicationLocalizations.of(context)!.translate("party_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
             ),
           ),
           GestureDetector(
@@ -305,7 +317,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                   ),
                 ],
               ),
-              child: Text("Itemwise",style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+              child: Text(ApplicationLocalizations.of(context)!.translate("item_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
             ),
           ),
         ],
@@ -376,7 +388,10 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
               )
             ],
           ),
-        ):Container(),
+        ):Container(
+            height:SizeConfig.screenHeight*.60,
+            alignment: Alignment.center,
+            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
       ),
     );
   }
@@ -418,7 +433,10 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             ],
           ),
         ):
-        Container(),
+        Container(
+            height:SizeConfig.screenHeight*.60,
+            alignment: Alignment.center,
+            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/home_fragment.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../core/app_preferance.dart';
@@ -11,39 +14,35 @@ import '../../../core/localss/application_localizations.dart';
 import '../../../core/size_config.dart';
 import '../../../data/api/constant.dart';
 import '../../../data/api/request_helper.dart';
-import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../common_widget/get_date_layout.dart';
-import '../home/home_fragment.dart';
 
 class LedgerDashActivity extends StatefulWidget {
   const LedgerDashActivity({Key? key}) : super(key: key);
 
   @override
-  State<LedgerDashActivity> createState() => _LedgerDashActivityState();
+  State<LedgerDashActivity> createState() => _LedgerDashState();
 }
 
-class _LedgerDashActivityState extends State<LedgerDashActivity> {
+class _LedgerDashState extends State<LedgerDashActivity> {
+
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
 
-  List<SalesData> _saleData = [];
+  List<SalesDataDash> _saleData = [];
 
-  var statistics=[];
+  List<SalesItemWise> _saleItem = [];
 
-  var saleAmt=0;
-  var expenseAmt=0;
-  var returnAmt=0;
-  var receiptAmt=0;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDashboardExpense();
+    getSalePartyWise();
   }
   bool isShowSkeleton = true;
-  getDashboardExpense() async {
+  getSalePartyWise() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -57,26 +56,89 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
               setState(() {
+                _saleData=[];
+                isLoaderShow=false;
+                isShowSkeleton=false;
+                print("jejejnj   ${data['DashboardPartywise']}");
+                if(data['DashboardPartywise']!=[]){
+                  if (mounted) {
+                    for (var item in data['DashboardPartywise']) {
+                      _saleData.add(SalesDataDash(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Vendor_Name']));
+                    }
+                  }
+                  _saleData=_saleData;
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  getSaleItemWise() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+
+              setState(() {
+                _saleItem=[];
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
                   if (mounted) {
-                    for (var item in data['DashboardSaleDateWise']) {
-                      _saleData.add(SalesData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount']));
+                    for (var item in data['DashboardExpensewise']) {
+                      _saleItem.add(SalesItemWise(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Expense_Name']));
                     }
                   }
-                  _saleData=_saleData;
-                  saleAmt=data['DashboardMainData'][0]['Sale_Amount'];
-                  expenseAmt=data['DashboardMainData'][0]['Expense_Amount'];
-                  returnAmt=data['DashboardMainData'][0]['Return_Amount'];
-                  receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
-
-                  print(statistics);
+                  _saleItem=_saleItem;
 
                 }else{
                   isApiCall=true;
@@ -116,53 +178,127 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
         child: SafeArea(
-          child:  Card(
+          child: Card(
             elevation: 3,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
+                borderRadius: BorderRadius.circular(25)),
             color: Colors.transparent,
             // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
             child: AppBar(
-              leadingWidth: 0,
+              leadingWidth: 30,
               automaticallyImplyLeading: false,
-              leading: Container(),
-              title:  Container(
-                width: SizeConfig.screenWidth,
-                child: Center(
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("ledger")!,
-                    style: appbar_text_style,),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              leading: GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  child: const Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Icon(
+                      Icons.menu,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
               backgroundColor: Colors.white,
-
+              title: Image(
+                width: SizeConfig.screenHeight * .1,
+                image: const AssetImage('assets/images/Shop_Logo.png'),
+                // fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
       ),
       backgroundColor: const Color(0xFFfffff5),
-      body: SingleChildScrollView(
-        child:  Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getPurchaseDateLayout(),
-              weeklySalegraph(),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            getPurchaseDateLayout(),
+            toggleLayout(),
+
+            isPartyWise?partywisegraph():itemwisegraph()
+          ],
         ),
+      ),
+    );
+  }
+  var isPartyWise=true;
+  toggleLayout(){
+    return Padding(
+      padding:  EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: ()async{
+              setState(() {
+                isPartyWise=true;
+              });
+              await getSalePartyWise();
+            },
+            child: Container(
+              height: 45,
+              width: SizeConfig.halfscreenWidth,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                // border: Border.all(color: Colors.black87),
+                color: isPartyWise?CommonColor.THEME_COLOR:Colors.white,
+                // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child: Text(ApplicationLocalizations.of(context)!.translate("party_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+            ),
+          ),
+          GestureDetector(
+            onTap: ()async{
+              setState(() {
+                isPartyWise=false;
+              });
+              await getSaleItemWise();
+            },
+            child: Container(
+              height: 45,
+              width: SizeConfig.halfscreenWidth,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isPartyWise==false?CommonColor.THEME_COLOR:Colors.white,
+                // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child: Text(ApplicationLocalizations.of(context)!.translate("item_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -179,39 +315,143 @@ class _LedgerDashActivityState extends State<LedgerDashActivity> {
           setState(() {
             saleDate=date!;
           });
-          getDashboardExpense();
+          if(isPartyWise){
+            getSalePartyWise();
+          }
+          else{
+            getSaleItemWise();
+          }
         },
         applicablefrom: saleDate
     );
   }
 
-  Container weeklySalegraph() {
-    return  Container(
-      height: 400,
-      width: SizeConfig.screenWidth,
-      child: SfCartesianChart(
-        title: ChartTitle(text: 'Ledger',alignment: ChartAlignment.near),
-        // Enable legend
-        // legend: Legend(isVisible: true),
-        primaryXAxis: CategoryAxis( labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
-        primaryYAxis: NumericAxis(
-            title: AxisTitle(text: "Party ",textStyle: item_regular_textStyle, )
-        ),
-        series: <ChartSeries>[
-          ColumnSeries<SalesData, String>(
-            dataSource: _saleData,
-            xValueMapper: (SalesData sales, _) => sales.Date,
-            yValueMapper: (SalesData sales, _) => sales.Amount,
-            dataLabelSettings: DataLabelSettings(
-                alignment: ChartAlignment.far,
-                angle: 270,
-                isVisible: true,
-                labelAlignment: ChartDataLabelAlignment.outer,
-                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+  Widget partywisegraph() {
+    print("ghhgrghr  ${_saleData.length}");
+    return  Expanded(
+      child: SingleChildScrollView(
+        child: _saleData.length!=0? Container(
+          height: _saleData.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*100,
+          margin: const EdgeInsets.symmetric(vertical:5),
+          width: SizeConfig.screenWidth,
+          child: SfCartesianChart(
+            title: ChartTitle(text: 'Sales analysis',
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: .1
+                ),
+                alignment: ChartAlignment.near),
+            primaryXAxis: CategoryAxis(
+                maximumLabelWidth: 50,
+                labelIntersectAction: AxisLabelIntersectAction.rotate90,
+                labelPlacement: LabelPlacement.betweenTicks),
+            primaryYAxis: NumericAxis(
+
+                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
             ),
-          )
-        ],
+            series: <ChartSeries>[
+              BarSeries<SalesDataDash, String>(
+                width: 0.2,
+                dataSource: _saleData,
+                xValueMapper: (SalesDataDash sales, _) => sales.Vendor_Name,
+                yValueMapper: (SalesDataDash sales, _) => sales.Amount,
+                dataLabelSettings: DataLabelSettings(
+                    alignment: ChartAlignment.far,
+                    angle: 360,
+                    isVisible: true,
+                    labelAlignment: ChartDataLabelAlignment.auto,
+                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                ),
+              )
+            ],
+          ),
+        ):Container(
+            height:SizeConfig.screenHeight*.60,
+            alignment: Alignment.center,
+            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
       ),
     );
   }
+
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget itemwisegraph() {
+    return  Expanded(
+      child: SingleChildScrollView(
+        child:_saleItem.length!=0? Container(
+          //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
+          height: _saleItem.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*100,
+          margin: const EdgeInsets.symmetric(vertical:0),
+          width: SizeConfig.screenWidth,
+          child: SfCartesianChart(
+            title: ChartTitle(text: 'Sales analysis',
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: .1
+                ),
+                alignment: ChartAlignment.near),
+            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.betweenTicks),
+            primaryYAxis: NumericAxis(
+                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
+            ),
+            series: <ChartSeries>[
+              BarSeries<SalesItemWise, String>(
+                width: 0.2,
+                dataSource: _saleItem,
+                xValueMapper: (SalesItemWise sales, _) => sales.Expense_Name,
+                yValueMapper: (SalesItemWise sales, _) => sales.Amount,
+                dataLabelSettings: DataLabelSettings(
+                    alignment: ChartAlignment.far,
+                    angle: 360,
+                    isVisible: true,
+                    labelAlignment: ChartDataLabelAlignment.auto,
+                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                ),
+              )
+            ],
+          ),
+        ):
+        Container(
+            height:SizeConfig.screenHeight*.60,
+            alignment: Alignment.center,
+            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+      ),
+    );
+  }
+
+}
+class SalesDataDash {
+  final String Date;
+  final String Vendor_Name;
+  final int Amount;
+
+  SalesDataDash(this.Date, this.Amount, this.Vendor_Name);
+}
+
+class SalesItemWise {
+  final String Date;
+  final String Expense_Name;
+  final int Amount;
+
+  SalesItemWise(this.Date, this.Amount, this.Expense_Name);
 }

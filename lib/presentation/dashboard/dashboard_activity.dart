@@ -214,7 +214,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             addNewScreen(
                 PurchaseDashActivity(
                 ),
-                Constant.PURCHASE);
+                Constant.RETURN);
 
           },
           onDoubleTap: (){},
@@ -229,14 +229,14 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                   image: const AssetImage("assets/images/payment-method.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.PURCHASE ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("purchase")!,
+                    ApplicationLocalizations.of(context)!.translate("return")!,
                     style: TextStyle(
-                        color: currentScreen == Constant.PURCHASE ? CommonColor.THEME_COLOR:Colors.black,
+                        color: currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
@@ -293,7 +293,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             addNewScreen(
                 PaymentDashActivity(
                 ),
-                Constant.PAYMENT);
+                Constant.RECEIPT);
 
           },
           onDoubleTap: (){},
@@ -308,15 +308,15 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                   image: const AssetImage("assets/images/cashless-payment.png"),
                   height: parentHeight * .035,
                   width:parentHeight * .035,
-                  color:currentScreen == Constant.PAYMENT ? CommonColor.THEME_COLOR:Colors.black,
+                  color:currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight*.005),
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("payment")!,
+                    ApplicationLocalizations.of(context)!.translate("receipt")!,
                   //  StringEn.PAYMENT,
                     style: TextStyle(
-                        color: currentScreen == Constant.PAYMENT ? CommonColor.THEME_COLOR:Colors.black,
+                        color: currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
                         fontSize: SizeConfig.blockSizeHorizontal* 4,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Inter_SemiBold_Font'
