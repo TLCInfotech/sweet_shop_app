@@ -69,7 +69,8 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                 _saleData=[];
                 isLoaderShow=false;
                 isShowSkeleton=false;
-                if(data!=null){
+                print("jejejnj   ${data['DashboardSalePartywise']}");
+                if(data['DashboardSalePartywise']!=[]){
                   if (mounted) {
                     for (var item in data['DashboardSalePartywise']) {
                       _saleData.add(SalesDataDash(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Vendor_Name']));
@@ -192,34 +193,43 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: PreferredSize(
         preferredSize: AppBar().preferredSize,
         child: SafeArea(
-          child:  Card(
+          child: Card(
             elevation: 3,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25)
-            ),
+                borderRadius: BorderRadius.circular(25)),
             color: Colors.transparent,
             // color: Colors.red,
-            margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
             child: AppBar(
-              leadingWidth: 0,
+              leadingWidth: 30,
               automaticallyImplyLeading: false,
-              leading: Container(),
-              title:  Container(
-                width: SizeConfig.screenWidth,
-                child: Center(
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("sale")!,
-                    style: appbar_text_style,),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              leading: GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  child: const Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Icon(
+                      Icons.menu,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-              ),
               backgroundColor: Colors.white,
-
+              title: Image(
+                width: SizeConfig.screenHeight * .1,
+                image: const AssetImage('assets/images/Shop_Logo.png'),
+                // fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
@@ -327,9 +337,10 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   }
 
   Widget partywisegraph() {
+    print("ghhgrghr  ${_saleData.length}");
     return  Expanded(
       child: SingleChildScrollView(
-        child: Container(
+        child: _saleData.length!=0? Container(
           height: _saleData.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*100,
           margin: const EdgeInsets.symmetric(vertical:5),
           width: SizeConfig.screenWidth,
@@ -357,15 +368,15 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                 yValueMapper: (SalesDataDash sales, _) => sales.Amount,
                 dataLabelSettings: DataLabelSettings(
                     alignment: ChartAlignment.far,
-                    angle: 270,
+                    angle: 360,
                     isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.outer,
+                    labelAlignment: ChartDataLabelAlignment.auto,
                     textStyle: item_heading_textStyle.copyWith(fontSize:9 )
                 ),
               )
             ],
           ),
-        ),
+        ):Container(),
       ),
     );
   }
@@ -373,7 +384,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   Widget itemwisegraph() {
     return  Expanded(
       child: SingleChildScrollView(
-        child: Container(
+        child:_saleItem.length!=0? Container(
            //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
           height: _saleItem.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*100,
           margin: const EdgeInsets.symmetric(vertical:0),
@@ -398,15 +409,16 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                 yValueMapper: (SalesItemWise sales, _) => sales.Amount,
                 dataLabelSettings: DataLabelSettings(
                     alignment: ChartAlignment.far,
-                    angle: 270,
+                    angle: 360,
                     isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.outer,
+                    labelAlignment: ChartDataLabelAlignment.auto,
                     textStyle: item_heading_textStyle.copyWith(fontSize:9 )
                 ),
               )
             ],
           ),
-        ),
+        ):
+        Container(),
       ),
     );
   }
