@@ -7,13 +7,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../core/app_preferance.dart';
-import '../../core/common_style.dart';
-import '../../core/internet_check.dart';
-import '../../core/string_en.dart';
-import '../../data/api/constant.dart';
-import '../../data/api/request_helper.dart';
-import '../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../data/api/request_helper.dart';
 
 class HomeSkeleton extends StatefulWidget {
 

@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
+import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../core/app_preferance.dart';
-import '../../core/common_style.dart';
-import '../../core/internet_check.dart';
-import '../../core/localss/application_localizations.dart';
-import '../../core/string_en.dart';
-import '../../data/api/constant.dart';
-import '../../data/api/request_helper.dart';
-import '../../data/domain/commonRequest/get_toakn_request.dart';
-import '../common_widget/get_date_layout.dart';
+import '../../../data/api/request_helper.dart';
+import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'home_skeleton.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 class HomeFragment extends StatefulWidget {
