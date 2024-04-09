@@ -212,6 +212,46 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: (){
             addNewScreen(
+                LedgerDashActivity(
+                ),
+                Constant.EXPENSE);
+
+          },
+          onDoubleTap: (){},
+          child: Container(
+            height: parentHeight*.10,
+            width: parentWidth*.2,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: const AssetImage("assets/images/expense.png"),
+                  height: parentHeight * .035,
+                  width:parentHeight * .035,
+                  color:currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: parentHeight*.005),
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("expense")!,
+                    //StringEn.EXPENSE,
+                    style: TextStyle(
+                        color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal* 4,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter_SemiBold_Font'
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            addNewScreen(
                 PurchaseDashActivity(
                 ),
                 Constant.RETURN);
@@ -248,46 +288,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             ),
           ),
         ),
-        GestureDetector(
-          onTap: (){
-            addNewScreen(
-                LedgerDashActivity(
-                ),
-                Constant.EXPENSE);
 
-          },
-          onDoubleTap: (){},
-          child: Container(
-            height: parentHeight*.10,
-            width: parentWidth*.2,
-            color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: const AssetImage("assets/images/expense.png"),
-                  height: parentHeight * .035,
-                  width:parentHeight * .035,
-                  color:currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: parentHeight*.005),
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("ledger")!,
-                    //StringEn.EXPENSE,
-                    style: TextStyle(
-                        color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 4,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter_SemiBold_Font'
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
         GestureDetector(
           onTap: (){
             addNewScreen(

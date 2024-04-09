@@ -1,4 +1,3 @@
-import 'package:animated_number/animated_number.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -13,7 +12,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
+import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'home_skeleton.dart';
@@ -89,12 +88,18 @@ class _HomeFragmentState extends State<HomeFragment> {
                       }
                     }
                     _saleData=_saleData;
+                    print("nessssss  $_saleData");
                     _profitPartywise=_profitPartywise;
                     saleAmt=data['DashboardMainData'][0]['Sale_Amount'];
                     expenseAmt=data['DashboardMainData'][0]['Expense_Amount'];
                     returnAmt=data['DashboardMainData'][0]['Return_Amount'];
                     receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
-                    profit=data['DashboardMainData'][0]['Profit'];
+                   int profitValue=data['DashboardMainData'][0]['Profit'];
+                   setState(() {
+                     profit=profitValue;
+                     getAnimatedFunction();
+                   });
+      print("neehehehehge   $profit");
                     print(statistics);
 
                 }else{
@@ -212,6 +217,9 @@ class _HomeFragmentState extends State<HomeFragment> {
         ));
   }
 
+
+
+
   Widget getProfitLayout(){
     return Container(
       height:70 ,
@@ -232,15 +240,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             color:Colors.white,
           ),
           SizedBox(width: 20,),
-          AnimatedNumber(
-            // prefixText: profit<0?"- ":profit>0?"+ ":"",
-            startValue: 0,
-            endValue: profit,
-            duration: Duration(seconds: 2),
-            isFloatingPoint: true,
-            decimalPoint: 2,
-            style: big_title_style.copyWith(fontSize: 26),
-          ),
+          getAnimatedFunction(),
           SizedBox(width: 20,),
           profit>0? FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
         ],
@@ -248,6 +248,15 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
+   getAnimatedFunction(){
+   return  Countup(
+     begin: 0,
+     end: double.parse(profit.toString()) ,
+     duration: Duration(seconds: 2),
+     separator: ',',
+     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+   );
+  }
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
