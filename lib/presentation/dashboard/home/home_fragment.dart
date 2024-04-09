@@ -1,3 +1,4 @@
+import 'package:animated_number/animated_number.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -34,6 +35,9 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   var statistics=[];
 
+  List<ProfitPartyWiseData> _profitPartywise = [];
+
+  var profit=0;
   var saleAmt=0;
   var expenseAmt=0;
   var returnAmt=0;
@@ -47,7 +51,10 @@ class _HomeFragmentState extends State<HomeFragment> {
     super.initState();
     getDashboardData();
   }
+
   bool isShowSkeleton = true;
+
+
   getDashboardData() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -62,12 +69,14 @@ class _HomeFragmentState extends State<HomeFragment> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
               setState(() {
                 _saleData=[];
+                _profitPartywise=[];
+                profit=0;
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
@@ -75,13 +84,17 @@ class _HomeFragmentState extends State<HomeFragment> {
                       for (var item in data['DashboardSaleDateWise']) {
                         _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
                       }
+                      for (var item in data['DashboardProfitPartywise']) {
+                        _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Profit'],item['Vendor_Name']));
+                      }
                     }
                     _saleData=_saleData;
+                    _profitPartywise=_profitPartywise;
                     saleAmt=data['DashboardMainData'][0]['Sale_Amount'];
                     expenseAmt=data['DashboardMainData'][0]['Expense_Amount'];
                     returnAmt=data['DashboardMainData'][0]['Return_Amount'];
                     receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
-
+                    profit=data['DashboardMainData'][0]['Profit'];
                     print(statistics);
 
                 }else{
@@ -180,22 +193,61 @@ class _HomeFragmentState extends State<HomeFragment> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                getFieldTitleLayout("Statistics Of : "),
+                // getFieldTitleLayout("Statistics Of : "),
                 getPurchaseDateLayout(),
                 SizedBox(height: 10,),
+                getProfitLayout(),
 
                 sale_purchase_expense_container(),
                 const SizedBox(
                   height: 10,
                 ),
 
-                weeklySalegraph(),
-                yearly_report_graph(),
+                partywisegraph()
+                // weeklySalegraph(),
+                // yearly_report_graph(),
               ],
             ),
           ),
         ));
   }
+
+  Widget getProfitLayout(){
+    return Container(
+      height:70 ,
+      margin: EdgeInsets.only(bottom: 10),
+      width: (SizeConfig.screenWidth),
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: profit<0?Colors.red:Colors.green,
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image(
+            image: const AssetImage("assets/images/hand.png"),
+            height: 50,
+            width:50,
+            color:Colors.white,
+          ),
+          SizedBox(width: 20,),
+          AnimatedNumber(
+            // prefixText: profit<0?"- ":profit>0?"+ ":"",
+            startValue: 0,
+            endValue: profit,
+            duration: Duration(seconds: 2),
+            isFloatingPoint: true,
+            decimalPoint: 2,
+            style: big_title_style.copyWith(fontSize: 26),
+          ),
+          SizedBox(width: 20,),
+          profit>0? FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
+        ],
+      ),
+    );
+  }
+
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
@@ -210,6 +262,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         applicablefrom: saleDate
     );
   }
+
   Container yearly_report_graph() {
     return   Container(
       height: 400,
@@ -240,7 +293,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-   sale_purchase_expense_container() {
+  sale_purchase_expense_container() {
     return Column(
       children: [
         Row(
@@ -296,6 +349,41 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
 
+  Widget partywisegraph() {
+    return  _profitPartywise.length!=0? Container(
+      height: _profitPartywise.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_profitPartywise.length*120,
+      margin: const EdgeInsets.symmetric(vertical:5),
+      width: SizeConfig.screenWidth,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Profit Analysis',
+            alignment: ChartAlignment.near),
+        primaryXAxis: CategoryAxis(
+            maximumLabelWidth: 50,
+            labelIntersectAction: AxisLabelIntersectAction.rotate90,
+            labelPlacement: LabelPlacement.betweenTicks),
+        primaryYAxis: NumericAxis(
+
+            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+            title: AxisTitle(text: "Profit ",textStyle: item_regular_textStyle, )
+        ),
+        series: <ChartSeries>[
+          BarSeries<ProfitPartyWiseData, String>(
+            width: 0.2,
+            dataSource: _profitPartywise,
+            xValueMapper: (ProfitPartyWiseData sales, _) => sales.Vendor_Name,
+            yValueMapper: (ProfitPartyWiseData sales, _) => sales.Profit,
+            dataLabelSettings: DataLabelSettings(
+                alignment: ChartAlignment.far,
+                angle: 360,
+                isVisible: true,
+                labelAlignment: ChartDataLabelAlignment.outer,
+                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+            ),
+          )
+        ],
+      ),
+    ):Container();
+  }
 
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
@@ -399,9 +487,11 @@ class _HomeFragmentState extends State<HomeFragment> {
     //   ),
     // );
   }
+
 }
 
 abstract class HomeFragmentInterface {}
+
 class SalesData {
   final String Date;
   final int Amount;
@@ -414,4 +504,12 @@ class ExpenseData {
   final int amount;
 
   ExpenseData(this.category, this.amount);
+}
+
+class ProfitPartyWiseData {
+  final String Date;
+  final String Vendor_Name;
+  final int Profit;
+
+  ProfitPartyWiseData(this.Date, this.Profit, this.Vendor_Name);
 }
