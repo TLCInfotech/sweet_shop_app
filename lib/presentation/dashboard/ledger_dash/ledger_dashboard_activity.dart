@@ -331,7 +331,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     return  Expanded(
       child: SingleChildScrollView(
         child: _saleData.length!=0? Container(
-          height: _saleData.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*100,
+          height: _saleData.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*120,
           margin: const EdgeInsets.symmetric(vertical:5),
           width: SizeConfig.screenWidth,
           child: SfCartesianChart(
@@ -360,7 +360,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
                     alignment: ChartAlignment.far,
                     angle: 360,
                     isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.auto,
+                    labelAlignment: ChartDataLabelAlignment.outer,
                     textStyle: item_heading_textStyle.copyWith(fontSize:9 )
                 ),
               )
@@ -398,7 +398,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
       child: SingleChildScrollView(
         child:_saleItem.length!=0? Container(
           //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
-          height: _saleItem.length*100>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*100,
+          height: _saleItem.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*120,
           margin: const EdgeInsets.symmetric(vertical:0),
           width: SizeConfig.screenWidth,
           child: SfCartesianChart(
@@ -423,7 +423,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
                     alignment: ChartAlignment.far,
                     angle: 360,
                     isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.auto,
+                    labelAlignment: ChartDataLabelAlignment.outer,
                     textStyle: item_heading_textStyle.copyWith(fontSize:9 )
                 ),
               )
