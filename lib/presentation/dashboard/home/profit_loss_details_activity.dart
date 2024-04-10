@@ -215,7 +215,49 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: Card(
-                      child: Row(
+                      child:Column(
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image(
+                                  image: AssetImage("assets/images/hand.png"),
+                                  height: 30,
+                                  width:30,
+                                  color:Colors.black87,
+                                ),
+                              ),
+                              Text(model.Vendor_Name,style: item_heading_textStyle,),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8,right: 8,bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(child: Text("Profit:  ${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.green),)),
+
+                                Expanded(child: Text("Sale: ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
+                              ],
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(child: Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),)),
+                                Expanded(child: Text("Return : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,))),
+                              ],
+                            ),
+                          )
+
+
+                        ],
+                      )
+/* Row(
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -290,7 +332,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                             ),
                           )
                         ],
-                      ),
+                      ),*/
                     ),
                   ),
                 ),
