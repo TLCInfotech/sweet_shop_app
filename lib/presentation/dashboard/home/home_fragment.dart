@@ -11,6 +11,8 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
@@ -41,6 +43,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   var expenseAmt=0;
   var returnAmt=0;
   var receiptAmt=0;
+  var FranchiseeOutstanding=0;
 
   DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
@@ -95,6 +98,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     returnAmt=data['DashboardMainData'][0]['Return_Amount'];
                     receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
                    int profitValue=data['DashboardMainData'][0]['Profit'];
+                    FranchiseeOutstanding=data['DashboardMainData'][0]['Franchisee_Outstanding'];
                    setState(() {
                      profit=profitValue;
                      getAnimatedFunction();
@@ -149,7 +153,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         curve: Curves.easeIn,
         child: Container(
             color: CommonColor.MAIN_BG,
-            child: HomeSkeleton())):Scaffold(
+            child: const HomeSkeleton())):Scaffold(
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
@@ -197,17 +201,16 @@ class _HomeFragmentState extends State<HomeFragment> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // getFieldTitleLayout("Statistics Of : "),
                 getPurchaseDateLayout(),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
+
+                const SizedBox(height: 5,),
                 getProfitLayout(),
-
                 sale_purchase_expense_container(),
-                const SizedBox(
-                  height: 10,
-                ),
-
+                const SizedBox(height: 10,),
+                getFranchiseeLayout(),
+                const SizedBox(height: 10,),
                 partywisegraph()
                 // weeklySalegraph(),
                 // yearly_report_graph(),
@@ -221,42 +224,159 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 
   Widget getProfitLayout(){
-    return Container(
-      height:70 ,
-      margin: EdgeInsets.only(bottom: 10),
-      width: (SizeConfig.screenWidth),
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: profit<0?Colors.red:Colors.green,
-          borderRadius: BorderRadius.circular(5)),
-      alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Image(
-            image: const AssetImage("assets/images/hand.png"),
-            height: 50,
-            width:50,
-            color:Colors.white,
-          ),
-          SizedBox(width: 20,),
-          getAnimatedFunction(),
-          SizedBox(width: 20,),
-          profit>0? FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
-        ],
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+        comeFor: profit>=0?"Profit ":"Loss" ,
+          date:saleDate,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Container(
+        height:70 ,
+        margin: const EdgeInsets.only(bottom: 10),
+        width: (SizeConfig.screenWidth),
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: profit<0?Colors.red:Colors.green,
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding:  EdgeInsets.only(left: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    profit>=0?"Profit ":"Loss",
+                    style: item_heading_textStyle.copyWith(
+                        color:Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const FaIcon(
+                    FontAwesomeIcons.solidArrowAltCircleRight,
+                    color:Colors.white,
+                  )
+                ],
+              ),
+            ),
+            getAnimatedFunction(),
+          ],
+        ),
+        /*Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Image(
+              image: AssetImage("assets/images/hand.png"),
+              height: 50,
+              width:50,
+              color:Colors.white,
+            ),
+            const SizedBox(width: 20,),
+            getAnimatedFunction(),
+            const SizedBox(width: 20,),
+            profit>0? const FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): const FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
+          ],
+        ),*/
       ),
     );
   }
 
+  Widget getFranchiseeLayout(){
+    return Container(
+      height:70 ,
+      margin: const EdgeInsets.only(bottom: 10),
+      width: (SizeConfig.screenWidth),
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding:  EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Franchisee Outstanding",
+                  style: item_heading_textStyle.copyWith(
+                      color:Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const FaIcon(
+                  FontAwesomeIcons.solidArrowAltCircleRight,
+                  color:Colors.white,
+                )
+              ],
+            ),
+          ),
+          getFranAnimatedFunction(),
+        ],
+      ),
+      /*Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const Image(
+            image: AssetImage("assets/images/hand.png"),
+            height: 50,
+            width:50,
+            color:Colors.white,
+          ),
+          const SizedBox(width: 20,),
+          getAnimatedFunction(),
+          const SizedBox(width: 20,),
+          profit>0? const FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): const FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
+        ],
+      ),*/
+    );
+  }
+
    getAnimatedFunction(){
-   return  Countup(
-     begin: 0,
-     end: double.parse(profit.toString()) ,
-     duration: Duration(seconds: 2),
-     separator: ',',
-     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+   return  Padding(
+     padding:  EdgeInsets.only(left: 50),
+     child: Countup(
+       begin: 0,
+       end: double.parse(profit.toString()) ,
+       duration: const Duration(seconds: 2),
+       separator: ',',
+       style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+     ),
    );
   }
+
+  getFranAnimatedFunction(){
+    return  Padding(
+      padding:  EdgeInsets.only(left: 10),
+      child: Countup(
+          begin: 0,
+          end: double.parse(FranchiseeOutstanding.toString()) ,
+          duration: const Duration(seconds: 2),
+          separator: ',',
+          style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+      ),
+    );
+  }
+
+
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
@@ -288,7 +408,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             ],
             xValueMapper: (ExpenseData data, _) => data.category,
             yValueMapper: (ExpenseData data, _) => data.amount,
-            dataLabelSettings: DataLabelSettings(
+            dataLabelSettings: const DataLabelSettings(
               isVisible: true,
               connectorLineSettings: ConnectorLineSettings(
                 color: Colors.blue,
@@ -312,7 +432,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       getSellPurchaseExpenseLayout(Colors.orange, "${CommonWidget.getCurrencyFormat((expenseAmt))}", "Expense"),
                     ],
                   ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -365,13 +485,13 @@ class _HomeFragmentState extends State<HomeFragment> {
       width: SizeConfig.screenWidth,
       child: SfCartesianChart(
         title: ChartTitle(text: 'Profit Analysis',
+            textStyle: item_heading_textStyle.copyWith(fontSize: 16),
             alignment: ChartAlignment.near),
         primaryXAxis: CategoryAxis(
             maximumLabelWidth: 50,
             labelIntersectAction: AxisLabelIntersectAction.rotate90,
             labelPlacement: LabelPlacement.betweenTicks),
         primaryYAxis: NumericAxis(
-
             numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
             title: AxisTitle(text: "Profit ",textStyle: item_regular_textStyle, )
         ),
@@ -381,6 +501,8 @@ class _HomeFragmentState extends State<HomeFragment> {
             dataSource: _profitPartywise,
             xValueMapper: (ProfitPartyWiseData sales, _) => sales.Vendor_Name,
             yValueMapper: (ProfitPartyWiseData sales, _) => sales.Profit,
+            pointColorMapper: (ProfitPartyWiseData sales, _) =>
+            sales.Profit >= 0 ? Colors.green : Colors.red,// Conditional color
             dataLabelSettings: DataLabelSettings(
                 alignment: ChartAlignment.far,
                 angle: 360,
@@ -394,6 +516,8 @@ class _HomeFragmentState extends State<HomeFragment> {
     ):Container();
   }
 
+
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -401,7 +525,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       padding: const EdgeInsets.only(top: 0, bottom: 0,),
       child: Text(
         "$title",
-        style: item_heading_textStyle,
+        style: item_heading_textStyle.copyWith(fontSize: 22),
       ),
     );
   }

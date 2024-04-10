@@ -61,4 +61,5 @@ class ApiConstants {
   String getDashboardSalePartywise="getDashboardSalePartywise";
   String getDashboardSaleReturnItemwise="getDashboardSaleReturnItemwise";
   String getDashboardSaleReturnPartywise="getDashboardSaleReturnPartywise";
+  String getDashboardProfitDetailpartywise="getDashboardProfitDetailPartywise";
 }
