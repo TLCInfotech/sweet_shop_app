@@ -228,6 +228,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Profit ":"Loss" ,
+          profit:profit ,
           date:saleDate,
         )));
       },
@@ -298,7 +299,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       width: (SizeConfig.screenWidth),
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Colors.green,
+          color: Colors.deepOrange,
           borderRadius: BorderRadius.circular(5)),
       alignment: Alignment.center,
       child:  Row(
@@ -311,7 +312,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Franchisee Outstanding",
+                  "Franchisee \nOutstanding",
                   style: item_heading_textStyle.copyWith(
                       color:Colors.white,
                       fontSize: 20,
@@ -322,9 +323,12 @@ class _HomeFragmentState extends State<HomeFragment> {
                 const SizedBox(
                   width: 10,
                 ),
-                const FaIcon(
-                  FontAwesomeIcons.solidArrowAltCircleRight,
-                  color:Colors.white,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: const FaIcon(
+                    FontAwesomeIcons.solidArrowAltCircleRight,
+                    color:Colors.white,
+                  ),
                 )
               ],
             ),
@@ -332,21 +336,6 @@ class _HomeFragmentState extends State<HomeFragment> {
           getFranAnimatedFunction(),
         ],
       ),
-      /*Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Image(
-            image: AssetImage("assets/images/hand.png"),
-            height: 50,
-            width:50,
-            color:Colors.white,
-          ),
-          const SizedBox(width: 20,),
-          getAnimatedFunction(),
-          const SizedBox(width: 20,),
-          profit>0? const FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): const FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
-        ],
-      ),*/
     );
   }
 
@@ -365,7 +354,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   getFranAnimatedFunction(){
     return  Padding(
-      padding:  EdgeInsets.only(left: 10),
+      padding:  EdgeInsets.only(left: 20),
       child: Countup(
           begin: 0,
           end: double.parse(FranchiseeOutstanding.toString()) ,

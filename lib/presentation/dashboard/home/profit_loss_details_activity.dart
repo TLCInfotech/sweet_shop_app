@@ -22,7 +22,8 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;
   final date;
-  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date});
+  final profit;
+  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date, this.profit});
 
   @override
   State<ProfitLossDetailActivity> createState() => _ProfitLossDetailActivityState();
@@ -46,6 +47,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
  //   _scrollController.addListener(_scrollListener);
     newDate=widget.date;
     getExpense(page);
+    print("hghdghdghdgh  ${widget.comeFor}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -126,7 +128,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                     const SizedBox(
                       height: 10,
                     ),
-
+                   _profitPartywise.isNotEmpty? getFilterLayout():Container(),
                     get_ledger_list_layout()
                   ],
                 ),
@@ -140,6 +142,89 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
+    );
+  }
+
+
+  Widget getFilterLayout(){
+    return                Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        getTotalCountAndAmount(),
+        Container(
+          alignment: Alignment.centerRight,
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(onPressed: (){}, icon: FaIcon(
+                FontAwesomeIcons.sortAlphaUpAlt,
+                color: Colors.black87,
+                size: 18,
+              ),
+              ),
+              PopupMenuButton<String>(
+                icon: FaIcon(
+                  FontAwesomeIcons.filter,
+                  size: 18,
+                  color: Colors.black87,
+                ),
+                onSelected: (value) {
+                  // Implement your logic based on the selected value
+                  print('Selected: $value');
+                },
+                itemBuilder: (BuildContext context) {
+                  return <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'Profit',
+                      child: Text('Profit'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Sale',
+                      child: Text('Sale'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Expense',
+                      child: Text('Option 3'),
+                    ),
+                  ];
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  /* Widget to get total count and amount layout */
+  Widget getTotalCountAndAmount() {
+    return Container(
+      margin: const EdgeInsets.only(left: 2,right: 8,bottom: 8),
+      child: Container(
+          height: 40,
+          width: SizeConfig.screenWidth*0.6,
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
+
+          ),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            //  Text("${_profitPartywise.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
+              Text("Total: ${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}", style: subHeading_withBold,),
+            ],
+          )
+      ),
     );
   }
 
@@ -223,12 +308,12 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image(
                                   image: AssetImage("assets/images/hand.png"),
-                                  height: 30,
-                                  width:30,
+                                  height: 33,
+                                  width:33,
                                   color:Colors.black87,
                                 ),
                               ),
-                              Text(model.Vendor_Name,style: item_heading_textStyle,),
+                              Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 22),),
                             ],
                           ),
                           Padding(
@@ -236,103 +321,24 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Expanded(child: Text("Profit:  ${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.green),)),
-
                                 Expanded(child: Text("Sale: ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
+                                Expanded(child: Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),)),
                               ],
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Expanded(child: Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),)),
                                 Expanded(child: Text("Return : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,))),
+                                widget.profit>=0? Expanded(child: Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 22),)):
+                                 Expanded(child: Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 22),)),
                               ],
                             ),
                           )
-
-
                         ],
                       )
-/* Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(model.Vendor_Name,style: item_heading_textStyle,),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      const SizedBox(width: 10,),
-                                      Expanded(child: Text("Vendor ID:- ${model.Vendor_ID}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      const SizedBox(width: 10,),
-                                      Expanded(child: Text("Sale Amount:- ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      const SizedBox(width: 10,),
-                                      Expanded(child: Text("Expense Amount:- ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      const SizedBox(width: 10,),
-                                      Expanded(child: Text("Return Amount:- ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      const SizedBox(width: 10,),
-                                      Expanded(child: Text("Profit:- ${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),*/
                     ),
                   ),
                 ),
@@ -346,8 +352,19 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
           ),
         ));
   }
-
   List<ProfitPartyWiseData> _profitPartywise = [];
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in _profitPartywise ){
+      total=total+item.Profit;
+      print(item.Profit);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
+  }
+
   getExpense(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -370,21 +387,10 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   for (var item in data['DashboardProfitDetailPartywise']) {
-                    _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Vendor_ID']),(item['Vendor_Name']),(item['Sale_Amount']),(item['Expense_Amount']),(item['Return_Amount']),(item['Profit'])));
+                    _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Profit']),(item['Vendor_Name']),(item['Sale_Amount']),(item['Expense_Amount']),(item['Return_Amount']),(item['Vendor_ID'])));
                   }
+                  calculateTotalAmt();
                   print("getDashboardProfitDetailpartywise    $_profitPartywise");
-            /*      if (_arrList.length < 10) {
-                    if (mounted) {
-                      setState(() {
-                        isPagination = false;
-                      });
-                    }
-                  }
-                  if (page == 1) {
-                    setDataToList(_arrList);
-                  } else {
-                    setMoreDataToList(_arrList);
-                  }*/
                 }else{
                   isApiCall=true;
                 }
