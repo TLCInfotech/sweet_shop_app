@@ -745,7 +745,7 @@ print("mosdeemmm  ${model.toJson()}");
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S&pageNumber=$page&pageSize=10";
+        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S&PageNumber=$page&pageSize=10";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",

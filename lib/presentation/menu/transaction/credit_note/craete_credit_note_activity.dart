@@ -825,7 +825,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getVoucherNoteHeaderDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&pageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getVoucherNoteHeaderDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&PageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);

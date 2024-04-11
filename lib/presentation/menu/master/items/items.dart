@@ -307,7 +307,7 @@ Expanded get_items_list_layout() {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId&pageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId&PageNumber=$page&pageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
