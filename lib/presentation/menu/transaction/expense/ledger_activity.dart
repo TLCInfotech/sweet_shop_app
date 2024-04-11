@@ -179,6 +179,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     );
   }
 
+
   /* Widget to get add PURCHASE date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
