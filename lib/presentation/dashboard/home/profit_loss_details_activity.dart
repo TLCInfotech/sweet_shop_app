@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
+import 'package:textfield_search/textfield_search.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -15,9 +17,8 @@ import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-
-
-
+import '../../../core/string_en.dart';
+import '../../common_widget/signleLine_TexformField.dart';
 
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;
@@ -31,7 +32,11 @@ class ProfitLossDetailActivity extends StatefulWidget {
 
 class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
 
+
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+  TextEditingController serchvendor=TextEditingController();
+
 
   bool isLoaderShow=false;
   bool isApiCall=false;
@@ -128,6 +133,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                     const SizedBox(
                       height: 10,
                     ),
+                    // getFilterLayout(),
                    _profitPartywise.isNotEmpty? getFilterLayout():Container(),
                     get_ledger_list_layout()
                   ],
@@ -145,53 +151,112 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
     );
   }
 
+  var selectedOption="Profit";
+  var selectedOrder="A";
 
   Widget getFilterLayout(){
-    return                Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        getTotalCountAndAmount(),
-        Container(
-          alignment: Alignment.centerRight,
-          child:  Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(onPressed: (){}, icon: FaIcon(
-                FontAwesomeIcons.sortAlphaUpAlt,
-                color: Colors.black87,
-                size: 18,
-              ),
-              ),
-              PopupMenuButton<String>(
-                icon: FaIcon(
-                  FontAwesomeIcons.filter,
-                  size: 18,
-                  color: Colors.black87,
-                ),
-                onSelected: (value) {
-                  // Implement your logic based on the selected value
-                  print('Selected: $value');
-                },
-                itemBuilder: (BuildContext context) {
-                  return <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: 'Profit',
-                      child: Text('Profit'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            getTotalCountAndAmount(),
+            Container(
+              alignment: Alignment.centerRight,
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // IconButton(onPressed: (){}, icon: FaIcon(
+                  //   FontAwesomeIcons.sortAlphaUpAlt,
+                  //   color: Colors.black87,
+                  //   size: 18,
+                  // ),
+                  // ),
+                  PopupMenuButton<String>(
+                    icon: Row(
+                      children: [
+                        Text("Sort By",style: item_heading_textStyle,),
+                        SizedBox(width: 15,),
+                        FaIcon(
+                          FontAwesomeIcons.caretDown,
+                          size: 18,
+                          color: Colors.black87,
+                        ),
+                      ],
                     ),
-                    PopupMenuItem<String>(
-                      value: 'Sale',
-                      child: Text('Sale'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Expense',
-                      child: Text('Option 3'),
-                    ),
-                  ];
-                },
+                    onSelected: (value) {
+                      // Implement your logic based on the selected value
+                      // print('Selected: $value');
+                      // print(value.split("-"));
+                      setState(() {
+                        selectedOption=value.split("-")[0];
+                        selectedOrder=value.split("-")[1];
+                      });
+                      print(selectedOption);
+                      print(selectedOrder);
+                      getExpense(1);
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value: 'Profit-A',
+                          child: Text('Profit : High-Low'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'Profit-D',
+                          child: Text('Profit : Low-High'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'Vendor_Name-A',
+                          child: Text('Vendor : A-Z'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'Vendor_Name-D',
+                          child: Text('Vendor : Z-A'),
+                        ),
+                      ];
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        Container(
+            height:45,
+            margin: EdgeInsets.only(bottom: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+
+            padding: EdgeInsets.only(left: 8),
+            child: TextFormField(
+              onChanged: (value)async{
+                await getExpense(1);
+              },
+              keyboardType:TextInputType.text,
+              textInputAction: TextInputAction.next,
+              cursorColor: CommonColor.BLACK_COLOR,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Vendor Name",
+                hintStyle: hint_textfield_Style,
+                suffixIcon: Icon(Icons.search,color: Colors.grey,),
+              ),
+              controller: serchvendor,
+
+            )
+
+        )
       ],
     );
   }
@@ -206,7 +271,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
           width: SizeConfig.screenWidth*0.6,
           padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color: Colors.green,
+              color:int.parse(TotalAmount)>=0? Colors.green:Colors.red,
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
@@ -221,7 +286,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
             //  Text("${_profitPartywise.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text("Total: ${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}", style: subHeading_withBold,),
+              Text("Total : ${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}", style: subHeading_withBold,),
             ],
           )
       ),
@@ -262,8 +327,6 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
         applicablefrom: newDate
     );
   }
-
-
 
   /* widget for title layout */
   Widget getFieldTitleLayout(String title) {
@@ -313,30 +376,32 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                                   color:Colors.black87,
                                 ),
                               ),
-                              Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 22),),
+                              Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8,right: 8,bottom: 5),
+                            padding:  EdgeInsets.only(left: 8,right: 8,bottom: 5),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Expanded(child: Text("Sale: ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
-                                Expanded(child: Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),)),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text("Sale : ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                    Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),),
+                                    Text("Return  : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,)),
+
+                                  ],
+                                ),
+                                model.Profit>=0?  Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
+                                 Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(child: Text("Return : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,))),
-                                widget.profit>=0? Expanded(child: Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 22),)):
-                                 Expanded(child: Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 22),)),
-                              ],
-                            ),
-                          )
+
+
                         ],
                       )
                     ),
@@ -352,18 +417,10 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
           ),
         ));
   }
+
   List<ProfitPartyWiseData> _profitPartywise = [];
+
   String TotalAmount="0.00";
-  calculateTotalAmt()async{
-    var total=0.00;
-    for(var item  in _profitPartywise ){
-      total=total+item.Profit;
-      print(item.Profit);
-    }
-    setState(() {
-      TotalAmount=total.toStringAsFixed(2) ;
-    });
-  }
 
   getExpense(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -379,17 +436,18 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardProfitDetailpartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardProfitDetailpartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                _profitPartywise=[];
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   for (var item in data['DashboardProfitDetailPartywise']) {
                     _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Profit']),(item['Vendor_Name']),(item['Sale_Amount']),(item['Expense_Amount']),(item['Return_Amount']),(item['Vendor_ID'])));
                   }
-                  calculateTotalAmt();
+                  TotalAmount= data['TotalProfit'].toString();
                   print("getDashboardProfitDetailpartywise    $_profitPartywise");
                 }else{
                   isApiCall=true;
@@ -428,10 +486,6 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
-
-
-
 
 }
 

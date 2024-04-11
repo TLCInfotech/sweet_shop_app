@@ -612,7 +612,9 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 }
 
-abstract class HomeFragmentInterface {}
+abstract class HomeFragmentInterface {
+
+}
 
 class SalesData {
   final String Date;
