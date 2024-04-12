@@ -77,21 +77,25 @@ String amountTypeId="";
 
   final _formkey=GlobalKey<FormState>();
 
-  fetchShows (searchstring) async {
-    String sessionToken = await AppPreferences.getSessionToken();
+  var filteredItemsList = [];
+
+
+  fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId&Name=${searchstring}";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.dateNew}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              var topShowsJson = await(data) as List;
-              List data1= await  topShowsJson.map((show) => (show)).toList();
+              var topShowsJson = (data) as List;
               setState(() {
-                itemsList= data1;
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=topShowsJson.map((show) => (show)).toList();
               });
             }
           }, onFailure: (error) {
@@ -114,18 +118,37 @@ String amountTypeId="";
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
+    for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
     }
     return _list;
   }
+
 
   @override
   void initState() {
@@ -148,6 +171,7 @@ String amountTypeId="";
         amountType=widget.editproduct['Amount_Type'];
       });
     }
+    await fetchItems();
   }
 
   @override

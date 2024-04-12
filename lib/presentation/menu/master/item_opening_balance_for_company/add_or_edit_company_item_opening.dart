@@ -65,12 +65,16 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   TextEditingController batchno = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
-  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   final _formkey=GlobalKey<FormState>();
 
-  fetchShows (searchstring) async {
+
+  var filteredItemsList = [];
+
+
+  fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
@@ -78,19 +82,15 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&Name=${searchstring}&Date=${widget.date}";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              print("IN ITEM");
-              print(data);
-              // var topShowsJson = await(data) as List;
-              // List data1= await  topShowsJson.map((show) => (show)).toList();
+              var topShowsJson = (data) as List;
               setState(() {
-                itemsList= data as List;
+                itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=topShowsJson.map((show) => (show)).toList();
               });
-              print("IN ITEMLIST");
-              print(itemsList);
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
@@ -112,19 +112,38 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 1));
-    await  fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
-    print("IN MAIN CaLL");
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
+    for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate']}));
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
     }
     return _list;
   }
+
+
 
 
   @override
@@ -146,6 +165,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         rate.text=widget.editproduct['Rate'].toString();
         amount.text=widget.editproduct['Amount'].toString();
       });
+      await fetchItems();
       await calculateRates();
     }
   }
