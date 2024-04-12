@@ -34,7 +34,6 @@ class CreateLedger extends StatefulWidget {
   _CreateLedgerState createState() => _CreateLedgerState();
 }
 
-
 class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderStateMixin,AddOrEditLedgerForLedgerInterface {
 
   final _formkey = GlobalKey<FormState>();
