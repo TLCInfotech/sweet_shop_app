@@ -256,7 +256,8 @@
  "return": "Return",
  "party_wise": "Partywise",
  "item_wise": "Itemwise",
- "franchisee_outstanding": "Franchisee Outstanding"
+ "franchisee_outstanding": "Franchisee Outstanding",
+ "bank_wise": "Bankwise"
 
 
 }

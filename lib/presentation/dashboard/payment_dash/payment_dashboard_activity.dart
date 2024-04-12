@@ -298,7 +298,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                   ),
                 ],
               ),
-              child: Text(ApplicationLocalizations.of(context)!.translate("item_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
+              child: Text(ApplicationLocalizations.of(context)!.translate("bank_wise")!,style: subHeading_withBold.copyWith(color: Colors.black87,fontSize: 18),),
             ),
           ),
         ],
