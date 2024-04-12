@@ -29,6 +29,12 @@ class _LoginActivityState extends State<LoginActivity> {
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isLoaderShow=false;
   @override
+  void initState() {
+    // TODO: implement initState
+    CommonWidget.getPlayerId();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,

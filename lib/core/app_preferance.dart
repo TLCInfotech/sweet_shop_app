@@ -11,6 +11,19 @@ class AppPreferences {
 
 
 
+  /*set getDeviceType value in SharedPreferences*/
+  static Future<String> getPushKey() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("pushKey") ?? '0';
+  }
+
+/*get setDeviceType value form SharedPreferences*/
+  static setPushKey(String pushKey) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("pushKey   $pushKey");
+    prefs.setString("pushKey", pushKey);
+  }
+
   /*set deviceId value in SharedPreferences*/
   static Future<String> getDeviceId() async {
     SharedPreferences  prefs = await SharedPreferences.getInstance();

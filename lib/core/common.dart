@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -352,6 +353,23 @@ class CommonWidget {
           ),
         ),
       ],
+    );
+  }
+
+  static getPlayerId()   async {
+    await OneSignal.shared.setAppId("8915610b-2521-4686-8069-0f5eea3c87b8");
+    /// Get the Onesignal userId and update that into the firebase.
+    /// So, that it can be used to send Notifications to users later.̥
+    final status = await OneSignal.shared.getDeviceState();
+    final String? osUserID = status!.userId;
+    print("osUserIDsss   $osUserID");
+    // We will update this once he logged in and goes to dashboard.
+    ////updateUserProfile(osUserID);
+    // Preferences.setOnesignalUserId(osUserID);
+    if (osUserID != null) AppPreferences.setPushKey(osUserID);
+    // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    await OneSignal.shared.promptUserForPushNotificationPermission(
+      fallbackToSettings: false,
     );
   }
 }
