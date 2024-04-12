@@ -28,8 +28,9 @@ class AddProductSaleRate extends StatefulWidget {
   final AddProductSaleRateInterface mListener;
   final dynamic editproduct;
   final String dateNew;
+  final id;
 
-  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew});
+  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew,  this.id});
 
   @override
   State<AddProductSaleRate> createState() => _AddProductSaleRateState();
@@ -55,26 +56,82 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   ScrollController _scrollController = new ScrollController();
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  fetchShows (searchstring) async {
-    String sessionToken = await AppPreferences.getSessionToken();
+  // fetchShows (searchstring) async {
+  //   String sessionToken = await AppPreferences.getSessionToken();
+  //   String companyId = await AppPreferences.getCompanyId();
+  //   await AppPreferences.getDeviceId().then((deviceId) {
+  //     TokenRequestModel model = TokenRequestModel(
+  //       token: sessionToken,
+  //     );
+  //     String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_list}?Company_ID=$companyId&name=${searchstring}&Date=${widget.dateNew}";
+  //     apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+  //         onSuccess:(data)async{
+  //           if(data!=null) {
+  //             print("newwwww   $data");
+  //             var topShowsJson = (data) as List;
+  //             setState(() {
+  //               itemsList=  topShowsJson.map((show) => (show)).toList();
+  //             });
+  //           }
+  //         }, onFailure: (error) {
+  //           CommonWidget.errorDialog(context, error);
+  //           return [];
+  //         }, onException: (e) {
+  //           CommonWidget.errorDialog(context, e);
+  //           return [];
+  //
+  //         },sessionExpire: (e) {
+  //           CommonWidget.gotoLoginScreen(context);
+  //           return [];
+  //         });
+  //   });
+  // }
+  //
+  // var itemsList = [];
+  //
+  // Future<List> fetchSimpleData(searchstring) async {
+  //   await Future.delayed(Duration(milliseconds: 0));
+  //   await fetchShows(searchstring) ;
+  //
+  //   List _list = <dynamic>[];
+  //   print(itemsList);
+  //   //  for (var ele in data) _list.add(ele['TestName'].toString());
+  //   for (var ele in itemsList) {
+  //     _list.add(new TestItem.fromJson(
+  //         {'label': "${ele['Name']}", 'value': "${ele['ID']}", 'gst': "${ele['GST_Rate']}", 'rate': "${ele['Rate']}"}));
+  //   }
+  //   return _list;
+  // }
+
+
+  var itemsList = [];
+  var filteredItemsList = [];
+
+
+  fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    String baseurl=await AppPreferences.getDomainLink();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${ApiConstants().baseUrl}${ApiConstants().item_list}?Company_ID=$companyId&name=${searchstring}&Date=${widget.dateNew}";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.dateNew}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              print("newwwww   $data");
               var topShowsJson = (data) as List;
               setState(() {
                 itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=topShowsJson.map((show) => (show)).toList();
               });
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
             return [];
+            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+            //  widget.mListener.loaderShow(false);
+            //  Navigator.of(context, rootNavigator: true).pop();
           }, onException: (e) {
             CommonWidget.errorDialog(context, e);
             return [];
@@ -82,28 +139,49 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           },sessionExpire: (e) {
             CommonWidget.gotoLoginScreen(context);
             return [];
+            // widget.mListener.loaderShow(false);
           });
+
     });
   }
 
-  var itemsList = [];
-
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
+    for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}", 'gst': "${ele['GST_Rate']}", 'rate': "${ele['Rate']}"}));
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
     }
     return _list;
   }
 
+
+
+
   var selectedItemID =null;
-  setVal(){
+  setVal()async{
     if(widget.editproduct!=null){
       setState(() {
         _textController.text=widget.editproduct['Name'];
@@ -115,6 +193,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
       });
     }
+    await fetchItems();
   }
 
   @override
@@ -340,6 +419,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         ),
         child: TextFieldSearch(
             label: 'Item',
+            minStringLength: 0,
             controller: _textController,
             decoration: textfield_decoration.copyWith(
               hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
@@ -353,8 +433,6 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
             getSelectedValue: (v) {
               setState(() {
                 selectedItemID = v.value;
-                //gst.text=v.gst;
-                //rate.text=v.rate;
                 gst.text=v.gst=="null"?gst.text:v.gst;
                 itemsList = [];
               });

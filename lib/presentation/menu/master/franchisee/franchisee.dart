@@ -293,7 +293,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee}?Company_ID=$companyId&PageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

@@ -417,9 +417,9 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&pageSize=10";
+        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&PageSize=10";
           print("newwww  $apiUrl   $baseurl ");
-        //  "?pageNumber=$page&pageSize=12";
+        //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

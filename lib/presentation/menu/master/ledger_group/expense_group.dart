@@ -769,7 +769,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&PageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

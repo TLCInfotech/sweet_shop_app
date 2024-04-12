@@ -68,7 +68,8 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
         Container(
             height: 45,
             width: double.parse(widget.width.toString()),
-            margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:40): EdgeInsets.only(left: 5,top:10),
+
+            margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:30): EdgeInsets.only(left: 5,top:10),
             padding: EdgeInsets.only(left: 10, right: 10),
             decoration: BoxDecoration(
                 boxShadow: [

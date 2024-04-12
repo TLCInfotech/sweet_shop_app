@@ -804,7 +804,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&PageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);

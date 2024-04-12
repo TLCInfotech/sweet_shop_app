@@ -380,7 +380,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getVoucherNote}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getVoucherNote}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 

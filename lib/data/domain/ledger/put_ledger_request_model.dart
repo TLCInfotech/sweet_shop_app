@@ -32,10 +32,10 @@ class PutLedgerRequestModel {
   String? tcsApplicable;
   String? extName;
   String? remark;
-  String? photo;
-  String? panCardImage;
-  String? adharCardImage;
-  String? gstImage;
+  final List<int>? photo;
+  final List<int>? panCardImage;
+  final List<int>? adharCardImage;
+  final List<int>? gstImage;
   String? modifier;
   String? modifierMachine;
   String? companyId;

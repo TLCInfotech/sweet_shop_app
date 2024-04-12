@@ -377,7 +377,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&pageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

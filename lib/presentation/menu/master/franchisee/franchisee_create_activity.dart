@@ -480,6 +480,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                       getAddressLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           getCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                           getPincodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
@@ -740,8 +741,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   Widget getOutstandingLimit(double parentHeight, double parentWidth) {
     return
       Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: SingleLineEditableTextFormField(

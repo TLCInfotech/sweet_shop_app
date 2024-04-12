@@ -128,7 +128,10 @@ print("hjthghh  $companyId");
       if(_arrList[0]['Photo']!=null&&_arrList[0]['Photo']['data']!=null && _arrList[0]['Photo']['data'].length>10) {
         f = await CommonWidget.convertBytesToFile(_arrList[0]['Photo']['data']);
       }
-        nameController.text=_arrList[0]['Name'] ?? nameController.text;
+
+      picImageBytes=(_arrList[0]['Photo']!=null && _arrList[0]['Photo']['data']!=null && _arrList[0]['Photo']['data'].length>10)?(_arrList[0]['Photo']['data']).whereType<int>().toList():[];
+      picImage=f!=null?f:picImage;
+      nameController.text=_arrList[0]['Name'] ?? nameController.text;
       contactPersonController.text=_arrList[0]['Contact_Person'] ?? contactPersonController.text;
    addressController.text=_arrList[0]['Address'] ?? addressController.text;
    cityName=_arrList[0]['District'] ?? cityName;

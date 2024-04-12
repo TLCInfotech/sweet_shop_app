@@ -303,6 +303,8 @@ class ApiRequestHelper {
           try {
             // ApiResponseForFetch apiResponse = ApiResponseForFetch();
             // apiResponse = ApiResponseForFetch.fromJson(json.decode((response.body)));
+            print("API");
+            print(json.decode((response.body))['data']);
             onSuccess(json.decode((response.body))['data']);
           }
           catch(e){

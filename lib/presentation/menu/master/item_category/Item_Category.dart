@@ -531,7 +531,7 @@ bool isLoaderShow=false;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item_category}?Company_ID=$companyId&PageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().item_category}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

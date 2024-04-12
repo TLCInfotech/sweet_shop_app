@@ -78,14 +78,19 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&Name=${searchstring}&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              var topShowsJson = (data) as List;
+              print("IN ITEM");
+              print(data);
+              // var topShowsJson = await(data) as List;
+              // List data1= await  topShowsJson.map((show) => (show)).toList();
               setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
+                itemsList= data as List;
               });
+              print("IN ITEMLIST");
+              print(itemsList);
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
@@ -107,10 +112,11 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    await Future.delayed(Duration(milliseconds: 1));
+    await  fetchShows(searchstring) ;
 
     List _list = <dynamic>[];
+    print("IN MAIN CaLL");
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in itemsList) {
@@ -292,6 +298,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           ],
         ),
         child: TextFieldSearch(
+          minStringLength: 0,
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(

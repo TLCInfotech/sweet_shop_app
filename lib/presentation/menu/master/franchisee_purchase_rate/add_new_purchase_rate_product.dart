@@ -33,8 +33,9 @@ class AddProductPurchaseRate extends StatefulWidget {
   final AddProductPurchaseRateInterface mListener;
   final dynamic editproduct;
   final date;
+  final id;
 
-  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct, this.date});
+  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct, this.date,this.id});
 
   @override
   State<AddProductPurchaseRate> createState() => _AddProductPurchaseRateState();
@@ -44,7 +45,6 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
   bool isLoaderShow = false;
   var oldItemID=null;
-  var itemsList = [];
   var selectedItemID =null;
 
   TextEditingController _textController = TextEditingController();
@@ -60,7 +60,61 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
   final _formkey1=GlobalKey<FormState>();
 
-  fetchShows (searchstring) async {
+  // fetchShows (searchstring) async {
+  //   String companyId = await AppPreferences.getCompanyId();
+  //   String sessionToken = await AppPreferences.getSessionToken();
+  //   String baseurl=await AppPreferences.getDomainLink();
+  //   await AppPreferences.getDeviceId().then((deviceId) {
+  //     TokenRequestModel model = TokenRequestModel(
+  //       token: sessionToken,
+  //     );
+  //     String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+  //     apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+  //         onSuccess:(data)async{
+  //           if(data!=null) {
+  //             var topShowsJson = (data) as List;
+  //             setState(() {
+  //               itemsList=  topShowsJson.map((show) => (show)).toList();
+  //             });
+  //           }
+  //         }, onFailure: (error) {
+  //           CommonWidget.errorDialog(context, error);
+  //           return [];
+  //           // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+  //           //  widget.mListener.loaderShow(false);
+  //           //  Navigator.of(context, rootNavigator: true).pop();
+  //         }, onException: (e) {
+  //           CommonWidget.errorDialog(context, e);
+  //           return [];
+  //
+  //         },sessionExpire: (e) {
+  //           CommonWidget.gotoLoginScreen(context);
+  //           return [];
+  //           // widget.mListener.loaderShow(false);
+  //         });
+  //
+  //   });
+  // }
+  //
+  // Future<List> fetchSimpleData(searchstring) async {
+  //   await Future.delayed(const Duration(milliseconds: 0));
+  //   await fetchShows(searchstring) ;
+  //
+  //   List _list = <dynamic>[];
+  //   print(itemsList);
+  //   //  for (var ele in data) _list.add(ele['TestName'].toString());
+  //   for (var ele in itemsList) {
+  //     _list.add(new TestItem.fromJson(
+  //         {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"gst":ele['GST_Rate']}));
+  //   }
+  //   return _list;
+  // }
+
+  var itemsList = [];
+  var filteredItemsList = [];
+
+
+  fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
@@ -68,13 +122,14 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
               var topShowsJson = (data) as List;
               setState(() {
                 itemsList=  topShowsJson.map((show) => (show)).toList();
+                filteredItemsList=topShowsJson.map((show) => (show)).toList();
               });
             }
           }, onFailure: (error) {
@@ -97,15 +152,33 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   }
 
   Future<List> fetchSimpleData(searchstring) async {
-    await Future.delayed(const Duration(milliseconds: 0));
-    await fetchShows(searchstring) ;
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = filteredItemsList;
+    } else {
 
-    List _list = <dynamic>[];
+      results = filteredItemsList
+          .where((user) =>
+          user["Name"]
+              .toLowerCase()
+              .contains(searchstring.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      itemsList = results;
+    });
+
     print(itemsList);
     //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in itemsList) {
+    for (var ele in filteredItemsList) {
       _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"gst":ele['GST_Rate']}));
+          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
     }
     return _list;
   }
@@ -117,7 +190,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
     setVal();
   }
 
-  setVal(){
+  setVal()async{
     if(widget.editproduct!=null){
       setState(() {
         oldItemID=widget.editproduct['Item_ID'];
@@ -131,6 +204,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
       });
 
     }
+    await fetchItems();
   }
 
   @override
@@ -324,6 +398,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
           ],
         ),
         child: TextFieldSearch(
+          minStringLength: 0,
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(

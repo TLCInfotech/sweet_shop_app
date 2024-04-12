@@ -84,13 +84,14 @@ String amountTypeId="";
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId&name=${searchstring}";
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId&Name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              var topShowsJson = (data) as List;
+              var topShowsJson = await(data) as List;
+              List data1= await  topShowsJson.map((show) => (show)).toList();
               setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
+                itemsList= data1;
               });
             }
           }, onFailure: (error) {
@@ -217,6 +218,7 @@ String amountTypeId="";
           ],
         ),
         child: TextFieldSearch(
+          minStringLength: 0,
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(

@@ -490,8 +490,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             dataSource: _profitPartywise,
             xValueMapper: (ProfitPartyWiseData sales, _) => sales.Vendor_Name,
             yValueMapper: (ProfitPartyWiseData sales, _) => sales.Profit,
-            pointColorMapper: (ProfitPartyWiseData sales, _) =>
-            sales.Profit >= 0 ? Colors.green : Colors.red,// Conditional color
+            pointColorMapper: (ProfitPartyWiseData sales, _) => sales.Profit >= 0 ? Colors.green : Colors.red,// Conditional color
             dataLabelSettings: DataLabelSettings(
                 alignment: ChartAlignment.far,
                 angle: 360,

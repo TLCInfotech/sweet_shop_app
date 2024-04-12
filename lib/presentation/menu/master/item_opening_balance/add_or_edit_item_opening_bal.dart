@@ -77,14 +77,15 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}&Date=${widget.date}";
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&Name=${searchstring}&Date=${widget.date}";
       // String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
-              var topShowsJson = (data) as List;
+              var topShowsJson = await(data) as List;
+              List data1= await  topShowsJson.map((show) => (show)).toList();
               setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
+                itemsList= data1;
               });
             }
           }, onFailure: (error) {
@@ -292,6 +293,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           ],
         ),
         child: TextFieldSearch(
+          minStringLength: 0,
             label: 'Item',
             controller: _textController,
             decoration: textfield_decoration.copyWith(

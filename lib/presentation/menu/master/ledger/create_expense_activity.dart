@@ -1864,10 +1864,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             tcsApplicable: "",
             extName: extName,
             remark: "",
-            adharCardImage:adharImageBytes.length==0?null: adharImageBytes.toString(),
-            panCardImage:panImageBytes.length==0?null: panImageBytes.toString(),
-            gstImage:gstImageBytes.length==0?null: gstImageBytes.toString(),
-            photo:  picImageBytes.length==0?null:picImageBytes.toString(),
+            adharCardImage:adharImageBytes.length==0?null: adharImageBytes,
+            panCardImage:panImageBytes.length==0?null: panImageBytes,
+            gstImage:gstImageBytes.length==0?null: gstImageBytes,
+            photo: picImageBytes.length==0?null:picImageBytes,
             modifier: creatorName,
             modifierMachine: deviceId
         );

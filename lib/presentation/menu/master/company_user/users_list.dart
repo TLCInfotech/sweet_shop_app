@@ -269,7 +269,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
-        String apiUrl = "$baseurl${ApiConstants().users}?pageNumber=$page&pageSize=12&&Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().users}?PageNumber=$page&PageSize=10&&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {
