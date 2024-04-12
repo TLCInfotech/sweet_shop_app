@@ -255,6 +255,8 @@
  "account_ledger": "Account Ledger",
  "return": "Return",
  "party_wise": "Partywise",
- "item_wise": "Itemwise"
+ "item_wise": "Itemwise",
+ "franchisee_outstanding": "Franchisee Outstanding"
+
 
 }
