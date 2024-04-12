@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -292,49 +293,59 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-  Widget getFranchiseeLayout(){
-    return Container(
-      height:70 ,
-      margin: const EdgeInsets.only(bottom: 10),
-      width: (SizeConfig.screenWidth),
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: Colors.deepOrange,
-          borderRadius: BorderRadius.circular(5)),
-      alignment: Alignment.center,
-      child:  Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding:  EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Franchisee \nOutstanding",
-                  style: item_heading_textStyle.copyWith(
-                      color:Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold
 
+  Widget getFranchiseeLayout(){
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
+          comeFor: "Franchisee Outstanding",
+          profit:profit ,
+          date:saleDate,
+        )));
+      },
+      child: Container(
+        height:70 ,
+        margin: const EdgeInsets.only(bottom: 10),
+        width: (SizeConfig.screenWidth),
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.deepOrange,
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding:  EdgeInsets.only(left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Franchisee \nOutstanding",
+                    style: item_heading_textStyle.copyWith(
+                        color:Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const FaIcon(
-                    FontAwesomeIcons.solidArrowAltCircleRight,
-                    color:Colors.white,
+                  const SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const FaIcon(
+                      FontAwesomeIcons.solidArrowAltCircleRight,
+                      color:Colors.white,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          getFranAnimatedFunction(),
-        ],
+            getFranAnimatedFunction(),
+          ],
+        ),
       ),
     );
   }
@@ -518,54 +529,60 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-  Container getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
-    return   Container(
-      height: 120,
-      width: (SizeConfig.screenWidth * 0.85) / 2,
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: boxcolor.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(5)),
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Container(
-            height: 60,
-            width: (SizeConfig.screenWidth * 0.85) / 2,
-            // margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-                color: boxcolor, borderRadius: BorderRadius.circular(5)),
-            alignment: Alignment.center,
-            child: Text(
-              amount,
-              style: subHeading_withBold.copyWith(fontSize:18 ),
+  Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
+    return   GestureDetector(
+      onTap: (){
+        widget.mListener.getAddLeder(title);
+        print("newwww");
+      },
+      child: Container(
+        height: 120,
+        width: (SizeConfig.screenWidth * 0.85) / 2,
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: boxcolor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              width: (SizeConfig.screenWidth * 0.85) / 2,
+              // margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: boxcolor, borderRadius: BorderRadius.circular(5)),
+              alignment: Alignment.center,
+              child: Text(
+                amount,
+                style: subHeading_withBold.copyWith(fontSize:18 ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "$title",
-                style: item_heading_textStyle.copyWith(
-                  color: boxcolor,
-                  fontWeight: FontWeight.bold
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "$title",
+                  style: item_heading_textStyle.copyWith(
+                    color: boxcolor,
+                    fontWeight: FontWeight.bold
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              FaIcon(
-                FontAwesomeIcons.solidArrowAltCircleRight,
-                color: boxcolor,
-              )
-            ],
-          )
+                const SizedBox(
+                  width: 10,
+                ),
+                FaIcon(
+                  FontAwesomeIcons.solidArrowAltCircleRight,
+                  color: boxcolor,
+                )
+              ],
+            )
 
-        ],
+          ],
+        ),
       ),
     );
 
@@ -612,7 +629,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 }
 
 abstract class HomeFragmentInterface {
-
+getAddLeder(String comeScreen);
 }
 
 class SalesData {

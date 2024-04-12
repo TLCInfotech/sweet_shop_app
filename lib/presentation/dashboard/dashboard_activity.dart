@@ -343,7 +343,41 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   @override
   addHomePage(String screenName) {
     // TODO: implement addHomePage
-    throw UnimplementedError();
+
+  }
+
+  @override
+  getAddLeder(String comeScreen) {
+    // TODO: implement getAddLeder
+    if(comeScreen=="Expense"){
+      addNewScreen(
+          LedgerDashActivity(
+          ),
+          Constant.EXPENSE);
+    } else if(comeScreen=="Sale"){
+      addNewScreen(
+          SaleDashboardActivity(
+          ),
+          Constant.SELL);
+
+    }else  if(comeScreen=="Return"){
+      addNewScreen(
+          PurchaseDashActivity(
+          ),
+          Constant.RETURN);
+    } else if(comeScreen=="Receipt"){
+      addNewScreen(
+          PaymentDashActivity(
+          ),
+          Constant.RECEIPT);
+    }else{
+      addNewScreen(
+          HomeFragment(
+            mListener: this,
+          ),
+          Constant.HOME_FRAGMENT);
+    }
+
   }
 
 

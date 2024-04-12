@@ -56,7 +56,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardSalePartywise}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardSalePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -127,7 +127,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleItemwise}?Company_ID=$companyId&Date=${DateFormat("dd-MM-yyyy").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleItemwise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
