@@ -25,6 +25,7 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class CreateSellInvoice extends StatefulWidget {
@@ -70,7 +71,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-
+ var companyId="0";
   bool isLoaderShow=false;
 
   var editedItemIndex=null;
@@ -83,6 +84,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    getCompanyId();
     calculateTotalAmt();
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
@@ -91,7 +93,13 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
       });
     }
+  }
 
+  getCompanyId()async{
+    String companyId1 = await AppPreferences.getCompanyId();
+    setState(() {
+      companyId=companyId1;
+    });
   }
 
   calculateTotalAmt()async{
@@ -678,7 +686,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
+    return SearchableLedgerDropdown(
+         apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId",
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("party")!,
         callback: (name,id){

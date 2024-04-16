@@ -45,39 +45,38 @@ class _GetDateLayoutState extends State<GetDateLayout> {
           ):Container(),
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child: Container(
-              width:  widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
-              height: (SizeConfig.screenHeight) * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
-                onTap: () async{
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  if(widget.comeFor!="newOne"){
-                    if (Platform.isIOS) {
-                      var date= await CommonWidget.startDate(context,widget.applicablefrom);
-                      widget.callback(date);
-                      // startDateIOS(context);
-                    } else if (Platform.isAndroid) {
-                      var date= await CommonWidget.startDate(context,widget.applicablefrom) ;
-                      widget.callback(date);
-                    }
-                  }else{
-                    print("Voucher Number blank???????");
+            child: GestureDetector(
+              onTap: ()async{
+                FocusScope.of(context).requestFocus(FocusNode());
+                if(widget.comeFor!="newOne"){
+                  if (Platform.isIOS) {
+                    var date= await CommonWidget.startDate(context,widget.applicablefrom);
+                    widget.callback(date);
+                    // startDateIOS(context);
+                  } else if (Platform.isAndroid) {
+                    var date= await CommonWidget.startDate(context,widget.applicablefrom) ;
+                    widget.callback(date);
                   }
-
-                },
-                child: Container(
+                }else{
+                  print("Voucher Number blank???????");
+                }
+              },
+              child: Container(
+                width:  widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
+                height: (SizeConfig.screenHeight) * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child:  Container(
                     height: 50,
                     padding: EdgeInsets.only(left: 10, right: 10),
                     decoration: BoxDecoration(

@@ -108,7 +108,6 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   var itemsList = [];
   var filteredItemsList = [];
 
-
   fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
