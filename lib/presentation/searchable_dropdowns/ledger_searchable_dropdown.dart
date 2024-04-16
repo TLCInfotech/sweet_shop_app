@@ -167,6 +167,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
               ),
               child: TypeAheadFormField(
                 textFieldConfiguration: TextFieldConfiguration(
+                  onTap: (){
+                    _controller.clear();
+                  },
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
@@ -175,6 +178,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     suffixIcon: Icon(Icons.search)
                   ),
                 ),
+
                 suggestionsCallback: (pattern) {
                   return _getSuggestions(pattern);
                 },
@@ -185,7 +189,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                 },
                 onSuggestionSelected: (suggestion) {
                   setState(() {
-                    selectedItem = suggestion;
+                    selectedItem = suggestion['Name'];
                     _controller.text=suggestion['Name'];
                   });
                   widget.callback(suggestion['Name'],(suggestion['ID']).toString());
