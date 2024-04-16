@@ -172,6 +172,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     // labelText: '${widget.title}',
                     hintText: "${widget.title}",
                     border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.search)
                   ),
                 ),
                 suggestionsCallback: (pattern) {

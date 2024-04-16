@@ -714,7 +714,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
+    return SearchableLedgerDropdown(
+           apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId",
           titleIndicator: false,
           title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
           callback: (name,id){
