@@ -684,6 +684,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       );
   }
 
+
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
