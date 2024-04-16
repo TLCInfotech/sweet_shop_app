@@ -33,7 +33,7 @@ class FranchiseeOutstandingDetailActivity extends StatefulWidget {
 class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstandingDetailActivity> {
 
 
-  DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  //DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   TextEditingController serchvendor=TextEditingController();
 
@@ -50,9 +50,20 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
     // TODO: implement initState
     super.initState();
     //   _scrollController.addListener(_scrollListener);
-    newDate=widget.date;
+   // newDate=widget.date;
+    addDate();
     getOutstandings(page);
     print("hghdghdghdgh  ${widget.comeFor}");
+  }
+
+  DateTime newDate= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+  addDate() async {
+    String dateString = await AppPreferences.getDateLayout(); // Example string date
+    newDate = DateTime.parse(dateString);
+    print(newDate);
+    setState(() {
+
+    });
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -320,6 +331,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
         callback: (date){
           setState(() {
             newDate=date!;
+            AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
             _outstandingPartywise=[];
           });
           getOutstandings(1);

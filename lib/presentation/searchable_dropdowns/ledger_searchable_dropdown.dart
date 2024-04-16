@@ -168,8 +168,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
               child: TypeAheadFormField(
                 textFieldConfiguration: TextFieldConfiguration(
                   onTap: (){
-                    _controller.clear();
+                   // _controller.clear();
                   },
+                  textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
