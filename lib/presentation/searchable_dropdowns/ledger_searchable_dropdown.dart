@@ -151,29 +151,45 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
           ):Container(),
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child:  TypeAheadFormField(
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: _controller,
-                decoration: InputDecoration(
-                  labelText: 'Type a fruit',
-                  border: OutlineInputBorder(),
-                ),
+            child:  Container(
+              height: SizeConfig.screenHeight * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
               ),
-              suggestionsCallback: (pattern) {
-                return _getSuggestions(pattern);
-              },
-              itemBuilder: (context, suggestion) {
-                return ListTile(
-                  title: Text(suggestion['Name']),
-                );
-              },
-              onSuggestionSelected: (suggestion) {
-                setState(() {
-                  selectedItem = suggestion;
-                  _controller.text=suggestion['Name'];
-                });
-                widget.callback(suggestion['Name'],(suggestion['ID']).toString());
-              },
+              child: TypeAheadFormField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: _controller,
+                  decoration: textfield_decoration.copyWith(
+                    // labelText: '${widget.title}',
+                    hintText: "${widget.title}",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                suggestionsCallback: (pattern) {
+                  return _getSuggestions(pattern);
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion['Name']),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  setState(() {
+                    selectedItem = suggestion;
+                    _controller.text=suggestion['Name'];
+                  });
+                  widget.callback(suggestion['Name'],(suggestion['ID']).toString());
+                },
+              ),
             ),
 
             // Container(
