@@ -85,6 +85,17 @@ class AppPreferences {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("domainLink", domainLink);
   }
+  /*set getAppVersion value in SharedPreferences*/
+  static Future<String> getDateLayout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("date") ?? "";
+  }
+
+/*get setUserEmail value form SharedPreferences*/
+  static setDateLayout(String date) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("date", date);
+  }
 
 
 
@@ -94,5 +105,10 @@ class AppPreferences {
   static clearAppPreference() async {
     prefs = await getInstance();
     prefs!.remove("sessionToken");
+  }
+
+  static dateClear()async{
+    prefs = await getInstance();
+    prefs!.remove("date");
   }
 }

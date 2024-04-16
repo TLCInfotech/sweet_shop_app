@@ -46,15 +46,36 @@ class _HomeFragmentState extends State<HomeFragment> {
   var receiptAmt=0;
   var FranchiseeOutstanding=0;
 
-  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
-
-  @override
+ @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    addDate();
     getDashboardData();
-  }
+print("hfshjffhfbh  $dateString");
 
+   // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+
+  }
+  late DateTime dateTime;
+  String dateString="";
+  addDate() async {
+
+    String  dateString = await AppPreferences.getDateLayout(); // Example string date
+     dateTime = DateTime.parse(dateString);
+    if(dateString==""){
+      DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+      AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+      print("jdjfjfbf  $saleDate");
+    }else{
+
+    }
+    print(dateTime);
+    print("jdhbdcbhb  $dateTime  $dateString");
+    setState(() {
+
+    });
+  }
   bool isShowSkeleton = true;
 
 
@@ -63,6 +84,9 @@ class _HomeFragmentState extends State<HomeFragment> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -72,7 +96,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -230,7 +254,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Profit ":"Loss" ,
           profit:profit ,
-          date:saleDate,
+          date:dateTime,
         )));
       },
       onDoubleTap: (){},
@@ -274,21 +298,6 @@ class _HomeFragmentState extends State<HomeFragment> {
             getAnimatedFunction(),
           ],
         ),
-        /*Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Image(
-              image: AssetImage("assets/images/hand.png"),
-              height: 50,
-              width:50,
-              color:Colors.white,
-            ),
-            const SizedBox(width: 20,),
-            getAnimatedFunction(),
-            const SizedBox(width: 20,),
-            profit>0? const FaIcon(FontAwesomeIcons.arrowUpWideShort,size: 30,color: Colors.white,): const FaIcon(FontAwesomeIcons.arrowDownWideShort,size: 30,color: Colors.white,)
-          ],
-        ),*/
       ),
     );
   }
@@ -300,7 +309,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
           comeFor: "Franchisee Outstanding",
           profit:profit ,
-          date:saleDate,
+          date:dateTime,
         )));
       },
       child: Container(
@@ -384,11 +393,12 @@ class _HomeFragmentState extends State<HomeFragment> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
-            saleDate=date!;
+            dateTime=date!;
+            AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(dateTime));
           });
           getDashboardData();
         },
-        applicablefrom: saleDate
+        applicablefrom: dateTime
     );
   }
 

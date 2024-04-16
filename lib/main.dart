@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -87,13 +88,15 @@ class _MyHomePageState extends State<MyHomePage> {
     startTimer();
     CommonWidget.getPlayerId();
     getDeviceID();
+    DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+    AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+
   }
 
 
   /*Function for get Device Id is IOS or Android */
   getDeviceID()   {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
     if (Platform.isIOS) {
       deviceInfo.iosInfo.then((iosInfo) {
         AppPreferences.setDeviceId(iosInfo.identifierForVendor!);

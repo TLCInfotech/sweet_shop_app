@@ -39,7 +39,18 @@ class _LedgerDashState extends State<LedgerDashActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    addDate();
     getSalePartyWise();
+
+  }
+  DateTime dateTime= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+  addDate() async {
+    String dateString = await AppPreferences.getDateLayout(); // Example string date
+     dateTime = DateTime.parse(dateString);
+    print(dateTime);
+    setState(() {
+
+    });
   }
   bool isShowSkeleton = true;
   getSalePartyWise() async {
@@ -56,7 +67,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -124,7 +135,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -303,7 +314,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     );
   }
 
-  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+//  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
 
   /* Widget to get add Invoice date Layout */
@@ -313,7 +324,8 @@ class _LedgerDashState extends State<LedgerDashActivity> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
-            saleDate=date!;
+            dateTime=date!;
+            AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
           });
           if(isPartyWise){
             getSalePartyWise();
@@ -322,7 +334,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             getSaleItemWise();
           }
         },
-        applicablefrom: saleDate
+        applicablefrom: dateTime
     );
   }
 

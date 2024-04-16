@@ -39,7 +39,17 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    addDate();
     getSalePartyWise();
+  }
+   DateTime saleDate= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+  addDate() async {
+    String dateString = await AppPreferences.getDateLayout(); // Example string date
+    saleDate = DateTime.parse(dateString);
+    print(saleDate);
+    setState(() {
+
+    });
   }
   bool isShowSkeleton = true;
   getSalePartyWise() async {
@@ -324,7 +334,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
     );
   }
 
-  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+//DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
 
   /* Widget to get add Invoice date Layout */
@@ -335,6 +345,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
         callback: (date){
           setState(() {
             saleDate=date!;
+            AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
           });
           if(isPartyWise){
             getSalePartyWise();
