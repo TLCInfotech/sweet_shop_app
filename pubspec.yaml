@@ -30,6 +30,7 @@ dependencies:
   skeleton_text:
   countup: ^0.1.4
   onesignal_flutter:  ^3.3.0
+  flutter_typeahead:
 
 dev_dependencies:
   flutter_test:
