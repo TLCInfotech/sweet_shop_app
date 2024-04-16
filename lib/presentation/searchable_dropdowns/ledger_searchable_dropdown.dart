@@ -134,16 +134,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
 
   final TextEditingController _controller = TextEditingController();
 
-  List<String> _suggestions = [
-    'Apple',
-    'Banana',
-    'Orange',
-    'Mango',
-    'Grapes',
-    // Add more suggestions as needed
-  ];
-
-  String selectedItem="";
+  var selectedItem=null;
 
   @override
   Widget build(BuildContext context) {
@@ -173,14 +164,15 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
               },
               itemBuilder: (context, suggestion) {
                 return ListTile(
-                  title: Text(suggestion),
+                  title: Text(suggestion['Name']),
                 );
               },
               onSuggestionSelected: (suggestion) {
                 setState(() {
                   selectedItem = suggestion;
-                  _controller.text=suggestion;
+                  _controller.text=suggestion['Name'];
                 });
+                widget.callback(suggestion['Name'],(suggestion['ID']).toString());
               },
             ),
 
@@ -234,9 +226,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
   }
   List _getSuggestions(String query) {
     List matches = [];
-    matches.addAll(_suggestions);
+    matches.addAll(ledger_list);
 
-    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+    matches.retainWhere((s) => s['Name'].toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
 

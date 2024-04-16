@@ -698,13 +698,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           else {
             setState(() {
               selectedFranchiseeName = name!;
-              selectedFranchiseeId = id!;
+              selectedFranchiseeId = id.toString()!;
               // Item_list=[];
               // Updated_list=[];
               // Deleted_list=[];
               // Inserted_list=[];
             });
           }
+          print("############3");
+          print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
         },
         ledgerName: selectedFranchiseeName);
 
