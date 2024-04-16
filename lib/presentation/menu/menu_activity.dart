@@ -316,7 +316,9 @@ String companyId="";
   Widget getFranchiseeSaleRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const FranchiseeSaleRate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
+          compId: companyId,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -345,7 +347,9 @@ String companyId="";
     return  GestureDetector(
       onTap: (){
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const FranchiseePurchaseRate()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
+          compId: companyId,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(

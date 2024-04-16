@@ -116,8 +116,15 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     // TODO: implement initState
     super.initState();
     callGetFranchiseeItemOpeningList(1);
+    getLocal();
   }
+  String companyId="";
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
 
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +188,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               onPressed: () async{
                 await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                   dateNew:CommonWidget.getDateLayout(invoiceDate),
-
+compId:companyId ,
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
                 )));
@@ -298,6 +305,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                         dateNew:CommonWidget.getDateLayout(invoiceDate),
                         editedItem:Franchisee_list[index],
+                        compId:companyId ,
                         //DateFormat('dd-MM-yyyy').format(invoiceDate),
                         mListener: this,
                       )));

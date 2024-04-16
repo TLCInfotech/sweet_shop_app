@@ -21,9 +21,12 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/exit_screen_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class FranchiseeSaleRate extends StatefulWidget {
-  const FranchiseeSaleRate({super.key});
+final  String compId;
+
+  const FranchiseeSaleRate({super.key, required this.compId});
 
   @override
   State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
@@ -70,6 +73,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   void initState() {
     // TODO: implement initState
     super.initState();
+   // getCompanyId();
     calculateTotalAmt();
     _scrollController.addListener(_scrollListener);
     if(selectedCopyFranchiseeId!=""){
@@ -77,6 +81,15 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     }
 
   }
+String companyId="";
+  getCompanyId()async{
+    companyId = await AppPreferences.getCompanyId();
+    setState(() {
+      //companyId=companyId1;
+      print("jjgjgjg   $companyId");
+    });
+  }
+
 
   int page = 1;
   bool isPagination = true;
@@ -498,7 +511,31 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GetFranchiseeLayout(
+          SearchableLedgerDropdown(
+          apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
+        callback: (name,id){
+          if(selectedCopyFranchiseeId==id){
+            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          }
+          else {
+            setState(() {
+              selectedCopyFranchiseeName=name!;
+              selectedCopyFranchiseeId=id!;
+
+                Item_list=[];
+                Updated_list=[];
+                Inserted_list=[];
+                Deleted_list=[];
+               callGetFrenchisee(1);
+            });
+          }
+          print(selectedCopyFranchiseeId);
+        },
+        ledgerName: selectedCopyFranchiseeName),
+        /*  GetFranchiseeLayout(
               titleIndicator:false,
               title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name,id){
@@ -513,9 +550,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
                   Deleted_list=[];
                 });    callGetFrenchisee(1);
               },
-              franchiseeName: selectedCopyFranchiseeName),
-          // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          Padding(
+              franchiseeName: selectedCopyFranchiseeName),*/
+        Padding(
             padding:  EdgeInsets.only(top: SizeConfig.screenHeight*.01),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -591,7 +627,24 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout(){
-    return  GetCategoryLayout(
+    return  SearchableLedgerDropdown(
+        apiUrl:ApiConstants().item_category+"?Company_ID=${widget.compId}",
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("category")!,
+        callback: (name,id){
+
+            setState(() {
+              selectedProductCategory=name!;
+              //selectedCopyFranchiseeId=id!;
+            });
+
+          print(selectedProductCategory);
+        },
+        ledgerName: selectedProductCategory);
+
+
+
+    /*  GetCategoryLayout(
         titleIndicator:false,
         title:    ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){
@@ -599,7 +652,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
             selectedProductCategory=name!;
           });
         },
-        selectedProductCategory: selectedProductCategory);
+        selectedProductCategory: selectedProductCategory);*/
 
   }
 

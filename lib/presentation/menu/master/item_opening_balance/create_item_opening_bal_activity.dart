@@ -24,14 +24,16 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeItemOpeningBal/franchisee_item_opening_bal_req_body.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/exit_screen_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_or_edit_item_opening_bal.dart';
 
 class CreateItemOpeningBal extends StatefulWidget {
   final CreateItemOpeningBalInterface mListener;
   final String dateNew;
   final editedItem;
+  final compId;
 
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener});
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -489,8 +491,30 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-
-    return GetFranchiseeLayout(
+    return SearchableLedgerDropdown(
+        apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
+        callback: (name,id){
+          if(selectedFranchiseeID==id){
+            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          }
+          else {
+            setState(() {
+              selectedFranchiseeName = name!;
+              selectedFranchiseeID = id;
+              Item_list = [];
+              Updated_list = [];
+              Deleted_list = [];
+              Inserted_list = [];
+            });
+            print(selectedFranchiseeID);
+            print(selectedFranchiseeName);
+          }
+            callGetFranchiseeItemOpeningList(1);
+          },
+           ledgerName: selectedFranchiseeName,);GetFranchiseeLayout(
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("franchisee_name")! ,
         callback: (name,id){

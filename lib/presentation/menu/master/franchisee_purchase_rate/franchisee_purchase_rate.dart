@@ -24,9 +24,11 @@ import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/exit_screen_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class FranchiseePurchaseRate extends StatefulWidget {
-  const FranchiseePurchaseRate({super.key});
+  final String compId;
+  const FranchiseePurchaseRate({super.key, required this.compId});
 
   @override
   State<FranchiseePurchaseRate> createState() => _FranchiseePurchaseRateState();
@@ -611,18 +613,30 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GetFranchiseeLayout(
-              titleIndicator:false,
-          title:      ApplicationLocalizations.of(context)!.translate("franchisee")!,
+          SearchableLedgerDropdown(
+              apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+              titleIndicator: false,
+              title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name,id){
-            setState(() {
-              selectedCopyFranchiseeName=name!;
-              selectedFranchiseeID=id;
-            });
+                if(selectedFranchiseeID==id){
+                  var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+                  ScaffoldMessenger.of(context).showSnackBar(snack);
+                }
+                else {
+                  setState(() {
+                    selectedCopyFranchiseeName=name!;
+                    selectedFranchiseeID=id!;
 
-            getPurchaseList();
-          },
-          franchiseeName: selectedCopyFranchiseeName),
+                    Item_list=[];
+                    Updated_list=[];
+                    Inserted_list=[];
+                    Deleted_list=[];
+                    callGetFranchiseeItemOpeningList(1);
+                  });
+                }
+                print(selectedFranchiseeID);
+              },
+              ledgerName: selectedCopyFranchiseeName),
           // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
           Padding(
             padding:  EdgeInsets.only(top: SizeConfig.screenHeight*.01),
@@ -701,16 +715,20 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout(){
-    return  GetCategoryLayout(
-        titleIndicator:false,
-        title:      ApplicationLocalizations.of(context)!.translate("category")!,
+    return SearchableLedgerDropdown(
+        apiUrl:ApiConstants().item_category+"?Company_ID=${widget.compId}",
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){
+
           setState(() {
             selectedProductCategory=name!;
             selectedCategoryID=id;
           });
+
+          print(selectedProductCategory);
         },
-        selectedProductCategory: selectedProductCategory);
+        ledgerName: selectedProductCategory);
   }
 
   calculateTotalAmt()async{
