@@ -97,15 +97,19 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   }
   setData()async{
     await getCompanyId();
-    await calculateTotalAmt();
     invoiceDate=widget.dateNew;
-    await gerSaleInvoice(1);
-    print("#######################3 ${widget.editedItem}");
-    setState(() {
-      invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-      selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
-      selectedFranchiseeName=widget.editedItem['Vendor_Name'];
-    });
+    if(widget.come=="edit"){
+      await calculateTotalAmt();
+
+      await gerSaleInvoice(1);
+      print("#######################3 ${widget.editedItem}");
+      setState(() {
+        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+        selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+        selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+      });
+    }
+
     print("#######################33 ${selectedFranchiseeName}");
 
   }
@@ -705,6 +709,9 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     return SearchableLedgerDropdown(
          apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId",
         titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      franchisee: widget.come,
+      franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
         title: ApplicationLocalizations.of(context)!.translate("party")!,
         callback: (name,id){
           if(selectedLedgerId==id){
@@ -724,9 +731,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           print("############3");
           print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
         },
-        ledgerName: selectedFranchiseeName,
-        franchisee: widget.come,
-        franchiseeName: selectedFranchiseeName,
+
     );
 
   }
@@ -737,6 +742,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
            apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId",
           titleIndicator: false,
           title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
+          franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
+          franchisee: widget.come,
           callback: (name,id){
             if(selectedFranchiseeId==id){
               var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
