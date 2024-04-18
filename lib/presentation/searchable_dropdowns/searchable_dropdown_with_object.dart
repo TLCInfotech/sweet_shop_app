@@ -38,11 +38,12 @@ class TestItem {
 
 class SearchableDropdownWithObject extends StatefulWidget{
   final title;
-  final ledgerName;
+  final name;
   final Function(dynamic?) callback;
   final titleIndicator;
   final apiUrl;
-  SearchableDropdownWithObject({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl});
+  final status;
+  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
 
 
 
@@ -62,6 +63,11 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     // TODO: implement initState
     super.initState();
     callGetLedger();
+    print("gggggg ${widget.status}");
+    if(widget.status=="edit"){
+      print(":::::: ${widget.name}");
+      _controller.text=widget.name;
+    }
   }
   List<dynamic> ledger_list = [];
 

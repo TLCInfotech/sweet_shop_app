@@ -77,6 +77,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
 
 
   FocusNode searchFocus = FocusNode() ;
+
   getCompanyId()async{
     String companyId1 = await AppPreferences.getCompanyId();
     setState(() {
@@ -100,6 +101,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:null;
+        selectedItemName=widget.editproduct['Item_Name']!=null?widget.editproduct['Item_Name']:null;
         _textController.text=widget.editproduct['Item_Name'];
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
@@ -256,7 +258,10 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
+    print("sadas ${selectedItemName}");
     return SearchableDropdownWithObject(
+        name: selectedItemName,
+        status:  "edit",
         apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("item_name")!,
@@ -271,7 +276,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
           });
           await calculateRates();
         },
-      ledgerName: selectedItemName,
+
     );
 
     //   Container(
