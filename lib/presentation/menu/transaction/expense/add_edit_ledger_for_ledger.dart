@@ -13,6 +13,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -23,6 +24,7 @@ class TestItem {
     return TestItem(label: json['label'], value: json['value']);
   }
 }
+
 class AddOrEditLedgerForLedger extends StatefulWidget {
   final AddOrEditLedgerForLedgerInterface mListener;
   final dynamic editproduct;
@@ -52,6 +54,8 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   var oldItemId=0;
 
   var filteredItemsList = [];
+  var companyId="0";
+  var selectedLedgerName="";
 
   fetchItems () async{ 
     String sessionToken = await AppPreferences.getSessionToken();
@@ -130,6 +134,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemID=widget.editproduct['Expense_ID']!=null?widget.editproduct['Expense_ID']:null;
+        selectedLedgerName=widget.editproduct['Expense_Name']!=null?widget.editproduct['Expense_Name']:null;
         _textController.text=widget.editproduct['Expense_Name'];
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
@@ -242,45 +247,62 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
 
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("expense_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                itemsList = [];
-              });
-            },
-            minStringLength: 0,
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
+    // ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId";
+    return SearchableDropdownWithObject(
+      name: selectedLedgerName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().ledger_list}?",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("expense_name")!,
+      callback: (item)async{
+        setState(() {
+
+          selectedItemID = item['ID'].toString();
+          selectedLedgerName=item['Name'].toString();
+        });
+      },
+
     );
+
+    //   Container(
+    //     height: parentHeight * .055,
+    //     alignment: Alignment.center,
+    //     decoration: BoxDecoration(
+    //       color: CommonColor.WHITE_COLOR,
+    //       borderRadius: BorderRadius.circular(4),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           offset: Offset(0, 1),
+    //           blurRadius: 5,
+    //           color: Colors.black.withOpacity(0.1),
+    //         ),
+    //       ],
+    //     ),
+    //     child: TextFieldSearch(
+    //         label: 'Item',
+    //         controller: _textController,
+    //         decoration: textfield_decoration.copyWith(
+    //           hintText: ApplicationLocalizations.of(context)!.translate("expense_name")!,
+    //           prefixIcon: Container(
+    //               width: 50,
+    //               padding: EdgeInsets.all(10),
+    //               alignment: Alignment.centerLeft,
+    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    //         ),
+    //         textStyle: item_regular_textStyle,
+    //         getSelectedValue: (v) {
+    //           setState(() {
+    //             selectedItemID = v.value;
+    //             itemsList = [];
+    //           });
+    //         },
+    //         minStringLength: 0,
+    //         future: () {
+    //           if (_textController.text != "")
+    //             return fetchSimpleData(
+    //                 _textController.text.trim());
+    //         })
+    // );
   }
 
 
@@ -336,7 +358,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
             if(widget.editproduct!=null){
               item = {
                 "New_Expense_ID": selectedItemID,
-                "Expense_Name": _textController.text,
+                "Expense_Name": selectedLedgerName,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Expense_ID": widget.editproduct['Expense_ID'],
                 "Amount": double.parse(amount.text),
@@ -345,7 +367,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
             }
             else {
                item = {
-                "Expense_Name": _textController.text,
+                "Expense_Name": selectedLedgerName,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Expense_ID": selectedItemID,
                 "Amount": double.parse(amount.text),

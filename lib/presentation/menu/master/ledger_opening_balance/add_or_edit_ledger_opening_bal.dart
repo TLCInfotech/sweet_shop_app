@@ -88,7 +88,7 @@ String amountTypeId="";
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.dateNew}";
+      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.dateApi}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
@@ -163,6 +163,7 @@ String amountTypeId="";
 
   List<dynamic> Deleted_list=[];
   setVal()async{
+    print("Assssssssss ${widget.dateApi}");
     if(widget.editproduct!=null){
       setState(() {
         _textController.text=widget.editproduct['Ledger_Name'];

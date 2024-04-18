@@ -281,6 +281,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                             dateNew:invoiceDate,
                             Invoice_No: saleInvoice_list[index]['Invoice_No'],
                             mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
+                            editedItem:saleInvoice_list[index],
+                            come:"edit",
                           )));
                     },
                     child: Card(

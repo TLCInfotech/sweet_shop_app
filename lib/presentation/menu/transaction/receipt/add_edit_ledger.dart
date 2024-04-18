@@ -13,6 +13,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 class TestItem {
   String label;
   dynamic value;
@@ -48,6 +49,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   var itemsList = [];
   var selectedItemID =null;
+  var companyId="0";
+  var selectedLedgerName="";
   var oldItemId=0;
 
   var filteredItemsList = [];
@@ -127,6 +130,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:null;
+        selectedLedgerName=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:null;
         _textController.text=widget.editproduct['Ledger_Name'];
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
@@ -253,45 +257,61 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                itemsList = [];
-              });
-            },
-            minStringLength: 0,
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
+    return  SearchableDropdownWithObject(
+      name: selectedLedgerName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().getLedgerWithoutBankCash}?",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      callback: (item)async{
+        setState(() {
+
+          selectedItemID = item['ID'].toString();
+          selectedLedgerName=item['Name'].toString();
+        });
+      },
+
     );
+
+    //   Container(
+    //     height: parentHeight * .055,
+    //     alignment: Alignment.center,
+    //     decoration: BoxDecoration(
+    //       color: CommonColor.WHITE_COLOR,
+    //       borderRadius: BorderRadius.circular(4),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           offset: const Offset(0, 1),
+    //           blurRadius: 5,
+    //           color: Colors.black.withOpacity(0.1),
+    //         ),
+    //       ],
+    //     ),
+    //     child: TextFieldSearch(
+    //         label: 'Item',
+    //         controller: _textController,
+    //         decoration: textfield_decoration.copyWith(
+    //           hintText: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
+    //           prefixIcon: Container(
+    //               width: 50,
+    //               padding: const EdgeInsets.all(10),
+    //               alignment: Alignment.centerLeft,
+    //               child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    //         ),
+    //         textStyle: item_regular_textStyle,
+    //         getSelectedValue: (v) {
+    //           setState(() {
+    //             selectedItemID = v.value;
+    //             itemsList = [];
+    //           });
+    //         },
+    //         minStringLength: 0,
+    //         future: () {
+    //           if (_textController.text != "")
+    //             return fetchSimpleData(
+    //                 _textController.text.trim());
+    //         })
+    // );
   }
 
   /* widget for button layout */
@@ -346,7 +366,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
             if(widget.editproduct!=null){
               item = {
                 "New_Ledger_ID": selectedItemID,
-                "Ledger_Name": _textController.text,
+                "Ledger_Name": selectedLedgerName,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_ID": widget.editproduct['Ledger_ID'],
                 "Amount": double.parse(amount.text),
@@ -356,7 +376,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
             }
             else {
               item = {
-                "Ledger_Name": _textController.text,
+                "Ledger_Name": selectedLedgerName,
                  "Date": widget.newDate,
               //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_ID": selectedItemID,

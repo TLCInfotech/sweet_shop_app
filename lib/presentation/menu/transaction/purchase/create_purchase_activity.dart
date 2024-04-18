@@ -31,6 +31,7 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/getLedger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/franchisee_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../sell/add_or_edit_Item.dart';
 import 'add_or_edit_Item.dart';
 
@@ -41,7 +42,9 @@ class CreatePurchaseInvoice extends StatefulWidget {
   final  Invoice_No;
   final  ledgerName;
   final  franchiseeName;
-  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName});
+  final editedItem;
+  final come;
+  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come});
 
   @override
   _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
@@ -87,6 +90,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   var editedItemIndex=null;
 
+  var companyId="0";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -95,17 +100,50 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    calculateTotalAmt();
-    invoiceDate=widget.dateNew;
-    if(widget.Invoice_No!=null){
-      gerSaleInvoice(1);
-      setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-      });
-    }
+    // calculateTotalAmt();
+    // getCompanyId();
+    // invoiceDate=widget.dateNew;
+    // if(widget.Invoice_No!=null){
+    //   gerSaleInvoice(1);
+    //   setState(() {
+    //     invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+    //     selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+    //     selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+    //     selectedLedgerName=widget.editedItem['Purchase_Ledger_Name'];
+    //     selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
+    //   });
+    // }
+    setData();
 
   }
 
+  setData()async{
+    await getCompanyId();
+    invoiceDate=widget.dateNew;
+    if(widget.come=="edit"){
+      await calculateTotalAmt();
+
+      await gerSaleInvoice(1);
+      print("#######################3 ${widget.editedItem}");
+      setState(() {
+        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+        selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+        selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+        selectedLedgerName=widget.editedItem['Purchase_Ledger_Name'];
+        selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
+      });
+    }
+
+    print("#######################33 ${selectedFranchiseeName}");
+
+  }
+
+  getCompanyId()async{
+    String companyId1 = await AppPreferences.getCompanyId();
+    setState(() {
+      companyId=companyId1;
+    });
+  }
   var roundoff="0.00";
 
   calculateTotalAmt()async{
@@ -117,7 +155,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     for(var item  in Item_list ){
       total=total+item['Net_Amount'];
       // print(item['Amount']);
-      print("jdjdn  $total");
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
     double amt = total % 1;
@@ -180,9 +217,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   ),
                   color: Colors.transparent,
                   margin: const EdgeInsets.only(top: 10, left: 5, right: 10),
-                 child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
+                  child: AppBar(
+                    leadingWidth: 0,
+                    automaticallyImplyLeading: false,
                     title:  Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
@@ -240,7 +277,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             ),
           ),
         ),
-       Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
   }
@@ -250,7 +287,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      /*  TotalAmount!="0.00"?*/ Container(
+        TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
           padding: EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
@@ -267,7 +304,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
           ),
-        )/*:Container()*/,
+        ):Container(),
         GestureDetector(
           onTap: () {
             if(selectedLedgerId=="" ){
@@ -686,34 +723,65 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
-        titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("party")!,
-        callback: (name,id){
-          if(selectedLedgerId==id){
-            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-            ScaffoldMessenger.of(context).showSnackBar(snack);
-          }
-          else {
-            setState(() {
-              selectedFranchiseeName = name!;
-              selectedFranchiseeId = id!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
-            });
-          }
-        },
-        ledgerName: selectedFranchiseeName);
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      franchisee: widget.come,
+      franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        if(selectedLedgerId==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedFranchiseeName = name!;
+            selectedFranchiseeId = id.toString()!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+        }
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+
+    );
+
+    // GetLedgerLayout(
+    //   titleIndicator: false,
+    //   title: ApplicationLocalizations.of(context)!.translate("party")!,
+    //   callback: (name,id){
+    //     if(selectedLedgerId==id){
+    //       var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+    //       ScaffoldMessenger.of(context).showSnackBar(snack);
+    //     }
+    //     else {
+    //       setState(() {
+    //         selectedFranchiseeName = name!;
+    //         selectedFranchiseeId = id!;
+    //         // Item_list=[];
+    //         // Updated_list=[];
+    //         // Deleted_list=[];
+    //         // Inserted_list=[];
+    //       });
+    //     }
+    //   },
+    //   ledgerName: selectedFranchiseeName);
 
   }
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
+    return SearchableLedgerDropdown(
+        apiUrl: ApiConstants().ledgerWithoutImage+"?",
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
+        franchiseeName: widget.come=="edit"? widget.editedItem['Purchase_Ledger_Name']:"",
+        franchisee: widget.come,
         callback: (name,id){
           if(selectedFranchiseeId==id){
             var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
@@ -732,6 +800,27 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           print(selectedLedgerId);
         },
         ledgerName: selectedLedgerName);
+    // GetLedgerLayout(
+    //   titleIndicator: false,
+    //   title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
+    //   callback: (name,id){
+    //     if(selectedFranchiseeId==id){
+    //       var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+    //       ScaffoldMessenger.of(context).showSnackBar(snack);
+    //     }
+    //     else {
+    //       setState(() {
+    //         selectedLedgerName = name!;
+    //         selectedLedgerId = id!;
+    //         // Item_list=[];
+    //         // Updated_list=[];
+    //         // Deleted_list=[];
+    //         // Inserted_list=[];
+    //       });
+    //     }
+    //     print(selectedLedgerId);
+    //   },
+    //   ledgerName: selectedLedgerName);
   }
 
   @override
@@ -832,8 +921,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
-                    }, onException: (e) {
-                  print("Here2=> $e");
+            }, onException: (e) {
+              print("Here2=> $e");
               setState(() {
                 isLoaderShow=false;
               });
@@ -865,8 +954,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
- double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
- 
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -952,7 +1041,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             invoiceNo:widget.Invoice_No.toString() ,
             companyID: companyId ,
             voucherName: "Purchase",
-              roundOff:double.parse(roundoff) ,
+            roundOff:double.parse(roundoff) ,
             totalAmount:TotalAmountInt,
             dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
             date: DateFormat('yyyy-MM-dd').format(widget.dateNew),

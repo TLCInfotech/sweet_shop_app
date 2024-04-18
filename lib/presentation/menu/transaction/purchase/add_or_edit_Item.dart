@@ -17,6 +17,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -75,6 +76,8 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
 
   TextEditingController netAmount = TextEditingController();
   var selectedItemID =null;
+
+  var selectedItemName="";
   var oldItemId=0;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
@@ -93,6 +96,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:null;
+        selectedItemName=widget.editproduct['Item_Name']!=null?widget.editproduct['Item_Name']:null;
         _textController.text=widget.editproduct['Item_Name'];
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
@@ -246,48 +250,23 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   }
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-            label: 'Item',
-            minStringLength: 0,
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                unit.text=v.unit;
-                rate.text=v.rate;
-                itemsList = [];
-                gst.text=v.gst!="null"?v.gst:"";
-              });
-              calculateRates();
-            },
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
+    return SearchableDropdownWithObject(
+      name: selectedItemName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+          selectedItemID = item['ID'].toString();
+          selectedItemName=item['Name'].toString();
+          unit.text=item['Unit'];
+          rate.text=item['Rate'].toString();
+          gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+        });
+        await calculateRates();
+      },
 
     );
   }
@@ -536,7 +515,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
                 "New_Item_ID": selectedItemID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),
@@ -553,7 +532,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
             else {
               item={
                 "Item_ID":selectedItemID,
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),

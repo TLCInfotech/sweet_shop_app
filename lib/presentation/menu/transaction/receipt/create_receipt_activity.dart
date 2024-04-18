@@ -21,6 +21,7 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class CreateReceipt extends StatefulWidget {
@@ -28,7 +29,10 @@ class CreateReceipt extends StatefulWidget {
   final  dateNew;
   final  voucherNo;
   final  newDate;
-  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate});
+  final come;
+  final editedItem;
+
+  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate,this.editedItem,this.come});
   @override
   _CreateReceiptState createState() => _CreateReceiptState();
 }
@@ -79,6 +83,7 @@ bool isLoaderShow=false;
   ];*/
 
 
+  var companyId="0";
 
   calculateTotalAmt()async{
     print("Here");
@@ -101,12 +106,37 @@ bool isLoaderShow=false;
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    invoiceDate=widget.newDate;
-    if(widget.voucherNo!=null){
-      getRecipt(1);
-      voucherNoController.text="Voucher No: ${widget.voucherNo}";
+    setData();
+    // invoiceDate=widget.newDate;
+    // if(widget.voucherNo!=null){
+    //   getRecipt(1);
+    //   voucherNoController.text="Voucher No: ${widget.voucherNo}";
+    // }
+    // calculateTotalAmt();
+  }
+  setData()async{
+    await getCompanyId();
+    invoiceDate=widget.dateNew;
+    if(widget.come=="edit"){
+      await calculateTotalAmt();
+      await getRecipt(1);
+      print("#######################3 ${widget.editedItem}");
+      setState(() {
+        voucherNoController.text="Voucher No: ${widget.voucherNo}";
+        selectedBankLedgerID=widget.editedItem['Ledger_ID'].toString();
+        selectedbankCashLedger=widget.editedItem['Ledger_Name'];
+      });
     }
-    calculateTotalAmt();
+
+    print("#######################33 ${selectedbankCashLedger}");
+
+  }
+
+  getCompanyId()async{
+    String companyId1 = await AppPreferences.getCompanyId();
+    setState(() {
+      companyId=companyId1;
+    });
   }
 
   @override
@@ -519,7 +549,34 @@ bool isLoaderShow=false;
   var selectedBankLedgerID=null;
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  GetBankCashLedger(
+    return  SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?",
+      titleIndicator: false,
+      ledgerName: selectedbankCashLedger,
+      franchisee: widget.come,
+      franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name,id){
+        setState(() {
+          selectedbankCashLedger=name!;
+          selectedBankLedgerID=id!;
+          // Item_list=[];
+          // Updated_list=[];
+          // Deleted_list=[];
+          // Inserted_list=[];
+        });
+        print(selectedBankLedgerID);
+        print(selectedbankCashLedger);
+
+        // if(widget.voucherNo!=""){
+        //   getExpInvoice(1);
+        // }
+      },
+
+    );
+
+
+      GetBankCashLedger(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){

@@ -26,6 +26,8 @@ import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/amount_type_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
 
 class CreateFranchisee extends StatefulWidget {
@@ -126,6 +128,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
 
   setData()async{
+    print("EDITED: ${widget.editItem}");
     if(widget.editItem!=null){
       File ?f=null;
       File ?a=null;
@@ -483,6 +486,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           getCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                          SizedBox(width: 5,),
                           getPincodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                         ],
                       ),
@@ -628,29 +632,84 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
-    return GetCountryLayout(
-        title:  ApplicationLocalizations.of(context)!.translate("country")!,
-        callback: (name,id){
-          setState(() {
-            countryName=name!;
-            countryId=id!;
-          });
-        },
-        countryName: countryName);
+    return Padding(
+      padding: const EdgeInsets.only(top:3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("country")!,
+            style: item_heading_textStyle,
+          ),
+          SearchableDropdownForStringArray(
+              apiUrl:ApiConstants().country+"?",
+              titleIndicator: false,
+              title:  ApplicationLocalizations.of(context)!.translate("country")!,
+              callback: (name){
+
+                setState(() {
+                  countryName=name!;
+                  // cityId=id.toString()!;
+                });
+
+                print(countryName);
+              },
+              ledgerName: countryName),
+        ],
+      ),
+    );
+      // GetCountryLayout(
+      //   title:  ApplicationLocalizations.of(context)!.translate("country")!,
+      //   callback: (name,id){
+      //     setState(() {
+      //       countryName=name!;
+      //       countryId=id!;
+      //     });
+      //   },
+      //   countryName: countryName);
   }
 
 
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
-    return GetStateLayout(
-        title:  ApplicationLocalizations.of(context)!.translate("state")!,
-        callback: (name,id){
-          setState(() {
-            stateName=name!;
-            stateId=id!;
-          });
-        },
-        stateName: stateName);
+    return  Padding(
+      padding: const EdgeInsets.only(top:3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("state")!,
+            style: item_heading_textStyle,
+          ),
+          SearchableDropdownForStringArray(
+              apiUrl:ApiConstants().state+"?",
+              titleIndicator: false,
+              title:  ApplicationLocalizations.of(context)!.translate("state")!,
+              callback: (name){
+
+                setState(() {
+                  stateName=name!;
+                  // cityId=id.toString()!;
+                });
+
+                print(stateName);
+              },
+              ledgerName: stateName),
+        ],
+      ),
+    );
+
+      // GetStateLayout(
+      //   title:  ApplicationLocalizations.of(context)!.translate("state")!,
+      //   callback: (name,id){
+      //     setState(() {
+      //       stateName=name!;
+      //       stateId=id!;
+      //     });
+      //   },
+      //   stateName: stateName);
   }
 
   /* widget for image layout */
@@ -931,15 +990,45 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for city text from field layout */
   Widget getCityLayout(double parentHeight, double parentWidth) {
-    return GetDistrictLayout(
-        title: ApplicationLocalizations.of(context)!.translate("city")!,
-        callback: (name,id){
-          setState(() {
-            selectedCity=name!;
-            cityId =id!;
-          });
-        },
-        districtName: selectedCity);
+    return Expanded(
+      child:  Padding(
+        padding: const EdgeInsets.only(top:3),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("city")!,
+              style: item_heading_textStyle,
+            ),
+            SearchableDropdownForStringArray(
+                ledgerName: widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
+                apiUrl:ApiConstants().city+"?",
+                titleIndicator: false,
+                title:  ApplicationLocalizations.of(context)!.translate("city")!,
+                callback: (name){
+                  setState(() {
+                    selectedCity=name!;
+                    // cityId=id.toString()!;
+                  });
+
+                  print(selectedCity);
+                },
+                ),
+          ],
+        ),
+      ),
+    );
+
+      // GetDistrictLayout(
+      //   title: ApplicationLocalizations.of(context)!.translate("city")!,
+      //   callback: (name,id){
+      //     setState(() {
+      //       selectedCity=name!;
+      //       cityId =id!;
+      //     });
+      //   },
+      //   districtName: selectedCity);
 
   }
 

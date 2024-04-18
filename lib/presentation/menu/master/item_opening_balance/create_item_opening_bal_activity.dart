@@ -493,7 +493,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-        apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+        apiUrl:ApiConstants().franchisee+"?",
         titleIndicator: false,
         franchisee: widget.come,
         franchiseeName: selectedFranchiseeName,

@@ -614,7 +614,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SearchableLedgerDropdown(
-              apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+              apiUrl:ApiConstants().franchisee+"?",
               titleIndicator: false,
               title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name,id){
@@ -716,7 +716,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout(){
     return SearchableLedgerDropdown(
-        apiUrl:ApiConstants().item_category+"?Company_ID=${widget.compId}",
+        apiUrl:ApiConstants().item_category+"?",
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){

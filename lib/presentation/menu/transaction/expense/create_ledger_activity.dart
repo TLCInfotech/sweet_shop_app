@@ -21,6 +21,7 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_edit_ledger_for_ledger.dart';
 
 
@@ -29,7 +30,9 @@ class CreateLedger extends StatefulWidget {
   final dateNew;
   final  voucherNo;
   final come;
-  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo, this.come});
+  final editedItem;
+
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -70,6 +73,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   var editedItemIndex=null;
 
 
+  var companyId="0";
 
   @override
   void initState() {
@@ -79,15 +83,41 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    setData();
+
+    // invoiceDate=widget.dateNew;
+    // calculateTotalAmt();
+    // if(widget.voucherNo!=null){
+    //   getExpInvoice(1);
+    //   voucherNoController.text="Voucher No: ${widget.voucherNo}";
+    // }
+
+  }
+  setData()async{
+    await getCompanyId();
     invoiceDate=widget.dateNew;
-    calculateTotalAmt();
-    if(widget.voucherNo!=null){
-      getExpInvoice(1);
-      voucherNoController.text="Voucher No: ${widget.voucherNo}";
+    if(widget.come=="edit"){
+      await calculateTotalAmt();
+
+      await getExpInvoice(1);
+      print("#######################3 ${widget.editedItem}");
+      setState(() {
+        voucherNoController.text="Voucher No: ${widget.voucherNo}";
+        selectedFranchiseeId=widget.editedItem['Ledger_ID'].toString();
+        selectedFranchiseeName=widget.editedItem['Ledger_Name'];
+      });
     }
+
+    print("#######################33 ${selectedFranchiseeName}");
 
   }
 
+  getCompanyId()async{
+    String companyId1 = await AppPreferences.getCompanyId();
+    setState(() {
+      companyId=companyId1;
+    });
+  }
 /*  calculateTotalAmt()async{
     var total=0.00;
     for(var item  in Item_list ){
@@ -361,26 +391,52 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  GetFranchiseeLayout(
-        titleIndicator: false,
-        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            selectedFranchiseeName=name!;
-            selectedFranchiseeId=id!;
-            // Item_list=[];
-            // Updated_list=[];
-            // Deleted_list=[];
-            // Inserted_list=[];
-          });
-          print(selectedFranchiseeId);
-          print(selectedFranchiseeName);
+    return  SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      franchisee: widget.come,
+      franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName=name!;
+          selectedFranchiseeId=id!;
+          // Item_list=[];
+          // Updated_list=[];
+          // Deleted_list=[];
+          // Inserted_list=[];
+        });
+        print(selectedFranchiseeId);
+        print(selectedFranchiseeName);
 
-          // if(widget.voucherNo!=""){
-          //   getExpInvoice(1);
-          // }
-        },
-        franchiseeName: selectedFranchiseeName);
+        // if(widget.voucherNo!=""){
+        //   getExpInvoice(1);
+        // }
+      },
+
+    );
+
+      // GetFranchiseeLayout(
+      //   titleIndicator: false,
+      //   title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      //   callback: (name,id){
+      //     setState(() {
+      //       selectedFranchiseeName=name!;
+      //       selectedFranchiseeId=id!;
+      //       // Item_list=[];
+      //       // Updated_list=[];
+      //       // Deleted_list=[];
+      //       // Inserted_list=[];
+      //     });
+      //     print(selectedFranchiseeId);
+      //     print(selectedFranchiseeName);
+      //
+      //     // if(widget.voucherNo!=""){
+      //     //   getExpInvoice(1);
+      //     // }
+      //   },
+      //   franchiseeName: selectedFranchiseeName);
   }
 
 

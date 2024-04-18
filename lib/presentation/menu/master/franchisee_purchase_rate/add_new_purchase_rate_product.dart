@@ -16,6 +16,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -46,6 +47,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   bool isLoaderShow = false;
   var oldItemID=null;
   var selectedItemID =null;
+  var selectedItemName="";
 
   TextEditingController _textController = TextEditingController();
   TextEditingController rate = TextEditingController();
@@ -196,6 +198,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         oldItemID=widget.editproduct['Item_ID'];
         selectedItemID=widget.editproduct['Item_ID'];
         unit=widget.editproduct['Unit'];
+        selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:null;
         _textController.text=widget.editproduct['Name'];
         rate.text=widget.editproduct['Rate'].toString();
         gst.text=widget.editproduct['GST'].toString();
@@ -383,48 +386,68 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return  Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-          minStringLength: 0,
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                unit=v.unit;
-                gst.text=v.gst=="null"?gst.text:v.gst;
-                itemsList = [];
-              });
-            },
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
+    return  SearchableDropdownWithObject(
+      name: selectedItemName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.date}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+          selectedItemID = item['ID'].toString();
+          unit=item['Unit'].toString();
+          rate.text=item['Rate'].toString();
+          selectedItemName=item['Name'].toString();
+          gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+
+        });
+
+      },
 
     );
+    //   Container(
+    //     height: parentHeight * .055,
+    //     alignment: Alignment.center,
+    //     decoration: BoxDecoration(
+    //       color: CommonColor.WHITE_COLOR,
+    //       borderRadius: BorderRadius.circular(4),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           offset: const Offset(0, 1),
+    //           blurRadius: 5,
+    //           color: Colors.black.withOpacity(0.1),
+    //         ),
+    //       ],
+    //     ),
+    //     child: TextFieldSearch(
+    //       minStringLength: 0,
+    //         label: 'Item',
+    //         controller: _textController,
+    //         decoration: textfield_decoration.copyWith(
+    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+    //           prefixIcon: Container(
+    //               width: 50,
+    //               padding: const EdgeInsets.all(10),
+    //               alignment: Alignment.centerLeft,
+    //               child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    //         ),
+    //         textStyle: item_regular_textStyle,
+    //         getSelectedValue: (v) {
+    //           setState(() {
+    //             selectedItemID = v.value;
+    //             unit=v.unit;
+    //             gst.text=v.gst=="null"?gst.text:v.gst;
+    //             itemsList = [];
+    //           });
+    //         },
+    //         future: () {
+    //           if (_textController.text != "")
+    //             return fetchSimpleData(
+    //                 _textController.text.trim());
+    //         })
+    //
+    // );
   }
   
   /* widget for button layout */
@@ -492,7 +515,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                       "ID": widget.editproduct['ID'],
                       "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
                       "Unit":unit,
-                      "Name":_textController.text,
+                      "Name":selectedItemName,
                       "New_Item_ID":selectedItemID,
                       "Disc_Percent": null,
                       "Rate":double.parse(rate.text),
@@ -506,7 +529,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                       "ID": widget.editproduct['ID'],
                       "Unit":widget.editproduct['Unit'],
                       "Item_ID": selectedItemID,
-                      "Name":_textController.text,
+                      "Name":selectedItemName,
                       "Disc_Percent": null,
                       "Rate":double.parse(rate.text),
                       "GST":double.parse(gst.text),
@@ -521,7 +544,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                     "Unit":unit,
                     "Item_ID": selectedItemID,
                     "Disc_Percent": null,
-                    "Name":_textController.text,
+                    "Name":selectedItemName,
                     "Rate":double.parse(rate.text),
                     "GST":double.parse(gst.text),
                     "GST_Amount":double.parse(gstAmt.text),

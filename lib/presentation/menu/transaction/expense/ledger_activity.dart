@@ -266,6 +266,8 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                           mListener: this,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
                           dateNew: newDate,
+                          editedItem:expense_list[index],
+                          come:"edit",
                           // DateFormat('dd-MM-yyyy').format(newDate),
                         )));
                       },

@@ -263,6 +263,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                           newDate: newDate,
                           voucherNo: recipt_list[index]["Voucher_No"],
                           dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
+                          editedItem:recipt_list[index],
+                          come:"edit",
                         )));
                       },
                       child: Card(

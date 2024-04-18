@@ -270,6 +270,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                           mListener: this,
                           dateNew: newDate,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                          editedItem:payment_list[index],
+                          come:"edit",
                         )));
                       },
                       child: Card(

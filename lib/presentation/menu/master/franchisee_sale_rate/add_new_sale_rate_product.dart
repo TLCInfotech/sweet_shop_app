@@ -13,6 +13,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 class TestItem {
   String label;
   dynamic value;
@@ -106,6 +107,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
   var itemsList = [];
   var filteredItemsList = [];
+  var selectedItemName="";
 
 
   fetchItems () async {
@@ -184,6 +186,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
+        selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:null;
         _textController.text=widget.editproduct['Name'];
         selectedItemID=widget.editproduct['Item_ID'];
         rate.text=widget.editproduct['Rate'].toString();
@@ -403,47 +406,65 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-            label: 'Item',
-            minStringLength: 0,
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                gst.text=v.gst=="null"?gst.text:v.gst;
-                itemsList = [];
-              });
-            },
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
+    return SearchableDropdownWithObject(
+      name: selectedItemName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateNew}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+          selectedItemID = item['ID'].toString();
+          selectedItemName=item['Name'].toString();
+          rate.text=item['Rate'].toString();
+          gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+        });
+      },
 
     );
+
+    //   Container(
+    //     height: parentHeight * .055,
+    //     alignment: Alignment.center,
+    //     decoration: BoxDecoration(
+    //       color: CommonColor.WHITE_COLOR,
+    //       borderRadius: BorderRadius.circular(4),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           offset: Offset(0, 1),
+    //           blurRadius: 5,
+    //           color: Colors.black.withOpacity(0.1),
+    //         ),
+    //       ],
+    //     ),
+    //     child: TextFieldSearch(
+    //         label: 'Item',
+    //         minStringLength: 0,
+    //         controller: _textController,
+    //         decoration: textfield_decoration.copyWith(
+    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+    //           prefixIcon: Container(
+    //               width: 50,
+    //               padding: EdgeInsets.all(10),
+    //               alignment: Alignment.centerLeft,
+    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    //         ),
+    //         textStyle: item_regular_textStyle,
+    //         getSelectedValue: (v) {
+    //           setState(() {
+    //             selectedItemID = v.value;
+    //             gst.text=v.gst=="null"?gst.text:v.gst;
+    //             itemsList = [];
+    //           });
+    //         },
+    //         future: () {
+    //           if (_textController.text != "")
+    //             return fetchSimpleData(
+    //                 _textController.text.trim());
+    //         })
+    //
+    // );
   }
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
@@ -527,7 +548,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                item={
                 "Item_ID":widget.editproduct['Item_ID'],
                 "ID": widget.editproduct['ID'],
-                "Name":_textController.text,
+                "Name":selectedItemName,
                 "New_Item_ID":selectedItemID,
                 "Rate":double.parse(rate.text),
                 "GST":double.parse(gst.text),
@@ -536,7 +557,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
               };
             }else{
                item={
-                "Name":_textController.text,
+                "Name":selectedItemName,
                 "Item_ID":selectedItemID,
                 "Rate":double.parse(rate.text),
                 "GST":double.parse(gst.text),

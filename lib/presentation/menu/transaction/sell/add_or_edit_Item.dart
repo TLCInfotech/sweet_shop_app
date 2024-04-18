@@ -88,6 +88,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
 
   var companyId="0";
+  var selectedItemName="";
   var api="";
 
   @override
@@ -123,7 +124,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   var itemsList = [];
   var filteredItemsList = [];
 
-  var selectedItemName="";
+
 
   fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
