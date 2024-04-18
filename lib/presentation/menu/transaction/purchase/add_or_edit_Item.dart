@@ -170,7 +170,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       // we use the toLowerCase() method to make it case-insensitive
     }
 
-    // Refresh the UI
+    // Refresh the
     setState(() {
       itemsList = results;
     });

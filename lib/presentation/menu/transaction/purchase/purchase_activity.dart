@@ -171,7 +171,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
       ],
     );
   }
-  /*widget for no data*/
+  /*widget for no data d*/
   Widget getNoData(double parentHeight,double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

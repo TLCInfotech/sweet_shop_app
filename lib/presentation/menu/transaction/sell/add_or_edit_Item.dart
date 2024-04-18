@@ -524,7 +524,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
 
 
-  /* Widget for Buttons Layout0 */
+  /* Widget for Buttons Layout */
   Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,

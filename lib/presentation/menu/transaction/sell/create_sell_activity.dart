@@ -259,7 +259,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     );
   }
 
-  /* Widget for navigate to next screen button layout */
+  /* Widget for navigate to next screen button  */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
