@@ -32,8 +32,9 @@ class CreateItemOpeningBal extends StatefulWidget {
   final String dateNew;
   final editedItem;
   final compId;
+  final come;
 
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId});
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -494,6 +495,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     return SearchableLedgerDropdown(
         apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
         titleIndicator: false,
+        franchisee: widget.come,
+        franchiseeName: selectedFranchiseeName,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name,id){
           if(selectedFranchiseeID==id){

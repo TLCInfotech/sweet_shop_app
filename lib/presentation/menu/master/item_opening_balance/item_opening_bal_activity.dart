@@ -306,6 +306,7 @@ compId:companyId ,
                         dateNew:CommonWidget.getDateLayout(invoiceDate),
                         editedItem:Franchisee_list[index],
                         compId:companyId ,
+                        come:"edit",
                         //DateFormat('dd-MM-yyyy').format(invoiceDate),
                         mListener: this,
                       )));
