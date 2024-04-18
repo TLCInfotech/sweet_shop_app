@@ -6,7 +6,6 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:textfield_search/textfield_search.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -15,6 +14,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -32,8 +32,9 @@ class AddOrEditItemCreditNote extends StatefulWidget {
   final AddOrEditItemCreditNoteInterface mListener;
   final dynamic editproduct;
   final date;
-
-  const AddOrEditItemCreditNote({super.key, required this.mListener, required this.editproduct,required this.date});
+  final companyId;
+  final status;
+  const AddOrEditItemCreditNote({super.key, required this.mListener, required this.editproduct,required this.date, this.companyId, this.status});
 
   @override
   State<AddOrEditItemCreditNote> createState() => _AddOrEditItemCreditNoteState();
@@ -236,9 +237,28 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
       ),
     );
   }
+  var selectedItemName="";
+
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableDropdownWithObject(
+      name:widget.status=="edit"?widget.editproduct['Item_Name']:"",
+      status:  widget.status,
+      apiUrl:ApiConstants().item_list+"?Company_ID=${widget.companyId}&Date=${widget.date}",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          selectedItemID = item['ID'].toString();
+          selectedItemName=item['Name'].toString();
+          unit.text=item['Unit'];
+          rate.text=item['Rate'].toString();
+          gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+        });
+        await calculateRates();
+      },
+
+    );  /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -281,7 +301,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
                     _textController.text.trim());
             })
 
-    );
+    );*/
   }
 
   /* widget for item quantity layout */
@@ -528,7 +548,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
                 "New_Item_ID": selectedItemID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),
@@ -545,7 +565,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
             else {
               item={
                 "Item_ID":selectedItemID,
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),

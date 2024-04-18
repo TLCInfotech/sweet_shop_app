@@ -25,6 +25,7 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_or_edit_item_credit.dart';
 
 
@@ -32,8 +33,11 @@ class CreateCreditNote extends StatefulWidget {
   final CreateCreditNoteInterface mListener;
   final  dateNew;
   final  Invoice_No;
+  final  come;
+  final  debitNote;
+  final  companyId;
 
-  const CreateCreditNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
+  const CreateCreditNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId});
   @override
   _CreateCreditNoteState createState() => _CreateCreditNoteState();
 }
@@ -346,7 +350,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
-                                goToAddOrEditItem(null);
+                                goToAddOrEditItem(null,widget.companyId,"");
                               }
                             }
                             else{
@@ -415,7 +419,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Item_list[index]);
+                      goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
                     }
                   },
                   child: Card(
@@ -531,7 +535,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null);
+          goToAddOrEditItem(null,widget.companyId,"");
         }
       },
       child: Container(
@@ -554,7 +558,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,compId,status) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -569,6 +573,8 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate.toString(),
+                companyId: compId,
+                status: status,
               ),
             ),
           );
@@ -676,7 +682,29 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.debitNote['Vendor_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        if(selectedLedgerId==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedFranchiseeName = name!;
+            selectedFranchiseeId = id.toString()!;
+          });
+        }
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+
+    );/*GetLedgerLayout(
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("party")!,
         callback: (name,id){
@@ -695,27 +723,35 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
             });
           }
         },
-        ledgerName: selectedFranchiseeName);
-      GetFranchiseeLayout(
-          titleIndicator: false,
-          title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-          callback: (name,id){
-            setState(() {
-              selectedFranchiseeName=name!;
-              selectedFranchiseeId=id!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
-            });
-            print(selectedFranchiseeId);
-          },
-          franchiseeName: selectedFranchiseeName);
+        ledgerName: selectedFranchiseeName);*/
+
   }
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
-    return GetLedgerLayout(
+    return  SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedLedgerName,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("account_ledger")!,
+      callback: (name,id){
+        if(selectedLedgerId==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedLedgerName = name!;
+            selectedLedgerId = id.toString();
+          });
+        }
+        print("############3");
+        print(selectedLedgerId);
+      },
+
+    );/*GetLedgerLayout(
         titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("account_ledger")!,
         callback: (name,id){
@@ -735,22 +771,8 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
           }
           print(selectedLedgerId);
         },
-        ledgerName: selectedLedgerName);
-    // GetLedgerLayout(
-    //     titleIndicator: false,
-    //     title: ApplicationLocalizations.of(context)!.translate("ledger")!,
-    //     callback: (name,id){
-    //       setState(() {
-    //         selectedLedgerName=name!;
-    //         selectedLedgerId=id!;
-    //         // Item_list=[];
-    //         // Updated_list=[];
-    //         // Deleted_list=[];
-    //         // Inserted_list=[];
-    //       });
-    //       print(selectedLedgerId);
-    //     },
-    //     ledgerName: selectedLedgerName);
+        ledgerName: selectedLedgerName);*/
+
   }
 
   @override

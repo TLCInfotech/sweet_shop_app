@@ -13,6 +13,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class TestItem {
   String label;
   dynamic value;
@@ -27,7 +28,10 @@ class AddOrEditLedgerForContra extends StatefulWidget {
   final dynamic editproduct;
   final newDate;
   final franId;
-  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate, this.franId});
+  final  come;
+  final  debitNote;
+  final  companyId;
+  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate, this.franId, this.come, this.debitNote, this.companyId});
   @override
   State<AddOrEditLedgerForContra> createState() => _AddOrEditLedgerForContraState();
 }
@@ -252,9 +256,25 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
     );
   }
-
+var selectedbankCashLedger="";
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedbankCashLedger,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+
+          setState(() {
+            selectedbankCashLedger=name!;
+          selectedItemID=id;
+          });
+
+      },
+
+    );  /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -302,7 +322,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
                 return fetchSimpleData(
                     _textController.text.trim());
             })
-    );
+    );*/
   }
 
   /* widget for button layout */
@@ -357,7 +377,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
             if(widget.editproduct!=null){
               item = {
                 "New_Ledger_ID": selectedItemID,
-                "Ledger_Name": _textController.text,
+                "Ledger_Name": selectedbankCashLedger,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Ledger_ID": widget.editproduct['Ledger_ID'],
                 "Amount": double.parse(amount.text),

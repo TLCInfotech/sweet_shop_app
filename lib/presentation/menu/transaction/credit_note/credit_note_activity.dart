@@ -45,6 +45,11 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     super.initState();
     _scrollController.addListener(_scrollListener);
     getCreditNote(page);
+    setData();
+  }
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -133,7 +138,8 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateCreditNote(
                       dateNew:   invoiceDate,
-                      Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
+                      Invoice_No: null,
+                      companyId:companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                     )));
               }),
@@ -280,8 +286,11 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           CreateCreditNote(
                             dateNew: invoiceDate,
-                            Invoice_No: debitNote_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                            Invoice_No: debitNote_list[index]['Invoice_No'],
+                              debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
+                              companyId:companyId,
+                            come:"edit"
                           )));
                     },
                     child: Card(

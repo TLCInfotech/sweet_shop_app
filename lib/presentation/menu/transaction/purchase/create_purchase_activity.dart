@@ -117,6 +117,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     for(var item  in Item_list ){
       total=total+item['Net_Amount'];
       // print(item['Amount']);
+      print("jdjdn  $total");
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
     double amt = total % 1;
@@ -249,7 +250,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TotalAmount!="0.00"? Container(
+      /*  TotalAmount!="0.00"?*/ Container(
           width: SizeConfig.halfscreenWidth,
           padding: EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
@@ -266,7 +267,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
             ],
           ),
-        ):Container(),
+        )/*:Container()*/,
         GestureDetector(
           onTap: () {
             if(selectedLedgerId=="" ){

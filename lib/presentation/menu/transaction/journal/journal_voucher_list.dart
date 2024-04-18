@@ -46,6 +46,11 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
     super.initState();
     _scrollController.addListener(_scrollListener);
     getJournals(page);
+    setData();
+  }
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -119,7 +124,8 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                   mListener: this,
                   dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
-                  voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
+                  voucherNo: null,
+                  companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
           body: Stack(
@@ -253,7 +259,10 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                         mListener: this,
                         dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
-                        voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                        voucherNo: payment_list[index]['Voucher_No'],
+                        debitNote:payment_list[index] ,
+                        companyId: companyId,
+                        come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
                       )));
                     },
                     child: Card(

@@ -15,6 +15,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -32,8 +33,10 @@ class AddOrEditItemDebit extends StatefulWidget {
   final AddOrEditItemDebitInterface mListener;
   final dynamic editproduct;
   final date;
+  final companyId;
+  final status;
 
-  const AddOrEditItemDebit({super.key, required this.mListener, required this.editproduct,required this.date});
+  const AddOrEditItemDebit({super.key, required this.mListener, required this.editproduct,required this.date, this.companyId, this.status});
 
   @override
   State<AddOrEditItemDebit> createState() => _AddOrEditItemDebitState();
@@ -107,7 +110,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
     await fetchShows();
   }
   var itemsList = [];
-
+  var selectedItemName="";
   fetchShows () async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -237,7 +240,24 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
   }
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableDropdownWithObject(
+      name:widget.status=="edit"?widget.editproduct['Item_Name']:"",
+      status:  widget.status,
+      apiUrl:ApiConstants().item_list+"?Company_ID=${widget.companyId}&Date=${widget.date}",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          selectedItemID = item['ID'].toString();
+          selectedItemName=item['Name'].toString();
+          unit.text=item['Unit'];
+          rate.text=item['Rate'].toString();
+          gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+        });
+        await calculateRates();
+      },
+
+    ); /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -280,7 +300,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
                     _textController.text.trim());
             })
 
-    );
+    );*/
   }
 
   /* widget for item quantity layout */
@@ -527,7 +547,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
                 "New_Item_ID": selectedItemID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),
@@ -544,7 +564,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit>{
             else {
               item={
                 "Item_ID":selectedItemID,
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),

@@ -46,6 +46,11 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
     super.initState();
     _scrollController.addListener(_scrollListener);
     getContra(page);
+    setData();
+  }
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -127,7 +132,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   mListener: this,
                   newDate: newDate,
                   voucherNo: null,
-                  dateNew:newDate,//DateFormat('dd-MM-yyyy').format(newDate),
+                  dateNew:newDate,
+                  companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
               }),
           body: Stack(
@@ -268,7 +274,10 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                           mListener: this,
                           newDate: newDate,
                           voucherNo: contraList[index]["Voucher_No"],
-                          dateNew:newDate,// DateFormat('dd-MM-yyyy').format(newDate),
+                          dateNew:newDate,
+                          companyId: companyId,
+                          come: "edit",
+                          debitNote:contraList[index] ,// DateFormat('dd-MM-yyyy').format(newDate),
                         )));
                       },
                       child: Card(

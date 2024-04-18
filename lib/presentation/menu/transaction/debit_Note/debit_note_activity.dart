@@ -45,6 +45,11 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
     super.initState();
     _scrollController.addListener(_scrollListener);
     getDebitNotes(page);
+    setData();
+  }
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -135,6 +140,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                       dateNew:   invoiceDate,
                       Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
+                      companyId: companyId,
                     )));
               }),
           body: Stack(
@@ -282,6 +288,9 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                             dateNew: invoiceDate,
                             Invoice_No: debitNote_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
+                            come: "edit",
+                            companyId: companyId,
+                            debitNote: debitNote_list[index] ,
                           )));
                     },
                     child: Card(

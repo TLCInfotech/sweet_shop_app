@@ -17,6 +17,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/amount_type_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class TestItem {
   String label;
@@ -32,9 +33,9 @@ class AddOrEditLedgerForJournals extends StatefulWidget {
   final AddOrEditLedgerForJournalsInterface mListener;
   final dynamic editproduct;
   final newdate;
-
-
-  const AddOrEditLedgerForJournals({super.key, required this.mListener, required this.editproduct,required this.newdate});
+  final  come;
+  final  companyId;
+  const AddOrEditLedgerForJournals({super.key, required this.mListener, required this.editproduct,required this.newdate, this.come, this.companyId});
 
   @override
   State<AddOrEditLedgerForJournals> createState() => _AddOrEditLedgerForJournalsState();
@@ -270,10 +271,31 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
       ],
     );
   }
+var selectedbankCashLedger="";
 
   /* widget for ledger search layout */
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedbankCashLedger,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      callback: (name,id){
+        if(selectedBankLedgerID==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedbankCashLedger=name!;
+            selectedBankLedgerID=id;
+          });
+        }
+      },
+
+    ); /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -311,7 +333,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                 return fetchSimpleData(
                     _textController.text.trim());
             })
-    );
+    );*/
   }
 
   /* widget for title layout */
@@ -367,7 +389,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                 // "New_Date":widget.newdate,
                 "New_Ledger_ID": selectedBankLedgerID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Ledger_Name": _textController.text,
+                "Ledger_Name":selectedbankCashLedger,
                 "Ledger_ID": widget.editproduct['Ledger_ID'],
                 "Amount": double.parse(amount.text),
                 "Amnt_Type": selectedLimitUnit,
@@ -378,7 +400,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
               item = {
                // "Date":widget.newdate,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
-                "Ledger_Name": _textController.text,
+                "Ledger_Name": selectedbankCashLedger,
                 "Ledger_ID": selectedBankLedgerID,
                 "Amount": double.parse(amount.text),
                 "Amnt_Type": selectedLimitUnit,

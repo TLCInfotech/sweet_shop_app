@@ -25,6 +25,7 @@ import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_edit_ledger_for_contra.dart';
 
 
@@ -33,7 +34,10 @@ class CreateContra extends StatefulWidget {
   final dateNew;
   final  voucherNo;
   final  newDate;
-  const CreateContra({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate});
+  final  come;
+  final  debitNote;
+  final  companyId;
+  const CreateContra({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate, this.come, this.debitNote, this.companyId});
   @override
   _CreateContraState createState() => _CreateContraState();
 }
@@ -111,8 +115,12 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
     calculateTotalAmt();
+    setData();
   }
-
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
+  }
   @override
   Widget build(BuildContext context) {
     return contentBox(context);
@@ -230,7 +238,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null){
                               if (context != null) {
-                                goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
+                                goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"");
                               }
                             }else{
                               CommonWidget.errorDialog(context, "Select bank name first.");
@@ -295,7 +303,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
+                      goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"edit");
                     }
                   },
                   child: Card(
@@ -507,7 +515,27 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
   var selectedBankLedgerID=null;
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  GetBankCashLedger(
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedbankCashLedger,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        if(selectedBankLedgerID==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedbankCashLedger=name!;
+            selectedBankLedgerID=id;
+          });
+        }
+      },
+
+    );  /*GetBankCashLedger(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){
@@ -516,7 +544,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             selectedBankLedgerID=id;
           });
         },
-        bankCashLedger: selectedbankCashLedger);
+        bankCashLedger: selectedbankCashLedger);*/
   }
 
   /* Widget to get add Product Layout */
@@ -525,7 +553,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID);
+          goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"");
         }
       },
       child: Container(
@@ -548,7 +576,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product,dateee,fid) {
+  Future<Object?> goToAddOrEditItem(product,dateee,fid,compId,status) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -564,6 +592,8 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 editproduct:product,
                 newDate:dateee,
                 franId: fid,
+                companyId: companyId,
+                come: status,
               ),
             ),
           );

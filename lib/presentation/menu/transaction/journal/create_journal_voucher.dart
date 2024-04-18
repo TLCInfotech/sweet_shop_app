@@ -29,14 +29,17 @@ import '../../../common_widget/get_bank_cash_ledger.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_edit_journal_voucher.dart';
 
 class CreateJournals extends StatefulWidget {
   final CreateJournalInterface mListener;
   final  dateNew;
   final  voucherNo;
-
-  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo});
+  final  come;
+  final  debitNote;
+  final  companyId;
+  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId});
   @override
   _CreateJournalsState createState() => _CreateJournalsState();
 }
@@ -239,7 +242,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
-                              goToAddOrEditItem(null);
+                              goToAddOrEditItem(null,widget.companyId,"");
                             }
                           },
                           child: Container(
@@ -284,20 +287,26 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child:     widget.voucherNo==null? Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-     Expanded(
-              // width:(SizeConfig.screenWidth),
-              child: getReceiptDateLayout()),
- ],
-      ):Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          getReceiptDateLayout(),
-          getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+          widget.voucherNo==null? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                // width:(SizeConfig.screenWidth),
+                  child: getReceiptDateLayout()),
+            ],
+          ):Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              getReceiptDateLayout(),
+              getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+            ],
+          ),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
-      ),
+      )
     );
   }
 
@@ -325,7 +334,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
-                      goToAddOrEditItem(Ledger_list[index]);
+                      goToAddOrEditItem(Ledger_list[index],widget.companyId,"edit");
                     }
                   },
                   child: Card(
@@ -497,7 +506,27 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   }
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  GetBankCashLedger(
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?Company_ID=${widget.companyId}",
+      titleIndicator: false,
+      ledgerName: selectedbankCashLedger,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      callback: (name,id){
+        if(selectedBankLedgerID==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            selectedbankCashLedger=name!;
+            selectedBankLedgerID=id;
+          });
+        }
+      },
+
+    );  /*GetBankCashLedger(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){
@@ -506,7 +535,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             selectedBankLedgerID=id;
           });
         },
-        bankCashLedger: selectedbankCashLedger);
+        bankCashLedger: selectedbankCashLedger);*/
   }
 
 
@@ -600,7 +629,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   }
 
 /* Widget for add or edit button layout*/
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,companyId,status) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -615,6 +644,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 mListener: this,
                 editproduct:product,
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
+                companyId: companyId,
+                come: status,
               ),
             ),
           );
