@@ -114,7 +114,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + widget.apiUrl;
+      String apiUrl = baseurl + widget.apiUrl+"Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             isLoaderShow=false;

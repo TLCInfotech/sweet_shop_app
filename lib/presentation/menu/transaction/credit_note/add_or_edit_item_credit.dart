@@ -244,7 +244,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
     return SearchableDropdownWithObject(
       name:widget.status=="edit"?widget.editproduct['Item_Name']:"",
       status:  widget.status,
-      apiUrl:ApiConstants().item_list+"?Company_ID=${widget.companyId}&Date=${widget.date}",
+      apiUrl:ApiConstants().item_list+"?Date=${widget.date}&",
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callback: (item)async{
