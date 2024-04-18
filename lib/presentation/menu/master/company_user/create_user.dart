@@ -19,10 +19,13 @@ import '../../../../data/domain/user/post_user_request_model.dart';
 import '../../../../data/domain/user/put_user_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/working_under_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class UserCreate extends StatefulWidget {
  final editUser;
-  const UserCreate({super.key, required this.mListener, this.editUser});
+ final compId;
+
+  const UserCreate({super.key, required this.mListener, this.editUser, this.compId});
 
    final UserCreateInterface mListener;
 
@@ -320,22 +323,25 @@ String oldUid="";
              ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
             style: item_heading_textStyle, ),
           Padding(
-            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child: Container(
-              height: (SizeConfig.screenHeight) * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:  GestureDetector(
+            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+            child:  SearchableLedgerDropdown(
+                  apiUrl:ApiConstants().franchisee+"?Company_ID=${widget.compId}",
+                  titleIndicator: false,
+                  title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
+                  callback: (name,id){
+                    if(franchiseeId==id){
+                      var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+                      ScaffoldMessenger.of(context).showSnackBar(snack);
+                    }
+                    else {
+                      setState(() {
+                        franchiseeName=name!;
+                        franchiseeId=id!;
+                      });
+                    }
+                    print(franchiseeId);
+                  },
+                  ledgerName: franchiseeName), /* GestureDetector(
                 onTap: (){
                   showGeneralDialog(
                       barrierColor: Colors.black.withOpacity(0.5),
@@ -377,16 +383,16 @@ String oldUid="";
                       Icon(
                         Icons.keyboard_arrow_down,
                         size: (SizeConfig.screenHeight) * .03,
-                        color: /*pollName == ""
+                        color: *//*pollName == ""
                             ? CommonColor.HINT_TEXT
-                            :*/
+                            :*//*
                         CommonColor.BLACK_COLOR,
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
+              ),*/
+
           )
         ],
       ),

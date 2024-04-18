@@ -38,8 +38,15 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetUser(page);
+    getLocal();
   }
+  String companyId="";
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
 
+    });
+  }
   _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -111,6 +118,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                     MaterialPageRoute(
                         builder: (context) => UserCreate(
                               mListener: this,
+                          compId: companyId,
                             )));
               }),
           body: Container(
@@ -188,6 +196,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             builder: (context) => UserCreate(
                                   editUser: userList[index],
                                   mListener: this,
+                              compId: companyId,
                                 )));
                   },
                   child: Card(
