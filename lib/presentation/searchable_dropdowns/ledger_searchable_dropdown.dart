@@ -104,7 +104,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + widget.apiUrl;
+      String apiUrl = baseurl + widget.apiUrl+"Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             isLoaderShow=false;
