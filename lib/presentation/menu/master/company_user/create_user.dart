@@ -145,37 +145,32 @@ String oldUid="";
                 ),
               ),
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: SizeConfig.screenHeight*0.8,
-                        child: Form(
-                          key: _formkey,
-                          child: getAllTextFormFieldLayout(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        )),
-                    Container(
-                        decoration: BoxDecoration(
-                          color: CommonColor.WHITE_COLOR,
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.black.withOpacity(0.08),
-                              width: 1.0,
-                            ),
-                          ),
-                        ),
-                        alignment: Alignment.bottomCenter,
-                        // height: SizeConfig.safeUsedHeight * .08,
-                        child: getSaveAndFinishButtonLayout(
-                            SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                    CommonWidget.getCommonPadding(
-                        SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-                  ],
+            body: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      child: Form(
+                        key: _formkey,
+                        child: getAllTextFormFieldLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      )),
                 ),
-              ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+              ],
             ),
           ),
         ),
@@ -207,7 +202,7 @@ String oldUid="";
     return ListView(
       shrinkWrap: true,
       controller: _scrollController,
-      physics: NeverScrollableScrollPhysics(),
+      physics:  AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.only(
           left: parentWidth * 0.04,
           right: parentWidth * 0.04,
