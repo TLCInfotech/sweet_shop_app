@@ -32,8 +32,10 @@ class CreateSellInvoice extends StatefulWidget {
   final CreateSellInvoiceInterface mListener;
   final  dateNew;
   final  Invoice_No;
-  
-  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No});
+  final editedItem;
+  final come;
+
+  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come});
   @override
   _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
@@ -84,15 +86,28 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    getCompanyId();
-    calculateTotalAmt();
+
+    setData();
+    // if(widget.Invoice_No!=null){
+    //   gerSaleInvoice(1);
+    //   setState(() {
+    //     invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+    //   });
+    // }
+  }
+  setData()async{
+    await getCompanyId();
+    await calculateTotalAmt();
     invoiceDate=widget.dateNew;
-    if(widget.Invoice_No!=null){
-      gerSaleInvoice(1);
-      setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-      });
-    }
+    await gerSaleInvoice(1);
+    print("#######################3 ${widget.editedItem}");
+    setState(() {
+      invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+      selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+      selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+    });
+    print("#######################33 ${selectedFranchiseeName}");
+
   }
 
   getCompanyId()async{
@@ -709,7 +724,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           print("############3");
           print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
         },
-        ledgerName: selectedFranchiseeName);
+        ledgerName: selectedFranchiseeName,
+        franchisee: widget.come,
+        franchiseeName: selectedFranchiseeName,
+    );
 
   }
 

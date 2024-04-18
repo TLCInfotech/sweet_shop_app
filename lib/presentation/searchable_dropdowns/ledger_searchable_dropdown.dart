@@ -39,16 +39,23 @@ class SearchableLedgerDropdown extends StatefulWidget{
 
 class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdown> with  SingleTickerProviderStateMixin {
   bool isLoaderShow = false;
-  TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  final TextEditingController _controller = TextEditingController();
+
+  var selectedItem=null;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    callGetLedger();
+    setdata();
+  }
+
+  setdata()async{
+    await callGetLedger();
     if(widget.franchisee=="edit"){
+      print(":::::: ${widget.franchiseeName}\n ${widget.ledgerName}");
       _controller.text=widget.franchiseeName;
     }
   }
@@ -125,9 +132,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
     });
   }
 
-  final TextEditingController _controller = TextEditingController();
 
-  var selectedItem=null;
 
   @override
   Widget build(BuildContext context) {

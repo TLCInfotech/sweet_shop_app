@@ -281,6 +281,8 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                             dateNew: invoiceDate,
                             Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                             mListener:this,
+                            editedItem:saleInvoice_list[index],
+                            come:"edit",
                           )));
                     },
                     child: Card(

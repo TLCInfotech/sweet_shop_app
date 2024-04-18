@@ -14,6 +14,8 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -75,7 +77,17 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
 
 
   FocusNode searchFocus = FocusNode() ;
+  getCompanyId()async{
+    String companyId1 = await AppPreferences.getCompanyId();
+    setState(() {
+      companyId=companyId1;
+      api="${ApiConstants().salePartyItem}?Company_ID=$companyId1&PartyID=${widget.id}&Date=${widget.dateFinal}";
+    });
+    print("CompanyID=> $companyId");
+  }
 
+  var companyId="0";
+  var api="";
 
   @override
   void initState() {
@@ -103,10 +115,13 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
        });
       await calculateRates();
     }
-    await fetchItems();
+    // await fetchItems();
+    // await getCompanyId();
   }
   var itemsList = [];
   var filteredItemsList = [];
+
+  var selectedItemName="";
 
   fetchItems () async {
     String companyId = await AppPreferences.getCompanyId();
@@ -241,50 +256,68 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
   }
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-          minStringLength: 0,
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                unit.text=v.unit;
-                rate.text=v.rate;
-                itemsList = [];
-                gst.text=v.gst!="null"?v.gst:"";
-              });
-              calculateRates();
-            },
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
-
+    return SearchableDropdownWithObject(
+        apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+        callback: (item)async{
+          setState(() {
+            // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+            selectedItemID = item['ID'].toString();
+            selectedItemName=item['Name'].toString();
+            unit.text=item['Unit'];
+            rate.text=item['Rate'].toString();
+            gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+          });
+          await calculateRates();
+        },
+      ledgerName: selectedItemName,
     );
+
+    //   Container(
+    //     height: parentHeight * .055,
+    //     alignment: Alignment.center,
+    //     decoration: BoxDecoration(
+    //       color: CommonColor.WHITE_COLOR,
+    //       borderRadius: BorderRadius.circular(4),
+    //       boxShadow: [
+    //         BoxShadow(
+    //           offset: Offset(0, 1),
+    //           blurRadius: 5,
+    //           color: Colors.black.withOpacity(0.1),
+    //         ),
+    //       ],
+    //     ),
+    //     child: TextFieldSearch(
+    //       minStringLength: 0,
+    //         label: 'Item',
+    //         controller: _textController,
+    //         decoration: textfield_decoration.copyWith(
+    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
+    //           prefixIcon: Container(
+    //               width: 50,
+    //               padding: EdgeInsets.all(10),
+    //               alignment: Alignment.centerLeft,
+    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
+    //         ),
+    //         textStyle: item_regular_textStyle,
+    //         getSelectedValue: (v) {
+    //           setState(() {
+    //             selectedItemID = v.value;
+    //             unit.text=v.unit;
+    //             rate.text=v.rate;
+    //             itemsList = [];
+    //             gst.text=v.gst!="null"?v.gst:"";
+    //           });
+    //           calculateRates();
+    //         },
+    //         future: () {
+    //           if (_textController.text != "")
+    //             return fetchSimpleData(
+    //                 _textController.text.trim());
+    //         })
+    //
+    // );
   }
 
   /* widget for item quantity layout */
@@ -531,7 +564,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
                 "New_Item_ID": selectedItemID,
                 "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                 "Item_ID":widget.editproduct!=null?widget.editproduct['Item_ID']:"",
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),
@@ -548,7 +581,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell>{
             else {
               item={
                 "Item_ID":selectedItemID,
-                "Item_Name":_textController.text,
+                "Item_Name":selectedItemName,
                 "Quantity":int.parse(quantity.text),
                 "Unit":"kg",
                 "Rate":double.parse(rate.text),
