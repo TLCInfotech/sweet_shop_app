@@ -266,10 +266,14 @@ var selectedbankCashLedger="";
       franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
-
-          setState(() {
-            selectedbankCashLedger=name!;
-          selectedItemID=id;
+        setState(() {
+          if(widget.franId==id){
+            _textController.clear();
+            CommonWidget.errorDialog(context, "You can not select same ledger.");
+          } else {
+            selectedbankCashLedger = name!;
+            selectedItemID = id;
+          }
           });
 
       },
