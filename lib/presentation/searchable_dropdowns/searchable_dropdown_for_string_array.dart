@@ -110,7 +110,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
     return
 
       Padding(
-        padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+          // widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):
+        padding:  EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

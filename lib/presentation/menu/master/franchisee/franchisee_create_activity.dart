@@ -655,8 +655,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
                 print(countryName);
               },
-              franchiseeName: widget.editItem['Country']!=null?widget.editItem['Country'].toString(): "",
-              franchisee: widget.editItem['Country']!=null?"edit":"",
+              franchiseeName: widget.editItem!=null&&widget.editItem['Country']!=null?widget.editItem['Country'].toString(): "",
+              franchisee:  widget.editItem!=null &&widget.editItem['Country']!=null?"edit":"",
               ledgerName: countryName),
         ],
       ),
@@ -698,8 +698,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
                 print(stateName);
               },
-              franchiseeName: widget.editItem['State']!=null?widget.editItem['State'].toString(): "",
-              franchisee: widget.editItem['State']!=null?"edit":"",
+              franchiseeName:widget.editItem!=null && widget.editItem['State']!=null?widget.editItem['State'].toString(): "",
+              franchisee:  widget.editItem!=null &&  widget.editItem['State']!=null?"edit":"",
               ledgerName: stateName),
         ],
       ),
@@ -1009,8 +1009,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                 apiUrl:ApiConstants().city+"?",
                 titleIndicator: false,
                 ledgerName: selectedCity,
-                franchiseeName: widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
-                franchisee: widget.editItem['District']!=null?"edit":"",
+                franchiseeName: widget.editItem!=null && widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
+                franchisee: widget.editItem!=null&& widget.editItem['District']!=null?"edit":"",
                 title:  ApplicationLocalizations.of(context)!.translate("city")!,
                 callback: (name){
                   setState(() {
