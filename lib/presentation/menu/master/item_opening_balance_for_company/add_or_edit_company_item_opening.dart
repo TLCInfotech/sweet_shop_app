@@ -18,6 +18,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -301,9 +302,29 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       ],
     );
   }
+  var selectedItemName="";
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableDropdownWithObject(
+      name: selectedItemName,
+      status:  "edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item)async{
+        setState(() {
+          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+          selectedItemID = item['ID'].toString();
+          selectedItemName=item['Name'].toString();
+          unit.text=item['Unit'];
+          rate.text=item['Rate'].toString();
+        });
+        await calculateRates();
+      },
+
+    );
+
+      Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -410,7 +431,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                       "Seq_No": widget.editproduct['Seq_No'],
                       "Item_ID": oldItemID,
                       "New_Item_ID":selectedItemID,
-                      "Item_Name": _textController.text,
+                      "Item_Name":selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
                       "Quantity": int.parse(quantity.text),
@@ -423,7 +444,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                     item = {
                       "Seq_No": widget.editproduct['Seq_No'],
                       "Item_ID": selectedItemID,
-                      "Item_Name": _textController.text,
+                      "Item_Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
                       "Quantity": int.parse(quantity.text),
@@ -436,7 +457,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                 else {
                   item = {
                     "Item_ID": selectedItemID,
-                    "Item_Name": _textController.text,
+                    "Item_Name": selectedItemName,
                     "Store_ID": null,
                     "Batch_ID": null,
                     "Quantity": int.parse(quantity.text),
