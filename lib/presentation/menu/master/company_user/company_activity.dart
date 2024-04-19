@@ -26,6 +26,8 @@ import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dashboard/dashboard_activity.dart';
 import '../../../dialog/default_bank_dialog.dart';
 import '../../../dialog/district_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
 class CompanyCreate extends StatefulWidget {
   final companyId;
@@ -293,11 +295,15 @@ print("hjthghh  $companyId");
                         getContactPersonLayout(parentHeight, parentWidth),
                         getAddressLayout(parentHeight, parentWidth),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            getLeftLayout(parentHeight, parentWidth),
-                            getRightLayout(parentHeight, parentWidth),
+                            getDistrictCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            SizedBox(width: 5,),
+                            getPinCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                           ],
                         ),
+
                         getStateLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                         getCountryLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
@@ -641,7 +647,61 @@ print("hjthghh  $companyId");
 
   /* Widget for default bank text from field layout */
   Widget getDefaultBankLayout(double parentHeight, double parentWidth) {
-    return Container(
+    return Padding(
+      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+      child:  _arrList.length!=0?SearchableLedgerDropdown(
+          apiUrl:ApiConstants().default_bank+"?",
+          franchisee: _arrList.length!=0?"edit":"",
+          franchiseeName: _arrList.length!=0 && defaultBankName!=null?defaultBankName:"",
+          title:  ApplicationLocalizations.of(context)!.translate("default_bank")!,
+          callback: (name,id){
+            setState(() {
+              defaultBankName=name!;
+              defaultBankId=(id!);
+            });
+
+          },
+          ledgerName: defaultBankName): Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("default_bank")!,
+            style: item_heading_textStyle,
+          ),
+          Container(
+            height: (SizeConfig.screenHeight) * .055,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(
+                width:((SizeConfig.screenWidth) * .4 )- 40,
+                child: Text(
+                  defaultBankName == "" ? ApplicationLocalizations.of(context)!.translate("default_bank")!  : defaultBankName,
+                  style: defaultBankName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.clip,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+      Container(
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -795,7 +855,65 @@ print("hjthghh  $companyId");
 
   /* Widget for distric text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
-    return Container(
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top:3),
+        child:  _arrList.length!=0 ?SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().city+"?",
+          ledgerName: districtController.text,
+          franchiseeName: _arrList.length!=0 && _arrList[0]['District']!=null?_arrList[0]['District'].toString(): "",
+          franchisee:_arrList.length!=0  && _arrList[0]['District']!=null?"edit":"",
+          title:  ApplicationLocalizations.of(context)!.translate("city")!,
+          callback: (name){
+            setState(() {
+              districtController.text=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(districtController.text);
+          },
+        ): Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ApplicationLocalizations.of(context)!.translate("select_city")!,
+                  style: item_heading_textStyle,
+                ),
+            Container(
+              height: (SizeConfig.screenHeight) * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                  width:((SizeConfig.screenWidth) * .4 )- 40,
+                  child: Text(
+                    cityName == "" ? ApplicationLocalizations.of(context)!.translate("select_city")!  : cityName,
+                    style: cityName == ""
+                        ? hint_textfield_Style
+                        : text_field_textStyle,
+                    overflow: TextOverflow.clip,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+
+      Container(
       width: (SizeConfig.screenWidth) * .4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -884,7 +1002,65 @@ print("hjthghh  $companyId");
 
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
-    return GetStateLayout(
+    return Padding(
+      padding: const EdgeInsets.only(top:3),
+      child: _arrList.length!=0?SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().state+"?",
+
+          title:  ApplicationLocalizations.of(context)!.translate("state")!,
+          callback: (name){
+
+            setState(() {
+              stateName=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(stateName);
+          },
+          franchiseeName: _arrList.length!=0 && _arrList[0]['State']!=null?_arrList[0]['State'].toString(): "",
+          franchisee:  _arrList.length!=0 &&  _arrList[0]['State']!=null?"edit":"",
+          ledgerName: stateName):Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("state")!,
+            style: item_heading_textStyle,
+          ),
+          Container(
+            height: (SizeConfig.screenHeight) * .055,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(
+                width:((SizeConfig.screenWidth) * .4 )- 40,
+                child: Text(
+                  stateName == "" ? ApplicationLocalizations.of(context)!.translate("state")!  : stateName,
+                  style: stateName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.clip,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
+      ,
+    );
+
+      GetStateLayout(
         title:   ApplicationLocalizations.of(context)!.translate("state")! ,
         callback: (name,id){
           setState(() {
@@ -922,7 +1098,64 @@ print("hjthghh  $companyId");
 
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
-    return GetCountryLayout(
+    return Padding(
+      padding: const EdgeInsets.only(top:3),
+      child:_arrList.length!=0? SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().country+"?",
+          title:  ApplicationLocalizations.of(context)!.translate("country")!,
+          callback: (name){
+
+            setState(() {
+              countryName=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(countryName);
+          },
+          franchiseeName:_arrList.length!=0 && _arrList[0]['Country']!=null?_arrList[0]['Country'].toString(): "",
+          franchisee:  _arrList.length!=0 &&_arrList[0]['Country']!=null?"edit":"",
+          ledgerName: countryName):
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            ApplicationLocalizations.of(context)!.translate("country")!,
+            style: item_heading_textStyle,
+          ),
+          Container(
+            height: (SizeConfig.screenHeight) * .055,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Container(
+                width:((SizeConfig.screenWidth) * .4 )- 40,
+                child: Text(
+                  countryName == "" ? ApplicationLocalizations.of(context)!.translate("country")!  : countryName,
+                  style: countryName == ""
+                      ? hint_textfield_Style
+                      : text_field_textStyle,
+                  overflow: TextOverflow.clip,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+      GetCountryLayout(
         title:  ApplicationLocalizations.of(context)!.translate("country")! ,
         callback: (name,id){
           setState(() {

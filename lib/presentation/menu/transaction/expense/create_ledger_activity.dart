@@ -666,7 +666,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+item['Amount'];
+      total=await total+item['Amount'];
       // print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
@@ -702,6 +702,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 /*
 
     *//* calculate round off amount function *//*
+
   double calculateRoundOffAmt(){
     if(double.parse(TotalAmount.substring(TotalAmount.length-3,TotalAmount.length))==0.00){
       return 0.00;

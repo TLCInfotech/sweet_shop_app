@@ -634,32 +634,21 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   Widget getCountryLayout(double parentHeight, double parentWidth) {
     return Padding(
       padding: const EdgeInsets.only(top:3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("country")!,
-            style: item_heading_textStyle,
-          ),
-          SearchableDropdownForStringArray(
-              apiUrl:ApiConstants().country+"?",
-              titleIndicator: false,
-              title:  ApplicationLocalizations.of(context)!.translate("country")!,
-              callback: (name){
+      child: SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().country+"?",
+          title:  ApplicationLocalizations.of(context)!.translate("country")!,
+          callback: (name){
 
-                setState(() {
-                  countryName=name!;
-                  // cityId=id.toString()!;
-                });
+            setState(() {
+              countryName=name!;
+              // cityId=id.toString()!;
+            });
 
-                print(countryName);
-              },
-              franchiseeName: widget.editItem!=null&&widget.editItem['Country']!=null?widget.editItem['Country'].toString(): "",
-              franchisee:  widget.editItem!=null &&widget.editItem['Country']!=null?"edit":"",
-              ledgerName: countryName),
-        ],
-      ),
+            print(countryName);
+          },
+          franchiseeName: widget.editItem!=null&&widget.editItem['Country']!=null?widget.editItem['Country'].toString(): "",
+          franchisee:  widget.editItem!=null &&widget.editItem['Country']!=null?"edit":"",
+          ledgerName: countryName),
     );
       // GetCountryLayout(
       //   title:  ApplicationLocalizations.of(context)!.translate("country")!,
@@ -677,32 +666,22 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   Widget getStateLayout(double parentHeight, double parentWidth) {
     return  Padding(
       padding: const EdgeInsets.only(top:3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("state")!,
-            style: item_heading_textStyle,
-          ),
-          SearchableDropdownForStringArray(
-              apiUrl:ApiConstants().state+"?",
-              titleIndicator: false,
-              title:  ApplicationLocalizations.of(context)!.translate("state")!,
-              callback: (name){
+      child: SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().state+"?",
 
-                setState(() {
-                  stateName=name!;
-                  // cityId=id.toString()!;
-                });
+          title:  ApplicationLocalizations.of(context)!.translate("state")!,
+          callback: (name){
 
-                print(stateName);
-              },
-              franchiseeName:widget.editItem!=null && widget.editItem['State']!=null?widget.editItem['State'].toString(): "",
-              franchisee:  widget.editItem!=null &&  widget.editItem['State']!=null?"edit":"",
-              ledgerName: stateName),
-        ],
-      ),
+            setState(() {
+              stateName=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(stateName);
+          },
+          franchiseeName:widget.editItem!=null && widget.editItem['State']!=null?widget.editItem['State'].toString(): "",
+          franchisee:  widget.editItem!=null &&  widget.editItem['State']!=null?"edit":"",
+          ledgerName: stateName),
     );
 
       // GetStateLayout(
@@ -997,32 +976,21 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return Expanded(
       child:  Padding(
         padding: const EdgeInsets.only(top:3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              ApplicationLocalizations.of(context)!.translate("city")!,
-              style: item_heading_textStyle,
-            ),
-            SearchableDropdownForStringArray(
-                apiUrl:ApiConstants().city+"?",
-                titleIndicator: false,
-                ledgerName: selectedCity,
-                franchiseeName: widget.editItem!=null && widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
-                franchisee: widget.editItem!=null&& widget.editItem['District']!=null?"edit":"",
-                title:  ApplicationLocalizations.of(context)!.translate("city")!,
-                callback: (name){
-                  setState(() {
-                    selectedCity=name!;
-                    // cityId=id.toString()!;
-                  });
+        child:  SearchableDropdownForStringArray(
+            apiUrl:ApiConstants().city+"?",
+            ledgerName: selectedCity,
+            franchiseeName: widget.editItem!=null && widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
+            franchisee: widget.editItem!=null&& widget.editItem['District']!=null?"edit":"",
+            title:  ApplicationLocalizations.of(context)!.translate("city")!,
+            callback: (name){
+              setState(() {
+                selectedCity=name!;
+                // cityId=id.toString()!;
+              });
 
-                  print(selectedCity);
-                },
-                ),
-          ],
-        ),
+              print(selectedCity);
+            },
+            ),
       ),
     );
 

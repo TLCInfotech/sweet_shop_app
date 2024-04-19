@@ -19,6 +19,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../../data/domain/itemCategory/put_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class ItemCategoryActivity extends StatefulWidget {
@@ -279,7 +280,26 @@ bool isLoaderShow=false;
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
-    return GetCategoryLayout(
+    return Padding(
+        padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+        child:  SearchableLedgerDropdown(
+            apiUrl:ApiConstants().item_category+"?",
+            franchisee: editedItem!=null?"edit":"",
+            franchiseeName: editedItem!=null && editedItem['Parent_Name']!=null?editedItem['Parent_Name']:"",
+            title:  ApplicationLocalizations.of(context)!.translate("parent_category")!,
+            callback: (name,id){
+
+              setState(() {
+                parentCategory=name!;
+                parentCategoryId=int.parse(id!);
+              });
+
+            },
+            ledgerName: parentCategory)
+    );
+
+
+      GetCategoryLayout(
         title: ApplicationLocalizations.of(context)!.translate("parent_category")!,
         callback: (name,id){
           setState(() {

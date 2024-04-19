@@ -23,6 +23,8 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/parent_ledger_group_dialoug.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_obj_for_tax.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 
 class ExpenseGroup extends StatefulWidget {
@@ -449,7 +451,53 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
   /* widget for Category layout */
   Widget getSequenceNatureLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return  Padding(
+        padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+        child: parentCategory==""? SearchableDropdownWithObjectForTax(
+          name:editedItem!=null && selectedgroup!=null?selectedgroup:"",
+          status:   editedItem!=null?"edit":"",
+          apiUrl:ApiConstants().group_nature+"?",
+          titleIndicator: false,
+          title: ApplicationLocalizations.of(context)!.translate("group_nature")!,
+          callback: (item)async{
+
+            setState(() {
+              // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+
+              selectedgroup=item['name'].toString();
+
+            });
+          },
+
+        ): Container(
+            height: parentHeight * .055,
+            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(left: 10, right: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selectedgroup == null ? ApplicationLocalizations.of(context)!.translate("group_nature")!
+                      : selectedgroup,
+                  style: selectedgroup == null ? item_regular_textStyle : text_field_textStyle,
+                ),
+              ],
+            )),
+    );
+
+      Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -640,7 +688,58 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth,StateSetter setState){
-    return Padding(
+    return
+      Padding(
+          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+          child:  SearchableDropdownWithObject(
+            name:editedItem!=null && parentCategory!=null?parentCategory:"",
+            status:   editedItem!=null?"edit":"",
+            apiUrl:ApiConstants().ledger_group+"?",
+            titleIndicator: false,
+            title: ApplicationLocalizations.of(context)!.translate("parent_group")!,
+            callback: (item)async{
+              print("hsdhkasj $item");
+              if(item!=null) {
+                setState(() {
+                  parentCategory = item['Name'].toString();
+                  parentCategoryId = item['ID'];
+                  if (item['Group_Nature'].toString() == "A") {
+                    setState(() {
+                      selectedgroup = "Asset";
+                    });
+                  }
+
+                  else if (item['Group_Nature'].toString() == "L") {
+                    setState(() {
+                      selectedgroup = "Liability";
+                    });
+                  }
+                  else if (item['Group_Nature'].toString() == "I") {
+                    setState(() {
+                      selectedgroup = "Income";
+                    });
+                  }
+                  else if (item['Group_Nature'].toString() == "E") {
+                    setState(() {
+                      selectedgroup = "Expense";
+                    });
+                  }
+
+                  // selectedgroup=item['Group_Nature'].toString();
+                });
+              }
+              else{
+                setState(() {
+                  selectedgroup = "";
+                  parentCategory="";
+                  parentCategoryId=0;
+                });
+              }
+            },
+
+          )
+      );
+      Padding(
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

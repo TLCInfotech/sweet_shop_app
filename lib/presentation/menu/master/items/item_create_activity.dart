@@ -27,6 +27,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/item/put_item_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
 class ItemCreateActivity extends StatefulWidget {
@@ -431,16 +432,34 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
-    return GetCategoryLayout(
-        title: ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (value,id){
-          setState(() {
-            categoryName=value!;
-            categoryId=id!;
-          });
-    },
-        selectedProductCategory: categoryName
+    return   Padding(
+      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+      child:  SearchableLedgerDropdown(
+          apiUrl:ApiConstants().item_category+"?",
+          franchisee: widget.editItem!=null?"edit":"",
+          franchiseeName: widget.editItem!=null && widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:"",
+          title:  ApplicationLocalizations.of(context)!.translate("category")!,
+          callback: (name,id){
+
+              setState(() {
+                categoryName=name!;
+                categoryId=int.parse(id!);
+              });
+
+          },
+          ledgerName: categoryName)
     );
+
+      // GetCategoryLayout(
+    //     title: ApplicationLocalizations.of(context)!.translate("category")!,
+    //     callback: (value,id){
+    //       setState(() {
+    //         categoryName=value!;
+    //         categoryId=id!;
+    //       });
+    // },
+    //     selectedProductCategory: categoryName
+    // );
 
   }
 
@@ -450,32 +469,21 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return Padding(
       padding: const EdgeInsets.only(top:3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
-            style: item_heading_textStyle,
-          ),
-          SearchableDropdownForStringArray(
-              apiUrl:ApiConstants().measuring_unit+"?",
-              titleIndicator: false,
-              title:  ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
-              callback: (name){
+      child: SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().measuring_unit+"?",
+          title:  ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
+          callback: (name){
 
-                setState(() {
-                  measuringUnit=name!;
-                  // cityId=id.toString()!;
-                });
+            setState(() {
+              measuringUnit=name!;
+              // cityId=id.toString()!;
+            });
 
-                print(measuringUnit);
-              },
-              franchiseeName: widget.editItem!=null&&widget.editItem['Unit']!=null?widget.editItem['Unit'].toString():"",
-              franchisee:widget.editItem!=null&&widget.editItem['Unit']!=null?"edit":"",
-              ledgerName: measuringUnit),
-        ],
-      ),
+            print(measuringUnit);
+          },
+          franchiseeName: widget.editItem!=null&&widget.editItem['Unit']!=null?widget.editItem['Unit'].toString():"",
+          franchisee:widget.editItem!=null&&widget.editItem['Unit']!=null?"edit":"",
+          ledgerName: measuringUnit),
     );
 
       GetUnitLayout(
@@ -496,142 +504,130 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return Padding(
       padding: EdgeInsets.only(
         top: parentHeight * .015),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("unit_two")!,
-            style: item_heading_textStyle,
+          Container(
+            width: parentWidth * .30,
+            child: SearchableDropdownForStringArray(
+                apiUrl:ApiConstants().measuring_unit+"?",
+                title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
+                callback: (name){
+
+                  setState(() {
+                    unitTwoName=name!;
+                    // cityId=id.toString()!;
+                  });
+
+                  print(unitTwoName);
+                },
+                franchiseeName: widget.editItem!=null&&widget.editItem['Unit2']!=null?widget.editItem['Unit2'].toString():"",
+                franchisee:widget.editItem!=null&&widget.editItem['Unit2']!=null?"edit":"",
+                ledgerName: unitTwoName),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: parentWidth * .30,
-                child: SearchableDropdownForStringArray(
-                    apiUrl:ApiConstants().measuring_unit+"?",
-                    titleIndicator: false,
-                    title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
-                    callback: (name){
-
-                      setState(() {
-                        unitTwoName=name!;
-                        // cityId=id.toString()!;
-                      });
-
-                      print(unitTwoName);
-                    },
-                    franchiseeName: widget.editItem!=null&&widget.editItem['Unit2']!=null?widget.editItem['Unit2'].toString():"",
-                    franchisee:widget.editItem!=null&&widget.editItem['Unit2']!=null?"edit":"",
-                    ledgerName: unitTwoName),
+       //    GetUnitLayout(
+       //    parentWidth:parentWidth * .25,
+       //  title: ApplicationLocalizations.of(context)!.translate("unit_two")!,
+       //  callback: (value){
+       //    setState(() {
+       //      unitTwoName=value!;
+       //    });
+       //  },
+       //  measuringUnit: unitTwoName
+       // ),
+          Container(
+            margin: EdgeInsets.only(top: 35),
+            height: parentHeight * .055,
+            width: parentWidth * .2,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textCapitalization: TextCapitalization.words,
+              focusNode: _unitTwofactor,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              cursorColor: CommonColor.BLACK_COLOR,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: parentWidth * .04, right: parentWidth * .02),
+                border: InputBorder.none,
+                counterText: '',
+                isDense: true,
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                hintStyle: hint_textfield_Style,
               ),
-           //    GetUnitLayout(
-           //    parentWidth:parentWidth * .25,
-           //  title: ApplicationLocalizations.of(context)!.translate("unit_two")!,
-           //  callback: (value){
-           //    setState(() {
-           //      unitTwoName=value!;
-           //    });
-           //  },
-           //  measuringUnit: unitTwoName
-           // ),
-              Container(
-                margin: EdgeInsets.only(top: 15),
-                height: parentHeight * .055,
-                width: parentWidth * .2,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
-                  focusNode: _unitTwofactor,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  cursorColor: CommonColor.BLACK_COLOR,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: parentWidth * .04, right: parentWidth * .02),
-                    border: InputBorder.none,
-                    counterText: '',
-                    isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                    hintStyle: hint_textfield_Style,
-                  ),
-                  controller: unitTwofactorController,
-                  onEditingComplete: () {
-                     _unitTwofactor.unfocus();
-                    FocusScope.of(context).requestFocus(_unitTwoBase);
-                  },
-                  style: text_field_textStyle,
-                ),
-              ),
+              controller: unitTwofactorController,
+              onEditingComplete: () {
+                 _unitTwofactor.unfocus();
+                FocusScope.of(context).requestFocus(_unitTwoBase);
+              },
+              style: text_field_textStyle,
+            ),
+          ),
 
-              Container(
-                margin: EdgeInsets.only(top: 15),
-                child: const Text(
-                  "=",
-                  style:
-                  text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                ),
-              ),
+          Container(
+            margin: EdgeInsets.only(top: 35),
+            child: const Text(
+              "=",
+              style:
+              text_field_textStyle,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              // textScaleFactor: 1.02,
+            ),
+          ),
 
-              Container(
-                margin: EdgeInsets.only(top: 15),
-
-                height: parentHeight * .055,
-                alignment: Alignment.center,
-                width: parentWidth * .2,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
+          Container(
+            margin: EdgeInsets.only(top: 35),
+            height: parentHeight * .055,
+            alignment: Alignment.center,
+            width: parentWidth * .2,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
                 ),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
-                  focusNode: _unitTwoBase,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  cursorColor: CommonColor.BLACK_COLOR,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: parentWidth * .04, right: parentWidth * .02),
-                    border: InputBorder.none,
-                    suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
-                    counterText: '',
-                    isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                    hintStyle: hint_textfield_Style,
-                  ),
-                  controller: unitTwoBaseController,
-                  onEditingComplete: () {
-                    _unitTwoBase.unfocus();
-                    FocusScope.of(context).requestFocus(_unitThreefactor);
-                  },
-                  style: text_field_textStyle,
-                ),
+              ],
+            ),
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textCapitalization: TextCapitalization.words,
+              focusNode: _unitTwoBase,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              cursorColor: CommonColor.BLACK_COLOR,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: parentWidth * .04, right: parentWidth * .02),
+                border: InputBorder.none,
+                suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
+                counterText: '',
+                isDense: true,
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                hintStyle: hint_textfield_Style,
               ),
-            ],
+              controller: unitTwoBaseController,
+              onEditingComplete: () {
+                _unitTwoBase.unfocus();
+                FocusScope.of(context).requestFocus(_unitThreefactor);
+              },
+              style: text_field_textStyle,
+            ),
           ),
         ],
       ),
@@ -642,143 +638,132 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return Padding(
       padding: EdgeInsets.only(
           top: parentHeight * .015),
-      child:Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("unit_three")!,
-            style: item_heading_textStyle,
+
+          // GetUnitLayout(
+          //     parentWidth:parentWidth * .25,
+          //     title: ApplicationLocalizations.of(context)!.translate("unit_three")!,
+          //     callback: (value){
+          //       setState(() {
+          //         unitThreeName=value!;
+          //       });
+          //     },
+          //     measuringUnit: unitThreeName
+          // ),
+          Container(
+            width: parentWidth * .30,
+            child: SearchableDropdownForStringArray(
+                apiUrl:ApiConstants().measuring_unit+"?",
+                title:  ApplicationLocalizations.of(context)!.translate("unit_three")!,
+                callback: (name){
+
+                  setState(() {
+                    unitThreeName=name!;
+                    // cityId=id.toString()!;
+                  });
+
+                  print(unitThreeName);
+                },
+                franchiseeName: widget.editItem!=null&&widget.editItem['Unit3']!=null?widget.editItem['Unit3'].toString():"",
+                franchisee:widget.editItem!=null&&widget.editItem['Unit3']!=null?"edit":"",
+                ledgerName: unitThreeName),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-
-              // GetUnitLayout(
-              //     parentWidth:parentWidth * .25,
-              //     title: ApplicationLocalizations.of(context)!.translate("unit_three")!,
-              //     callback: (value){
-              //       setState(() {
-              //         unitThreeName=value!;
-              //       });
-              //     },
-              //     measuringUnit: unitThreeName
-              // ),
-              Container(
-                width: parentWidth * .30,
-                child: SearchableDropdownForStringArray(
-                    apiUrl:ApiConstants().measuring_unit+"?",
-                    titleIndicator: false,
-                    title:  ApplicationLocalizations.of(context)!.translate("unit_three")!,
-                    callback: (name){
-
-                      setState(() {
-                        unitThreeName=name!;
-                        // cityId=id.toString()!;
-                      });
-
-                      print(unitThreeName);
-                    },
-                    franchiseeName: widget.editItem!=null&&widget.editItem['Unit3']!=null?widget.editItem['Unit3'].toString():"",
-                    franchisee:widget.editItem!=null&&widget.editItem['Unit3']!=null?"edit":"",
-                    ledgerName: unitThreeName),
+          Container(
+            margin: EdgeInsets.only(top: 35),
+            height: parentHeight * .055,
+            width: parentWidth * .2,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textCapitalization: TextCapitalization.words,
+              focusNode: _unitThreefactor,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              cursorColor: CommonColor.BLACK_COLOR,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: parentWidth * .04, right: parentWidth * .02),
+                border: InputBorder.none,
+                counterText: '',
+                isDense: true,
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                hintStyle: hint_textfield_Style,
               ),
-              Container(
-                margin: EdgeInsets.only(top: 15),
-                height: parentHeight * .055,
-                width: parentWidth * .2,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
+              controller: unitThreefactorController,
+              onEditingComplete: () {
+                 _unitThreefactor.unfocus();
+                FocusScope.of(context).requestFocus(_unitThreeBase);
+              },
+              style: text_field_textStyle,
+            ),
+          ),
+
+           Container(
+             margin: EdgeInsets.only(top: 35),
+             child: Text(
+              "=",
+              style:
+              text_field_textStyle,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              // textScaleFactor: 1.02,
+                       ),
+           ),
+
+          Container(
+            margin: EdgeInsets.only(top: 35),
+
+            height: parentHeight * .055,
+            alignment: Alignment.center,
+            width: parentWidth * .2,
+            decoration: BoxDecoration(
+              color: CommonColor.WHITE_COLOR,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
                 ),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
-                  focusNode: _unitThreefactor,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  cursorColor: CommonColor.BLACK_COLOR,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: parentWidth * .04, right: parentWidth * .02),
-                    border: InputBorder.none,
-                    counterText: '',
-                    isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                    hintStyle: hint_textfield_Style,
-                  ),
-                  controller: unitThreefactorController,
-                  onEditingComplete: () {
-                     _unitThreefactor.unfocus();
-                    FocusScope.of(context).requestFocus(_unitThreeBase);
-                  },
-                  style: text_field_textStyle,
-                ),
+              ],
+            ),
+            child: TextFormField(
+              textAlignVertical: TextAlignVertical.center,
+              textCapitalization: TextCapitalization.words,
+              focusNode: _unitThreeBase,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              cursorColor: CommonColor.BLACK_COLOR,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: parentWidth * .04, right: parentWidth * .02),
+                border: InputBorder.none,
+                counterText: '',
+                suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
+                isDense: true,
+                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                hintStyle: hint_textfield_Style,
               ),
-
-               Container(
-                 margin: EdgeInsets.only(top: 15),
-                 child: Text(
-                  "=",
-                  style:
-                  text_field_textStyle,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  // textScaleFactor: 1.02,
-                           ),
-               ),
-
-              Container(
-                margin: EdgeInsets.only(top: 15),
-
-                height: parentHeight * .055,
-                alignment: Alignment.center,
-                width: parentWidth * .2,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: TextCapitalization.words,
-                  focusNode: _unitThreeBase,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  cursorColor: CommonColor.BLACK_COLOR,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: parentWidth * .04, right: parentWidth * .02),
-                    border: InputBorder.none,
-                    counterText: '',
-                    suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
-                    isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                    hintStyle: hint_textfield_Style,
-                  ),
-                  //controller: itemNameController,
-                  onEditingComplete: () {
-                    _unitThreeBase.unfocus();
-                    FocusScope.of(context).requestFocus(_packSizeFocus);
-                  },
-                  style: text_field_textStyle,
-                ),
-              ),
-            ],
+              //controller: itemNameController,
+              onEditingComplete: () {
+                _unitThreeBase.unfocus();
+                FocusScope.of(context).requestFocus(_packSizeFocus);
+              },
+              style: text_field_textStyle,
+            ),
           ),
         ],
       ),

@@ -293,7 +293,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&PageSize=12&&Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&PageSize=12&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

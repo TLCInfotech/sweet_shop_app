@@ -26,6 +26,10 @@ import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/parent_ledger_group_dialoug.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_obj_for_tax.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 
 class CreateExpenseActivity extends StatefulWidget {
@@ -143,9 +147,9 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   File? gstFile ;
 
   setData()async{
-    print("@#@@@@@@@@@");
-    print(widget.ledgerList['Outstanding_Limit_Type']);
   if(widget.ledgerList!=null){
+    print("#############");
+    print(widget.ledgerList);
     File ?f=null;
     File ?a=null;
     File ?p=null;
@@ -186,7 +190,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
       gstNoController.text=widget.ledgerList['GST_No']!=null?widget.ledgerList['GST_No'].toString():gstNoController.text;
       hsnNoController.text=widget.ledgerList['HSN_No']!=null?widget.ledgerList['HSN_No'].toString():hsnNoController.text;
-      taxRateController.text=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString():taxRateController.text;
+      taxRateController.text=widget.ledgerList['Tax_Rate']!=null?widget.ledgerList['Tax_Rate'].toString():taxRateController.text;
       CGSTController.text=widget.ledgerList['CGST_Rate']!=null?widget.ledgerList['CGST_Rate'].toString():CGSTController.text;
       SGSTController.text=widget.ledgerList['SGST_Rate']!=null?widget.ledgerList['SGST_Rate'].toString():SGSTController.text;
       cessController.text=widget.ledgerList['Cess_Rate']!=null?widget.ledgerList['Cess_Rate'].toString():cessController.text;
@@ -196,6 +200,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
       accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
       aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
+      taxTypeName=widget.ledgerList['Tax_Type']!=null?widget.ledgerList['Tax_Type'].toString(): taxTypeName;
+      taxCategoryName=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString(): taxTypeName;
       });
   }
 }
@@ -334,10 +340,19 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       getParentGroupLayout(parentHeight, parentWidth),
                       getContactPersonLayout(parentHeight, parentWidth),
                       getAddressLayout(parentHeight, parentWidth),
+                      // Row(
+                      //   children: [
+                      //     getLeftLayout(parentHeight, parentWidth),
+                      //     getRightLayout(parentHeight, parentWidth),
+                      //   ],
+                      // ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          getLeftLayout(parentHeight, parentWidth),
-                          getRightLayout(parentHeight, parentWidth),
+                          getDistrictCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                          SizedBox(width: 5,),
+                          getPinCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                         ],
                       ),
                       getStateLayout(parentHeight, parentWidth),
@@ -428,6 +443,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   ),
                   SizedBox(height: 20,),
                   getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("tax_information")!, ),
+
                   Container(
 
                     padding: EdgeInsets.all(10),
@@ -436,6 +452,15 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          getTaxTypeLayout(parentHeight,parentWidth),
+                          SizedBox(width: 5,),
+                          getTaxCategoryLayout(parentHeight,parentWidth),
+                        ],
+                      ),
                       Row(
                         children: [
                           getTaxLeftLayout(parentHeight, parentWidth),
@@ -566,7 +591,24 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth){
-    return Padding(
+    return   Padding(
+        padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+        child:  SearchableLedgerDropdown(
+            apiUrl:ApiConstants().ledger_group+"?",
+            franchisee: widget.ledgerList!=null?"edit":"",
+            franchiseeName: widget.ledgerList!=null && widget.ledgerList['Group_Name']!=null?widget.ledgerList['Group_Name']:"",
+            title:  ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+            callback: (name,id){
+              setState(() {
+                parentCategory=name!;
+                parentCategoryId=(id!);
+              });
+
+            },
+            ledgerName: parentCategory)
+    );
+
+      Padding(
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -706,13 +748,14 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   /* Widget for select contract layout */
 
   Widget getLeftLayout(double parentHeight, double parentWidth) {
-    return Padding(
-      padding: EdgeInsets.only(right: parentWidth * .01),
-      child: Column(
-        children: [
-          getDistrictCityLayout(parentHeight, parentWidth),
-
-        ],
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(right: parentWidth * .01),
+        child: Column(
+          children: [
+            getDistrictCityLayout(parentHeight, parentWidth),
+          ],
+        ),
       ),
     );
   }
@@ -892,7 +935,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       padding: EdgeInsets.only(right: parentWidth * .01),
       child: Column(
         children: [
-          getTaxTypeLayout(parentHeight,parentWidth),
+
           getHSNLayout(parentHeight,parentWidth),
           getCGSTLayout(parentHeight,parentWidth),
           getCessLayout(parentHeight,parentWidth),
@@ -904,7 +947,31 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget for taxt type layout */
   Widget getTaxTypeLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return Expanded(
+      child: Padding(
+          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+          child:  SearchableDropdownWithObjectForTax(
+            name:widget.ledgerList!=null && widget.ledgerList['Tax_Type']!=null?widget.ledgerList['Tax_Type']:"",
+            status:   widget.ledgerList!=null?"edit":"",
+            apiUrl:ApiConstants().tax_type+"?",
+            titleIndicator: false,
+            title: ApplicationLocalizations.of(context)!.translate("tax_type")!,
+            callback: (item)async{
+              setState(() {
+                // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+                taxTypeId = item['code'].toString();
+                taxTypeName=item['name'].toString();
+
+              });
+            },
+
+          )
+
+      ),
+    );
+
+
+      Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
         width: parentWidth * .4,
@@ -1112,7 +1179,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       padding: EdgeInsets.only(left: parentWidth * .01),
       child: Column(
         children: [
-          getTaxCategoryLayout(parentHeight,parentWidth),
+
           getTaxRateLayout(parentHeight,parentWidth),
           getSGSTLayout(parentHeight,parentWidth),
           getAddCessLayout(parentHeight,parentWidth),
@@ -1124,7 +1191,46 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget for taxt category layout */
   Widget getTaxCategoryLayout(double parentHeight, double parentWidth) {
-    return Padding(
+    return Expanded(
+      child: Padding(
+          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+          child:  SearchableDropdownWithObjectForTax(
+            name:widget.ledgerList!=null && widget.ledgerList['Tax_Category']!=null? widget.ledgerList['Tax_Category']:"",
+            status:   widget.ledgerList!=null?"edit":"",
+            apiUrl:ApiConstants().tax_category+"?",
+            titleIndicator: false,
+            title: ApplicationLocalizations.of(context)!.translate("tax_category")!,
+            callback: (item)async{
+              setState(() {
+                // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+                taxCategoryId = item['code'].toString();
+                taxCategoryName=item['code'].toString();
+
+              });
+            },
+
+          )
+
+
+          // SearchableLedgerDropdown(
+          //     apiUrl:ApiConstants().tax_category+"?",
+          //     franchisee: widget.ledgerList!=null?"edit":"",
+          //     franchiseeName: widget.ledgerList!=null && widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category']:"",
+          //     title:  ApplicationLocalizations.of(context)!.translate("tax_category")!,
+          //     callback: (name,id){
+          //       setState(() {
+          //         taxCategoryName=name!;
+          //         taxCategoryId=(id!);
+          //       });
+          //
+          //     },
+          //     ledgerName: taxCategoryName)
+      ),
+    );
+
+
+
+    Padding(
       padding: EdgeInsets.only(top: parentHeight * 0.02),
       child: Container(
         width: parentWidth * .4,
@@ -1316,7 +1422,27 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget for distric/city text from field layout */
   Widget getDistrictCityLayout(double parentHeight, double parentWidth) {
-    return GetDistrictLayout(
+    return   Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top:3),
+        child:  SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().city+"?",
+          ledgerName: districtController.text,
+          franchiseeName:widget.ledgerList!=null && widget.ledgerList['District']!=null?widget.ledgerList['District'].toString(): "",
+          franchisee: widget.ledgerList!=null&& widget.ledgerList['District']!=null?"edit":"",
+          title:  ApplicationLocalizations.of(context)!.translate("city")!,
+          callback: (name){
+            setState(() {
+              districtController.text=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(districtController.text);
+          },
+        ),
+      ),
+    );
+      GetDistrictLayout(
         title:  ApplicationLocalizations.of(context)!.translate("city")!,
         callback: (name,id){
           setState(() {
@@ -1330,7 +1456,27 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget for state text from field layout */
   Widget getStateLayout(double parentHeight, double parentWidth) {
-    return GetStateLayout(
+    return Padding(
+      padding: const EdgeInsets.only(top:3),
+      child: SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().state+"?",
+
+          title:  ApplicationLocalizations.of(context)!.translate("state")!,
+          callback: (name){
+
+            setState(() {
+              stateName=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(stateName);
+          },
+          franchiseeName:widget.ledgerList!=null && widget.ledgerList['State']!=null?widget.ledgerList['State'].toString(): "",
+          franchisee:  widget.ledgerList!=null &&  widget.ledgerList['State']!=null?"edit":"",
+          ledgerName: stateName),
+    );
+
+      GetStateLayout(
         title:  ApplicationLocalizations.of(context)!.translate("state")!,
         callback: (name,id){
           setState(() {
@@ -1372,7 +1518,26 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
 
   /* Widget for country text from field layout */
   Widget getCountryLayout(double parentHeight, double parentWidth) {
-    return GetCountryLayout(
+    return Padding(
+      padding: const EdgeInsets.only(top:3),
+      child: SearchableDropdownForStringArray(
+          apiUrl:ApiConstants().country+"?",
+          title:  ApplicationLocalizations.of(context)!.translate("country")!,
+          callback: (name){
+
+            setState(() {
+              countryName=name!;
+              // cityId=id.toString()!;
+            });
+
+            print(countryName);
+          },
+          franchiseeName: widget.ledgerList!=null&&widget.ledgerList['Country']!=null?widget.ledgerList['Country'].toString(): "",
+          franchisee:  widget.ledgerList!=null &&widget.ledgerList['Country']!=null?"edit":"",
+          ledgerName: countryName),
+    );
+
+      GetCountryLayout(
         title:  ApplicationLocalizations.of(context)!.translate("country")!,
         callback: (name,id){
           setState(() {
@@ -1722,10 +1887,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
-          district:cityId,
-          state: stateId,
+          district:districtController.text,
+          state: stateName,
           pinCode: pinCode,
-          country: countryId,
+          country: countryName,
           contactNo: contactNo,
           eMail: emailAdd,
           pANNo: panNo,
@@ -1746,8 +1911,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             sGSTRate: sgstNo,
             cessRate: cess,
             addCessRate: addCess,
-            taxCategory: taxCategoryId,//drop
-            Tax_Type: taxTypeId,//drop
+            taxCategory: taxCategoryName,//drop
+            Tax_Type: taxTypeName,//drop
             gSTType: "",
             tCSApplicable: "",
             extName: extName,
@@ -1859,8 +2024,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             sgstRate: sgstNo,
             cessRate: cess,
             addCessRate: addCess,
-            taxCategory: taxCategoryId,//drop
-            Tax_Type: taxTypeId,
+            taxCategory: taxCategoryName,//drop
+            Tax_Type: taxTypeName,
             tcsApplicable: "",
             extName: extName,
             remark: "",

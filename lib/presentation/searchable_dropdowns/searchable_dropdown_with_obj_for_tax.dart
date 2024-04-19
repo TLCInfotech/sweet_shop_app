@@ -36,23 +36,23 @@ class TestItem {
   }
 }
 
-class SearchableDropdownWithObject extends StatefulWidget{
+class SearchableDropdownWithObjectForTax extends StatefulWidget{
   final title;
   final name;
   final Function(dynamic?) callback;
   final titleIndicator;
   final apiUrl;
   final status;
-  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
+  SearchableDropdownWithObjectForTax({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
 
 
 
 
   @override
-  State<SearchableDropdownWithObject> createState() => _SingleLineEditableTextFormFieldState();
+  State<SearchableDropdownWithObjectForTax> createState() => _SingleLineEditableTextFormFieldState();
 }
 
-class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWithObject> with  SingleTickerProviderStateMixin {
+class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWithObjectForTax> with  SingleTickerProviderStateMixin {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode searchFocus = FocusNode() ;
@@ -73,35 +73,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
 
   var filteredStates = [];
 
-  Future<List> fetchSimpleData(searchstring) async {
-    List<dynamic> _list = [];
-    List<dynamic> results = [];
-    // if (searchstring.isEmpty) {
-    //   // if the search field is empty or only contains white-space, we'll display all users
-    //   results = filteredStates;
-    // } else {
-
-    results = filteredStates
-        .where((user) =>
-        user["Name"]
-            .toLowerCase()
-            .contains(searchstring.toLowerCase()))
-        .toList();
-    // we use the toLowerCase() method to make it case-insensitive
-    // }
-
-    // Refresh the UI
-    setState(() {
-      ledger_list = results;
-    });
-
-    //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in ledger_list) {
-      _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
-    }
-    return _list;
-  }
 
   callGetLedger() async {
     String companyId = await AppPreferences.getCompanyId();
@@ -145,7 +116,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
   final TextEditingController _controller = TextEditingController();
 
   var selectedItem=null;
-  var selected=null;
 
   @override
   Widget build(BuildContext context) {
@@ -178,13 +148,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 ),
                 child: TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
-                    onChanged: (v)async{
-                      if(v.isEmpty) {
-                        setState(() {
-                          selected=null;
-                        });
-                        await widget.callback(selected);
-                      }
+                    onTap: (){
+                      // _controller.clear();
                     },
                     textInputAction: TextInputAction.none, // Change input action to "none"
                     controller: _controller,
@@ -201,14 +166,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(
-                      title: Text(suggestion['Name']),
+                      title: Text(suggestion['name']),
                     );
                   },
                   onSuggestionSelected: (suggestion) {
                     setState(() {
-                      selectedItem = suggestion['Name'];
-                      selected=suggestion;
-                      _controller.text=suggestion['Name'];
+                      selectedItem = suggestion['name'];
+                      _controller.text=suggestion['name'];
                     });
                     widget.callback(suggestion);
                   },
@@ -267,7 +231,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     List matches = [];
     matches.addAll(ledger_list);
 
-    matches.retainWhere((s) => s['Name'].toLowerCase().contains(query.toLowerCase()));
+    matches.retainWhere((s) => s['name'].toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
 
