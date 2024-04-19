@@ -19,6 +19,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/amount_type_dialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class TestItem {
   String label;
   dynamic value;
@@ -33,7 +34,9 @@ class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final dynamic editproduct;
   final String dateNew;
   final  dateApi;
-  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi});
+  final  come;
+  final  companyId;
+  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi, this.come, this.companyId});
   @override
   State<AddOrEditLedgerOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -226,9 +229,30 @@ String amountTypeId="";
       ),
     );
   }
+  var searchName="";
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return Container(
+    return SearchableLedgerDropdown(
+    apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=${widget.companyId}&PartyID=null&Date=${widget.dateApi}" ,
+      titleIndicator: false,
+      ledgerName: searchName,
+      franchisee: widget.come,
+      franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
+      title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
+      callback: (name,id){
+        if(selectedItemID==id){
+          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          ScaffoldMessenger.of(context).showSnackBar(snack);
+        }
+        else {
+          setState(() {
+            searchName=name!;
+            selectedItemID=id;
+          });
+        }
+      },
+
+    );  /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -267,7 +291,7 @@ String amountTypeId="";
                     _textController.text.trim());
             })
 
-    );
+    );*/
   }
 
 /*

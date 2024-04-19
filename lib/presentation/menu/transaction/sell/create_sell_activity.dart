@@ -708,7 +708,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
          apiUrl: ApiConstants().ledgerWithoutImage+"?",
-        titleIndicator: false,
+        titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
@@ -740,7 +740,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
            apiUrl: ApiConstants().ledgerWithoutImage+"?",
-          titleIndicator: false,
+          titleIndicator: true,
           title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
           franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
           franchisee: widget.come,

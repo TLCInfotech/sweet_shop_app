@@ -1,9 +1,4 @@
 
-
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,46 +9,40 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-
+import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/order_invoice_req_model.dart';
+import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
+import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/order/add_or_edit_order.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../../data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
-import '../../../common_widget/getLedger.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../dialog/franchisee_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
-import '../sell/add_or_edit_Item.dart';
-import 'add_or_edit_Item.dart';
 
 
-class CreatePurchaseInvoice extends StatefulWidget {
-  final CreatePurchaseInvoiceInterface mListener;
+class CreateOrderInvoice extends StatefulWidget {
+  final CreateOrderInvoiceInterface mListener;
   final  dateNew;
   final  Invoice_No;
-  final  ledgerName;
-  final  franchiseeName;
   final editedItem;
   final come;
-  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come});
 
+  const CreateOrderInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come});
   @override
-  _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
+  _CreateOrderInvoiceState createState() => _CreateOrderInvoiceState();
 }
 
-
-
-class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with SingleTickerProviderStateMixin,AddOrEditItemInterface {
-
+class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTickerProviderStateMixin,AddOrEditOrderInterface {
 
   final _formkey = GlobalKey<FormState>();
 
@@ -63,6 +52,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
+  final _voucherNoFocus = FocusNode();
   final VoucherNoController = TextEditingController();
 
   TextEditingController invoiceNo=TextEditingController();
@@ -85,12 +75,10 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-
+  var companyId="0";
   bool isLoaderShow=false;
 
   var editedItemIndex=null;
-
-  var companyId="0";
 
   @override
   void initState() {
@@ -100,37 +88,27 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    // calculateTotalAmt();
-    // getCompanyId();
-    // invoiceDate=widget.dateNew;
+
+    setData();
     // if(widget.Invoice_No!=null){
-    //   gerSaleInvoice(1);
+    //   getOrderInvoice(1);
     //   setState(() {
     //     invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-    //     selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
-    //     selectedFranchiseeName=widget.editedItem['Vendor_Name'];
-    //     selectedLedgerName=widget.editedItem['Purchase_Ledger_Name'];
-    //     selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
     //   });
     // }
-    setData();
-
   }
-
   setData()async{
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
       await calculateTotalAmt();
 
-      await gerSaleInvoice(1);
+      await getOrderInvoice(1);
       print("#######################3 ${widget.editedItem}");
       setState(() {
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
         selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
         selectedFranchiseeName=widget.editedItem['Vendor_Name'];
-        selectedLedgerName=widget.editedItem['Purchase_Ledger_Name'];
-        selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
       });
     }
 
@@ -144,7 +122,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       companyId=companyId1;
     });
   }
-  var roundoff="0.00";
 
   calculateTotalAmt()async{
     setState(() {
@@ -192,7 +169,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return contentBox(context);
   }
 
-  /* Widget to get build context Layout */
   Widget contentBox(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -200,13 +176,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         Container(
           height: SizeConfig.safeUsedHeight,
           width: SizeConfig.screenWidth,
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           decoration: const BoxDecoration(
             shape: BoxShape.rectangle,
             color: Color(0xFFfffff5),
+            // borderRadius: BorderRadius.circular(16.0),
           ),
           child: Scaffold(
-            backgroundColor: const Color(0xFFfffff5),
+            backgroundColor: Color(0xFFfffff5),
             appBar: PreferredSize(
               preferredSize: AppBar().preferredSize,
               child: SafeArea(
@@ -216,7 +193,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                       borderRadius: BorderRadius.circular(25)
                   ),
                   color: Colors.transparent,
-                  margin: const EdgeInsets.only(top: 10, left: 5, right: 10),
+                  // color: Colors.red,
+                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
                     leadingWidth: 0,
                     automaticallyImplyLeading: false,
@@ -234,7 +212,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+                                ApplicationLocalizations.of(context)!.translate("order_invoice")!,
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -255,6 +233,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               children: [
                 Expanded(
                   child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
                 Container(
@@ -282,7 +261,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
   }
 
-/* Widget for navigate to next screen button layout */
+  /* Widget for navigate to next screen button  */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -299,19 +278,19 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: $roundoff",style:item_regular_textStyle.copyWith(fontSize: 17),),
+              Text("Round off: $roundoff",style: item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
           ),
         ):Container(),
         GestureDetector(
           onTap: () {
-            if(selectedLedgerId=="" ){
+        /*    if(selectedLedgerId=="" ){
               var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(selectedFranchiseeId==""){
+            else */if(selectedFranchiseeId==""){
               var snackBar=SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
@@ -319,7 +298,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
               var snackBar=SnackBar(content: Text("Add atleast one Item!"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+            else if(/*selectedLedgerId!="" &&*/ selectedFranchiseeId!= " " && Item_list.length>0){
               if (mounted) {
                 setState(() {
                   disableColor = true;
@@ -335,6 +314,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                 updatecallPostSaleInvoice();
               }
             }
+
           },
           onDoubleTap: () {},
           child: Container(
@@ -366,6 +346,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
 
+  var roundoff="0.00";
+
+
+
+
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
@@ -389,15 +374,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
-                            if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                            if(selectedFranchiseeId!="") {
                               if (context != null) {
                                 goToAddOrEditItem(null);
                               }
                             }
                             else{
-                              CommonWidget.errorDialog(context, "Select Purchase Ledger and Party !");
+                              CommonWidget.errorDialog(context, "Select Party !");
                             }
-
                           },
                           child: Container(
                               width: 120,
@@ -610,7 +594,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditItem(
+              child: AddOrEditOrder(
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate.toString(),
@@ -653,9 +637,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             ],
           ):getPurchaseDateLayout(),
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+         // getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
-
         ],
       ),
     );
@@ -683,6 +666,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     );
 
   }
+
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -714,12 +698,13 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             });
 
             if(widget.Invoice_No!=null){
-              gerSaleInvoice(1);
+              getOrderInvoice(1);
             }
           },
           applicablefrom: invoiceDate
       );
   }
+
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
@@ -751,27 +736,6 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
     );
 
-    // GetLedgerLayout(
-    //   titleIndicator: false,
-    //   title: ApplicationLocalizations.of(context)!.translate("party")!,
-    //   callback: (name,id){
-    //     if(selectedLedgerId==id){
-    //       var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-    //       ScaffoldMessenger.of(context).showSnackBar(snack);
-    //     }
-    //     else {
-    //       setState(() {
-    //         selectedFranchiseeName = name!;
-    //         selectedFranchiseeId = id!;
-    //         // Item_list=[];
-    //         // Updated_list=[];
-    //         // Deleted_list=[];
-    //         // Inserted_list=[];
-    //       });
-    //     }
-    //   },
-    //   ledgerName: selectedFranchiseeName);
-
   }
 
   /* Widget to get sale ledger Name Layout */
@@ -779,8 +743,8 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return SearchableLedgerDropdown(
         apiUrl: ApiConstants().ledgerWithoutImage+"?",
         titleIndicator: true,
-        title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
-        franchiseeName: widget.come=="edit"? widget.editedItem['Purchase_Ledger_Name']:"",
+        title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
+        franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
         franchisee: widget.come,
         callback: (name,id){
           if(selectedFranchiseeId==id){
@@ -800,32 +764,232 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
           print(selectedLedgerId);
         },
         ledgerName: selectedLedgerName);
-    // GetLedgerLayout(
-    //   titleIndicator: false,
-    //   title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
-    //   callback: (name,id){
-    //     if(selectedFranchiseeId==id){
-    //       var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-    //       ScaffoldMessenger.of(context).showSnackBar(snack);
-    //     }
-    //     else {
-    //       setState(() {
-    //         selectedLedgerName = name!;
-    //         selectedLedgerId = id!;
-    //         // Item_list=[];
-    //         // Updated_list=[];
-    //         // Deleted_list=[];
-    //         // Inserted_list=[];
-    //       });
-    //     }
-    //     print(selectedLedgerId);
-    //   },
-    //   ledgerName: selectedLedgerName);
+  }
+
+
+
+  getOrderInvoice(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.Invoice_No}&pageNumber=$page&pageSize=10";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=(data['itemDetails']);
+
+                  setState(() {
+                    Item_list=_arrList;
+                    selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
+
+                  });
+                  calculateTotalAmt();
+                }
+
+              });
+                         print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              },
+            onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  callPostSaleInvoice() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        PostOrderInvoiceReq model = PostOrderInvoiceReq(
+          //  saleLedger:selectedLedgerId ,
+            vendorID:selectedFranchiseeId ,
+            companyID: companyId ,
+            voucherName: "Sale Order",
+            roundOff:double.parse(roundoff) ,
+            totalAmount:TotalAmountInt,
+            date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+            creator: creatorName,
+            creatorMachine: deviceId,
+            iNSERT: Inserted_list.toList(),
+            remark: "Inserted"
+        );
+
+        String apiUrl =baseurl + ApiConstants().saleOrder;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList(invoiceDate);
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+  updatecallPostSaleInvoice() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
+    print("newOne    $matchDate");
+    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        PostOrderInvoiceReq model = PostOrderInvoiceReq(
+         //   saleLedger:selectedLedgerId ,
+            vendorID:selectedFranchiseeId ,
+            Order_No:widget.Invoice_No.toString() ,
+            companyID: companyId ,
+            voucherName: "Sale Order",
+            roundOff:double.parse(roundoff),
+            totalAmount:TotalAmountInt,
+            dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+            date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
+            modifier: creatorName,
+            modifierMachine: deviceId,
+            iNSERT: Inserted_list.toList(),
+            dELETE: Deleted_list.toList(),
+            uPDATE: Updated_list.toList(),
+            remark:"Modified"
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().saleOrder;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToList(invoiceDate);
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
   @override
-  AddOrEditItemDetail(item)async {
-    // TODO: implement AddOrEditItemDetail
+  AddOrEditOrderDetail(item) async{
+    // TODO: implement AddOrEditOrderDetail
     var itemLlist=Item_list;
 
     if(editedItemIndex!=null){
@@ -876,233 +1040,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     print("List");
     print(Inserted_list);
     print(Updated_list);
+
   }
-
-
-  gerSaleInvoice(int page) async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}&PageNumber=$page&PageSize=10";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              print(data);
-              setState(() {
-                isLoaderShow=false;
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  _arrList=(data['itemDetails']);
-
-                  setState(() {
-                    Item_list=_arrList;
-                    selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
-                    selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
-                    selectedLedgerName=data['voucherDetails']['Purchase_Ledger_Name'];
-                    selectedLedgerId=data['voucherDetails']['Purchase_Ledger'].toString();
-
-                  });
-                  calculateTotalAmt();
-                }
-
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-  callPostSaleInvoice() async {
-    String creatorName = await AppPreferences.getUId();
-    String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if(netStatus==InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            purchaseLedger:selectedLedgerId ,
-            vendorID:selectedFranchiseeId ,
-            companyID: companyId ,
-            voucherName: "Purchase",
-            roundOff:double.parse(roundoff) ,
-            totalAmount:TotalAmountInt,
-            date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-            creator: creatorName,
-            creatorMachine: deviceId,
-            iNSERT: Inserted_list.toList(),
-            remark: "Inserted"
-        );
-
-        String apiUrl =baseurl + ApiConstants().getPurchaseInvoice;
-        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              print("  ITEM  $data ");
-              setState(() {
-                isLoaderShow=true;
-                Item_list=[];
-                Inserted_list=[];
-                Updated_list=[];
-                Deleted_list=[];
-              });
-              widget.mListener.backToList(invoiceDate);
-
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-
-      }); }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-
-  updatecallPostSaleInvoice() async {
-    String creatorName = await AppPreferences.getUId();
-    String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
-    print("dfsdf    $matchDate");
-    // double updatedamt= await calculateTotalInsertAmt();
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if(netStatus==InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-            purchaseLedger:selectedLedgerId ,
-            vendorID:selectedFranchiseeId ,
-            invoiceNo:widget.Invoice_No.toString() ,
-            companyID: companyId ,
-            voucherName: "Purchase",
-            roundOff:double.parse(roundoff) ,
-            totalAmount:TotalAmountInt,
-            dateNew:matchDate==1?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
-            date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
-            modifier: creatorName,
-            modifierMachine: deviceId,
-            iNSERT: Inserted_list.toList(),
-            dELETE: Deleted_list.toList(),
-            uPDATE: Updated_list.toList(),
-            remark:"Modified"
-        );
-
-        print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().getPurchaseInvoice;
-        print(apiUrl);
-        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              print("  ITEM  $data ");
-              setState(() {
-                isLoaderShow=true;
-                Item_list=[];
-                Inserted_list=[];
-                Updated_list=[];
-                Deleted_list=[];
-              });
-              widget.mListener.backToList(invoiceDate);
-
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-
-      }); }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-
 
 }
 
-abstract class CreatePurchaseInvoiceInterface {
+abstract class CreateOrderInvoiceInterface {
   backToList(DateTime updateDate);
 }

@@ -27,6 +27,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activ
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/debit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/journal/journal_voucher_list.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/order/order_invoice_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
@@ -1024,6 +1025,7 @@ String companyId="";
                 ],
               ),
             ),
+            getOrderInvoice(parentHeight,parentWidth),
             getSellLayout(parentHeight,parentWidth),
             getPuerchaseLayout(parentHeight,parentWidth),
             getExpensseLayout(parentHeight,parentWidth),
@@ -1039,6 +1041,37 @@ String companyId="";
     );
   }
 
+
+
+/* Widget for sell transaction Layout */
+  Widget getOrderInvoice(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderInvoiceActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("order_invoice")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 
 /* Widget for sell transaction Layout */

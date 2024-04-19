@@ -54,8 +54,15 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetLedgerOB(page);
+    setData();
   }
+  String companyId='';
+  setData()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
 
+    });
+  }
   List<dynamic> ledgerList = [];
 //FUNC: REFRESH LIST
   Future<void> refreshList() async {
@@ -125,7 +132,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 color: Colors.black87,
               ),
               onPressed: () {
-                goToAddOrEditItem(null);
+                goToAddOrEditItem(null,"",companyId);
              /*   Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
                   dateNew: CommonWidget.getDateLayout(invoiceDate),
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
@@ -246,7 +253,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                   delay: const Duration(microseconds: 1500),
                   child: GestureDetector(
                     onTap: (){
-                      goToAddOrEditItem(ledgerList[index]);
+                      goToAddOrEditItem(ledgerList[index],"edit",companyId);
                     },
                     child: Card(
                       child: Row(
@@ -336,7 +343,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
         ));
   }
 
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,status,compId) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -352,6 +359,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 editproduct:product,
                 dateNew:CommonWidget.getDateLayout(invoiceDate) ,
                 dateApi:DateFormat('yyyy-MM-dd').format(invoiceDate) ,
+                come: status,
+                companyId: compId,
               ),
             ),
           );

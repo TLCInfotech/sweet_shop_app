@@ -684,7 +684,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=${widget.companyId}",
-      titleIndicator: false,
+      titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Vendor_Name']:"",
@@ -731,7 +731,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return  SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?Company_ID=${widget.companyId}",
-      titleIndicator: false,
+      titleIndicator: true,
       ledgerName: selectedLedgerName,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",

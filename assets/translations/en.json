@@ -259,6 +259,7 @@
   "party_wise": "Partywise",
   "item_wise": "Itemwise",
   "franchisee_outstanding": "Franchisee Outstanding",
-  "bank_wise": "Bankwise"
+  "bank_wise": "Bankwise",
+  "order_invoice": "Order Invoice"
 }
 

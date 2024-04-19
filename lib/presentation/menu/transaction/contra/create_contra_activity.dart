@@ -517,7 +517,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().getBankCashLedger+"?Company_ID=${widget.companyId}",
-      titleIndicator: false,
+      titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",

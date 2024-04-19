@@ -551,7 +551,7 @@ bool isLoaderShow=false;
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return  SearchableLedgerDropdown(
       apiUrl: ApiConstants().getBankCashLedger+"?",
-      titleIndicator: false,
+      titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",

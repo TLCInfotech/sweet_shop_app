@@ -1,4 +1,4 @@
-class postSaleInvoiceRequestModel {
+class PostOrderInvoiceReq {
   String? companyID;
   String? date;
   String? dateNew;
@@ -14,12 +14,11 @@ class postSaleInvoiceRequestModel {
   String? creatorMachine;
   String? modifier;
   String? modifierMachine;
-  String? invoiceNo;
   List<dynamic>? iNSERT;
   List<dynamic>? uPDATE;
   List<dynamic>? dELETE;
 
-  postSaleInvoiceRequestModel(
+  PostOrderInvoiceReq(
       {this.companyID,
         this.date,
         this.dateNew,
@@ -35,12 +34,11 @@ class postSaleInvoiceRequestModel {
         this.creatorMachine,
         this.modifier,
         this.modifierMachine,
-        this.invoiceNo,
         this.iNSERT,
         this.uPDATE,
         this.dELETE,  });
 
-  postSaleInvoiceRequestModel.fromJson(Map<String, dynamic> json) {
+  PostOrderInvoiceReq.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     date = json['Date'];
     Order_No = json['Order_No'];
@@ -56,7 +54,6 @@ class postSaleInvoiceRequestModel {
     creatorMachine = json['Creator_Machine'];
     modifier = json['Modifier'];
     modifierMachine = json['Modifier_Machine'];
-    invoiceNo = json['Invoice_No'];
     if (json['INSERT'] != null) {
       iNSERT = <dynamic>[];
       json['INSERT'].forEach((v) {
@@ -94,7 +91,6 @@ class postSaleInvoiceRequestModel {
     data['Creator_Machine'] = this.creatorMachine;
     data['Modifier'] = this.modifier;
     data['Modifier_Machine'] = this.modifierMachine;
-    data['Invoice_No'] = this.invoiceNo;
     if (this.iNSERT != null) {
       data['INSERT'] = this.iNSERT!.map((v) => v).toList();
     }

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,15 +6,14 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/journal/create_journal_voucher.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/order/create_oredr_invoice_activity.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
-import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
@@ -21,49 +21,56 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
-
-class JournalVoucherActivity extends StatefulWidget {
+class OrderInvoiceActivity extends StatefulWidget {
   final String? comeFor;
-  const JournalVoucherActivity({super.key, required mListener, this.comeFor});
+  const OrderInvoiceActivity({super.key, required mListener,  this.comeFor});
+
   @override
-  State<JournalVoucherActivity> createState() => _PaymentActivityState();
+  State<OrderInvoiceActivity> createState() => _OrderInvoiceActivityState();
 }
 
-class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJournalInterface {
-
-  DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateOrderInvoiceInterface {
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
-  bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-  List<dynamic> payment_list=[];
+  List<dynamic> saleInvoice_list=[];
   int page = 1;
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
+  bool isApiCall=false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
-    getJournals(page);
-    setData();
-  }
-  String companyId='';
-  setData()async{
-    companyId=await AppPreferences.getCompanyId();
-    setState(() {
-
-    });
+    getSaleOrder(page);
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        getJournals(page);
+        getSaleOrder(page);
       }
     }
   }
+  setDataToList(List<dynamic> _list) {
+    if (saleInvoice_list.isNotEmpty) saleInvoice_list.clear();
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
 
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        saleInvoice_list.addAll(_list);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +78,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
       alignment: Alignment.center,
       children: [
         Scaffold(
-          backgroundColor: const Color(0xFFfffff5),
+          backgroundColor: Color(0xFFfffff5),
           appBar: PreferredSize(
             preferredSize: AppBar().preferredSize,
             child: SafeArea(
@@ -82,54 +89,53 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 ),
                 color: Colors.transparent,
                 // color: Colors.red,
-                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-               child: AppBar(
+                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: AppBar(
                   leadingWidth: 0,
                   automaticallyImplyLeading: false,
                   title:  Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: FaIcon(Icons.arrow_back),
+                    width: SizeConfig.screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        widget.comeFor=="dash"?Container():GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: FaIcon(Icons.arrow_back),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              ApplicationLocalizations.of(context)!.translate("order_invoice")!,
+                              style: appbar_text_style,),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
-                                style: appbar_text_style,),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25)
                   ),
-
                   backgroundColor: Colors.white,
                 ),
               ),
             ),
           ),
           floatingActionButton: FloatingActionButton(
-              backgroundColor: const Color(0xFFFBE404),
+              backgroundColor: Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
                 size: 30,
                 color: Colors.black87,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-                  mListener: this,
-                  dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
-                  voucherNo: null,
-                  companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
-                )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    CreateOrderInvoice(
+                      dateNew:   invoiceDate,
+                      Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
+                      mListener:this,
+                    )));
               }),
           body: Stack(
             alignment: Alignment.center,
@@ -139,23 +145,22 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     getPurchaseDateLayout(),
                     const SizedBox(
                       height: 10,
                     ),
-                    payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
+                    saleInvoice_list.isNotEmpty? getTotalCountAndAmount():
+                    Container(),
                     const SizedBox(
                       height: .5,
                     ),
-                    get_payment_list_layout()
+                    get_purchase_list_layout()
                   ],
                 ),
               ),
               Visibility(
-                  visible: payment_list.isEmpty && isApiCall  ? true : false,
+                  visible: saleInvoice_list.isEmpty && isApiCall  ? true : false,
                   child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
             ],
           ),
         ),
@@ -181,38 +186,22 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
       ],
     );
   }
-  /* Widget to get add purchase date Layout */
-  Widget getPurchaseDateLayout(){
-    return GetDateLayout(
-        titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("date")!,
-        callback: (date){
-          setState(() {
-            newDate=date!;
-            payment_list=[];
-          });
-          getJournals(1);
-        },
-        applicablefrom: newDate
 
-    );
-  }
-
-  /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
-      margin: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
+          // width: SizeConfig.halfscreenWidth,
           width: SizeConfig.screenWidth*0.9,
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.green,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: const Offset(0, 1),
+                  offset: Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -222,32 +211,61 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${payment_list.length} ${ApplicationLocalizations.of(context)!.translate("journal")!}", style: subHeading_withBold,),
-              // Text(CommonWidget.getCurrencyFormat(200000), style: subHeading_withBold,),
+              Text("${saleInvoice_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
       ),
     );
   }
+  String TotalAmount="0.00";
+  calculateTotalAmt()async{
+    var total=0.00;
+    for(var item  in saleInvoice_list ){
+      total=total+item['Total_Amount'];
+      print(item['Total_Amount']);
+    }
+    setState(() {
+      TotalAmount=total.toStringAsFixed(2) ;
+    });
 
+  }
 
-  /* widget for title layout */
+  /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(top: 5, bottom: 5,),
       child: Text(
-        title,
+        "$title",
         style: page_heading_textStyle,
       ),
     );
   }
 
-  /* Widget to get add payment list Layout */
-  Expanded get_payment_list_layout() {
+
+  /* Widget to get add Invoice date Layout */
+  Widget getPurchaseDateLayout(){
+    return GetDateLayout(
+        titleIndicator: false,
+        title:  ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date){
+          setState(() {
+            saleInvoice_list.clear();
+          });
+          setState(() {
+            invoiceDate=date!;
+          });
+          getSaleOrder(1);
+        },
+        applicablefrom: invoiceDate
+    );
+  }
+
+  Expanded get_purchase_list_layout() {
     return Expanded(
         child: ListView.separated(
-          itemCount: payment_list.length,
+          itemCount: saleInvoice_list.length,
           itemBuilder: (BuildContext context, int index) {
             return  AnimationConfiguration.staggeredList(
               position: index,
@@ -256,17 +274,17 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
               child: SlideAnimation(
                 verticalOffset: -44.0,
                 child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
+                  delay: Duration(microseconds: 1500),
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-                        mListener: this,
-                        dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
-                        voucherNo: payment_list[index]['Voucher_No'],
-                        debitNote:payment_list[index] ,
-                        companyId: companyId,
-                        come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
-                      )));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          CreateOrderInvoice(
+                            dateNew: invoiceDate,
+                            Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                            mListener:this,
+                            editedItem:saleInvoice_list[index],
+                            come:"edit",
+                          )));
                     },
                     child: Card(
                       child: Row(
@@ -274,7 +292,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                     color: (index)%2==0?Colors.green:Colors.blueAccent,
                                     borderRadius: BorderRadius.circular(5)
@@ -283,6 +301,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                   FontAwesomeIcons.moneyCheck,
                                   color: Colors.white,
                                 )
+                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
                             ),
                           ),
                           Expanded(
@@ -296,23 +315,23 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${payment_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
-                                          const SizedBox(height: 5,),
+                                          Text("${saleInvoice_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
+                                          SizedBox(height: 5,),
                                           Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("Voucher No: - ${payment_list[index]['Voucher_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              SizedBox(width: 10,),
+                                              Expanded(child: Text("Order No. - ${saleInvoice_list[index]['Fin_Order_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                             ],
                                           ),
-                                          const SizedBox(height: 5,),
+                                          SizedBox(height: 5,),
                                           Row(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(payment_list[index]['Amount'])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                              SizedBox(width: 10,),
+                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                             ],
                                           ),
 
@@ -324,7 +343,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                     callback: (response ) async{
                                       if(response=="yes"){
                                         print("##############$response");
-                                        await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
+                                        await   callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
                                       }
                                     },
                                   )
@@ -341,7 +360,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
+            return SizedBox(
               height: 5,
             );
           },
@@ -349,7 +368,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   }
 
 
-  getJournals(int page) async {
+  getSaleOrder(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -363,17 +382,30 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Journal&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().saleOrder}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
-              setState(() {
+          setState(() {
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
+                  _arrList.clear();
                   _arrList=data;
-                  setState(() {
-                    payment_list=_arrList;
-                  });
+                  print("orderDate    $data");
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+
+                  calculateTotalAmt();
                 }else{
                   isApiCall=true;
                 }
@@ -412,7 +444,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
     }
   }
 
-  callDeleteExpense(String removeId,String seqNo,int index) async {
+  callDeleteSaleInvoice(String removeId,String seqNo,int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -423,20 +455,23 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
           isLoaderShow=true;
         });
         var model= {
-          "Voucher_No": removeId,
-          "Voucher_Name": "Journal",
-          "Seq_No":seqNo,
+          "Order_No": removeId,
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().saleOrder+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
-                payment_list.removeAt(index);
-
+                saleInvoice_list.removeAt(index);
               });
+              if(saleInvoice_list.length==0){
+                setState(() {
+                  TotalAmount="0.00";
+                });
+              }
+              calculateTotalAmt();
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
               setState(() {
@@ -471,13 +506,14 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   }
 
   @override
-  backToList(DateTime date) {
+  backToList(DateTime updateDate) {
     // TODO: implement backToList
+
     setState(() {
-      payment_list=[];
-      newDate=date;
+      saleInvoice_list.clear();
+      invoiceDate=updateDate;
     });
-    getJournals(1);
+    getSaleOrder(1);
     Navigator.pop(context);
   }
 }

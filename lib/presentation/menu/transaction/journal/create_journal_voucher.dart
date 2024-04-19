@@ -508,7 +508,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().getLedgerWithoutBankCash+"?Company_ID=${widget.companyId}",
-      titleIndicator: false,
+      titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
