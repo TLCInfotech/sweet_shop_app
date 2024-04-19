@@ -81,7 +81,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item_opening}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().item_opening}? Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

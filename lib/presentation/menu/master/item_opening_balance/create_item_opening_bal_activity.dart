@@ -500,7 +500,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name,id){
           if(selectedFranchiseeID==id){
-            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+            var snack=SnackBar(content: Text(" Sale Ledger and Party can not be same!"));
             ScaffoldMessenger.of(context).showSnackBar(snack);
           }
           else {
