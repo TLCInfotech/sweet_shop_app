@@ -253,103 +253,81 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
       child: ListView.separated(
         itemCount: saleInvoice_list.length,
         itemBuilder: (BuildContext context, int index) {
-          return CheckboxListTile(
-            value: selectedItems.contains(saleInvoice_list[index]),
-            onChanged: (bool? value) {
-              print("##########33");
-              print(value);
-              print(value!);
-              print("ads");
+          return Card(
+            child: CheckboxListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ) ,
 
-                // setState(() {
-                //   //   if(value==true){
-                //   // selectedItems.add(saleInvoice_list[index]);
-                //   // }
-                //   selectedItems.contains(saleInvoice_list[index]);
-                // });
+              tileColor: Colors.transparent,
+              value: selectedItems.contains(saleInvoice_list[index]),
+              onChanged: (bool? value) {
+                print("##########33");
+                print(value);
+                print(value!);
+                print("ads");
 
-              if( value!){
-                setState(() {
-                  selectedItems.add(saleInvoice_list[index]);
-                });
-              }
-              else{
-                setState(() {
-                  selectedItems.remove(saleInvoice_list[index]);
+                  // setState(() {
+                  //   //   if(value==true){
+                  //   // selectedItems.add(saleInvoice_list[index]);
+                  //   // }
+                  //   selectedItems.contains(saleInvoice_list[index]);
+                  // });
 
-                });
-              }
-            },
-            title: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateOrderInvoice(
-                      dateNew: invoiceDate,
-                      Invoice_No: saleInvoice_list[index]['Order_No'],
-                      mListener: this,
-                      editedItem: saleInvoice_list[index],
-                      come: "edit",
-                    ),
-                  ),
-                );
+                if( value!){
+                  setState(() {
+                    selectedItems.add(saleInvoice_list[index]);
+                  });
+                }
+                else{
+                  setState(() {
+                    selectedItems.remove(saleInvoice_list[index]);
+
+                  });
+                }
               },
-              child: Card(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: (index) % 2 == 0 ? Colors.green : Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: const FaIcon(
-                          FontAwesomeIcons.moneyCheck,
-                          color: Colors.white,
-                        ),
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateOrderInvoice(
+                        dateNew: invoiceDate,
+                        Invoice_No: saleInvoice_list[index]['Order_No'],
+                        mListener: this,
+                        editedItem: saleInvoice_list[index],
+                        come: "edit",
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 10, left: 10, right: 40, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("${saleInvoice_list[index]['Vendor_Name']}", style: item_heading_textStyle),
-                            SizedBox(height: 5),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                FaIcon(FontAwesomeIcons.fileInvoice, size: 15, color: Colors.black.withOpacity(0.7)),
-                                SizedBox(width: 10),
-                                Expanded(child: Text("Order No. - ${saleInvoice_list[index]['Fin_Order_No']}", overflow: TextOverflow.clip, style: item_regular_textStyle)),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FaIcon(FontAwesomeIcons.moneyBill1Wave, size: 15, color: Colors.black.withOpacity(0.7)),
-                                SizedBox(width: 10),
-                                Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']), overflow: TextOverflow.clip, style: item_regular_textStyle)),
-                              ],
-                            ),
-                          ],
-                        ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 40, bottom: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${saleInvoice_list[index]['Vendor_Name']}", style: item_heading_textStyle),
+                      SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FaIcon(FontAwesomeIcons.fileInvoice, size: 15, color: Colors.black.withOpacity(0.7)),
+                          SizedBox(width: 10),
+                          Expanded(child: Text("Order No. - ${saleInvoice_list[index]['Fin_Order_No']}", overflow: TextOverflow.clip, style: item_regular_textStyle)),
+                        ],
                       ),
-                    ),
-                    DeleteDialogLayout(
-                      callback: (response) async {
-                        if (response == "yes") {
-                          await callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(), saleInvoice_list[index]['Seq_No'].toString(), index);
-                        }
-                      },
-                    ),
-                  ],
+                      SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FaIcon(FontAwesomeIcons.moneyBill1Wave, size: 15, color: Colors.black.withOpacity(0.7)),
+                          SizedBox(width: 10),
+                          Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']), overflow: TextOverflow.clip, style: item_regular_textStyle)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
