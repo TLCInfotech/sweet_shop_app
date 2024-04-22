@@ -17,6 +17,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../../data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
@@ -39,19 +40,20 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
   bool isApiCall=false;
+  bool disableColor = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
-    getSaleOrder(page);
+    getSaleOrderedList(page);
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        getSaleOrder(page);
+        getSaleOrderedList(page);
       }
     }
   }
@@ -122,37 +124,106 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
               ),
             ),
           ),
-          body: Stack(
-            alignment: Alignment.center,
+          body:  Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Expanded(
+                child:  Stack(
+                  alignment: Alignment.center,
                   children: [
-                    getPurchaseDateLayout(),
-                    const SizedBox(
-                      height: 10,
+                    Container(
+                      margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getPurchaseDateLayout(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          saleInvoice_list.isNotEmpty? getTotalCountAndAmount():
+                          Container(),
+                          const SizedBox(
+                            height: .5,
+                          ),
+                          get_purchase_list_layout()
+                        ],
+                      ),
                     ),
-                    saleInvoice_list.isNotEmpty? getTotalCountAndAmount():
-                    Container(),
-                    const SizedBox(
-                      height: .5,
-                    ),
-                    get_purchase_list_layout()
+                    Visibility(
+                        visible: saleInvoice_list.isEmpty && isApiCall  ? true : false,
+                        child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
                   ],
                 ),
               ),
-              Visibility(
-                  visible: saleInvoice_list.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              Container(
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.black.withOpacity(0.08),
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  height: SizeConfig.safeUsedHeight * .10,
+                  child: getSaveAndFinishButtonLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              CommonWidget.getCommonPadding(
+                  SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+
             ],
           ),
+
+
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
   }
+
+  /* Widget for navigate to next screen button  */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: ()async {
+          print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^ $selectedItems");
+          if (mounted) {
+            setState(() {
+              disableColor = true;
+            });
+          }
+         await callPostToConverOrderToSale();
+
+        },
+        onDoubleTap: () {},
+        child: Container(
+          width: SizeConfig.screenWidth,
+          height: 40,
+          decoration: BoxDecoration(
+            color: disableColor == true
+                ? CommonColor.THEME_COLOR.withOpacity(.5)
+                : CommonColor.THEME_COLOR,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: parentWidth * .005) ,
+                child:  Text(
+                  ApplicationLocalizations.of(context)!.translate("save")!,
+                  style: page_heading_textStyle,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /*widget for no data*/
   Widget getNoData(double parentHeight,double parentWidth){
     return Row(
@@ -196,7 +267,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${saleInvoice_list.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!} ", style: subHeading_withBold,),
+              Text("${saleInvoice_list.length} ${ApplicationLocalizations.of(context)!.translate("orders")!} ", style: subHeading_withBold,),
               Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
             ],
           )
@@ -241,7 +312,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
           setState(() {
             invoiceDate=date!;
           });
-          getSaleOrder(1);
+          getSaleOrderedList(1);
         },
         applicablefrom: invoiceDate
     );
@@ -260,28 +331,18 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
               ) ,
 
               tileColor: Colors.transparent,
-              value: selectedItems.contains(saleInvoice_list[index]),
+              value: selectedItems.contains(saleInvoice_list[index]['Order_No']),
               onChanged: (bool? value) {
-                print("##########33");
-                print(value);
-                print(value!);
-                print("ads");
-
-                  // setState(() {
-                  //   //   if(value==true){
-                  //   // selectedItems.add(saleInvoice_list[index]);
-                  //   // }
-                  //   selectedItems.contains(saleInvoice_list[index]);
-                  // });
+ 
 
                 if( value!){
                   setState(() {
-                    selectedItems.add(saleInvoice_list[index]);
+                    selectedItems.add(saleInvoice_list[index]['Order_No']);
                   });
                 }
                 else{
                   setState(() {
-                    selectedItems.remove(saleInvoice_list[index]);
+                    selectedItems.remove(saleInvoice_list[index]['Order_No']);
 
                   });
                 }
@@ -339,112 +400,10 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
       ),
     );
 
- /*Expanded(
-        child: ListView.separated(
-          itemCount: saleInvoice_list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          CreateOrderInvoice(
-                            dateNew: invoiceDate,
-                            Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
-                            mListener:this,
-                            editedItem:saleInvoice_list[index],
-                            come:"edit",
-                          )));
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                            ),
-                          ),
-                          Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${saleInvoice_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
-                                          SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(child: Text("Order No. - ${saleInvoice_list[index]['Fin_Order_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  DeleteDialogLayout(
-                                    callback: (response ) async{
-                                      if(response=="yes"){
-                                        print("##############$response");
-                                        await   callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
-                                      }
-                                    },
-                                  )
-                                ],
-                              )
-
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 5,
-            );
-          },
-        ));*/
   }
 
 
-  getSaleOrder(int page) async {
+  getSaleOrderedList(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -458,7 +417,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().saleOrder}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getOrderVendorList}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&pageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -520,44 +479,53 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
     }
   }
 
-  callDeleteSaleInvoice(String removeId,String seqNo,int index) async {
-    String uid = await AppPreferences.getUId();
-    String companyId = await AppPreferences.getCompanyId();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+  callPostToConverOrderToSale() async {
+    String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
+    String companyId = await AppPreferences.getCompanyId();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
           isLoaderShow=true;
         });
-        var model= {
-          "Order_No": removeId,
-          "Modifier": uid,
-          "Modifier_Machine": deviceId
-        };
-        String apiUrl = baseurl + ApiConstants().saleOrder+"?Company_ID=$companyId";
-        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
-            onSuccess:(data){
+        // postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
+        //     companyID: companyId ,
+        //     voucherName: "Sale",
+        //     totalAmount:TotalAmountInt,
+        //     date: DateFormat('yyyy-MM-dd').format(invoiceDate),
+        //     creator: creatorName,
+        //     creatorMachine: deviceId,
+        //     iNSERT: selectedItems.toList(),
+        //     remark: "Inserted"
+        // );
+
+
+          var model=  {
+                        "Orders": selectedItems,
+                        "Modifier":creatorName,
+                        "Modifier_Machine":deviceId
+                      };
+
+          print(model);
+        String apiUrl =baseurl + ApiConstants().orderToSaleConvert+"?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model, "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
               setState(() {
                 isLoaderShow=false;
-                saleInvoice_list.removeAt(index);
+                disableColor = false;
               });
-              if(saleInvoice_list.length==0){
-                setState(() {
-                  TotalAmount="0.00";
-                });
-              }
-              calculateTotalAmt();
-              print("  LedgerLedger  $data ");
+              getSaleOrderedList(1);
+
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
+            },
+            onException: (e) {
               setState(() {
                 isLoaderShow=false;
               });
@@ -570,8 +538,9 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
               CommonWidget.gotoLoginScreen(context);
               // widget.mListener.loaderShow(false);
             });
-      });
-    }else{
+
+      }); }
+    else{
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -589,7 +558,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
       saleInvoice_list.clear();
       invoiceDate=updateDate;
     });
-    getSaleOrder(1);
+    getSaleOrderedList(1);
     Navigator.pop(context);
   }
 }

@@ -262,6 +262,8 @@
   "bank_wise": "Bankwise",
   "notifications": "Notifications",
   "order_invoice": "Sale Order",
-  "constant_order_invoice": "Constant Sale Order"
+  "constant_order_invoice": "Convert Sale Order",
+  "orders": "Orders"
+
 }
 
