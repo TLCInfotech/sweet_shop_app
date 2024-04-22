@@ -78,7 +78,7 @@ class _NotificationListingState extends State<NotificationListing> {
         _scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        // callGetNotifications(page);
+        callGetNotifications(page);
       }
     }
   }
@@ -88,7 +88,7 @@ class _NotificationListingState extends State<NotificationListing> {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
-    // callGetNotifications(page);
+    callGetNotifications(page);
   }
   Future<void> refreshList() async {
     print("Here");
@@ -97,7 +97,7 @@ class _NotificationListingState extends State<NotificationListing> {
       page=1;
     });
     isPagination = true;
-    // await callGetNotifications(page);
+    await callGetNotifications(page);
 
   }
 
@@ -205,18 +205,21 @@ class _NotificationListingState extends State<NotificationListing> {
                         //   page=1;
                         // });
                         // callGetItem(page);
+                        await updatecallPostSaleInvoice(notification_list[index]['ID']);
+                        await callGetNotifications(1);
+
                       },
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: notification_list[index]['read']?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
+                            color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
                           ),
                           child: Row(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child:notification_list[index]['read']? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
+                                child:notification_list[index]['Status']=="Read"? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
                               ),
                               Expanded(
                                   child:Row(
@@ -229,8 +232,8 @@ class _NotificationListingState extends State<NotificationListing> {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(notification_list[index]['title'],style: item_heading_textStyle,),
-                                              notification_list[index]['detail']!=null? Text(notification_list[index]['detail'],style: item_regular_textStyle,):Container(),
+                                              notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_heading_textStyle,):Container(),
+                                              notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
                                              ], 
                                           ),
                                         ),
@@ -292,7 +295,7 @@ class _NotificationListingState extends State<NotificationListing> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -300,7 +303,7 @@ class _NotificationListingState extends State<NotificationListing> {
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList=data;
+                  _arrList=data['Notifications'];
                   if (_arrList.length < 10) {
                     if (mounted) {
                       setState(() {
@@ -377,6 +380,65 @@ class _NotificationListingState extends State<NotificationListing> {
       setState(() {
         notification_list.addAll(_list);
       });
+    }
+  }
+
+
+  updatecallPostSaleInvoice(id) async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+
+        String apiUrl =baseurl + ApiConstants().updateNotificationStatus+"?Company_ID=$companyId";
+
+        var model={
+          "ID": id,
+          "Status": "Read"
+        };
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model, "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+
+              });
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
     }
   }
   

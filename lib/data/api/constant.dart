@@ -67,4 +67,6 @@ class ApiConstants {
   String getSaleOrderDetail="getSaleOrderDetails";
   String getOrderVendorList="getOrderVendorList";
   String orderToSaleConvert="orderToSaleConvert";
+  String getAllNotifications="getAllNotifications";
+  String updateNotificationStatus="updateNotificationStatus";
 }
