@@ -666,16 +666,19 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=await total+item['Amount'];
-      // print(item['Amount']);
+      total=await total+ await item['Amount'];
+      print("####################3");
+      print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
-    double amt = total % 1;
+    double amt = await total % 1;
 
     print("%%%%%%%%%%%%%%%%%%%%% $amt");
     if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
+      var total1=(total).floorToDouble();
       setState(() {
         roundoff="0.00";
+        TotalAmount=total1.toStringAsFixed(2) ;
       });
     }
     else {
@@ -696,7 +699,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       }
 
     }
-
+    print("####################31");
+    print(TotalAmount);
   }
 
 /*
@@ -759,7 +763,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   @override
   AddOrEditLedgerForLedgerDetail(item)async {
     // TODO: implement AddOrEditItemDetail
-    var itemLlist=Item_list;
+    var itemLlist=await Item_list;
 
     if(editedItemIndex!=null){
       var index=editedItemIndex;
@@ -789,6 +793,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       Inserted_list.add(item);
       setState(() {
         Inserted_list=Inserted_list;
+        Item_list = itemLlist;
       });
       print(itemLlist);
 

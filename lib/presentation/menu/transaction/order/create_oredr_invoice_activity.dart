@@ -138,8 +138,10 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
 
     print("%%%%%%%%%%%%%%%%%%%%% $amt");
     if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
+      var total1=(total).floorToDouble();
       setState(() {
         roundoff="0.00";
+        TotalAmount=total1.toStringAsFixed(2) ;
       });
     }
     else {
