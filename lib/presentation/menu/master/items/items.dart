@@ -38,6 +38,7 @@ ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
 int page = 1;
 bool isPagination = true;
+
 ScrollController _scrollController = new ScrollController();
 
 _scrollListener() {
@@ -258,7 +259,7 @@ Expanded get_items_list_layout() {
                                           children: [
                                             Text(itemList[index]['Name'],style: item_heading_textStyle,),
                                             itemList[index]['Detail_Desc']!=null? Text(itemList[index]['Detail_Desc'],style: item_regular_textStyle,):Container(),
-                                            itemList[index]['Unit']!=null?   Text(itemList[index]['Rate'].toString()+"/"+itemList[index]['Unit'],style: item_heading_textStyle,):Container(),
+                                            itemList[index]['Unit']!=null && itemList[index]['Rate']!=null?   Text(itemList[index]['Rate'].toString()+"/"+itemList[index]['Unit'],style: item_heading_textStyle,):Container(),
                                           ],
                                         ),
                                       ),

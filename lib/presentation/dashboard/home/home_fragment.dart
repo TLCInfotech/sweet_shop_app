@@ -13,6 +13,7 @@ import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
+import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
@@ -215,6 +216,13 @@ print("hfshjffhfbh  $dateString");
                   image: const AssetImage('assets/images/Shop_Logo.png'),
                   // fit: BoxFit.contain,
                 ),
+               actions: [
+                 IconButton(
+                     onPressed: ()async{
+                       await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing()));
+                     },
+                     icon: FaIcon(FontAwesomeIcons.bell,))
+               ],
               ),
             ),
           ),
