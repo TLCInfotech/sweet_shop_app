@@ -258,7 +258,8 @@
  "item_wise": "Itemwise",
  "franchisee_outstanding": "Franchisee Outstanding",
  "bank_wise": "Bankwise",
- "order_invoice": "Order Invoice",
+ "order_invoice": "Sale Order",
+ "constant_order_invoice": "Constant Sale Order",
  "notifications": "Notifications"
 
 

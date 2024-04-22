@@ -23,6 +23,7 @@ import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/constant_sale_order_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/debit_note_activity.dart';
@@ -1025,6 +1026,7 @@ String companyId="";
                 ],
               ),
             ),
+            getConstantOrderInvoice(parentHeight,parentWidth),
             getOrderInvoice(parentHeight,parentWidth),
             getSellLayout(parentHeight,parentWidth),
             getPuerchaseLayout(parentHeight,parentWidth),
@@ -1043,7 +1045,39 @@ String companyId="";
 
 
 
-/* Widget for sell transaction Layout */
+/* Widget for constat order transaction Layout */
+  Widget getConstantOrderInvoice(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
+          mListener: this,
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("constant_order_invoice")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+/* Widget for order transaction Layout */
   Widget getOrderInvoice(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
