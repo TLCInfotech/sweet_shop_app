@@ -246,24 +246,39 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
         applicablefrom: invoiceDate
     );
   }
-  List<bool> selectedItems =[];
+  List selectedItems =[];
   Expanded get_purchase_list_layout() {
 
     return Expanded(
       child: ListView.separated(
         itemCount: saleInvoice_list.length,
         itemBuilder: (BuildContext context, int index) {
-          var contain = selectedItems.contains(saleInvoice_list[index]);
-          print("hjdchfhfc  $contain");
           return CheckboxListTile(
-            value: contain,
+            value: selectedItems.contains(saleInvoice_list[index]),
             onChanged: (bool? value) {
-              setState(() {
-                if(value==true){
-                  selectedItems.add(saleInvoice_list[index]);
-                }
+              print("##########33");
+              print(value);
+              print(value!);
+              print("ads");
 
-              });
+                // setState(() {
+                //   //   if(value==true){
+                //   // selectedItems.add(saleInvoice_list[index]);
+                //   // }
+                //   selectedItems.contains(saleInvoice_list[index]);
+                // });
+
+              if( value!){
+                setState(() {
+                  selectedItems.add(saleInvoice_list[index]);
+                });
+              }
+              else{
+                setState(() {
+                  selectedItems.remove(saleInvoice_list[index]);
+
+                });
+              }
             },
             title: GestureDetector(
               onTap: () {
