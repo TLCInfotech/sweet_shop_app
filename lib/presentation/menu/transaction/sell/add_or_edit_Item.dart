@@ -465,15 +465,17 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         focusnext: null,
         title: ApplicationLocalizations.of(context)!.translate("amount")!,
         callbackOnchage: (value) async {
+          print("########### $value");
           setState(() {
             amount.text = value;
-
           });
-          await calculateRates();
+          // await calculateRates();
         },
-        textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(
+          decimal: true 
+         ),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
      /* GetDisableTextFormField(
           parentWidth: (parentWidth),
