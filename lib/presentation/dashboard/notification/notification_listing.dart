@@ -31,8 +31,8 @@ class _NotificationListingState extends State<NotificationListing> {
 
   int page = 1;
   bool isPagination = true;
-  
-  List notification_list=[
+  List notification_list=[];
+ /* List notification_list=[
   {
     "title":"Notication Title 1",
     "detail":"Notification details click to continue",
@@ -69,7 +69,7 @@ class _NotificationListingState extends State<NotificationListing> {
       "id":23,
       "read":true
     },
-  ];
+  ];*/
 
   ScrollController _scrollController = new ScrollController();
 

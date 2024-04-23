@@ -332,9 +332,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                               SizedBox(width: 10,),
                                               Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                             ],
-                                          ),
-
-                                        ],
+                                          ),],
                                       ),
                                     ),
                                   ),
