@@ -100,7 +100,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
         _textController.text=widget.editproduct['Item_Name'];
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
-        rate.text=widget.editproduct['Rate'].toString();
+        rate.text =  widget.editproduct['Rate']==null?"0": widget.editproduct['Rate'].toString();
         amount.text=widget.editproduct['Amount'].toString();
         discount.text=widget.editproduct['Disc_Percent']==null?"0":widget.editproduct['Disc_Percent'].toString();
         discountAmt.text=widget.editproduct['Disc_Amount'].toString();
@@ -262,7 +262,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
           selectedItemID = item['ID'].toString();
           selectedItemName=item['Name'].toString();
           unit.text=item['Unit'];
-          rate.text=item['Rate'].toString();
+          rate.text =item['Rate']==null?"0":item['Rate'].toString();
           gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
         });
         await calculateRates();
@@ -288,6 +288,7 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       callbackOnchage: (value)async {
         setState(() {
           quantity.text = value;
+          amountedited=false;
         });
         await calculateRates();
       },
@@ -338,22 +339,88 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
     );
   }
 
+  // // rate amount layout
+  // Widget getRateAndAmount(double parentHeight, double parentWidth){
+  //   return Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         GetDisableTextFormField(
+  //             parentWidth: (parentWidth),
+  //             title: ApplicationLocalizations.of(context)!.translate("rate")!,
+  //             controller: rate
+  //         ),
+  //         GetDisableTextFormField(
+  //             parentWidth: (parentWidth),
+  //             title:  ApplicationLocalizations.of(context)!.translate("amount")!,
+  //             controller: amount
+  //         )]
+  //   );
+  // }
+
+  var amountedited=false;
+
   // rate amount layout
-  Widget getRateAndAmount(double parentHeight, double parentWidth){
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GetDisableTextFormField(
-              parentWidth: (parentWidth),
-              title: ApplicationLocalizations.of(context)!.translate("rate")!,
-              controller: rate
-          ),
-          GetDisableTextFormField(
-              parentWidth: (parentWidth),
-              title:  ApplicationLocalizations.of(context)!.translate("amount")!,
-              controller: amount
-          )]
-    );
+  Widget getRateAndAmount(double parentHeight, double parentWidth) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      SingleLineEditableTextFormField(
+        parentWidth: (parentWidth),
+        validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER + StringEn.QUANTITY;
+          }
+          return null;
+        },
+        controller: rate,
+        focuscontroller: null,
+        focusnext: null,
+        title: ApplicationLocalizations.of(context)!.translate("rate")!,
+        callbackOnchage: (value) async {
+          setState(() {
+            rate.text = value;
+            amountedited=false;
+          });
+          await calculateRates();
+        },
+        textInput: TextInputType.number,
+        maxlines: 1,
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      ),
+      /*    SingleLineEditableTextFormField(
+            parentWidth: (parentWidth),
+            title: ApplicationLocalizations.of(context)!.translate("rate")!,
+            controller: rate
+        ),*/
+      SingleLineEditableTextFormField(
+        parentWidth: (parentWidth),
+        validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER + StringEn.QUANTITY;
+          }
+          return null;
+        },
+        controller: amount,
+        focuscontroller: null,
+        focusnext: null,
+        title: ApplicationLocalizations.of(context)!.translate("amount")!,
+        callbackOnchage: (value) async {
+          print("########### $value");
+          setState(() {
+            amount.text = value;
+            amountedited=true;
+          });
+          await calculateRates();
+        },
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+      ),
+      /* GetDisableTextFormField(
+          parentWidth: (parentWidth),
+          title: ApplicationLocalizations.of(context)!.translate("amount")!,
+          controller: amount)*/
+    ]);
   }
 
 
@@ -632,7 +699,9 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
   }
   calculateRates()async{
     if(quantity.text!=""&&rate.text!="") {
-      await calculateAmt();
+      if(amountedited==false) {
+        await calculateAmt();
+      }
       await calculateGstAmt();
       await calculateDiscountAmt();
       await calculateTaxableAmt();

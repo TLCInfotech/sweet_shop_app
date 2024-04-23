@@ -218,6 +218,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: expense_group.length,
+            controller: _scrollController,
             itemBuilder: (BuildContext context, int index) {
               return  AnimationConfiguration.staggeredList(
                 position: index,

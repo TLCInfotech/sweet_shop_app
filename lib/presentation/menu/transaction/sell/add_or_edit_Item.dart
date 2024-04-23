@@ -370,6 +370,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       callbackOnchage: (value) async {
         setState(() {
           quantity.text = value;
+          amountedited=false;
         });
         await calculateRates();
       },
@@ -420,6 +421,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       ),
     );
   }
+  var amountedited=false;
 
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
@@ -439,7 +441,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         callbackOnchage: (value) async {
           setState(() {
             rate.text = value;
-
+            amountedited=false;
           });
           await calculateRates();
         },
@@ -468,11 +470,13 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           print("########### $value");
           setState(() {
             amount.text = value;
+            amountedited=true;
           });
+          await calculateRates();
           // await calculateRates();
         },
         textInput: TextInputType.numberWithOptions(
-          decimal: true 
+          decimal: true
          ),
         maxlines: 1,
         format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
@@ -775,7 +779,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
 
   calculateRates() async {
     if (quantity.text != "" && rate.text != "") {
-      await calculateAmt();
+      if(amountedited==false) {
+        await calculateAmt();
+      }
       await calculateGstAmt();
       await calculateDiscountAmt();
       await calculateTaxableAmt();
