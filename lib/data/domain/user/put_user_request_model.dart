@@ -8,6 +8,7 @@ class PutUserRequestModel {
   bool resetPassword;
   String creator;
   String creatorMachine;
+  String? photo;
 
   PutUserRequestModel({
     required this.uid,
@@ -19,6 +20,7 @@ class PutUserRequestModel {
     required this.resetPassword,
     required this.creator,
     required this.creatorMachine,
+    this.photo,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +34,7 @@ class PutUserRequestModel {
       'Reset_Password': resetPassword,
       'Modifier': creator,
       'Modifier_Machine': creatorMachine,
+      'Photo': photo,
     };
   }
 }

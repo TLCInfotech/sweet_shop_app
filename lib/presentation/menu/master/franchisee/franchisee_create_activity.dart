@@ -702,11 +702,20 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         width: parentHeight * .25,
         picImage: picImage,
         callbackFile: (file)async{
-          List<int> bytes = (await file?.readAsBytes()) as List<int>;
-          setState(()  {
-          picImage=file;
-          picImageBytes=bytes;
-          });
+          if(file!=null) {
+            List<int> bytes = (await file?.readAsBytes()) as List<int>;
+            setState(()  {
+              picImage=file;
+              picImageBytes=bytes;
+            });
+          }
+          else{
+            setState(() {
+              picImage = file;
+              picImageBytes = [];
+            });
+          }
+
         }
     );
   }

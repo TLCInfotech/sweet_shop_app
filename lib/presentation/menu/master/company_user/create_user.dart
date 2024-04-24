@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,7 +132,7 @@ String oldUid="";
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("user_new")!,
+                                ApplicationLocalizations.of(context)!.translate("user")!,
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -186,10 +187,9 @@ String oldUid="";
         picImage: picImage,
         callbackFile: (file)async{
           Uint8List? bytes = await file?.readAsBytes();
-
           setState(() {
             picImage=file;
-            picImageBytes = (bytes)!.whereType<int>().toList();
+            picImageBytes = file!=null?(bytes)!.whereType<int>().toList():[];
           });
           print("IMGE1 : ${picImageBytes.length}");
         }
@@ -659,6 +659,7 @@ String oldUid="";
       AppPreferences.getDeviceId().then((deviceId) {
         PutUserRequestModel model = PutUserRequestModel(
           uid: userName,
+          photo:picImageBytes.toString(),
           Company_ID: companyIds,
           ledgerID: franchiseeId,
           workingDays: workingDay,

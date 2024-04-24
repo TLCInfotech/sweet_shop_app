@@ -100,19 +100,37 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
                 borderRadius: BorderRadius.circular(7),
               ),
             )
-                : Container(
-              height: widget.height,
-              width: widget.width,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  image: DecorationImage(
-                    image: FileImage(widget.picImage!),
-                    fit: BoxFit.cover,
-                  )
-              ),
-              // child: ImageMemory(bytes: bytes),
-            ),
+                : Stack(
+                  children: [
+                    Container(
+                                  height: widget.height,
+                                  width: widget.width,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      image: DecorationImage(
+                        image: FileImage(widget.picImage!),
+                        fit: BoxFit.cover,
+                      )
+                                  ),
+                                  // child: ImageMemory(bytes: bytes),
+                                ),
+
+                    Positioned(
+                      top: 0,
+                      right: 15,
+                      child: Container(
+                        height: (SizeConfig.screenHeight) * .03,
+                        width: (SizeConfig.screenHeight) * .03,
+                        child:IconButton(onPressed: (){
+                          widget.callbackFile(null);
+                        },
+                          icon: Icon(Icons.cancel,color: Colors.red,),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             GestureDetector(
               onTap: () {
                 if (mounted) {
@@ -160,6 +178,8 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
                         borderRadius: BorderRadius.circular(7),
                       ),*/
                     ),
+
+
                     Container(
                         height: (SizeConfig.screenHeight) * .03,
                         width: (SizeConfig.screenHeight) * .03,

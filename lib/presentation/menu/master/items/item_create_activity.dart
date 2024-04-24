@@ -190,7 +190,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                           Expanded(
                             child: widget.editItem!=null?Center(
                           child: Text(
-                              ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("item")!,
+                              ApplicationLocalizations.of(context)!.translate("item")!,
                     style: appbar_text_style,
                   ),
                 ): Center(
@@ -332,11 +332,19 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         width: parentHeight * .25,
         picImage: picImage,
         callbackFile: (file)async{
-          List<int> bytes = (await file?.readAsBytes()) as List<int>;
-          setState(()  {
-            picImage=file;
-            picImageBytes=bytes;
-          });
+          if(file!=null) {
+            List<int> bytes = (await file?.readAsBytes()) as List<int>;
+            setState(() {
+              picImage = file;
+              picImageBytes = file != null ? (bytes)!.whereType<int>().toList() : [];
+            });
+          }
+          else{
+            setState(() {
+              picImage = file;
+              picImageBytes = [];
+            });
+          }
         }
     );
 
@@ -1149,6 +1157,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             Photo: picImageBytes.length==0?null:picImageBytes,
             Unit: measuringUnit,
         );
+
+        print("############55%%%%%%%% ${model.Photo}");
 
         String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
 
