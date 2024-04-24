@@ -40,12 +40,12 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   List<ProfitPartyWiseData> _profitPartywise = [];
 
-  var profit=0;
-  var saleAmt=0;
-  var expenseAmt=0;
-  var returnAmt=0;
-  var receiptAmt=0;
-  var FranchiseeOutstanding=0;
+  double profit=0.0;
+  var saleAmt=0.0;
+  var expenseAmt=0.0;
+  var returnAmt=0.0;
+  var receiptAmt=0.0;
+  var FranchiseeOutstanding=0.0;
 
  @override
   void initState() {
@@ -104,7 +104,8 @@ print("hfshjffhfbh  $dateString");
               setState(() {
                 _saleData=[];
                 _profitPartywise=[];
-                profit=0;
+                profit=0.0;
+                FranchiseeOutstanding=0.0;
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
@@ -113,24 +114,21 @@ print("hfshjffhfbh  $dateString");
                         _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
                       }
                       for (var item in data['DashboardProfitPartywise']) {
-                        _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Profit'],item['Vendor_Name']));
+                        _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
                       }
                     }
-                    _saleData=_saleData;
-                    print("nessssss  $_saleData");
-                    _profitPartywise=_profitPartywise;
-                    saleAmt=data['DashboardMainData'][0]['Sale_Amount'];
-                    expenseAmt=data['DashboardMainData'][0]['Expense_Amount'];
-                    returnAmt=data['DashboardMainData'][0]['Return_Amount'];
-                    receiptAmt=data['DashboardMainData'][0]['Receipt_Amount'];
-                   int profitValue=data['DashboardMainData'][0]['Profit'];
-                    FranchiseeOutstanding=data['DashboardMainData'][0]['Franchisee_Outstanding'];
+                    // _saleData=_saleData;
+                    // print("nessssss  $_saleData");
+
                    setState(() {
-                     profit=profitValue;
-                     getAnimatedFunction();
+                     profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
+                     _profitPartywise=_profitPartywise;
+                     saleAmt=double.parse(data['DashboardMainData'][0]['Sale_Amount'].toString());
+                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
+                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
+                     receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
+                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
                    });
-      print("neehehehehge   $profit");
-                    print(statistics);
 
                 }else{
                   isApiCall=true;
@@ -316,7 +314,7 @@ print("hfshjffhfbh  $dateString");
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
           comeFor: "Franchisee Outstanding",
-          profit:profit ,
+          profit:FranchiseeOutstanding ,
           date:dateTime,
         )));
       },
@@ -371,8 +369,9 @@ print("hfshjffhfbh  $dateString");
    return  Padding(
      padding:  EdgeInsets.only(left: 50),
      child: Countup(
+       precision: 2,
        begin: 0,
-       end: double.parse(profit.toString()) ,
+       end: double.parse((profit).toString()),
        duration: const Duration(seconds: 2),
        separator: ',',
        style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
@@ -384,8 +383,9 @@ print("hfshjffhfbh  $dateString");
     return  Padding(
       padding:  EdgeInsets.only(left: 20),
       child: Countup(
+          precision: 2,
           begin: 0,
-          end: double.parse(FranchiseeOutstanding.toString()) ,
+          end:double.parse((FranchiseeOutstanding).toString()) ,
           duration: const Duration(seconds: 2),
           separator: ',',
           style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
@@ -410,35 +410,35 @@ print("hfshjffhfbh  $dateString");
     );
   }
 
-  Container yearly_report_graph() {
-    return   Container(
-      height: 400,
-      width: 400,
-      child: SfCircularChart(
-        title: ChartTitle(text: 'Expense analysis',alignment: ChartAlignment.near),
-        series: <CircularSeries>[
-          PieSeries<ExpenseData, String>(
-            dataSource: [
-              ExpenseData('Food', 300),
-              ExpenseData('Rent', 600),
-              ExpenseData('Transport', 200),
-              ExpenseData('Utilities', 150),
-            ],
-            xValueMapper: (ExpenseData data, _) => data.category,
-            yValueMapper: (ExpenseData data, _) => data.amount,
-            dataLabelSettings: const DataLabelSettings(
-              isVisible: true,
-              connectorLineSettings: ConnectorLineSettings(
-                color: Colors.blue,
-                length: '8%',
-                type: ConnectorType.line,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // Container yearly_report_graph() {
+  //   return   Container(
+  //     height: 400,
+  //     width: 400,
+  //     child: SfCircularChart(
+  //       title: ChartTitle(text: 'Expense analysis',alignment: ChartAlignment.near),
+  //       series: <CircularSeries>[
+  //         PieSeries<ExpenseData, String>(
+  //           dataSource: [
+  //             ExpenseData('Food', 300),
+  //             ExpenseData('Rent', 600),
+  //             ExpenseData('Transport', 200),
+  //             ExpenseData('Utilities', 150),
+  //           ],
+  //           xValueMapper: (ExpenseData data, _) => data.category,
+  //           yValueMapper: (ExpenseData data, _) => data.amount,
+  //           dataLabelSettings: const DataLabelSettings(
+  //             isVisible: true,
+  //             connectorLineSettings: ConnectorLineSettings(
+  //               color: Colors.blue,
+  //               length: '8%',
+  //               type: ConnectorType.line,
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   sale_purchase_expense_container() {
     return Column(
@@ -462,38 +462,38 @@ print("hfshjffhfbh  $dateString");
     );
   }
 
-  Container weeklySalegraph() {
-    return  Container(
-      height: 400,
-      width: SizeConfig.screenWidth,
-      child: SfCartesianChart(
-        title: ChartTitle(text: 'Weekly Sale',alignment: ChartAlignment.near),
-        // Enable legend
-        // legend: Legend(isVisible: true),
-        primaryXAxis: CategoryAxis(labelRotation: 270, labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
-        primaryYAxis: NumericAxis(
-            // numberFormat: NumberFormat('#,##0'),
-            // numberFormat: NumberFormat.compact(),
-          numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-            title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
-        ),
-        series: <ChartSeries>[
-          ColumnSeries<SalesData, String>(
-            dataSource: _saleData,
-            xValueMapper: (SalesData sales, _) => sales.Date,
-            yValueMapper: (SalesData sales, _) => sales.Amount,
-            dataLabelSettings: DataLabelSettings(
-              alignment: ChartAlignment.far,
-                angle: 270,
-                isVisible: true,
-                labelAlignment: ChartDataLabelAlignment.outer,
-                textStyle: item_heading_textStyle.copyWith(fontSize:9 )
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // Container weeklySalegraph() {
+  //   return  Container(
+  //     height: 400,
+  //     width: SizeConfig.screenWidth,
+  //     child: SfCartesianChart(
+  //       title: ChartTitle(text: 'Weekly Sale',alignment: ChartAlignment.near),
+  //       // Enable legend
+  //       // legend: Legend(isVisible: true),
+  //       primaryXAxis: CategoryAxis(labelRotation: 270, labelIntersectAction: AxisLabelIntersectAction.rotate90,labelPlacement: LabelPlacement.betweenTicks),
+  //       primaryYAxis: NumericAxis(
+  //           // numberFormat: NumberFormat('#,##0'),
+  //           // numberFormat: NumberFormat.compact(),
+  //         numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+  //           title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
+  //       ),
+  //       series: <ChartSeries>[
+  //         ColumnSeries<SalesData, String>(
+  //           dataSource: _saleData,
+  //           xValueMapper: (SalesData sales, _) => sales.Date,
+  //           yValueMapper: (SalesData sales, _) => sales.Amount,
+  //           dataLabelSettings: DataLabelSettings(
+  //             alignment: ChartAlignment.far,
+  //               angle: 270,
+  //               isVisible: true,
+  //               labelAlignment: ChartDataLabelAlignment.outer,
+  //               textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
 
   Widget partywisegraph() {
@@ -510,7 +510,7 @@ print("hfshjffhfbh  $dateString");
             labelIntersectAction: AxisLabelIntersectAction.rotate90,
             labelPlacement: LabelPlacement.betweenTicks),
         primaryYAxis: NumericAxis(
-            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+            numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,),
             title: AxisTitle(text: "Profit ",textStyle: item_regular_textStyle, )
         ),
         series: <ChartSeries>[
@@ -667,7 +667,7 @@ class ExpenseData {
 class ProfitPartyWiseData {
   final String Date;
   final String Vendor_Name;
-  final int Profit;
+  final double Profit;
 
   ProfitPartyWiseData(this.Date, this.Profit, this.Vendor_Name);
 }
