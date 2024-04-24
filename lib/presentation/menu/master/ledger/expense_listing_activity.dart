@@ -228,7 +228,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                         child: Row(
                           children: [
                             ledgerList[index]['Photo']==null? Container(
-                              margin: const EdgeInsets.only(left: 10),
+                              margin: EdgeInsets.all(5),
                               width:SizeConfig.imageBlockFromCardWidth,
                               height: 80,
                               decoration: const BoxDecoration(
@@ -240,7 +240,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                               ),
 
                             ): Container(
-                              margin: const EdgeInsets.only(left: 10),
+                              margin: EdgeInsets.all(5),
                               width:SizeConfig.imageBlockFromCardWidth,
                               height: 80,
                               decoration:  BoxDecoration(

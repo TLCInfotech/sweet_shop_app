@@ -32,7 +32,7 @@ class PutLedgerRequestModel {
   String? tcsApplicable;
   String? extName;
   String? remark;
-  final List<int>? photo;
+  final List<int>? Photo;
   final List<int>? panCardImage;
   final List<int>? adharCardImage;
   final List<int>? gstImage;
@@ -74,7 +74,7 @@ class PutLedgerRequestModel {
     this.tcsApplicable,
     this.extName,
     this.remark,
-    this.photo,
+    this.Photo,
     this.panCardImage,
     this.adharCardImage,
     this.gstImage,
@@ -119,7 +119,7 @@ class PutLedgerRequestModel {
       'TCS_Applicable': tcsApplicable ?? '',
       'Ext_Name': extName ?? '',
       'Remark': remark ?? '',
-      'Photo': photo ?? '',
+      'Photo': Photo ?? null,
       'PAN_Card_Image': panCardImage ?? '',
       'Adhar_Card_Image': adharCardImage ?? '',
       'GST_Image': gstImage ?? '',

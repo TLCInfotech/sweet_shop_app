@@ -233,7 +233,8 @@ Expanded get_items_list_layout() {
                               ),
 
                             ): Container(
-                              margin: const EdgeInsets.only(left: 10),
+                              // margin: const EdgeInsets.only(left: 10),
+                              margin: EdgeInsets.all(5),
                               width:SizeConfig.imageBlockFromCardWidth,
                               height: 80,
                               decoration:  BoxDecoration(

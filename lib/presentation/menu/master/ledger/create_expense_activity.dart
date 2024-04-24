@@ -245,7 +245,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                           Expanded(
                             child: widget.ledgerList!=null? Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("ledger")!,
+                               ApplicationLocalizations.of(context)!.translate("ledger")!,
                                 style: appbar_text_style,
                               ),
                             )
@@ -512,13 +512,22 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         width: parentHeight * .25,
         picImage: picImage,
         callbackFile: (file)async{
-          Uint8List? bytes = await file?.readAsBytes();
+          if(file!=null) {
 
-          setState(() {
-            picImage=file;
-            picImageBytes = (bytes)!.whereType<int>().toList();
-          });
-          print("IMGE1 : ${picImageBytes.length}");
+            Uint8List? bytes = await file?.readAsBytes();
+
+              setState(() {
+                picImage=file;
+                picImageBytes = (bytes)!.whereType<int>().toList();
+              });
+          }
+          else{
+            setState(() {
+              picImage = file;
+              picImageBytes = [];
+            });
+          }
+
         }
     );
 
@@ -2032,12 +2041,11 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
             adharCardImage:adharImageBytes.length==0?null: adharImageBytes,
             panCardImage:panImageBytes.length==0?null: panImageBytes,
             gstImage:gstImageBytes.length==0?null: gstImageBytes,
-            photo: picImageBytes.length==0?null:picImageBytes,
+            Photo: picImageBytes.length==0?null:picImageBytes,
             modifier: creatorName,
             modifierMachine: deviceId
         );
-        print("MODAL");
-        print(model.toJson());
+        print("MODAL ${model.Photo}");
         String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString()+"?Company_ID=$companyId";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

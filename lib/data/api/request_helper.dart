@@ -508,14 +508,16 @@ class ApiRequestHelper {
     Map<String, dynamic> cleanedData = {};
 
     requestBody.forEach((key, value) {
-      if (value != null && value!="") {
+      // value != null &&
+      if ( value!="") {
         cleanedData[key] = jsonDecode(jsonEncode(value));
       }
     });
 
+
     String jsonString = json.encode(cleanedData);
 
-    print("sessionTokennnnn  $sessionToken");
+    print("sessionTokennnnn  ${cleanedData}");
 
     try {
       Response response = await http.put(
