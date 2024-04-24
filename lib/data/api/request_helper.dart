@@ -516,8 +516,8 @@ class ApiRequestHelper {
 
 
     String jsonString = json.encode(cleanedData);
-
-    print("sessionTokennnnn  ${cleanedData}");
+    //
+    // print("sessionTokennnnn  ${cleanedData}");
 
     try {
       Response response = await http.put(

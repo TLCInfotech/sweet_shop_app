@@ -80,6 +80,11 @@ class _UserCreateState extends State<UserCreate>with WorkingUnderDialogInterface
 String oldUid="";
   setData()async{
     if(widget.editUser!=null){
+      File ?f=null;
+      if(widget.editUser['Photo']!=null&&widget.editUser['Photo']['data']!=null && widget.editUser['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(widget.editUser['Photo']['data']);
+      }
+
       userController.text=widget.editUser["UID"];
       oldUid=widget.editUser["UID"];
       print("jhjfhjf  ${widget.editUser["Active"]}  $oldUid");
@@ -90,6 +95,7 @@ String oldUid="";
       checkPasswordValue=widget.editUser["Reset_Password"];
       picImageBytes=(widget.editUser['Photo']!=null && widget.editUser['Photo']['data']!=null && widget.editUser['Photo']['data'].length>10)?(widget.editUser['Photo']['data']).whereType<int>().toList():[];
 
+      picImage=f;
     }
 
   }
@@ -186,12 +192,19 @@ String oldUid="";
         width: parentHeight * .25,
         picImage: picImage,
         callbackFile: (file)async{
-          Uint8List? bytes = await file?.readAsBytes();
-          setState(() {
-            picImage=file;
-            picImageBytes = file!=null?(bytes)!.whereType<int>().toList():[];
-          });
-          print("IMGE1 : ${picImageBytes.length}");
+          if(file!=null) {
+            List<int> bytes = (await file?.readAsBytes()) as List<int>;
+            setState(()  {
+              picImage=file;
+              picImageBytes=bytes;
+            });
+          }
+          else{
+            setState(() {
+              picImage = file;
+              picImageBytes = [];
+            });
+          }
         }
     );
   }
@@ -607,7 +620,7 @@ String oldUid="";
       });
       PostUserRequestModel model = PostUserRequestModel(
         uid: userName,
-        photo:picImageBytes.toString(),
+          photo: picImageBytes.length==0?null:picImageBytes,
         Company_ID: companyId,
         ledgerID: franchiseeId,
         workingDays: workingDay,
@@ -659,7 +672,7 @@ String oldUid="";
       AppPreferences.getDeviceId().then((deviceId) {
         PutUserRequestModel model = PutUserRequestModel(
           uid: userName,
-          photo:picImageBytes.toString(),
+          Photo: picImageBytes.length==0?null:picImageBytes,
           Company_ID: companyIds,
           ledgerID: franchiseeId,
           workingDays: workingDay,
@@ -673,6 +686,9 @@ String oldUid="";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), tokan,
             onSuccess:(value)async{
+              setState(() {
+                isLoaderShow=false;
+              });
               print("  Put Call :   $value ");
               var snackBar = const SnackBar(content: Text('User  Updated Successfully'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);

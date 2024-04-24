@@ -1111,7 +1111,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             contactNo: franchiseeMobileNo.text.trim(),
             eMail: franchiseeEmail.text.trim(),
             pANNo: panNoController.text.trim(),
-            photo: picImageBytes,
+            photo: picImageBytes.length==0?null:picImageBytes,
             extName: "cscddc",
             adharNo: adharNoController.text.trim(),
             gSTNo: gstNoController.text.trim(),
@@ -1126,10 +1126,11 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             accountNo: accountNoController.text.trim(),
             declaration: "rrr",
             cINNo: "145",
-            pANCardImage: panImageBytes,
-            adharCardImage: adharImageBytes,
-            gSTImage: gstImageBytes,
+            pANCardImage:panImageBytes.length==0?null: panImageBytes,
+            adharCardImage: adharImageBytes.length==0?null:adharImageBytes,
+            gSTImage: gstImageBytes.length==0?null:gstImageBytes,
       );
+
       if(widget.editItem!=null){
         model.modifier=creatorName;
         model.modifierMachine=deviceId;
@@ -1140,7 +1141,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       }
 
 
-
+      print(apiUrl);
+      print("jfhjfhjjhrjhr   ${model.toJson()} ");
       callmethod(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");

@@ -1,6 +1,6 @@
 class PostUserRequestModel {
   String uid;
-  String? photo;
+  late final List<int>? photo;
   String Company_ID;
   String? ledgerID;
   String? workingDays;
