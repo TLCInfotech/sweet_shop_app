@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
@@ -52,6 +53,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     // TODO: implement initState
     super.initState();
     addDate();
+    callGetFranchiseeNot(0);
     getDashboardData();
 print("hfshjffhfbh  $dateString");
 
@@ -60,6 +62,53 @@ print("hfshjffhfbh  $dateString");
   }
   late DateTime dateTime;
   String dateString="";
+
+
+  callGetFranchiseeNot(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+            token: sessionToken,
+        );
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+              setState(() {
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  franchisee   $data ");
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
   addDate() async {
 
     String  dateString = await AppPreferences.getDateLayout(); // Example string date
@@ -98,7 +147,7 @@ print("hfshjffhfbh  $dateString");
             page: "1"
         );
         String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 
               setState(() {

@@ -17,9 +17,6 @@ import 'package:sweet_shop_app/data/domain/item/post_item_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_unit_layout.dart';
-import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
-import 'package:sweet_shop_app/presentation/dialog/measuring_unit_dialog.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';

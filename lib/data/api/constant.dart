@@ -69,4 +69,5 @@ class ApiConstants {
   String orderToSaleConvert="orderToSaleConvert";
   String getAllNotifications="getAllNotifications";
   String updateNotificationStatus="updateNotificationStatus";
+  String sendFranchiseeNotification="sendFranchiseeNotification";
 }

@@ -109,20 +109,16 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
-
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
-
                   setState(() {
                     Item_list=_arrList;
                   });
                   calculateTotalAmt();
                 }
-
               });
-
               // _arrListNew.addAll(data.map((arrData) =>
               // new EmailPhoneRegistrationModel.fromJson(arrData)));
               print("  LedgerLedger  $data ");
@@ -131,14 +127,11 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, error.toString());
-
               // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
               //  widget.mListener.loaderShow(false);
               //  Navigator.of(context, rootNavigator: true).pop();
             }, onException: (e) {
-
               print("Here2=> $e");
-
               setState(() {
                 isLoaderShow=false;
               });

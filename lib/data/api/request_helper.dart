@@ -288,6 +288,9 @@ class ApiRequestHelper {
    try {
       Response response = await http.get(
         Uri.parse(apiUrl),
+          headers: {
+            'Authorization': 'Bearer $sessionToken',
+          }
       );
       print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
 

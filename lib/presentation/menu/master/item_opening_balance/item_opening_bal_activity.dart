@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -58,7 +59,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
-
+                  callGetFranchiseeNot(0);
                   setState(() {
 
                     Franchisee_list=_arrList;
@@ -406,7 +407,48 @@ compId:companyId ,
     setState(() {
       TotalAmount=total.toStringAsFixed(2) ;
     });
-
   }
+  callGetFranchiseeNot(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+            token: sessionToken,
+        );
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+              setState(() {
 
+              });
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  franchisee   $data ");
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }

@@ -233,7 +233,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                               height: 80,
                               decoration: const BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('assets/images/Login_Background.jpg'), // Replace with your image asset path
+                                    image: AssetImage('assets/images/placeholder.png'), // Replace with your image asset path
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.all(Radius.circular(10))

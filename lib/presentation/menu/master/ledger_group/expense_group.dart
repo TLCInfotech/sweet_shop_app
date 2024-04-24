@@ -458,7 +458,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           name:editedItem!=null && selectedgroup!=null?selectedgroup:"",
           status:   editedItem!=null?"edit":"",
           apiUrl:ApiConstants().group_nature+"?",
-          titleIndicator: false,
+          titleIndicator: true,
           title: ApplicationLocalizations.of(context)!.translate("group_nature")!,
           callback: (item)async{
 
@@ -696,7 +696,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             name:editedItem!=null && parentCategory!=null?parentCategory:"",
             status:   editedItem!=null?"edit":"",
             apiUrl:ApiConstants().ledger_group+"?",
-            titleIndicator: false,
+            titleIndicator: true,
             title: ApplicationLocalizations.of(context)!.translate("parent_group")!,
             callback: (item)async{
               print("hsdhkasj $item");

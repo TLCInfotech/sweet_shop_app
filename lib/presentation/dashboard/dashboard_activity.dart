@@ -2,12 +2,16 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/constant.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/dashboard/ledger_dash/ledger_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/payment_dash/payment_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/purchase_dash/purchase_dashboard_activity.dart';
@@ -16,6 +20,8 @@ import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 
+import '../../core/app_preferance.dart';
+import '../../data/api/request_helper.dart';
 import '../menu/transaction/expense/ledger_activity.dart';
 import '../menu/transaction/payment/payment_activity.dart';
 import 'home/home_fragment.dart';
@@ -42,6 +48,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   void initState() {
     // TODO: implement initState
     super.initState();
+
     addNewScreen(
         HomeFragment(
           mListener: this,
@@ -379,7 +386,6 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     }
 
   }
-
 
 }
 
