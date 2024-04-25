@@ -24,9 +24,10 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class UserCreate extends StatefulWidget {
  final editUser;
+ final come;
  final compId;
 
-  const UserCreate({super.key, required this.mListener, this.editUser, this.compId});
+  const UserCreate({super.key, required this.mListener, this.editUser, this.compId, this.come});
 
    final UserCreateInterface mListener;
 
@@ -340,6 +341,8 @@ String oldUid="";
             child:  SearchableLedgerDropdown(
                   apiUrl:ApiConstants().franchisee+"?",
                   titleIndicator: false,
+                  franchiseeName: widget.come=="edit"?widget.editUser["Ledger_Name"]:"",
+                  franchisee: widget.come,
                   title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
                   callback: (name,id){
                     if(franchiseeId==id){
@@ -354,7 +357,7 @@ String oldUid="";
                     }
                     print(franchiseeId);
                   },
-                  ledgerName: franchiseeName), /* GestureDetector(
+                  ledgerName: widget.come=="edit"?widget.editUser["Ledger_Name"]:""), /* GestureDetector(
                 onTap: (){
                   showGeneralDialog(
                       barrierColor: Colors.black.withOpacity(0.5),

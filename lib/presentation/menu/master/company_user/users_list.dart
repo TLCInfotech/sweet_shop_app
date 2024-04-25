@@ -197,6 +197,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                   editUser: userList[index],
                                   mListener: this,
                               compId: companyId,
+                              come:"edit"
                                 )));
                   },
                   child: Card(
