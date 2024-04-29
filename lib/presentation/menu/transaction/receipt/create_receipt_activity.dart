@@ -555,7 +555,7 @@ bool isLoaderShow=false;
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
-      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         setState(() {
           selectedbankCashLedger=name!;

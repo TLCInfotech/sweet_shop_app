@@ -388,7 +388,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                                   color:Colors.black87,
                                 ),
                               ),
-                              Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
+                              Expanded(child: Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),)),
                             ],
                           ),
                           Padding(
