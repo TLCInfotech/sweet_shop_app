@@ -34,6 +34,8 @@ import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_a
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import '../../core/localss/application_localizations.dart';
+import '../dashboard/dashboard_activity.dart';
+import '../dashboard/home/home_fragment.dart';
 import 'report/MIS/mis_report_activity.dart';
 import 'report/payment/payment_report_activity.dart';
 import 'report/recipt/recipt_report_layout.dart';
@@ -317,10 +319,15 @@ String companyId="";
   /* Widget for franchisee sale rate Layout */
   Widget getFranchiseeSaleRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
           compId: companyId,
         )));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -347,11 +354,15 @@ String companyId="";
   /* Widget for franchisee purchase rate sub field Layout */
   Widget getFranchiseePurchaseRateLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
           compId: companyId,
         )));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -377,9 +388,8 @@ String companyId="";
   /* Widget for franchisee  Layout */
   Widget getFranchiseeLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.pop(context);
-        showCupertinoDialog(
+      onTap: ()async{
+        await showCupertinoDialog(
             context: context,
             builder: (BuildContext context){
               return AddFranchiseeActivity(mListener: this,);
@@ -411,8 +421,13 @@ String companyId="";
   /* Widget for user Layout */
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UsersList()));
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UsersList()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -439,8 +454,13 @@ String companyId="";
   /* Widget for measuring unit Layout */
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UnitsActivity()));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UnitsActivity()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -467,8 +487,13 @@ String companyId="";
   /* Widget for expense Layout */
   Widget getExpenseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseListingActivity()));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseListingActivity()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -495,8 +520,13 @@ String companyId="";
   /* Widget for expense group Layout */
   Widget getExpensceGroupLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseGroup()));
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseGroup()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -523,11 +553,16 @@ String companyId="";
   /* Widget for company info Layout */
   Widget getCompanyInfoLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
           companyId: companyId,
         )));
-        },
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
+      },
       onDoubleTap: (){},
       child: Padding(
         padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
@@ -553,8 +588,13 @@ String companyId="";
   /* Widget for item opening balance Layout */
   Widget getOpeningBalanceForCompanyLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreateItemOpeningBalForCompany(dateNew: DateTime.now().toString())));
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreateItemOpeningBalForCompany(dateNew: DateTime.now().toString())));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -582,9 +622,14 @@ String companyId="";
   /* Widget for item opening balance Layout */
   Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal()));
-        },
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
+      },
       onDoubleTap: (){},
       child: Padding(
         padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
@@ -612,9 +657,14 @@ String companyId="";
   /* Widget for ledger opening balance Layout */
   Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerOpeningBal()));
-        },
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerOpeningBal()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
+      },
       onDoubleTap: (){},
       child: Padding(
         padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
@@ -640,8 +690,13 @@ String companyId="";
   /* Widget for category Layout */
   Widget getCategoryLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemCategoryActivity()));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemCategoryActivity()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -668,8 +723,13 @@ String companyId="";
   /* Widget for item Layout */
   Widget getItemLayout(double parentHeight, double parentWidth){
     return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemsActivity()));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemsActivity()));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1048,10 +1108,14 @@ String companyId="";
 /* Widget for constat order transaction Layout */
   Widget getConstantOrderInvoice(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
           mListener: this,
         )));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1080,10 +1144,16 @@ String companyId="";
 /* Widget for order transaction Layout */
   Widget getOrderInvoice(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderInvoiceActivity(
+      onTap: ()async{
+
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderInvoiceActivity(
           mListener: this,
         )));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1111,10 +1181,14 @@ String companyId="";
 /* Widget for sell transaction Layout */
   Widget getSellLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
           mListener: this,
         )));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1141,8 +1215,12 @@ String companyId="";
   /* Widget for purchase transaction Layout */
   Widget getPuerchaseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,)));
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1169,9 +1247,12 @@ String companyId="";
   /* Widget for payment transaction Layout */
   Widget getPaymentLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1198,8 +1279,12 @@ String companyId="";
   /* Widget for receipt transaction Layout */
   Widget getReceptLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this)));
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1226,8 +1311,12 @@ String companyId="";
   /* Widget for journal transaction Layout */
   Widget getDebitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1253,8 +1342,12 @@ String companyId="";
   /* Widget for credit transaction Layout */
   Widget getCreditLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1281,8 +1374,12 @@ String companyId="";
   /* Widget for journal transaction Layout */
   Widget getJournalLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1309,8 +1406,12 @@ String companyId="";
   /* Widget for contra transaction Layout */
   Widget getContraLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1337,8 +1438,12 @@ String companyId="";
   /* Widget for expense transaction Layout */
   Widget getExpensseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this)));
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this)));
+        if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
       },
       onDoubleTap: (){},
       child: Padding(
