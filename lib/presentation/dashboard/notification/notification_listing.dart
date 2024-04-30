@@ -295,7 +295,11 @@ class _NotificationListingState extends State<NotificationListing> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
+
+        DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
+
+        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
