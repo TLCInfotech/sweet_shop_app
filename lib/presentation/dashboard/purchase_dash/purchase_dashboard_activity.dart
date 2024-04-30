@@ -421,7 +421,10 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
                     fontSize: .1
                 ),
                 alignment: ChartAlignment.near),
-            primaryXAxis: CategoryAxis(labelPlacement: LabelPlacement.betweenTicks),
+            primaryXAxis: CategoryAxis(
+                maximumLabelWidth: 50,
+                labelIntersectAction: AxisLabelIntersectAction.rotate90,
+                labelPlacement: LabelPlacement.betweenTicks),
             primaryYAxis: NumericAxis(
                 numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
                 title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )

@@ -388,15 +388,17 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
                                   color:Colors.black87,
                                 ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                children: [
-                                  Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
-                                  model.Outstanding>=0?  Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
-                                  Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                
+                                  children: [
+                                    Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
+                                    model.Outstanding>=0?  Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
+                                    Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

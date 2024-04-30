@@ -1131,6 +1131,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
+    String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1164,7 +1165,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
         print(apiUrl);
         print(model.toJson());
-        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(value)async{
               print("  Put Call :   $value ");
               var snackBar = SnackBar(content: Text('Item  Updated Successfully'));
