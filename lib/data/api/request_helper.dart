@@ -37,9 +37,13 @@ class ApiRequestHelper {
     print("sessionToken    ${sessionToken}");
 
     try {
+      String token=await AppPreferences.getSessionToken();
       Response response = await http.post(
         Uri.parse(apiUrl),
         body: requestBody,
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
       );
       print("response    ${response.body}");
       print("response    ${response.statusCode}");
@@ -123,9 +127,13 @@ class ApiRequestHelper {
     print("sessionToken    ${sessionToken}");
 
     try {
+      String token =await AppPreferences.getSessionToken();
       Response response = await http.post(
         Uri.parse(apiUrl),
         body: requestBody,
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
       );
 
       switch (response.statusCode) {
@@ -206,9 +214,13 @@ class ApiRequestHelper {
     print("sessionToken    ${sessionToken}");
 
     try{
+      String token=await AppPreferences.getSessionToken();
     Response response = await http.post(
       Uri.parse(apiUrl),
       body: requestBody,
+        headers: {
+          'Authorization': 'Bearer $token',
+        }
     );
     switch (response.statusCode) {
     /*response of api status id zero when something is wrong*/
@@ -286,10 +298,11 @@ class ApiRequestHelper {
     print("requestBody    $requestBody");
     print("sessionToken    ${sessionToken}");
    try {
+     String token =await AppPreferences.getSessionToken();
       Response response = await http.get(
         Uri.parse(apiUrl),
           headers: {
-            'Authorization': 'Bearer $sessionToken',
+            'Authorization': 'Bearer $token',
           }
       );
       print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
@@ -360,9 +373,13 @@ class ApiRequestHelper {
     print("apiUrl    $apiUrl");
     print("requestBody    $requestBody");
     print("sessionToken    ${sessionToken}");
-  try {
+ // try {
+    String token=await AppPreferences.getSessionToken();
     Response response = await http.get(
       Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        }
     );
     print("   jnkjfwbhjfwbhjw   ${response.statusCode}");
     switch (response.statusCode) {
@@ -410,15 +427,15 @@ class ApiRequestHelper {
         sessionExpire("jhhh");
         break;
     }
-  }
-  catch(e){
+ // }
+/*  catch(e){
     if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
       onException("Server Not Reachable!Please contact to Admin.");
     }
     else
       onException(e.toString().substring(0,e.toString().indexOf(":")));
 
-  }
+  }*/
 
   }
 
@@ -434,11 +451,14 @@ class ApiRequestHelper {
     print("requestBody    $requestBody");
 
     print("sessionToken    ${sessionToken}");
-
+    String token=await AppPreferences.getSessionToken();
     try {
       Response response = await http.delete(
           Uri.parse(apiUrl),
-          body: requestBody
+          body: requestBody,
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
       );
 
       switch (response.statusCode) {
@@ -504,7 +524,7 @@ class ApiRequestHelper {
         required Function(dynamic error) onException,
         required Function(dynamic error) sessionExpire}) async {
 
-
+String token=await AppPreferences.getSessionToken();
     Map<String, dynamic> cleanedData = {};
 
     requestBody.forEach((key, value) {
@@ -525,10 +545,10 @@ class ApiRequestHelper {
           body: jsonString,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $sessionToken',
+            'Authorization': 'Bearer $token',
           }
       );
-      print(response.statusCode);
+      print("responseeee   ${response.statusCode} $token  $response");
       switch (response.statusCode) {
       /*response of api status id zero when something is wrong*/
         case 400:
@@ -629,9 +649,14 @@ class ApiRequestHelper {
         print("fasfasf");
         print(e);
       }
+      String token=await AppPreferences.getSessionToken();
       Response response = await http.post(
         Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+     //   headers: {'Content-Type': 'application/json'},
         body: jsonString,
       );
 
