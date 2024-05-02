@@ -42,11 +42,14 @@ class _HomeFragmentState extends State<HomeFragment> {
   List<ProfitPartyWiseData> _profitPartywise = [];
 
   double profit=0.0;
-  var saleAmt=0.0;
+  var saleCompanyAmt=0.0;
   var expenseAmt=0.0;
   var returnAmt=0.0;
   var receiptAmt=0.0;
   var FranchiseeOutstanding=0.0;
+  var franchiseesaleAmt=0.0;
+  var itemOpening=0.0;
+  var itemClosing=0.0;
 
  @override
   void initState() {
@@ -172,10 +175,15 @@ print("hfshjffhfbh  $dateString");
                    setState(() {
                      profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
                      _profitPartywise=_profitPartywise;
-                     saleAmt=double.parse(data['DashboardMainData'][0]['Sale_Amount'].toString());
+                     franchiseesaleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                      expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
                      returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
                      receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
+                     saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
+
+                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
+
+                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
                      FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
                    });
 
@@ -282,14 +290,51 @@ print("hfshjffhfbh  $dateString");
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // getFieldTitleLayout("Statistics Of : "),
-                getPurchaseDateLayout(),
+                // getPurchaseDateLayout(),
+                // const SizedBox(height: 10,),
+                //
+                // const SizedBox(height: 5,),
+                // getProfitLayout(),
+                // sale_purchase_expense_container(),
+                // const SizedBox(height: 10,),
+                // getFranchiseeLayout(),
+
+
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87),
+                    getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green),
+                    getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87),
+
+                  ],
+                ),
                 const SizedBox(height: 10,),
 
-                const SizedBox(height: 5,),
-                getProfitLayout(),
-                sale_purchase_expense_container(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green),
+                    getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange),
+                    getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)
+                  ],
+                ),
                 const SizedBox(height: 10,),
-                getFranchiseeLayout(),
+                // getFieldTitleLayout("Profit/Loss "),
+                // const SizedBox(height: 5,),
+                getProfitLayout(),
+                // getFieldTitleLayout("Payment-Outanding "),
+                // const SizedBox(height: 5,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                    getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+
+                  ],
+                ),
+
                 const SizedBox(height: 10,),
                 partywisegraph()
                 // weeklySalegraph(),
@@ -302,6 +347,62 @@ print("hfshjffhfbh  $dateString");
 
 
 
+  Widget getThreeLayout(title,amount,boxcolor){
+    return GestureDetector(
+      onTap: (){
+        widget.mListener.getAddLeder(title);
+      },
+      child: Container(
+        height: 100,
+        width: (SizeConfig.screenWidth * 0.85) / 3,
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          // color: (Colors.orange).withOpacity(0.3),
+            border: Border.all(color: boxcolor),
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              width: (SizeConfig.screenWidth * 0.85) / 3,
+              // margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
+
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                "$amount",
+                style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Expanded(
+              child: Container(
+                width: (SizeConfig.screenWidth * 0.85) / 3,
+                alignment: Alignment.center,
+                color: boxcolor,
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "$title",
+                  style: item_heading_textStyle.copyWith(
+                      color: (Colors.white),
+                      fontWeight: FontWeight.bold
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget getProfitLayout(){
     return GestureDetector(
@@ -489,27 +590,27 @@ print("hfshjffhfbh  $dateString");
   //   );
   // }
 
-  sale_purchase_expense_container() {
-    return Column(
-      children: [
-        Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getSellPurchaseExpenseLayout(Colors.green, "${CommonWidget.getCurrencyFormat(saleAmt)}", "Sale"),
-                      getSellPurchaseExpenseLayout(Colors.orange, "${CommonWidget.getCurrencyFormat((expenseAmt))}", "Expense"),
-                    ],
-                  ),
-        const SizedBox(height: 10,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return"),
-            getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-          ],
-        ),
-      ],
-    );
-  }
+  // sale_purchase_expense_container() {
+  //   return Column(
+  //     children: [
+  //       Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     getSellPurchaseExpenseLayout(Colors.green, "${CommonWidget.getCurrencyFormat(saleAmt)}", "Sale"),
+  //                     getSellPurchaseExpenseLayout(Colors.orange, "${CommonWidget.getCurrencyFormat((expenseAmt))}", "Expense"),
+  //                   ],
+  //                 ),
+  //       const SizedBox(height: 10,),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return"),
+  //           getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   // Container weeklySalegraph() {
   //   return  Container(
@@ -599,8 +700,16 @@ print("hfshjffhfbh  $dateString");
   Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
     return   GestureDetector(
       onTap: (){
-        widget.mListener.getAddLeder(title);
-        print("newwww");
+        if(title=="Outstanding"){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
+            comeFor: "Franchisee Outstanding",
+            profit:FranchiseeOutstanding ,
+            date:dateTime,
+          )));
+        }
+        else{
+          widget.mListener.getAddLeder(title);
+        }
       },
       child: Container(
         height: 120,
