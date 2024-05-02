@@ -84,7 +84,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
+                             Navigator.pop(context);
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),

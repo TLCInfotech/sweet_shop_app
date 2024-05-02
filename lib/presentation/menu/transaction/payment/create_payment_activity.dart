@@ -522,19 +522,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
-      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         setState(() {
           selectedbankCashLedger=name!;
           selectedBankLedgerID=id!;
-          // Item_list=[];
-          // Updated_list=[];
-          // Deleted_list=[];
-          // Inserted_list=[];
         });
         print(selectedBankLedgerID);
         print(selectedbankCashLedger);
-
         // if(widget.voucherNo!=""){
         //   getExpInvoice(1);
         // }

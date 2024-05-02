@@ -144,7 +144,10 @@ String companyId="";
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                if(mounted){
+                  print("HERE BACK");
+                  Navigator.of(context).pushReplacementNamed('/dashboard');
+                }
               },
               onDoubleTap: () {},
               child: Container(
@@ -323,10 +326,10 @@ String companyId="";
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
           compId: companyId,
         )));
-        if(mounted){
+      /*  if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -358,10 +361,10 @@ String companyId="";
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
           compId: companyId,
         )));
-        if(mounted){
+     /*   if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -423,11 +426,11 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UsersList()));
-        if(mounted){
+    /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }
-
+*/
       },
       onDoubleTap: (){},
       child: Padding(
@@ -456,11 +459,11 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UnitsActivity()));
-        if(mounted){
+   /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }
-
+*/
       },
       onDoubleTap: (){},
       child: Padding(
@@ -489,10 +492,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseListingActivity()));
-        if(mounted){
+    /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -522,10 +525,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseGroup()));
-        if(mounted){
+    /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -557,10 +560,10 @@ String companyId="";
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
           companyId: companyId,
         )));
-        if(mounted){
+      /*  if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -590,10 +593,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreateItemOpeningBalForCompany(dateNew: DateTime.now().toString())));
-        if(mounted){
+   /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -624,11 +627,11 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal()));
-        if(mounted){
+   /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }
-
+*/
       },
       onDoubleTap: (){},
       child: Padding(
@@ -659,10 +662,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerOpeningBal()));
-        if(mounted){
+       /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -692,10 +695,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemCategoryActivity()));
-        if(mounted){
+       /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -725,10 +728,10 @@ String companyId="";
     return GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemsActivity()));
-        if(mounted){
+     /*   if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
 
       },
       onDoubleTap: (){},
@@ -1112,10 +1115,10 @@ String companyId="";
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
           mListener: this,
         )));
-        if(mounted){
+      /*  if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1149,10 +1152,7 @@ String companyId="";
         await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderInvoiceActivity(
           mListener: this,
         )));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
 
       },
       onDoubleTap: (){},
@@ -1185,10 +1185,7 @@ String companyId="";
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
           mListener: this,
         )));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1217,10 +1214,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1249,10 +1243,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1281,10 +1272,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1313,10 +1301,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1344,10 +1329,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1376,10 +1358,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1408,10 +1387,7 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this)));
-        if(mounted){
-          print("HERE BACK");
-          Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1440,10 +1416,10 @@ String companyId="";
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this)));
-        if(mounted){
+       /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
-        }
+        }*/
       },
       onDoubleTap: (){},
       child: Padding(
