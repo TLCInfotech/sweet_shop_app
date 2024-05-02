@@ -172,6 +172,7 @@ class _LoginActivityState extends State<LoginActivity> {
             Password: passwordText,
             UID: userName,
             PushKey:pushKey ,
+            AppType: "C",
             Machine_Name: deviceId,
            // modifire: "myMachine",
         );
