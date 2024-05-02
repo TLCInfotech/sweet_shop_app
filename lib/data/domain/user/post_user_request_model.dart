@@ -4,6 +4,7 @@ class PostUserRequestModel {
   String Company_ID;
   String? ledgerID;
   String? workingDays;
+  String? AppType;
   bool? active;
   bool resetPassword;
   String creator;
@@ -15,6 +16,7 @@ class PostUserRequestModel {
     this.ledgerID,
     this.photo,
     this.workingDays,
+    this.AppType,
     this.active,
     required this.resetPassword,
     required this.creator,
@@ -28,6 +30,7 @@ class PostUserRequestModel {
       'Ledger_ID': ledgerID,
       'Photo': photo,
       'Working_Days': workingDays,
+      'AppType': AppType,
       'Active': active,
       'Reset_Password': resetPassword,
       'Creator': creator,

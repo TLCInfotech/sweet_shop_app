@@ -4,6 +4,7 @@ class PutUserRequestModel {
   String? ledgerID;
   String? Company_ID;
   String? workingDays;
+  String? AppType;
   bool? active;
   bool resetPassword;
   String creator;
@@ -18,6 +19,7 @@ class PutUserRequestModel {
     this.workingDays,
     this.active,
     required this.resetPassword,
+     this.AppType,
     required this.creator,
     required this.creatorMachine,
    this.Photo
@@ -30,6 +32,7 @@ class PutUserRequestModel {
       'Ledger_ID': ledgerID,
       'Company_ID': Company_ID,
       'Working_Days': workingDays,
+      'AppType': AppType,
       'Active': active,
       'Reset_Password': resetPassword,
       'Modifier': creator,

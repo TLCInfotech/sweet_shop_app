@@ -355,7 +355,7 @@ String oldUid="";
                         franchiseeId=id!;
                       });
                     }
-                    print(franchiseeId);
+                    print("ddddddddd   $franchiseeId");
                   },
                   ledgerName: widget.come=="edit"?widget.editUser["Ledger_Name"]:""), /* GestureDetector(
                 onTap: (){
@@ -617,6 +617,7 @@ String oldUid="";
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -627,6 +628,7 @@ String oldUid="";
         Company_ID: companyId,
         ledgerID: franchiseeId,
         workingDays: workingDay,
+       // AppType: "F",
         active: true,
         resetPassword: true,
         creator: creatorName,
@@ -678,6 +680,7 @@ String oldUid="";
           Photo: picImageBytes.length==0?null:picImageBytes,
           Company_ID: companyIds,
           ledgerID: franchiseeId,
+         // AppType: "",
           workingDays: workingDay,
           active: checkActiveValue,
           resetPassword: checkPasswordValue,
