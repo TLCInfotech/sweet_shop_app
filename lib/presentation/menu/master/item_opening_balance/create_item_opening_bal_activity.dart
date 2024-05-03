@@ -110,6 +110,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
+                disableColor = false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
@@ -814,6 +815,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               Inserted_list=[];
               Updated_list=[];
               Deleted_list=[];
+              widget.mListener.backToList();
             });
             await callGetFranchiseeItemOpeningList(0);
 
@@ -842,4 +844,5 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 }
 
 abstract class CreateItemOpeningBalInterface {
+  backToList();
 }

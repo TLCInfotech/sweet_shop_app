@@ -85,8 +85,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
-
                 isLoaderShow=false;
+                disableColor = false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;

@@ -118,8 +118,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
                setState(() {
-
-                isLoaderShow=false;
+                 isLoaderShow=false;
+                disableColor = false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;

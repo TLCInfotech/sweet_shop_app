@@ -760,7 +760,6 @@ print("mosdeemmm  ${model.toJson()}");
               Deleted_list=[];
             });
             await callGetFrenchisee(1);
-
           }, onFailure: (error) {
             setState(() {
               isLoaderShow=false;
@@ -806,6 +805,7 @@ print("mosdeemmm  ${model.toJson()}");
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
+                disableColor = false;
                 if(data!=null){
                  // Item_list=data;
                   print("ledger opening data....  $data");

@@ -56,6 +56,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
@@ -450,5 +451,14 @@ compId:companyId ,
     else{
       CommonWidget.noInternetDialogNew(context);
     }
+  }
+
+  @override
+  backToList() {
+    // TODO: implement backToList
+ setState(() {
+   callGetFranchiseeNot(0);
+ });
+ Navigator.pop(context);
   }
 }
