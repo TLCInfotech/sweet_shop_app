@@ -256,9 +256,9 @@ Widget getCompanyId(double parentHeight, double parentWidth){
           companyId.text = value;
         });
       },
-      textInput: TextInputType.text,
+      textInput: TextInputType.number,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.digitsOnly,
     );
 }
   /* Widget for navigate to next screen button layout */

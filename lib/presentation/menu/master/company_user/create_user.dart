@@ -339,7 +339,7 @@ String oldUid="";
           Padding(
             padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
             child:  SearchableLedgerDropdown(
-                  apiUrl:ApiConstants().franchisee+"?",
+                  apiUrl:ApiConstants().franchiseeWithCompany+"?",
                   titleIndicator: false,
                   franchiseeName: widget.come=="edit"?widget.editUser["Ledger_Name"]:"",
                   franchisee: widget.come,
