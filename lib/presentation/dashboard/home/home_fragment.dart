@@ -15,6 +15,7 @@ import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
+import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
@@ -290,7 +291,7 @@ print("hfshjffhfbh  $dateString");
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // getFieldTitleLayout("Statistics Of : "),
-                // getPurchaseDateLayout(),
+                getPurchaseDateLayout(),
                 // const SizedBox(height: 10,),
                 //
                 // const SizedBox(height: 5,),
@@ -304,9 +305,21 @@ print("hfshjffhfbh  $dateString");
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87),
+                    GestureDetector(
+                        onTap: (){
+                           Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
+                             newDate: dateTime,
+                           )));
+                           },
+                        child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
                     getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green),
-                    getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87),
+                    GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                            newDate: dateTime.add(Duration(days: 1)),
+                          )));
+                          print("kkkkkkkk");
+                        }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
 
                   ],
                 ),
@@ -315,9 +328,18 @@ print("hfshjffhfbh  $dateString");
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green),
-                    getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange),
-                    getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)
+                    GestureDetector(
+                        onTap: (){
+                          widget.mListener.getAddLeder("Sale");
+                        },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
+                    GestureDetector(
+                        onTap: (){
+                          widget.mListener.getAddLeder("Expense");
+                        },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
+                    GestureDetector(
+                        onTap: (){
+                          widget.mListener.getAddLeder("Return");
+                        },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue))
                   ],
                 ),
                 const SizedBox(height: 10,),
@@ -348,58 +370,52 @@ print("hfshjffhfbh  $dateString");
 
 
   Widget getThreeLayout(title,amount,boxcolor){
-    return GestureDetector(
-      onTap: (){
-        widget.mListener.getAddLeder(title);
-      },
-      child: Container(
-        height: 100,
-        width: (SizeConfig.screenWidth * 0.85) / 3,
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          // color: (Colors.orange).withOpacity(0.3),
-            border: Border.all(color: boxcolor),
-            borderRadius: BorderRadius.circular(5)),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(
-              height: 40,
+    return Container(
+      height: 100,
+      width: (SizeConfig.screenWidth * 0.85) / 3,
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        // color: (Colors.orange).withOpacity(0.3),
+          border: Border.all(color: boxcolor),
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            height: 40,
+            width: (SizeConfig.screenWidth * 0.85) / 3,
+            // margin: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "$amount",
+              style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+
+          Expanded(
+            child: Container(
               width: (SizeConfig.screenWidth * 0.85) / 3,
-              // margin: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
-
-              ),
               alignment: Alignment.center,
+              color: boxcolor,
+              padding: EdgeInsets.all(5),
               child: Text(
-                "$amount",
-                style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            Expanded(
-              child: Container(
-                width: (SizeConfig.screenWidth * 0.85) / 3,
-                alignment: Alignment.center,
-                color: boxcolor,
-                padding: EdgeInsets.all(5),
-                child: Text(
-                  "$title",
-                  style: item_heading_textStyle.copyWith(
-                      color: (Colors.white),
-                      fontWeight: FontWeight.bold
-                  ),
-                  textAlign: TextAlign.center,
+                "$title",
+                style: item_heading_textStyle.copyWith(
+                    color: (Colors.white),
+                    fontWeight: FontWeight.bold
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
+          ),
 
-          ],
-        ),
+        ],
       ),
     );
   }

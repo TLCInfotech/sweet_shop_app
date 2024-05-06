@@ -21,7 +21,8 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'create_item_opening_bal_activity.dart';
 
 class ItemOpeningBal extends StatefulWidget {
-  const ItemOpeningBal({super.key});
+  final newDate;
+  const ItemOpeningBal({super.key, this.newDate});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
@@ -118,6 +119,9 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     // TODO: implement initState
     super.initState();
     callGetFranchiseeItemOpeningList(1);
+    if(widget.newDate!=null){
+      invoiceDate=widget.newDate;
+    }
     getLocal();
   }
   String companyId="";

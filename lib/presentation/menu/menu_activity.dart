@@ -626,7 +626,9 @@ String companyId="";
   Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal(
+          newDate: null,
+        )));
    /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
