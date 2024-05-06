@@ -22,7 +22,8 @@ import 'create_sell_activity.dart';
 
 class SellActivity extends StatefulWidget {
 final String? comeFor;
-  const SellActivity({super.key, required mListener,  this.comeFor});
+final DateTime? dateNew;
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew});
 
   @override
   State<SellActivity> createState() => _SellActivityState();

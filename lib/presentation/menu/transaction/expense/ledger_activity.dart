@@ -21,7 +21,8 @@ import '../../../common_widget/get_date_layout.dart';
 
 class LedgerActivity extends StatefulWidget {
   final String? comeFor;
-  const LedgerActivity({super.key, required mListener, this.comeFor});
+  final dateNew;
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -43,6 +44,11 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.dateNew!=null){
+      setState(() {
+        newDate=widget.dateNew;
+      });
+    }
     getExpense(page);
   }
   _scrollListener() {

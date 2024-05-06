@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/home_fragment.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../core/app_preferance.dart';
@@ -33,7 +35,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
 
   List<SalesItemWise> _saleItem = [];
 
-
+  DateTime dateTime= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
   @override
   void initState() {
@@ -244,6 +246,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
         child: Column(
           children: [
             getPurchaseDateLayout(),
+            goToTransactionPage(),
             toggleLayout(),
 
             isPartyWise?partywisegraph():itemwisegraph()
@@ -252,6 +255,46 @@ class _PaymentDashState extends State<PaymentDashActivity> {
       ),
     );
   }
+
+  goToTransactionPage(){
+    return GestureDetector(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,)));
+      },
+      child: Container(
+        height: 40,
+        width: SizeConfig.screenWidth,
+        margin: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+          // border: Border.all(color: Colors.black87),
+          color: Colors.green,
+          // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        // padding: EdgeInsets.all(5),
+        child: Padding(
+          padding:  EdgeInsets.all(5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(ApplicationLocalizations.of(context)!.translate("receipt")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
+              Icon(Icons.double_arrow_outlined,color: Colors.white,)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   var isPartyWise=true;
   toggleLayout(){
     return Padding(
