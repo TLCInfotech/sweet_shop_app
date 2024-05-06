@@ -15,6 +15,7 @@ import '../../../core/size_config.dart';
 import '../../../data/api/constant.dart';
 import '../../../data/api/request_helper.dart';
 import '../../common_widget/get_date_layout.dart';
+import '../../menu/transaction/expense/ledger_activity.dart';
 
 class LedgerDashActivity extends StatefulWidget {
   const LedgerDashActivity({Key? key}) : super(key: key);
@@ -241,8 +242,8 @@ class _LedgerDashState extends State<LedgerDashActivity> {
         child: Column(
           children: [
             getPurchaseDateLayout(),
+            goToTransactionPage(),
             toggleLayout(),
-
             isPartyWise?partywisegraph():itemwisegraph()
           ],
         ),
@@ -313,7 +314,44 @@ class _LedgerDashState extends State<LedgerDashActivity> {
       ),
     );
   }
-
+  goToTransactionPage(){
+    return GestureDetector(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,)));
+      },
+      child: Container(
+        height: 40,
+        width: SizeConfig.screenWidth,
+        margin: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+          // border: Border.all(color: Colors.black87),
+          color: Colors.green,
+          // border: Border.all(color: isPartyWise?Colors.transparent: Colors.black87),
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 5,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+        // padding: EdgeInsets.all(5),
+        child: Padding(
+          padding:  EdgeInsets.all(5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(ApplicationLocalizations.of(context)!.translate("expense_invoice")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
+              Icon(Icons.double_arrow_outlined,color: Colors.white,)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 //  DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
 
 
