@@ -29,7 +29,7 @@ import 'add_or_edit_item_opening_bal.dart';
 
 class CreateItemOpeningBal extends StatefulWidget {
   final CreateItemOpeningBalInterface mListener;
-  final String dateNew;
+  final  dateNew;
   final editedItem;
   final compId;
   final come;
@@ -78,6 +78,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   void initState() {
     // TODO: implement initState
     super.initState();
+    invoiceDate=widget.dateNew;
     if(widget.editedItem!=null) {
       setData();
     }

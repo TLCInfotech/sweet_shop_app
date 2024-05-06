@@ -312,7 +312,11 @@ print("hfshjffhfbh  $dateString");
                            )));
                            },
                         child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
-                    getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green),
+                    GestureDetector(
+                        onTap: (){
+                          widget.mListener.getAddLeder("Sale");
+                        },
+                        child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green)),
                     GestureDetector(
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
@@ -327,19 +331,21 @@ print("hfshjffhfbh  $dateString");
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                   children: [
                     GestureDetector(
                         onTap: (){
-                          widget.mListener.getAddLeder("Sale");
+                          widget.mListener.getAddLeder("Return");
+                        },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
+                    GestureDetector(
+                        onTap: (){
+
                         },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
                     GestureDetector(
                         onTap: (){
                           widget.mListener.getAddLeder("Expense");
                         },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Return");
-                        },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue))
+
                   ],
                 ),
                 const SizedBox(height: 10,),

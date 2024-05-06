@@ -402,8 +402,8 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text("Sale : ${CommonWidget.getCurrencyFormat(model.Sale_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                    Text("Return  : ${CommonWidget.getCurrencyFormat(model.Return_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,)),
                                     Text("Expense : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.orange),),
-                                    Text("Return  : ${CommonWidget.getCurrencyFormat(model.Expense_Amount)}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.indigo,)),
 
                                   ],
                                 ),

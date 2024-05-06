@@ -193,7 +193,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               ),
               onPressed: () async{
                 await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-                  dateNew:CommonWidget.getDateLayout(invoiceDate),
+                  dateNew:invoiceDate,
 compId:companyId ,
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
@@ -309,7 +309,7 @@ compId:companyId ,
                   child: GestureDetector(
                     onTap: ()async{
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-                        dateNew:CommonWidget.getDateLayout(invoiceDate),
+                        dateNew:invoiceDate,
                         editedItem:Franchisee_list[index],
                         compId:companyId ,
                         come:"edit",
