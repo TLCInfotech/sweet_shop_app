@@ -533,7 +533,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   }
 
-  Container InvoiceInfo() {
+  Widget InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
@@ -541,15 +541,12 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Colors.grey,width: 1),
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              width:(SizeConfig.screenWidth)*.32,
-              child: getPurchaseDateLayout()),
+          getPurchaseDateLayout(),
           SizedBox(width: 5,),
-          Expanded(
-              child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
         ],
       ),
     );
