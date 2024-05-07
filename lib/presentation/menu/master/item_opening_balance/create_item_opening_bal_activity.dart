@@ -33,8 +33,9 @@ class CreateItemOpeningBal extends StatefulWidget {
   final editedItem;
   final compId;
   final come;
+  final franchiseeDetails;
 
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come});
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -82,8 +83,23 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     if(widget.editedItem!=null) {
       setData();
     }
+    else if(widget.franchiseeDetails!=null){
+      setFranchisee();
+    }
   }
+  List fdetail=[];
+  setFranchisee()async{
+    setState(() {
+      fdetail=widget.franchiseeDetails;
+    });
+    setState(() {
+      selectedFranchiseeID=fdetail[1];
+      selectedFranchiseeName=fdetail[0];
+    });
 
+    print(selectedFranchiseeName);
+    await callGetFranchiseeItemOpeningList(0);
+  }
   setData()async{
     setState(() {
       selectedFranchiseeID=widget.editedItem['Franchisee_ID'];

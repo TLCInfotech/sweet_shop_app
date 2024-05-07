@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
@@ -68,6 +69,12 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   late DateTime dateTime;
   String dateString="";
 
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    await callGetFranchiseeNot(0);
+    await getDashboardData();
+  }
 
   callGetFranchiseeNot(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
@@ -282,30 +289,66 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
           ),
         ),
         backgroundColor: const Color(0xFFfffff5),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // getFieldTitleLayout("Statistics Of : "),
-                getPurchaseDateLayout(),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                            mListener: this,
-                          )));
-                        },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Purchase")),
-                    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
+        body: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // getFieldTitleLayout("Statistics Of : "),
+                  getPurchaseDateLayout(),
+                  const SizedBox(height: 10,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: ()async{
+                            print("CLICKED");
+                           await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                              dateNew: dateTime,
+                              mListener: this,
+                            )));
+                           await callGetFranchiseeNot(0);
+                           await getDashboardData();
+                          },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Sale")),
+
+                      GestureDetector(
+                          onTap: ()async{
+                            print("CLICKED");
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                              dateNew: dateTime,
+                              mListener: this,
+                            )));
+                            await callGetFranchiseeNot(0);
+                            await getDashboardData();
+                          },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return")),
+
                   ],
-                ),
-                const SizedBox(height: 10,),
-                getProfitLayout(),
-              ],
+                  ),
+
+                  const SizedBox(height: 10,),
+                  GestureDetector(
+                      onTap: ()async{
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(
+                          dateNew: dateTime,
+                          mListener: this,
+                        )));
+                        await callGetFranchiseeNot(0);
+                        await getDashboardData();
+                      },
+                      child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
+
+                  const SizedBox(height: 10,),
+                  getProfitLayout(),
+                  const SizedBox(height: 5,),
+                ],
+              ),
             ),
           ),
         ));
@@ -443,14 +486,15 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   getFranAnimatedFunction(){
     return  Padding(
       padding:  EdgeInsets.only(left: 20),
-      child: Countup(
-          precision: 2,
-          begin: 0,
-          end:double.parse((FranchiseeOutstanding).toString()) ,
-          duration: const Duration(seconds: 2),
-          separator: ',',
-          style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-      ),
+      child:Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(FranchiseeOutstanding)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+      // Countup(
+      //     precision: 2,
+      //     begin: 0,
+      //     end:double.parse((FranchiseeOutstanding).toString()) ,
+      //     duration: const Duration(seconds: 2),
+      //     separator: ',',
+      //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+      // ),
     );
   }
 
@@ -580,8 +624,6 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     ):Container();
   }
 
-
-
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
@@ -595,59 +637,53 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   }
 
   Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
-    return   GestureDetector(
-      onTap: (){
-        // widget.mListener.getAddLeder(title);
-        print("newwww");
-      },
-      child: Container(
-        height: 120,
-        width: (SizeConfig.screenWidth * 0.85) / 2,
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: boxcolor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(5)),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(
-              height: 60,
-              width: (SizeConfig.screenWidth * 0.85) / 2,
-              // margin: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: boxcolor, borderRadius: BorderRadius.circular(5)),
-              alignment: Alignment.center,
-              child: Text(
-                amount,
-                style: subHeading_withBold.copyWith(fontSize:18 ),
-              ),
+    return   Container(
+      height: 120,
+      width: (SizeConfig.screenWidth * 0.89) / 2,
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: boxcolor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: (SizeConfig.screenWidth * 0.89) / 2,
+            // margin: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+                color: boxcolor, borderRadius: BorderRadius.circular(5)),
+            alignment: Alignment.center,
+            child: Text(
+              amount,
+              style: subHeading_withBold.copyWith(fontSize:18 ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "$title",
-                  style: item_heading_textStyle.copyWith(
-                      color: boxcolor,
-                      fontWeight: FontWeight.bold
-                  ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "$title",
+                style: item_heading_textStyle.copyWith(
+                    color: boxcolor,
+                    fontWeight: FontWeight.bold
                 ),
-                // const SizedBox(
-                //   width: 10,
-                // ),
-                // FaIcon(
-                //   FontAwesomeIcons.solidArrowAltCircleRight,
-                //   color: boxcolor,
-                // )
-              ],
-            )
+              ),
+              // const SizedBox(
+              //   width: 10,
+              // ),
+              // FaIcon(
+              //   FontAwesomeIcons.solidArrowAltCircleRight,
+              //   color: boxcolor,
+              // )
+            ],
+          )
 
-          ],
-        ),
+        ],
       ),
     );
 

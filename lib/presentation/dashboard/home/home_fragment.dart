@@ -229,6 +229,12 @@ print("hfshjffhfbh  $dateString");
     }
   }
 
+  Future<void> refreshList() async {
+      await Future.delayed(Duration(seconds: 2));
+    await callGetFranchiseeNot(0);
+   await  getDashboardData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return isShowSkeleton? SkeletonAnimation(
@@ -284,87 +290,91 @@ print("hfshjffhfbh  $dateString");
           ),
         ),
         backgroundColor: const Color(0xFFfffff5),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // getFieldTitleLayout("Statistics Of : "),
-                getPurchaseDateLayout(),
-                // const SizedBox(height: 10,),
-                //
-                // const SizedBox(height: 5,),
-                // getProfitLayout(),
-                // sale_purchase_expense_container(),
-                // const SizedBox(height: 10,),
-                // getFranchiseeLayout(),
+        body: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () => refreshList(),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // getFieldTitleLayout("Statistics Of : "),
+                  getPurchaseDateLayout(),
+                  // const SizedBox(height: 10,),
+                  //
+                  // const SizedBox(height: 5,),
+                  // getProfitLayout(),
+                  // sale_purchase_expense_container(),
+                  // const SizedBox(height: 10,),
+                  // getFranchiseeLayout(),
 
 
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: (){
-                           Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
-                             newDate: dateTime,
-                           )));
-                           },
-                        child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Sale");
-                        },
-                        child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green)),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                            newDate: dateTime.add(Duration(days: 1)),
-                          )));
-                        }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Return");
-                        },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
-                  ],
-                ),
-                const SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: (){
+                             Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
+                               newDate: dateTime,
+                             )));
+                             },
+                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
+                      GestureDetector(
+                          onTap: (){
+                            widget.mListener.getAddLeder("Sale");
+                          },
+                          child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green)),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                              newDate: dateTime.add(Duration(days: 1)),
+                            )));
+                          }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
+                      GestureDetector(
+                          onTap: (){
+                            widget.mListener.getAddLeder("Return");
+                          },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                 GestureDetector(
-                        onTap: (){
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                   GestureDetector(
+                          onTap: (){
 
-                        },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Expense");
-                        },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
+                          },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
+                      GestureDetector(
+                          onTap: (){
+                            widget.mListener.getAddLeder("Expense");
+                          },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
 
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                // getFieldTitleLayout("Profit/Loss "),
-                // const SizedBox(height: 5,),
-                getProfitLayout(),
-                // getFieldTitleLayout("Payment-Outanding "),
-                // const SizedBox(height: 5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-                    getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 10,),
+                  // getFieldTitleLayout("Profit/Loss "),
+                  // const SizedBox(height: 5,),
+                  getProfitLayout(),
+                  // getFieldTitleLayout("Payment-Outanding "),
+                  // const SizedBox(height: 5,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                      getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ));
@@ -375,7 +385,7 @@ print("hfshjffhfbh  $dateString");
   Widget getThreeLayout(title,amount,boxcolor){
     return Container(
       height: 100,
-      width: (SizeConfig.screenWidth * 0.85) / 2,
+      width: (SizeConfig.screenWidth * 0.89) / 2,
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
         // color: (Colors.orange).withOpacity(0.3),
@@ -386,7 +396,7 @@ print("hfshjffhfbh  $dateString");
         children: [
           Container(
             height: 40,
-            width: (SizeConfig.screenWidth * 0.85) / 2,
+            width: (SizeConfig.screenWidth * 0.89) / 2,
             // margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
@@ -403,7 +413,7 @@ print("hfshjffhfbh  $dateString");
 
           Expanded(
             child: Container(
-              width: (SizeConfig.screenWidth * 0.85) / 2,
+              width: (SizeConfig.screenWidth * 0.89) / 2,
               alignment: Alignment.center,
               color: boxcolor,
               padding: EdgeInsets.all(5),
@@ -537,14 +547,19 @@ print("hfshjffhfbh  $dateString");
    getAnimatedFunction(){
    return  Padding(
      padding:  EdgeInsets.only(left: 50),
-     child: Countup(
-       precision: 2,
-       begin: 0,
-       end: double.parse((profit).toString()),
-       duration: const Duration(seconds: 2),
-       separator: ',',
-       style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-     ),
+     child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+     // Countup(
+     //   locale: Locale('HI', 'IN'),
+     //   precision: 2,
+     //   begin: 0,
+     //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+     //   end: double.parse((profit).toString()),
+     //   duration: const Duration(seconds: 2),
+     //   separator: ',',
+     //
+     //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+     //
+     // ),
    );
   }
 
@@ -732,7 +747,7 @@ print("hfshjffhfbh  $dateString");
       },
       child: Container(
         height: 120,
-        width: (SizeConfig.screenWidth * 0.85) / 2,
+        width: (SizeConfig.screenWidth * 0.89) / 2,
         // margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: boxcolor.withOpacity(0.3),
@@ -742,7 +757,7 @@ print("hfshjffhfbh  $dateString");
           children: [
             Container(
               height: 60,
-              width: (SizeConfig.screenWidth * 0.85) / 2,
+              width: (SizeConfig.screenWidth * 0.89) / 2,
               // margin: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: boxcolor, borderRadius: BorderRadius.circular(5)),

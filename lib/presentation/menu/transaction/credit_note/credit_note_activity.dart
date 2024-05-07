@@ -22,7 +22,9 @@ import 'craete_credit_note_activity.dart';
 
 class CreditNoteActivity extends StatefulWidget {
   final String? comeFor;
-  const CreditNoteActivity({super.key, required mListener,  this.comeFor});
+  final dateNew;
+  final franhiseeID;
+  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID});
 
   @override
   State<CreditNoteActivity> createState() => _CreditNoteState();
@@ -44,6 +46,11 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.dateNew!=null){
+      setState(() {
+        invoiceDate=widget.dateNew!;
+      });
+    }
     getCreditNote(page);
     setData();
   }
@@ -389,7 +396,15 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().voucherCreditNoteHeader}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+        String apiUrl;
+        if(widget.franhiseeID!=null){
+         apiUrl = "${baseurl}${ApiConstants().voucherCreditNoteHeader}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10&${StringEn.frnachisee_id}=${widget.franhiseeID}";
+
+        }
+        else{
+          apiUrl = "${baseurl}${ApiConstants().voucherCreditNoteHeader}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
