@@ -6,6 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_dashboard.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
 import 'package:textfield_search/textfield_search.dart';
 import '../../../../core/app_preferance.dart';
@@ -30,7 +31,7 @@ class ProfitLossDetailActivity extends StatefulWidget {
   State<ProfitLossDetailActivity> createState() => _ProfitLossDetailActivityState();
 }
 
-class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
+class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with ProfitLossDashInterface {
 
 
  // DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -374,6 +375,56 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(mListener: this,
+                        fid: model.Vendor_ID,
+                        vName: model.Vendor_Name,
+                        )));
+
+                      },
+                      child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image(
+                                    image: AssetImage("assets/images/hand.png"),
+                                    height: 33,
+                                    width:33,
+                                    color:Colors.black87,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                    children: [
+                                      Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
+                                      model.Profit>=0?  Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
+                                      Text("${CommonWidget.getCurrencyFormat(model.Profit)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ),
+                  ),
+                ),
+              );
+             /* return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
                     child: Card(
                       child:Column(
                         children: [
@@ -419,7 +470,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity> {
                     ),
                   ),
                 ),
-              );
+              );*/
             },
             separatorBuilder: (BuildContext context, int index) {
               return const SizedBox(

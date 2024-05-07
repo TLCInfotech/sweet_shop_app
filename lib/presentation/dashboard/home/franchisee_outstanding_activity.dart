@@ -6,6 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_dash_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
 import 'package:textfield_search/textfield_search.dart';
 import '../../../../core/app_preferance.dart';
@@ -30,10 +31,7 @@ class FranchiseeOutstandingDetailActivity extends StatefulWidget {
   State<FranchiseeOutstandingDetailActivity> createState() => _FranchiseeOutstandingDetailActivityState();
 }
 
-class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstandingDetailActivity> {
-
-
-  //DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstandingDetailActivity>with FOutstandingDashActivityInterface {
 
   TextEditingController serchvendor=TextEditingController();
 
@@ -374,35 +372,44 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
-                    child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image(
-                                  image: AssetImage("assets/images/hand.png"),
-                                  height: 33,
-                                  width:33,
-                                  color:Colors.black87,
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => FOutstandingDashActivity(mListener: this,
+                          fid: model.Vendor_ID,
+                          vName: model.Vendor_Name,
+                        )));
+
+                      },
+                      child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image(
+                                    image: AssetImage("assets/images/hand.png"),
+                                    height: 33,
+                                    width:33,
+                                    color:Colors.black87,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                
-                                  children: [
-                                    Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
-                                    model.Outstanding>=0?  Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
-                                    Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                                    children: [
+                                      Text(model.Vendor_Name,style: item_heading_textStyle.copyWith(fontSize: 20),),
+                                      model.Outstanding>=0?  Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.green,fontSize: 20),):
+                                      Text("${CommonWidget.getCurrencyFormat(model.Outstanding)}",overflow: TextOverflow.clip,style: big_title_style.copyWith(color: Colors.red,fontSize: 20),),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
+                              ],
+                            ),
+                          )
+                      ),
                     ),
                   ),
                 ),

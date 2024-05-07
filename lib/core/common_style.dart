@@ -78,7 +78,7 @@ var box_decoration=BoxDecoration(
 
 
 const appbar_text_style=TextStyle(
-    fontSize: 22.0,
+    fontSize: 20.0,
     color: Colors.black87,
     fontFamily: "Inter_SemiBold_Font"
 );

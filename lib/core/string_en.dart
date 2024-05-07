@@ -273,4 +273,5 @@ class StringEn{
   static const SELECT_UNIT="Select measuring unit";
   static const SALE = "Sale";
   static const PURCHASE = "Purchase";
+  static const frnachisee_id = "Franchisee_ID";
 }

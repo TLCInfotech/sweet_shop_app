@@ -9,29 +9,32 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
-import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
-import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
-import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../menu/master/item_opening_balance/create_item_opening_bal_activity.dart';
+import '../../menu/transaction/expense/ledger_activity.dart';
+import '../../menu/transaction/sell/sell_activity.dart';
 import 'home_skeleton.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-class HomeFragment extends StatefulWidget {
-  final HomeFragmentInterface mListener;
-  const HomeFragment({Key? key, required this.mListener}) : super(key: key);
+class FOutstandingDashActivity extends StatefulWidget {
+  final FOutstandingDashActivityInterface mListener;
+  final fid;
+  final vName;
+  final date;
+  const FOutstandingDashActivity({Key? key, required this.mListener, this.fid, this.vName, this.date}) : super(key: key);
 
   @override
-  State<HomeFragment> createState() => _HomeFragmentState();
+  State<FOutstandingDashActivity> createState() => _FOutstandingDashActivityState();
 }
 
-class _HomeFragmentState extends State<HomeFragment> {
+class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> with CreateItemOpeningBalInterface{
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
@@ -43,26 +46,24 @@ class _HomeFragmentState extends State<HomeFragment> {
   List<ProfitPartyWiseData> _profitPartywise = [];
 
   double profit=0.0;
-  var saleCompanyAmt=0.0;
+  var purchaseAmt=0.0;
   var expenseAmt=0.0;
   var returnAmt=0.0;
   var receiptAmt=0.0;
   var FranchiseeOutstanding=0.0;
-  var franchiseesaleAmt=0.0;
+  var saleAmt=0.0;
   var itemOpening=0.0;
   var itemClosing=0.0;
 
- @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     addDate();
     callGetFranchiseeNot(0);
     getDashboardData();
-print("hfshjffhfbh  $dateString");
-
-   // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
-
+    print("hfshjffhfbh  $dateString");
+    // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
   }
   late DateTime dateTime;
   String dateString="";
@@ -76,9 +77,9 @@ print("hfshjffhfbh  $dateString");
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-            token: sessionToken,
+          token: sessionToken,
         );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&${StringEn.frnachisee_id}=${widget.fid}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               setState(() {
@@ -116,7 +117,7 @@ print("hfshjffhfbh  $dateString");
   addDate() async {
 
     String  dateString = await AppPreferences.getDateLayout(); // Example string date
-     dateTime = DateTime.parse(dateString);
+    dateTime = DateTime.parse(dateString);
     if(dateString==""){
       DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
       AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
@@ -139,6 +140,7 @@ print("hfshjffhfbh  $dateString");
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
+
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
     if (netStatus == InternetConnectionStatus.connected){
@@ -150,43 +152,43 @@ print("hfshjffhfbh  $dateString");
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.frnachisee_id}=${widget.fid}&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 
               setState(() {
                 _saleData=[];
                 _profitPartywise=[];
-                profit=0.0;
-                FranchiseeOutstanding=0.0;
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
-                    if (mounted) {
-                      for (var item in data['DashboardSaleDateWise']) {
-                        _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
-                      }
-                      for (var item in data['DashboardProfitPartywise']) {
-                        _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
-                      }
+                  if (mounted) {
+                    for (var item in data['DashboardSaleDateWise']) {
+                      _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
                     }
-                    // _saleData=_saleData;
-                    // print("nessssss  $_saleData");
+                    for (var item in data['DashboardProfitPartywise']) {
+                      _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
+                    }
+                  }
+                  // _saleData=_saleData;
+                  // print("nessssss  $_saleData");
 
-                   setState(() {
-                     profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
-                     _profitPartywise=_profitPartywise;
-                     franchiseesaleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
-                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
-                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
-                     receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
-                     saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
+                  setState(() {
+                    profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
+                    _profitPartywise=_profitPartywise;
+                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Purchase_Amount'].toString());
+                    expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
+                    returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
+                    receiptAmt=double.parse(data['DashboardMainData'][0]['Payment_Amount'].toString());
+                    saleAmt=double.parse(data['DashboardMainData'][0]['Sale_Amount'].toString());
 
-                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
+                    itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
 
-                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
-                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
-                   });
+                    itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
+
+                    FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+
+                  });
 
                 }else{
                   isApiCall=true;
@@ -239,46 +241,42 @@ print("hfshjffhfbh  $dateString");
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
-            child: Card(
+            child:  Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)),
+                  borderRadius: BorderRadius.circular(25)
+              ),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-             child: AppBar(
-                  leadingWidth: 30,
-                  automaticallyImplyLeading: false,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                leading: GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: const Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.black,
+              margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+              child: AppBar(
+                leadingWidth: 0,
+                automaticallyImplyLeading: false,
+                title:  Container(
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: FaIcon(Icons.arrow_back),
                       ),
-                    ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            widget.vName!,
+                            style: appbar_text_style,),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                backgroundColor: Colors.white,
-                title: Image(
-                  width: SizeConfig.screenHeight * .1,
-                  image: const AssetImage('assets/images/Shop_Logo.png'),
-                  // fit: BoxFit.contain,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
                 ),
-               actions: [
-                 IconButton(
-                     onPressed: ()async{
-                       await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing()));
-                     },
-                     icon: FaIcon(FontAwesomeIcons.bell,))
-               ],
+                backgroundColor: Colors.white,
               ),
             ),
           ),
@@ -292,78 +290,21 @@ print("hfshjffhfbh  $dateString");
               children: [
                 // getFieldTitleLayout("Statistics Of : "),
                 getPurchaseDateLayout(),
-                // const SizedBox(height: 10,),
-                //
-                // const SizedBox(height: 5,),
-                // getProfitLayout(),
-                // sale_purchase_expense_container(),
-                // const SizedBox(height: 10,),
-                // getFranchiseeLayout(),
-
-
                 const SizedBox(height: 10,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
                         onTap: (){
-                           Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
-                             newDate: dateTime,
-                           )));
-                           },
-                        child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Sale");
-                        },
-                        child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green)),
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                            newDate: dateTime.add(Duration(days: 1)),
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                            mListener: this,
                           )));
-                        }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Return");
-                        },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
+                        },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Purchase")),
+                    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
                   ],
                 ),
                 const SizedBox(height: 10,),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                 GestureDetector(
-                        onTap: (){
-
-                        },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
-                    GestureDetector(
-                        onTap: (){
-                          widget.mListener.getAddLeder("Expense");
-                        },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
-
-                  ],
-                ),
-                const SizedBox(height: 10,),
-                // getFieldTitleLayout("Profit/Loss "),
-                // const SizedBox(height: 5,),
                 getProfitLayout(),
-                // getFieldTitleLayout("Payment-Outanding "),
-                // const SizedBox(height: 5,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-                    getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
-                  ],
-                ),
               ],
             ),
           ),
@@ -372,65 +313,16 @@ print("hfshjffhfbh  $dateString");
 
 
 
-  Widget getThreeLayout(title,amount,boxcolor){
-    return Container(
-      height: 100,
-      width: (SizeConfig.screenWidth * 0.85) / 2,
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        // color: (Colors.orange).withOpacity(0.3),
-          border: Border.all(color: boxcolor),
-          borderRadius: BorderRadius.circular(5)),
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Container(
-            height: 40,
-            width: (SizeConfig.screenWidth * 0.85) / 2,
-            // margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "$amount",
-              style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
 
-          Expanded(
-            child: Container(
-              width: (SizeConfig.screenWidth * 0.85) / 2,
-              alignment: Alignment.center,
-              color: boxcolor,
-              padding: EdgeInsets.all(5),
-              child: Text(
-                "$title",
-                style: item_heading_textStyle.copyWith(
-                    color: (Colors.white),
-                    fontWeight: FontWeight.bold
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-
-        ],
-      ),
-    );
-  }
 
   Widget getProfitLayout(){
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+        /*   Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Profit ":"Loss" ,
           profit:profit ,
           date:dateTime,
-        )));
+        )));*/
       },
       onDoubleTap: (){},
       child: Container(
@@ -439,20 +331,20 @@ print("hfshjffhfbh  $dateString");
         width: (SizeConfig.screenWidth),
         // margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: profit<0?Colors.red:Colors.green,
+            color: Colors.orange,
             borderRadius: BorderRadius.circular(5)),
         alignment: Alignment.center,
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding:  EdgeInsets.only(left: 40),
+              padding:  EdgeInsets.only(left: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    profit>=0?"Profit ":"Loss",
+                  "Outstanding",
                     style: item_heading_textStyle.copyWith(
                         color:Colors.white,
                         fontSize: 20,
@@ -470,7 +362,7 @@ print("hfshjffhfbh  $dateString");
                 ],
               ),
             ),
-            getAnimatedFunction(),
+            getFranAnimatedFunction(),
           ],
         ),
       ),
@@ -481,11 +373,11 @@ print("hfshjffhfbh  $dateString");
   Widget getFranchiseeLayout(){
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
+        /*    Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
           comeFor: "Franchisee Outstanding",
           profit:FranchiseeOutstanding ,
           date:dateTime,
-        )));
+        )));*/
       },
       child: Container(
         height:70 ,
@@ -534,18 +426,18 @@ print("hfshjffhfbh  $dateString");
     );
   }
 
-   getAnimatedFunction(){
-   return  Padding(
-     padding:  EdgeInsets.only(left: 50),
-     child: Countup(
-       precision: 2,
-       begin: 0,
-       end: double.parse((profit).toString()),
-       duration: const Duration(seconds: 2),
-       separator: ',',
-       style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-     ),
-   );
+  getAnimatedFunction(){
+    return  Padding(
+      padding:  EdgeInsets.only(left: 50),
+      child: Countup(
+          precision: 2,
+          begin: 0,
+          end: double.parse((profit).toString()),
+          duration: const Duration(seconds: 2),
+          separator: ',',
+          style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+      ),
+    );
   }
 
   getFranAnimatedFunction(){
@@ -568,12 +460,19 @@ print("hfshjffhfbh  $dateString");
     return GetDateLayout(
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
-        callback: (date){
+        callback: (date)async{
           setState(() {
             dateTime=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(dateTime));
+            profit=0.0;
+            purchaseAmt=0.0;
+            expenseAmt=0.0;
+            returnAmt=0.0;
+            receiptAmt=0.0;
+            FranchiseeOutstanding=0.0;
           });
-          getDashboardData();
+          await callGetFranchiseeNot(0);
+          await getDashboardData();
         },
         applicablefrom: dateTime
     );
@@ -609,27 +508,6 @@ print("hfshjffhfbh  $dateString");
   //   );
   // }
 
-  // sale_purchase_expense_container() {
-  //   return Column(
-  //     children: [
-  //       Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     getSellPurchaseExpenseLayout(Colors.green, "${CommonWidget.getCurrencyFormat(saleAmt)}", "Sale"),
-  //                     getSellPurchaseExpenseLayout(Colors.orange, "${CommonWidget.getCurrencyFormat((expenseAmt))}", "Expense"),
-  //                   ],
-  //                 ),
-  //       const SizedBox(height: 10,),
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return"),
-  //           getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
 
   // Container weeklySalegraph() {
   //   return  Container(
@@ -711,7 +589,7 @@ print("hfshjffhfbh  $dateString");
       padding: const EdgeInsets.only(top: 0, bottom: 0,),
       child: Text(
         "$title",
-        style: item_heading_textStyle.copyWith(fontSize: 22),
+        style: item_heading_textStyle.copyWith(fontSize: 20),
       ),
     );
   }
@@ -719,16 +597,8 @@ print("hfshjffhfbh  $dateString");
   Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
     return   GestureDetector(
       onTap: (){
-        if(title=="Outstanding"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
-            comeFor: "Franchisee Outstanding",
-            profit:FranchiseeOutstanding ,
-            date:dateTime,
-          )));
-        }
-        else{
-          widget.mListener.getAddLeder(title);
-        }
+        // widget.mListener.getAddLeder(title);
+        print("newwww");
       },
       child: Container(
         height: 120,
@@ -762,17 +632,17 @@ print("hfshjffhfbh  $dateString");
                 Text(
                   "$title",
                   style: item_heading_textStyle.copyWith(
-                    color: boxcolor,
-                    fontWeight: FontWeight.bold
+                      color: boxcolor,
+                      fontWeight: FontWeight.bold
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                FaIcon(
-                  FontAwesomeIcons.solidArrowAltCircleRight,
-                  color: boxcolor,
-                )
+                // const SizedBox(
+                //   width: 10,
+                // ),
+                // FaIcon(
+                //   FontAwesomeIcons.solidArrowAltCircleRight,
+                //   color: boxcolor,
+                // )
               ],
             )
 
@@ -821,10 +691,15 @@ print("hfshjffhfbh  $dateString");
     // );
   }
 
+  @override
+  backToList() {
+    // TODO: implement backToList
+  }
+
 }
 
-abstract class HomeFragmentInterface {
-getAddLeder(String comeScreen);
+abstract class FOutstandingDashActivityInterface {
+
 }
 
 class SalesData {
