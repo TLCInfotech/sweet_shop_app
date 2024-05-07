@@ -23,7 +23,8 @@ import 'create_sell_activity.dart';
 class SellActivity extends StatefulWidget {
 final String? comeFor;
 final DateTime? dateNew;
-  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew});
+final franhiseeID;
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
@@ -45,6 +46,11 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.dateNew!=null){
+      setState(() {
+        invoiceDate=widget.dateNew!;
+      });
+    }
     gerSaleInvoice(page);
   }
   _scrollListener() {
@@ -380,7 +386,14 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+        String apiUrl;
+        if(widget.franhiseeID!=null){
+          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10&${StringEn.frnachisee_id}=${widget.franhiseeID}";
+
+        }
+        else{
+          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 

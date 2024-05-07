@@ -21,7 +21,8 @@ import '../../../common_widget/get_date_layout.dart';
 
 
 class ReceiptActivity extends StatefulWidget {
-  const ReceiptActivity({super.key, required mListener});
+  final dateNew;
+  const ReceiptActivity({super.key, required mListener,this.dateNew});
   @override
   State<ReceiptActivity> createState() => _ReceiptActivityState();
 }
@@ -40,6 +41,12 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+
+    if(widget.dateNew!=null){
+      setState(() {
+        newDate=widget.dateNew!;
+      });
+    }
     getRecipt(page);
   }
   bool isApiCall=false;

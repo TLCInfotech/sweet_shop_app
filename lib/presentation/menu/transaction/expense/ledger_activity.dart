@@ -11,6 +11,7 @@ import '../../../../core/common.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../core/string_en.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
@@ -22,7 +23,8 @@ import '../../../common_widget/get_date_layout.dart';
 class LedgerActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;
-  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew});
+  final franhiseeID;
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -385,7 +387,15 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
+        String apiUrl;
+        if(widget.franhiseeID!=null){
+           apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12&${StringEn.frnachisee_id}=${widget.franhiseeID}";
+
+        }
+        else{
+          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
+
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
