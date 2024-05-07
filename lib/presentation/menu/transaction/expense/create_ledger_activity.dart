@@ -26,13 +26,13 @@ import 'add_edit_ledger_for_ledger.dart';
 
 
 class CreateLedger extends StatefulWidget {
-  final CreateLedgerInterface mListener;
+  final  mListener;
   final dateNew;
   final  voucherNo;
   final come;
   final editedItem;
-
-  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come});
+  final franchiseeDetails;
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -83,7 +83,12 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    setData();
+    if(widget.franchiseeDetails!=null){
+      setFranchisee();
+    }
+    else {
+      setData();
+    }
 
     // invoiceDate=widget.dateNew;
     // calculateTotalAmt();
@@ -93,6 +98,25 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     // }
 
   }
+
+
+  List fdetail=[];
+  setFranchisee()async{
+    setState(() {
+      fdetail=widget.franchiseeDetails;
+    });
+    setState(() {
+      voucherNoController.text="Voucher No: ${widget.voucherNo}";
+      selectedFranchiseeId=fdetail[1].toString();
+      selectedFranchiseeName=fdetail[0].toString();
+    });
+
+    print(selectedFranchiseeName);
+    await calculateTotalAmt();
+
+    await getExpInvoice(1);
+  }
+
   setData()async{
     await getCompanyId();
     invoiceDate=widget.dateNew;
