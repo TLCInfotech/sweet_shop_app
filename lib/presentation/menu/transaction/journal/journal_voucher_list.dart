@@ -64,6 +64,15 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
     }
   }
 
+  //FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await getJournals(page);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,105 +255,113 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   /* Widget to get add payment list Layout */
   Expanded get_payment_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: payment_list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-                        mListener: this,
-                        dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
-                        voucherNo: payment_list[index]['Voucher_No'],
-                        debitNote:payment_list[index] ,
-                        companyId: companyId,
-                        come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
-                      )));
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
+        child:  RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: payment_list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
+                          mListener: this,
+                          dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
+                          voucherNo: payment_list[index]['Voucher_No'],
+                          debitNote:payment_list[index] ,
+                          companyId: companyId,
+                          come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
+                        )));
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                              ),
                             ),
-                          ),
-                          Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${payment_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("Voucher No: - ${payment_list[index]['Voucher_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(payment_list[index]['Amount'])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
-                                            ],
-                                          ),
+                            Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("${payment_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                Expanded(child: Text("Voucher No: - ${payment_list[index]['Voucher_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                Expanded(child: Text("${CommonWidget.getCurrencyFormat(payment_list[index]['Amount'])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                              ],
+                                            ),
 
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  DeleteDialogLayout(
-                                    callback: (response ) async{
-                                      if(response=="yes"){
-                                        print("##############$response");
-                                        await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
-                                      }
-                                    },
-                                  )
-                                ],
-                              )
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
+                                        }
+                                      },
+                                    )
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 

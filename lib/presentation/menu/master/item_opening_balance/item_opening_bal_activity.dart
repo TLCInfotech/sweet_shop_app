@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -37,7 +38,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> Franchisee_list=[];
-
+  bool isApiCall=false;
   callGetFranchiseeItemOpeningList(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -66,6 +67,8 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
                     Franchisee_list=_arrList;
                   });
+                }else{
+                  isApiCall=true;
                 }
                 calculateTotalAmt();
               });
@@ -131,7 +134,12 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
     });
   }
-
+//FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    await   callGetFranchiseeItemOpeningList(1);
+  }
+  final ScrollController _scrollController =  ScrollController();
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -203,22 +211,31 @@ compId:companyId ,
                 });
                 callGetFranchiseeItemOpeningList(1);
               }),
-          body: Container(
-            margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getPurchaseDateLayout(),
-                const SizedBox(
-                  height: 5,
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    getTotalCountAndAmount(),
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_purchase_list_layout()
+                  ],
                 ),
-                getTotalCountAndAmount(),
-                const SizedBox(
-                  height: .5,
-                ),
-                get_purchase_list_layout()
-              ],
-            ),
+              ),
+              Visibility(
+                  visible: Franchisee_list.isEmpty && isApiCall  ? true : false,
+                  child:CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -295,107 +312,115 @@ compId:companyId ,
 
   Expanded get_purchase_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount:Franchisee_list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: ()async{
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-                        dateNew:invoiceDate,
-                        editedItem:Franchisee_list[index],
-                        compId:companyId ,
-                        come:"edit",
-                        //DateFormat('dd-MM-yyyy').format(invoiceDate),
-                        mListener: this,
-                      )));
-                      callGetFranchiseeItemOpeningList(0);
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                            ),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                         Text("${Franchisee_list[index]['Name']}",style: item_heading_textStyle,),
-                                        //  SizedBox(height: 5,),
-                                        // Row(
-                                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                                        //   children: [
-                                        //     FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        //     const SizedBox(width: 10,),
-                                        //      Expanded(child: Text("${Franchisee_list[index]['itemCount']} Items",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        //   ],
-                                        // ),
-                                        const SizedBox(height: 5,),
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            Expanded(child: Text(CommonWidget.getCurrencyFormat(Franchisee_list[index]['Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
+        child:RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            itemCount:Franchisee_list.length,
+            controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: ()async{
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                          dateNew:invoiceDate,
+                          editedItem:Franchisee_list[index],
+                          compId:companyId ,
+                          come:"edit",
+                          //DateFormat('dd-MM-yyyy').format(invoiceDate),
+                          mListener: this,
+                        )));
+                        callGetFranchiseeItemOpeningList(0);
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
                                   ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:IconButton(
-                                        icon:  const FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 18,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: (){},
-                                      ) )
-                                ],
-                              )
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                                // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                              ),
+                            ),
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                           Text("${Franchisee_list[index]['Name']}",style: item_heading_textStyle,),
+                                          //  SizedBox(height: 5,),
+                                          // Row(
+                                          //   crossAxisAlignment: CrossAxisAlignment.center,
+                                          //   children: [
+                                          //     FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                          //     const SizedBox(width: 10,),
+                                          //      Expanded(child: Text("${Franchisee_list[index]['itemCount']} Items",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                          //   ],
+                                          // ),
+                                          const SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(Franchisee_list[index]['Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
 
-                          )
-                        ],
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:IconButton(
+                                          icon:  const FaIcon(
+                                            FontAwesomeIcons.trash,
+                                            size: 18,
+                                            color: Colors.redAccent,
+                                          ),
+                                          onPressed: (){},
+                                        ) )
+                                  ],
+                                )
+
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 

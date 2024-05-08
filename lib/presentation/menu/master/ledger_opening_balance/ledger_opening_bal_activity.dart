@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -139,22 +140,31 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                   mListener: this,
                 )));*/
               }),
-          body: Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getPurchaseDateLayout(),
-                const SizedBox(
-                  height: 5,
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    ledgerList.isNotEmpty?getTotalCountAndAmount():Container(),
+                    const SizedBox(
+                      height: .5,
+                    ),
+                    get_purchase_list_layout()
+                  ],
                 ),
-                ledgerList.isNotEmpty?getTotalCountAndAmount():Container(),
-                const SizedBox(
-                  height: .5,
-                ),
-                get_purchase_list_layout()
-              ],
-            ),
+              ),
+              Visibility(
+                  visible: ledgerList.isEmpty && isApiCall  ? true : false,
+                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -238,108 +248,114 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
 
   Expanded get_purchase_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: ledgerList.length,
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      goToAddOrEditItem(ledgerList[index],"edit",companyId);
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                            ),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                         Text(ledgerList[index]["Ledger_Name"],style: item_heading_textStyle,),
-                                        const SizedBox(height: 5,),
-                                     /*   Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5,),*/
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                            const SizedBox(width: 10,),
-                                            Expanded(child: Text("${(ledgerList[index]['Amount']).toStringAsFixed(2)} ${ledgerList[index]['Amount_Type']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            //Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
+        child: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            itemCount: ledgerList.length,
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        goToAddOrEditItem(ledgerList[index],"edit",companyId);
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
                                   ),
-                                  Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-                                            print("##############$response");
-                                            var deletedItem=   {
-                                              "Ledger_ID": ledgerList[index]['Ledger_ID'],
-                                            };
-                                            Deleted_list.add(deletedItem);
-                                            setState(() {
-                                              Deleted_list=Deleted_list;
-                                            });
-                                            await  callLedgerOpeningBal(Deleted_list,index);
-                                          }
-                                        },
-                                      ))
-                                ],
-                              )
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                              ),
+                            ),
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                           Text(ledgerList[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                          const SizedBox(height: 5,),
+                                       /*   Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                              const Expanded(child: Text("Bal. Sheet No. - 1234",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5,),*/
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              const SizedBox(width: 10,),
+                                              Expanded(child: Text("${(ledgerList[index]['Amount']).toStringAsFixed(2)} ${ledgerList[index]['Amount_Type']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              //Expanded(child: Text(CommonWidget.getCurrencyFormat(1000),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                            ],
+                                          ),
 
-                          )
-                        ],
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child:DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              var deletedItem=   {
+                                                "Ledger_ID": ledgerList[index]['Ledger_ID'],
+                                              };
+                                              Deleted_list.add(deletedItem);
+                                              setState(() {
+                                                Deleted_list=Deleted_list;
+                                              });
+                                              await  callLedgerOpeningBal(Deleted_list,index);
+                                            }
+                                          },
+                                        ))
+                                  ],
+                                )
+
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 

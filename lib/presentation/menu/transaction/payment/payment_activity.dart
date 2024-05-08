@@ -54,8 +54,17 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       }
     }
   }
-  
-  
+  //FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await getPayment(page);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -234,15 +243,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
       ),
     );
   }
-//FUNC: REFRESH LIST
-  Future<void> refreshList() async {
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      page=1;
-    });
-    isPagination = true;
-    await getPayment(1);
-  }
+
   /* Widget to get add payment list Layout */
   Expanded get_payment_list_layout() {
     return Expanded(

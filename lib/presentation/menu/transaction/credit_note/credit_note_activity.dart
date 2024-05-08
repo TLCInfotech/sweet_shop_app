@@ -82,6 +82,16 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
       });
     }
   }
+  //FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      page=1;
+    });
+    isPagination = true;
+    await getCreditNote(page);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -277,107 +287,115 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
 
   Expanded get_purchase_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: debitNote_list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          CreateCreditNote(
-                            dateNew: invoiceDate,
-                            Invoice_No: debitNote_list[index]['Invoice_No'],
-                              debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
-                            mListener:this,
-                              companyId:companyId,
-                            come:"edit"
-                          )));
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child:  const FaIcon(
-                                  FontAwesomeIcons.moneyCheck,
-                                  color: Colors.white,
-                                )
-                              // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+        child: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: debitNote_list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            CreateCreditNote(
+                              dateNew: invoiceDate,
+                              Invoice_No: debitNote_list[index]['Invoice_No'],
+                                debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
+                              mListener:this,
+                                companyId:companyId,
+                              come:"edit"
+                            )));
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child:  const FaIcon(
+                                    FontAwesomeIcons.moneyCheck,
+                                    color: Colors.white,
+                                  )
+                                // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${debitNote_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
-                                          SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(child: Text("Invoice No:- ${debitNote_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              SizedBox(width: 10,),
-                                              Expanded(child: Text(CommonWidget.getCurrencyFormat(debitNote_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
+                            Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("${debitNote_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
+                                            SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                SizedBox(width: 10,),
+                                                Expanded(child: Text("Invoice No:- ${debitNote_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
+                                            SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                SizedBox(width: 10,),
+                                                Expanded(child: Text(CommonWidget.getCurrencyFormat(debitNote_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
 
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  DeleteDialogLayout(
-                                    callback: (response ) async{
-                                      if(response=="yes"){
-                                        print("##############$response");
-                                        await   deleteCreditNote(debitNote_list[index]['Invoice_No'].toString(),debitNote_list[index]['Seq_No'].toString(),index);
-                                      }
-                                    },
-                                  )
-                                ],
-                              )
+                                    DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await   deleteCreditNote(debitNote_list[index]['Invoice_No'].toString(),debitNote_list[index]['Seq_No'].toString(),index);
+                                        }
+                                      },
+                                    )
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
   }
 

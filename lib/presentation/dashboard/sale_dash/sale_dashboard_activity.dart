@@ -191,7 +191,15 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
+  final ScrollController _scrollController =  ScrollController();
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    await  getSalePartyWise();
+  }
+  Future<void> refreshListItem() async {
+    await Future.delayed(Duration(seconds: 2));
+   await    getSaleItemWise();
+  }
 
 
   @override
@@ -241,7 +249,9 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
       backgroundColor: const Color(0xFFfffff5),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
+        child:Column(
+          // shrinkWrap: true,
+          // physics: AlwaysScrollableScrollPhysics(),
           children: [
             getPurchaseDateLayout(),
             goToTransactionPage(),
@@ -403,95 +413,113 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   Widget partywisegraph() {
     print("ghhgrghr  ${_saleData.length}");
     return  Expanded(
-      child: SingleChildScrollView(
-        child: _saleData.length!=0? Container(
-          height: _saleData.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*120,
-          margin: const EdgeInsets.symmetric(vertical:5),
-          width: SizeConfig.screenWidth,
-          child: SfCartesianChart(
-            title: ChartTitle(text: 'Sales analysis',
-                textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: .1
+      child: RefreshIndicator(
+        color: CommonColor.THEME_COLOR,
+        onRefresh: () => refreshList(),
+        child: ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
+          physics: AlwaysScrollableScrollPhysics(),
+          children: [
+            _saleData.length!=0? Container(
+              height: _saleData.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleData.length*120,
+              margin: const EdgeInsets.symmetric(vertical:5),
+              width: SizeConfig.screenWidth,
+              child: SfCartesianChart(
+                title: ChartTitle(text: 'Sales analysis',
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: .1
+                    ),
+                    alignment: ChartAlignment.near),
+                primaryXAxis: CategoryAxis(
+                    maximumLabelWidth: 50,
+                    labelIntersectAction: AxisLabelIntersectAction.rotate90,
+                    labelPlacement: LabelPlacement.betweenTicks),
+                primaryYAxis: NumericAxis(
+
+                    numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                    title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
                 ),
-                alignment: ChartAlignment.near),
-            primaryXAxis: CategoryAxis(
-                maximumLabelWidth: 50,
-                labelIntersectAction: AxisLabelIntersectAction.rotate90,
-                labelPlacement: LabelPlacement.betweenTicks),
-            primaryYAxis: NumericAxis(
-      
-                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
-            ),
-            series: <ChartSeries>[
-              BarSeries<SalesDataDash, String>(
-                width: 0.2,
-                dataSource: _saleData,
-                xValueMapper: (SalesDataDash sales, _) => sales.Vendor_Name,
-                yValueMapper: (SalesDataDash sales, _) => sales.Amount,
-                dataLabelSettings: DataLabelSettings(
-                    alignment: ChartAlignment.far,
-                    angle: 360,
-                    isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.outer,
-                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
-                ),
-              )
-            ],
-          ),
-        ):Container(
-            height:SizeConfig.screenHeight*.60,
-            alignment: Alignment.center,
-            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                series: <ChartSeries>[
+                  BarSeries<SalesDataDash, String>(
+                    width: 0.2,
+                    dataSource: _saleData,
+                    xValueMapper: (SalesDataDash sales, _) => sales.Vendor_Name,
+                    yValueMapper: (SalesDataDash sales, _) => sales.Amount,
+                    dataLabelSettings: DataLabelSettings(
+                        alignment: ChartAlignment.far,
+                        angle: 360,
+                        isVisible: true,
+                        labelAlignment: ChartDataLabelAlignment.outer,
+                        textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                    ),
+                  )
+                ],
+              ),
+            ):Container(
+                height:SizeConfig.screenHeight*.60,
+                alignment: Alignment.center,
+                child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+          ],
+        ),
       ),
     );
   }
 
   Widget itemwisegraph() {
     return  Expanded(
-      child: SingleChildScrollView(
-        child:_saleItem.length!=0? Container(
-           //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
-          height: _saleItem.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*120,
-          margin: const EdgeInsets.symmetric(vertical:0),
-          width: SizeConfig.screenWidth,
-          child: SfCartesianChart(
-            title: ChartTitle(text: 'Sales analysis',
-                textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: .1
+      child:RefreshIndicator(
+        color: CommonColor.THEME_COLOR,
+        onRefresh: () => refreshListItem(),
+        child: ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
+          physics: AlwaysScrollableScrollPhysics(),
+          children: [
+            _saleItem.length!=0? Container(
+              //height: _saleItem.length>6?SizeConfig.screenHeight:SizeConfig.screenHeight*.5,
+              height: _saleItem.length*120>SizeConfig.screenHeight?SizeConfig.screenHeight:_saleItem.length*120,
+              margin: const EdgeInsets.symmetric(vertical:0),
+              width: SizeConfig.screenWidth,
+              child: SfCartesianChart(
+                title: ChartTitle(text: 'Sales analysis',
+                    textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: .1
+                    ),
+                    alignment: ChartAlignment.near),
+                primaryXAxis: CategoryAxis(
+                    maximumLabelWidth: 50,
+                    labelIntersectAction: AxisLabelIntersectAction.rotate90,
+                    labelPlacement: LabelPlacement.betweenTicks),
+                primaryYAxis: NumericAxis(
+                    numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
+                    title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
                 ),
-                alignment: ChartAlignment.near),
-            primaryXAxis: CategoryAxis(
-                maximumLabelWidth: 50,
-                labelIntersectAction: AxisLabelIntersectAction.rotate90,
-                labelPlacement: LabelPlacement.betweenTicks),
-            primaryYAxis: NumericAxis(
-                numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-                title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
-            ),
-            series: <ChartSeries>[
-              BarSeries<SalesItemWise, String>(
-                width: 0.2,
-                dataSource: _saleItem,
-                xValueMapper: (SalesItemWise sales, _) => sales.Item_Name,
-                yValueMapper: (SalesItemWise sales, _) => sales.Amount,
-                dataLabelSettings: DataLabelSettings(
-                    alignment: ChartAlignment.far,
-                    angle: 360,
-                    isVisible: true,
-                    labelAlignment: ChartDataLabelAlignment.outer,
-                    textStyle: item_heading_textStyle.copyWith(fontSize:9 )
-                ),
-              )
-            ],
-          ),
-        ):
-        Container(
-            height:SizeConfig.screenHeight*.60,
-            alignment: Alignment.center,
-            child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                series: <ChartSeries>[
+                  BarSeries<SalesItemWise, String>(
+                    width: 0.2,
+                    dataSource: _saleItem,
+                    xValueMapper: (SalesItemWise sales, _) => sales.Item_Name,
+                    yValueMapper: (SalesItemWise sales, _) => sales.Amount,
+                    dataLabelSettings: DataLabelSettings(
+                        alignment: ChartAlignment.far,
+                        angle: 360,
+                        isVisible: true,
+                        labelAlignment: ChartDataLabelAlignment.outer,
+                        textStyle: item_heading_textStyle.copyWith(fontSize:9 )
+                    ),
+                  )
+                ],
+              ),
+            ):
+            Container(
+                height:SizeConfig.screenHeight*.60,
+                alignment: Alignment.center,
+                child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+          ],
+        ),
       ),
     );
   }

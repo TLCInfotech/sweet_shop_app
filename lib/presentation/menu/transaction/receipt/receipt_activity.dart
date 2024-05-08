@@ -58,6 +58,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(

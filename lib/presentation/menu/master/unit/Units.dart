@@ -45,6 +45,11 @@ class _UnitsActivityState extends State<UnitsActivity> {
     super.initState();
     getMeasuringUnit();
   }
+  //FUNC: REFRESH LIST
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    await getMeasuringUnit();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -106,17 +111,25 @@ class _UnitsActivityState extends State<UnitsActivity> {
               onPressed: () {
                 add_unit_layout(context);
               }),
-          body: Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 5,
+          body: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    get_unit_list_layout()
+                  ],
                 ),
-                get_unit_list_layout()
-              ],
-            ),
+              ),
+              Visibility(
+                  visible: measuring_unit.isEmpty && isApiCall  ? true : false,
+                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -128,80 +141,88 @@ class _UnitsActivityState extends State<UnitsActivity> {
   
   Expanded get_unit_list_layout() {
     return Expanded(
-        child: ListView.separated(
-          itemCount: measuring_unit.length,
-          itemBuilder: (BuildContext context, int index) {
-            print("hhjjhhjjh ${ measuring_unit[index]}");
-            return  AnimationConfiguration.staggeredList(
-              position: index,
-              duration:
-              const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: -44.0,
-                child: FadeInAnimation(
-                  delay: const Duration(microseconds: 1500),
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        editedItem=measuring_unit[index];
-                        unitName.text=measuring_unit[index];
-                        mesuringText=measuring_unit[index];
-                      });
+        child:RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView.separated(
+            controller: _scrollController,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: measuring_unit.length,
+            itemBuilder: (BuildContext context, int index) {
+              print("hhjjhhjjh ${ measuring_unit[index]}");
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          editedItem=measuring_unit[index];
+                          unitName.text=measuring_unit[index];
+                          mesuringText=measuring_unit[index];
+                        });
 
-                      add_unit_layout(context);
-                    },
-                    child: Card(
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width:60,
-                            height: 40,
-                            decoration:  BoxDecoration(
-                                color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
-                                borderRadius: const BorderRadius.all(Radius.circular(10))
+                        add_unit_layout(context);
+                      },
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width:60,
+                              height: 40,
+                              decoration:  BoxDecoration(
+                                  color: index %2==0?const Color(0xFFEC9A32):const Color(0xFF7BA33C),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))
+                              ),
+                              alignment: Alignment.center,
+                              child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
                             ),
-                            alignment: Alignment.center,
-                            child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
-                          ),
-                          Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    margin:  const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
-                                    child: measuring_unit[index]!=null? Text(
-                                      measuring_unit[index],style: item_heading_textStyle,):Container(),
-                                  ),
+                            Expanded(
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin:  const EdgeInsets.only(top: 15,left: 10,right: 40,bottom: 15),
+                                      child: measuring_unit[index]!=null? Text(
+                                        measuring_unit[index],style: item_heading_textStyle,):Container(),
+                                    ),
 
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: DeleteDialogLayout(
-                                    callback: (response ) async{
-                                      if(response=="yes"){
-                                        print("##############$response");
-                                        await callDeleteMeasuringUnit(measuring_unit[index],index);
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          print("##############$response");
+                                          await callDeleteMeasuringUnit(measuring_unit[index],index);
 
-                                      }
-                                    },
-                                  ))
-                                ],
-                              )
+                                        }
+                                      },
+                                    ))
+                                  ],
+                                )
 
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              height: 5,
-            );
-          },
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 5,
+              );
+            },
+          ),
         ));
 
 
