@@ -238,6 +238,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     await callGetFranchiseeNot(0);
     await getDashboardData();
   }
+  final ScrollController _scrollController =  ScrollController();
   @override
   Widget build(BuildContext context) {
     return isShowSkeleton? SkeletonAnimation(
@@ -289,106 +290,112 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
           ),
         ),
         backgroundColor: const Color(0xFFfffff5),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: RefreshIndicator(
-              color: CommonColor.THEME_COLOR,
-              onRefresh: () {
-                return refreshList();
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // getFieldTitleLayout("Statistics Of : "),
-                  getPurchaseDateLayout(),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: ()async{
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-                              dateNew: dateTime,
-                              mListener: this,
-                                come:"edit",
-                              franchiseeDetails:[widget.vName!,widget.fid!]
-                            )));
-                            await callGetFranchiseeNot(0);
-                            await getDashboardData();
-                          },
-                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
-                      GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                              dateNew: dateTime,
-                              mListener: this,
-                              franhiseeID:widget.fid!
-                            )));
-                          },
-                          child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Colors.green)),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: ()async{
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
-                                dateNew: dateTime.add(Duration(days: 1)),
-                                mListener: this,
-                                come:"edit",
-                                franchiseeDetails:[widget.vName!,widget.fid!]
-                            )));
-                            await callGetFranchiseeNot(0);
-                            await getDashboardData();
-                          },
-                          child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
+        body: RefreshIndicator(
+          color: CommonColor.THEME_COLOR,
+          onRefresh: () {
+            return refreshList();
+          },
+          child: ListView(
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+     children: [
+       Padding(
+         padding: const EdgeInsets.all(15.0),
+         child: Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             // getFieldTitleLayout("Statistics Of : "),
+             getPurchaseDateLayout(),
+             const SizedBox(height: 10,),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 GestureDetector(
+                     onTap: ()async{
+                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                           dateNew: dateTime,
+                           mListener: this,
+                           come:"edit",
+                           franchiseeDetails:[widget.vName!,widget.fid!]
+                       )));
+                       await callGetFranchiseeNot(0);
+                       await getDashboardData();
+                     },
+                     child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
+                 GestureDetector(
+                     onTap: ()async{
+                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
+                           dateNew: dateTime.add(Duration(days: 1)),
+                           mListener: this,
+                           come:"edit",
+                           franchiseeDetails:[widget.vName!,widget.fid!]
+                       )));
+                       await callGetFranchiseeNot(0);
+                       await getDashboardData();
+                     },
+                     child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
+  ],
+             ),
+             const SizedBox(height: 10,),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
 
-                      GestureDetector(
-                          onTap: ()async{
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(
-                              dateNew: dateTime,
-                              mListener: this,
-                                franhiseeID:widget.fid!
-                            )));
-                          },
-                          child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
+                 GestureDetector(
+                     onTap: (){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                           dateNew: dateTime,
+                           mListener: this,
+                           franhiseeID:widget.fid!
+                       )));
+                     },
+                     child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(saleAmt)}",Colors.green),
-                      GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(
-                              dateNew: dateTime,
-                              mListener: this,
-                                franhiseeID:widget.fid!
-                            )));
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                            //   mListener: this,
-                            //   voucherNo: null,
-                            //   dateNew: dateTime.add(Duration(days: 1)),
-                            //   franchiseeDetails:[widget.vName!,widget.fid!],
-                            //   come:"edit",
-                            //   // DateFormat('dd-MM-yyyy').format(newDate),
-                            // )));
-                          },
-                          child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                  getProfitLayout(),
+                 GestureDetector(
+                     onTap: ()async{
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(
+                           dateNew: dateTime,
+                           mListener: this,
+                           franhiseeID:widget.fid!
+                       )));
+                     },
+                     child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
+               ],
+             ),
+             const SizedBox(height: 10,),
+
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 getThreeLayout("Sale","${CommonWidget.getCurrencyFormat(saleAmt)}",Color(0xFF00A36C)),
+                 GestureDetector(
+                     onTap: (){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(
+                           dateNew: dateTime,
+                           mListener: this,
+                           franhiseeID:widget.fid!
+                       )));
+                       // Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
+                       //   mListener: this,
+                       //   voucherNo: null,
+                       //   dateNew: dateTime.add(Duration(days: 1)),
+                       //   franchiseeDetails:[widget.vName!,widget.fid!],
+                       //   come:"edit",
+                       //   // DateFormat('dd-MM-yyyy').format(newDate),
+                       // )));
+                     },
+                     child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
+               ],
+             ),
+             const SizedBox(height: 10,),
+             getProfitLayout(),
 
 
-                ],
-              ),
-            ),
+           ],
+         ),
+       ),
+     ],
           ),
         ));
   }
@@ -485,13 +492,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
 
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const FaIcon(
-                    FontAwesomeIcons.solidArrowAltCircleRight,
-                    color:Colors.white,
-                  )
+
                 ],
               ),
             ),

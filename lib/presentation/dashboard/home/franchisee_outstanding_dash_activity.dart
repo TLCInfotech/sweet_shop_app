@@ -237,7 +237,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
+  final ScrollController _scrollController =  ScrollController();
   @override
   Widget build(BuildContext context) {
     return isShowSkeleton? SkeletonAnimation(
@@ -294,62 +294,67 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
           onRefresh: () {
             return refreshList();
           },
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // getFieldTitleLayout("Statistics Of : "),
-                  getPurchaseDateLayout(),
-                  const SizedBox(height: 10,),
+          child: ListView(
+            controller:_scrollController ,
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // getFieldTitleLayout("Statistics Of : "),
+                    getPurchaseDateLayout(),
+                    const SizedBox(height: 10,),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: ()async{
-                            print("CLICKED");
-                           await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                              dateNew: dateTime,
-                              mListener: this,
-                            )));
-                           await callGetFranchiseeNot(0);
-                           await getDashboardData();
-                          },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Sale")),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: ()async{
+                              print("CLICKED");
+                              await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                                dateNew: dateTime,
+                                mListener: this,
+                              )));
+                              await callGetFranchiseeNot(0);
+                              await getDashboardData();
+                            },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Sale")),
 
-                      GestureDetector(
-                          onTap: ()async{
-                            print("CLICKED");
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                              dateNew: dateTime,
-                              mListener: this,
-                            )));
-                            await callGetFranchiseeNot(0);
-                            await getDashboardData();
-                          },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return")),
+                        GestureDetector(
+                            onTap: ()async{
+                              print("CLICKED");
+                              await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
+                                dateNew: dateTime,
+                                mListener: this,
+                              )));
+                              await callGetFranchiseeNot(0);
+                              await getDashboardData();
+                            },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return")),
 
+                      ],
+                    ),
+
+                    const SizedBox(height: 10,),
+                    GestureDetector(
+                        onTap: ()async{
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(
+                            dateNew: dateTime,
+                            mListener: this,
+                          )));
+                          await callGetFranchiseeNot(0);
+                          await getDashboardData();
+                        },
+                        child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
+
+                    const SizedBox(height: 10,),
+                    getProfitLayout(),
+                    const SizedBox(height: 5,),
                   ],
-                  ),
-
-                  const SizedBox(height: 10,),
-                  GestureDetector(
-                      onTap: ()async{
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(
-                          dateNew: dateTime,
-                          mListener: this,
-                        )));
-                        await callGetFranchiseeNot(0);
-                        await getDashboardData();
-                      },
-                      child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
-
-                  const SizedBox(height: 10,),
-                  getProfitLayout(),
-                  const SizedBox(height: 5,),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ));
   }
@@ -395,13 +400,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
 
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const FaIcon(
-                    FontAwesomeIcons.solidArrowAltCircleRight,
-                    color:Colors.white,
-                  )
+
                 ],
               ),
             ),
@@ -449,16 +448,6 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
 
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const FaIcon(
-                      FontAwesomeIcons.solidArrowAltCircleRight,
-                      color:Colors.white,
-                    ),
-                  )
                 ],
               ),
             ),

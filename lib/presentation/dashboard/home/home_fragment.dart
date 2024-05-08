@@ -320,12 +320,12 @@ print("hfshjffhfbh  $dateString");
                                newDate: dateTime,
                              )));
                              },
-                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Colors.black87)),
+                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                       GestureDetector(
                           onTap: (){
                             widget.mListener.getAddLeder("Sale");
                           },
-                          child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Colors.green)),
+                          child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17))),
                     ],
                   ),
                   const SizedBox(height: 10,),
@@ -337,11 +337,11 @@ print("hfshjffhfbh  $dateString");
                             Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
                               newDate: dateTime.add(Duration(days: 1)),
                             )));
-                          }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Colors.black87)),
+                          }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       GestureDetector(
                           onTap: (){
                             widget.mListener.getAddLeder("Return");
-                          },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Colors.blue)),
+                          },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
                     ],
                   ),
                   const SizedBox(height: 10,),
@@ -352,7 +352,7 @@ print("hfshjffhfbh  $dateString");
                    GestureDetector(
                           onTap: (){
 
-                          },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Colors.green)),
+                          },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C))),
                       GestureDetector(
                           onTap: (){
                             widget.mListener.getAddLeder("Expense");
@@ -470,13 +470,7 @@ print("hfshjffhfbh  $dateString");
 
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const FaIcon(
-                    FontAwesomeIcons.solidArrowAltCircleRight,
-                    color:Colors.white,
-                  )
+
                 ],
               ),
             ),
@@ -781,13 +775,6 @@ print("hfshjffhfbh  $dateString");
                     fontWeight: FontWeight.bold
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                FaIcon(
-                  FontAwesomeIcons.solidArrowAltCircleRight,
-                  color: boxcolor,
-                )
               ],
             )
 

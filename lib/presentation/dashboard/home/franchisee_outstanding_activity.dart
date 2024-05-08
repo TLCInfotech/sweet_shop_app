@@ -148,9 +148,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
                   ],
                 ),
               ),
-              Visibility(
-                  visible: _outstandingPartywise.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+              _outstandingPartywise.isEmpty?CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
 
             ],
           ),
