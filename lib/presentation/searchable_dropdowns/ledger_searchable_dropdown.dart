@@ -113,7 +113,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                 ledger_list = data;
                 filteredStates=ledger_list;
               });
-              print("  LedgerLedger  $data ");
+              print("  LedgerLedgersearrr  $data ");
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
@@ -167,6 +167,10 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                 textFieldConfiguration: TextFieldConfiguration(
                   onTap: (){
                    // _controller.clear();
+                    setState(() {
+                      callGetLedger();
+                    });
+
                   },
                   textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,

@@ -662,58 +662,12 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                     fontWeight: FontWeight.bold
                 ),
               ),
-              // const SizedBox(
-              //   width: 10,
-              // ),
-              // FaIcon(
-              //   FontAwesomeIcons.solidArrowAltCircleRight,
-              //   color: boxcolor,
-              // )
             ],
           )
 
         ],
       ),
     );
-
-    //   Container(
-    //   height: 170,
-    //   width: (SizeConfig.screenWidth * 0.85) / 3,
-    //   // margin: EdgeInsets.all(10),
-    //   decoration: BoxDecoration(
-    //       color: boxcolor.withOpacity(0.3),
-    //       borderRadius: BorderRadius.circular(5)),
-    //   alignment: Alignment.center,
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         height: 60,
-    //         width: (SizeConfig.screenWidth * 0.85) / 3,
-    //         margin: const EdgeInsets.all(15),
-    //         decoration: BoxDecoration(
-    //             color: boxcolor, borderRadius: BorderRadius.circular(5)),
-    //         alignment: Alignment.center,
-    //         child: Text(
-    //           "$amount",
-    //           style: subHeading_withBold,
-    //         ),
-    //       ),
-    //       Text(
-    //         "$title",
-    //         style: item_heading_textStyle.copyWith(
-    //           color: boxcolor,
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 10,
-    //       ),
-    //       FaIcon(
-    //         FontAwesomeIcons.solidArrowAltCircleRight,
-    //         color: boxcolor,
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 
   @override

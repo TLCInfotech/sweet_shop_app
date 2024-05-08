@@ -149,7 +149,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 child: TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
                     onTap: (){
-                      // _controller.clear();
+                      setState(() {
+                        callGetLedger();
+                      });
                     },
                     textInputAction: TextInputAction.none, // Change input action to "none"
                     controller: _controller,

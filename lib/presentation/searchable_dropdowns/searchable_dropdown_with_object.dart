@@ -178,6 +178,11 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 ),
                 child: TypeAheadFormField(
                   textFieldConfiguration: TextFieldConfiguration(
+                    onTap: (){
+                      setState(() {
+                        callGetLedger();
+                      });
+                    },
                     onChanged: (v)async{
                       if(v.isEmpty) {
                         setState(() {
