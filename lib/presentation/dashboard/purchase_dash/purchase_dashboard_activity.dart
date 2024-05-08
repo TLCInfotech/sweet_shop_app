@@ -256,7 +256,8 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+        dateNew: saleDate,)));
       },
       child: Container(
         height: 40,
@@ -282,7 +283,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(ApplicationLocalizations.of(context)!.translate("credit_note_voucher")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text("Go To Credit Note Voucher",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],

@@ -343,7 +343,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(ApplicationLocalizations.of(context)!.translate("expense_invoice")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text("Go To Expense Invoice",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],

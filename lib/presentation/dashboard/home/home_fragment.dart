@@ -16,7 +16,10 @@ import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstandin
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
@@ -293,89 +296,94 @@ print("hfshjffhfbh  $dateString");
         body: RefreshIndicator(
           color: CommonColor.THEME_COLOR,
           onRefresh: () => refreshList(),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // getFieldTitleLayout("Statistics Of : "),
-                  getPurchaseDateLayout(),
-                  // const SizedBox(height: 10,),
-                  //
-                  // const SizedBox(height: 5,),
-                  // getProfitLayout(),
-                  // sale_purchase_expense_container(),
-                  // const SizedBox(height: 10,),
-                  // getFranchiseeLayout(),
+          child: ListView(
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // getFieldTitleLayout("Statistics Of : "),
+                    getPurchaseDateLayout(),
+                    // const SizedBox(height: 10,),
+                    //
+                    // const SizedBox(height: 5,),
+                    // getProfitLayout(),
+                    // sale_purchase_expense_container(),
+                    // const SizedBox(height: 10,),
+                    // getFranchiseeLayout(),
 
 
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
-                               newDate: dateTime,
-                             )));
-                             },
-                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
-                      GestureDetector(
-                          onTap: (){
-                            widget.mListener.getAddLeder("Sale");
-                          },
-                          child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17))),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                              newDate: dateTime.add(Duration(days: 1)),
-                            )));
-                          }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
-                      GestureDetector(
-                          onTap: (){
-                            widget.mListener.getAddLeder("Return");
-                          },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
+                                newDate: dateTime,
+                              )));
+                            },
+                            child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                                newDate: dateTime.add(Duration(days: 1)),
+                              )));
+                            }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
+                      ],
+                    ),
+                    const SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,)));
+                            },
+                            child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17))),
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+                                dateNew: dateTime,)));
+                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
+                      ],
+                    ),
+                    const SizedBox(height: 10,),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                   GestureDetector(
-                          onTap: (){
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: (){
+                            },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C))),
+                        GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,)));
+                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
 
-                          },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C))),
-                      GestureDetector(
-                          onTap: (){
-                            widget.mListener.getAddLeder("Expense");
-                          },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
-
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                  // getFieldTitleLayout("Profit/Loss "),
-                  // const SizedBox(height: 5,),
-                  getProfitLayout(),
-                  // getFieldTitleLayout("Payment-Outanding "),
-                  // const SizedBox(height: 5,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-                      getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: 10,),
+                    // getFieldTitleLayout("Profit/Loss "),
+                    // const SizedBox(height: 5,),
+                    getProfitLayout(),
+                    // getFieldTitleLayout("Payment-Outanding "),
+                    // const SizedBox(height: 5,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
+
           ),
         ));
   }
@@ -736,7 +744,10 @@ print("hfshjffhfbh  $dateString");
           )));
         }
         else{
-          widget.mListener.getAddLeder(title);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
+            dateNew: dateTime,
+          )));
+       //   widget.mListener.getAddLeder(title);
         }
       },
       child: Container(

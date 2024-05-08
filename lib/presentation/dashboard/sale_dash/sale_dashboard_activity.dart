@@ -256,7 +256,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: saleDate,)));
       },
       child: Container(
         height: 40,
@@ -282,7 +282,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(ApplicationLocalizations.of(context)!.translate("sale_invoice")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text("Go To Sale Invoice",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],

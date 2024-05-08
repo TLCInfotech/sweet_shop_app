@@ -259,7 +259,9 @@ class _PaymentDashState extends State<PaymentDashActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
+dateNew: saleDate,
+        )));
       },
       child: Container(
         height: 40,
@@ -285,7 +287,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(ApplicationLocalizations.of(context)!.translate("receipt")!,style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text("Go To Receipt",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],
