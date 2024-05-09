@@ -156,7 +156,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       setState(() {
         oldItemID=widget.editproduct['Item_ID'];
         selectedItemID=widget.editproduct['Item_ID'];
-        _textController.text=widget.editproduct['Name']!=null?widget.editproduct['Name']:_textController.text;
+        selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:_textController.text;
         batchno.text=widget.editproduct['Batch_ID']!=null?widget.editproduct['Batch_ID']:batchno.text;
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
@@ -496,7 +496,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       "Seq_No": widget.editproduct['Seq_No'],
                       "Item_ID": oldItemID,
                       "New_Item_ID":selectedItemID,
-                      "Item_Name": selectedItemName,
+                      "Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
                       "Quantity": int.parse(quantity.text),

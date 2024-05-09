@@ -511,6 +511,10 @@ String companyId="";
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Container(
+            width: SizeConfig.screenWidth,
+            child: getApplicableFromLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+          ),
           SearchableLedgerDropdown(
           apiUrl:ApiConstants().franchisee+"?",
         titleIndicator: false,
@@ -551,23 +555,12 @@ String companyId="";
                 });    callGetFrenchisee(1);
               },
               franchiseeName: selectedCopyFranchiseeName),*/
-        Padding(
-            padding:  EdgeInsets.only(top: SizeConfig.screenHeight*.01),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: SizeConfig.halfscreenWidth,
-                  child: getProductCategoryLayout(),
-                ),
-
-                Container(
-                  width: SizeConfig.halfscreenWidth,
-                  child: getApplicableFromLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                )
-              ],
-            ),
+          Container(
+            width: SizeConfig.screenWidth,
+            child: getProductCategoryLayout(),
           ),
+
+
         ],
       ),
     );

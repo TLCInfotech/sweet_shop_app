@@ -199,7 +199,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         selectedItemID=widget.editproduct['Item_ID'];
         unit=widget.editproduct['Unit'];
         selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:null;
-        _textController.text=widget.editproduct['Name'];
+       selectedItemName=widget.editproduct['Name'];
         rate.text=widget.editproduct['Rate'].toString();
         gst.text=widget.editproduct['GST'].toString();
         net.text=widget.editproduct['Net_Rate'].toString();
@@ -208,6 +208,8 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
 
     }
     await fetchItems();
+    await calculateNetAmt();
+    await calculateGstAmt();
   }
 
   @override

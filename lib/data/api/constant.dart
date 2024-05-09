@@ -49,7 +49,8 @@ class ApiConstants {
   String getPurchaseInvoiceDetails="getPurchaseInvoiceDetails";
   String getVoucherNote="VoucherNoteHeader";
   String getVoucherNoteHeaderDetails="getVoucherNoteHeaderDetails";
-  String ledgerWithoutImage="LedgerWithoutImage";
+  String ledgerWithoutImage="LedgerList";
+ // String ledgerWithoutImage="LedgerWithoutImage";
   String purchasePartyItem="purchasePartyItem";
   String salePartyItem="salePartyItem";
   String getDashboardData="getDashboardAmount";

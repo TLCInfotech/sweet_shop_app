@@ -165,7 +165,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                       ),
                     ),
                   ),
-                  height: SizeConfig.safeUsedHeight * .10,
+                  height: SizeConfig.safeUsedHeight * .08,
                   child: getSaveAndFinishButtonLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
               CommonWidget.getCommonPadding(
@@ -199,7 +199,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
         onDoubleTap: () {},
         child: Container(
           width: SizeConfig.screenWidth,
-          height: 40,
+          height: 30,
           decoration: BoxDecoration(
             color: disableColor == true
                 ? CommonColor.THEME_COLOR.withOpacity(.5)

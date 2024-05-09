@@ -187,7 +187,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:null;
-        _textController.text=widget.editproduct['Name'];
+       selectedItemName=widget.editproduct['Name'];
         selectedItemID=widget.editproduct['Item_ID'];
         rate.text=widget.editproduct['Rate'].toString();
         gst.text=widget.editproduct['GST'].toString();
@@ -197,6 +197,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       });
     }
     await fetchItems();
+    await calculateGstAmt();
+    await calculateNetAmt();
   }
 
   @override
