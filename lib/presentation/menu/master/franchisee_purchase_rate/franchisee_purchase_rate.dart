@@ -422,6 +422,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                               editedItemIndex=null;
                             });
                             if(selectedFranchiseeID!=null){
+
                               goToAddOrEditProduct(null);
                             }else{
                               CommonWidget.errorDialog(context, "Select franchisee first.");
@@ -744,7 +745,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       var index=editedItemIndex;
       setState(() {
         Item_list[index]['ID']=item['ID'];
-        Item_list[index]['Item_ID']=item['Item_ID'];
+        Item_list[index]['Item_ID']=item['New_Item_ID'];
         Item_list[index]['Name']=item['Name'];
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
         Item_list[index]['Rate']=item['Rate'];
@@ -762,9 +763,18 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         });
       }
       if(item['ID']!=null) {
-        Updated_list.add(item);
+        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

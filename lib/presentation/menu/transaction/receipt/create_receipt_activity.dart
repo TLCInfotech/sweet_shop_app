@@ -737,22 +737,31 @@ bool isLoaderShow=false;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
+       // Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Item_list[index]['Ledger_Name']=item['Ledger_Name'];
-        Item_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Item_list[index]['Ledger_ID']=item['New_Ledger_ID'];
         Item_list[index]['Amount']=item['Amount'];
         Item_list[index]['Remark']=item['Remark'];
         Item_list[index]['Seq_No']=item['Seq_No'];
       });
       print("#############3");
       print(item['Seq_No']);
-      if(item['New_Expense_ID']!=null){
-        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+      if(item['New_Ledger_ID']!=null){
+        Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+        var contain = Updated_list.indexWhere((element) => element['Ledger_ID']== item['Ledger_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

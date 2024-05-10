@@ -681,7 +681,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
        // Ledger_list[index]['Date']=item['Date'];
         // Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Ledger_Name']=item['Ledger_Name'];
-        Ledger_list[index]['Ledger_ID']=item['Ledger_ID'];
+        Ledger_list[index]['Ledger_ID']=item['New_Ledger_ID'];
         Ledger_list[index]['Amount']=item['Amount'];
         Ledger_list[index]['Amnt_Type']=item['Amnt_Type'];
         Ledger_list[index]['Remark']=item['Remark'];
@@ -693,9 +693,18 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         Ledger_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(Ledger_list[index]);
+        var contain = Updated_list.indexWhere((element) => element['Ledger_ID']== item['Ledger_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

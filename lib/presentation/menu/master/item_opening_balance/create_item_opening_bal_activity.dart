@@ -318,7 +318,11 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeID!=null) {
                               if (context != null) {
+                                Deleted_list=[];
+                                Updated_list=[];
+                                Inserted_list=[];
                                 goToAddOrEditItem(null);
+
                               }
                             }
                             else{
@@ -740,7 +744,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['Seq_No']=item['seq_No'];
+        Item_list[index]['Seq_No']=item['Seq_No'];
         Item_list[index]['Item_ID']=item['Item_ID'];
         Item_list[index]['Batch_ID']=item['Batch_ID'];
         Item_list[index]['Name']=item['Name'];
@@ -752,9 +756,18 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
       print("#############3");
       print(item['Seq_No']);
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

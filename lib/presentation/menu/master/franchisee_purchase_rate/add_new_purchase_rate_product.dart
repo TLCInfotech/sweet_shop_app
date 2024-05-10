@@ -534,7 +534,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
                       "Name":selectedItemName,
                       "Disc_Percent": null,
                       "Rate":double.parse(rate.text),
-                      "GST":double.parse(gst.text),
+                      "GST":gst.text!=""?double.parse(gst.text):"",
                       "GST_Amount":double.parse(gstAmt.text),
                       "Net_Rate":double.parse(net.text)
                     };

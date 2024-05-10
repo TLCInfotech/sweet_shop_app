@@ -158,8 +158,8 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
     if(widget.editproduct!=null){
       setState(() {
         oldItemID=widget.editproduct['Item_ID'];
-        selectedItemID=widget.editproduct['Item_ID'];
-        selectedItemName=widget.editproduct['Item_Name'];
+        selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:"";
+        selectedItemName=widget.editproduct['Item_Name']!=null?widget.editproduct['Item_Name']:"";
         batchno.text=widget.editproduct['Batch_ID']!=null?widget.editproduct['Batch_ID']:batchno.text;
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();

@@ -138,7 +138,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
     if(widget.editproduct!=null){
       setState(() {
         selectedLedgerName=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:null;
-        _textController.text=widget.editproduct['Ledger_Name'];
+        selectedBankLedgerID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:null;
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark'].toString();
       });
@@ -260,7 +260,6 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (item)async{
         setState(() {
-
           selectedBankLedgerID = item['ID'].toString();
           selectedLedgerName=item['Name'].toString();
         });

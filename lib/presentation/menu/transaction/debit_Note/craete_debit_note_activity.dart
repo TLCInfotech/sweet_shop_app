@@ -351,6 +351,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
+
                                 goToAddOrEditItem(null,widget.companyId,"");
                               }
                             }
@@ -984,6 +985,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
       setState(() {
         Item_list[index]['Item_Name']=item['Item_Name'];
         Item_list[index]['Quantity']=item['Quantity'];
+        Item_list[index]['Item_ID']=item['New_Item_ID'];
         Item_list[index]['Unit']=item['Unit'];
         Item_list[index]['Rate']=item['Rate'];
         Item_list[index]['Amount']=item['Amount'];
@@ -1001,10 +1003,20 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         Item_list[index]['New_Item_ID']=item['New_Item_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(Item_list[index]);
+        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
+
       }
     }
     else

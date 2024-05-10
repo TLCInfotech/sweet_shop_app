@@ -1002,9 +1002,19 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+
+        var contain = Updated_list.indexWhere((element) => element['Ledger_ID']== item['Ledger_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

@@ -119,7 +119,6 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         selectedItemName = widget.editproduct['Item_Name'] != null
             ? widget.editproduct['Item_Name']
             : null;
-        _textController.text = widget.editproduct['Item_Name'];
         unit.text = widget.editproduct['Unit'].toString();
         quantity.text = widget.editproduct['Quantity'].toString();
         rate.text =  widget.editproduct['Rate']==null?"0":
@@ -291,7 +290,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       name: selectedItemName,
       status: "edit",
       apiUrl:
-          "${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
+          "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callback: (item) async {

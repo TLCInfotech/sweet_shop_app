@@ -792,9 +792,9 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
+        //Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
         Item_list[index]['Expense_Name']=item['Expense_Name'];
-        Item_list[index]['Expense_ID']=item['Expense_ID'];
+        Item_list[index]['Expense_ID']=item['New_Expense_ID'];
         Item_list[index]['Amount']=item['Amount'];
         Item_list[index]['Remark']=item['Remark'];
         Item_list[index]['Seq_No']=item['Seq_No'];
@@ -805,9 +805,18 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
         Item_list[index]['New_Expense_ID']=item['New_Expense_ID'];
       }
       if(item['Seq_No']!=null) {
-        Updated_list.add(item);
+        var contain = Updated_list.indexWhere((element) => element['Expense_ID']== item['Expense_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

@@ -90,7 +90,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
     if(widget.editproduct!=null){
       setState(() {
         selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:null;
-        _textController.text=widget.editproduct['Item_Name'];
+       selectedItemName=widget.editproduct['Item_Name']!=null?widget.editproduct['Item_Name']:"";
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
         rate.text =  widget.editproduct['Rate']==null?"0": widget.editproduct['Rate'].toString();
@@ -242,7 +242,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote>{
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return SearchableDropdownWithObject(
-      name:widget.status=="edit"?widget.editproduct['Item_Name']:"",
+      name:selectedItemName,
       status:  widget.status,
       apiUrl:ApiConstants().item_list+"?Date=${widget.date}&",
       titleIndicator: false,

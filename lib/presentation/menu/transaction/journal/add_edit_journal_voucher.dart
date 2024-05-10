@@ -144,7 +144,8 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
-        _textController.text=widget.editproduct['Ledger_Name'];
+        selectedbankCashLedger=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:"";
+        selectedBankLedgerID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:"";
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark'].toString();
         selectedLimitUnit=widget.editproduct['Amnt_Type'].toString();
@@ -280,7 +281,7 @@ var selectedbankCashLedger="";
       titleIndicator: false,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
-      franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
+      franchiseeName:selectedbankCashLedger,
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (name,id){
         if(selectedBankLedgerID==id){

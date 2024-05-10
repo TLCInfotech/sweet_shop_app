@@ -674,7 +674,7 @@ String companyId="";
       var index=editedItemIndex;
       setState(() {
         Item_list[index]['ID']=item['ID'];
-        Item_list[index]['Item_ID']=item['Item_ID'];
+        Item_list[index]['Item_ID']=item['New_Item_ID'];
         Item_list[index]['New_Item_ID']=item['New_Item_ID'];
         Item_list[index]['Name']=item['Name'];
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
@@ -692,9 +692,18 @@ String companyId="";
         });
       }
       if(item['ID']!=null) {
-        Updated_list.add(item);
+        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+        print(contain);
+        if(contain>=0){
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        }else{
+          Updated_list.add(item);
+        }
         setState(() {
           Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
         });
       }
     }

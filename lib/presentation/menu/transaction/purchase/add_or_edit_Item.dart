@@ -97,7 +97,6 @@ class _AddOrEditItemState extends State<AddOrEditItem>{
       setState(() {
         selectedItemID=widget.editproduct['Item_ID']!=null?widget.editproduct['Item_ID']:null;
         selectedItemName=widget.editproduct['Item_Name']!=null?widget.editproduct['Item_Name']:null;
-        _textController.text=widget.editproduct['Item_Name'];
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity'].toString();
         rate.text =  widget.editproduct['Rate']==null?"0": widget.editproduct['Rate'].toString();

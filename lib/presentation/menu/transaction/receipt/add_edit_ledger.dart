@@ -131,7 +131,6 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       setState(() {
         selectedItemID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:null;
         selectedLedgerName=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:null;
-        _textController.text=widget.editproduct['Ledger_Name'];
         amount.text=widget.editproduct['Amount'].toString();
         narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
       });
