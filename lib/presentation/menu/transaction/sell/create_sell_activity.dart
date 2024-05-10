@@ -376,6 +376,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
                               }
                             }

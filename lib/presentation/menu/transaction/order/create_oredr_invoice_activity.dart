@@ -378,7 +378,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!="") {
                               if (context != null) {
-
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
                               }
                             }

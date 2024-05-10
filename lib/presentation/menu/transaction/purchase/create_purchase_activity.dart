@@ -393,6 +393,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
                               }
                             }

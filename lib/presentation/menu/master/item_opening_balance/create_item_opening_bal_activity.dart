@@ -321,6 +321,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                 Deleted_list=[];
                                 Updated_list=[];
                                 Inserted_list=[];
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
 
                               }

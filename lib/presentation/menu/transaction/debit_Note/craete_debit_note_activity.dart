@@ -351,7 +351,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
-
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null,widget.companyId,"");
                               }
                             }

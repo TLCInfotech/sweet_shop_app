@@ -318,6 +318,7 @@ String companyId="";
                               editedItemIndex=null;
                             });
                       if(selectedCopyFranchiseeId!=""){
+                        editedItemIndex=null;
                         goToAddOrEditProduct(null);
                       }else{
                         CommonWidget.errorDialog(context, "Select franchisee first.");

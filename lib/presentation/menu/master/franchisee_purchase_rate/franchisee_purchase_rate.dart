@@ -422,7 +422,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                               editedItemIndex=null;
                             });
                             if(selectedFranchiseeID!=null){
-
+                              editedItemIndex=null;
                               goToAddOrEditProduct(null);
                             }else{
                               CommonWidget.errorDialog(context, "Select franchisee first.");

@@ -262,6 +262,7 @@ bool isLoaderShow=false;
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null) {
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
                               }
                             }

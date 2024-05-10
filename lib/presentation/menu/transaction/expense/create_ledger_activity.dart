@@ -270,6 +270,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!="") {
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
                               }
                             }

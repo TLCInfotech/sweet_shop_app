@@ -352,7 +352,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
                               if (context != null) {
-
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null,widget.companyId,"");
                               }
                             }

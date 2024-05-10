@@ -242,6 +242,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
+                              editedItemIndex=null;
                               goToAddOrEditItem(null,widget.companyId,"");
                             }
                           },

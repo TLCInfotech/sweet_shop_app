@@ -190,14 +190,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return Container(
       height: SizeConfig.safeUsedHeight,
       width: SizeConfig.screenWidth,
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Color(0xFFfffff5),
+        color: const Color(0xFFfffff5),
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Scaffold(
-        backgroundColor: Color(0xFFfffff5),
+        backgroundColor: const Color(0xFFfffff5),
         appBar: PreferredSize(
           preferredSize: AppBar().preferredSize,
           child: SafeArea(
@@ -208,7 +208,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               ),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
              child: AppBar(
                   leadingWidth: 0,
                   automaticallyImplyLeading: false,
@@ -221,7 +221,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: FaIcon(Icons.arrow_back),
+                            child: const FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
                             child:  widget.editItem!=null?
@@ -353,19 +353,18 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
           child: Container(
             child: Column(
               children: [
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("basic_information")!),
                 BasicInfo(),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("document_information")!),
                 Document_Information(),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("account_information")!),
                 Container(
-
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.grey,width: 1),
@@ -379,7 +378,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                   ],
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
               ],
             ),
           ),
@@ -392,7 +391,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   Container Document_Information() {
     return Container(
 
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.grey,width: 1),
@@ -470,7 +469,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   Container BasicInfo() {
     return Container(
 
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.grey,width: 1),
@@ -486,7 +485,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           getCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                          SizedBox(width: 5,),
+                          const SizedBox(width: 5,),
                           getPincodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
                         ],
                       ),

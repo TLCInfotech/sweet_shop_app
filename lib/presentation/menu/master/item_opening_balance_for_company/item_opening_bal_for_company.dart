@@ -296,6 +296,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
+                              editedItemIndex=null;
                               goToAddOrEditItem(null);
                             }
                           },

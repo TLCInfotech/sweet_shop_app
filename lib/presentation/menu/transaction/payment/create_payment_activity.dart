@@ -243,6 +243,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null) {
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null);
                               }
                             }

@@ -238,6 +238,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null){
                               if (context != null) {
+                                editedItemIndex=null;
                                 goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"");
                               }
                             }else{
