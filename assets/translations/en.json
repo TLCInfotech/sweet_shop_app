@@ -263,7 +263,10 @@
   "notifications": "Notifications",
   "order_invoice": "Sale Order",
   "constant_order_invoice": "Convert Sale Order",
-  "orders": "Orders"
+  "orders": "Orders",
+  "user_right": "User Right",
+  "add_screen": "Add Screen",
+  "add_all": "Add All"
 
 }
 

@@ -36,6 +36,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.
 import '../../core/localss/application_localizations.dart';
 import '../dashboard/dashboard_activity.dart';
 import '../dashboard/home/home_fragment.dart';
+import 'master/user_rights/user_list_for_rights.dart';
 import 'report/MIS/mis_report_activity.dart';
 import 'report/payment/payment_report_activity.dart';
 import 'report/recipt/recipt_report_layout.dart';
@@ -304,6 +305,7 @@ String companyId="";
             getFranchiseePurchaseRateLayout(parentHeight,parentWidth),
             getFranchiseeLayout(parentHeight,parentWidth),
             getUserLayout(parentHeight,parentWidth),
+            getUserRightsLayout(parentHeight,parentWidth),
             getItemLayout(parentHeight,parentWidth),
             getCategoryLayout(parentHeight,parentWidth),
             getMeasuringUnitLayout(parentHeight,parentWidth),
@@ -444,6 +446,39 @@ String companyId="";
             ),
             Text(
               ApplicationLocalizations.of(context)!.translate("user")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* Widget for user Layout */
+  Widget getUserRightsLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UserRightListActivity()));
+        /*    if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }
+*/
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("user_right")!,
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

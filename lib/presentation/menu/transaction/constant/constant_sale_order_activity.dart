@@ -516,8 +516,9 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
               setState(() {
                 isLoaderShow=false;
                 disableColor = false;
+                saleInvoice_list=[];
               });
-              getSaleOrderedList(1);
+              await getSaleOrderedList(1);
 
             }, onFailure: (error) {
               setState(() {

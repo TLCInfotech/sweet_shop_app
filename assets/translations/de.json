@@ -261,7 +261,8 @@
  "order_invoice": "Sale Order",
  "constant_order_invoice": "Convert Sale Order",
  "notifications": "Notifications",
- "orders": "Order"
-
-
+ "orders": "Order",
+ "user_right": "User Right",
+ "add_screen": "Add Screen",
+ "add_all": "Add All"
 }
