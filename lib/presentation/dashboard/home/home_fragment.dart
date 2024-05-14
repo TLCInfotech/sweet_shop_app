@@ -38,7 +38,6 @@ class _HomeFragmentState extends State<HomeFragment> {
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
-
   List<SalesData> _saleData = [];
 
   var statistics=[];

@@ -53,6 +53,7 @@ class ApiConstants {
  // String ledgerWithoutImage="LedgerWithoutImage";
   String purchasePartyItem="purchasePartyItem";
   String salePartyItem="salePartyItem";
+
   String getDashboardData="getDashboardAmount";
   String getDashboardExpense="getDashboardExpensewise";
   String getDashboardExpensePartywise="getDashboardExpensePartywise";
@@ -62,7 +63,7 @@ class ApiConstants {
   String getDashboardSalePartywise="getDashboardSalePartywise";
   String getDashboardSaleReturnItemwise="getDashboardSaleReturnItemwise";
   String getDashboardSaleReturnPartywise="getDashboardSaleReturnPartywise";
-  String getDashboardProfitDetailpartywise="getDashboardProfitDetailPartywise";
+  String getDashboardProfitDetailPartywise="getDashboardProfitDetailPartywise";
   String getDashboardOutstandingPartywise="getDashboardOutstandingPartywise";
   String saleOrder="SaleOrder";
   String getSaleOrderDetail="getSaleOrderDetails";

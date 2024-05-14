@@ -499,7 +499,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardProfitDetailpartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardProfitDetailPartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

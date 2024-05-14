@@ -44,6 +44,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   String  companyLongitude = "";
   double distanceInMeters = 0;
 
+
   @override
   void initState() {
     // TODO: implement initState

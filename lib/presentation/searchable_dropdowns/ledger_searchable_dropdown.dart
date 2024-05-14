@@ -50,8 +50,27 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
     // TODO: implement initState
     super.initState();
     setdata();
+    searchFocus.addListener(_onFocusChange);
   }
 
+  void _onFocusChange() {
+    if (!searchFocus.hasFocus) {
+      if(selectedItem==null){
+        FocusManager.instance.primaryFocus?.unfocus();
+        _controller.clear();
+        var snackBar=SnackBar(content: Text("No item available !"));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    searchFocus.removeListener(_onFocusChange);
+    searchFocus.dispose();
+    super.dispose();
+  }
   setdata()async{
     await callGetLedger();
     if(widget.franchisee=="edit"){
@@ -174,6 +193,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                   },
                   textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,
+                  focusNode: searchFocus,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
                     hintText: "${widget.title}",

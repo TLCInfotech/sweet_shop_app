@@ -55,7 +55,7 @@ class SearchableDropdownWithObject extends StatefulWidget{
 class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWithObject> with  SingleTickerProviderStateMixin {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
-  FocusNode searchFocus = FocusNode() ;
+
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   @override
@@ -68,6 +68,26 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       print(":::::: ${widget.name}");
       _controller.text=widget.name;
     }
+    searchFocus.addListener(_onFocusChange);
+  }
+  FocusNode searchFocus = FocusNode() ;
+  void _onFocusChange() {
+    if (!searchFocus.hasFocus) {
+      if(selected==null){
+        FocusManager.instance.primaryFocus?.unfocus();
+        _controller.clear();
+        var snackBar=SnackBar(content: Text("No item available !"));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    searchFocus.removeListener(_onFocusChange);
+    searchFocus.dispose();
+    super.dispose();
   }
   List<dynamic> ledger_list = [];
 
@@ -94,7 +114,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     setState(() {
       ledger_list = results;
     });
-
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in ledger_list) {
       _list.add(new TestItem.fromJson(
@@ -143,15 +162,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
   }
 
   final TextEditingController _controller = TextEditingController();
-
+final FocusNode reqFocus=FocusNode();
   var selectedItem=null;
   var selected=null;
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      Padding(
+    return Padding(
         padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,15 +200,18 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                         callGetLedger();
                       });
                     },
+
                     onChanged: (v)async{
                       if(v.isEmpty) {
                         setState(() {
                           selected=null;
+                          print("knjbnbnjbnbn  $v");
                         });
                         await widget.callback(selected);
                       }
                     },
                     textInputAction: TextInputAction.none, // Change input action to "none"
+                   focusNode: searchFocus,
                     controller: _controller,
                     decoration: textfield_decoration.copyWith(
                       // labelText: '${widget.title}',
@@ -203,14 +223,21 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
 
                   suggestionsCallback: (pattern) {
                     return _getSuggestions(pattern);
+
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(
                       title: Text(suggestion['Name']),
                     );
                   },
+    validator: (value) {
+                    print("kkjggkg   $value");
+    if (value!.isEmpty) {
+    return 'Please select a city';
+    }},
                   onSuggestionSelected: (suggestion) {
                     setState(() {
+                      print("knjbnbnjbnbn2222  $suggestion  $selected");
                       selectedItem = suggestion['Name'];
                       selected=suggestion;
                       _controller.text=suggestion['Name'];
@@ -276,4 +303,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     return matches;
   }
 
+
+  Future<bool> _onBackPressed() {
+    return CommonWidget.showExitDialog(context, "", "1");
+  }
 }
