@@ -27,8 +27,9 @@ class SearchableLedgerDropdown extends StatefulWidget{
   final titleIndicator;
   final apiUrl;
   final franchisee;
+  final come;
   final franchiseeName;
-  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName});
+  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come});
 
 
 
@@ -193,6 +194,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                   },
                   textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,
+                  enabled: widget.come=="disable"?false:true,
                   focusNode: searchFocus,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
@@ -219,50 +221,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                 },
               ),
             ),
-
-            // Container(
-            //     height: SizeConfig.screenHeight * .055,
-            //     alignment: Alignment.center,
-            //     decoration: BoxDecoration(
-            //       color: CommonColor.WHITE_COLOR,
-            //       borderRadius: BorderRadius.circular(4),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           offset: Offset(0, 1),
-            //           blurRadius: 5,
-            //           color: Colors.black.withOpacity(0.1),
-            //         ),
-            //       ],
-            //     ),
-            //     child: TextFieldSearch(
-            //         initialList: filteredStates,
-            //         minStringLength: 0,
-            //         label: 'Ledger',
-            //         controller: _textController,
-            //         decoration: textfield_decoration.copyWith(
-            //           hintText:widget.title,
-            //           prefixIcon: Container(
-            //               width: 50,
-            //               padding: EdgeInsets.all(10),
-            //               alignment: Alignment.centerLeft,
-            //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            //         ),
-            //         textStyle: item_regular_textStyle,
-            //         getSelectedValue: (v)async {
-            //           await widget.callback(v.label,v.value);
-            //           setState(() {
-            //             ledger_list=[];
-            //           });
-            //
-            //         },
-            //         future: () {
-            //           // if (_textController.text != "")
-            //             return
-            //               fetchSimpleData(
-            //                 _textController.text.trim());
-            //         })
-            //
-            // ),
           )
         ],
       ),

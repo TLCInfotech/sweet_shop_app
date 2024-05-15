@@ -268,7 +268,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                               style: item_heading_textStyle),
                                           const SizedBox(height: 5),
                                           Text(
-                                              "${users_list[index]['Franchisee_Name']}",
+                                              "${users_list[index]['Ledger_Name']}",
                                               overflow: TextOverflow.clip,
                                               style: item_regular_textStyle.copyWith(
                                                 color:Colors.black87,
@@ -334,7 +334,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
             page: page.toString()
         );
         String apiUrl;
-        apiUrl = "${baseurl}${ApiConstants().allUserPermission}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        apiUrl = "${baseurl}${ApiConstants().users}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

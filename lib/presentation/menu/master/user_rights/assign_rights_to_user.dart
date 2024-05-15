@@ -374,6 +374,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      come:"disable",
       franchiseeName: widget.come=="edit"? widget.editedItem['UID']:"",
       title: ApplicationLocalizations.of(context)!.translate("user")!,
       callback: (name,id){
@@ -434,7 +435,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
