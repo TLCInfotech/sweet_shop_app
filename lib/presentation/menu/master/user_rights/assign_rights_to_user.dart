@@ -172,7 +172,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                         ),
                       ),
                     ),
-                    height: SizeConfig.safeUsedHeight * .12,
+                    height: SizeConfig.safeUsedHeight * .08,
                     child: getSaveAndFinishButtonLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
@@ -222,8 +222,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           },
           onDoubleTap: () {},
           child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 50,
+            width: SizeConfig.screenWidth*.90,
+            height: 40,
             decoration: BoxDecoration(
               color: disableColor == true
                   ? CommonColor.THEME_COLOR.withOpacity(.5)
@@ -397,6 +397,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       child: ListView.separated(
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: Item_list.length,
+        padding: EdgeInsets.only(bottom: 50),
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
