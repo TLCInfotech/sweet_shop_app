@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_form_list.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -45,6 +46,10 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
   var companyId = "0";
   var selectedItemName = "";
   var api = "";
+bool updateV=true;
+bool deleteV=true;
+bool insertV=true;
+
 
   @override
   void initState() {
@@ -56,12 +61,17 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
-        selectedItemID = widget.editproduct['Item_ID'] != null
-            ? widget.editproduct['Item_ID']
+        insertV=widget.editproduct['Insert_Right'];
+        updateV=widget.editproduct['Update_Right'];
+        deleteV=widget.editproduct['Delete_Right'];
+        print("vbvnvbnvbnvbn   $insertV");
+        selectedItemID = widget.editproduct['Form_ID'] != null
+            ? widget.editproduct['Form_ID']
             : null;
-        selectedItemName = widget.editproduct['Item_Name'] != null
-            ? widget.editproduct['Item_Name']
+        selectedItemName = widget.editproduct['Form'] != null
+            ? widget.editproduct['Form']
             : null;
+
       });
     }
     // await fetchItems();
@@ -96,20 +106,18 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
                       height: SizeConfig.screenHeight * .08,
                       child: Center(
                         child: Text(
-                            ApplicationLocalizations.of(context)!
-                                .translate("user_right")!,
+                          "Screen Right",
                             style: page_heading_textStyle),
                       ),
                     ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("user_name")!),
+                    getFieldTitleLayout("Screen Name"),
                     getAddSearchLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth),
                     SizedBox(
                       height: 5,
                     ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("user_right")!),
+                    // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                    //     .translate("user_right")!),
                     getInserUpdateDeleteCheckboxTile(),
                     SizedBox(
                       height: 10,
@@ -148,66 +156,21 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     print("sadas ${selectedItemName}");
-    return SearchableDropdownWithObject(
+    return SearchableDropdownWithFormList(
       name: selectedItemName,
       status: "edit",
-      apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=2024-05-09&",
+      apiUrl:"${ApiConstants().formList}?",
       titleIndicator: false,
-      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      title:"Screen Name",
       callback: (item) async {
         setState(() {
           // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-          selectedItemID = item['ID'].toString();
-          selectedItemName = item['Name'].toString();
+          selectedItemID = item['Form_ID'].toString();
+          selectedItemName = item['Form'].toString();
 
         });
       },
     );
-
-    //   Container(
-    //     height: parentHeight * .055,
-    //     alignment: Alignment.center,
-    //     decoration: BoxDecoration(
-    //       color: CommonColor.WHITE_COLOR,
-    //       borderRadius: BorderRadius.circular(4),
-    //       boxShadow: [
-    //         BoxShadow(
-    //           offset: Offset(0, 1),
-    //           blurRadius: 5,
-    //           color: Colors.black.withOpacity(0.1),
-    //         ),
-    //       ],
-    //     ),
-    //     child: TextFieldSearch(
-    //       minStringLength: 0,
-    //         label: 'Item',
-    //         controller: _textController,
-    //         decoration: textfield_decoration.copyWith(
-    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-    //           prefixIcon: Container(
-    //               width: 50,
-    //               padding: EdgeInsets.all(10),
-    //               alignment: Alignment.centerLeft,
-    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-    //         ),
-    //         textStyle: item_regular_textStyle,
-    //         getSelectedValue: (v) {
-    //           setState(() {
-    //             selectedItemID = v.value;
-    //             unit.text=v.unit;
-    //             rate.text=v.rate;
-    //             itemsList = [];
-    //             gst.text=v.gst!="null"?v.gst:"";
-    //           });
-    //           calculateRates();
-    //         },
-    //         future: () {
-    //           if (_textController.text != "")
-    //             return fetchSimpleData(
-    //                 _textController.text.trim());
-    //         })
-    //
-    // );
   }
 
   Widget getInserUpdateDeleteCheckboxTile(){
@@ -220,9 +183,11 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
           ) ,
 
           tileColor: Colors.transparent,
-          value: true,
+          value: insertV,
           onChanged: (bool? value) {
-
+setState(() {
+  insertV=!insertV;
+});
           },
           title:  Text("Insert", style: item_heading_textStyle),
         ),
@@ -235,24 +200,28 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
            ) ,
 
            tileColor: Colors.transparent,
-           value: true,
+           value: updateV,
            onChanged: (bool? value) {
-
+setState(() {
+  updateV=!updateV;
+});
            },
            title:  Text("Update", style: item_heading_textStyle),
          ),
 
          CheckboxListTile(
-
            contentPadding: EdgeInsets.all(0),
            shape: RoundedRectangleBorder(
              borderRadius: BorderRadius.circular(5),
            ) ,
 
            tileColor: Colors.transparent,
-           value: true,
+           value: deleteV,
            onChanged: (bool? value) {
-
+           setState(() {
+             deleteV=!deleteV;
+             print("kjjkfjfd $deleteV");
+           });
            },
            title:  Text("Delete", style: item_heading_textStyle),
          ),
@@ -299,19 +268,25 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
             var item = {};
             if (widget.editproduct != null) {
               item = {
-                "New_Item_ID": selectedItemID,
+                "New_Form_ID": selectedItemID,
+                "Form": selectedItemName,
                 "Seq_No": widget.editproduct != null
                     ? widget.editproduct['Seq_No']
                     : null,
-                "Item_ID": widget.editproduct != null
-                    ? widget.editproduct['Item_ID']
+                "Form_ID": widget.editproduct != null
+                    ? widget.editproduct['Form_ID']
                     : "",
-                "Item_Name": selectedItemName,
+                "Insert_Right": insertV,
+                "Update_Right": updateV,
+                "Delete_Right": deleteV,
               };
             } else {
               item = {
-                "Item_ID": selectedItemID,
-                "Item_Name": selectedItemName,
+                "Form_ID": selectedItemID,
+                "Form": selectedItemName,
+                "Insert_Right": insertV,
+                "Update_Right": updateV,
+                "Delete_Right": deleteV,
                 "Seq_No": widget.editproduct != null
                     ? widget.editproduct['Seq_No']
                     : null,
@@ -348,6 +323,10 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
       ],
     );
   }
+
+
+
+
 }
 abstract class AddOrEditUserScreenRightInterface {
   AddOrEditUserScreenRightDetail(dynamic item);

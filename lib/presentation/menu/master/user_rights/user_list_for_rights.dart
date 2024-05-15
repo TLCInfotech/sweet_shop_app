@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user_rights/assign_rights_to_user.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -24,13 +25,13 @@ class UserRightListActivity extends StatefulWidget {
   State<UserRightListActivity> createState() => _UserRightListActivityState();
 }
 
-class _UserRightListActivityState extends State<UserRightListActivity> {
+class _UserRightListActivityState extends State<UserRightListActivity>with AssignRightsToUserInterface {
 
   // DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-  List<dynamic> users_list=[
+/*  List<dynamic> users_list=[
     {
       "UID":"Kala",
       "Right":"All Right"
@@ -43,7 +44,8 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
       "UID":"Kala",
       "Right":"No_Right"
     },
-  ];
+  ];*/
+  List<dynamic> users_list=[];
   int page = 1;
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
@@ -60,13 +62,13 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
     //     invoiceDate=widget.dateNew!;
     //   });
     // }
-    // getUserList(page);
+    getUser(page);
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        // getUserList(page);
+        getUser(page);
       }
     }
   }
@@ -93,86 +95,9 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
       page=1;
     });
     isPagination = true;
-    await getUserList(page);
+    await  getUser(page);
   }
-  
-  getUserList(int page) async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl;
-      
-          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
 
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-
-              setState(() {
-                isLoaderShow=false;
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  _arrList.clear();
-                  _arrList=data;
-                  if (_arrList.length < 10) {
-                    if (mounted) {
-                      setState(() {
-                        isPagination = false;
-                      });
-                    }
-                  }
-                  if (page == 1) {
-                    setDataToList(_arrList);
-                  } else {
-                    setMoreDataToList(_arrList);
-                  }
-
-                }else{
-                  isApiCall=true;
-                }
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -235,6 +160,7 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     AssignRightsToUser(
                       mListener:this,
+                      editedItem: null,
                     )));
               }),
           body: Stack(
@@ -310,7 +236,7 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
                                 builder: (context) => AssignRightsToUser(
                                     editedItem: users_list[index],
                                     mListener: this,
-                                    come:"edit"
+                                    come:"edit",
                                 )));
                       },
                       child: Card(
@@ -342,29 +268,28 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
                                               style: item_heading_textStyle),
                                           const SizedBox(height: 5),
                                           Text(
-                                              "${users_list[index]['Right']}",
+                                              "${users_list[index]['Franchisee_Name']}",
                                               overflow: TextOverflow.clip,
                                               style: item_regular_textStyle.copyWith(
-                                                color: users_list[index]['Right']=="All Right"?Colors.green:
-                                                users_list[index]['Right']=="Restricted"?Colors.orange:Colors.black87,
+                                                color:Colors.black87,
                                                 fontWeight: FontWeight.bold
                                               ))
                                         ],
                                       ),
                                     ),
-                                    // Positioned(
-                                    //     top: 0,
-                                    //     right: 0,
-                                    //     child: DeleteDialogLayout(
-                                    //       callback: (response) async {
-                                    //         if (response == "yes") {
-                                    //           print("##############$response");
-                                    //           await callDeleteUser(
-                                    //               users_list[index]['UID'].toString(),
-                                    //               index);
-                                    //         }
-                                    //       },
-                                    //     ))
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: DeleteDialogLayout(
+                                          callback: (response) async {
+                                            if (response == "yes") {
+                                              print("##############$response");
+                                              await callDeleteUser(
+                                                  users_list[index]['UID'].toString(),
+                                                  index);
+                                            }
+                                          },
+                                        ))
                                   ],
                                 ))
                           ],
@@ -384,5 +309,142 @@ class _UserRightListActivityState extends State<UserRightListActivity> {
         ));
   }
 
+  getUser(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl;
+        apiUrl = "${baseurl}${ApiConstants().allUserPermission}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList.clear();
+                  _arrList=data;
+                  print("kjfhjfjhfhj  $users_list  $data");
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
+  @override
+  backToUserList() {
+    // TODO: implement backToUserList
+  setState(() {
+    getUser(1);
+  });
+  Navigator.pop(context);
+  }
+
+  callDeleteUser(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        var model= {
+          "UID": removeId,
+          "Modifier": uid,
+          "Modifier_Machine": deviceId
+        };
+        String apiUrl = baseurl + ApiConstants().userPermission+"?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                users_list.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
+import 'package:sweet_shop_app/data/domain/user_rights/user_rigts_request_model.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user_rights/add_or_edit_user_rights.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -16,11 +19,12 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class AssignRightsToUser extends StatefulWidget {
-  final  mListener;
+  final  AssignRightsToUserInterface mListener;
   final editedItem;
   final come;
+  final uId;
 
-  const AssignRightsToUser({super.key,required this.mListener, this.editedItem, this.come});
+  const AssignRightsToUser({super.key,required this.mListener, this.editedItem, this.come, this.uId});
 
   @override
   State<AssignRightsToUser> createState() => _AssignRightsToUserState();
@@ -62,12 +66,9 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     );
 
     setData();
-    // if(widget.Invoice_No!=null){
-    //   gerSaleInvoice(1);
-    //   setState(() {
-    //     invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-    //   });
-    // }
+    if(widget.editedItem!=null){
+      getUserRights(1);
+    }
   }
   setData()async{
     await getCompanyId();
@@ -213,11 +214,11 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
               if(widget.editedItem==null) {
                 print("#######");
-                callPostSaleInvoice();
+                callPostUser();
               }
               else {
                 print("dfsdf");
-                updatecallPostSaleInvoice();
+               updateCallPostUser();
               }
             }
 
@@ -364,7 +365,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      apiUrl: ApiConstants().userList+"?",
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
@@ -374,11 +375,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
           setState(() {
             selectedFranchiseeName = name!;
-            selectedFranchiseeId = id.toString()!;
-            // Item_list=[];
-            // Updated_list=[];
-            // Deleted_list=[];
-            // Inserted_list=[];
+            selectedFranchiseeId = name;
           });
 
         print("############3");
@@ -443,7 +440,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
+                                          Text("${Item_list[index]['Form']}",style: item_heading_textStyle,),
 
                                           SizedBox(height: 5,),
                                           Row(
@@ -451,7 +448,13 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                             children: [
                                               Container(
                                                   alignment: Alignment.centerRight,
-                                                  child: Text("Insert,Update,Delete",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                  child: Row(
+                                                    children: [
+                                                      Item_list[index]['Insert_Right']==true?Text("Insert, ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Update_Right']==true?Text("Update, ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Delete_Right']==true?Text("Delete",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                    ],
+                                                  )),
                                             ],
                                           ),
                                         ],
@@ -469,7 +472,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                               print("##############$response");
                                               if(Item_list[index]['Seq_No']!=null){
                                                 var deletedItem=   {
-                                                  "Item_ID": Item_list[index]['Item_ID'],
+                                                  "Form_ID": Item_list[index]['Form_ID'],
                                                   "Seq_No": Item_list[index]['Seq_No'],
                                                 };
                                                 Deleted_list.add(deletedItem);
@@ -478,7 +481,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                                  });
                                               }
 
-                                              var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                              var contain = Inserted_list.indexWhere((element) => element['Form_ID']== Item_list[index]['Form_ID']);
                                               print(contain);
                                               if(contain>=0){
                                                 print("REMOVE");
@@ -579,20 +582,24 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   AddOrEditUserScreenRightDetail(item) {
     // TODO: implement AddOrEditUserScreenRightDetail
     var itemLlist=Item_list;
-
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
-        Item_list[index]['Item_Name']=item['Item_Name'];
-        Item_list[index]['Item_ID']=item['New_Item_ID'];
+        Item_list[index]['Form_ID']=item['Form_ID'];
+        Item_list[index]['Form_ID']=item['New_Form_ID'];
+        Item_list[index]['Form']=item['Form'];
+        Item_list[index]['Insert_Right']=item['Insert_Right'];
+        Item_list[index]['Update_Right']=item['Update_Right'];
+        Item_list[index]['Delete_Right']=item['Delete_Right'];
+        Item_list[index]['Seq_No']=item['Seq_No'];
       });
       print("#############3");
       print(item['Seq_No']);
-      if(item['New_Item_ID']!=null){
-        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+      if(item['New_Form_ID']!=null){
+        Item_list[index]['New_Form_ID']=item['New_Form_ID'];
       }
       if(item['Seq_No']!=null) {
-        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+        var contain = Updated_list.indexWhere((element) => element['Form_ID']== item['Form_ID']);
         print(contain);
         if(contain>=0){
           print("REMOVE");
@@ -628,154 +635,215 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     print(Updated_list);
 
   }
-  callPostSaleInvoice() async {
-    // String creatorName = await AppPreferences.getUId();
-    // String companyId = await AppPreferences.getCompanyId();
-    // String baseurl=await AppPreferences.getDomainLink();
-    //
-    // // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
-    //
-    // InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    // if(netStatus==InternetConnectionStatus.connected){
-    //   AppPreferences.getDeviceId().then((deviceId) {
-    //     setState(() {
-    //       isLoaderShow=true;
-    //     });
-    //     postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-    //         saleLedger:selectedLedgerId ,
-    //         vendorID:selectedFranchiseeId ,
-    //         companyID: companyId ,
-    //         voucherName: "Sale",
-    //         roundOff:double.parse(roundoff) ,
-    //         totalAmount:TotalAmountInt,
-    //         date: DateFormat('yyyy-MM-dd').format(invoiceDate),
-    //         creator: creatorName,
-    //         creatorMachine: deviceId,
-    //         iNSERT: Inserted_list.toList(),
-    //         remark: "Inserted"
-    //     );
-    //
-    //     String apiUrl =baseurl + ApiConstants().getSaleInvoice;
-    //     apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
-    //         onSuccess:(data)async{
-    //           print("  ITEM  $data ");
-    //           setState(() {
-    //             isLoaderShow=true;
-    //             Item_list=[];
-    //             Inserted_list=[];
-    //             Updated_list=[];
-    //             Deleted_list=[];
-    //           });
-    //           widget.mListener.backToList(invoiceDate);
-    //
-    //         }, onFailure: (error) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.errorDialog(context, error.toString());
-    //         },
-    //         onException: (e) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.errorDialog(context, e.toString());
-    //
-    //         },sessionExpire: (e) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.gotoLoginScreen(context);
-    //           // widget.mListener.loaderShow(false);
-    //         });
-    //
-    //   }); }
-    // else{
-    //   if (mounted) {
-    //     setState(() {
-    //       isLoaderShow = false;
-    //     });
-    //   }
-    //   CommonWidget.noInternetDialogNew(context);
-    // }
+  getUserRights(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${widget.editedItem['UID']}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+
+                  setState(() {
+                    Item_list=data;
+                  });
+
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  userLisstttttttt  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  callPostUser() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        UserRightsModel model = UserRightsModel(
+          UID:selectedFranchiseeId ,
+          companyID: companyId ,
+          creater: creatorName,
+          createrMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+        );
+
+        String apiUrl =baseurl + ApiConstants().userPermission;
+        apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  userPermissionnnn  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToUserList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
 
-  updatecallPostSaleInvoice() async {
-    // String creatorName = await AppPreferences.getUId();
-    // String companyId = await AppPreferences.getCompanyId();
-    // String baseurl=await AppPreferences.getDomainLink();
-    // var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
-    // print("newOne    $matchDate");
-    // double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
-    // InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    // if(netStatus==InternetConnectionStatus.connected){
-    //   AppPreferences.getDeviceId().then((deviceId) {
-    //     setState(() {
-    //       isLoaderShow=true;
-    //     });
-    //     postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
-    //         saleLedger:selectedLedgerId ,
-    //         vendorID:selectedFranchiseeId ,
-    //         invoiceNo:widget.Invoice_No.toString() ,
-    //         companyID: companyId ,
-    //         voucherName: "Sale",
-    //         roundOff:double.parse(roundoff),
-    //         totalAmount:TotalAmountInt,
-    //         dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
-    //         date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
-    //         modifier: creatorName,
-    //         modifierMachine: deviceId,
-    //         iNSERT: Inserted_list.toList(),
-    //         dELETE: Deleted_list.toList(),
-    //         uPDATE: Updated_list.toList(),
-    //         remark:"Modified"
-    //     );
-    //
-    //     print(model.toJson());
-    //     String apiUrl =baseurl + ApiConstants().getSaleInvoice;
-    //     print(apiUrl);
-    //     apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
-    //         onSuccess:(data)async{
-    //           print("  ITEM  $data ");
-    //           setState(() {
-    //             isLoaderShow=true;
-    //             Item_list=[];
-    //             Inserted_list=[];
-    //             Updated_list=[];
-    //             Deleted_list=[];
-    //           });
-    //           widget.mListener.backToList(invoiceDate);
-    //
-    //         }, onFailure: (error) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.errorDialog(context, error.toString());
-    //         },
-    //         onException: (e) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.errorDialog(context, e.toString());
-    //
-    //         },sessionExpire: (e) {
-    //           setState(() {
-    //             isLoaderShow=false;
-    //           });
-    //           CommonWidget.gotoLoginScreen(context);
-    //           // widget.mListener.loaderShow(false);
-    //         });
-    //
-    //   }); }
-    // else{
-    //   if (mounted) {
-    //     setState(() {
-    //       isLoaderShow = false;
-    //     });
-    //   }
-    //   CommonWidget.noInternetDialogNew(context);
-    // }
+  updateCallPostUser() async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        UserRightsModel model = UserRightsModel(
+          UID:selectedFranchiseeId ,
+          companyID: companyId ,
+          creater: creatorName,
+          createrMachine: deviceId,
+          iNSERT: Inserted_list.toList(),
+          modifier: creatorName,
+          modifierMachine: deviceId,
+          dELETE: Deleted_list.toList(),
+          uPDATE: Updated_list.toList(),
+        );
+
+        print(model.toJson());
+        String apiUrl =baseurl + ApiConstants().userPermission;
+        print(apiUrl);
+        apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              print("  ITEM  $data ");
+              setState(() {
+                isLoaderShow=true;
+                Item_list=[];
+                Inserted_list=[];
+                Updated_list=[];
+                Deleted_list=[];
+              });
+              widget.mListener.backToUserList();
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
 
+}
+
+abstract class AssignRightsToUserInterface {
+  backToUserList();
 }

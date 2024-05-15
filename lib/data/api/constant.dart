@@ -74,5 +74,8 @@ class ApiConstants {
   String sendFranchiseeNotification="sendFranchiseeNotification";
   String franchiseeWithCompany="FranchiseeWithCompany";
   String voucherCreditNoteHeader="VoucherCreditNoteHeader";
-
+  String formList="FormList";
+  String userPermission="UserPermission";
+  String allUserPermission="AllUserPermission";
+  String userList="userList";
 }
