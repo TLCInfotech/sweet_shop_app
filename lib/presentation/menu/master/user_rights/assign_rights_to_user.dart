@@ -253,96 +253,104 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
-      shrinkWrap: true,
-      controller: _scrollController,
-      physics: const AlwaysScrollableScrollPhysics(),
+    return Container(
+      height: parentHeight*0.6,
+      child: ListView(
+        shrinkWrap: true,
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
 
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: parentHeight * .01),
-          child: Container(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  InvoiceInfo(),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                          onTap: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            setState(() {
-                              addAll=!addAll;
-                            });
-                          },
-                          child: Container(
-                              width: SizeConfig.halfscreenWidth,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                  color:addAll? CommonColor.THEME_COLOR:Colors.transparent,
-                                  border: Border.all(color: Colors.grey.withOpacity(0.5))
-                              ),
-                              child:  Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    ApplicationLocalizations.of(context)!.translate("add_all")!,
-                                    style: item_heading_textStyle,),
-                                  FaIcon(FontAwesomeIcons.plusCircle,
-                                    color: Colors.black87, size: 20,)
-                                ],
-                              )
-                          )
-                      ),
-
-                      GestureDetector(
-                          onTap: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if(selectedFranchiseeId!="") {
-                              if (context != null) {
-                                editedItemIndex=null;
-                                goToAddOrEditItem(null);
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: parentHeight * .01 ),
+            child: Container(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  children: [
+                    InvoiceInfo(),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: (){
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              if(addAll==false) {
+                                setState(() {
+                                  addAll = !addAll;
+                                });
+                                getAllForms();
                               }
-                            }
-                            else{
-                              CommonWidget.errorDialog(context, "Select User !");
-                            }
-                          },
-                          child: Container(
-                              width: SizeConfig.halfscreenWidth,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                  color: CommonColor.THEME_COLOR,
-                                  border: Border.all(color: Colors.grey.withOpacity(0.5))
-                              ),
-                              child:  Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    ApplicationLocalizations.of(context)!.translate("add_screen")!,
-                                    style: item_heading_textStyle,),
-                                  FaIcon(FontAwesomeIcons.plusCircle,
-                                    color: Colors.black87, size: 20,)
-                                ],
-                              )
-                          )
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10,),
 
-                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
-                ],
+
+                            },
+                            child: Container(
+                                width: SizeConfig.halfscreenWidth,
+                                padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                                margin: EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                    color:addAll? CommonColor.THEME_COLOR:Colors.transparent,
+                                    border: Border.all(color: Colors.grey.withOpacity(0.5))
+                                ),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      ApplicationLocalizations.of(context)!.translate("add_all")!,
+                                      style: item_heading_textStyle,),
+                                    FaIcon(FontAwesomeIcons.plusCircle,
+                                      color: Colors.black87, size: 20,)
+                                  ],
+                                )
+                            )
+                        ),
+
+                        GestureDetector(
+                            onTap: (){
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              if(selectedFranchiseeId!="") {
+                                if (context != null) {
+                                  editedItemIndex=null;
+                                  goToAddOrEditItem(null);
+                                }
+                              }
+                              else{
+                                CommonWidget.errorDialog(context, "Select User !");
+                              }
+                            },
+                            child: Container(
+                                width: SizeConfig.halfscreenWidth,
+                                padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                                margin: EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                    color: CommonColor.THEME_COLOR,
+                                    border: Border.all(color: Colors.grey.withOpacity(0.5))
+                                ),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      ApplicationLocalizations.of(context)!.translate("add_screen")!,
+                                      style: item_heading_textStyle,),
+                                    FaIcon(FontAwesomeIcons.plusCircle,
+                                      color: Colors.black87, size: 20,)
+                                  ],
+                                )
+                            )
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+
+                    Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
 
   }
@@ -390,7 +398,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     return Container(
       height: parentHeight*.6,
       child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: AlwaysScrollableScrollPhysics(),
         itemCount: Item_list.length,
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
@@ -635,6 +643,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     print(Updated_list);
 
   }
+  
   getUserRights(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -841,6 +850,91 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     }
   }
 
+  getAllForms() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().formList}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              print(data);
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  print("################# ${data.length}");
+                  for (var ele in data) {
+                    _arrList.add( {
+                      "Form_ID": ele['Form_ID'],
+                      "Form": ele['Form'],
+                      "Insert_Right": true,
+                      "Update_Right": true,
+                      "Delete_Right": true,
+                      "Seq_No": null
+                    });
+                  }
+                  setState(() {
+                    Item_list=_arrList;
+                    Inserted_list=_arrList;
+                  });
+
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  userLisstttttttt  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 }
 

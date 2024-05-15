@@ -277,21 +277,31 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                         ],
                                       ),
                                     ),
-                                    Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: DeleteDialogLayout(
-                                          callback: (response) async {
-                                            if (response == "yes") {
-                                              print("##############$response");
-                                              await callDeleteUser(
-                                                  users_list[index]['UID'].toString(),
-                                                  index);
-                                            }
-                                          },
-                                        ))
+                                    // Positioned(
+                                    //     top: 0,
+                                    //     right: 0,
+                                    //     child: DeleteDialogLayout(
+                                    //       callback: (response) async {
+                                    //         if (response == "yes") {
+                                    //           print("##############$response");
+                                    //           await callDeleteUser(
+                                    //               users_list[index]['UID'].toString(),
+                                    //               index);
+                                    //         }
+                                    //       },
+                                    //     ))
                                   ],
-                                ))
+                                )),
+                             DeleteDialogLayout(
+                               callback: (response) async {
+                                 if (response == "yes") {
+                                   print("##############$response");
+                                   await callDeleteUser(
+                                       users_list[index]['UID'].toString(),
+                                       index);
+                                 }
+                               },
+                             )
                           ],
                         ),
                       ),

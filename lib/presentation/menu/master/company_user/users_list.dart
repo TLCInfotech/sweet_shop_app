@@ -229,27 +229,41 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                       style: item_heading_textStyle),
                                   const SizedBox(height: 5),
                                   Text(
-                                      "Working Days: ${userList[index]['Working_Days']}",
+                                      "${userList[index]['Ledger_Name']}",
                                       overflow: TextOverflow.clip,
-                                      style: item_regular_textStyle)
+                                      style: item_regular_textStyle),
+                                  // Text(
+                                  //     "Working Days: ${userList[index]['Working_Days']}",
+                                  //     overflow: TextOverflow.clip,
+                                  //     style: item_regular_textStyle)
                                 ],
                               ),
                             ),
-                            Positioned(
-                                top: 0,
-                                right: 0,
-                                child: DeleteDialogLayout(
-                                  callback: (response) async {
-                                    if (response == "yes") {
-                                      print("##############$response");
-                                      await callDeleteUser(
-                                          userList[index]['UID'].toString(),
-                                          index);
-                                    }
-                                  },
-                                ))
+                            // Positioned(
+                            //     top: 0,
+                            //     right: 0,
+                            //     child: DeleteDialogLayout(
+                            //       callback: (response) async {
+                            //         if (response == "yes") {
+                            //           print("##############$response");
+                            //           await callDeleteUser(
+                            //               userList[index]['UID'].toString(),
+                            //               index);
+                            //         }
+                            //       },
+                            //     ))
                           ],
-                        ))
+                        )),
+                        DeleteDialogLayout(
+                          callback: (response) async {
+                            if (response == "yes") {
+                              print("##############$response");
+                              await callDeleteUser(
+                                  userList[index]['UID'].toString(),
+                                  index);
+                            }
+                          },
+                        )
                       ],
                     ),
                   ),
