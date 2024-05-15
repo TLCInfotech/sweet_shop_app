@@ -268,11 +268,7 @@ setState(() {
             var item = {};
             if (widget.editproduct != null) {
               item = {
-                "New_Form_ID": selectedItemID,
                 "Form": selectedItemName,
-                "Seq_No": widget.editproduct != null
-                    ? widget.editproduct['Seq_No']
-                    : null,
                 "Form_ID": widget.editproduct != null
                     ? widget.editproduct['Form_ID']
                     : "",
@@ -287,9 +283,7 @@ setState(() {
                 "Insert_Right": insertV,
                 "Update_Right": updateV,
                 "Delete_Right": deleteV,
-                "Seq_No": widget.editproduct != null
-                    ? widget.editproduct['Seq_No']
-                    : null,
+
               };
             }
 
