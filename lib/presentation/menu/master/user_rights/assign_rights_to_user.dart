@@ -43,6 +43,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
 
   List<dynamic> Deleted_list=[];
+  List<dynamic> OldData=[];
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
@@ -380,13 +381,28 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       franchiseeName: copyFromFranchiseeName,
       title: "Copy Rights From ",
       callback: (name,id)async{
-        setState(() {
-          copyFromFranchiseeName = name!;
-        });
-        await  getUserRights(1,copyFromFranchiseeName);
+        if(copyFromFranchiseeName==""){
+          setState(() {
+            OldData=Item_list;
+          });
+        }
+        if(name==""){
+          setState(() {
+            Item_list=OldData;
+          });
+          setState(() {
+            copyFromFranchiseeName = name!;
+          });
+        }
+        else {
+          setState(() {
+            copyFromFranchiseeName = name!;
+          });
+          await getUserRights(1, copyFromFranchiseeName);
 
-        print("############3");
-        print(copyFromFranchiseeName+"\n"+copyFromFranchiseeName);
+          print("############3");
+          print(copyFromFranchiseeName + "\n" + copyFromFranchiseeName);
+        }
       },
 
     );
@@ -511,7 +527,10 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                               //   callDeleteUser(Item_list[index]['Form_ID'],index);
                                               // }
                                               // else{
-                                                Item_list.remove(Item_list[index]);
+
+                                                setState(() {
+                                                  Item_list.remove(Item_list[index]);
+                                                });
                                               // }
                                             }
                                           })

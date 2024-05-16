@@ -205,6 +205,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                       setState(() {
                         _controller.clear();
                       });
+                      widget.callback("","");
+
                     }, icon: Icon(Icons.clear))
                   ),
                 ),

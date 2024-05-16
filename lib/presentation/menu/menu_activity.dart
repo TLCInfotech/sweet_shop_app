@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,14 +78,30 @@ class _MenuActivityState extends State<MenuActivity>
     // TODO: implement initState
     super.initState();
     getLocal();
-    getAllForms();
+    // getAllForms();
   }
+
+  List MasterMenu=[];
+  List TransactionMenu=[];
+
+
 String companyId="";
   getLocal()async{
     companyId=await AppPreferences.getCompanyId();
     setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    var re =await (AppPreferences.getReportMenuList());
+
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+      // MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
 
     });
+
+    print(MasterMenu.contains("AM001"));
   }
   @override
   Widget build(BuildContext context) {
@@ -182,7 +199,8 @@ String companyId="";
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       physics:   const AlwaysScrollableScrollPhysics(),
-      children: [
+      children:
+      [
         openTransactionDropDown==false?getAddTransactionLayout(parentHeight, parentWidth):
         getTransactionSubLayout(parentHeight, parentWidth),
         openReportDropDown==false?getAddReportLayout(parentHeight, parentWidth):
@@ -307,20 +325,20 @@ String companyId="";
                 ],
               ),
             ),
-            getOpeningBalanceLayout(parentHeight,parentWidth),
-            getFranchiseeSaleRateLayout(parentHeight,parentWidth),
-            getFranchiseePurchaseRateLayout(parentHeight,parentWidth),
-            getFranchiseeLayout(parentHeight,parentWidth),
-            getUserLayout(parentHeight,parentWidth),
-            getUserRightsLayout(parentHeight,parentWidth),
-            getItemLayout(parentHeight,parentWidth),
-            getCategoryLayout(parentHeight,parentWidth),
-            getMeasuringUnitLayout(parentHeight,parentWidth),
-            getExpenseLayout(parentHeight,parentWidth),
-            getExpensceGroupLayout(parentHeight,parentWidth),
-            getLeaderOpeningLayout(parentHeight,parentWidth),
-            getOpeningBalanceForCompanyLayout(parentHeight,parentWidth),
-            getCompanyInfoLayout(parentHeight,parentWidth),
+            (MasterMenu.contains("RM005"))?getOpeningBalanceLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM006"))?getFranchiseeSaleRateLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM007"))?getFranchiseePurchaseRateLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM008"))?getFranchiseeLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("LM001"))?getUserLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("AM001"))? getUserRightsLayout(parentHeight,parentWidth):Container(),//
+            (MasterMenu.contains("RM001"))?getItemLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM002"))?getCategoryLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM004"))?getMeasuringUnitLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("AM001"))? getExpenseLayout(parentHeight,parentWidth) :Container(),
+            (MasterMenu.contains("AM002"))?getExpensceGroupLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("AM005"))?getLeaderOpeningLayout(parentHeight,parentWidth):Container(),
+            (MasterMenu.contains("RM003"))?getOpeningBalanceForCompanyLayout(parentHeight,parentWidth):Container(),
+            getCompanyInfoLayout(parentHeight,parentWidth)
           ],
         ),
       ),
@@ -1110,7 +1128,12 @@ String companyId="";
       ),
       child: Padding(
         padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.03,top: parentHeight*.01,bottom: parentHeight*.01),
-        child: Column(
+        child:
+        // ListView.builder(itemBuilder: (context,index){
+        //   return Text(MenuList[index]['Form_ID']);
+        // }
+        // )
+        Column(
           children: [
             GestureDetector(
               onTap: () {
@@ -1133,17 +1156,18 @@ String companyId="";
                 ],
               ),
             ),
-            getOrderInvoice(parentHeight,parentWidth),
-            getConstantOrderInvoice(parentHeight,parentWidth),
-            getSellLayout(parentHeight,parentWidth),
-            getPuerchaseLayout(parentHeight,parentWidth),
-            getExpensseLayout(parentHeight,parentWidth),
-            getPaymentLayout(parentHeight,parentWidth),
-            getReceptLayout(parentHeight,parentWidth),
-            getContraLayout(parentHeight,parentWidth),
-            getJournalLayout(parentHeight,parentWidth),
-            getDebitLayout(parentHeight,parentWidth),
-            getCreditLayout(parentHeight,parentWidth),
+
+            (TransactionMenu.contains("ST001"))? getOrderInvoice(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("ST002"))?getConstantOrderInvoice(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("ST003"))?getSellLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("PT005"))?getPuerchaseLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT009"))?getExpensseLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT001"))?getPaymentLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT002"))?getReceptLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT003"))?getContraLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT004"))?getJournalLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT005"))?getDebitLayout(parentHeight,parentWidth):Container(),
+            (TransactionMenu.contains("AT006"))? getCreditLayout(parentHeight,parentWidth):Container(),
           ],
         ),
       ),

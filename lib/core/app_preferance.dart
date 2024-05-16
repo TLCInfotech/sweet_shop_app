@@ -5,6 +5,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppPreferences {
   static SharedPreferences? prefs;
 
+
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getMasterMenuList() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("masterMenu") ?? "";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setMasterMenuList(String list) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    prefs.setString("masterMenu", list);
+  }
+
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getTransactionMenuList() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("transactionMenu") ?? "";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setTransactionMenuList(String list) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    prefs.setString("transactionMenu", list);
+  }
+
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getReportMenuList() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("reportMenu") ?? "";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setReportMenuList(String list) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    prefs.setString("reportMenu", list);
+  }
+
+
   static Future<SharedPreferences> getInstance() async {
     return await SharedPreferences.getInstance();
   }

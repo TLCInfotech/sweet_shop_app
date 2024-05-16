@@ -188,6 +188,7 @@ class _LoginActivityState extends State<LoginActivity> {
               AppPreferences.setCompanyId("74");
               AppPreferences.setDomainLink("http://61.2.227.173:3000/");
               AppPreferences.setUId(uid);
+
               Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
             }, onFailure: (error) {
               setState(() {

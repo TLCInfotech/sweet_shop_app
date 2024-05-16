@@ -62,14 +62,16 @@ class ApiRequestHelper {
         case 200:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
           print("rfhjrjrfrjrfj   ${apiResponse.token}");
-          apiResponse =
-              ApiResponseForFetch.fromJson(json.decode(response.body));
+          apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
           if (apiResponse.token!.isNotEmpty) {
             AppPreferences.setSessionToken(apiResponse.token!);
           }
           // print('apiResponse.session_token_key!    ${apiResponse.session_token_key!}');
           AppPreferences.setDeviceId(apiResponse.Machine_Name!);
           AppPreferences.setUId(apiResponse.UID!);
+          AppPreferences.setMasterMenuList(jsonEncode(apiResponse.masterMenu));
+          AppPreferences.setTransactionMenuList(jsonEncode(apiResponse.transactionMenu));
+          AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
 
           onSuccess(apiResponse.token!, apiResponse.UID!);
 

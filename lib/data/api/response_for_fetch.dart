@@ -6,7 +6,10 @@
 class ApiResponseForFetch {
   ApiResponseForFetch({
     bool? status,
-    List<dynamic>? data,
+    List<dynamic>? masterMenu,
+    List<dynamic>?transactionMenu,
+    List<dynamic>?reportMenu,
+    List<dynamic>?data,
     String? msg,
     String? token,
     String? Machine_Name,
@@ -14,7 +17,10 @@ class ApiResponseForFetch {
     String? UID,
   }) {
     _status = status;
-    _data = data;
+    _masterMenu = masterMenu;
+    _transactionMenu = transactionMenu;
+    _reportMenu = reportMenu;
+    _data=data;
     _msg = msg;
     _token = token;
     _Machine_Name = Machine_Name;
@@ -25,7 +31,10 @@ class ApiResponseForFetch {
 
   ApiResponseForFetch.fromJson(dynamic json) {
     _status = json['status'];
-    _data = json['data'];
+    _masterMenu = json['MasterSub_ModuleList'];
+    _transactionMenu = json['TransactionSub_ModuleList'];
+    _reportMenu = json['MasterSub_ModuleList'];
+    _data=json['data'];
     _msg = json['msg'];
     _token = json['token'];
     _Machine_Name = json['Modifier_Machine'];
@@ -35,7 +44,11 @@ class ApiResponseForFetch {
   }
 
   bool? _status;
+  List<dynamic>? _masterMenu;
+  List<dynamic>? _transactionMenu;
+  List<dynamic>? _reportMenu;
   List<dynamic>? _data;
+
   String? _msg;
   String? _token;
   String? _Machine_Name;
@@ -48,6 +61,9 @@ class ApiResponseForFetch {
   String? get token => _token;
   String? get Machine_Name => _Machine_Name;
 
+  List<dynamic>? get masterMenu => _masterMenu;
+  List<dynamic>? get transactionMenu => _transactionMenu;
+  List<dynamic>? get reportMenu => _reportMenu;
   List<dynamic>? get data => _data;
 
   String? get msg => _msg;
@@ -58,6 +74,15 @@ class ApiResponseForFetch {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['status'] = _status;
+    if (_masterMenu != null) {
+      map['MasterSub_ModuleList'] = _masterMenu;
+    }
+    if (_transactionMenu != null) {
+      map['TransactionSub_ModuleList'] = _transactionMenu;
+    }
+    if (_reportMenu != null) {
+      map['ReportSub_ModuleList'] = _reportMenu;
+    }
     if (_data != null) {
       map['data'] = _data;
     }
