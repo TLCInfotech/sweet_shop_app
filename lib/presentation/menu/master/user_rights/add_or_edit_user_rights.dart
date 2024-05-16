@@ -178,6 +178,7 @@ bool insertV=true;
     return Column(
       children: [
         CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.all(0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
@@ -194,7 +195,7 @@ setState(() {
         ),
 
          CheckboxListTile(
-
+           controlAffinity: ListTileControlAffinity.leading,
            contentPadding: EdgeInsets.all(0),
            shape: RoundedRectangleBorder(
              borderRadius: BorderRadius.circular(5),
@@ -211,6 +212,7 @@ setState(() {
          ),
 
          CheckboxListTile(
+           controlAffinity: ListTileControlAffinity.leading,
            contentPadding: EdgeInsets.all(0),
            shape: RoundedRectangleBorder(
              borderRadius: BorderRadius.circular(5),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -58,6 +60,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLocal();
     addDate();
     callGetFranchiseeNot(0);
     getDashboardData();
@@ -66,6 +69,27 @@ print("hfshjffhfbh  $dateString");
    // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
 
   }
+  List MasterMenu=[];
+  List TransactionMenu=[];
+
+
+  getLocal()async{
+    setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    var re =await (AppPreferences.getReportMenuList());
+
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+      // MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+
+    });
+
+    print(MasterMenu.contains("AM001"));
+  }
+
   late DateTime dateTime;
   String dateString="";
 
