@@ -158,6 +158,7 @@ bool insertV=true;
     print("sadas ${selectedItemName}");
     return SearchableDropdownWithFormList(
       name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
       status: "edit",
       apiUrl:"${ApiConstants().formList}?",
       titleIndicator: false,

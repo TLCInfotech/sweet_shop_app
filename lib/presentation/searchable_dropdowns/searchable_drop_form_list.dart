@@ -43,7 +43,8 @@ class SearchableDropdownWithFormList extends StatefulWidget{
   final titleIndicator;
   final apiUrl;
   final status;
-  SearchableDropdownWithFormList({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
+  final come;
+  SearchableDropdownWithFormList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status});
 
 
 
@@ -210,14 +211,15 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                       await widget.callback(selected);
                     }
                   },
-                  textInputAction: TextInputAction.none, // Change input action to "none"
+                  textInputAction: TextInputAction.none,
+                  enabled: widget.come=="disable"?false:true, // Change input action to "none"
                   focusNode: searchFocus,
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.search)
+                      suffixIcon:  widget.come=="disable"?null:Icon(Icons.search)
                   ),
                 ),
 

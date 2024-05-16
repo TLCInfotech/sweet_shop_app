@@ -53,6 +53,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   bool addAll=false;
 
+  var copyFromFranchiseeName="";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -64,7 +66,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
     setData();
     if(widget.editedItem!=null){
-      getUserRights(1);
+      getUserRights(1,widget.editedItem['UID']);
     }
   }
   setData()async{
@@ -362,10 +364,33 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       child: Column(
         children: [
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          getCopyFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
       ),
     );
+  }
+
+  Widget getCopyFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return  SearchableLedgerDropdown(
+      apiUrl: ApiConstants().userList+"?",
+      titleIndicator: true,
+      ledgerName: copyFromFranchiseeName,
+      franchisee: copyFromFranchiseeName,
+      franchiseeName: copyFromFranchiseeName,
+      title: "Copy Rights From ",
+      callback: (name,id)async{
+        setState(() {
+          copyFromFranchiseeName = name!;
+        });
+        await  getUserRights(1,copyFromFranchiseeName);
+
+        print("############3");
+        print(copyFromFranchiseeName+"\n"+copyFromFranchiseeName);
+      },
+
+    );
+
   }
 
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
@@ -477,17 +502,17 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                           callback: (response ) async{
                                             if(response=="yes"){
 
-                                              print(Item_list);
-                                              print(Deleted_list);
-                                              var contain = Deleted_list.indexWhere((element) => element['Form_ID']== Item_list[index]['Form_ID']);
-                                              print("##############$response");
-                                              print(contain);
-                                              if(contain>=1){
-                                                callDeleteUser(Item_list[index]['Form_ID'],index);
-                                              }
-                                              else{
+                                              // print(Item_list);
+                                              // print(Deleted_list);
+                                              // var contain = Deleted_list.indexWhere((element) => element['Form_ID']== Item_list[index]['Form_ID']);
+                                              // print("##############$response");
+                                              // print(contain);
+                                              // if(contain>=1){
+                                              //   callDeleteUser(Item_list[index]['Form_ID'],index);
+                                              // }
+                                              // else{
                                                 Item_list.remove(Item_list[index]);
-                                              }
+                                              // }
                                             }
                                           })
                                   ),
@@ -586,15 +611,15 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
         Item_list[index]['Delete_Right']=item['Delete_Right'];
       });
 
-        var contain = Item_list.indexWhere((element) => element['Form_ID']== item['Form_ID']);
-        print(contain);
-        if(contain>=0){
-          print("REMOVE");
-          Item_list.remove(Item_list[contain]);
-          Item_list.add(item);
-        }else{
-          Item_list.add(item);
-        }
+        // var contain = Item_list.indexWhere((element) => element['Form_ID']== item['Form_ID']);
+        // print(contain);
+        // if(contain>=0){
+        //   print("REMOVE");
+        //   Item_list.remove(Item_list[contain]);
+        //   Item_list.add(item);
+        // }else{
+        //   Item_list.add(item);
+        // }
         setState(() {
           Item_list = Item_list;
           print("hvhfvbfbv   $Item_list");
@@ -623,7 +648,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   }
   
-  getUserRights(int page) async {
+  getUserRights(int page,UID) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -637,7 +662,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${widget.editedItem['UID']}";
+        String apiUrl = "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${UID}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -762,8 +787,6 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     }
   }
 
-
-
   getAllForms() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -788,14 +811,22 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                   List<dynamic> _arrList = [];
                   print("################# ${data.length}");
                   for (var ele in data) {
-                    _arrList.add( {
-                      "Form_ID": ele['Form_ID'],
-                      "Form": ele['Form'],
-                      "Insert_Right": true,
-                      "Update_Right": true,
-                      "Delete_Right": true,
-                      "Seq_No": null
-                    });
+                    print("Available###############3");
+                    var i=Deleted_list.indexWhere((element) => element['Form_ID']==ele['Form_ID']);
+                    if(i<0) {
+                      _arrList.add({
+                        "Form_ID": ele['Form_ID'],
+                        "Form": ele['Form'],
+                        "Insert_Right": true,
+                        "Update_Right": true,
+                        "Delete_Right": true,
+                        "Seq_No": null
+                      });
+                    }
+                    else{
+                      _arrList.add(Deleted_list[i]);
+                    }
+
                   }
                   setState(() {
                     Item_list=_arrList;
@@ -906,6 +937,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       CommonWidget.noInternetDialogNew(context);
     }
   }
+
+
 }
 
 abstract class AssignRightsToUserInterface {

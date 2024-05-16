@@ -29,7 +29,8 @@ class SearchableLedgerDropdown extends StatefulWidget{
   final franchisee;
   final come;
   final franchiseeName;
-  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come});
+  final suffixicon;
+  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come,this.suffixicon});
 
 
 
@@ -200,7 +201,11 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     // labelText: '${widget.title}',
                     hintText: "${widget.title}",
                     border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.search)
+                    suffixIcon: widget.come=="disable"?null: (_controller.text=="" || _controller.text==null)?Icon(Icons.search):IconButton(onPressed: (){
+                      setState(() {
+                        _controller.clear();
+                      });
+                    }, icon: Icon(Icons.clear))
                   ),
                 ),
 

@@ -149,20 +149,20 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: Color(0xFFFBE404),
-              child: const Icon(
-                Icons.add,
-                size: 30,
-                color: Colors.black87,
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                    AssignRightsToUser(
-                      mListener:this,
-                      editedItem: null,
-                    )));
-              }),
+          // floatingActionButton: FloatingActionButton(
+          //     backgroundColor: Color(0xFFFBE404),
+          //     child: const Icon(
+          //       Icons.add,
+          //       size: 30,
+          //       color: Colors.black87,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          //           AssignRightsToUser(
+          //             mListener:this,
+          //             editedItem: null,
+          //           )));
+          //     }),
           body: Stack(
             alignment: Alignment.center,
             children: [
