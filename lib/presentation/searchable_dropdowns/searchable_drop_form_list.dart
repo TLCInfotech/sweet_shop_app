@@ -44,10 +44,8 @@ class SearchableDropdownWithFormList extends StatefulWidget{
   final apiUrl;
   final status;
   final come;
-  SearchableDropdownWithFormList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status});
-
-
-
+  final insertedList;
+  SearchableDropdownWithFormList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList});
 
   @override
   State<SearchableDropdownWithFormList> createState() => _SingleLineEditableTextFormFieldState();
@@ -145,10 +143,32 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
           onSuccess:(data){
             isLoaderShow=false;
             if(data!=null) {
-              setState(() {
-                ledger_list = data;
-                filteredStates=ledger_list;
-              });
+
+              if(widget.insertedList!=null||widget.insertedList!=[]){
+                List ext=widget.insertedList;
+                List l =(data).map((e) =>e['Form_ID'] ).toList();
+
+                for(var el in l)
+                {
+                  var contains=ext.contains(el);
+                  print(contains);
+                  if(contains==false){
+                    var index=l.indexOf(el);
+                    print(data[index]);
+                    ledger_list.add(data[index]);
+                  }
+                }
+                setState(() {
+                  ledger_list = ledger_list;
+                  filteredStates=ledger_list;
+                });
+              }
+              else {
+                setState(() {
+                  ledger_list = data;
+                  filteredStates = ledger_list;
+                });
+              }
               print("  LedgerLedger  $data ");
             }
           }, onFailure: (error) {

@@ -172,6 +172,7 @@ List insertedList=[];
       apiUrl:"${ApiConstants().formList}?",
       titleIndicator: false,
       title:"Screen Name",
+      insertedList:insertedList,
       callback: (item) async {
 
         if(insertedList.contains(item['Form_ID'])){
