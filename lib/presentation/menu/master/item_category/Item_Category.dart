@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,7 +25,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class ItemCategoryActivity extends StatefulWidget {
-  const ItemCategoryActivity({super.key});
+  final  formId;
+  final  arrData;
+  const ItemCategoryActivity({super.key, this.formId, this.arrData});
 
   @override
   State<ItemCategoryActivity> createState() => _ItemCategoryActivityState();
@@ -58,6 +62,13 @@ bool isLoaderShow=false;
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetItemCategory(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
 
   List<dynamic> _arrListNew = [];
@@ -122,7 +133,7 @@ bool isLoaderShow=false;
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -139,7 +150,7 @@ bool isLoaderShow=false;
                 });
                 add_category_layout(context);
 
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -445,7 +456,7 @@ bool isLoaderShow=false;
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-
+                        if( singleRecord['Update_Right']==true){
                         print(_arrListNew[index]);
                         setState(() {
                           editedItem=_arrListNew[index];
@@ -454,7 +465,10 @@ bool isLoaderShow=false;
                           parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
                           seqNo.text=_arrListNew[index]['Seq_No'].toString();
                         });
-                        add_category_layout(context);
+                        add_category_layout(context);}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         color: Colors.white,
@@ -490,7 +504,7 @@ bool isLoaderShow=false;
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    singleRecord['Delete_Right']==true?   Positioned(
                                         top: 0,
                                         right: 0,
                                         child:DeleteDialogLayout(
@@ -515,7 +529,7 @@ bool isLoaderShow=false;
                                         //     // callDeleteItemCategory(_arrListNew[index]['ID'].toString(),index);
                                         //   },
                                         // )
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

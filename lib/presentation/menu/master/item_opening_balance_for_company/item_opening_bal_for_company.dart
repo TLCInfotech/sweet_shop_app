@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,8 +29,9 @@ import 'add_or_edit_company_item_opening.dart';
 
 class CreateItemOpeningBalForCompany extends StatefulWidget {
   final String dateNew;
-
-  const CreateItemOpeningBalForCompany({super.key, required this.dateNew});
+  final  formId;
+  final  arrData;
+  const CreateItemOpeningBalForCompany({super.key, required this.dateNew, this.formId, this.arrData});
   @override
   State<CreateItemOpeningBalForCompany> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -148,7 +151,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
     // TODO: implement initState
     super.initState();
     callGetItemOpeningList(0);
-
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
 
   @override
@@ -292,7 +301,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      GestureDetector(
+                      singleRecord['Insert_Right']==true ?GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
@@ -318,7 +327,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                               )
 
                           )
-                      )
+                      ):Container()
                     ],
                   ),
                   Item_list.length>0? get_purchase_list_layout(parentHeight,parentWidth):Container(),
@@ -358,9 +367,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                       editedItemIndex=index;
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
+          if( singleRecord['Update_Right']==true){
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}else{
+            var snackBar = SnackBar(content: Text('user not have a edit rights'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
                   },
                   child: Card(
                     child: Row(
@@ -413,7 +426,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                     ),
                                   ),
 
-                                  Container(
+                                  singleRecord['Delete_Right']==true?Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
@@ -449,7 +462,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                           await calculateTotalAmt();
                                         },
                                       )
-                                  ),
+                                  ):Container(),
                                 ],
                               )
                           ),

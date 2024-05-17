@@ -340,7 +340,7 @@ var dataArrM;
             (MasterMenu.contains("RM007"))?getFranchiseePurchaseRateLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM008"))?getFranchiseeLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("LM001"))?getUserLayout(parentHeight,parentWidth):Container(),
-            (MasterMenu.contains("AM001"))? getUserRightsLayout(parentHeight,parentWidth):Container(),//
+            getUserRightsLayout(parentHeight,parentWidth),//
             (MasterMenu.contains("RM001"))?getItemLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM002"))?getCategoryLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM004"))?getMeasuringUnitLayout(parentHeight,parentWidth):Container(),
@@ -462,7 +462,10 @@ var dataArrM;
   Widget getUserLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UsersList()));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => UsersList(
+          formId:"LM001" ,
+          arrData: dataArrM,
+        )));
     /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -528,7 +531,10 @@ var dataArrM;
   Widget getMeasuringUnitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UnitsActivity()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity(
+          formId:"RM004" ,
+          arrData: dataArrM,
+        )));
    /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -561,7 +567,10 @@ var dataArrM;
   Widget getExpenseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseListingActivity()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ExpenseListingActivity(
+          formId:"AM001" ,
+          arrData: dataArrM,
+        )));
     /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -594,7 +603,10 @@ var dataArrM;
   Widget getExpensceGroupLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseGroup()));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    ExpenseGroup(
+          formId:"AM002" ,
+          arrData: dataArrM,
+        )));
     /*    if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -662,7 +674,11 @@ var dataArrM;
   Widget getOpeningBalanceForCompanyLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreateItemOpeningBalForCompany(dateNew: DateTime.now().toString())));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>CreateItemOpeningBalForCompany(
+            dateNew: DateTime.now().toString(),
+        formId:"RM003" ,
+        arrData: dataArrM,
+        )));
    /*     if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -735,7 +751,10 @@ var dataArrM;
   Widget getLeaderOpeningLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerOpeningBal()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerOpeningBal(
+          formId:"AM005" ,
+          arrData: dataArrM,
+        )));
        /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -768,7 +787,10 @@ var dataArrM;
   Widget getCategoryLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemCategoryActivity()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCategoryActivity(
+          formId:"RM002" ,
+          arrData: dataArrM,
+        )));
        /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
@@ -801,7 +823,10 @@ var dataArrM;
   Widget getItemLayout(double parentHeight, double parentWidth){
     return GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemsActivity()));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemsActivity(
+          formId:"RM001" ,
+          arrData: dataArrM,
+        )));
      /*   if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');

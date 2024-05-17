@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -23,7 +24,9 @@ import '../../../common_widget/deleteDialog.dart';
 
 
 class ExpenseListingActivity extends StatefulWidget {
-  const ExpenseListingActivity({super.key});
+  final  formId;
+  final  arrData;
+  const ExpenseListingActivity({super.key, this.formId, this.arrData});
 
   @override
   State<ExpenseListingActivity> createState() => _ExpenseListingActivityState();
@@ -59,8 +62,14 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetLedger(page);
+    setVal();
   }
-
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+  }
   List<dynamic> ledgerList = [];
 //FUNC: REFRESH LIST
   Future<void> refreshList() async {
@@ -123,7 +132,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -139,7 +148,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                   page=1;
                 });
                 await callGetLedger(page);
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -214,6 +223,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
+                        if( singleRecord['Update_Right']==true){
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                           mListener: this,
                           ledgerList: ledgerList[index],
@@ -222,7 +232,10 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                           ledgerList=[];
                           page=1;
                         });
-                         callGetLedger(page);
+                         callGetLedger(page);}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -268,7 +281,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    singleRecord['Delete_Right']==true?   Positioned(
                                         top: 0,
                                         right: 0,
                                         child:DeleteDialogLayout(
@@ -279,7 +292,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                                             }
                                           },
                                         )
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

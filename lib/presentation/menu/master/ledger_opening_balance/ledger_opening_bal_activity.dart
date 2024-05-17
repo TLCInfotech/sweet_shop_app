@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -22,7 +23,9 @@ import 'add_or_edit_ledger_opening_bal.dart';
 import 'create_ledger_opening_bal_activity.dart';
 
 class LedgerOpeningBal extends StatefulWidget {
-  const LedgerOpeningBal({super.key});
+  final  formId;
+  final  arrData;
+  const LedgerOpeningBal({super.key, this.formId, this.arrData});
 
   @override
   State<LedgerOpeningBal> createState() => _ItemOpeningBalState();
@@ -56,6 +59,13 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
     _scrollController.addListener(_scrollListener);
     callGetLedgerOB(page);
     setData();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId='';
   setData()async{
@@ -125,7 +135,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -139,7 +149,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
                 )));*/
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -268,7 +278,11 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        goToAddOrEditItem(ledgerList[index],"edit",companyId);
+                        if( singleRecord['Update_Right']==true){
+                        goToAddOrEditItem(ledgerList[index],"edit",companyId);}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -320,7 +334,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    singleRecord['Delete_Right']==true?    Positioned(
                                         top: 0,
                                         right: 0,
                                         child:DeleteDialogLayout(
@@ -337,7 +351,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                               await  callLedgerOpeningBal(Deleted_list,index);
                                             }
                                           },
-                                        ))
+                                        )):Container()
                                   ],
                                 )
 

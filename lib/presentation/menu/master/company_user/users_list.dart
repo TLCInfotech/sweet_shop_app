@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,7 +19,9 @@ import '../../../../data/domain/user/delete_user_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
 
 class UsersList extends StatefulWidget {
-  const UsersList({super.key});
+  final  formId;
+  final  arrData;
+  const UsersList({super.key, this.formId, this.arrData});
 
   @override
   State<UsersList> createState() => _UsersListState();
@@ -39,6 +43,13 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
     _scrollController.addListener(_scrollListener);
     callGetUser(page);
     getLocal();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId="";
   getLocal()async{
@@ -105,7 +116,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -120,7 +131,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                               mListener: this,
                           compId: companyId,
                             )));
-              }),
+              }):Container(),
           body: Container(
             margin: const EdgeInsets.all(15),
             child: Stack(
@@ -188,6 +199,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                 delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: () {
+                    if( singleRecord['Update_Right']==true){
                     editedItem = userList[index];
 
                     Navigator.push(
@@ -198,7 +210,10 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                   mListener: this,
                               compId: companyId,
                               come:"edit"
-                                )));
+                                )));}else{
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
                   },
                   child: Card(
                     child: Row(
@@ -254,7 +269,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             //     ))
                           ],
                         )),
-                        DeleteDialogLayout(
+                        singleRecord['Delete_Right']==true?  DeleteDialogLayout(
                           callback: (response) async {
                             if (response == "yes") {
                               print("##############$response");
@@ -263,7 +278,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                   index);
                             }
                           },
-                        )
+                        ):Container()
                       ],
                     ),
                   ),

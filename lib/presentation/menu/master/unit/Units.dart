@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -21,7 +23,9 @@ import '../../../common_widget/signleLine_TexformField.dart';
 
 
 class UnitsActivity extends StatefulWidget {
-  const UnitsActivity({super.key});
+  final  formId;
+  final  arrData;
+  const UnitsActivity({super.key, this.formId, this.arrData});
 
   @override
   State<UnitsActivity> createState() => _UnitsActivityState();
@@ -44,6 +48,13 @@ class _UnitsActivityState extends State<UnitsActivity> {
     // TODO: implement initState
     super.initState();
     getMeasuringUnit();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   //FUNC: REFRESH LIST
   Future<void> refreshList() async {
@@ -101,7 +112,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -110,7 +121,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
               ),
               onPressed: () {
                 add_unit_layout(context);
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -162,13 +173,17 @@ class _UnitsActivityState extends State<UnitsActivity> {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         setState(() {
                           editedItem=measuring_unit[index];
                           unitName.text=measuring_unit[index];
                           mesuringText=measuring_unit[index];
                         });
 
-                        add_unit_layout(context);
+                        add_unit_layout(context);}else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -193,7 +208,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                                         measuring_unit[index],style: item_heading_textStyle,):Container(),
                                     ),
 
-                        Positioned(
+                                    singleRecord['Delete_Right']==true? Positioned(
                           top: 0,
                           right: 0,
                           child: DeleteDialogLayout(
@@ -204,7 +219,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
                                         }
                                       },
-                                    ))
+                                    )):Container()
                                   ],
                                 )
 

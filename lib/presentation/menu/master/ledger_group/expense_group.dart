@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -28,7 +30,9 @@ import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 
 class ExpenseGroup extends StatefulWidget {
-  const ExpenseGroup({super.key});
+  final  formId;
+  final  arrData;
+  const ExpenseGroup({super.key, this.formId, this.arrData});
 
   @override
   State<ExpenseGroup> createState() => _ExpenseGroupState();
@@ -66,6 +70,13 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetLedgerGroup(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
 
   _scrollListener() {
@@ -130,7 +141,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -149,7 +160,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 });
 
                 add_category_layout(context);
-              }),
+              }):Container(),
           body: Container(
             margin: const EdgeInsets.all(15),
             child: Stack(
@@ -230,7 +241,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-
+              if( singleRecord['Update_Right']==true){
                         print(expense_group[index]);
                         setState(() {
                           editedItem=expense_group[index];
@@ -263,7 +274,10 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                           });
                         }
 
-                        add_category_layout(context);
+                        add_category_layout(context);}else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       onDoubleTap: (){},
                       child: Card(
@@ -298,14 +312,14 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteLedgerGroup(expense_group[index]['ID'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

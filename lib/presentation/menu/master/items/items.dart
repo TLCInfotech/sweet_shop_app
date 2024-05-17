@@ -24,7 +24,9 @@ import '../../../common_widget/deleteDialog.dart';
 
 
 class ItemsActivity extends StatefulWidget {
-  const ItemsActivity({super.key});
+  final  formId;
+  final  arrData;
+  const ItemsActivity({super.key, this.formId, this.arrData});
 
   @override
   State<ItemsActivity> createState() => _ItemsActivityState();
@@ -56,6 +58,13 @@ void initState() {
   super.initState();
   _scrollController.addListener(_scrollListener);
   callGetItem(page);
+  setVal();
+}
+var  singleRecord;
+setVal()async{
+  List<dynamic> jsonArray = jsonDecode(widget.arrData);
+  singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+  print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
 }
 
 List<dynamic> itemList = [];
@@ -121,7 +130,7 @@ Future<void> refreshList() async {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -134,7 +143,7 @@ Future<void> refreshList() async {
                   page=1;
                 });
                 callGetItem(page);
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -210,11 +219,15 @@ Expanded get_items_list_layout() {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
+              if( singleRecord['Update_Right']==true){
                         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: itemList[index],)));
                         setState(() {
                           page=1;
                         });
-                        callGetItem(page);
+                        callGetItem(page);}else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -265,14 +278,14 @@ Expanded get_items_list_layout() {
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?     DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await  callDeleteItem(itemList[index]['ID'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 
