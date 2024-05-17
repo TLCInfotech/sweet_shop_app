@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +24,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class PurchaseActivity extends StatefulWidget {
   final String? comeFor;
-  const PurchaseActivity({super.key, required mListener, this.comeFor});
+  final  formId;
+  final  arrData;
+  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
 
   @override
   State<PurchaseActivity> createState() => _PurchaseActivityState();
@@ -48,6 +52,13 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
     super.initState();
     _scrollController.addListener(_scrollListener);
     gerSaleInvoice(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -133,7 +144,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -147,7 +158,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                       Invoice_No: null,
                       mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                     )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -292,6 +303,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePurchaseInvoice(
                               dateNew:invoiceDate,
@@ -300,6 +312,10 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                               editedItem:saleInvoice_list[index],
                               come:"edit",
                             )));
+              }else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -354,14 +370,14 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?   DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteSaleInvoice(saleInvoice_list[index]['Invoice_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

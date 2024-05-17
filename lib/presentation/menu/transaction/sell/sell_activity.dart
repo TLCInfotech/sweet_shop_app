@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -24,7 +25,9 @@ class SellActivity extends StatefulWidget {
 final String? comeFor;
 final DateTime? dateNew;
 final franhiseeID;
-  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID});
+final  formId;
+final  arrData;
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
@@ -52,6 +55,13 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       });
     }
     gerSaleInvoice(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -137,7 +147,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: singleRecord['Insert_Right']==true ?  FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -151,7 +161,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                       Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                 )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -299,14 +309,18 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        if( singleRecord['Update_Right']==true){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateSellInvoice(
                               dateNew: invoiceDate,
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               editedItem:saleInvoice_list[index],
                               come:"edit",
-                            )));
+                            )));}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -359,14 +373,14 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?      DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteSaleInvoice(saleInvoice_list[index]['Invoice_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

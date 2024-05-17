@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,7 +25,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class PaymentActivity extends StatefulWidget {
   final String? comeFor;
-  const PaymentActivity({super.key, required mListener, this.comeFor});
+  final  formId;
+  final  arrData;
+  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
   @override
   State<PaymentActivity> createState() => _PaymentActivityState();
 }
@@ -45,6 +49,13 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     super.initState();
     _scrollController.addListener(_scrollListener);
     getPayment(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -117,7 +128,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -130,7 +141,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                   dateNew:newDate,
                   voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -267,13 +278,17 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
                           dateNew: newDate,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:payment_list[index],
                           come:"edit",
-                        )));
+                        ))); }else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -327,14 +342,14 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?      DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

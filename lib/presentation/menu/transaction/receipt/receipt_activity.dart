@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +24,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class ReceiptActivity extends StatefulWidget {
   final dateNew;
-  const ReceiptActivity({super.key, required mListener,this.dateNew});
+  final  formId;
+  final  arrData;
+  const ReceiptActivity({super.key, required mListener,this.dateNew, this.formId, this.arrData});
   @override
   State<ReceiptActivity> createState() => _ReceiptActivityState();
 }
@@ -48,6 +52,13 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
       });
     }
     getRecipt(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   bool isApiCall=false;
   _scrollListener() {
@@ -109,7 +120,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
               child: Icon(
                 Icons.add,
@@ -123,7 +134,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                   voucherNo: null,
                   dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                 )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -266,6 +277,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
                           mListener: this,
                           newDate: newDate,
@@ -273,7 +285,10 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                           dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:recipt_list[index],
                           come:"edit",
-                        )));
+                        )));}else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -325,7 +340,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    singleRecord['Delete_Right']==true?   Positioned(
                                         top: 0,
                                         right: 0,
                                         child:    DeleteDialogLayout(
@@ -335,7 +350,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                               await   callDeleteRecipt(recipt_list[index]['Voucher_No'].toString(),index);
                                             }
                                           },
-                                        ) )
+                                        ) ):Container()
                                   ],
                                 )
 

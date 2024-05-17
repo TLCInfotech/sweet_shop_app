@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +26,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class JournalVoucherActivity extends StatefulWidget {
   final String? comeFor;
-  const JournalVoucherActivity({super.key, required mListener, this.comeFor});
+  final  formId;
+  final  arrData;
+  const JournalVoucherActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
   @override
   State<JournalVoucherActivity> createState() => _PaymentActivityState();
 }
@@ -47,6 +51,13 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
     _scrollController.addListener(_scrollListener);
     getJournals(page);
     setData();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId='';
   setData()async{
@@ -125,7 +136,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -139,7 +150,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                   voucherNo: null,
                   companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -275,6 +286,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+                        if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                           mListener: this,
                           dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
@@ -282,7 +294,10 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                           debitNote:payment_list[index] ,
                           companyId: companyId,
                           come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
-                        )));
+                        )));}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -336,14 +351,14 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?      DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteExpense(payment_list[index]['Voucher_No'].toString(),payment_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

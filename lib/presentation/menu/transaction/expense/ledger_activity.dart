@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +26,9 @@ class LedgerActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;
   final franhiseeID;
-  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID});
+  final  formId;
+  final  arrData;
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -52,6 +56,14 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
       });
     }
     getExpense(page);
+    setVal();
+  }
+
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -120,7 +132,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:  singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -134,7 +146,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                   dateNew:    newDate,
                  // DateFormat('dd-MM-yyyy').format(newDate),
                 )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -270,6 +282,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                           mListener: this,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
@@ -277,7 +290,10 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                           editedItem:expense_list[index],
                           come:"edit",
                           // DateFormat('dd-MM-yyyy').format(newDate),
-                        )));
+                        )));     }else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -332,14 +348,14 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?   DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

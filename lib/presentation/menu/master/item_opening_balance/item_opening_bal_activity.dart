@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,7 +24,9 @@ import 'create_item_opening_bal_activity.dart';
 
 class ItemOpeningBal extends StatefulWidget {
   final newDate;
-  const ItemOpeningBal({super.key, this.newDate});
+  final  formId;
+  final  arrData;
+  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
@@ -126,6 +129,13 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
       invoiceDate=widget.newDate;
     }
     getLocal();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId="";
   getLocal()async{
@@ -192,7 +202,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -210,7 +220,7 @@ compId:companyId ,
                   Franchisee_list=[];
                 });
                 callGetFranchiseeItemOpeningList(1);
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -331,7 +341,7 @@ compId:companyId ,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: ()async{
+                      onTap: ()async{  if( singleRecord['Update_Right']==true){
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                           dateNew:invoiceDate,
                           editedItem:Franchisee_list[index],
@@ -340,7 +350,10 @@ compId:companyId ,
                           //DateFormat('dd-MM-yyyy').format(invoiceDate),
                           mListener: this,
                         )));
-                        callGetFranchiseeItemOpeningList(0);
+                        callGetFranchiseeItemOpeningList(0);}else{
+                        var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
                       },
                       child: Card(
                         child: Row(
@@ -392,7 +405,7 @@ compId:companyId ,
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    singleRecord['Delete_Right']==true?   Positioned(
                                         top: 0,
                                         right: 0,
                                         child:IconButton(
@@ -402,7 +415,7 @@ compId:companyId ,
                                             color: Colors.redAccent,
                                           ),
                                           onPressed: (){},
-                                        ) )
+                                        ) ):Container()
                                   ],
                                 )
 

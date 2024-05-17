@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -24,7 +25,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class ConstantOrderActivity extends StatefulWidget {
   final String? comeFor;
-  const ConstantOrderActivity({super.key, required mListener,  this.comeFor});
+  final  formId;
+  final  arrData;
+  const ConstantOrderActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData});
 
   @override
   State<ConstantOrderActivity> createState() => _ConstantOrderActivityState();
@@ -48,6 +51,13 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
     super.initState();
     _scrollController.addListener(_scrollListener);
     getSaleOrderedList(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -333,8 +343,8 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
               tileColor: Colors.transparent,
               value: selectedItems.contains(saleInvoice_list[index]['Order_No']),
               onChanged: (bool? value) {
- 
 
+                if(singleRecord['Update_Right']==true){
                 if( value!){
                   setState(() {
                     selectedItems.add(saleInvoice_list[index]['Order_No']);
@@ -345,11 +355,15 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                     selectedItems.remove(saleInvoice_list[index]['Order_No']);
 
                   });
+                }}else{
+                  var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                 }
               },
               title: GestureDetector(
                 onTap: () {
-                  Navigator.push(
+               if(singleRecord['Update_Right']==true){   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateOrderInvoice(
@@ -360,7 +374,11 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                         come: "edit",
                       ),
                     ),
-                  );
+                  );}else{
+                 var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+               }
                 },
                 child: Container(
                   margin: const EdgeInsets.only(top: 10, left: 10, right: 40, bottom: 10),

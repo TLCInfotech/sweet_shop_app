@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -24,7 +25,9 @@ class CreditNoteActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;
   final franhiseeID;
-  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID});
+  final  formId;
+  final  arrData;
+  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData});
 
   @override
   State<CreditNoteActivity> createState() => _CreditNoteState();
@@ -53,6 +56,13 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     }
     getCreditNote(page);
     setData();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId='';
   setData()async{
@@ -144,7 +154,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -159,7 +169,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                       companyId:companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                     )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -307,6 +317,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+                        if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateCreditNote(
                               dateNew: invoiceDate,
@@ -315,7 +326,10 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                               mListener:this,
                                 companyId:companyId,
                               come:"edit"
-                            )));
+                            )));}else{
+              var snackBar = SnackBar(content: Text('user not have a edit rights'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -370,14 +384,14 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?  DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   deleteCreditNote(debitNote_list[index]['Invoice_No'].toString(),debitNote_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

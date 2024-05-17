@@ -86,19 +86,29 @@ class _MenuActivityState extends State<MenuActivity>
 
 
 String companyId="";
+var dataArr;
+var dataArrM;
   getLocal()async{
     companyId=await AppPreferences.getCompanyId();
     setState(() {
     });
     var menu =await (AppPreferences.getMasterMenuList());
     var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
+    dataArrM=menu;
     var re =await (AppPreferences.getReportMenuList());
 
     setState(() {
       MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
       TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    //  print("jhhjgfgjjgd   $tr  \n  onnnnn $TransactionMenu");
       // MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      List<dynamic> jsonArray = jsonDecode(tr);
 
+      // Get single record where Form_ID is "AT003"
+      var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == 'AT003');
+
+      print("singleRecorddddd   $singleRecord");
     });
 
     print(MasterMenu.contains("AM001"));
@@ -686,8 +696,10 @@ String companyId="";
   Widget getOpeningBalanceLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ItemOpeningBal(
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemOpeningBal(
           newDate: null,
+            formId: "RM005",
+            arrData: dataArrM
         )));
    /*     if(mounted){
           print("HERE BACK");
@@ -1156,7 +1168,6 @@ String companyId="";
                 ],
               ),
             ),
-
             (TransactionMenu.contains("ST001"))? getOrderInvoice(parentHeight,parentWidth):Container(),
             (TransactionMenu.contains("ST002"))?getConstantOrderInvoice(parentHeight,parentWidth):Container(),
             (TransactionMenu.contains("ST003"))?getSellLayout(parentHeight,parentWidth):Container(),
@@ -1182,6 +1193,8 @@ String companyId="";
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
           mListener: this,
+          formId: "ST002",
+          arrData: dataArr,
         )));
       /*  if(mounted){
           print("HERE BACK");
@@ -1219,6 +1232,8 @@ String companyId="";
 
         await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderInvoiceActivity(
           mListener: this,
+          formId: "ST001",
+          arrData: dataArr,
         )));
 
 
@@ -1252,6 +1267,8 @@ String companyId="";
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
           mListener: this,
+          formId: "ST003",
+          arrData: dataArr,
         )));
 
       },
@@ -1281,7 +1298,10 @@ String companyId="";
   Widget getPuerchaseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,)));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,
+          formId: "PT005",
+          arrData: dataArr,
+        )));
 
       },
       onDoubleTap: (){},
@@ -1310,7 +1330,10 @@ String companyId="";
   Widget getPaymentLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            PaymentActivity(mListener: this,
+              formId: "AT001",
+              arrData: dataArr,)));
 
       },
       onDoubleTap: (){},
@@ -1339,7 +1362,10 @@ String companyId="";
   Widget getReceptLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this)));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            ReceiptActivity(mListener: this,
+              formId: "AT002",
+              arrData: dataArr,)));
 
       },
       onDoubleTap: (){},
@@ -1368,7 +1394,9 @@ String companyId="";
   Widget getDebitLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this,
+            formId: "AT005",
+            arrData: dataArr)));
 
       },
       onDoubleTap: (){},
@@ -1396,7 +1424,9 @@ String companyId="";
   Widget getCreditLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+            formId: "AT006",
+            arrData: dataArr)));
 
       },
       onDoubleTap: (){},
@@ -1425,7 +1455,9 @@ String companyId="";
   Widget getJournalLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this,
+            formId: "AT004",
+            arrData: dataArr)));
 
       },
       onDoubleTap: (){},
@@ -1454,7 +1486,9 @@ String companyId="";
   Widget getContraLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this,
+            formId: "AT003",
+            arrData: dataArr)));
 
       },
       onDoubleTap: (){},
@@ -1483,7 +1517,10 @@ String companyId="";
   Widget getExpensseLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,
+          formId: "AT009",
+          arrData: dataArr,
+        )));
        /* if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');

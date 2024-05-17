@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -22,7 +23,9 @@ import 'craete_debit_note_activity.dart';
 
 class DebitNoteActivity extends StatefulWidget {
   final String? comeFor;
-  const DebitNoteActivity({super.key, required mListener,  this.comeFor});
+  final  formId;
+  final  arrData;
+  const DebitNoteActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData});
 
   @override
   State<DebitNoteActivity> createState() => _DebitNoteState();
@@ -46,6 +49,13 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
     _scrollController.addListener(_scrollListener);
     getDebitNotes(page);
     setData();
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   String companyId='';
   setData()async{
@@ -136,7 +146,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: singleRecord['Insert_Right']==true?FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -151,7 +161,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                       mListener:this,
                       companyId: companyId,
                     )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -299,6 +309,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateDebitNote(
                               dateNew: invoiceDate,
@@ -307,7 +318,10 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                               come: "edit",
                               companyId: companyId,
                               debitNote: debitNote_list[index] ,
-                            )));
+                            )));}else{
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
                       },
                       child: Card(
                         child: Row(
@@ -362,14 +376,14 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?    DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteSaleInvoice(debitNote_list[index]['Invoice_No'].toString(),debitNote_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

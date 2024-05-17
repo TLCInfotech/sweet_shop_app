@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,7 +24,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class OrderInvoiceActivity extends StatefulWidget {
   final String? comeFor;
-  const OrderInvoiceActivity({super.key, required mListener,  this.comeFor});
+  final  formId;
+  final  arrData;
+  const OrderInvoiceActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData});
 
   @override
   State<OrderInvoiceActivity> createState() => _OrderInvoiceActivityState();
@@ -46,6 +49,13 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     super.initState();
     _scrollController.addListener(_scrollListener);
     getSaleOrder(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+     singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -132,21 +142,21 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:   singleRecord['Insert_Right']==true ? FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
-              child: const Icon(
+              child:  Icon(
                 Icons.add,
                 size: 30,
                 color: Colors.black87,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                 Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateOrderInvoice(
                       dateNew:   invoiceDate,
                       Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                     )));
-              }),
+              }):Container(),
           body: Stack(
             alignment: Alignment.center,
             children: [
@@ -294,14 +304,19 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
+                        if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreateOrderInvoice(
-                              dateNew: invoiceDate,
-                              Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
-                              mListener:this,
-                              editedItem:saleInvoice_list[index],
-                              come:"edit",
-                            )));
+                        CreateOrderInvoice(
+                        dateNew: invoiceDate,
+                        Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                        mListener:this,
+                        editedItem:saleInvoice_list[index],
+                        come:"edit",
+                        )));
+                        }else{
+                          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       },
                       child: Card(
                         child: Row(
@@ -356,14 +371,14 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                                         ),
                                       ),
                                     ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?    DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 
