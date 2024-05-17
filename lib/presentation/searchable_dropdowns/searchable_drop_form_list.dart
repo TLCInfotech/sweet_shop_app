@@ -69,6 +69,12 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       print(":::::: ${widget.name}");
       _controller.text=widget.name;
     }
+    else{
+      _controller.clear();
+      setState(() {
+        selected=null;
+      });
+    }
     searchFocus.addListener(_onFocusChange);
   }
   FocusNode searchFocus = FocusNode() ;

@@ -396,6 +396,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
         }
         else {
           setState(() {
+            Item_list=[];
             copyFromFranchiseeName = name!;
           });
           await getUserRights(1, copyFromFranchiseeName);
@@ -602,6 +603,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                 mListener: this,
                 editproduct:product,
                 id: selectedFranchiseeId,
+                exstingList:Item_list,
               ),
             ),
           );

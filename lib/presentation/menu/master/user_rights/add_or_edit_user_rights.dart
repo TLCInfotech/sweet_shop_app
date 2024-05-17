@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_form_list.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -14,12 +15,14 @@ class AddOrEditUserRights extends StatefulWidget {
   final  mListener;
   final dynamic editproduct;
   final id;
+  final exstingList;
 
   const AddOrEditUserRights(
       {super.key,
         required this.mListener,
         required this.editproduct,
         this.id,
+        this.exstingList,
        });
 
   @override
@@ -49,7 +52,7 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
 bool updateV=true;
 bool deleteV=true;
 bool insertV=true;
-
+List insertedList=[];
 
   @override
   void initState() {
@@ -74,6 +77,12 @@ bool insertV=true;
 
       });
     }
+    List list= widget.exstingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Form_ID'] ).toList();
+    });
+    print("###########");
+    print(insertedList);
     // await fetchItems();
     // await getCompanyId();
   }
@@ -159,17 +168,26 @@ bool insertV=true;
     return SearchableDropdownWithFormList(
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
-      status: "edit",
+      status: selectedItemName==""?"":"edit",
       apiUrl:"${ApiConstants().formList}?",
       titleIndicator: false,
       title:"Screen Name",
       callback: (item) async {
-        setState(() {
-          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-          selectedItemID = item['Form_ID'].toString();
-          selectedItemName = item['Form'].toString();
 
-        });
+        if(insertedList.contains(item['Form_ID'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+            selectedItemID = item['Form_ID'].toString();
+            selectedItemName = item['Form'].toString();
+          });
+        }
       },
     );
   }
