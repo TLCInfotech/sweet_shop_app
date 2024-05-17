@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,7 +22,10 @@ import '../../../common_widget/deleteDialog.dart';
 
 
 class AddFranchiseeActivity extends StatefulWidget {
-  const AddFranchiseeActivity({super.key, required mListener});
+  final  formId;
+  final  arrData;
+
+  const AddFranchiseeActivity({super.key, required mListener, this.formId, this.arrData});
 
   @override
   State<AddFranchiseeActivity> createState() => _AddFranchiseeActivityState();
@@ -36,7 +41,13 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
   int page = 1;
   bool isPagination = true;
   ScrollController _scrollController = new ScrollController();
-
+  var  singleRecord;
+  setVal()async{
+    print(widget.arrData);
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+  }
   _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -45,6 +56,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
         callGetFranchisee(page);
       }
     }
+
   }
   @override
   void initState() {
@@ -52,6 +64,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetFranchisee(page);
+    setVal();
   }
 
   List<dynamic> franchiseeList = [];
@@ -118,7 +131,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
               backgroundColor: Color(0xFFFBE404),
               child: Icon(
                 Icons.add,
@@ -131,7 +144,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                   page=1;
                 });
                 await callGetFranchisee(page);
-              }),
+              }):Container(),
           body:Stack(
             alignment: Alignment.center,
             children: [
@@ -180,11 +193,15 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateFranchisee(editItem: franchiseeList[index],)));
-                        setState(() {
-                          page=1;
-                        });
-                        callGetFranchisee(page);
+                        if( singleRecord['Update_Right']==true) {
+                          await Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateFranchisee(editItem: franchiseeList[index],)));
+                          setState(() {
+                            page = 1;
+                          });
+                          callGetFranchisee(page);
+                        }
                       },
                       child: Card(
                         child: Row(
@@ -249,14 +266,14 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                                         ),
                                                                            ),
                                      ),
-                                    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==true?  DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await  callDeleteFranchisee(franchiseeList[index]['ID'].toString(),index);
                                         }
                                       },
-                                    )
+                                    ):Container()
                                   ],
                                 )
 

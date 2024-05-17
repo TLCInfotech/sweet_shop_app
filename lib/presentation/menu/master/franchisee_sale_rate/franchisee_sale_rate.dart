@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -25,8 +27,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class FranchiseeSaleRate extends StatefulWidget {
 final  String compId;
-
-  const FranchiseeSaleRate({super.key, required this.compId});
+final  formId;
+final  arrData;
+  const FranchiseeSaleRate({super.key, required this.compId, this.formId, this.arrData});
 
   @override
   State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
@@ -43,7 +46,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
   String selectedCopyFranchiseeName="";
   String selectedCopyFranchiseeId="";
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-
+  var  singleRecord;
 /*  List<dynamic> Item_list=[
     {
       "id":1,
@@ -74,6 +77,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     // TODO: implement initState
     super.initState();
    // getCompanyId();
+    setVal();
     calculateTotalAmt();
     _scrollController.addListener(_scrollListener);
     if(selectedCopyFranchiseeId!=""){
@@ -81,6 +85,14 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
     }
 
   }
+
+  setVal()async{
+    print(widget.arrData);
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+  }
+
 String companyId="";
   getCompanyId()async{
     companyId = await AppPreferences.getCompanyId();
@@ -228,7 +240,7 @@ String companyId="";
                 ],
           ),
         ),
-        GestureDetector(
+        singleRecord['Insert_Right']==true || singleRecord['Update_Right']==true ? GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -282,7 +294,7 @@ String companyId="";
               ],
             ),
           ),
-        ),
+        ):Container(),
       ],
     );
   }
@@ -311,7 +323,7 @@ String companyId="";
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      GestureDetector(
+                      singleRecord['Insert_Right']==true?   GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
@@ -343,7 +355,7 @@ String companyId="";
                               )
 
                           )
-                      )
+                      ):Container()
                     ],
                   ),
                   Item_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
@@ -375,12 +387,14 @@ String companyId="";
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
-                    setState(() {
-                      editedItemIndex=index;
-                    });
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
-                      goToAddOrEditProduct(Item_list[index]);
+                    if(singleRecord['Update_Right']==true) {
+                      setState(() {
+                        editedItemIndex = index;
+                      });
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (context != null) {
+                        goToAddOrEditProduct(Item_list[index]);
+                      }
                     }
 
                   },
@@ -445,7 +459,7 @@ String companyId="";
                                     ),
                                   ),
 
-                                  Container(
+                                  singleRecord['Delete_Right']==true?Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
@@ -478,7 +492,7 @@ String companyId="";
                                             print(Inserted_list);
                                             await calculateTotalAmt();  }
                                         })
-                                  ),
+                                  ):Container(),
                                 ],
                               )
                           ),

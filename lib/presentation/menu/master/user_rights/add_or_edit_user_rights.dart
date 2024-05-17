@@ -62,6 +62,7 @@ List insertedList=[];
   }
 
   setVal() async {
+    print("jjjjjjjjjjjjjjjjjjjj ${widget.editproduct}");
     if (widget.editproduct != null) {
       setState(() {
         insertV=widget.editproduct['Insert_Right'];

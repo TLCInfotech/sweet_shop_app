@@ -362,6 +362,8 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
           compId: companyId,
+            formId: "RM006",
+            arrData: dataArrM
         )));
       /*  if(mounted){
           print("HERE BACK");
@@ -397,6 +399,8 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
           compId: companyId,
+            formId: "RM007",
+            arrData: dataArrM
         )));
      /*   if(mounted){
           print("HERE BACK");
@@ -432,7 +436,9 @@ var dataArrM;
         await showCupertinoDialog(
             context: context,
             builder: (BuildContext context){
-              return AddFranchiseeActivity(mListener: this,);
+              return AddFranchiseeActivity(mListener: this,
+                  formId: "RM008",
+                  arrData: dataArrM);
             }
         );
       },

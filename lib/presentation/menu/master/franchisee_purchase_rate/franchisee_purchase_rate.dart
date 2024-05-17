@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class FranchiseePurchaseRate extends StatefulWidget {
   final String compId;
-  const FranchiseePurchaseRate({super.key, required this.compId});
+  final  formId;
+  final  arrData;
+  const FranchiseePurchaseRate({super.key, required this.compId, this.formId, this.arrData});
 
   @override
   State<FranchiseePurchaseRate> createState() => _FranchiseePurchaseRateState();
@@ -63,15 +66,21 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   bool isLoaderShow=false;
 
   var editedItemIndex=null;
-
+  var  singleRecord;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    setVal();
   }
-
+  setVal()async{
+    print(widget.arrData);
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+  }
   int page = 1;
   bool isPagination = true;
   bool isApiCall = false;
@@ -333,7 +342,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 ],
           ),
         ),
-        GestureDetector(
+        singleRecord['Insert_Right']==true || singleRecord['Update_Right']==true ?  GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -387,7 +396,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               ],
             ),
           ),
-        ),
+        ):Container(),
       ],
     );
   }
@@ -416,7 +425,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      GestureDetector(
+                      singleRecord['Insert_Right']==true?       GestureDetector(
                           onTap: (){
                             setState(() {
                               editedItemIndex=null;
@@ -449,7 +458,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                               )
 
                           )
-                      )
+                      ):Container()
                     ],
                   ),
                   Item_list.isNotEmpty? get_purchase_list_layout(parentHeight,parentWidth):Container(),
@@ -481,12 +490,14 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
-                    setState(() {
-                      editedItemIndex=index;
-                    });
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
-                      goToAddOrEditProduct(Item_list[index]);
+                    if(singleRecord['Update_Right']==true) {
+                      setState(() {
+                        editedItemIndex = index;
+                      });
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (context != null) {
+                        goToAddOrEditProduct(Item_list[index]);
+                      }
                     }
                   },
                   child: Card(
@@ -543,7 +554,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                     ),
                                   ),
 
-                                  Container(
+                                  singleRecord['Delete_Right']==true? Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
                                       color: Colors.transparent,
@@ -579,7 +590,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                           await calculateTotalAmt();
                                         },
                                       )
-                                  ),
+                                  ):Container(),
                                 ],
                               )
                           ),
