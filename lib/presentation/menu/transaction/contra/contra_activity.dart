@@ -281,7 +281,6 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                     delay: const Duration(microseconds: 1500),
                     child:GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
                           mListener: this,
                           newDate: newDate,
@@ -289,11 +288,9 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                           dateNew:newDate,
                           companyId: companyId,
                           come: "edit",
+                          readOnly: singleRecord['Update_Right'],
                           debitNote:contraList[index] ,// DateFormat('dd-MM-yyyy').format(newDate),
-                        )));}else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        )));
                       },
                       child: Card(
                         child: Row(

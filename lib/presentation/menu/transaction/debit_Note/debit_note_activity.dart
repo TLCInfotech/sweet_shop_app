@@ -309,19 +309,16 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateDebitNote(
                               dateNew: invoiceDate,
                               Invoice_No: debitNote_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               come: "edit",
+                              readOnly: singleRecord['Update_Right'],
                               companyId: companyId,
                               debitNote: debitNote_list[index] ,
-                            )));}else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                            )));
                       },
                       child: Card(
                         child: Row(

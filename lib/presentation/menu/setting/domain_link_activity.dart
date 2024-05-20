@@ -246,7 +246,6 @@ Widget getCompanyId(double parentHeight, double parentWidth){
         }
         return null;
       },
-      //readOnly: false,
       controller: companyId,
       focuscontroller: _companyIdFocus,
       focusnext: _companyIdFocus,

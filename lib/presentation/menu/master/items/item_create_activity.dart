@@ -29,7 +29,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class ItemCreateActivity extends StatefulWidget {
   final editItem;
-  const ItemCreateActivity({super.key,this.editItem});
+  final readOnly;
+  const ItemCreateActivity({super.key,this.editItem, this.readOnly});
 
   // final ItemCreateActivityInterface mListener;
 
@@ -419,6 +420,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: itemNameController,
+      readOnly: widget.readOnly,
       focuscontroller: _itemNameFocus,
       focusnext: _branchNameFocus,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
@@ -785,6 +787,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: maxController,
+      readOnly: widget.readOnly,
       focuscontroller: _maxFocus,
       focusnext: _extNameFocus,
       title: ApplicationLocalizations.of(context)!.translate("max_stock")!,
@@ -811,6 +814,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: minController,
+      readOnly: widget.readOnly,
       focuscontroller: _minFocus,
       focusnext: _maxFocus,
       title: ApplicationLocalizations.of(context)!.translate("min_stock")!,
@@ -837,6 +841,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: extNameController,
+      readOnly: widget.readOnly,
       focuscontroller: _extNameFocus,
       focusnext: _descFocus,
       title: ApplicationLocalizations.of(context)!.translate("ext_name")!,
@@ -862,6 +867,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: packSizeController,
+      readOnly: widget.readOnly,
       focuscontroller: _packSizeFocus,
       focusnext: _hsnNoFocus,
       title: ApplicationLocalizations.of(context)!.translate("pack_size")!,
@@ -888,7 +894,9 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       controller: rateController,
+      readOnly: widget.readOnly,
       focuscontroller: _rateFocus,
+
       focusnext: _hsnNoFocus,
       title: ApplicationLocalizations.of(context)!.translate("rate")!,
       callbackOnchage: (value) {
@@ -913,6 +921,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         return null;
       },
       capital:true,
+      readOnly: widget.readOnly,
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
       focusnext: _branchNameFocus,
@@ -939,6 +948,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: descController,
       focuscontroller: _descFocus,
       focusnext: _branchNameFocus,
@@ -965,6 +975,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: defaultStoreController,
       focuscontroller: _defaultStoreFocus,
       focusnext: _minFocus,

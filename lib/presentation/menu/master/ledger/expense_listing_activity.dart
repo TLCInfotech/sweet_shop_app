@@ -223,19 +223,16 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        if( singleRecord['Update_Right']==true){
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                           mListener: this,
                           ledgerList: ledgerList[index],
+                          readOnly:singleRecord['Update_Right'],
                         )));
                         setState(() {
                           ledgerList=[];
                           page=1;
                         });
-                         callGetLedger(page);}else{
-              var snackBar = SnackBar(content: Text('user not have a edit rights'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                         callGetLedger(page);
                       },
                       child: Card(
                         child: Row(

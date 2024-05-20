@@ -304,19 +304,17 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        if( singleRecord['Update_Right']==true){
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                         CreateOrderInvoice(
                         dateNew: invoiceDate,
                         Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
+                        readOnly:  singleRecord['Update_Right'],
                         editedItem:saleInvoice_list[index],
                         come:"edit",
                         )));
-                        }else{
-                          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
+
                       },
                       child: Card(
                         child: Row(

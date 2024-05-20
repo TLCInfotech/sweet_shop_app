@@ -303,19 +303,15 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePurchaseInvoice(
                               dateNew:invoiceDate,
+                              readOnly: singleRecord['Update_Right'],
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],
                               mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                               editedItem:saleInvoice_list[index],
                               come:"edit",
                             )));
-              }else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
                       },
                       child: Card(
                         child: Row(

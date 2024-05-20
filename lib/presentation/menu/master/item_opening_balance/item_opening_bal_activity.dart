@@ -341,19 +341,17 @@ compId:companyId ,
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: ()async{  if( singleRecord['Update_Right']==true){
+                      onTap: ()async{
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                           dateNew:invoiceDate,
                           editedItem:Franchisee_list[index],
                           compId:companyId ,
                           come:"edit",
+                          readOnly: singleRecord['Update_Right'],
                           //DateFormat('dd-MM-yyyy').format(invoiceDate),
                           mListener: this,
                         )));
-                        callGetFranchiseeItemOpeningList(0);}else{
-                        var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
+                        callGetFranchiseeItemOpeningList(0);
                       },
                       child: Card(
                         child: Row(

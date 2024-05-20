@@ -193,15 +193,17 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        if( singleRecord['Update_Right']==true) {
+
                           await Navigator.push(context, MaterialPageRoute(
                               builder: (context) =>
-                                  CreateFranchisee(editItem: franchiseeList[index],)));
+                                  CreateFranchisee(editItem: franchiseeList[index],
+                                  readOnly: singleRecord['Update_Right']
+                                  )));
                           setState(() {
                             page = 1;
                           });
                           callGetFranchisee(page);
-                        }
+
                       },
                       child: Card(
                         child: Row(

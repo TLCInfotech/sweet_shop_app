@@ -30,8 +30,9 @@ class AddProductSaleRate extends StatefulWidget {
   final dynamic editproduct;
   final String dateNew;
   final id;
+  final readOnly;
 
-  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew,  this.id});
+  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew,  this.id, this.readOnly});
 
   @override
   State<AddProductSaleRate> createState() => _AddProductSaleRateState();
@@ -314,6 +315,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         return null;
       },
       controller: gst,
+      readOnly: widget.readOnly,
       focuscontroller: null,
       focusnext: null,
       title:ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -354,6 +356,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       controller: rate,
       focuscontroller: null,
       focusnext: null,
+      readOnly: widget.readOnly,
       title:  ApplicationLocalizations.of(context)!.translate("sale_rate")!,
       callbackOnchage: (value)async {
         print("#");

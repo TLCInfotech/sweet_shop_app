@@ -432,7 +432,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                             });
                             if(selectedFranchiseeID!=null){
                               editedItemIndex=null;
-                              goToAddOrEditProduct(null);
+                              goToAddOrEditProduct(null,singleRecord['Update_Right']);
                             }else{
                               CommonWidget.errorDialog(context, "Select franchisee first.");
                             }
@@ -490,15 +490,15 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
-                    if(singleRecord['Update_Right']==true) {
+
                       setState(() {
                         editedItemIndex = index;
                       });
                       FocusScope.of(context).requestFocus(FocusNode());
                       if (context != null) {
-                        goToAddOrEditProduct(Item_list[index]);
+                        goToAddOrEditProduct(Item_list[index],singleRecord['Update_Right']);
                       }
-                    }
+
                   },
                   child: Card(
                     child: Row(
@@ -664,7 +664,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     );
   }
 
-  Future<Object?> goToAddOrEditProduct(product) {
+  Future<Object?> goToAddOrEditProduct(product,updateRight) {
     return showGeneralDialog(
             barrierColor: Colors.black.withOpacity(0.5),
             transitionBuilder: (context, a1, a2, widget) {
@@ -678,7 +678,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   child: AddProductPurchaseRate(
                     mListener: this,
                     editproduct:product,
-                    date:invoiceDate
+                    date:invoiceDate,
+                    readOnly: updateRight,
                   ),
                 ),
               );

@@ -44,7 +44,8 @@ class CreatePurchaseInvoice extends StatefulWidget {
   final  franchiseeName;
   final editedItem;
   final come;
-  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come});
+  final readOnly;
+  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come, this.readOnly});
 
   @override
   _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
@@ -387,7 +388,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
+                      widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -461,10 +462,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -730,6 +735,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
+      readOnly: widget.readOnly,
       franchisee: widget.come,
       franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
@@ -782,6 +788,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     return SearchableLedgerDropdown(
         apiUrl: ApiConstants().ledgerWithoutImage+"?",
         titleIndicator: true,
+        readOnly: widget.readOnly,
         title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
         franchiseeName: widget.come=="edit"? widget.editedItem['Purchase_Ledger_Name']:"",
         franchisee: widget.come,

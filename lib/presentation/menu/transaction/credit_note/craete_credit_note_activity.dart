@@ -36,8 +36,9 @@ class CreateCreditNote extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
+  final  readOnly;
 
-  const CreateCreditNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId});
+  const CreateCreditNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly});
   @override
   _CreateCreditNoteState createState() => _CreateCreditNoteState();
 }
@@ -346,7 +347,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
+                      widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -420,9 +421,13 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                     setState(() {
                       editedItemIndex=index;
                     });
+                    if(widget.readOnly==true){
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
+                    }}else{
+                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   },
                   child: Card(
@@ -688,6 +693,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: true,
+      readOnly: widget.readOnly,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Vendor_Name']:"",
@@ -735,6 +741,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     return  SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: true,
+      readOnly: widget.readOnly,
       ledgerName: selectedLedgerName,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",

@@ -219,15 +219,14 @@ Expanded get_items_list_layout() {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-              if( singleRecord['Update_Right']==true){
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: itemList[index],)));
+
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: itemList[index],
+                        readOnly:singleRecord['Update_Right']
+                        )));
                         setState(() {
                           page=1;
                         });
-                        callGetItem(page);}else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        callGetItem(page);
                       },
                       child: Card(
                         child: Row(

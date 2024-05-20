@@ -286,18 +286,16 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        if( singleRecord['Update_Right']==true){
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                           mListener: this,
                           dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
                           voucherNo: payment_list[index]['Voucher_No'],
                           debitNote:payment_list[index] ,
                           companyId: companyId,
+                          readOnly: singleRecord['Update_Right'],
                           come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
-                        )));}else{
-              var snackBar = SnackBar(content: Text('user not have a edit rights'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        )));
                       },
                       child: Card(
                         child: Row(

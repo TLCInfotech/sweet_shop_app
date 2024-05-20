@@ -19,8 +19,9 @@ class PickDocument extends StatefulWidget{
   final controller;
   final focuscontroller;
   final focusnext;
+  final readOnly;
 
-  PickDocument({required this.title,required this.callbackOnchage,required this.documentFile, required this.callbackFile,required this.controller,required this.focuscontroller,required this.focusnext});
+  PickDocument({required this.title,required this.callbackOnchage,required this.documentFile, required this.callbackFile,required this.controller,required this.focuscontroller,required this.focusnext, this.readOnly});
 
   @override
   State<PickDocument> createState() => _PickDocumentState();
@@ -68,10 +69,9 @@ class _PickDocumentState extends State<PickDocument> {
                 ],
               ),
               child: TextFormField(
-
+                readOnly: widget.readOnly!=false?false:true,
                 maxLength: widget.title==ApplicationLocalizations.of(context)!.translate("adhar_number")!?12:widget.title==ApplicationLocalizations.of(context)!.translate("pan_number")!?10:
                 widget.title==ApplicationLocalizations.of(context)!.translate("gst_number")!?15:100,
-
                 keyboardType: widget.title==ApplicationLocalizations.of(context)!.translate("adhar_number")!?TextInputType.number:TextInputType.text,
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.center,

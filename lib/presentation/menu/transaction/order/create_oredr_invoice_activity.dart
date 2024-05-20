@@ -36,8 +36,9 @@ class CreateOrderInvoice extends StatefulWidget {
   final  Invoice_No;
   final editedItem;
   final come;
+  final readOnly;
 
-  const CreateOrderInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come});
+  const CreateOrderInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come, this.readOnly});
   @override
   _CreateOrderInvoiceState createState() => _CreateOrderInvoiceState();
 }
@@ -373,6 +374,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
+                      widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -445,10 +447,14 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -716,6 +722,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){

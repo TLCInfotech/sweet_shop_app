@@ -35,6 +35,13 @@ class SingleLineEditableTextFormField extends StatefulWidget{
 
 class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableTextFormField> {
 
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("kjnjnvng   ${widget.readOnly}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -30,8 +30,9 @@ class CreatePayment extends StatefulWidget {
   final  voucherNo;
   final come;
   final editedItem;
+  final readOnly;
 
-  const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo,this.editedItem,this.come});
+  const CreatePayment({super.key,required this.mListener, required this.dateNew,required this.voucherNo,this.editedItem,this.come, this.readOnly});
   @override
   _CreatePaymentState createState() => _CreatePaymentState();
 }
@@ -238,7 +239,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
-                      GestureDetector(
+                      widget.readOnly==false?Container():  GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null) {
@@ -343,10 +344,14 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Ledger_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -522,6 +527,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){

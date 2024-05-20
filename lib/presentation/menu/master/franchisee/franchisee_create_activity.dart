@@ -32,7 +32,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class CreateFranchisee extends StatefulWidget {
   final editItem;
-  const CreateFranchisee({super.key,this.editItem});
+  final readOnly;
+  const CreateFranchisee({super.key,this.editItem, this.readOnly});
 
   @override
   _CreateFranchiseeState createState() => _CreateFranchiseeState();
@@ -510,6 +511,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: bankNameController,
       focuscontroller: _bankNameFocus,
       focusnext: _bankBranchFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("bank_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -536,6 +538,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: bankBranchController,
       focuscontroller: _bankBranchFocus,
       focusnext: _IFSCCodeFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("bank_branch")!,
       callbackOnchage: (value) {
         setState(() {
@@ -559,6 +562,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return SingleLineEditableTextFormField(
       controller: IFSCCodeController,
       focuscontroller: _IFSCCodeFocus,
+      readOnly: widget.readOnly,
       focusnext: _aCHolderNameFocus,
       title: ApplicationLocalizations.of(context)!.translate("ifsc_branch")!,
       callbackOnchage: (value) {
@@ -585,6 +589,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: aCHolderNameController,
       focuscontroller: _aCHolderNameFocus,
       focusnext: _accountNoFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("ac_holder_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -610,6 +615,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: accountNoController,
       focuscontroller: _accountNoFocus,
       focusnext: _franchiseeNameFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("account_no")!,
       callbackOnchage: (value) {
         setState(() {
@@ -740,6 +746,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseefssaiNo,
       focuscontroller: _franchiseefssaiNo,
       focusnext: _franchiseePaymentDaysFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("fssai")!,
       callbackOnchage: (value) {
         setState(() {
@@ -767,6 +774,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseePaymentDays,
       focuscontroller: _franchiseePaymentDaysFocus,
       focusnext: _bankNameFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("payment_days")!,
       callbackOnchage: (value) {
         setState(() {
@@ -799,6 +807,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeOutstandingLimit,
         focuscontroller: _franchiseeOutstandingLimitFocus,
         focusnext: _adharoFocus,
+            readOnly: widget.readOnly,
         title: ApplicationLocalizations.of(context)!.translate("outstanding_limit")!,
         callbackOnchage: (value) {
           setState(() {
@@ -897,6 +906,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeEmail,
       focuscontroller: _franchiseeEmailFocus,
       focusnext: _adharoFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("email_address")!,
       callbackOnchage: (value) {
         setState(() {
@@ -926,6 +936,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeMobileNo,
       focuscontroller: _franchiseeMobileNoFocus,
       focusnext: _franchiseeEmailFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("mobile_no")!,
       callbackOnchage: (value) {
         setState(() {
@@ -959,6 +970,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return SingleLineEditableTextFormField(
       parentWidth: parentWidth,
       controller: pincode,
+      readOnly: widget.readOnly,
       focuscontroller: _pincodeFocus,
       focusnext: _franchiseeMobileNoFocus,
       title: ApplicationLocalizations.of(context)!.translate("pin_code")!,
@@ -1020,6 +1032,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeContactPerson,
       focuscontroller: _franchiseeContactPersonFocus,
       focusnext: _franchiseeAddressFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("contact_person")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1045,6 +1058,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeAddress,
       focuscontroller: _franchiseeAddressFocus,
       focusnext: _pincodeFocus,
+      readOnly: widget.readOnly,
       title:ApplicationLocalizations.of(context)!.translate("address")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1071,6 +1085,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       controller: franchiseeName,
       focuscontroller: _franchiseeNameFocus,
       focusnext: _franchiseeContactPersonFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
       callbackOnchage: (value) {
         setState(() {

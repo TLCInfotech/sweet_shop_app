@@ -278,17 +278,14 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
                           dateNew: newDate,
+                          readOnly: singleRecord['Update_Right'] ,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:payment_list[index],
                           come:"edit",
-                        ))); }else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        )));
                       },
                       child: Card(
                         child: Row(

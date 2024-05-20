@@ -274,6 +274,7 @@ bool isLoaderShow=false;
         return null;
       },
       controller: seqNo,
+      readOnly: singleRecord['Update_Right'],
       focuscontroller: null,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("sequence_no")!,
@@ -335,6 +336,7 @@ bool isLoaderShow=false;
       },
     //  readOnly: editedItem!=null?false:true,
       controller: categoryName,
+      readOnly: singleRecord['Update_Right'],
       focuscontroller: null,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("category")!,
@@ -456,7 +458,7 @@ bool isLoaderShow=false;
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        if( singleRecord['Update_Right']==true){
+
                         print(_arrListNew[index]);
                         setState(() {
                           editedItem=_arrListNew[index];
@@ -465,10 +467,7 @@ bool isLoaderShow=false;
                           parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
                           seqNo.text=_arrListNew[index]['Seq_No'].toString();
                         });
-                        add_category_layout(context);}else{
-              var snackBar = SnackBar(content: Text('user not have a edit rights'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        add_category_layout(context);
                       },
                       child: Card(
                         color: Colors.white,

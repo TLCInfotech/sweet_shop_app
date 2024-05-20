@@ -36,7 +36,8 @@ class CreateDebitNote extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
-  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId});
+  final  readOnly;
+  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly});
   @override
   _CreateDebitNoteState createState() => _CreateDebitNoteState();
 }
@@ -345,7 +346,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
+                      widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -418,10 +419,16 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                     setState(() {
                       editedItemIndex=index;
                     });
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
-                      goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
+                    if(widget.readOnly==false){
+                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }else{
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (context != null) {
+                        goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
+                      }
                     }
+
                   },
                   child: Card(
                     child: Row(
@@ -688,6 +695,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName:widget.come=="edit"?widget.debitNote['Vendor_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
@@ -714,6 +722,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: true,
+      readOnly: widget.readOnly,
       ledgerName: selectedLedgerName,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",

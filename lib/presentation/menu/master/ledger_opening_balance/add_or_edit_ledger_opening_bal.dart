@@ -36,7 +36,8 @@ class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final  dateApi;
   final  come;
   final  companyId;
-  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi, this.come, this.companyId});
+  final  readOnly;
+  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi, this.come, this.companyId, this.readOnly});
   @override
   State<AddOrEditLedgerOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -342,6 +343,7 @@ String amountTypeId="";
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: amount,
       focuscontroller: null,
       focusnext: null,

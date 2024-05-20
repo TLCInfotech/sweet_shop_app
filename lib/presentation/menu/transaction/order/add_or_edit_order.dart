@@ -41,12 +41,14 @@ class AddOrEditOrder extends StatefulWidget {
   final dynamic editproduct;
   final date;
   final id;
+  final readOnly;
   final dateFinal;
   const AddOrEditOrder(
       {super.key,
         required this.mListener,
         required this.editproduct,
         required this.date,
+        this.readOnly,
         this.id,
         this.dateFinal});
 
@@ -363,6 +365,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
@@ -434,6 +437,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           }
           return null;
         },
+        readOnly: widget.readOnly,
         controller: rate,
         focuscontroller: null,
         focusnext: null,
@@ -462,6 +466,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           }
           return null;
         },
+        readOnly: widget.readOnly,
         controller: amount,
         focuscontroller: null,
         focusnext: null,
@@ -501,6 +506,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             }
             return null;
           },
+          readOnly: widget.readOnly,
           controller: discount,
           focuscontroller: null,
           focusnext: null,
@@ -546,6 +552,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             }
             return null;
           },
+          readOnly: widget.readOnly,
           controller: gst,
           focuscontroller: null,
           focusnext: null,

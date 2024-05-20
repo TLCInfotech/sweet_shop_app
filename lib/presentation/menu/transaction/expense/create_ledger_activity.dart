@@ -32,7 +32,8 @@ class CreateLedger extends StatefulWidget {
   final come;
   final editedItem;
   final franchiseeDetails;
-  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails});
+  final readOnly;
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails, this.readOnly});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -265,7 +266,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
+                      widget.readOnly==false?Container(): GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeId!="") {
@@ -421,6 +422,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
@@ -487,10 +489,14 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                     setState(() {
                       editedItemIndex=index;
                     });
+                    if(widget.readOnly==false){
+                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(

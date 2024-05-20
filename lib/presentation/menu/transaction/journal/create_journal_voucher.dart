@@ -39,7 +39,8 @@ class CreateJournals extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
-  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId});
+  final  readOnly;
+  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId, this.readOnly});
   @override
   _CreateJournalsState createState() => _CreateJournalsState();
 }
@@ -238,7 +239,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
-                      GestureDetector(
+                      widget.readOnly==false?Container():  GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
@@ -333,10 +334,14 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                     setState(() {
                       editedItemIndex=index;
                     });
+                    if(widget.readOnly==false){
+                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Ledger_list[index],widget.companyId,"edit");
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -512,6 +517,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (name,id){

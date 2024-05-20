@@ -241,7 +241,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
+
                         print(expense_group[index]);
                         setState(() {
                           editedItem=expense_group[index];
@@ -274,10 +274,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                           });
                         }
 
-                        add_category_layout(context);}else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        add_category_layout(context);
                       },
                       onDoubleTap: (){},
                       child: Card(
@@ -425,6 +422,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         }
         return null;
       },
+      readOnly:singleRecord['Update_Right'],
       controller: groupName,
       focuscontroller: _groupNameFocus,
       focusnext: _sequenseNoFocus,
@@ -449,6 +447,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         }
         return null;
       },
+      readOnly:singleRecord['Update_Right'],
       controller: sequenseNoName,
       focuscontroller: _sequenseNoFocus,
       focusnext: _sequenceNatureFocus,

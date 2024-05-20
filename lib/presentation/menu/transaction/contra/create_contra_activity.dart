@@ -37,7 +37,8 @@ class CreateContra extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
-  const CreateContra({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate, this.come, this.debitNote, this.companyId});
+  final  readOnly;
+  const CreateContra({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate, this.come, this.debitNote, this.companyId, this.readOnly});
   @override
   _CreateContraState createState() => _CreateContraState();
 }
@@ -233,7 +234,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
+                      widget.readOnly==false?Container():  GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null){
@@ -302,10 +303,14 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     setState(() {
                       editedItemIndex=index;
                     });
+                    if(widget.readOnly==true){
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"edit");
-                    }
+                    }}else{
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
                   },
                   child: Card(
                     child: Row(
@@ -519,6 +524,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().getBankCashLedger+"?Company_ID=${widget.companyId}",
       titleIndicator: true,
+      readOnly: widget.readOnly,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",

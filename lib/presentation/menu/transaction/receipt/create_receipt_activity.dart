@@ -31,8 +31,9 @@ class CreateReceipt extends StatefulWidget {
   final  newDate;
   final come;
   final editedItem;
+  final readOnly;
 
-  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate,this.editedItem,this.come});
+  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate,this.editedItem,this.come, this.readOnly});
   @override
   _CreateReceiptState createState() => _CreateReceiptState();
 }
@@ -257,7 +258,7 @@ bool isLoaderShow=false;
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
+                      widget.readOnly==false?Container():  GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedBankLedgerID!=null) {
@@ -327,10 +328,14 @@ bool isLoaderShow=false;
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate));
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -555,6 +560,7 @@ bool isLoaderShow=false;
       titleIndicator: true,
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){

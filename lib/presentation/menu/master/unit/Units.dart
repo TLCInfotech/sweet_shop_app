@@ -173,17 +173,13 @@ class _UnitsActivityState extends State<UnitsActivity> {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
                         setState(() {
                           editedItem=measuring_unit[index];
                           unitName.text=measuring_unit[index];
                           mesuringText=measuring_unit[index];
                         });
 
-                        add_unit_layout(context);}else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        add_unit_layout(context);
                       },
                       child: Card(
                         child: Row(
@@ -290,6 +286,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                             }
                             return null;
                           },
+                          readOnly: singleRecord['Update_Right'],
                           controller: unitName,
                           focuscontroller: null,
                           focusnext: null,

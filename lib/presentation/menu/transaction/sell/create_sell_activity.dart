@@ -34,8 +34,9 @@ class CreateSellInvoice extends StatefulWidget {
   final  Invoice_No;
   final editedItem;
   final come;
+  final readOnly;
 
-  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come});
+  const CreateSellInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come, this.readOnly});
   @override
   _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
@@ -370,7 +371,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
+                      widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -439,10 +440,14 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -710,6 +715,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
         titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
         title: ApplicationLocalizations.of(context)!.translate("party")!,
         callback: (name,id){
@@ -743,6 +749,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
           franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
           franchisee: widget.come,
+        readOnly: widget.readOnly,
           callback: (name,id){
             if(selectedFranchiseeId==id){
               var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));

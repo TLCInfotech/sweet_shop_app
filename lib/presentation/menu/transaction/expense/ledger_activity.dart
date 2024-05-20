@@ -282,18 +282,16 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-              if( singleRecord['Update_Right']==true){
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                           mListener: this,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
                           dateNew: newDate,
+                          readOnly:singleRecord['Update_Right'],
                           editedItem:expense_list[index],
                           come:"edit",
                           // DateFormat('dd-MM-yyyy').format(newDate),
-                        )));     }else{
-                var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                        )));
                       },
                       child: Card(
                         child: Row(

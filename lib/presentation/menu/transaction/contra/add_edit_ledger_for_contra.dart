@@ -31,7 +31,8 @@ class AddOrEditLedgerForContra extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
-  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate, this.franId, this.come, this.debitNote, this.companyId});
+  final  readOnly;
+  const AddOrEditLedgerForContra({super.key, required this.mListener, required this.editproduct, this.newDate, this.franId, this.come, this.debitNote, this.companyId, this.readOnly});
   @override
   State<AddOrEditLedgerForContra> createState() => _AddOrEditLedgerForContraState();
 }
@@ -217,6 +218,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: narration,
       focuscontroller: null,
       focusnext: null,
@@ -242,6 +244,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: amount,
       focuscontroller: null,
       focusnext: null,

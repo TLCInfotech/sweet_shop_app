@@ -28,8 +28,8 @@ class TestItem {
 class AddOrEditLedgerForLedger extends StatefulWidget {
   final AddOrEditLedgerForLedgerInterface mListener;
   final dynamic editproduct;
-
-  const AddOrEditLedgerForLedger({super.key, required this.mListener, required this.editproduct});
+final readOnly;
+  const AddOrEditLedgerForLedger({super.key, required this.mListener, required this.editproduct, this.readOnly});
 
   @override
   State<AddOrEditLedgerForLedger> createState() => _AddOrEditLedgerForLedgerState();
@@ -204,6 +204,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: narration,
       focuscontroller: null,
       focusnext: null,
@@ -229,6 +230,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: amount,
       focuscontroller: null,
       focusnext: null,

@@ -40,6 +40,7 @@ class AddOrEditItemSell extends StatefulWidget {
   final dynamic editproduct;
   final date;
   final id;
+  final readOnly;
   final dateFinal;
   const AddOrEditItemSell(
       {super.key,
@@ -47,6 +48,7 @@ class AddOrEditItemSell extends StatefulWidget {
       required this.editproduct,
       required this.date,
       this.id,
+      this.readOnly,
       this.dateFinal});
 
   @override
@@ -362,6 +364,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
@@ -433,6 +436,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           }
           return null;
         },
+        readOnly: widget.readOnly,
         controller: rate,
         focuscontroller: null,
         focusnext: null,
@@ -461,6 +465,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           }
           return null;
         },
+        readOnly: widget.readOnly,
         controller: amount,
         focuscontroller: null,
         focusnext: null,
@@ -500,6 +505,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             }
             return null;
           },
+          readOnly: widget.readOnly,
           controller: discount,
           focuscontroller: null,
           focusnext: null,
@@ -545,6 +551,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             }
             return null;
           },
+          readOnly: widget.readOnly,
           controller: gst,
           focuscontroller: null,
           focusnext: null,

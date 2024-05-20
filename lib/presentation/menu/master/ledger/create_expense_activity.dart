@@ -35,7 +35,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 class CreateExpenseActivity extends StatefulWidget {
   final CreateExpenseActivityInterface mListener;
   final   ledgerList;
-  const CreateExpenseActivity({super.key, required this.mListener,  this.ledgerList});
+  final   readOnly;
+  const CreateExpenseActivity({super.key, required this.mListener,  this.ledgerList, this.readOnly});
 
 
   @override
@@ -388,9 +389,11 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                           });
                           print("IMGE1 : ${adharImageBytes.length}");
                         },
+                        readOnly: widget.readOnly,
                         title: ApplicationLocalizations.of(context)!.translate("adhar_number")!, 
                         documentFile: adharFile,
                         controller: adharNoController,
+
                         focuscontroller: _adharoFocus,
                         focusnext: _panNoFocus,
                       ),
@@ -412,6 +415,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("pan_number")! ,
                         documentFile: panFile,
+                        readOnly: widget.readOnly,
                         controller: panNoController,
                         focuscontroller: _panNoFocus,
                         focusnext: _gstNoFocus,
@@ -434,6 +438,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("gst_number")!,
                         documentFile: gstFile,
+                        readOnly: widget.readOnly,
                         controller: gstNoController,
                         focuscontroller: _gstNoFocus,
                         focusnext: _cinNoFocus,
@@ -555,8 +560,10 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+
       controller: nameController,
       focuscontroller: _nameFocus,
+      readOnly: widget.readOnly,
       focusnext: _leaderGroupFocus,
       title:     ApplicationLocalizations.of(context)!.translate("name")! ,
       callbackOnchage: (value) {
@@ -583,6 +590,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: leaderGroupController,
       focuscontroller: _leaderGroupFocus,
       focusnext: _contactPersonFocus,
+      readOnly: widget.readOnly,
       title:     ApplicationLocalizations.of(context)!.translate("ledger_group")! ,
       callbackOnchage: (value) {
         setState(() {
@@ -712,6 +720,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
@@ -737,6 +746,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
@@ -789,6 +799,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       }
       return null;
     },
+      readOnly: widget.readOnly,
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
@@ -814,6 +825,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       }
       return null;
     },
+      readOnly: widget.readOnly,
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
@@ -849,6 +861,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                   outstandingLimitController.text = value;
                 });
               },
+              readOnly: widget.readOnly,
               textInput: TextInputType.number,
               maxlines: 1,
               format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
@@ -1070,6 +1083,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
       focusnext: _taxRateFocus,
@@ -1100,6 +1114,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: CGSTController,
       focuscontroller: _CGSTFocus,
       focusnext: _SGSTFocus,
@@ -1151,6 +1166,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: cessController,
       focuscontroller: _cessFocus,
       focusnext: _addCessFocus,
@@ -1330,6 +1346,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: taxRateController,
       focuscontroller: _taxRateFocus,
       focusnext: _CGSTFocus,
@@ -1359,6 +1376,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: SGSTController,
       focuscontroller: _SGSTFocus,
       focusnext: _cessFocus,
@@ -1398,6 +1416,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: addCessController,
       focuscontroller: _addCessFocus,
       focusnext: _bankNameFocus,
@@ -1504,6 +1523,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: pinCodeController,
       focuscontroller: _pinCodeFocus,
       focusnext: _contactFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("pin_code")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1568,6 +1588,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
@@ -1665,6 +1686,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: bankNameController,
       focuscontroller: _bankNameFocus,
       focusnext: _bankBranchFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("bank_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1692,6 +1714,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: bankBranchController,
       focuscontroller: _bankBranchFocus,
       focusnext: _IFSCCodeFocus,
+      readOnly: widget.readOnly,
       title:     ApplicationLocalizations.of(context)!.translate("bank_branch")! ,
       callbackOnchage: (value) {
         setState(() {
@@ -1716,6 +1739,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: IFSCCodeController,
       focuscontroller: _IFSCCodeFocus,
       focusnext: _aCHolderNameFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("ifsc_branch")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1741,6 +1765,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: aCHolderNameController,
       focuscontroller: _aCHolderNameFocus,
       focusnext: _accountNoFocus,
+      readOnly: widget.readOnly,
       title:ApplicationLocalizations.of(context)!.translate("ac_holder_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1766,6 +1791,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       controller: accountNoController,
       focuscontroller: _accountNoFocus,
       focusnext: _bankNameFocus,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("account_no")!,
       callbackOnchage: (value) {
         setState(() {

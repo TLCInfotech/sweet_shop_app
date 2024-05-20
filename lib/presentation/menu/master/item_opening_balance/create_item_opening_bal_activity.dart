@@ -34,8 +34,9 @@ class CreateItemOpeningBal extends StatefulWidget {
   final compId;
   final come;
   final franchiseeDetails;
+  final readOnly;
 
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails});
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails, this.readOnly});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -312,7 +313,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
+                     widget.readOnly==false?Container():
                       GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
@@ -387,10 +388,14 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                     setState(() {
                       editedItemIndex=index;
                     });
+          if(widget.readOnly==false){
+          var snackBar = SnackBar(content: Text('user not have a edit rights'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -512,6 +517,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         apiUrl:ApiConstants().franchisee+"?",
         titleIndicator: false,
         franchisee: widget.come,
+        readOnly: widget.readOnly,
         franchiseeName: selectedFranchiseeName,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name,id){

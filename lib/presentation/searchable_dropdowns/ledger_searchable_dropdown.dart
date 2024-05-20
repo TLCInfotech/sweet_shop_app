@@ -30,7 +30,8 @@ class SearchableLedgerDropdown extends StatefulWidget{
   final come;
   final franchiseeName;
   final suffixicon;
-  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come,this.suffixicon});
+  final readOnly;
+  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come,this.suffixicon, this.readOnly});
 
 
 
@@ -195,7 +196,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                   },
                   textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,
-                  enabled: widget.come=="disable"?false:true,
+                  //enabled: widget.come=="disable"?false:true,
+                  enabled: widget.readOnly==false?false:true,
                   focusNode: searchFocus,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',
@@ -206,8 +208,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                         _controller.clear();
                       });
                       widget.callback("","");
-
-                    }, icon: Icon(Icons.clear))
+                      }, icon: Icon(Icons.clear))
                   ),
                 ),
 

@@ -27,7 +27,8 @@ class AddOrEditLedger extends StatefulWidget {
   final AddOrEditLedgerInterface mListener;
   final dynamic editproduct;
   final newDate;
-  const AddOrEditLedger({super.key, required this.mListener, required this.editproduct, this.newDate});
+  final readOnly;
+  const AddOrEditLedger({super.key, required this.mListener, required this.editproduct, this.newDate, this.readOnly});
   @override
   State<AddOrEditLedger> createState() => _AddOrEditLedgerState();
 }
@@ -215,6 +216,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: narration,
       focuscontroller: null,
       focusnext: null,
@@ -240,6 +242,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
         }
         return null;
       },
+      readOnly: widget.readOnly,
       controller: amount,
       focuscontroller: null,
       focusnext: null,

@@ -35,8 +35,9 @@ class AddProductPurchaseRate extends StatefulWidget {
   final dynamic editproduct;
   final date;
   final id;
+  final readOnly;
 
-  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct, this.date,this.id});
+  const AddProductPurchaseRate({super.key, required this.mListener, required this.editproduct, this.date,this.id, this.readOnly});
 
   @override
   State<AddProductPurchaseRate> createState() => _AddProductPurchaseRateState();
@@ -330,6 +331,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         return null;
       },
       controller: gst,
+      readOnly: widget.readOnly,
       focuscontroller: null,
       focusnext: null,
       title:     ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -369,6 +371,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate>{
         return null;
       },
       controller: rate,
+      readOnly: widget.readOnly,
       focuscontroller: null,
       focusnext: null,
       title:   ApplicationLocalizations.of(context)!.translate("purchase_rate")!,

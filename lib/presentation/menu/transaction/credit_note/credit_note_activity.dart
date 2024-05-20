@@ -317,7 +317,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        if( singleRecord['Update_Right']==true){
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateCreditNote(
                               dateNew: invoiceDate,
@@ -325,11 +325,9 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                                 debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                                 companyId:companyId,
+                              readOnly:  singleRecord['Update_Right'],
                               come:"edit"
-                            )));}else{
-              var snackBar = SnackBar(content: Text('user not have a edit rights'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+                            )));
                       },
                       child: Card(
                         child: Row(

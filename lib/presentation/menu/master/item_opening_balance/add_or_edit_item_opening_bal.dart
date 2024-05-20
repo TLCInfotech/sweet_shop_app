@@ -35,8 +35,9 @@ class AddOrEditItemOpeningBal extends StatefulWidget {
   final AddOrEditItemOpeningBalInterface mListener;
   final dynamic editproduct;
   final date;
+  final readOnly;
 
-  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct,required this.date});
+  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct,required this.date, this.readOnly});
   @override
   State<AddOrEditItemOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -240,6 +241,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       controller: quantity,
       focuscontroller: null,
       focusnext: null,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
@@ -265,6 +267,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       controller: batchno,
       focuscontroller: null,
       focusnext: null,
+      readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("batch_id")!,
       callbackOnchage: (value)async {
         setState(() {
@@ -294,6 +297,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         },
         controller: rate,
         focuscontroller: null,
+        readOnly: widget.readOnly,
         focusnext: null,
         title: ApplicationLocalizations.of(context)!.translate("rate")!,
         callbackOnchage: (value) async {
@@ -321,6 +325,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           return null;
         },
         controller: amount,
+        readOnly: widget.readOnly,
         focuscontroller: null,
         focusnext: null,
         title: ApplicationLocalizations.of(context)!.translate("amount")!,
