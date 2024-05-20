@@ -301,12 +301,12 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      singleRecord['Insert_Right']==true ?GestureDetector(
+                      singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ?GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             if (context != null) {
                               editedItemIndex=null;
-                              goToAddOrEditItem(null);
+                              goToAddOrEditItem(null,true);
                             }
                           },
                           child: Container(
@@ -367,13 +367,10 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                       editedItemIndex=index;
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
-          if( singleRecord['Update_Right']==true){
+
                     if (context != null) {
-                      goToAddOrEditItem(Item_list[index]);
-                    }}else{
-            var snackBar = SnackBar(content: Text('user not have a edit rights'));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
+                      goToAddOrEditItem(Item_list[index],singleRecord['Update_Right']);
+                    }
                   },
                   child: Card(
                     child: Row(
@@ -531,7 +528,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   }
 
 
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,update) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -544,6 +541,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
               opacity: a1.value,
               child: AddOrEditItemOpeningBalForCompany(
                 mListener: this,
+                readOnly: update,
                 editproduct:product,
                 date:invoiceDate.toString()
               ),

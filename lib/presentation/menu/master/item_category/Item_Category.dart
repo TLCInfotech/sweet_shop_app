@@ -148,7 +148,7 @@ bool isLoaderShow=false;
                   parentCategoryId=0;
                   seqNo.clear();
                 });
-                add_category_layout(context);
+                add_category_layout(context,true);
 
               }):Container(),
           body: Stack(
@@ -197,7 +197,7 @@ bool isLoaderShow=false;
     );
   }
 
-  Future<dynamic> add_category_layout(BuildContext context) {
+  Future<dynamic> add_category_layout(BuildContext context,updateRight) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -236,11 +236,11 @@ bool isLoaderShow=false;
                                 ),
                               ),
                             ),
-                            getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                            getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
 
-                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth,updateRight),
 
-                            getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                            getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
 
                             const SizedBox(height: 20,),
 
@@ -265,7 +265,7 @@ bool isLoaderShow=false;
   }
 
   /* widget for seq no layout */
-  Widget getseqNoLayout(double parentHeight, double parentWidth) {
+  Widget getseqNoLayout(double parentHeight, double parentWidth, bool updateRight) {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
@@ -274,7 +274,7 @@ bool isLoaderShow=false;
         return null;
       },
       controller: seqNo,
-      readOnly: singleRecord['Update_Right'],
+      readOnly: updateRight,
       focuscontroller: null,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("sequence_no")!,
@@ -291,12 +291,13 @@ bool isLoaderShow=false;
   }
 
   /* Widget For Category Layout */
-  Widget getAddCategoryLayout(double parentHeight, double parentWidth){
+  Widget getAddCategoryLayout(double parentHeight, double parentWidth, bool updateRight){
     return Padding(
         padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
         child:  SearchableLedgerDropdown(
             apiUrl:ApiConstants().item_category+"?",
             franchisee: editedItem!=null?"edit":"",
+            readOnly: updateRight,
             franchiseeName: editedItem!=null && editedItem['Parent_Name']!=null?editedItem['Parent_Name']:"",
             title:  ApplicationLocalizations.of(context)!.translate("parent_category")!,
             callback: (name,id){
@@ -326,7 +327,7 @@ bool isLoaderShow=false;
   }
 
   /* widget for Category layout */
-  Widget getCategoryLayout(double parentHeight, double parentWidth) {
+  Widget getCategoryLayout(double parentHeight, double parentWidth, bool updateRight) {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
@@ -336,7 +337,7 @@ bool isLoaderShow=false;
       },
     //  readOnly: editedItem!=null?false:true,
       controller: categoryName,
-      readOnly: singleRecord['Update_Right'],
+      readOnly:updateRight ,
       focuscontroller: null,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("category")!,
@@ -467,7 +468,7 @@ bool isLoaderShow=false;
                           parentCategoryId=_arrListNew[index]['Parent_ID']==null?0:_arrListNew[index]['Parent_ID'];
                           seqNo.text=_arrListNew[index]['Seq_No'].toString();
                         });
-                        add_category_layout(context);
+                        add_category_layout(context,singleRecord['Update_Right']);
                       },
                       child: Card(
                         color: Colors.white,

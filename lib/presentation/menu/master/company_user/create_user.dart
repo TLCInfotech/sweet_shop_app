@@ -26,8 +26,9 @@ class UserCreate extends StatefulWidget {
  final editUser;
  final come;
  final compId;
+ final readOnly;
 
-  const UserCreate({super.key, required this.mListener, this.editUser, this.compId, this.come});
+  const UserCreate({super.key, required this.mListener, this.editUser, this.compId, this.come, this.readOnly});
 
    final UserCreateInterface mListener;
 
@@ -192,6 +193,7 @@ String oldUid="";
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
+       readOnly: widget.readOnly,
         callbackFile: (file)async{
           if(file!=null) {
             List<int> bytes = (await file?.readAsBytes()) as List<int>;
@@ -258,6 +260,7 @@ String oldUid="";
           }
           return null;
         },
+      readOnly: widget.readOnly,
       controller: userController,
       focuscontroller: _userFocus,
       focusnext: _workingdaysFocus,
@@ -283,6 +286,7 @@ String oldUid="";
           }
           return null;
         },
+      readOnly: widget.readOnly,
       controller: workingdaysController,
       focuscontroller: _workingdaysFocus,
       focusnext: _passwordFocus,
@@ -341,6 +345,7 @@ String oldUid="";
             child:  SearchableLedgerDropdown(
                   apiUrl:ApiConstants().franchiseeWithCompany+"?",
                   titleIndicator: false,
+                readOnly: widget.readOnly,
                   franchiseeName: widget.come=="edit"?widget.editUser["Ledger_Name"]:"",
                   franchisee: widget.come,
                   title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
@@ -427,6 +432,7 @@ String oldUid="";
           GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
+              if(widget.readOnly==true){
            if( widget.editUser!=null){
              setState(() {
                if (!checkPasswordValue) {
@@ -435,7 +441,7 @@ String oldUid="";
                  checkPasswordValue = false;
                }
              });
-           } else{
+           }} else{
 
            }
             },
@@ -498,19 +504,22 @@ String oldUid="";
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-    if( widget.editUser!=null){
-      setState(() {
-        if (!checkActiveValue) {
-          checkActiveValue = true;
-        } else {
-          checkActiveValue = false;
-        }
-      });
+    if(widget.readOnly==true) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      if (widget.editUser != null) {
+        setState(() {
+          if (!checkActiveValue) {
+            checkActiveValue = true;
+          } else {
+            checkActiveValue = false;
+          }
+        });
+      } else {
+
+      }
     }else{
 
     }
-
 
 
             },

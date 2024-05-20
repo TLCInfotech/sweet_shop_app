@@ -250,7 +250,9 @@ print("hjthghh  $companyId");
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
+
         callbackFile: (file)async{
+
           if(file!=null) {
             List<int> bytes = (await file?.readAsBytes()) as List<int>;
             setState(()  {

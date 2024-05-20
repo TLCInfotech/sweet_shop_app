@@ -43,7 +43,8 @@ class SearchableDropdownWithObjectForTax extends StatefulWidget{
   final titleIndicator;
   final apiUrl;
   final status;
-  SearchableDropdownWithObjectForTax({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
+  final readOnly;
+  SearchableDropdownWithObjectForTax({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status, this.readOnly});
 
 
 
@@ -155,6 +156,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     },
                     textInputAction: TextInputAction.none, // Change input action to "none"
                     controller: _controller,
+                    enabled: widget.readOnly==false?false:true,
                     decoration: textfield_decoration.copyWith(
                       // labelText: '${widget.title}',
                         hintText: "${widget.title}",

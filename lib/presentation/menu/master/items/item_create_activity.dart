@@ -332,6 +332,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
+        readOnly: widget.readOnly,
         callbackFile: (file)async{
           if(file!=null) {
             List<int> bytes = (await file?.readAsBytes()) as List<int>;
@@ -444,6 +445,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       child:  SearchableLedgerDropdown(
           apiUrl:ApiConstants().item_category+"?",
           franchisee: widget.editItem!=null?"edit":"",
+          readOnly: widget.readOnly,
           franchiseeName: widget.editItem!=null && widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:"",
           title:  ApplicationLocalizations.of(context)!.translate("category")!,
           callback: (name,id){
@@ -477,6 +479,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+          readOnly: widget.readOnly,
           apiUrl:ApiConstants().measuring_unit+"?",
           title:  ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
           callback: (name){
@@ -517,6 +520,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           Container(
             width: parentWidth * .30,
             child: SearchableDropdownForStringArray(
+                readOnly: widget.readOnly,
                 apiUrl:ApiConstants().measuring_unit+"?",
                 title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
                 callback: (name){
@@ -565,6 +569,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
+              readOnly: widget.readOnly!=false?false:true,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
                     left: parentWidth * .04, right: parentWidth * .02),
@@ -618,6 +623,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
+              readOnly: widget.readOnly!=false?false:true,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
                     left: parentWidth * .04, right: parentWidth * .02),
@@ -662,6 +668,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           Container(
             width: parentWidth * .30,
             child: SearchableDropdownForStringArray(
+                readOnly: widget.readOnly,
                 apiUrl:ApiConstants().measuring_unit+"?",
                 title:  ApplicationLocalizations.of(context)!.translate("unit_three")!,
                 callback: (name){
@@ -700,6 +707,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               cursorColor: CommonColor.BLACK_COLOR,
+              readOnly: widget.readOnly!=false?false:true,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(
                     left: parentWidth * .04, right: parentWidth * .02),
@@ -753,6 +761,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               focusNode: _unitThreeBase,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
+              readOnly: widget.readOnly!=false?false:true,
               cursorColor: CommonColor.BLACK_COLOR,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(

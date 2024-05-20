@@ -268,7 +268,8 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
           ),
         ),
-        AmountTypeDialog(mListener: this,selectedType: selectedLimitUnit,width:130,)
+        AmountTypeDialog(mListener: this,selectedType: selectedLimitUnit,width:130,
+        )
       ],
     );
   }

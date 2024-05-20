@@ -35,8 +35,9 @@ class AddOrEditItemOpeningBalForCompany extends StatefulWidget {
   final AddOrEditItemOpeningBalForCompanyInterface mListener;
   final dynamic editproduct;
   final date;
+  final readOnly;
 
-  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct, this.date});
+  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct, this.date, this.readOnly});
   @override
   State<AddOrEditItemOpeningBalForCompany> createState() => _AddOrEditItemOpeningBalForCompanyState();
 }
@@ -206,12 +207,9 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                         ),
                       ),
                       getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
-
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                       getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                       getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                       SizedBox(height: 10,)
@@ -240,6 +238,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         return null;
       },
       controller: quantity,
+      readOnly: widget.readOnly,
       focuscontroller: null,
       focusnext: null,
       title: ApplicationLocalizations.of(context)!.translate("quantity")!,
@@ -265,6 +264,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         return null;
       },
       controller: batchno,
+      readOnly: widget.readOnly,
       focuscontroller: null,
       focusnext: null,
       title: ApplicationLocalizations.of(context)!.translate("batch_id")!,
@@ -317,6 +317,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           return null;
         },
         controller: rate,
+        readOnly: widget.readOnly,
         focuscontroller: null,
         focusnext: null,
         title: ApplicationLocalizations.of(context)!.translate("rate")!,
@@ -347,6 +348,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         controller: amount,
         focuscontroller: null,
         focusnext: null,
+        readOnly: widget.readOnly,
         title: ApplicationLocalizations.of(context)!.translate("amount")!,
         callbackOnchage: (value) async {
           print("########### $value");
@@ -375,6 +377,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return SearchableDropdownWithObject(
       name: selectedItemName,
+      readOnly: widget.readOnly,
       status:  "edit",
       apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
       titleIndicator: false,

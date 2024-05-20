@@ -425,14 +425,14 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      singleRecord['Insert_Right']==true?       GestureDetector(
+                      singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true?       GestureDetector(
                           onTap: (){
                             setState(() {
                               editedItemIndex=null;
                             });
                             if(selectedFranchiseeID!=null){
                               editedItemIndex=null;
-                              goToAddOrEditProduct(null,singleRecord['Update_Right']);
+                              goToAddOrEditProduct(null,true);
                             }else{
                               CommonWidget.errorDialog(context, "Select franchisee first.");
                             }
@@ -490,15 +490,16 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: (){
-
-                      setState(() {
-                        editedItemIndex = index;
-                      });
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      if (context != null) {
-                        goToAddOrEditProduct(Item_list[index],singleRecord['Update_Right']);
-                      }
-
+          if(singleRecord['Update_Right']==true) {
+            setState(() {
+              editedItemIndex = index;
+            });
+            FocusScope.of(context).requestFocus(FocusNode());
+            if (context != null) {
+              goToAddOrEditProduct(
+                  Item_list[index], singleRecord['Update_Right']);
+            }
+          }
                   },
                   child: Card(
                     child: Row(
@@ -723,6 +724,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     return SearchableLedgerDropdown(
         apiUrl:ApiConstants().item_category+"?",
         titleIndicator: false,
+        readOnly: singleRecord['Update_Right'],
         title:  ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){
 

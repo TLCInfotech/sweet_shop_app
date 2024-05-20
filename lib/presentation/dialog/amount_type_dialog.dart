@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../core/internet_check.dart';
@@ -15,7 +16,8 @@ class AmountTypeDialog extends StatefulWidget {
   final AmountTypeDialogInterface mListener;
   final selectedType;
   final width;
-  const AmountTypeDialog({super.key, required this.mListener, required this.selectedType,required this.width});
+  final readOnly;
+  const AmountTypeDialog({super.key, required this.mListener, required this.selectedType,required this.width, this.readOnly});
 
   @override
   State<AmountTypeDialog> createState() => _LedegerGroupDialogState();
@@ -65,10 +67,9 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
     return Stack(
       alignment: Alignment.center,
       children: [
-        Container(
+     widget.readOnly==true?   Container(
             height: 45,
             width: double.parse(widget.width.toString()),
-
             margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:30): EdgeInsets.only(left: 5,top:10),
             padding: EdgeInsets.only(left: 10, right: 10),
             decoration: BoxDecoration(
@@ -112,8 +113,17 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                       ),
                     );
                   }).toList(),
-            )),
-        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+            )):
+    SearchableLedgerDropdown(
+    apiUrl: ApiConstants().amount_type+"?" ,
+    titleIndicator: false,
+    ledgerName: selctedAmtType,
+    readOnly: widget.readOnly,
+    franchiseeName:selctedAmtType,
+    title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
+    callback: (name,id){
+    },),
+    Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
   }

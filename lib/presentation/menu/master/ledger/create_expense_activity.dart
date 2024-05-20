@@ -516,6 +516,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
+        readOnly: widget.readOnly,
         callbackFile: (file)async{
           if(file!=null) {
 
@@ -613,6 +614,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
         child:  SearchableLedgerDropdown(
             apiUrl:ApiConstants().ledger_group+"?",
             franchisee: widget.ledgerList!=null?"edit":"",
+            readOnly: widget.readOnly,
             franchiseeName: widget.ledgerList!=null && widget.ledgerList['Group_Name']!=null?widget.ledgerList['Group_Name']:"",
             title:  ApplicationLocalizations.of(context)!.translate("ledger_group")!,
             callback: (name,id){
@@ -975,6 +977,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           child:  SearchableDropdownWithObjectForTax(
             name:widget.ledgerList!=null && widget.ledgerList['Tax_Type']!=null?widget.ledgerList['Tax_Type']:"",
             status:   widget.ledgerList!=null?"edit":"",
+            readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_type+"?",
             titleIndicator: false,
             title: ApplicationLocalizations.of(context)!.translate("tax_type")!,
@@ -1222,6 +1225,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
           child:  SearchableDropdownWithObjectForTax(
             name:widget.ledgerList!=null && widget.ledgerList['Tax_Category']!=null? widget.ledgerList['Tax_Category']:"",
             status:   widget.ledgerList!=null?"edit":"",
+            readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_category+"?",
             titleIndicator: false,
             title: ApplicationLocalizations.of(context)!.translate("tax_category")!,
@@ -1454,6 +1458,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       child: Padding(
         padding: const EdgeInsets.only(top:3),
         child:  SearchableDropdownForStringArray(
+          readOnly: widget.readOnly,
           apiUrl:ApiConstants().city+"?",
           ledgerName: districtController.text,
           franchiseeName:widget.ledgerList!=null && widget.ledgerList['District']!=null?widget.ledgerList['District'].toString(): "",
@@ -1488,7 +1493,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
           apiUrl:ApiConstants().state+"?",
-
+          readOnly: widget.readOnly,
           title:  ApplicationLocalizations.of(context)!.translate("state")!,
           callback: (name){
 
@@ -1550,6 +1555,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     return Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+          readOnly: widget.readOnly,
           apiUrl:ApiConstants().country+"?",
           title:  ApplicationLocalizations.of(context)!.translate("country")!,
           callback: (name){

@@ -43,7 +43,8 @@ class SearchableDropdownWithObject extends StatefulWidget{
   final titleIndicator;
   final apiUrl;
   final status;
-  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status});
+  final readOnly;
+  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status, this.readOnly});
 
 
 
@@ -213,6 +214,7 @@ final FocusNode reqFocus=FocusNode();
                     textInputAction: TextInputAction.none, // Change input action to "none"
                    focusNode: searchFocus,
                     controller: _controller,
+                    enabled: widget.readOnly==false?false:true,
                     decoration: textfield_decoration.copyWith(
                       // labelText: '${widget.title}',
                         hintText: "${widget.title}",

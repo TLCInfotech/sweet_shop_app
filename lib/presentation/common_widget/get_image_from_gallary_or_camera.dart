@@ -19,9 +19,10 @@ class GetSingleImage extends StatefulWidget{
   late final picImage;
   final height;
   final width;
+  final readOnly;
   final Function(File?) callbackFile;
   
-  GetSingleImage({required this.picImage, required this.callbackFile, required this.height,this.width});
+  GetSingleImage({required this.picImage, required this.callbackFile, required this.height,this.width, this.readOnly});
 
   @override
   State<GetSingleImage> createState() => _SingleLineEditableTextFormFieldState();
@@ -133,6 +134,10 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
                 ),
             GestureDetector(
               onTap: () {
+    if(widget.readOnly==false){
+    var snackBar = SnackBar(content: Text('user not have a edit rights'));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }else{
                 if (mounted) {
                   setState(() {
                     FocusScope.of(context).requestFocus(FocusNode());
@@ -154,7 +159,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
                       },
                     );
                   });
-                }
+                }}
               },
               child: Padding(
                 padding: EdgeInsets.only(left: (SizeConfig.screenWidth) * .08),

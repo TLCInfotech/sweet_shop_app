@@ -323,7 +323,7 @@ String companyId="";
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
 
-                      singleRecord['Insert_Right']==true?   GestureDetector(
+                      singleRecord['Insert_Right']==true||singleRecord['Update_Right'] ==true?   GestureDetector(
                           onTap: (){
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
@@ -638,6 +638,7 @@ String companyId="";
     return  SearchableLedgerDropdown(
         apiUrl:ApiConstants().item_category+"?",
         titleIndicator: false,
+        readOnly:singleRecord['Update_Right'] ,
         title:  ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){
 

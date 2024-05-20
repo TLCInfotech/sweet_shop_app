@@ -28,7 +28,8 @@ class SearchableDropdownForStringArray extends StatefulWidget{
   final apiUrl;
   final franchisee;
   final franchiseeName;
-  SearchableDropdownForStringArray({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName});
+  final readOnly;
+  SearchableDropdownForStringArray({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.readOnly});
 
 
 
@@ -164,6 +165,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
                     textInputAction: TextInputAction.none, // Change input action to "none"
                     controller: _controller,
                     focusNode: searchFocus,
+                    enabled: widget.readOnly==false?false:true,
                     decoration: textfield_decoration.copyWith(
                       // labelText: '${widget.title}',
                         hintText: "${widget.title}",

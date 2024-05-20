@@ -238,6 +238,7 @@ String amountTypeId="";
       titleIndicator: false,
       ledgerName: searchName,
       franchisee: widget.come,
+      readOnly: widget.readOnly,
       franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
       callback: (name,id){
@@ -370,7 +371,8 @@ String amountTypeId="";
             ApplicationLocalizations.of(context)!.translate("amount_type")!,
             style: item_heading_textStyle,
           ),
-          AmountTypeDialog(mListener: this,selectedType:amountType,width: parentWidth,),
+          AmountTypeDialog(mListener: this,  readOnly: widget.readOnly,
+            selectedType:amountType,width: parentWidth,),
         ],
       ),
     );

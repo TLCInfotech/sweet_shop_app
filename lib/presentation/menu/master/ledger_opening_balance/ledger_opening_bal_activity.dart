@@ -143,7 +143,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 color: Colors.black87,
               ),
               onPressed: () {
-                goToAddOrEditItem(null,"",companyId);
+                goToAddOrEditItem(null,"",companyId,true);
              /*   Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedgerOpeningBal(
                   dateNew: CommonWidget.getDateLayout(invoiceDate),
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
@@ -278,11 +278,8 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        if( singleRecord['Update_Right']==true){
-                        goToAddOrEditItem(ledgerList[index],"edit",companyId);}else{
-              var snackBar = SnackBar(content: Text('user not have a edit rights'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+
+                        goToAddOrEditItem(ledgerList[index],"edit",companyId,singleRecord['Update_Right']);
                       },
                       child: Card(
                         child: Row(
@@ -373,7 +370,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
         ));
   }
 
-  Future<Object?> goToAddOrEditItem(product,status,compId) {
+  Future<Object?> goToAddOrEditItem(product,status,compId,update) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -387,6 +384,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
               child: AddOrEditLedgerOpeningBal(
                 mListener: this,
                 editproduct:product,
+                readOnly: update,
                 dateNew:CommonWidget.getDateLayout(invoiceDate) ,
                 dateApi:DateFormat('yyyy-MM-dd').format(invoiceDate) ,
                 come: status,

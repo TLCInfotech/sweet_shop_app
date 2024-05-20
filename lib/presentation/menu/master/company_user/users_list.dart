@@ -199,7 +199,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                 delay: const Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: () {
-                    if( singleRecord['Update_Right']==true){
+
                     editedItem = userList[index];
 
                     Navigator.push(
@@ -208,12 +208,11 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             builder: (context) => UserCreate(
                                   editUser: userList[index],
                                   mListener: this,
+                                readOnly:
+                                singleRecord['Update_Right'],
                               compId: companyId,
                               come:"edit"
-                                )));}else{
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
+                                )));
                   },
                   child: Card(
                     child: Row(

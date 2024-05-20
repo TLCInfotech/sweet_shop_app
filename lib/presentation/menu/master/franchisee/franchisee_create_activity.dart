@@ -416,6 +416,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                         },
                         title:      ApplicationLocalizations.of(context)!.translate("adhar_number")!,
                         documentFile: adharFile,
+                        readOnly: widget.readOnly,
                         controller: adharNoController,
                         focuscontroller: _adharoFocus,
                         focusnext: _panNoFocus,
@@ -436,6 +437,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                         },
                         title:  ApplicationLocalizations.of(context)!.translate("pan_number")!,
                         documentFile: panFile,
+                        readOnly: widget.readOnly,
                         controller: panNoController,
                         focuscontroller: _panNoFocus,
                         focusnext: _gstNoFocus,
@@ -457,6 +459,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                         title:  ApplicationLocalizations.of(context)!.translate("gst_number")!,
                         documentFile: gstFile,
                         controller: gstNoController,
+                        readOnly: widget.readOnly,
                         focuscontroller: _gstNoFocus,
                         focusnext: _franchiseePaymentDaysFocus,
                       ),
@@ -640,6 +643,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+          readOnly: widget.readOnly,
           apiUrl:ApiConstants().country+"?",
           title:  ApplicationLocalizations.of(context)!.translate("country")!,
           callback: (name){
@@ -672,6 +676,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return  Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+          readOnly: widget.readOnly,
           apiUrl:ApiConstants().state+"?",
 
           title:  ApplicationLocalizations.of(context)!.translate("state")!,
@@ -706,6 +711,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
+        readOnly: widget.readOnly,
         callbackFile: (file)async{
           if(file!=null) {
             List<int> bytes = (await file?.readAsBytes()) as List<int>;
@@ -826,7 +832,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         },
       )
         ),
-        AmountTypeDialog(mListener: this,selectedType: selectedLimitUnit,width:130,)
+        AmountTypeDialog(mListener: this,  readOnly: widget.readOnly,
+          selectedType: selectedLimitUnit,width:130,)
         // Container(
         //   height: 50,
         //   width: 130,
@@ -999,6 +1006,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         child:  SearchableDropdownForStringArray(
             apiUrl:ApiConstants().city+"?",
             ledgerName: selectedCity,
+          readOnly: widget.readOnly,
             franchiseeName: widget.editItem!=null && widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
             franchisee: widget.editItem!=null&& widget.editItem['District']!=null?"edit":"",
             title:  ApplicationLocalizations.of(context)!.translate("city")!,

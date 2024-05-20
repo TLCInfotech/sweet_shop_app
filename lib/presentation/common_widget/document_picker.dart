@@ -102,7 +102,10 @@ class _PickDocumentState extends State<PickDocument> {
             ),
             GestureDetector(
               onTap: (){
-               getDocumentFile();
+              if(widget.readOnly==false){
+                var snackBar = SnackBar(content: Text('user not have a edit rights'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }else{ getDocumentFile();}
               },
               child: Padding(
                 padding:  EdgeInsets.only(right: (SizeConfig.screenWidth)*.0),

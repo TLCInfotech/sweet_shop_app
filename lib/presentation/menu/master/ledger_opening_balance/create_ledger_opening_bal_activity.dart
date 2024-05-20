@@ -20,9 +20,9 @@ import 'add_or_edit_ledger_opening_bal.dart';
 class CreateLedgerOpeningBal extends StatefulWidget {
   final CreateItemOpeningBalInterface mListener;
   final String dateNew;
+final readOnly;
 
-
-  const CreateLedgerOpeningBal({super.key, required this.dateNew, required this.mListener});
+  const CreateLedgerOpeningBal({super.key, required this.dateNew, required this.mListener, this.readOnly});
   @override
   State<CreateLedgerOpeningBal> createState() => _CreateItemOpeningBalState();
 }

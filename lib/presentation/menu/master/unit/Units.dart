@@ -120,7 +120,12 @@ class _UnitsActivityState extends State<UnitsActivity> {
                 color: Colors.black87,
               ),
               onPressed: () {
-                add_unit_layout(context);
+                setState(() {
+                  editedItem="";
+                  unitName.text="";
+                  mesuringText=" ";
+                });
+                add_unit_layout(context,true);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -179,7 +184,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                           mesuringText=measuring_unit[index];
                         });
 
-                        add_unit_layout(context);
+                        add_unit_layout(context,singleRecord['Update_Right']);
                       },
                       child: Card(
                         child: Row(
@@ -239,7 +244,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
   }
 
-  Future<dynamic> add_unit_layout(BuildContext context) {
+  Future<dynamic> add_unit_layout(BuildContext context,updateRight) {
     return  showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -286,7 +291,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                             }
                             return null;
                           },
-                          readOnly: singleRecord['Update_Right'],
+                          readOnly:updateRight ,
                           controller: unitName,
                           focuscontroller: null,
                           focusnext: null,
