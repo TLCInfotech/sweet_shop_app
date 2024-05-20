@@ -78,4 +78,5 @@ class ApiConstants {
   String userPermission="UserPermission";
   String allUserPermission="AllUserPermission";
   String userList="userList";
+  String getUserPermission="getUserPermission";
 }

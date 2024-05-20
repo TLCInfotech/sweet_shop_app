@@ -505,11 +505,11 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UserRightListActivity()));
-        /*    if(mounted){
+
+        if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }
-*/
       },
       onDoubleTap: (){},
       child: Padding(

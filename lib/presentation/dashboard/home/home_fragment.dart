@@ -60,6 +60,7 @@ class _HomeFragmentState extends State<HomeFragment> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getUserPermissions();
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
@@ -92,6 +93,7 @@ print("hfshjffhfbh  $dateString");
 
   late DateTime dateTime;
   String dateString="";
+
 
 
   callGetFranchiseeNot(int page) async {
@@ -135,6 +137,78 @@ print("hfshjffhfbh  $dateString");
       });
     }
     else{
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  getUserPermissions() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    String uid=await AppPreferences.getUId();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  if (mounted) {
+                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
+                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
+                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
+                  }
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
       CommonWidget.noInternetDialogNew(context);
     }
   }

@@ -127,7 +127,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
+                            Navigator.of(context).pushNamedAndRemoveUntil('/dashboard', (Route<dynamic> route) => false);
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
