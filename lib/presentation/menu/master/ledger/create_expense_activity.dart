@@ -252,7 +252,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                             )
                                 : Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("ledger_new")!,
+                                ApplicationLocalizations.of(context)!.translate("ledger")!,
                                 style: appbar_text_style,
                               ),
                             ),
@@ -275,7 +275,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                       child: getAllTextFormFieldLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Container(
+                widget.readOnly==false?Container():    Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -869,7 +869,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
               format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
               validation: (value) {
                 if (value!.isEmpty) {
-                  return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("outstanding_limit")! ;
+                  return ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("outstanding_limit")! ;
                 }
 
                 return null;
@@ -1855,10 +1855,7 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: widget.ledgerList!=null? Text(
-                      ApplicationLocalizations.of(context)!.translate("update")!,
-                      style: page_heading_textStyle,
-                    ): Text(
+                    child:Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),

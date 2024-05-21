@@ -67,7 +67,15 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
     return Stack(
       alignment: Alignment.center,
       children: [
-     widget.readOnly==true?   Container(
+     widget.readOnly==false?   SearchableLedgerDropdown(
+       apiUrl: ApiConstants().amount_type+"?" ,
+       titleIndicator: false,
+       ledgerName: selctedAmtType,
+       readOnly: widget.readOnly,
+       franchiseeName:selctedAmtType,
+       title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
+       callback: (name,id){
+       },):  Container(
             height: 45,
             width: double.parse(widget.width.toString()),
             margin: widget.width.toString()=="130"? EdgeInsets.only(left: 5,top:30): EdgeInsets.only(left: 5,top:10),
@@ -113,16 +121,8 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                       ),
                     );
                   }).toList(),
-            )):
-    SearchableLedgerDropdown(
-    apiUrl: ApiConstants().amount_type+"?" ,
-    titleIndicator: false,
-    ledgerName: selctedAmtType,
-    readOnly: widget.readOnly,
-    franchiseeName:selctedAmtType,
-    title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
-    callback: (name,id){
-    },),
+            )),
+
     Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
