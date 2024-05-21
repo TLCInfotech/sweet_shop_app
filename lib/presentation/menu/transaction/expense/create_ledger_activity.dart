@@ -490,9 +490,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                       editedItemIndex=index;
                     });
                     if(widget.readOnly==false){
-                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }else{
+                  }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -514,7 +512,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -542,13 +540,11 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                             child:
                                             Item_list[index]['Remark']!=null?Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,):Container(),
                                           ),
-
-
                                         ],
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
@@ -629,7 +625,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container():    GestureDetector(
           onTap: () {
             if(selectedFranchiseeId==""){
             var snackBar=SnackBar(content: Text("Select Franchisee Name !"));

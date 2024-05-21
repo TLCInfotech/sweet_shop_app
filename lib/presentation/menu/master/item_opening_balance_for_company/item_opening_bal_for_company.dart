@@ -388,7 +388,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -582,7 +582,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
               ],
             ),
           ),
-          GestureDetector(
+          singleRecord['Update_Right']==false&&singleRecord['Insert_Right']==false?Container():GestureDetector(
             onTap: ()async {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(

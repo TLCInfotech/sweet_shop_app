@@ -135,9 +135,7 @@ class _SingleLineEditableTextFormFieldState extends State<GetSingleImage> with  
             GestureDetector(
               onTap: () {
     if(widget.readOnly==false){
-    var snackBar = SnackBar(content: Text('user not have a edit rights'));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }else{
+ }else{
                 if (mounted) {
                   setState(() {
                     FocusScope.of(context).requestFocus(FocusNode());

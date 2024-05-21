@@ -287,37 +287,37 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container():GestureDetector(
           onTap: () {
-        /*    if(selectedLedgerId=="" ){
-              var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else */if(selectedFranchiseeId==""){
-              var snackBar=SnackBar(content: Text("Select Party Name !"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(Item_list.length==0){
-              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(/*selectedLedgerId!="" &&*/ selectedFranchiseeId!= " " && Item_list.length>0){
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
-              print(widget.Invoice_No);
-              if(widget.Invoice_No==null) {
-                print("#######");
-                callPostSaleInvoice();
-              }
-              else {
-                print("dfsdf");
-                updatecallPostSaleInvoice();
-              }
-            }
-
+    if(widget.readOnly==false){
+    Navigator.pop(context);
+    }else {
+      if (selectedFranchiseeId == "") {
+        var snackBar = SnackBar(content: Text("Select Party Name !"));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+      else if (Item_list.length == 0) {
+        var snackBar = SnackBar(content: Text("Add atleast one Item!"));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+      else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId != " " &&
+          Item_list.length > 0) {
+        if (mounted) {
+          setState(() {
+            disableColor = true;
+          });
+        }
+        print(widget.Invoice_No);
+        if (widget.Invoice_No == null) {
+          print("#######");
+          callPostSaleInvoice();
+        }
+        else {
+          print("dfsdf");
+          updatecallPostSaleInvoice();
+        }
+      }
+    }
           },
           onDoubleTap: () {},
           child: Container(
@@ -343,7 +343,8 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
               ],
             ),
           ),
-        ),
+        )
+       ,
       ],
     );
   }
@@ -448,9 +449,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                       editedItemIndex=index;
                     });
           if(widget.readOnly==false){
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }else{
+        }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -472,7 +471,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -493,7 +492,6 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                               Container(
                                                   alignment: Alignment.centerRight,
                                                   child: Text("${(Item_list[index]['Quantity'])}.00${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
-
                                               Container(
                                                 alignment: Alignment.centerLeft,
                                                 child:
@@ -505,7 +503,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,

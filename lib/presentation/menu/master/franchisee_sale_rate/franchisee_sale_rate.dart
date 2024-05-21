@@ -414,7 +414,7 @@ String companyId="";
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
                                   Expanded(
                                     child: Container(
@@ -638,7 +638,7 @@ String companyId="";
     return  SearchableLedgerDropdown(
         apiUrl:ApiConstants().item_category+"?",
         titleIndicator: false,
-        readOnly:singleRecord['Update_Right'] ,
+        readOnly:singleRecord['Update_Right']||singleRecord['Insert_Right'] ,
         title:  ApplicationLocalizations.of(context)!.translate("category")!,
         callback: (name,id){
 

@@ -329,9 +329,7 @@ bool isLoaderShow=false;
                       editedItemIndex=index;
                     });
           if(widget.readOnly==false){
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }else{
+        }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate));
@@ -353,7 +351,7 @@ bool isLoaderShow=false;
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -380,13 +378,11 @@ bool isLoaderShow=false;
                                             width: SizeConfig.screenWidth,
                                             child: Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                           ),
-
-
                                         ],
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
@@ -678,7 +674,7 @@ bool isLoaderShow=false;
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container():   GestureDetector(
           onTap: () {
             if(selectedBankLedgerID==null){
               var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));

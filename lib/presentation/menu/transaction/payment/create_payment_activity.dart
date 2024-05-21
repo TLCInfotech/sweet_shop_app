@@ -345,9 +345,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                       editedItemIndex=index;
                     });
           if(widget.readOnly==false){
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }else{
+       }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Ledger_list[index]);
@@ -369,7 +367,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -402,7 +400,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
@@ -580,7 +578,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             ],
           ),
         ),
-        GestureDetector(
+        widget.readOnly==false?Container():    GestureDetector(
           onTap: () {
               if(selectedBankLedgerID==null){
               var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));

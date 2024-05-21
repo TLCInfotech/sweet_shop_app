@@ -220,7 +220,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                       child: getAllTextFormFieldLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Container(
+                widget.readOnly==false?Container(): Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -1061,10 +1061,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child: widget.editItem!=null? Text(
-                      ApplicationLocalizations.of(context)!.translate("update")!,
-                      style: page_heading_textStyle,
-                    ): Text(
+                    child:  Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),

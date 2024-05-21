@@ -356,8 +356,6 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
 
                   });
                 }}else{
-                  var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                 }
               },
@@ -375,9 +373,6 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                       ),
                     ),
                   );}else{
-                 var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
                }
                 },
                 child: Container(

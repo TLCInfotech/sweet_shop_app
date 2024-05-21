@@ -307,10 +307,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate),selectedBankLedgerID,widget.companyId,"edit");
-                    }}else{
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -328,7 +325,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -362,6 +359,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                     ),
                                   ),
 
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
@@ -438,12 +436,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                // width:(SizeConfig.screenWidth),
                   child: getReceiptDateLayout()),
-
-              // SizedBox(width: 5,),
-              // Expanded(
-              //     child: getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
             ],
           ):Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -640,7 +633,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container(): GestureDetector(
           onTap: () {
             if(selectedBankLedgerID==null){
               var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));

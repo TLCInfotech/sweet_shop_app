@@ -294,7 +294,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -319,7 +319,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,
@@ -503,7 +503,7 @@ class _CreateItemOpeningBalState extends State<CreateLedgerOpeningBal> with Sing
               ],
             ),
           ),
-          GestureDetector(
+          widget.readOnly==false?Container():    GestureDetector(
             onTap: () async {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(

@@ -686,8 +686,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    editedItem!=null?ApplicationLocalizations.of(context)!.translate("update")!:
-                    ApplicationLocalizations.of(context)!.translate("save")!,
+                  ApplicationLocalizations.of(context)!.translate("save")!,
                     textAlign: TextAlign.center,
                     style: text_field_textStyle,
                   ),

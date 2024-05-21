@@ -285,37 +285,41 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container(): GestureDetector(
           onTap: () {
-            if(selectedLedgerId=="" ){
-              var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            if(widget.readOnly==false){
+              Navigator.pop(context);
+            }else {
+              if (selectedLedgerId == "") {
+                var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if (selectedFranchiseeId == "") {
+                var snackBar = SnackBar(content: Text("Select Party Name !"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if (Item_list.length == 0) {
+                var snackBar = SnackBar(content: Text("Add atleast one Item!"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if (selectedLedgerId != "" && selectedFranchiseeId != " " &&
+                  Item_list.length > 0) {
+                if (mounted) {
+                  setState(() {
+                    disableColor = true;
+                  });
+                }
+                print(widget.Invoice_No);
+                if (widget.Invoice_No == null) {
+                  print("#######");
+                  callPostSaleInvoice();
+                }
+                else {
+                  print("dfsdf");
+                  updatecallPostSaleInvoice();
+                }
+              }
             }
-            else if(selectedFranchiseeId==""){
-              var snackBar=SnackBar(content: Text("Select Party Name !"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(Item_list.length==0){
-              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-           else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
-             if (mounted) {
-               setState(() {
-                 disableColor = true;
-               });
-             }
-             print(widget.Invoice_No);
-             if(widget.Invoice_No==null) {
-               print("#######");
-               callPostSaleInvoice();
-             }
-             else {
-               print("dfsdf");
-               updatecallPostSaleInvoice();
-             }
-           }
-
           },
           onDoubleTap: () {},
           child: Container(
@@ -441,9 +445,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                       editedItemIndex=index;
                     });
           if(widget.readOnly==false){
-          var snackBar = SnackBar(content: Text('user not have a edit rights'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }else{
+       }else{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -465,7 +467,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -498,7 +500,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,

@@ -164,7 +164,7 @@ String oldUid="";
                             SizeConfig.screenHeight, SizeConfig.screenWidth),
                       )),
                 ),
-                Container(
+                widget.readOnly==false?Container():  Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -606,7 +606,7 @@ String oldUid="";
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
                     child:  Text(
-                     widget.editUser!=null?ApplicationLocalizations.of(context)!.translate("update")!: ApplicationLocalizations.of(context)!.translate("save")!,
+                      ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
                   ),

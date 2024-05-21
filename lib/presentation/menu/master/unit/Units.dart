@@ -198,7 +198,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                                   borderRadius: const BorderRadius.all(Radius.circular(10))
                               ),
                               alignment: Alignment.center,
-                              child: Text("${(index+1).toString().padLeft(2, '0')}",style: const TextStyle(),),
+                              child: Text("${(index+1).toString()}",style: const TextStyle(),),
                             ),
                             Expanded(
                                 child: Stack(
@@ -327,7 +327,33 @@ class _UnitsActivityState extends State<UnitsActivity> {
   }
 
   Widget getCloseButton(double parentHeight, double parentWidth){
-    return Padding(
+    return singleRecord['Update_Right']==false? GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      onDoubleTap: () {},
+      child: Container(
+        height:parentHeight*.05,
+        width: parentWidth*.90,
+        // width: SizeConfig.blockSizeVertical * 20.0,
+        decoration: const BoxDecoration(
+          color: CommonColor.HINT_TEXT,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+          ),
+        ),
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("close")!,
+              textAlign: TextAlign.center,
+              style: text_field_textStyle,
+            ),
+          ],
+        ),
+      ),
+    ): Padding(
       padding: EdgeInsets.only(left: parentWidth * .05, right: parentWidth * .05),
       child: Row(
         children: [

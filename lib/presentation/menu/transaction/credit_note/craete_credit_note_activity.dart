@@ -262,7 +262,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
             ],
           ),
         ):Container(),
-        GestureDetector(
+        widget.readOnly==false?Container():  GestureDetector(
           onTap: () {
             if(selectedLedgerId=="" ){
               var snackBar = SnackBar(content: Text('Select Account Ledger!'));
@@ -426,9 +426,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
                     }}else{
-                      var snackBar = SnackBar(content: Text('user not have a edit rights'));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }
+                   }
                   },
                   child: Card(
                     child: Row(
@@ -446,7 +444,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                                           borderRadius: BorderRadius.circular(15)
                                       ),
                                       alignment: Alignment.center,
-                                      child: Text("0${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
 
                                   Expanded(
@@ -479,7 +477,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,

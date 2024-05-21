@@ -225,13 +225,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                             child: const FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
-                            child:  widget.editItem!=null?
-                            Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("update")!+" "+ApplicationLocalizations.of(context)!.translate("franchisee")!,
-                                style: appbar_text_style,
-                              ),
-                            ) :Center(
+                            child:  Center(
                               child: Text(
                                 ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
                                 style: appbar_text_style,),
@@ -258,7 +252,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                 // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
-            Container(
+            widget.readOnly==false?Container():    Container(
                 decoration: BoxDecoration(
                   color: CommonColor.WHITE_COLOR,
                   border: Border(
@@ -324,12 +318,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child:widget.editItem!=null?
-                    Text(
-                      ApplicationLocalizations.of(context)!.translate("update")!,
-                      style: page_heading_textStyle,
-                    )
-                        :  Text(
+                    child: Text(
                       ApplicationLocalizations.of(context)!.translate("save")!,
                       style: page_heading_textStyle,
                     ),
@@ -832,7 +821,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         },
       )
         ),
-        AmountTypeDialog(mListener: this,  readOnly: widget.readOnly,
+        AmountTypeDialog(mListener: this,
           selectedType: selectedLimitUnit,width:130,)
         // Container(
         //   height: 50,
