@@ -142,7 +142,9 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   void initState() {
     // TODO: implement initState
     super.initState();
-    getData();
+    if(widget.ledgerList!=null) {
+      getData();
+    }
   }
   File? adharFile ;
   File? panFile ;
@@ -167,7 +169,7 @@ var ledgerData=null;
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               setState(()  {
-                isLoaderShow=false;
+
                 if(data!=null){
                   setState(() {
                     ledgerData=data;
@@ -239,9 +241,8 @@ var ledgerData=null;
       g = await CommonWidget.convertBytesToFile(ledgerData[0]['GST_Image']['data']);
     }
       setState(()  {
-      districtController.text=ledgerData[0]['District']!=""?ledgerData[0]['District'].toString(): "";
-      stateName=ledgerData[0]['State']!=""?ledgerData[0]['State']:"";
-
+      districtController.text=ledgerData[0]['District']!=null?ledgerData[0]['District'].toString(): "";
+      stateName=ledgerData[0]['State']!=null?ledgerData[0]['State']:"";
       picImageBytes=(ledgerData[0]['Photo']!=null && ledgerData[0]['Photo']['data']!=null && ledgerData[0]['Photo']['data'].length>10)?(ledgerData[0]['Photo']['data']).whereType<int>().toList():[];
       picImage=f!=null?f:picImage;
       adharImageBytes=(ledgerData[0]['Adhar_Card_Image']!=null&&ledgerData[0]['Adhar_Card_Image']['data']!=null && ledgerData[0]['Adhar_Card_Image']['data'].length>10)?(ledgerData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
@@ -277,6 +278,7 @@ var ledgerData=null;
       aCHolderNameController.text=ledgerData[0]['AC_Holder_Name']!=null?ledgerData[0]['AC_Holder_Name'].toString(): aCHolderNameController.text;
       taxTypeName=ledgerData[0]['Tax_Type']!=null?ledgerData[0]['Tax_Type'].toString(): taxTypeName;
       taxCategoryName=ledgerData[0]['Tax_Category']!=null?ledgerData[0]['Tax_Category'].toString(): taxTypeName;
+      isLoaderShow=false;
       });
   }
 }
@@ -383,7 +385,7 @@ var ledgerData=null;
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -689,7 +691,7 @@ var ledgerData=null;
             apiUrl:ApiConstants().ledger_group+"?",
             franchisee: widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
-            franchiseeName: widget.ledgerList!=null && widget.ledgerList['Group_Name']!=null?widget.ledgerList['Group_Name']:"",
+            franchiseeName: widget.ledgerList!=null && ledgerData!=null?ledgerData[0]['Group_Name']:"",
             title:  ApplicationLocalizations.of(context)!.translate("ledger_group")!,
             callback: (name,id){
               setState(() {
@@ -1049,7 +1051,7 @@ var ledgerData=null;
       child: Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
           child:  SearchableDropdownWithObjectForTax(
-            name:widget.ledgerList!=null && widget.ledgerList['Tax_Type']!=null?widget.ledgerList['Tax_Type']:"",
+            name:widget.ledgerList!=null && ledgerData!=null?ledgerData[0]['Tax_Type']:"",
             status:   widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_type+"?",
@@ -1297,7 +1299,7 @@ var ledgerData=null;
       child: Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
           child:  SearchableDropdownWithObjectForTax(
-            name:widget.ledgerList!=null && widget.ledgerList['Tax_Category']!=null? widget.ledgerList['Tax_Category']:"",
+            name:widget.ledgerList!=null && ledgerData!=null? ledgerData[0]['Tax_Category']:"",
             status:   widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_category+"?",
@@ -1535,8 +1537,8 @@ var ledgerData=null;
           readOnly: widget.readOnly,
           apiUrl:ApiConstants().city+"?",
           ledgerName: districtController.text,
-          franchiseeName:widget.ledgerList!=null && widget.ledgerList['District']!=null?widget.ledgerList['District'].toString(): "",
-          franchisee: widget.ledgerList!=null&& widget.ledgerList['District']!=null?"edit":"",
+          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['District'].toString(): "",
+          franchisee: widget.ledgerList!=null&& ledgerData!=null?"edit":"",
           title:  ApplicationLocalizations.of(context)!.translate("city")!,
           callback: (name){
             setState(() {
@@ -1578,8 +1580,8 @@ var ledgerData=null;
 
             print(stateName);
           },
-          franchiseeName:widget.ledgerList!=null && widget.ledgerList['State']!=null?widget.ledgerList['State'].toString(): "",
-          franchisee:  widget.ledgerList!=null &&  widget.ledgerList['State']!=null?"edit":"",
+          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['State'].toString(): "",
+          franchisee:  widget.ledgerList!=null &&  ledgerData!=null?"edit":"",
           ledgerName: stateName),
     );
 
@@ -1641,8 +1643,8 @@ var ledgerData=null;
 
             print(countryName);
           },
-          franchiseeName: widget.ledgerList!=null&&widget.ledgerList['Country']!=null?widget.ledgerList['Country'].toString(): "",
-          franchisee:  widget.ledgerList!=null &&widget.ledgerList['Country']!=null?"edit":"",
+          franchiseeName: widget.ledgerList!=null&&ledgerData!=null?ledgerData[0]['Country'].toString(): "",
+          franchisee:  widget.ledgerList!=null?"edit":"",
           ledgerName: countryName),
     );
 

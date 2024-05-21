@@ -67,7 +67,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     print("gggggg ${widget.status}");
     if(widget.status=="edit"){
       print(":::::: ${widget.name}");
-      _controller.text=widget.name;
+      _controller.text=widget.name!=null?widget.name:"";
     }
   }
   List<dynamic> ledger_list = [];

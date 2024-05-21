@@ -208,6 +208,9 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
               ledgerList: item,
               readOnly:singleRecord['Update_Right'],
             )));
+            setState(() {
+              page=0;
+            });
             await callGetLedger(0);
         },
         ledgerName: selectedLedgerName);
@@ -266,10 +269,9 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                           readOnly:singleRecord['Update_Right'],
                         )));
                         setState(() {
-                          ledgerList=[];
                           page=1;
                         });
-                         callGetLedger(page);
+                         await callGetLedger(page);
                       },
                       child: Card(
                         child: Row(
