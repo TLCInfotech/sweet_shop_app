@@ -183,7 +183,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
-    return SearchableLedgerDropdown(
+    return isLoaderShow?Container():SearchableLedgerDropdown(
         apiUrl: "${ApiConstants().ledgerWithoutImage}?",
         titleIndicator: true,
         title: ApplicationLocalizations.of(context)!.translate("ledger")!,
@@ -208,10 +208,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
               ledgerList: item,
               readOnly:singleRecord['Update_Right'],
             )));
-            setState(() {
-              selectedLedgerName="";
-              selectedLedgerId="";
-            });
+            await callGetLedger(0);
         },
         ledgerName: selectedLedgerName);
   }

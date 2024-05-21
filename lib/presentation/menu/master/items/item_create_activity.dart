@@ -22,6 +22,7 @@ import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/item/put_item_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
@@ -75,38 +76,112 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setData();
+    if(widget.editItem!=null)
+    getData();
+  }
+  var itemData=null;
+  bool isApiCall = false;
+
+  getData()async{
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().item}/${widget.editItem['ID']}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              setState(()  {
+
+                if(data!=null){
+                  setState(() {
+                    itemData=data;
+                  });
+                  print("%%%%%%%%%%%%%%%%%%%%% $itemData");
+
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              await setData();
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
   setData()async{
     print(widget.editItem);
+    print("&&&&&&&&&&&&&&&&&&&&& ${itemData[0]['Unit']}");
     if(widget.editItem!=null){
       File ?f=null;
-      if(widget.editItem['Photo']!=null&&widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10) {
-        f = await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      if(itemData[0]['Photo']!=null&&itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(itemData[0]['Photo']['data']);
       }
 
       setState(()  {
         picImage=f;
-        itemNameController.text=widget.editItem['Name'];
-        categoryName=widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:categoryName;
-        categoryId=widget.editItem['Category_ID']!=null?widget.editItem['Category_ID']:categoryId;
-         unitTwoId=widget.editItem['Unit2']!=null?widget.editItem['Unit2']:unitTwoId;
-          unitTwofactorController.text=widget.editItem['Unit2_Factor']!=null?(widget.editItem['Unit2_Factor']).toString():unitTwofactorController.text;
-           unitTwoBaseController.text=widget.editItem['Unit2_Base']!=null?(widget.editItem['Unit2_Base']).toString():unitTwoBaseController.text;
-          unitThreeId=widget.editItem['Unit3']!=null?widget.editItem['Unit3']:unitThreeId;
-         unitThreeBaseController.text=widget.editItem['Unit3_Base']!=null?(widget.editItem['Unit3_Base']).toString():unitThreeBaseController.text;
-         unitThreefactorController.text=widget.editItem['Unit3_Factor']!=null?(widget.editItem['Unit3_Factor']).toString():unitTwofactorController.text;
-         packSizeController.text=widget.editItem['Pack_Size']!=null?(widget.editItem['Pack_Size']).toString():packSizeController.text;
-        rateController.text=widget.editItem['Rate']!=null?(widget.editItem['Rate']).toString():rateController.text;
-         minController.text=widget.editItem['Min_Stock']!=null?(widget.editItem['Min_Stock']).toString():minController.text;
-        maxController.text=widget.editItem['Max_Stock']!=null?(widget.editItem['Max_Stock']).toString():maxController.text;
-        hsnNoController.text=widget.editItem['HSN_No']!=null?widget.editItem['HSN_No']:hsnNoController.text;
-        extNameController.text=widget.editItem['Ext_Name']!=null?widget.editItem['Ext_Name']:extNameController.text;
-        defaultStoreController.text=widget.editItem['Default_Store']!=null?widget.editItem['Default_Store']:defaultStoreController.text;
-         descController.text=widget.editItem['Detail_Desc']!=null?widget.editItem['Detail_Desc']:descController.text;
-         measuringUnit=widget.editItem['Unit']!=null?widget.editItem['Unit']:"";
+        itemNameController.text=itemData[0]['Name'];
+        categoryName=itemData[0]['Category_Name']!=null?itemData[0]['Category_Name']:categoryName;
+        categoryId=itemData[0]['Category_ID']!=null?itemData[0]['Category_ID']:categoryId;
+         unitTwoId=itemData[0]['Unit2']!=null?itemData[0]['Unit2']:unitTwoId;
+          unitTwofactorController.text=itemData[0]['Unit2_Factor']!=null?(itemData[0]['Unit2_Factor']).toString():unitTwofactorController.text;
+           unitTwoBaseController.text=itemData[0]['Unit2_Base']!=null?(itemData[0]['Unit2_Base']).toString():unitTwoBaseController.text;
+          unitThreeId=itemData[0]['Unit3']!=null?itemData[0]['Unit3']:unitThreeId;
+         unitThreeBaseController.text=itemData[0]['Unit3_Base']!=null?(itemData[0]['Unit3_Base']).toString():unitThreeBaseController.text;
+         unitThreefactorController.text=itemData[0]['Unit3_Factor']!=null?(itemData[0]['Unit3_Factor']).toString():unitTwofactorController.text;
+         packSizeController.text=itemData[0]['Pack_Size']!=null?(itemData[0]['Pack_Size']).toString():packSizeController.text;
+        rateController.text=itemData[0]['Rate']!=null?(itemData[0]['Rate']).toString():rateController.text;
+         minController.text=itemData[0]['Min_Stock']!=null?(itemData[0]['Min_Stock']).toString():minController.text;
+        maxController.text=itemData[0]['Max_Stock']!=null?(itemData[0]['Max_Stock']).toString():maxController.text;
+        hsnNoController.text=itemData[0]['HSN_No']!=null?itemData[0]['HSN_No']:hsnNoController.text;
+        extNameController.text=itemData[0]['Ext_Name']!=null?itemData[0]['Ext_Name']:extNameController.text;
+        defaultStoreController.text=itemData[0]['Default_Store']!=null?itemData[0]['Default_Store']:defaultStoreController.text;
+         descController.text=itemData[0]['Detail_Desc']!=null?itemData[0]['Detail_Desc']:descController.text;
+         measuringUnit=itemData[0]['Unit']!=""?itemData[0]['Unit']:"";
+        isLoaderShow=false;
       });
+
     }
   }
 
@@ -355,7 +430,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -446,7 +521,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           apiUrl:ApiConstants().item_category+"?",
           franchisee: widget.editItem!=null?"edit":"",
           readOnly: widget.readOnly,
-          franchiseeName: widget.editItem!=null && widget.editItem['Category_Name']!=null?widget.editItem['Category_Name']:"",
+          franchiseeName: widget.editItem!=null && itemData!=null?itemData[0]['Category_Name']:"",
           title:  ApplicationLocalizations.of(context)!.translate("category")!,
           callback: (name,id){
 
@@ -491,8 +566,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
             print(measuringUnit);
           },
-          franchiseeName: widget.editItem!=null&&widget.editItem['Unit']!=null?widget.editItem['Unit'].toString():"",
-          franchisee:widget.editItem!=null&&widget.editItem['Unit']!=null?"edit":"",
+          franchiseeName: widget.editItem!=null&& itemData!=null?itemData[0]['Unit']:"",
+          franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
           ledgerName: measuringUnit),
     );
 
@@ -532,8 +607,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
                   print(unitTwoName);
                 },
-                franchiseeName: widget.editItem!=null&&widget.editItem['Unit2']!=null?widget.editItem['Unit2'].toString():"",
-                franchisee:widget.editItem!=null&&widget.editItem['Unit2']!=null?"edit":"",
+                franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Unit2'].toString():"",
+                franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
                 ledgerName: unitTwoName),
           ),
        //    GetUnitLayout(
@@ -680,8 +755,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
                   print(unitThreeName);
                 },
-                franchiseeName: widget.editItem!=null&&widget.editItem['Unit3']!=null?widget.editItem['Unit3'].toString():"",
-                franchisee:widget.editItem!=null&&widget.editItem['Unit3']!=null?"edit":"",
+                franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Unit3'].toString():"",
+                franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
                 ledgerName: unitThreeName),
           ),
           Container(

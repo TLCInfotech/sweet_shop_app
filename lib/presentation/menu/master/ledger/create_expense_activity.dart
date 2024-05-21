@@ -239,6 +239,9 @@ var ledgerData=null;
       g = await CommonWidget.convertBytesToFile(ledgerData[0]['GST_Image']['data']);
     }
       setState(()  {
+      districtController.text=ledgerData[0]['District']!=""?ledgerData[0]['District'].toString(): "";
+      stateName=ledgerData[0]['State']!=""?ledgerData[0]['State']:"";
+
       picImageBytes=(ledgerData[0]['Photo']!=null && ledgerData[0]['Photo']['data']!=null && ledgerData[0]['Photo']['data'].length>10)?(ledgerData[0]['Photo']['data']).whereType<int>().toList():[];
       picImage=f!=null?f:picImage;
       adharImageBytes=(ledgerData[0]['Adhar_Card_Image']!=null&&ledgerData[0]['Adhar_Card_Image']['data']!=null && ledgerData[0]['Adhar_Card_Image']['data'].length>10)?(ledgerData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];

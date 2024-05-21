@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
@@ -21,6 +22,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class ItemsActivity extends StatefulWidget {
@@ -80,6 +82,50 @@ Future<void> refreshList() async {
 
 }
 
+  String selectedItemName="";
+  String selectedItemId="";
+  
+/* Widget to get sale ledger Name Layout */
+  Widget getItemSearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("item")!,
+        franchiseeName: selectedItemName!=""? selectedItemName:"",
+        franchisee:selectedItemName,
+        callback: (name,id)async{
+          setState(() {
+            selectedItemName = name!;
+            selectedItemId = id!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedItemId);
+          var item={
+            "Name":name,
+            "ID":id
+          };
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(
+              editItem: item,
+              readOnly:singleRecord['Update_Right']
+          )));
+          setState(() {
+            page=1;
+          });
+          await callGetItem(page);
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+        ledgerName: selectedItemName);
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -152,6 +198,7 @@ Future<void> refreshList() async {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getItemSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -220,7 +267,8 @@ Expanded get_items_list_layout() {
                     child: GestureDetector(
                       onTap: ()async{
 
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: itemList[index],
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(
+                            editItem: itemList[index],
                         readOnly:singleRecord['Update_Right']
                         )));
                         setState(() {
@@ -321,7 +369,7 @@ Expanded get_items_list_layout() {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredItem}?Company_ID=$companyId&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
