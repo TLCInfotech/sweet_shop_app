@@ -171,9 +171,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-
-                    get_users_list_layout()
+                    get_users_list_layout() 
                   ],
                 ),
               ),

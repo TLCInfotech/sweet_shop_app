@@ -79,4 +79,6 @@ class ApiConstants {
   String allUserPermission="AllUserPermission";
   String userList="userList";
   String getUserPermission="getUserPermission";
+  String getFilteredLedger="FilteredLedger";
+  String getLedger="Ledger";
 }

@@ -21,6 +21,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class ExpenseListingActivity extends StatefulWidget {
@@ -146,6 +147,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 )));
                 setState(() {
                   page=1;
+
                 });
                 await callGetLedger(page);
               }):Container(),
@@ -157,8 +159,9 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
-                      height: .5,
+                      height: .10,
                     ),
                     get_items_list_layout()
                   ],
@@ -174,6 +177,43 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
+  }
+  String selectedLedgerName="";
+  String selectedLedgerId="";
+
+  /* Widget to get sale ledger Name Layout */
+  Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
+    return SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().ledgerWithoutImage}?",
+        titleIndicator: true,
+        title: ApplicationLocalizations.of(context)!.translate("ledger")!,
+        franchiseeName: selectedLedgerName!=""? selectedLedgerName:"",
+        franchisee:selectedLedgerName,
+        callback: (name,id)async{
+            setState(() {
+              selectedLedgerName = name!;
+              selectedLedgerId = id!;
+              // Item_list=[];
+              // Updated_list=[];
+              // Deleted_list=[];
+              // Inserted_list=[];
+            });
+          print(selectedLedgerId);
+          var item={
+            "Name":name,
+            "ID":id
+          };
+            await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+              mListener: this,
+              ledgerList: item,
+              readOnly:singleRecord['Update_Right'],
+            )));
+            setState(() {
+              selectedLedgerName="";
+              selectedLedgerId="";
+            });
+        },
+        ledgerName: selectedLedgerName);
   }
 /*widget for no data*/
   Widget getNoData(double parentHeight,double parentWidth){
@@ -325,7 +365,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredLedger}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

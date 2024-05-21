@@ -18,6 +18,7 @@ import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/ledger/post_ledger_request_model.dart';
 import '../../../../data/domain/ledger/put_ledger_request_model.dart';
 import '../../../common_widget/get_country_layout.dart';
@@ -141,68 +142,138 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   void initState() {
     // TODO: implement initState
     super.initState();
-    setData();
+    getData();
   }
   File? adharFile ;
   File? panFile ;
   File? gstFile ;
+var ledgerData=null;
+
+  getData()async{
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getLedger}/${widget.ledgerList['ID']}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              setState(()  {
+                isLoaderShow=false;
+                if(data!=null){
+                  setState(() {
+                    ledgerData=data;
+                  });
+                  print("%%%%%%%%%%%%%%%%%%%%% $ledgerData");
+             
+                }else{
+                  isApiCall=true;
+                }
+              
+              });
+              await setData();
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
   setData()async{
   if(widget.ledgerList!=null){
-    print("#############");
-    print(widget.ledgerList);
+    // await getData();
+    print("#############123");
+    print(ledgerData[0]);
     File ?f=null;
     File ?a=null;
     File ?p=null;
     File ?g=null;
-    if(widget.ledgerList['Photo']!=null&&widget.ledgerList['Photo']['data']!=null && widget.ledgerList['Photo']['data'].length>10) {
-      f = await CommonWidget.convertBytesToFile(widget.ledgerList['Photo']['data']);
+    if(ledgerData[0]['Photo']!=null&&ledgerData[0]['Photo']['data']!=null && ledgerData[0]['Photo']['data'].length>10) {
+      f = await CommonWidget.convertBytesToFile(ledgerData[0]['Photo']['data']);
     }
-    if(widget.ledgerList['Adhar_Card_Image']!=null&&widget.ledgerList['Adhar_Card_Image']['data']!=null && widget.ledgerList['Adhar_Card_Image']['data'].length>10) {
-      a = await CommonWidget.convertBytesToFile(widget.ledgerList['Adhar_Card_Image']['data']);
+    if(ledgerData[0]['Adhar_Card_Image']!=null&&ledgerData[0]['Adhar_Card_Image']['data']!=null && ledgerData[0]['Adhar_Card_Image']['data'].length>10) {
+      a = await CommonWidget.convertBytesToFile(ledgerData[0]['Adhar_Card_Image']['data']);
     }
-    if(widget.ledgerList['PAN_Card_Image']!=null&&widget.ledgerList['PAN_Card_Image']['data']!=null && widget.ledgerList['PAN_Card_Image']['data'].length>10) {
-      p = await CommonWidget.convertBytesToFile(widget.ledgerList['PAN_Card_Image']['data']);
+    if(ledgerData[0]['PAN_Card_Image']!=null&&ledgerData[0]['PAN_Card_Image']['data']!=null && ledgerData[0]['PAN_Card_Image']['data'].length>10) {
+      p = await CommonWidget.convertBytesToFile(ledgerData[0]['PAN_Card_Image']['data']);
     }
-    if(widget.ledgerList['GST_Image']!=null&&widget.ledgerList['GST_Image']['data']!=null && widget.ledgerList['GST_Image']['data'].length>10) {
-      g = await CommonWidget.convertBytesToFile(widget.ledgerList['GST_Image']['data']);
+    if(ledgerData[0]['GST_Image']!=null&&ledgerData[0]['GST_Image']['data']!=null && ledgerData[0]['GST_Image']['data'].length>10) {
+      g = await CommonWidget.convertBytesToFile(ledgerData[0]['GST_Image']['data']);
     }
       setState(()  {
-      picImageBytes=(widget.ledgerList['Photo']!=null && widget.ledgerList['Photo']['data']!=null && widget.ledgerList['Photo']['data'].length>10)?(widget.ledgerList['Photo']['data']).whereType<int>().toList():[];
+      picImageBytes=(ledgerData[0]['Photo']!=null && ledgerData[0]['Photo']['data']!=null && ledgerData[0]['Photo']['data'].length>10)?(ledgerData[0]['Photo']['data']).whereType<int>().toList():[];
       picImage=f!=null?f:picImage;
-      adharImageBytes=(widget.ledgerList['Adhar_Card_Image']!=null&&widget.ledgerList['Adhar_Card_Image']['data']!=null && widget.ledgerList['Adhar_Card_Image']['data'].length>10)?(widget.ledgerList['Adhar_Card_Image']['data']).whereType<int>().toList():[];
+      adharImageBytes=(ledgerData[0]['Adhar_Card_Image']!=null&&ledgerData[0]['Adhar_Card_Image']['data']!=null && ledgerData[0]['Adhar_Card_Image']['data'].length>10)?(ledgerData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
       adharFile=a!=null?a:adharFile;
-      panImageBytes=(widget.ledgerList['PAN_Card_Image']!=null&&widget.ledgerList['PAN_Card_Image']['data']!=null && widget.ledgerList['PAN_Card_Image']['data'].length>10)?(widget.ledgerList['PAN_Card_Image']['data']).whereType<int>().toList():[];
+      panImageBytes=(ledgerData[0]['PAN_Card_Image']!=null&&ledgerData[0]['PAN_Card_Image']['data']!=null && ledgerData[0]['PAN_Card_Image']['data'].length>10)?(ledgerData[0]['PAN_Card_Image']['data']).whereType<int>().toList():[];
       panFile=p!=null?p:panFile;
-      gstImageBytes=(widget.ledgerList['GST_Image']!=null&&widget.ledgerList['GST_Image']['data']!=null && widget.ledgerList['GST_Image']['data'].length>10)?(widget.ledgerList['GST_Image']['data']).whereType<int>().toList():[];
+      gstImageBytes=(ledgerData[0]['GST_Image']!=null&&ledgerData[0]['GST_Image']['data']!=null && ledgerData[0]['GST_Image']['data'].length>10)?(ledgerData[0]['GST_Image']['data']).whereType<int>().toList():[];
       gstFile=g!=null?g:gstFile;
-      parentCategory= widget.ledgerList['Group_Name'];
-      parentCategoryId= widget.ledgerList['Group_ID'].toString();
-      nameController.text= widget.ledgerList['Name'];
-      contactPersonController.text=  widget.ledgerList['Contact_Person']!=null?widget.ledgerList['Contact_Person']:contactPersonController.text;
-      addressController.text= widget.ledgerList['Address']!=null?widget.ledgerList['Address']:addressController.text;
-      pinCodeController.text= widget.ledgerList['Pin_Code']!=null?widget.ledgerList['Pin_Code']:pinCodeController.text;
-      contactController.text=  widget.ledgerList['Contact_No']!=null?widget.ledgerList['Contact_No']:contactController.text;
-      emailController.text= widget.ledgerList['EMail']!=null?widget.ledgerList['EMail']: emailController.text;
-      outstandingLimitController.text= widget.ledgerList['Outstanding_Limit']!=null?widget.ledgerList['Outstanding_Limit'].toString():outstandingLimitController.text;
-      selectedLimitUnit= widget.ledgerList['Outstanding_Limit_Type']!=null?widget.ledgerList['Outstanding_Limit_Type'].toString():selectedLimitUnit;
-      extNameController.text=widget.ledgerList['Ext_Name']!=null?widget.ledgerList['Ext_Name'].toString(): extNameController.text;
-      adharNoController.text=widget.ledgerList['Adhar_No']!=null?widget.ledgerList['Adhar_No'].toString():adharNoController.text;
-      panNoController.text=widget.ledgerList['PAN_No']!=null?widget.ledgerList['PAN_No'].toString():panNoController.text;
-      gstNoController.text=widget.ledgerList['GST_No']!=null?widget.ledgerList['GST_No'].toString():gstNoController.text;
-      hsnNoController.text=widget.ledgerList['HSN_No']!=null?widget.ledgerList['HSN_No'].toString():hsnNoController.text;
-      taxRateController.text=widget.ledgerList['Tax_Rate']!=null?widget.ledgerList['Tax_Rate'].toString():taxRateController.text;
-      CGSTController.text=widget.ledgerList['CGST_Rate']!=null?widget.ledgerList['CGST_Rate'].toString():CGSTController.text;
-      SGSTController.text=widget.ledgerList['SGST_Rate']!=null?widget.ledgerList['SGST_Rate'].toString():SGSTController.text;
-      cessController.text=widget.ledgerList['Cess_Rate']!=null?widget.ledgerList['Cess_Rate'].toString():cessController.text;
-      addCessController.text=widget.ledgerList['Add_Cess_Rate']!=null?widget.ledgerList['Add_Cess_Rate'].toString():addCessController.text;
-      bankNameController.text=widget.ledgerList['Bank_Name']!=null?widget.ledgerList['Bank_Name'].toString():bankNameController.text;
-      bankBranchController.text=widget.ledgerList['Bank_Branch']!=null?widget.ledgerList['Bank_Branch'].toString():bankBranchController.text;
-      IFSCCodeController.text=widget.ledgerList['IFSC_Code']!=null?widget.ledgerList['IFSC_Code'].toString():IFSCCodeController.text;
-      accountNoController.text=widget.ledgerList['Account_No']!=null?widget.ledgerList['Account_No'].toString():accountNoController.text;
-      aCHolderNameController.text=widget.ledgerList['AC_Holder_Name']!=null?widget.ledgerList['AC_Holder_Name'].toString(): aCHolderNameController.text;
-      taxTypeName=widget.ledgerList['Tax_Type']!=null?widget.ledgerList['Tax_Type'].toString(): taxTypeName;
-      taxCategoryName=widget.ledgerList['Tax_Category']!=null?widget.ledgerList['Tax_Category'].toString(): taxTypeName;
+      parentCategory= ledgerData[0]['Group_Name'];
+      parentCategoryId= ledgerData[0]['Group_ID'].toString();
+      nameController.text= ledgerData[0]['Name'];
+      contactPersonController.text=  ledgerData[0]['Contact_Person']!=null?ledgerData[0]['Contact_Person']:contactPersonController.text;
+      addressController.text= ledgerData[0]['Address']!=null?ledgerData[0]['Address']:addressController.text;
+      pinCodeController.text= ledgerData[0]['Pin_Code']!=null?ledgerData[0]['Pin_Code']:pinCodeController.text;
+      contactController.text=  ledgerData[0]['Contact_No']!=null?ledgerData[0]['Contact_No']:contactController.text;
+      emailController.text= ledgerData[0]['EMail']!=null?ledgerData[0]['EMail']: emailController.text;
+      outstandingLimitController.text= ledgerData[0]['Outstanding_Limit']!=null?ledgerData[0]['Outstanding_Limit'].toString():outstandingLimitController.text;
+      selectedLimitUnit= ledgerData[0]['Outstanding_Limit_Type']!=null?ledgerData[0]['Outstanding_Limit_Type'].toString():selectedLimitUnit;
+      extNameController.text=ledgerData[0]['Ext_Name']!=null?ledgerData[0]['Ext_Name'].toString(): extNameController.text;
+      adharNoController.text=ledgerData[0]['Adhar_No']!=null?ledgerData[0]['Adhar_No'].toString():adharNoController.text;
+      panNoController.text=ledgerData[0]['PAN_No']!=null?ledgerData[0]['PAN_No'].toString():panNoController.text;
+      gstNoController.text=ledgerData[0]['GST_No']!=null?ledgerData[0]['GST_No'].toString():gstNoController.text;
+      hsnNoController.text=ledgerData[0]['HSN_No']!=null?ledgerData[0]['HSN_No'].toString():hsnNoController.text;
+      taxRateController.text=ledgerData[0]['Tax_Rate']!=null?ledgerData[0]['Tax_Rate'].toString():taxRateController.text;
+      CGSTController.text=ledgerData[0]['CGST_Rate']!=null?ledgerData[0]['CGST_Rate'].toString():CGSTController.text;
+      SGSTController.text=ledgerData[0]['SGST_Rate']!=null?ledgerData[0]['SGST_Rate'].toString():SGSTController.text;
+      cessController.text=ledgerData[0]['Cess_Rate']!=null?ledgerData[0]['Cess_Rate'].toString():cessController.text;
+      addCessController.text=ledgerData[0]['Add_Cess_Rate']!=null?ledgerData[0]['Add_Cess_Rate'].toString():addCessController.text;
+      bankNameController.text=ledgerData[0]['Bank_Name']!=null?ledgerData[0]['Bank_Name'].toString():bankNameController.text;
+      bankBranchController.text=ledgerData[0]['Bank_Branch']!=null?ledgerData[0]['Bank_Branch'].toString():bankBranchController.text;
+      IFSCCodeController.text=ledgerData[0]['IFSC_Code']!=null?ledgerData[0]['IFSC_Code'].toString():IFSCCodeController.text;
+      accountNoController.text=ledgerData[0]['Account_No']!=null?ledgerData[0]['Account_No'].toString():accountNoController.text;
+      aCHolderNameController.text=ledgerData[0]['AC_Holder_Name']!=null?ledgerData[0]['AC_Holder_Name'].toString(): aCHolderNameController.text;
+      taxTypeName=ledgerData[0]['Tax_Type']!=null?ledgerData[0]['Tax_Type'].toString(): taxTypeName;
+      taxCategoryName=ledgerData[0]['Tax_Category']!=null?ledgerData[0]['Tax_Category'].toString(): taxTypeName;
       });
   }
 }
