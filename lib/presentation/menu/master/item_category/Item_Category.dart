@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_dropdown_with_object.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -82,7 +83,46 @@ bool isLoaderShow=false;
     await callGetItemCategory(page);
 
   }
+  var selectedCategoryName=null;
+/* Widget to get sale ledger Name Layout */
+  Widget getCategorySearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableDropdownWithObject(
+        apiUrl: "${ApiConstants().item_category}?",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("item_category")!,
+        // franchiseeName: selectedCategoryName!=""? selectedCategoryName:"",
+        // franchisee:selectedCategoryName,
+        callback: (item)async{
+          setState(() {
+            selectedCategoryName=item;
+            page=1;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
 
+            setState(() {
+            editedItem=selectedCategoryName;
+            categoryName.text=selectedCategoryName['Name'];
+            parentCategory=selectedCategoryName['Parent_Name']==null?"":selectedCategoryName['Parent_Name'];
+            parentCategoryId=selectedCategoryName['Parent_ID']==null?0:selectedCategoryName['Parent_ID'];
+            seqNo.text=selectedCategoryName['Seq_No']!=null?selectedCategoryName['Seq_No'].toString():"";
+          });
+          await  add_category_layout(context,singleRecord['Update_Right']);
+
+          await callGetItemCategory(page);
+
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+      name: selectedCategoryName,);
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -159,8 +199,9 @@ bool isLoaderShow=false;
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getCategorySearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
-                      height: .5,
+                      height: 10,
                     ),
                     get_category_items_list_layout()
 

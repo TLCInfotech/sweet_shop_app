@@ -20,6 +20,8 @@ import '../../../../data/domain/measuring_unit/post_measuring_unit_request_model
 import '../../../../data/domain/measuring_unit/put_measuring_unit_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
 
 class UnitsActivity extends StatefulWidget {
@@ -61,6 +63,51 @@ class _UnitsActivityState extends State<UnitsActivity> {
     await Future.delayed(Duration(seconds: 2));
     await getMeasuringUnit();
   }
+
+
+  String selectedUnitName="";
+  String selectedUnitId="";
+/* Widget to get sale ledger Name Layout */
+  Widget getFranchiseeSearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableDropdownForStringArray(
+        apiUrl: "${ApiConstants().measuring_unit}?",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("unit")!,
+        franchiseeName: selectedUnitName!=""? selectedUnitName:"",
+        franchisee:selectedUnitName,
+        callback: (name)async{
+          setState(() {
+            selectedUnitName = name!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedUnitId);
+
+              setState(() {
+            editedItem=name;
+            unitName.text=name!;
+            mesuringText=name!;
+          });
+
+         await add_unit_layout(context,singleRecord['Update_Right']);
+         setState(() {
+           selectedUnitName="";
+         });
+         await  getMeasuringUnit();
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+        ledgerName: selectedUnitName);
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -135,8 +182,9 @@ class _UnitsActivityState extends State<UnitsActivity> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getFranchiseeSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
                     get_unit_list_layout()
                   ],

@@ -20,6 +20,7 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'create_item_opening_bal_activity.dart';
 
 class ItemOpeningBal extends StatefulWidget {
@@ -42,6 +43,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> Franchisee_list=[];
   bool isApiCall=false;
+
   callGetFranchiseeItemOpeningList(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -150,6 +152,54 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     await   callGetFranchiseeItemOpeningList(1);
   }
   final ScrollController _scrollController =  ScrollController();
+
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+/* Widget to get sale ledger Name Layout */
+  Widget getFranchiseeSearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().getFetchFranchiseeName}?Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("franchisee")!,
+        franchiseeName: selectedFranchiseeName!=""? selectedFranchiseeName:"",
+        franchisee:selectedFranchiseeName,
+        callback: (name,id)async{
+          setState(() {
+            selectedFranchiseeName = name!;
+            selectedFranchiseeId = id!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedFranchiseeId);
+          var item={
+            "Name":name,
+            "Franchisee_ID":id
+          };
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateItemOpeningBal(
+            dateNew:invoiceDate,
+            editedItem:item,
+            compId:companyId ,
+            come:"edit",
+            readOnly: singleRecord['Update_Right'],
+            //DateFormat('dd-MM-yyyy').format(invoiceDate),
+            mListener: this,
+          )));
+
+          await callGetFranchiseeItemOpeningList(1);
+
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+        ledgerName: selectedFranchiseeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -168,7 +218,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 color: Colors.transparent,
                 // color: Colors.red,
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-               child: AppBar(
+                child: AppBar(
                   leadingWidth: 0,
                   automaticallyImplyLeading: false,
                   shape: RoundedRectangleBorder(
@@ -212,7 +262,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               onPressed: () async{
                 await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                   dateNew:invoiceDate,
-compId:companyId ,
+                  compId:companyId ,
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
                 )));
@@ -234,8 +284,9 @@ compId:companyId ,
                       height: 5,
                     ),
                     getTotalCountAndAmount(),
+                    Franchisee_list.length>0?getFranchiseeSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth):Container(),
                     const SizedBox(
-                      height: .5,
+                      height: 10,
                     ),
                     get_purchase_list_layout()
                   ],
@@ -277,7 +328,7 @@ compId:companyId ,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("${Franchisee_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
+              Text("${Franchisee_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}  ", style: subHeading_withBold,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: subHeading_withBold,)
             ],
           )
@@ -288,7 +339,7 @@ compId:companyId ,
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
-      titleIndicator: false,
+        titleIndicator: false,
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
@@ -380,7 +431,7 @@ compId:companyId ,
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                           Text("${Franchisee_list[index]['Name']}",style: item_heading_textStyle,),
+                                          Text("${Franchisee_list[index]['Name']}",style: item_heading_textStyle,),
                                           //  SizedBox(height: 5,),
                                           // Row(
                                           //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -457,7 +508,7 @@ compId:companyId ,
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-            token: sessionToken,
+          token: sessionToken,
         );
         String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
@@ -496,9 +547,9 @@ compId:companyId ,
   @override
   backToList() {
     // TODO: implement backToList
- setState(() {
-   callGetFranchiseeNot(0);
- });
- Navigator.pop(context);
+    setState(() {
+      callGetFranchiseeNot(0);
+    });
+    Navigator.pop(context);
   }
 }
