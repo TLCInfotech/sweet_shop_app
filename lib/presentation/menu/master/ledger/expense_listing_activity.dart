@@ -185,7 +185,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return isLoaderShow?Container():SearchableLedgerDropdown(
         apiUrl: "${ApiConstants().ledgerWithoutImage}?",
-        titleIndicator: true,
+        titleIndicator: false,
         title: ApplicationLocalizations.of(context)!.translate("ledger")!,
         franchiseeName: selectedLedgerName!=""? selectedLedgerName:"",
         franchisee:selectedLedgerName,
@@ -246,6 +246,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             shrinkWrap: true,
             itemCount: ledgerList.length,
             controller: _scrollController,
+            padding: EdgeInsets.only(top: 20),
             itemBuilder: (BuildContext context, int index) {
               List<int> img=[];
               if( ledgerList[index]['Photo']!=null){

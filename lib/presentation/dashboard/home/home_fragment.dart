@@ -414,10 +414,9 @@ print("hfshjffhfbh  $dateString");
 
 
                     const SizedBox(height: 10,),
-                    Row(
+                    (MasterMenu.contains("RM005"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
+                      children: [  GestureDetector(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
@@ -431,7 +430,7 @@ print("hfshjffhfbh  $dateString");
                               )));
                             }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
-                    ),
+                    ):Container(),
                     const SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

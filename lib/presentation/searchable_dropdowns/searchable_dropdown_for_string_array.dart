@@ -108,7 +108,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
-
             // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
             //  widget.mListener.loaderShow(false);
             //  Navigator.of(context, rootNavigator: true).pop();

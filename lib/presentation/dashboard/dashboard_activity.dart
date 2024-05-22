@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
@@ -55,9 +56,34 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           mListener: this,
         ),
         Constant.HOME_FRAGMENT);
-
+    getLocal();
   }
 
+  List MasterMenu=[];
+  List TransactionMenu=[];
+
+
+  String companyId="";
+  var dataArr;
+  var dataArrM;
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
+    dataArrM=menu;
+    var re =await (AppPreferences.getReportMenuList());
+
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+ //          (MasterMenu.contains("RM005"))?
+
+      print("oneeeeeeeeeeee  ${(TransactionMenu.contains("AT009"))} \n newwwww  $tr ");
+  });
+  }
 
   late Widget widParentScreen;
   late String currentScreen;
@@ -137,6 +163,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   /*widget for bottom bar layout*/
   Widget getBottomBar(double parentHeight,double parentWidth){
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         GestureDetector(
           onTap: (){
@@ -150,7 +177,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           onDoubleTap: (){},
           child: Container(
             height: parentHeight*.10,
-            width: parentWidth*.2,
+           // width: parentWidth*.2,
             color: Colors.transparent,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -178,162 +205,170 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             ),
           ),
         ),
-        GestureDetector(
-          onTap: (){
-            addNewScreen(
-                SaleDashboardActivity(
-                ),
-                Constant.SELL);
-
-          },
-          onDoubleTap: (){},
-          child: Container(
-            height: parentHeight*.10,
-            width: parentWidth*.2,
-            color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: const AssetImage("assets/images/hand.png"),
-                  height: parentHeight * .035,
-                  width:parentHeight * .035,
-                  color:currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: parentHeight*.005),
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("sale")!,
-                    style: TextStyle(
-                        color: currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 4,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter_SemiBold_Font'
-                    ),
-                    textAlign: TextAlign.center,
+        Visibility(
+          visible: TransactionMenu.contains("ST003"),
+          child: GestureDetector(
+            onTap: (){
+              addNewScreen(
+                  SaleDashboardActivity(
                   ),
-                ),
-              ],
+                  Constant.SELL);
+              },
+            onDoubleTap: (){},
+            child: Container(
+              height: parentHeight*.10,
+              //width: parentWidth*.2,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: const AssetImage("assets/images/hand.png"),
+                    height: parentHeight * .035,
+                    width:parentHeight * .035,
+                    color:currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight*.005),
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("sale")!,
+                      style: TextStyle(
+                          color: currentScreen == Constant.SELL ? CommonColor.THEME_COLOR:Colors.black,
+                          fontSize: SizeConfig.blockSizeHorizontal* 4,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter_SemiBold_Font'
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        GestureDetector(
-          onTap: (){
-            addNewScreen(
-                LedgerDashActivity(
-                ),
-                Constant.EXPENSE);
-
-          },
-          onDoubleTap: (){},
-          child: Container(
-            height: parentHeight*.10,
-            width: parentWidth*.2,
-            color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: const AssetImage("assets/images/expense.png"),
-                  height: parentHeight * .035,
-                  width:parentHeight * .035,
-                  color:currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: parentHeight*.005),
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("expense")!,
-                    //StringEn.EXPENSE,
-                    style: TextStyle(
-                        color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 4,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter_SemiBold_Font'
-                    ),
-                    textAlign: TextAlign.center,
+        Visibility(
+          visible: TransactionMenu.contains("AT009"),
+          child: GestureDetector(
+            onTap: (){
+              addNewScreen(
+                  LedgerDashActivity(
                   ),
-                ),
-              ],
+                  Constant.EXPENSE);
+              },
+            onDoubleTap: (){},
+            child: Container(
+              height: parentHeight*.10,
+            //  width: parentWidth*.2,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: const AssetImage("assets/images/expense.png"),
+                    height: parentHeight * .035,
+                    width:parentHeight * .035,
+                    color:currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight*.005),
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("expense")!,
+                      //StringEn.EXPENSE,
+                      style: TextStyle(
+                          color: currentScreen == Constant.EXPENSE ? CommonColor.THEME_COLOR:Colors.black,
+                          fontSize: SizeConfig.blockSizeHorizontal* 4,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter_SemiBold_Font'
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        GestureDetector(
-          onTap: (){
-            addNewScreen(
-                PurchaseDashActivity(
-                ),
-                Constant.RETURN);
-
-          },
-          onDoubleTap: (){},
-          child: Container(
-            height: parentHeight*.10,
-            width: parentWidth*.2,
-            color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: const AssetImage("assets/images/payment-method.png"),
-                  height: parentHeight * .035,
-                  width:parentHeight * .035,
-                  color:currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: parentHeight*.005),
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("return")!,
-                    style: TextStyle(
-                        color: currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 4,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter_SemiBold_Font'
-                    ),
-                    textAlign: TextAlign.center,
+         Visibility(
+          visible: TransactionMenu.contains("AT006"),
+          child: GestureDetector(
+            onTap: (){
+              addNewScreen(
+                  PurchaseDashActivity(
                   ),
-                ),
-              ],
+                  Constant.RETURN);
+
+            },
+            onDoubleTap: (){},
+            child: Container(
+              height: parentHeight*.10,
+             // width: parentWidth*.2,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: const AssetImage("assets/images/payment-method.png"),
+                    height: parentHeight * .035,
+                    width:parentHeight * .035,
+                    color:currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight*.005),
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("return")!,
+                      style: TextStyle(
+                          color: currentScreen == Constant.RETURN ? CommonColor.THEME_COLOR:Colors.black,
+                          fontSize: SizeConfig.blockSizeHorizontal* 4,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter_SemiBold_Font'
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-
-        GestureDetector(
-          onTap: (){
-            addNewScreen(
-                PaymentDashActivity(
-                ),
-                Constant.RECEIPT);
-
-          },
-          onDoubleTap: (){},
-          child: Container(
-            height: parentHeight*.10,
-            width: parentWidth*.2,
-            color: Colors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: const AssetImage("assets/images/cashless-payment.png"),
-                  height: parentHeight * .035,
-                  width:parentHeight * .035,
-                  color:currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: parentHeight*.005),
-                  child: Text(
-                    ApplicationLocalizations.of(context)!.translate("receipt")!,
-                  //  StringEn.PAYMENT,
-                    style: TextStyle(
-                        color: currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
-                        fontSize: SizeConfig.blockSizeHorizontal* 4,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter_SemiBold_Font'
-                    ),
-                    textAlign: TextAlign.center,
+        Visibility(
+          visible: TransactionMenu.contains("AT002"),
+          child: GestureDetector(
+            onTap: (){
+              addNewScreen(
+                  PaymentDashActivity(
                   ),
-                ),
-              ],
+                  Constant.RECEIPT);
+              },
+            onDoubleTap: (){},
+            child: Container(
+              height: parentHeight*.10,
+              //width: parentWidth*.2,
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: const AssetImage("assets/images/cashless-payment.png"),
+                    height: parentHeight * .035,
+                    width:parentHeight * .035,
+                    color:currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: parentHeight*.005),
+                    child: Text(
+                      ApplicationLocalizations.of(context)!.translate("receipt")!,
+                    //  StringEn.PAYMENT,
+                      style: TextStyle(
+                          color: currentScreen == Constant.RECEIPT ? CommonColor.THEME_COLOR:Colors.black,
+                          fontSize: SizeConfig.blockSizeHorizontal* 4,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter_SemiBold_Font'
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
