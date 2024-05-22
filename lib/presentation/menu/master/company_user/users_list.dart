@@ -17,6 +17,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/user/delete_user_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class UsersList extends StatefulWidget {
   final  formId;
@@ -36,6 +37,9 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   var editedItem = null;
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -66,6 +70,57 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         callGetUser(page);
       }
     }
+  }
+
+  String selectedUSer="";
+  String selectedUserId="";
+/* Widget to get sale ledger Name Layout */
+  Widget getUserSearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().getuserFilteredList}?",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("user")!,
+        franchiseeName: selectedUSer!=""? selectedUSer:"",
+        franchisee:selectedUSer,
+        callback: (name,id)async{
+          setState(() {
+            selectedUSer = name!;
+            selectedUserId = name!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedUSer);
+          var item={
+            "Name":name,
+            "ID":name
+          };
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserCreate(
+                      editUser: item,
+                      mListener: this,
+                      readOnly:
+                      singleRecord['Update_Right'],
+                      compId: companyId,
+                      come:"edit"
+                  )));
+          setState(() {
+            page=1;
+          });
+          await       callGetUser(page);
+
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+        ledgerName: selectedUSer);
   }
 
   @override
@@ -140,6 +195,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getUserSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -239,11 +295,11 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("${userList[index]['UID']}",
+                                  Text("${userList[index]['Name']}",
                                       style: item_heading_textStyle),
                                   const SizedBox(height: 5),
                                   Text(
-                                      "${userList[index]['Ledger_Name']}",
+                                      "${userList[index]['Franchisee_Name']}",
                                       overflow: TextOverflow.clip,
                                       style: item_regular_textStyle),
                                   // Text(
@@ -307,7 +363,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
-        String apiUrl = "$baseurl${ApiConstants().users}?PageNumber=$page&PageSize=10&Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().getuserFilteredList}?PageNumber=$page&PageSize=10&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {

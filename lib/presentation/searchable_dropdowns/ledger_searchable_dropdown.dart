@@ -78,7 +78,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
     await callGetLedger();
     if(widget.franchisee=="edit"){
       print(":::::: ${widget.franchiseeName}\n ${widget.ledgerName}");
-      _controller.text=widget.franchiseeName;
+      _controller.text=widget.franchiseeName!=null?widget.franchiseeName:"";
     }
   }
   List<dynamic> ledger_list = [];

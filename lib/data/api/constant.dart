@@ -82,5 +82,7 @@ class ApiConstants {
   String getFilteredLedger="FilteredLedger";
   String getLedger="Ledger";
   String getFilteredItem="FilteredItem";
+  String getFilteredFranchisee="FilteredFranchisee";
+  String getuserFilteredList="userFilteredList";
 
 }

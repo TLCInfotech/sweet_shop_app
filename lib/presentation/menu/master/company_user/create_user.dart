@@ -16,6 +16,7 @@ import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/user/post_user_request_model.dart';
 import '../../../../data/domain/user/put_user_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
@@ -64,11 +65,15 @@ class _UserCreateState extends State<UserCreate>with WorkingUnderDialogInterface
   bool isLoaderShow=false;
   bool isApiCall=false;
   final _formkey=GlobalKey<FormState>();
+  var userData=null;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setData();
+    if(widget.editUser!=null)
+      getData();
+
     localData();
   }
   String companyIds="";
@@ -78,26 +83,99 @@ class _UserCreateState extends State<UserCreate>with WorkingUnderDialogInterface
 
     });
   }
+  getData()async{
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().users}/${widget.editUser['Name']}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              setState(()  {
+
+                if(data!=null){
+                  setState(() {
+                    userData=data;
+                  });
+                  print("%%%%%%%%%%%%%%%%%%%%% $userData");
+
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              await setData();
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 String oldUid="";
   setData()async{
     if(widget.editUser!=null){
       File ?f=null;
-      if(widget.editUser['Photo']!=null&&widget.editUser['Photo']['data']!=null && widget.editUser['Photo']['data'].length>10) {
-        f = await CommonWidget.convertBytesToFile(widget.editUser['Photo']['data']);
+      if(userData[0]['Photo']!=null&&userData[0]['Photo']['data']!=null && userData[0]['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(userData[0]['Photo']['data']);
       }
+      setState(() {
 
-      userController.text=widget.editUser["UID"];
-      oldUid=widget.editUser["UID"];
-      print("jhjfhjf  ${widget.editUser["Active"]}  $oldUid");
-      workingdaysController.text=widget.editUser["Working_Days"].toString();
-      franchiseeId=widget.editUser["Ledger_ID"].toString();
-      franchiseeName=widget.editUser["Ledger_Name"];
-      checkActiveValue=widget.editUser["Active"];
-      checkPasswordValue=widget.editUser["Reset_Password"];
-      picImageBytes=(widget.editUser['Photo']!=null && widget.editUser['Photo']['data']!=null && widget.editUser['Photo']['data'].length>10)?(widget.editUser['Photo']['data']).whereType<int>().toList():[];
+      userController.text=userData[0]["UID"];
+      oldUid=userData[0]["UID"];
+      print("jhjfhjf  ${userData[0]["Active"]}  $oldUid");
+      workingdaysController.text=userData[0]["Working_Days"].toString();
+      franchiseeId=userData[0]["Ledger_ID"].toString();
+      franchiseeName=userData[0]["Ledger_Name"];
+      checkActiveValue=userData[0]["Active"];
+      checkPasswordValue=userData[0]["Reset_Password"];
+      picImageBytes=(userData[0]['Photo']!=null && userData[0]['Photo']['data']!=null && userData[0]['Photo']['data'].length>10)?(userData[0]['Photo']['data']).whereType<int>().toList():[];
 
       picImage=f;
+      });
+      setState(() {
+        isLoaderShow=false;
+
+      });
     }
 
   }
@@ -215,7 +293,7 @@ String oldUid="";
 
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow ?Container(): ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics:  AlwaysScrollableScrollPhysics(),
@@ -346,7 +424,7 @@ String oldUid="";
                   apiUrl:ApiConstants().franchiseeWithCompany+"?",
                   titleIndicator: false,
                 readOnly: widget.readOnly,
-                  franchiseeName: widget.come=="edit"?widget.editUser["Ledger_Name"]:"",
+                  franchiseeName: widget.come=="edit"?franchiseeName:"",
                   franchisee: widget.come,
                   title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
                   callback: (name,id){
@@ -362,7 +440,7 @@ String oldUid="";
                     }
                     print("ddddddddd   $franchiseeId");
                   },
-                  ledgerName: widget.come=="edit"?widget.editUser["Ledger_Name"]:""), /* GestureDetector(
+                  ledgerName: widget.come=="edit"?franchiseeName:""), /* GestureDetector(
                 onTap: (){
                   showGeneralDialog(
                       barrierColor: Colors.black.withOpacity(0.5),

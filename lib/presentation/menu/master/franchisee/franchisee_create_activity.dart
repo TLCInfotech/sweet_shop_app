@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -17,9 +18,11 @@ import 'package:sweet_shop_app/data/domain/franchisee/post_franchisee_request_mo
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 
 import '../../../../core/app_preferance.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_country_layout.dart';
 import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
@@ -120,12 +123,83 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   bool isLoaderShow=false;
 
+  var itemData=null;
+  bool isApiCall = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setData();
+    if(widget.editItem!=null)
+      getData();
+
+  }
+  getData()async{
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().franchisee}/${widget.editItem['ID']}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              setState(()  {
+
+                if(data!=null){
+                  setState(() {
+                    itemData=data;
+                  });
+                  print("%%%%%%%%%%%%%%%%%%%%% $itemData");
+
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              await setData();
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
   setData()async{
@@ -135,48 +209,49 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       File ?a=null;
       File ?p=null;
       File ?g=null;
-      if(widget.editItem['Photo']!=null&&widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10) {
-        f = await CommonWidget.convertBytesToFile(widget.editItem['Photo']['data']);
+      if(itemData[0]['Photo']!=null&&itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(itemData[0]['Photo']['data']);
       }
-      if(widget.editItem['Adhar_Card_Image']!=null&&widget.editItem['Adhar_Card_Image']['data']!=null && widget.editItem['Adhar_Card_Image']['data'].length>10) {
-        a = await CommonWidget.convertBytesToFile(widget.editItem['Adhar_Card_Image']['data']);
+      if(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10) {
+        a = await CommonWidget.convertBytesToFile(itemData[0]['Adhar_Card_Image']['data']);
       }
-      if(widget.editItem['PAN_Card_Image']!=null&&widget.editItem['PAN_Card_Image']['data']!=null && widget.editItem['PAN_Card_Image']['data'].length>10) {
-        p = await CommonWidget.convertBytesToFile(widget.editItem['PAN_Card_Image']['data']);
+      if(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10) {
+        p = await CommonWidget.convertBytesToFile(itemData[0]['PAN_Card_Image']['data']);
       }
-      if(widget.editItem['GST_Image']!=null&&widget.editItem['GST_Image']['data']!=null && widget.editItem['GST_Image']['data'].length>10) {
-        g = await CommonWidget.convertBytesToFile(widget.editItem['GST_Image']['data']);
+      if(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10) {
+        g = await CommonWidget.convertBytesToFile(itemData[0]['GST_Image']['data']);
       }
       setState(()  {
-        picImageBytes=(widget.editItem['Photo']!=null && widget.editItem['Photo']['data']!=null && widget.editItem['Photo']['data'].length>10)?(widget.editItem['Photo']['data']).whereType<int>().toList():[];
+        picImageBytes=(itemData[0]['Photo']!=null && itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10)?(itemData[0]['Photo']['data']).whereType<int>().toList():[];
         picImage=f!=null?f:picImage;
-        adharImageBytes=(widget.editItem['Adhar_Card_Image']!=null&&widget.editItem['Adhar_Card_Image']['data']!=null && widget.editItem['Adhar_Card_Image']['data'].length>10)?(widget.editItem['Adhar_Card_Image']['data']).whereType<int>().toList():[];
+        adharImageBytes=(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10)?(itemData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
         adharFile=a!=null?a:adharFile;
-        panImageBytes=(widget.editItem['PAN_Card_Image']!=null&&widget.editItem['PAN_Card_Image']['data']!=null && widget.editItem['PAN_Card_Image']['data'].length>10)?(widget.editItem['PAN_Card_Image']['data']).whereType<int>().toList():[];
+        panImageBytes=(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10)?(itemData[0]['PAN_Card_Image']['data']).whereType<int>().toList():[];
         panFile=p!=null?p:panFile;
-        gstImageBytes=(widget.editItem['GST_Image']!=null&&widget.editItem['GST_Image']['data']!=null && widget.editItem['GST_Image']['data'].length>10)?(widget.editItem['GST_Image']['data']).whereType<int>().toList():[];
+        gstImageBytes=(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10)?(itemData[0]['GST_Image']['data']).whereType<int>().toList():[];
         gstFile=g!=null?g:gstFile;
-        adharNoController.text=widget.editItem['Adhar_No']!=null?widget.editItem['Adhar_No'].toString():adharNoController.text;
-        panNoController.text=widget.editItem['PAN_No']!=null?widget.editItem['PAN_No'].toString():panNoController.text;
-        gstNoController.text=widget.editItem['GST_No']!=null?widget.editItem['GST_No'].toString():gstNoController.text;
-        bankNameController.text=widget.editItem['Bank_Name']!=null?widget.editItem['Bank_Name'].toString():bankNameController.text;
-        bankBranchController.text=widget.editItem['Bank_Branch']!=null?widget.editItem['Bank_Branch'].toString():bankBranchController.text;
-        IFSCCodeController.text=widget.editItem['IFSC_Code']!=null?widget.editItem['IFSC_Code'].toString():IFSCCodeController.text;
-        accountNoController.text=widget.editItem['Account_No']!=null?widget.editItem['Account_No'].toString():accountNoController.text;
-        aCHolderNameController.text=widget.editItem['AC_Holder_Name']!=null?widget.editItem['AC_Holder_Name'].toString(): aCHolderNameController.text;
-        franchiseeName.text=widget.editItem['Name']!=null?widget.editItem['Name'].toString(): franchiseeName.text;
-        franchiseeContactPerson.text=widget.editItem['Contact_Person']!=null?widget.editItem['Contact_Person'].toString(): franchiseeContactPerson.text;
-        franchiseeAddress.text=widget.editItem['Address']!=null?widget.editItem['Address'].toString(): franchiseeAddress.text;
-        selectedCity=widget.editItem['District']!=null?widget.editItem['District'].toString(): selectedCity;
-        stateName=widget.editItem['State']!=null?widget.editItem['State'].toString(): stateName;
-        pincode.text=widget.editItem['Pin_Code']!=null?widget.editItem['Pin_Code'].toString(): pincode.text;
-        countryName=widget.editItem['Country']!=null?widget.editItem['Country'].toString(): countryName;
-        franchiseeMobileNo.text=widget.editItem['Contact_No']!=null?widget.editItem['Contact_No'].toString(): franchiseeMobileNo.text;
-       franchiseeEmail.text=widget.editItem['EMail']!=null?widget.editItem['EMail'].toString(): franchiseeEmail.text;
-      franchiseefssaiNo.text=widget.editItem['FSSAI_No']!=null?widget.editItem['FSSAI_No'].toString(): franchiseefssaiNo.text;
-        franchiseeOutstandingLimit.text=widget.editItem['Outstanding_Limit']!=null?widget.editItem['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
-        selectedLimitUnit= widget.editItem['Outstanding_Limit_Type']!=null?widget.editItem['Outstanding_Limit_Type'].toString():selectedLimitUnit;
-          franchiseePaymentDays.text=widget.editItem['Payment_Days']!=null?widget.editItem['Payment_Days'].toString(): franchiseePaymentDays.text;
+        adharNoController.text=itemData[0]['Adhar_No']!=null?itemData[0]['Adhar_No'].toString():adharNoController.text;
+        panNoController.text=itemData[0]['PAN_No']!=null?itemData[0]['PAN_No'].toString():panNoController.text;
+        gstNoController.text=itemData[0]['GST_No']!=null?itemData[0]['GST_No'].toString():gstNoController.text;
+        bankNameController.text=itemData[0]['Bank_Name']!=null?itemData[0]['Bank_Name'].toString():bankNameController.text;
+        bankBranchController.text=itemData[0]['Bank_Branch']!=null?itemData[0]['Bank_Branch'].toString():bankBranchController.text;
+        IFSCCodeController.text=itemData[0]['IFSC_Code']!=null?itemData[0]['IFSC_Code'].toString():IFSCCodeController.text;
+        accountNoController.text=itemData[0]['Account_No']!=null?itemData[0]['Account_No'].toString():accountNoController.text;
+        aCHolderNameController.text=itemData[0]['AC_Holder_Name']!=null?itemData[0]['AC_Holder_Name'].toString(): aCHolderNameController.text;
+        franchiseeName.text=itemData[0]['Name']!=null?itemData[0]['Name'].toString(): franchiseeName.text;
+        franchiseeContactPerson.text=itemData[0]['Contact_Person']!=null?itemData[0]['Contact_Person'].toString(): franchiseeContactPerson.text;
+        franchiseeAddress.text=itemData[0]['Address']!=null?itemData[0]['Address'].toString(): franchiseeAddress.text;
+        selectedCity=itemData[0]['District']!=null?itemData[0]['District'].toString(): selectedCity;
+        stateName=itemData[0]['State']!=null?itemData[0]['State'].toString(): stateName;
+        pincode.text=itemData[0]['Pin_Code']!=null?itemData[0]['Pin_Code'].toString(): pincode.text;
+        countryName=itemData[0]['Country']!=null?itemData[0]['Country'].toString(): countryName;
+        franchiseeMobileNo.text=itemData[0]['Contact_No']!=null?itemData[0]['Contact_No'].toString(): franchiseeMobileNo.text;
+       franchiseeEmail.text=itemData[0]['EMail']!=null?itemData[0]['EMail'].toString(): franchiseeEmail.text;
+      franchiseefssaiNo.text=itemData[0]['FSSAI_No']!=null?itemData[0]['FSSAI_No'].toString(): franchiseefssaiNo.text;
+        franchiseeOutstandingLimit.text=itemData[0]['Outstanding_Limit']!=null?itemData[0]['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
+        selectedLimitUnit= itemData[0]['Outstanding_Limit_Type']!=null?itemData[0]['Outstanding_Limit_Type'].toString():selectedLimitUnit;
+          franchiseePaymentDays.text=itemData[0]['Payment_Days']!=null?itemData[0]['Payment_Days'].toString(): franchiseePaymentDays.text;
+      isLoaderShow=false;
       });
     }
   }
@@ -333,7 +408,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -644,8 +719,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
             print(countryName);
           },
-          franchiseeName: widget.editItem!=null&&widget.editItem['Country']!=null?widget.editItem['Country'].toString(): "",
-          franchisee:  widget.editItem!=null &&widget.editItem['Country']!=null?"edit":"",
+          franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Country'].toString(): "",
+          franchisee:  widget.editItem!=null &&itemData!=null?"edit":"",
           ledgerName: countryName),
     );
       // GetCountryLayout(
@@ -678,8 +753,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
             print(stateName);
           },
-          franchiseeName:widget.editItem!=null && widget.editItem['State']!=null?widget.editItem['State'].toString(): "",
-          franchisee:  widget.editItem!=null &&  widget.editItem['State']!=null?"edit":"",
+          franchiseeName:widget.editItem!=null && itemData!=null?itemData[0]['State'].toString(): "",
+          franchisee:  widget.editItem!=null &&  itemData!=null?"edit":"",
           ledgerName: stateName),
     );
 
@@ -996,8 +1071,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             apiUrl:ApiConstants().city+"?",
             ledgerName: selectedCity,
           readOnly: widget.readOnly,
-            franchiseeName: widget.editItem!=null && widget.editItem['District']!=null?widget.editItem['District'].toString(): "",
-            franchisee: widget.editItem!=null&& widget.editItem['District']!=null?"edit":"",
+            franchiseeName: widget.editItem!=null && itemData!=null?itemData[0]['District'].toString(): "",
+            franchisee: widget.editItem!=null&& itemData!=null?"edit":"",
             title:  ApplicationLocalizations.of(context)!.translate("city")!,
             callback: (name){
               setState(() {

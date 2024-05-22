@@ -19,6 +19,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/delete_request_model.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class AddFranchiseeActivity extends StatefulWidget {
@@ -80,6 +81,49 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
 
   }
 
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+/* Widget to get sale ledger Name Layout */
+  Widget getFranchiseeSearchLayout(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container():
+    SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().getFilteredFranchisee}?",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("franchisee")!,
+        franchiseeName: selectedFranchiseeName!=""? selectedFranchiseeName:"",
+        franchisee:selectedFranchiseeName,
+        callback: (name,id)async{
+          setState(() {
+            selectedFranchiseeName = name!;
+            selectedFranchiseeId = id!;
+            // Item_list=[];
+            // Updated_list=[];
+            // Deleted_list=[];
+            // Inserted_list=[];
+          });
+          print(selectedFranchiseeId);
+          var item={
+            "Name":name,
+            "ID":id
+          };
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateFranchisee(
+              editItem: item,
+              readOnly:singleRecord['Update_Right']
+          )));
+          setState(() {
+            page=1;
+          });
+          await     callGetFranchisee(page);
+
+          // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
+          //   mListener: this,
+          //   ledgerList: item,
+          //   readOnly:singleRecord['Update_Right'],
+          // )));
+          // await callGetLedger(0);
+        },
+        ledgerName: selectedFranchiseeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +197,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    getFranchiseeSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -312,7 +357,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredFranchisee}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
