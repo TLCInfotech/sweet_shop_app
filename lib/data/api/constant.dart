@@ -86,4 +86,5 @@ class ApiConstants {
   String getuserFilteredList="userFilteredList";
   String getFetchFranchiseeName="FetchFranchiseeName";
 
+
 }

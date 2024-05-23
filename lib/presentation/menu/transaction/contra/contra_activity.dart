@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -138,14 +139,18 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
+              onPressed: () async{
+               await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
                   mListener: this,
                   newDate: newDate,
                   voucherNo: null,
                   dateNew:newDate,
                   companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
+                selectedFranchiseeId="";
+                partyBlank=false;
+                contraList=[];
+                await  getContra(1);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -156,6 +161,10 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -212,7 +221,31 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
         applicablefrom: newDate
     );
   }
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  bool partyBlank=true;
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+          getContra(1);
+        });
 
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+
+    );
+
+  }
   /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
@@ -280,8 +313,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child:GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
+                      onTap: ()async{
+                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
                           mListener: this,
                           newDate: newDate,
                           voucherNo: contraList[index]["Voucher_No"],
@@ -291,6 +324,10 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                           readOnly: singleRecord['Update_Right'],
                           debitNote:contraList[index] ,// DateFormat('dd-MM-yyyy').format(newDate),
                         )));
+                        selectedFranchiseeId="";
+                        partyBlank=false;
+                        contraList=[];
+                        await  getContra(1);
                       },
                       child: Card(
                         child: Row(
@@ -401,10 +438,11 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Contra&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Contra&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                partyBlank=true;
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];

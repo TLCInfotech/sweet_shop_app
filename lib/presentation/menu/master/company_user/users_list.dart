@@ -59,7 +59,6 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   getLocal()async{
     companyId=await AppPreferences.getCompanyId();
     setState(() {
-
     });
   }
   _scrollListener() {

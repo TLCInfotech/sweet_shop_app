@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -135,12 +136,16 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
+              onPressed: ()async {
+              await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                   mListener: this,
                   dateNew:newDate,
                   voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
+              selectedFranchiseeId="";
+              partyBlank=false;
+              payment_list=[];
+              await  getPayment(1);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -150,8 +155,12 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
                     const SizedBox(
                       height: 10,
                     ),
@@ -209,7 +218,31 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         applicablefrom: newDate
     );
   }
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  bool partyBlank=true;
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+          getPayment(1);
+        });
 
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+
+    );
+
+  }
   /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
@@ -277,8 +310,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
+                      onTap: ()async{
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
                           dateNew: newDate,
                           readOnly: singleRecord['Update_Right'] ,
@@ -286,6 +319,10 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                           editedItem:payment_list[index],
                           come:"edit",
                         )));
+                      selectedFranchiseeId="";
+                      partyBlank=false;
+                      payment_list=[];
+                      await  getPayment(1);
                       },
                       child: Card(
                         child: Row(
@@ -394,10 +431,11 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                partyBlank=true;
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];

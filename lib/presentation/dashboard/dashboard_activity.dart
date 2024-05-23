@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
@@ -12,19 +10,14 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/dashboard/ledger_dash/ledger_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/payment_dash/payment_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/purchase_dash/purchase_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/sale_dash/sale_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
-
 import '../../core/app_preferance.dart';
-import '../../data/api/request_helper.dart';
-import '../menu/transaction/expense/ledger_activity.dart';
-import '../menu/transaction/payment/payment_activity.dart';
 import 'home/home_fragment.dart';
 
 class DashboardActivity extends StatefulWidget {
@@ -56,8 +49,10 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
           mListener: this,
         ),
         Constant.HOME_FRAGMENT);
+    getUserPermissions();
     getLocal();
   }
+
 
   List MasterMenu=[];
   List TransactionMenu=[];
@@ -83,6 +78,56 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
 
       print("oneeeeeeeeeeee  ${(TransactionMenu.contains("AT009"))} \n newwwww  $tr ");
   });
+  }
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  getUserPermissions() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    String uid=await AppPreferences.getUId();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+                if(data!=null){
+                  if (mounted) {
+                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
+                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
+                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
+                  }
+
+                }else{
+                }
+              });
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 
   late Widget widParentScreen;
@@ -157,11 +202,252 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     );
   }
 
+  Widget getBottomBar(double parentHeight, double parentWidth) {
+    List<Widget> bottomBarItems = [];
+    // Home button
+    bottomBarItems.add(
+      GestureDetector(
+        onTap: () {
+          setState(() {
+            getUserPermissions();
+            getLocal();
+         bottomBarItems = [];
+       });
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+       /*  addNewScreen(
+              HomeFragment(
+                mListener: this,
+              ),
+              Constant.HOME_FRAGMENT);*/
+        },
+        onDoubleTap: () {},
+        child: Container(
+          height: parentHeight * .10,
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image: const AssetImage("assets/images/home.png"),
+                height: parentHeight * .035,
+                width: parentHeight * .035,
+                color: currentScreen == Constant.HOME_FRAGMENT
+                    ? CommonColor.THEME_COLOR
+                    : Colors.black,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Text(
+                  StringEn.HOME,
+                  style: TextStyle(
+                      color: currentScreen == Constant.HOME_FRAGMENT
+                          ? CommonColor.THEME_COLOR
+                          : Colors.black,
+                      fontSize: SizeConfig.blockSizeHorizontal * 4,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter_SemiBold_Font'),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    // Sale button
+    if (TransactionMenu.contains("ST003")) {
+      bottomBarItems.add(
+        GestureDetector(
+          onTap: () {
+            addNewScreen(
+                SaleDashboardActivity(),
+                Constant.SELL);
+            getUserPermissions();
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height: parentHeight * .10,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: const AssetImage("assets/images/hand.png"),
+                  height: parentHeight * .035,
+                  width: parentHeight * .035,
+                  color: currentScreen == Constant.SELL
+                      ? CommonColor.THEME_COLOR
+                      : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: parentHeight * .005),
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("sale")!,
+                    style: TextStyle(
+                        color: currentScreen == Constant.SELL
+                            ? CommonColor.THEME_COLOR
+                            : Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal * 4,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter_SemiBold_Font'),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Expense button
+    if (TransactionMenu.contains("AT009")) {
+      bottomBarItems.add(
+        GestureDetector(
+          onTap: () {
+            addNewScreen(
+                LedgerDashActivity(),
+                Constant.EXPENSE);
+            getUserPermissions();
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height: parentHeight * .10,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: const AssetImage("assets/images/expense.png"),
+                  height: parentHeight * .035,
+                  width: parentHeight * .035,
+                  color: currentScreen == Constant.EXPENSE
+                      ? CommonColor.THEME_COLOR
+                      : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: parentHeight * .005),
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("expense")!,
+                    style: TextStyle(
+                        color: currentScreen == Constant.EXPENSE
+                            ? CommonColor.THEME_COLOR
+                            : Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal * 4,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter_SemiBold_Font'),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Return button
+    if (TransactionMenu.contains("AT006")) {
+      bottomBarItems.add(
+        GestureDetector(
+          onTap: () {
+            addNewScreen(
+                PurchaseDashActivity(),
+                Constant.RETURN);
+            getUserPermissions();
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height: parentHeight * .10,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: const AssetImage("assets/images/payment-method.png"),
+                  height: parentHeight * .035,
+                  width: parentHeight * .035,
+                  color: currentScreen == Constant.RETURN
+                      ? CommonColor.THEME_COLOR
+                      : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: parentHeight * .005),
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("return")!,
+                    style: TextStyle(
+                        color: currentScreen == Constant.RETURN
+                            ? CommonColor.THEME_COLOR
+                            : Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal * 4,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter_SemiBold_Font'),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Receipt button
+    if (TransactionMenu.contains("AT002")) {
+      bottomBarItems.add(
+        GestureDetector(
+          onTap: () {
+            addNewScreen(
+                PaymentDashActivity(),
+                Constant.RECEIPT);
+            getUserPermissions();
+          },
+          onDoubleTap: () {},
+          child: Container(
+            height: parentHeight * .10,
+            color: Colors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: const AssetImage("assets/images/cashless-payment.png"),
+                  height: parentHeight * .035,
+                  width: parentHeight * .035,
+                  color: currentScreen == Constant.RECEIPT
+                      ? CommonColor.THEME_COLOR
+                      : Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: parentHeight * .005),
+                  child: Text(
+                    ApplicationLocalizations.of(context)!.translate("receipt")!,
+                    style: TextStyle(
+                        color: currentScreen == Constant.RECEIPT
+                            ? CommonColor.THEME_COLOR
+                            : Colors.black,
+                        fontSize: SizeConfig.blockSizeHorizontal * 4,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter_SemiBold_Font'),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: bottomBarItems,
+    );
+  }
 
 
 
   /*widget for bottom bar layout*/
-  Widget getBottomBar(double parentHeight,double parentWidth){
+/*  Widget getBottomBar(double parentHeight,double parentWidth){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -374,7 +660,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         ),
       ],
     );
-  }
+  }*/
 
 
   Future<bool> _onBackPressed() {

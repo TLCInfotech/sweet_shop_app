@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,9 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class CompanyCreate extends StatefulWidget {
   final companyId;
-  const CompanyCreate({super.key, this.companyId});
+  final  formId;
+  final  arrData;
+  const CompanyCreate({super.key, this.companyId, this.formId, this.arrData});
 
   @override
   State<CompanyCreate> createState() => _CompanyCreateState();
@@ -106,7 +109,14 @@ bool isLoaderShow=false;
   initState(){
      super.initState();
      getApiCall();
+     setVal();
    }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']||singleRecord['Insert_Right']}");
+  }
    String companyId="";
    String defaultBankName="";
    String defaultBankId="";
@@ -218,7 +228,8 @@ print("hjthghh  $companyId");
                       child: getAllTextFormFieldLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Container(
+             singleRecord['Update_Right']||singleRecord['Insert_Right']==false?Container():
+             Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -250,7 +261,7 @@ print("hjthghh  $companyId");
         height: parentHeight * .25,
         width: parentHeight * .25,
         picImage: picImage,
-
+        readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
         callbackFile: (file)async{
 
           if(file!=null) {
@@ -349,7 +360,7 @@ print("hjthghh  $companyId");
                             setState(() {
                               adharFile = file;
                             });
-                          },
+                          }, readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
                           title:  ApplicationLocalizations.of(context)!.translate("adhar_number")! ,
                           documentFile: adharFile,
                           controller: adharNoController,
@@ -367,7 +378,7 @@ print("hjthghh  $companyId");
                             setState(() {
                               panFile = file;
                             });
-                          },
+                          }, readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
                           title: ApplicationLocalizations.of(context)!.translate("pan_number")! ,
                           documentFile: panFile,
                           controller: panNoController,
@@ -385,7 +396,7 @@ print("hjthghh  $companyId");
                             setState(() {
                               gstFile = file;
                             });
-                          },
+                          }, readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
                           title:  ApplicationLocalizations.of(context)!.translate("gst_number")! ,
                           documentFile: gstFile,
                           controller: gstNoController,
@@ -420,6 +431,7 @@ print("hjthghh  $companyId");
         },
       controller: nameController,
       focuscontroller: _nameFocus,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       focusnext: _contactPersonFocus,
       title: ApplicationLocalizations.of(context)!.translate("company_name")!,
       callbackOnchage: (value) {
@@ -442,6 +454,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: contactPersonController,
       focuscontroller: _contactPersonFocus,
       focusnext: _addressFocus,
@@ -466,6 +479,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: addressController,
       focuscontroller: _addressFocus,
       focusnext: _districtCity,
@@ -517,6 +531,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+        readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: contactController,
       focuscontroller: _contactFocus,
       focusnext: _emailFocus,
@@ -541,6 +556,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: emailController,
       focuscontroller: _emailFocus,
       focusnext: _addTwoFocus,
@@ -566,6 +582,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: addTwoController,
       focuscontroller: _addTwoFocus,
       focusnext: _defaultBankFocus,
@@ -616,6 +633,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: cinNoController,
       focuscontroller: _cinNoFocus,
       focusnext: _jurisdictionFocus,
@@ -641,6 +659,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: jurisdictionController,
       focuscontroller: _jurisdictionFocus,
       focusnext: _invoiceFocus,
@@ -663,6 +682,7 @@ print("hjthghh  $companyId");
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
       child:  _arrList.length!=0?SearchableLedgerDropdown(
           apiUrl:ApiConstants().default_bank+"?",
+          readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
           franchisee: _arrList.length!=0?"edit":"",
           franchiseeName: _arrList.length!=0 && defaultBankName!=null?defaultBankName:"",
           title:  ApplicationLocalizations.of(context)!.translate("default_bank")!,
@@ -823,7 +843,7 @@ print("hjthghh  $companyId");
             return     ApplicationLocalizations.of(context)!.translate("enter")! +ApplicationLocalizations.of(context)!.translate("ext_name")!;
           }
           return null;
-        },
+        }, readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: extNameController,
       focuscontroller: _extNameFocus,
       focusnext: _adharoFocus,
@@ -849,6 +869,7 @@ print("hjthghh  $companyId");
           }
           return null;
         },
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       controller: invoiceController,
       focuscontroller: _invoiceFocus,
       focusnext: null,
@@ -872,6 +893,7 @@ print("hjthghh  $companyId");
         padding: const EdgeInsets.only(top:3),
         child:  _arrList.length!=0 ?SearchableDropdownForStringArray(
           apiUrl:ApiConstants().city+"?",
+          readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
           ledgerName: districtController.text,
           franchiseeName: _arrList.length!=0 && _arrList[0]['District']!=null?_arrList[0]['District'].toString(): "",
           franchisee:_arrList.length!=0  && _arrList[0]['District']!=null?"edit":"",
@@ -1018,7 +1040,7 @@ print("hjthghh  $companyId");
       padding: const EdgeInsets.only(top:3),
       child: _arrList.length!=0?SearchableDropdownForStringArray(
           apiUrl:ApiConstants().state+"?",
-
+readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
           title:  ApplicationLocalizations.of(context)!.translate("state")!,
           callback: (name){
 
@@ -1089,6 +1111,7 @@ print("hjthghh  $companyId");
       controller: pinCodeController,
       focuscontroller: _pinCodeFocus,
       focusnext: _contactFocus,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       title: ApplicationLocalizations.of(context)!.translate("pin_code")! ,
       callbackOnchage: (value) {
         setState(() {
@@ -1114,6 +1137,7 @@ print("hjthghh  $companyId");
       padding: const EdgeInsets.only(top:3),
       child:_arrList.length!=0? SearchableDropdownForStringArray(
           apiUrl:ApiConstants().country+"?",
+          readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
           title:  ApplicationLocalizations.of(context)!.translate("country")!,
           callback: (name){
 

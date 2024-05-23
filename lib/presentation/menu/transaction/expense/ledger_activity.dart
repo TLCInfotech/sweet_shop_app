@@ -19,6 +19,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 
@@ -139,13 +140,17 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
+              onPressed: () async{
+               await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                   mListener: this,
                   voucherNo: null,
                   dateNew:    newDate,
                  // DateFormat('dd-MM-yyyy').format(newDate),
                 )));
+                selectedFranchiseeId="";
+                partyBlank=false;
+                expense_list=[];
+                await  getExpense(1);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -156,6 +161,10 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -199,7 +208,28 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     );
   }
 
-
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  bool partyBlank=true;
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+          getExpense(1);
+        });
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+    );
+  }
   /* Widget to get add PURCHASE date Layout */
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
@@ -281,9 +311,8 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
+                      onTap: ()async{
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                           mListener: this,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
                           dateNew: newDate,
@@ -292,6 +321,10 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                           come:"edit",
                           // DateFormat('dd-MM-yyyy').format(newDate),
                         )));
+                        selectedFranchiseeId="";
+                        partyBlank=false;
+                        expense_list=[];
+                        await  getExpense(1);
                       },
                       child: Card(
                         child: Row(
@@ -402,17 +435,11 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             page: page.toString()
         );
         String apiUrl;
-        if(widget.franhiseeID!=null){
-           apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12&${StringEn.frnachisee_id}=${widget.franhiseeID}";
-
-        }
-        else{
-          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
-
-        }
+          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                partyBlank=true;
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];

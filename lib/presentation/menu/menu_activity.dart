@@ -340,7 +340,7 @@ var dataArrM;
             (MasterMenu.contains("RM007"))?getFranchiseePurchaseRateLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM008"))?getFranchiseeLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("LM001"))?getUserLayout(parentHeight,parentWidth):Container(),
-            getUserRightsLayout(parentHeight,parentWidth),//
+            (MasterMenu.contains("AM006"))?  getUserRightsLayout(parentHeight,parentWidth):Container(),//
             (MasterMenu.contains("RM001"))?getItemLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM002"))?getCategoryLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM004"))?getMeasuringUnitLayout(parentHeight,parentWidth):Container(),
@@ -348,7 +348,7 @@ var dataArrM;
             (MasterMenu.contains("AM002"))?getExpensceGroupLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("AM005"))?getLeaderOpeningLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM003"))?getOpeningBalanceForCompanyLayout(parentHeight,parentWidth):Container(),
-            getCompanyInfoLayout(parentHeight,parentWidth)
+            (MasterMenu.contains("AM007"))?  getCompanyInfoLayout(parentHeight,parentWidth):Container()
           ],
         ),
       ),
@@ -504,7 +504,10 @@ var dataArrM;
   Widget getUserRightsLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>   const UserRightListActivity()));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) => UserRightListActivity(
+          arrData: dataArrM,
+          formId: "AM006",
+        )));
 
         if(mounted){
           print("HERE BACK");
@@ -581,7 +584,6 @@ var dataArrM;
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }*/
-
       },
       onDoubleTap: (){},
       child: Padding(
@@ -617,7 +619,6 @@ var dataArrM;
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }*/
-
       },
       onDoubleTap: (){},
       child: Padding(
@@ -647,12 +648,13 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
           companyId: companyId,
+          arrData: dataArrM,
+          formId: "AM007",
         )));
       /*  if(mounted){
           print("HERE BACK");
           Navigator.of(context).pushReplacementNamed('/dashboard');
         }*/
-
       },
       onDoubleTap: (){},
       child: Padding(

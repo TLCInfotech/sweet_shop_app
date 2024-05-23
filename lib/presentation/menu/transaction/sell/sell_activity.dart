@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -87,6 +88,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       });
     }
   }
+  bool partyBlank=true;
   //FUNC: REFRESH LIST
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
@@ -154,13 +156,18 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              onPressed: () async{
+           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateSellInvoice(
                       dateNew:   invoiceDate,
                       Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                 )));
+               selectedFranchiseeId="";
+              partyBlank=false;
+                  saleInvoice_list=[];
+              await  gerSaleInvoice(1);
+
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -171,6 +178,10 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -287,6 +298,32 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     );
   }
 
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+       title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+          setState(() {
+            selectedFranchiseeName = name!;
+            selectedFranchiseeId = id.toString()!;
+            saleInvoice_list=[];
+            gerSaleInvoice(1);
+          });
+
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
+
+    );
+
+  }
+
   Expanded get_purchase_list_layout() {
     return Expanded(
         child:RefreshIndicator(
@@ -308,9 +345,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                   child: FadeInAnimation(
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () async{
 
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                       await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateSellInvoice(
                               dateNew: invoiceDate,
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
@@ -319,6 +356,10 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                               editedItem:saleInvoice_list[index],
                               come:"edit",
                             )));
+                       selectedFranchiseeId="";
+                       partyBlank=false;
+                       saleInvoice_list=[];
+                       await  gerSaleInvoice(1);
                       },
                       child: Card(
                         child: Row(
@@ -416,18 +457,15 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
             page: page.toString()
         );
         String apiUrl;
-        if(widget.franhiseeID!=null){
-          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10&${StringEn.frnachisee_id}=${widget.franhiseeID}";
 
-        }
-        else{
-          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
-        }
+          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
               setState(() {
                 isLoaderShow=false;
+                partyBlank=true;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList.clear();

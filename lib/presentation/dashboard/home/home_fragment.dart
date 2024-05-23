@@ -73,22 +73,22 @@ print("hfshjffhfbh  $dateString");
   List MasterMenu=[];
   List TransactionMenu=[];
 
-
+  var dataArr;
+  var dataArrM;
   getLocal()async{
     setState(() {
     });
     var menu =await (AppPreferences.getMasterMenuList());
     var tr =await (AppPreferences.getTransactionMenuList());
     var re =await (AppPreferences.getReportMenuList());
-
+    dataArr=tr;
+    dataArrM=menu;
     setState(() {
       MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
       TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
-      // MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
-
     });
 
-    print(MasterMenu.contains("AM001"));
+    print("bnbedbdbnebnedbneebn    $menu");
   }
 
   late DateTime dateTime;
@@ -420,6 +420,8 @@ print("hfshjffhfbh  $dateString");
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
+                                formId: "RM005",
+                                arrData: dataArrM,
                               )));
                             },
                             child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
@@ -427,6 +429,8 @@ print("hfshjffhfbh  $dateString");
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
                                 newDate: dateTime.add(Duration(days: 1)),
+                                formId: "RM005",
+                                arrData: dataArrM,
                               )));
                             }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
@@ -435,16 +439,24 @@ print("hfshjffhfbh  $dateString");
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
+                        (TransactionMenu.contains("ST003"))? GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,
+                                formId: "ST003",
+                                arrData: dataArr,
+                              )));
                             },
-                            child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17))),
-                        GestureDetector(
+                            child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17)))
+                        :Container(),
+                        (TransactionMenu.contains("AT006"))? GestureDetector(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
-                                dateNew: dateTime,)));
-                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
+                                dateNew: dateTime,
+                                formId: "AT006",
+                                arrData: dataArr,
+                              )));
+                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
+                        :Container(),
                       ],
                     ),
                     const SizedBox(height: 10,),
@@ -452,29 +464,34 @@ print("hfshjffhfbh  $dateString");
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
+                        (TransactionMenu.contains("ST003"))&& (TransactionMenu.contains("AT006"))?   GestureDetector(
                             onTap: (){
-                            },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C))),
-                        GestureDetector(
+                            },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C)))
+                        :Container(),
+                        (TransactionMenu.contains("AT009"))? GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,)));
-                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                                formId: "AT009",
+                                arrData: dataArr,
+                              )));
+                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
+                        :Container(),
 
                       ],
                     ),
                     const SizedBox(height: 10,),
                     // getFieldTitleLayout("Profit/Loss "),
                     // const SizedBox(height: 5,),
-                    getProfitLayout(),
                     // getFieldTitleLayout("Payment-Outanding "),
                     // const SizedBox(height: 5,),
-                    Row(
+                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&(TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?  getProfitLayout():Container(),
+                    (TransactionMenu.contains("AT002"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
                         getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
                       ],
-                    ),
+                    ):Container(),
                   ],
                 ),
               ),
@@ -841,6 +858,8 @@ print("hfshjffhfbh  $dateString");
         else{
           Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
             dateNew: dateTime,
+            formId: "AT002",
+            arrData: dataArr,
           )));
        //   widget.mListener.getAddLeder(title);
         }
@@ -883,50 +902,10 @@ print("hfshjffhfbh  $dateString");
                 ),
               ],
             )
-
           ],
         ),
       ),
     );
-
-    //   Container(
-    //   height: 170,
-    //   width: (SizeConfig.screenWidth * 0.85) / 3,
-    //   // margin: EdgeInsets.all(10),
-    //   decoration: BoxDecoration(
-    //       color: boxcolor.withOpacity(0.3),
-    //       borderRadius: BorderRadius.circular(5)),
-    //   alignment: Alignment.center,
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         height: 60,
-    //         width: (SizeConfig.screenWidth * 0.85) / 3,
-    //         margin: const EdgeInsets.all(15),
-    //         decoration: BoxDecoration(
-    //             color: boxcolor, borderRadius: BorderRadius.circular(5)),
-    //         alignment: Alignment.center,
-    //         child: Text(
-    //           "$amount",
-    //           style: subHeading_withBold,
-    //         ),
-    //       ),
-    //       Text(
-    //         "$title",
-    //         style: item_heading_textStyle.copyWith(
-    //           color: boxcolor,
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 10,
-    //       ),
-    //       FaIcon(
-    //         FontAwesomeIcons.solidArrowAltCircleRight,
-    //         color: boxcolor,
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 
 }

@@ -23,8 +23,9 @@ class AssignRightsToUser extends StatefulWidget {
   final editedItem;
   final come;
   final uId;
+  final readOnly;
 
-  const AssignRightsToUser({super.key,required this.mListener, this.editedItem, this.come, this.uId});
+  const AssignRightsToUser({super.key,required this.mListener, this.editedItem, this.come, this.uId, this.readOnly});
 
   @override
   State<AssignRightsToUser> createState() => _AssignRightsToUserState();
@@ -165,7 +166,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                     // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Container(
+                widget.readOnly==false?Container():  Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -192,7 +193,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   /* Widget for navigate to next screen button  */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
+    return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
@@ -273,18 +274,18 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        widget.readOnly==false?Container():
                         GestureDetector(
                             onTap: (){
                               FocusScope.of(context).requestFocus(FocusNode());
-                              if(addAll==false) {
-                                setState(() {
-                                  addAll = !addAll;
-                                });
-                                getAllForms();
-                              }
 
-
-                            },
+                               if(addAll==false) {
+                                 setState(() {
+                                   addAll = !addAll;
+                                 });
+                                 getAllForms();
+                               }
+                             },
                             child: Container(
                                 width: SizeConfig.halfscreenWidth,
                                 padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
@@ -305,7 +306,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                 )
                             )
                         ),
-
+                        widget.readOnly==false?Container():
                         GestureDetector(
                             onTap: (){
                               FocusScope.of(context).requestFocus(FocusNode());
@@ -365,7 +366,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       child: Column(
         children: [
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-          getCopyFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          widget.readOnly==false?Container():  getCopyFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
       ),
@@ -416,6 +417,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
+      readOnly: false,
       come:"disable",
       franchiseeName: widget.come=="edit"? widget.editedItem['UID']:"",
       title: ApplicationLocalizations.of(context)!.translate("user")!,
@@ -457,9 +459,10 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                       editedItemIndex=index;
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
+                    if(widget.readOnly==true){
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
-                    }
+                    }}
                   },
                   child: Card(
                     child: Row(
@@ -499,8 +502,10 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                                   alignment: Alignment.centerRight,
                                                   child: Row(
                                                     children: [
-                                                      Item_list[index]['Insert_Right']==true?Text("Insert, ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
-                                                      Item_list[index]['Update_Right']==true?Text("Update, ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Insert_Right']==true?Text("Insert ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Update_Right']==true &&  Item_list[index]['Insert_Right']==true ?Text(", ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Update_Right']==true?Text("Update",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                      Item_list[index]['Delete_Right']==true && (   Item_list[index]['Insert_Right']==true ||Item_list[index]['Update_Right']==true )?Text(", ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
                                                       Item_list[index]['Delete_Right']==true?Text("Delete",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
                                                     ],
                                                   )),
@@ -510,7 +515,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                       ),
                                     ),
                                   ),
-
+                                  widget.readOnly==false?Container():
                                   Container(
                                       width: parentWidth*.1,
                                       // height: parentHeight*.1,

@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/journal/create_journal_voucher.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -143,13 +144,17 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
+              onPressed: ()async {
+              await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                   mListener: this,
                   dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
                   voucherNo: null,
                   companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                 )));
+                selectedFranchiseeId="";
+                partyBlank=false;
+                payment_list=[];
+                await  getJournals(1);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -159,8 +164,11 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -214,8 +222,33 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
           getJournals(1);
         },
         applicablefrom: newDate
+    );
+  }
+
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  bool partyBlank=true;
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+          getJournals(1);
+        });
+
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
 
     );
+
   }
 
   /* Widget to get total count and amount Layout */
@@ -285,9 +318,9 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                   child: FadeInAnimation(
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: ()async{
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                           mListener: this,
                           dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
                           voucherNo: payment_list[index]['Voucher_No'],
@@ -296,6 +329,10 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                           readOnly: singleRecord['Update_Right'],
                           come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
                         )));
+                        selectedFranchiseeId="";
+                        partyBlank=false;
+                        payment_list=[];
+                        await  getJournals(1);
                       },
                       child: Card(
                         child: Row(
@@ -393,10 +430,11 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Journal&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Journal&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                partyBlank=true;
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];

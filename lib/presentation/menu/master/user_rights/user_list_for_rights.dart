@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +21,9 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 
 
 class UserRightListActivity extends StatefulWidget {
-  const UserRightListActivity({super.key});
+  final  formId;
+  final  arrData;
+  const UserRightListActivity({super.key, this.formId, this.arrData});
 
   @override
   State<UserRightListActivity> createState() => _UserRightListActivityState();
@@ -63,6 +67,13 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
     //   });
     // }
     getUser(page);
+    setVal();
+  }
+  var  singleRecord;
+  setVal()async{
+    List<dynamic> jsonArray = jsonDecode(widget.arrData);
+    singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
+    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -227,7 +238,6 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: () {
-
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -235,6 +245,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                     editedItem: users_list[index],
                                     mListener: this,
                                     come:"edit",
+                                  readOnly: singleRecord['Update_Right'],
                                 )));
                       },
                       child: Card(
@@ -275,22 +286,10 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                         ],
                                       ),
                                     ),
-                                    // Positioned(
-                                    //     top: 0,
-                                    //     right: 0,
-                                    //     child: DeleteDialogLayout(
-                                    //       callback: (response) async {
-                                    //         if (response == "yes") {
-                                    //           print("##############$response");
-                                    //           await callDeleteUser(
-                                    //               users_list[index]['UID'].toString(),
-                                    //               index);
-                                    //         }
-                                    //       },
-                                    //     ))
                                   ],
                                 )),
-                             DeleteDialogLayout(
+                            singleRecord['Delete_Right']==false?Container():
+                            DeleteDialogLayout(
                                callback: (response) async {
                                  if (response == "yes") {
                                    print("##############$response");

@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
@@ -37,6 +38,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
+  bool partyBlank=true;
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
@@ -151,13 +153,17 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                 size: 30,
                 color: Colors.black87,
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              onPressed: () async{
+               await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreatePurchaseInvoice(
                       dateNew:invoiceDate,
                       Invoice_No: null,
                       mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                     )));
+                selectedFranchiseeId="";
+                partyBlank=false;
+                saleInvoice_list=[];
+                await  gerSaleInvoice(1);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -168,6 +174,10 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getPurchaseDateLayout(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                     const SizedBox(
                       height: 10,
                     ),
@@ -207,6 +217,28 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           ),
         ),
       ],
+    );
+  }
+
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+          gerSaleInvoice(1);
+        });
+        print("############3");
+        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+      },
     );
   }
 
@@ -302,8 +334,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   child: FadeInAnimation(
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                      onTap: ()async{
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePurchaseInvoice(
                               dateNew:invoiceDate,
                               readOnly: singleRecord['Update_Right'],
@@ -312,6 +344,10 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                               editedItem:saleInvoice_list[index],
                               come:"edit",
                             )));
+                        selectedFranchiseeId="";
+                        partyBlank=false;
+                        saleInvoice_list=[];
+                        await  gerSaleInvoice(1);
                       },
                       child: Card(
                         child: Row(
@@ -410,10 +446,11 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoice}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoice}?Company_ID=$companyId&Vendor_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
+                partyBlank=true;
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
