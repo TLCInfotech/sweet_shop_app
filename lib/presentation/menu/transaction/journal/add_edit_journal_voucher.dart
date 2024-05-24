@@ -380,6 +380,10 @@ var selectedbankCashLedger="";
           onTap: () {
 
             var item={};
+            if(selectedLimitUnit==null){
+              var snack=SnackBar(content: Text("Please select amount type!"));
+              ScaffoldMessenger.of(context).showSnackBar(snack);
+            }else{
             if(widget.editproduct!=null){
               item = {
                 // "Date":widget.newdate,
@@ -408,7 +412,7 @@ var selectedbankCashLedger="";
             if(widget.mListener!=null){
               widget.mListener.AddOrEditLedgerForJournalsDetail(item);
               Navigator.pop(context);
-            }
+            }}
           },
           onDoubleTap: () {},
           child: Container(

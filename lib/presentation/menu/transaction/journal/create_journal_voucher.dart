@@ -756,19 +756,20 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             onSuccess:(data){
               print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['details']);
 
                   setState(() {
                     Ledger_list=_arrList;
+                    selectedbankCashLedger=data['headerJournal']['Ledger_Name'];
                   });
                  calculateTotalAmt();
                 }
 
               });
-
+              isLoaderShow=false;
               // _arrListNew.addAll(data.map((arrData) =>
               // new EmailPhoneRegistrationModel.fromJson(arrData)));
               print("  LedgerLedger  $data ");
