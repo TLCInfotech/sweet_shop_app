@@ -319,6 +319,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          debitNote_list=[];
           getCreditNote(1);
         });
         print("############3");

@@ -190,13 +190,8 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                       ),
                       getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-
                       getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-
                       getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                     ],
                   ),
                 ),

@@ -65,11 +65,9 @@ class _HomeFragmentState extends State<HomeFragment> {
     addDate();
     callGetFranchiseeNot(0);
     getDashboardData();
-print("hfshjffhfbh  $dateString");
-
-   // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
-
-  }
+    print("hfshjffhfbh  $dateString");
+     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+ }
   List MasterMenu=[];
   List TransactionMenu=[];
 
@@ -411,8 +409,6 @@ print("hfshjffhfbh  $dateString");
                     // sale_purchase_expense_container(),
                     // const SizedBox(height: 10,),
                     // getFranchiseeLayout(),
-
-
                     const SizedBox(height: 10,),
                     (MasterMenu.contains("RM005"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -436,7 +432,7 @@ print("hfshjffhfbh  $dateString");
                       ],
                     ):Container(),
                     const SizedBox(height: 10,),
-                    Row(
+                    (TransactionMenu.contains("ST003"))?   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         (TransactionMenu.contains("ST003"))? GestureDetector(
@@ -458,9 +454,33 @@ print("hfshjffhfbh  $dateString");
                             },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
                         :Container(),
                       ],
+                    )
+                    :Container(),
+                    (TransactionMenu.contains("ST003"))?Container():
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        (TransactionMenu.contains("AT006"))? GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+                                dateNew: dateTime,
+                                formId: "AT006",
+                                arrData: dataArr,
+                              )));
+                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
+                        :Container(),
+                        (TransactionMenu.contains("AT009"))? GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                                formId: "AT009",
+                                arrData: dataArr,
+                              )));
+                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
+                            :Container(),
+                      ],
                     ),
                     const SizedBox(height: 10,),
-
+                    (TransactionMenu.contains("ST003"))?
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -476,15 +496,16 @@ print("hfshjffhfbh  $dateString");
                               )));
                             },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
                         :Container(),
-
                       ],
-                    ),
+                    ):Container(),
                     const SizedBox(height: 10,),
                     // getFieldTitleLayout("Profit/Loss "),
                     // const SizedBox(height: 5,),
                     // getFieldTitleLayout("Payment-Outanding "),
                     // const SizedBox(height: 5,),
-                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&(TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?  getProfitLayout():Container(),
+                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                        (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+                    getProfitLayout():Container(),
                     (TransactionMenu.contains("AT002"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

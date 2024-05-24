@@ -221,7 +221,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
 /* Widget for all field layout*/
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -516,7 +516,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
+      franchiseeName:widget.come=="edit"?selectedbankCashLedger:"",
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (name,id){
         if(selectedBankLedgerID==id){

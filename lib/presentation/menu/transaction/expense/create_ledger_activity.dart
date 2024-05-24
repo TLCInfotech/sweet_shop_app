@@ -128,8 +128,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       print("#######################3 ${widget.editedItem}");
       setState(() {
         voucherNoController.text="Voucher No: ${widget.voucherNo}";
-        selectedFranchiseeId=widget.editedItem['Ledger_ID'].toString();
-        selectedFranchiseeName=widget.editedItem['Ledger_Name'];
       });
     }
 
@@ -249,7 +247,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container(): ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -423,7 +421,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
+      franchiseeName: widget.come=="edit"?selectedFranchiseeName:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
         setState(() {
@@ -893,7 +891,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             onSuccess:(data){
           print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['expenseDetails']);
@@ -905,7 +903,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                   });
                   calculateTotalAmt();
                 }
-
+                isLoaderShow=false;
               });
 
               // _arrListNew.addAll(data.map((arrData) =>

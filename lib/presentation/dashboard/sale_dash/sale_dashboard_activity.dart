@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +44,29 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
     super.initState();
     addDate();
     getSalePartyWise();
+    getLocal();
+  }
+
+
+  List MasterMenu=[];
+  List TransactionMenu=[];
+
+  String companyId="";
+  var dataArr;
+  var dataArrM;
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
+    dataArrM=menu;
+    var re =await (AppPreferences.getReportMenuList());
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    });
   }
    DateTime saleDate= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
   addDate() async {
@@ -266,7 +291,10 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: saleDate,)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: saleDate,
+          formId: "ST003",
+          arrData: dataArr,
+        )));
       },
       child: Container(
         height: 40,

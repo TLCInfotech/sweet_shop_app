@@ -357,7 +357,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -749,7 +749,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
            apiUrl: ApiConstants().ledgerWithoutImage+"?",
           titleIndicator: true,
           title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
-          franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
+          franchiseeName: widget.come=="edit"? selectedLedgerName:"",
           franchisee: widget.come,
         readOnly: widget.readOnly,
           callback: (name,id){
@@ -859,7 +859,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             onSuccess:(data){
               print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['itemDetails']);
@@ -874,7 +874,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   });
                   calculateTotalAmt();
                 }
-
+                isLoaderShow=false;
               });
 
               // _arrListNew.addAll(data.map((arrData) =>

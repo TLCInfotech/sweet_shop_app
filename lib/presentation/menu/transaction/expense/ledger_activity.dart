@@ -223,6 +223,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          expense_list=[];
           getExpense(1);
         });
         print("############3");

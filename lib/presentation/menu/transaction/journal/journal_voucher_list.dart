@@ -235,11 +235,12 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
-      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (name,id){
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          payment_list=[];
           getJournals(1);
         });
 

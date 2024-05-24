@@ -311,6 +311,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          debitNote_list=[];
           getDebitNotes(1);
         });
         print("############3");

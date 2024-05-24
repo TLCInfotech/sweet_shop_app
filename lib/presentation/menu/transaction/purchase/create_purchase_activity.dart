@@ -88,6 +88,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
   bool isLoaderShow=false;
+  bool isVisibleD=true;
 
   var editedItemIndex=null;
 
@@ -114,7 +115,9 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     //     selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
     //   });
     // }
-    setData();
+if(widget.come=="edit"){
+   gerSaleInvoice(1);
+}
 
   }
 
@@ -123,18 +126,14 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
       await calculateTotalAmt();
-
-      await gerSaleInvoice(1);
-      print("#######################3 ${widget.editedItem}");
       setState(() {
         invoiceNo.text="Invoice No : ${widget.Invoice_No}";
         selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
         selectedFranchiseeName=widget.editedItem['Vendor_Name'];
-        selectedLedgerName=widget.editedItem['Purchase_Ledger_Name'];
-        selectedLedgerId=widget.editedItem['Purchase_Ledger'].toString();
       });
     }
-
+    print("pfkjlfjkfrj  $selectedLedgerName");
+      isLoaderShow=false;
     print("#######################33 ${selectedFranchiseeName}");
 
   }
@@ -370,11 +369,10 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container(): ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -637,7 +635,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
   }
 
   Container InvoiceInfo() {
-    return Container(
+    return  Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
       decoration: BoxDecoration(
@@ -788,7 +786,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
         titleIndicator: true,
         readOnly: widget.readOnly,
         title: ApplicationLocalizations.of(context)!.translate("purchase_ledger")!,
-        franchiseeName: widget.come=="edit"? widget.editedItem['Purchase_Ledger_Name']:"",
+        franchiseeName: widget.come=="edit"? selectedLedgerName:"",
         franchisee: widget.come,
         callback: (name,id){
           if(selectedFranchiseeId==id){
@@ -906,6 +904,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
           isLoaderShow=true;
+          isVisibleD=true;
         });
         TokenRequestModel model = TokenRequestModel(
             token: sessionToken,
@@ -916,7 +915,7 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
             onSuccess:(data){
               print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['itemDetails']);
@@ -926,10 +925,11 @@ class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with Sing
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Purchase_Ledger_Name'];
+                    print("hjjbjjbnbn  $selectedLedgerName");
                     selectedLedgerId=data['voucherDetails']['Purchase_Ledger'].toString();
-
                   });
                   calculateTotalAmt();
+                  setData();
                 }
 
               });

@@ -231,6 +231,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          saleInvoice_list=[];
           getSaleOrder(1);
         });
         print("############3");

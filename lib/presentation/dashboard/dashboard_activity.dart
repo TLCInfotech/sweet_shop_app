@@ -52,12 +52,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     getUserPermissions();
     getLocal();
   }
-
-
   List MasterMenu=[];
   List TransactionMenu=[];
-
-
   String companyId="";
   var dataArr;
   var dataArrM;
@@ -70,13 +66,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     dataArr=tr;
     dataArrM=menu;
     var re =await (AppPreferences.getReportMenuList());
-
     setState(() {
       MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
       TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
- //          (MasterMenu.contains("RM005"))?
-
-      print("oneeeeeeeeeeee  ${(TransactionMenu.contains("AT009"))} \n newwwww  $tr ");
   });
   }
 

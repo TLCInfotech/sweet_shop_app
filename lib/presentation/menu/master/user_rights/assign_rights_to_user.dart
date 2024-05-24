@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -198,6 +200,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       children: [
         GestureDetector(
           onTap: () {
+            getUserPermissions();
              if(selectedFranchiseeId==""){
               var snackBar=SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -442,7 +445,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       child: ListView.separated(
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: Item_list.length,
-        padding: EdgeInsets.only(bottom: 50),
+        padding: EdgeInsets.only(bottom: 500),
         itemBuilder: (BuildContext context, int index) {
           return  AnimationConfiguration.staggeredList(
             position: index,
@@ -964,6 +967,55 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     }
   }
 
+
+  getUserPermissions() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    String uid=await AppPreferences.getUId();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+                if(data!=null){
+                  if (mounted) {
+                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
+                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
+                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
+                  }
+
+                }else{
+                }
+              });
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
 }
 

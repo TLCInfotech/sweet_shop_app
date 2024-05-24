@@ -234,6 +234,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          saleInvoice_list=[];
           gerSaleInvoice(1);
         });
         print("############3");

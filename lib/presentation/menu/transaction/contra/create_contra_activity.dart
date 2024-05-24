@@ -521,7 +521,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
-      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         if(selectedBankLedgerID==id){
           var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));

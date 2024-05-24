@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -65,6 +67,29 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     getDashboardData();
     print("hfshjffhfbh  $dateString");
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+    getLocal();
+  }
+
+
+  List MasterMenu=[];
+  List TransactionMenu=[];
+
+  String companyId="";
+  var dataArr;
+  var dataArrM;
+  getLocal()async{
+    companyId=await AppPreferences.getCompanyId();
+    setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
+    dataArrM=menu;
+    var re =await (AppPreferences.getReportMenuList());
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    });
   }
   late DateTime dateTime;
   String dateString="";
@@ -317,6 +342,8 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                               await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
                                 dateNew: dateTime,
                                 mListener: this,
+                                formId: "ST003",
+                                arrData: dataArr,
                               )));
                               await callGetFranchiseeNot(0);
                               await getDashboardData();
@@ -328,6 +355,8 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                               await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
                                 dateNew: dateTime,
                                 mListener: this,
+                                formId: "ST003",
+                                arrData: dataArr,
                               )));
                               await callGetFranchiseeNot(0);
                               await getDashboardData();
@@ -342,6 +371,8 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                           await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(
                             dateNew: dateTime,
                             mListener: this,
+                            formId: "AT002",
+                            arrData: dataArr,
                           )));
                           await callGetFranchiseeNot(0);
                           await getDashboardData();

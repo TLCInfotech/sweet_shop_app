@@ -103,8 +103,6 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       print("#######################3 ${widget.editedItem}");
       setState(() {
         voucherNoController.text="Voucher No: ${widget.voucherNo}";
-        selectedBankLedgerID=widget.editedItem['Ledger_ID'].toString();
-        selectedbankCashLedger=widget.editedItem['Ledger_Name'];
       });
     }
 
@@ -221,7 +219,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
 /* Widget for all field layout*/
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
+    return isLoaderShow?Container():ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -526,7 +524,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
       ledgerName: selectedbankCashLedger,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName: widget.come=="edit"? widget.editedItem['Ledger_Name']:"",
+      franchiseeName: widget.come=="edit"? selectedbankCashLedger:"",
       title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         setState(() {
@@ -756,7 +754,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             onSuccess:(data){
               print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['accountDetails']);
@@ -768,7 +766,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                   });
                   calculateTotalAmt();
                 }
-
+                isLoaderShow=false;
               });
 
               // _arrListNew.addAll(data.map((arrData) =>

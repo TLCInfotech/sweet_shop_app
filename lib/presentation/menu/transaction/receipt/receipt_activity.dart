@@ -221,11 +221,12 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
-      title: ApplicationLocalizations.of(context)!.translate("party")!,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         setState(() {
           selectedFranchiseeName = name!;
           selectedFranchiseeId = id.toString()!;
+          recipt_list=[];
           getRecipt(1);
         });
 
