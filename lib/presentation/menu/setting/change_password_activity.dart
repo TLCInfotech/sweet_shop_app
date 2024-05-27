@@ -7,15 +7,12 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-
 import '../../../core/app_preferance.dart';
 import '../../../core/internet_check.dart';
 import '../../../core/localss/application_localizations.dart';
 import '../../../data/api/constant.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/confirmPassword/create_login_user_upadte_request_model.dart';
-import '../../../data/domain/user/put_user_request_model.dart';
 import '../../dashboard/dashboard_activity.dart';
 
 class ChangePasswordActivity extends StatefulWidget {

@@ -90,6 +90,8 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     //   });
     // }
   }
+
+  String finInvoiceNo="";
   setData()async{
     await getCompanyId();
     invoiceDate=widget.dateNew;
@@ -99,7 +101,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
       await getOrderInvoice(1);
       print("#######################3 ${widget.editedItem}");
       setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
+
         selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
         selectedFranchiseeName=widget.editedItem['Vendor_Name'];
       });
@@ -661,7 +663,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
           ),
         ],
       ),
-      child: Text("${invoiceNo.text}",style:text_field_textStyle ,),
+      child: Text("Invoice No : $finInvoiceNo",style:text_field_textStyle ,),
     );
 
   }
@@ -791,6 +793,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                   setState(() {
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    finInvoiceNo=data['voucherDetails']['Fin_Order_No'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
 
                   });

@@ -53,6 +53,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
 
   String selectedFranchiseeName="";
   String selectedFranchiseeId="";
+  String finInvoiceNo="";
 
   String selectedLedgerName="";
   String selectedLedgerId="";
@@ -86,9 +87,6 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
       getCreditNote(1);
-      setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-      });
     }
 
   }
@@ -637,7 +635,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
           ),
         ],
       ),
-      child: Text("${invoiceNo.text}",style:text_field_textStyle ,),
+      child: Text("Invoice No: ${finInvoiceNo}",style:text_field_textStyle ,),
     );
 
   }
@@ -872,6 +870,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                   setState(() {
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    finInvoiceNo=data['voucherDetails']['Fin_Invoice_No'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Ledger_Name'];
                     selectedLedgerId=data['voucherDetails']['Ledger_ID'].toString();

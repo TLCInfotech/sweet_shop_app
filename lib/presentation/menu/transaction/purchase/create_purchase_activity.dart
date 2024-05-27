@@ -113,7 +113,6 @@ if(widget.come=="edit"){
     if(widget.come=="edit"){
       await calculateTotalAmt();
       setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
         selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
         selectedFranchiseeName=widget.editedItem['Vendor_Name'];
       });
@@ -669,7 +668,7 @@ if(widget.come=="edit"){
           ),
         ],
       ),
-      child: Text("${invoiceNo.text}",style:text_field_textStyle ,),
+      child: Text("Invoice No : $finInvoiceNo",style:text_field_textStyle ,),
     );
 
   }
@@ -880,7 +879,7 @@ if(widget.come=="edit"){
     print(Updated_list);
   }
 
-
+String finInvoiceNo="";
   gerSaleInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -909,6 +908,7 @@ if(widget.come=="edit"){
                   setState(() {
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    finInvoiceNo=data['voucherDetails']['Fin_Invoice_No'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Purchase_Ledger_Name'];
                     print("hjjbjjbnbn  $selectedLedgerName");

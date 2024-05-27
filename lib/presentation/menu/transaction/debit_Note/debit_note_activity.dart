@@ -390,7 +390,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                                               children: [
                                                 FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
                                                 SizedBox(width: 10,),
-                                                Expanded(child: Text("Invoice No. - ${debitNote_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                Expanded(child: Text("Invoice No. - ${debitNote_list[index]['Fin_Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                               ],
                                             ),
                                             SizedBox(height: 5,),

@@ -85,9 +85,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
       getDebitNote(1);
-      setState(() {
-        invoiceNo.text="Invoice No : ${widget.Invoice_No}";
-      });
+
     }
 
   }
@@ -637,7 +635,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
           ),
         ],
       ),
-      child: Text("${invoiceNo.text}",style:text_field_textStyle ,),
+      child: Text("Invoice No :$finInvoiceNo",style:text_field_textStyle ,),
     );
 
   }
@@ -742,7 +740,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
 
   }
 
-
+  String finInvoiceNo="";
   getDebitNote(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -770,6 +768,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                   setState(() {
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
+                    finInvoiceNo=data['voucherDetails']['Fin_Invoice_No'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Ledger_Name'];
                     selectedLedgerId=data['voucherDetails']['Ledger_ID'].toString();

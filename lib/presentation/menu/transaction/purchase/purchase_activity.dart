@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +6,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
@@ -386,7 +384,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                                               children: [
                                                 FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
                                                 SizedBox(width: 10,),
-                                                Expanded(child: Text("Invoice No. - ${saleInvoice_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                Expanded(child: Text("Invoice No. - ${saleInvoice_list[index]['Fin_Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                               ],
                                             ),
                                             SizedBox(height: 5,),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,9 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
@@ -401,10 +398,9 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                                               children: [
                                                 FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
                                                 SizedBox(width: 10,),
-                                                Expanded(child: Text("Invoice No:- ${debitNote_list[index]['Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                Expanded(child: Text("Invoice No:- ${debitNote_list[index]['Fin_Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                               ],
-                                            ),
-                                            SizedBox(height: 5,),
+                                            ), SizedBox(height: 5,),
                                             Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
@@ -413,7 +409,6 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                                                 Expanded(child: Text(CommonWidget.getCurrencyFormat(debitNote_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                               ],
                                             ),
-
                                           ],
                                         ),
                                       ),

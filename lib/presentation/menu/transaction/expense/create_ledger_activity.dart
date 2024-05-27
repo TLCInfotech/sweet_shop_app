@@ -106,7 +106,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       fdetail=widget.franchiseeDetails;
     });
     setState(() {
-      voucherNoController.text="Voucher No: ${widget.voucherNo}";
+
       selectedFranchiseeId=fdetail[1].toString();
       selectedFranchiseeName=fdetail[0].toString();
     });
@@ -338,7 +338,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 getReceiptDateLayout(),
-                getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
+                SizedBox(width: 5,),
+                Expanded(child: getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth))
               ],
             ),
             getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -387,29 +388,28 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   final voucherNoController = TextEditingController();
   /* Widget for voucher no text from field layout */
+
   Widget getVoucherNoLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
-      controller: voucherNoController,
-      focuscontroller: _voucherNoFocus,
-      focusnext: _voucherNoFocus,
-      title: "",
-      callbackOnchage: (value) {
-        setState(() {
-          voucherNoController.text = value;
-        });
-      },
-      readOnly: false,
-      textInput: TextInputType.text,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
-      validation: (value) {
-        if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("pin_code")!;
-        }
-        return null;
-      },
-      parentWidth: (SizeConfig.screenWidth ),
+    return   Container(
+      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(left: 10),
+      width:parentWidth,
+      height: (SizeConfig.screenHeight) * .055,
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        color:CommonColor.WHITE_COLOR,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 1),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+          ),
+        ],
+      ),
+      child: Text("Voucher No: $finVoucherNo",style:text_field_textStyle ,),
     );
+
   }
 
   /* Widget to get Franchisee Name Layout */
@@ -870,7 +870,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     calculateTotalAmt();*/
   }
   //http://localhost:3000/getExpenseVoucherDetails?Company_ID=18&Voucher_No=21&Date=2024-03-18
-
+String finVoucherNo="";
   getExpInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -897,6 +897,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                   setState(() {
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Ledger_Name'];
+                    finVoucherNo=data['voucherDetails']['Fin_Voucher_No'];
                     selectedFranchiseeId=data['voucherDetails']['Ledger_ID'].toString();
                   });
                   calculateTotalAmt();
