@@ -1,9 +1,3 @@
-
-
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,11 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_dialog_for_profile.dart';
-import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -27,12 +17,8 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/getFranchisee.dart';
-import '../../../common_widget/getLedger.dart';
 import '../../../common_widget/get_date_layout.dart';
-import '../../../dialog/franchisee_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
-import '../sell/add_or_edit_Item.dart';
 import 'add_or_edit_Item.dart';
 
 

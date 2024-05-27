@@ -1,16 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/order/create_oredr_invoice_activity.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/internet_check.dart';
@@ -18,8 +14,6 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../../data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
-import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 

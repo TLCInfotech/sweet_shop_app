@@ -7,8 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_dashboard.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
-import 'package:textfield_search/textfield_search.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -18,8 +16,7 @@ import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../core/string_en.dart';
-import '../../common_widget/signleLine_TexformField.dart';
+
 
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;

@@ -1,15 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
-import 'package:sweet_shop_app/presentation/dashboard/home/home_fragment.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../../../core/app_preferance.dart';
 import '../../../core/common.dart';
 import '../../../core/common_style.dart';

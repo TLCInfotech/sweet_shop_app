@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +12,6 @@ import '../../../../core/common.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
-import '../../../../core/string_en.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';

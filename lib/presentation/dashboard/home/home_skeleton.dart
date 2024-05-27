@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
-import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-
 import '../../../data/api/request_helper.dart';
 
 class HomeSkeleton extends StatefulWidget {

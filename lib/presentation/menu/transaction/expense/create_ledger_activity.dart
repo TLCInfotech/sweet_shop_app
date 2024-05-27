@@ -18,7 +18,6 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/transaction/expense/post_expense_invoice_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
@@ -891,7 +890,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
             onSuccess:(data){
           print(data);
               setState(() {
-
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['expenseDetails']);

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -15,18 +14,16 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
-import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../menu/master/item_opening_balance/create_item_opening_bal_activity.dart';
 import '../../menu/transaction/credit_note/credit_note_activity.dart';
-import '../../menu/transaction/expense/create_ledger_activity.dart';
 import '../../menu/transaction/expense/ledger_activity.dart';
 import '../../menu/transaction/sell/sell_activity.dart';
 import 'home_skeleton.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+
 class ProfitLossDash extends StatefulWidget {
   final ProfitLossDashInterface mListener;
   final fid;
@@ -378,7 +375,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                        )));
                      },
                      child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
-
                  GestureDetector(
                      onTap: ()async{
                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(

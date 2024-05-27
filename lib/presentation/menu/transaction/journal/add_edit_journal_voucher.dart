@@ -378,7 +378,6 @@ var selectedbankCashLedger="";
         ),
         GestureDetector(
           onTap: () {
-
             var item={};
             if(selectedLimitUnit==null){
               var snack=SnackBar(content: Text("Please select amount type!"));

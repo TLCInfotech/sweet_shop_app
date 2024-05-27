@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +6,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';

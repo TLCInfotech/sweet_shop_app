@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +9,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_credit_debit_reuest_model.dart';
-import 'package:sweet_shop_app/presentation/common_widget/getLedger.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -21,10 +17,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
-import '../../../common_widget/signleLine_TexformField.dart';
-import '../../../dialog/franchisee_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'add_or_edit_item_credit.dart';
 

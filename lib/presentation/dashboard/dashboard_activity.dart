@@ -29,11 +29,8 @@ class DashboardActivity extends StatefulWidget {
 class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentInterface,
     MenuActivityInterface{
   bool isLoader = false;
-
-
   double doubleValueLat = 0.0;
   double doubleValueLong = 0.0;
-
   String  companyLatitude = "";
   String  companyLongitude = "";
   double distanceInMeters = 0;
@@ -43,7 +40,6 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   void initState() {
     // TODO: implement initState
     super.initState();
-
     addNewScreen(
         HomeFragment(
           mListener: this,

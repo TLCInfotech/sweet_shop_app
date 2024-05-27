@@ -1,10 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-
 import '../../../core/app_preferance.dart';
 import '../../../core/colors.dart';
 import '../../../core/common.dart';
