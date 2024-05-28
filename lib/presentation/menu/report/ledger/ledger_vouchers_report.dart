@@ -274,7 +274,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                       },
                       child: Card(
                         elevation: 0,
-                        color: index%2==0?Colors.deepOrange.withOpacity(0.3):Colors.green.withOpacity(0.3),
+                        color: index%2==0?Colors.deepOrange.withOpacity(0.2):Colors.green.withOpacity(0.2),
                         child: Row(
                           children: [
                            Expanded(
@@ -292,7 +292,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                                             children: [
                                               FaIcon(FontAwesomeIcons.fileInvoice ,size: 15,),
                                               SizedBox(width: 10,),
-                                              Text("Recipt Voucher No.:${expense_list[index]['Voucher_No']}", style: item_regular_textStyle,),
+                                              Text("${expense_list[index]['Voucher_Name']} Voucher No.:${expense_list[index]['Voucher_No']}", style: item_regular_textStyle,),
                                             ],
                                           ),
                                           Row(
@@ -374,7 +374,12 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.centerLeft,
-          child: Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal).ceilToDouble())}",style: item_heading_textStyle,),
+          child: Row(
+            children: [
+              Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal).ceilToDouble().abs())}",style: item_heading_textStyle,),
+              int.parse(closingBal)==0?Container():( int.parse(openingBal)<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
+            ],
+          ),
         ),
        closingBal==null?Container():
        Container(
@@ -383,7 +388,12 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse(closingBal).ceilToDouble())}",style: item_heading_textStyle,),
+          child:  Row(
+            children: [
+              Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse(closingBal).ceilToDouble().abs())}",style: item_heading_textStyle,),
+              int.parse(closingBal)==0?Container():(int.parse(closingBal)<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
+            ],
+          ),
         ),
 
       ],
@@ -418,7 +428,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                 if(data!=null){
                   // openingBal=data['Opening_Balance']<0?"${data['Opening_Balance']}":"${data['Opening_Balance']}DR";
                   // closingBal=data['Closing_Balance']<0?"${data['Closing_Balance']}CR":"${data['Closing_Balance']}DR";
-                 openingBal= double.parse(data['Opening_Balance']).isNegative?(data['Opening_Balance']*-1).toString:(data['Opening_Balance']);
+                  openingBal= (data['Opening_Balance']).toString();
                   closingBal=data['Closing_Balance'].toString();
                   List<dynamic>  newList=(data['Ledger_vouchers']);
                   expense_list=newList;
