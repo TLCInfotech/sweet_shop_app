@@ -527,9 +527,10 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           "Voucher_No": removeId,
           "Voucher_Name": "Receipt",
           "Modifier": uid,
-          "Modifier_Machine": deviceId
+          "Modifier_Machine": deviceId,
+          "Date":DateFormat("yyyy-MM-dd").format(newDate)
         };
-        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {

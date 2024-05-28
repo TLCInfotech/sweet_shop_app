@@ -521,9 +521,10 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
           "Voucher_Name": "Payment",
           "Seq_No":seqNo,
           "Modifier": uid,
-          "Modifier_Machine": deviceId
+          "Modifier_Machine": deviceId,
+          "Date":DateFormat("yyyy-MM-dd").format(newDate)
         };
-        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
