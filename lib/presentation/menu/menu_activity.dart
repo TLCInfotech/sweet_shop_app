@@ -30,6 +30,7 @@ import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/report/ledger/ledger_vouchers_report.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/constant_sale_order_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
@@ -905,7 +906,7 @@ var dataArrM;
   Widget getReportSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .35,
+      height: parentHeight * .4,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -937,6 +938,7 @@ var dataArrM;
                 ],
               ),
             ),
+            getLedgerVouchersReportLayout(parentHeight,parentWidth),
             getSellReportLayout(parentHeight,parentWidth),
             getPurchaseReportLayout(parentHeight,parentWidth),
             getExpenseReportLayout(parentHeight,parentWidth),
@@ -949,6 +951,33 @@ var dataArrM;
     );
   }
 
+  /* Widget for sell report Layout */
+  Widget getLedgerVouchersReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerVouchersReport()));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("ledger_voucher")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   /* Widget for sell report Layout */
   Widget getSellReportLayout(double parentHeight, double parentWidth){
