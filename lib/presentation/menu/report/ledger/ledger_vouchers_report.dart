@@ -191,7 +191,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           ),
         ),
         Visibility(
-            visible: ledgerList.isEmpty && isApiCall  ? true : false,
+            visible: expense_list.isEmpty && isApiCall  ? true : false,
             child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
 
       ],
@@ -274,7 +274,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                       },
                       child: Card(
                         elevation: 0,
-                        color: index%2==0?Colors.deepOrange.withOpacity(0.2):Colors.green.withOpacity(0.2),
+                        color:  expense_list[index]['Credit']!=null?Colors.deepOrange.withOpacity(0.2):Colors.green.withOpacity(0.2),
                         child: Row(
                           children: [
                            Expanded(
@@ -286,7 +286,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(expense_list[index]['Voucher_Name'],style: item_heading_textStyle,),
+                                          Text(expense_list[index]['Ledger_Name'],style: item_heading_textStyle,),
 
                                           Row(
                                             children: [
