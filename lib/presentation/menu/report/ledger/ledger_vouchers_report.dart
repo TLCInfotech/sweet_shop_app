@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/data/api/request_helper.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -21,7 +27,11 @@ class LedgerVouchersReport extends StatefulWidget {
 class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
   String reportType = "";
   String reportId = "";
-
+  bool isLoaderShow=false;
+  bool partyBlank=true;
+  bool isApiCall=false;
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<dynamic> expense_list=[];
   bool disableColor = false;
 
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -33,8 +43,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
   final expenseController = TextEditingController();
   String selectedLedgerName="";
   String selectedLedgerId="";
-  bool isLoaderShow=false;
-  bool isApiCall = false;
+
 
   int page = 1;
   bool isPagination = true;
@@ -53,9 +62,9 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController.addListener(_scrollListener);
-    // callGetLedger(page);
-    // setVal();
+
+     getReportLedger(page);
+
   }
 
   var  singleRecord;
@@ -188,50 +197,11 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
       ],
     );
 
-      ListView(
-      shrinkWrap: true,
-      controller: _scrollController,
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.only(
-          left: parentWidth * 0.04,
-          right: parentWidth * 0.04,
-          top: parentHeight * 0.01,
-          bottom: parentHeight * 0.02),
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: parentHeight * .01),
-          child: Container(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
-
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
-    return isLoaderShow?Container():SearchableLedgerDropdown(
+    return SearchableLedgerDropdown(
         apiUrl: "${ApiConstants().ledgerWithoutImage}?",
         titleIndicator: true,
         title: ApplicationLocalizations.of(context)!.translate("ledger")!,
@@ -241,18 +211,9 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           setState(() {
             selectedLedgerName = name!;
             selectedLedgerId = id!;
-            // Item_list=[];
-            // Updated_list=[];
-            // Deleted_list=[];
-            // Inserted_list=[];
-          });
-          print(selectedLedgerId);
-          var item={
-            "Name":name,
-            "ID":id
-          };
 
-          // await callGetLedger(0);
+          });
+           await getReportLedger(page);
         },
         ledgerName: selectedLedgerName);
   }
@@ -265,6 +226,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           setState(() {
             applicablefrom=date!;
           });
+          getReportLedger(page);
         },
         applicablefrom: applicablefrom
     );
@@ -279,6 +241,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           setState(() {
             applicableTo=date!;
           });
+          getReportLedger(page);
         },
         applicablefrom: applicableTo
     );
@@ -294,7 +257,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 10,
+            itemCount: expense_list.length,
             controller: _scrollController,
             padding: EdgeInsets.only(top: 10),
             itemBuilder: (BuildContext context, int index) {
@@ -308,15 +271,6 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        // await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
-                        //   mListener: this,
-                        //   ledgerList: ledgerList[index],
-                        //   readOnly:singleRecord['Update_Right'],
-                        // )));
-                        // setState(() {
-                        //   page=1;
-                        // });
-                        // await callGetLedger(page);
                       },
                       child: Card(
                         elevation: 0,
@@ -332,13 +286,13 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("New Diamond Treders",style: item_heading_textStyle,),
+                                          Text(expense_list[index]['Voucher_Name'],style: item_heading_textStyle,),
 
                                           Row(
                                             children: [
                                               FaIcon(FontAwesomeIcons.fileInvoice ,size: 15,),
                                               SizedBox(width: 10,),
-                                              Text("Recipt Voucher No.: 100", style: item_regular_textStyle,),
+                                              Text("Recipt Voucher No.:${expense_list[index]['Voucher_No']}", style: item_regular_textStyle,),
                                             ],
                                           ),
                                           Row(
@@ -348,16 +302,17 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                                                 children: [
                                                   FaIcon(FontAwesomeIcons.calendar,size: 15,),
                                                   SizedBox(width: 10,),
-                                                  Text("28-05-2024", style: item_regular_textStyle,),
+                                                  Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(expense_list[index]['Date'])), style: item_regular_textStyle,),
                                                 ],
                                               ),
                                               Expanded(
                                                   child:Row(
                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                     children: [
-                                                      Text(CommonWidget.getCurrencyFormat(10000),overflow: TextOverflow.clip,style: item_heading_textStyle,),
+                                                      expense_list[index]['Credit']!=null?  Text(CommonWidget.getCurrencyFormat(expense_list[index]['Credit']),overflow: TextOverflow.clip,style: item_heading_textStyle,):
+                                                      Text(CommonWidget.getCurrencyFormat(expense_list[index]['Debit']),overflow: TextOverflow.clip,style: item_heading_textStyle,),
                                                       SizedBox(width: 5,),
-                                                      Text("CR",style: item_heading_textStyle,)
+                                                      expense_list[index]['Credit']!=null? Text("CR",style: item_heading_textStyle,):Text("DR",style: item_heading_textStyle,)
                                                     ],
                                                   )
                                               )
@@ -412,27 +367,98 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Container(
+        openingBal==null?Container():  Container(
           padding: EdgeInsets.only(top: 10,bottom:5,left: 10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.centerLeft,
-          child: Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse("10000").ceilToDouble())}",style: item_heading_textStyle,),
+          child: Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal).ceilToDouble())}",style: item_heading_textStyle,),
         ),
-        Container(
+       closingBal==null?Container():
+       Container(
           padding: EdgeInsets.only(top: 5,bottom:10,left: 10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse("10000").ceilToDouble())}",style: item_heading_textStyle,),
+          child: Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse(closingBal).ceilToDouble())}",style: item_heading_textStyle,),
         ),
 
       ],
     );
   }
 
+  var openingBal=null;
+  var closingBal=null;
 
+  getReportLedger(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl;
+        apiUrl = "${baseurl}${ApiConstants().ledgerOpeningBalance}?Company_ID=$companyId&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                partyBlank=true;
+                isLoaderShow=false;
+                print("jfhfhb  $data");
+                if(data!=null){
+                  // openingBal=data['Opening_Balance']<0?"${data['Opening_Balance']}":"${data['Opening_Balance']}DR";
+                  // closingBal=data['Closing_Balance']<0?"${data['Closing_Balance']}CR":"${data['Closing_Balance']}DR";
+                 openingBal= double.parse(data['Opening_Balance']).isNegative?(data['Opening_Balance']*-1).toString:(data['Opening_Balance']);
+                  closingBal=data['Closing_Balance'].toString();
+                  List<dynamic>  newList=(data['Ledger_vouchers']);
+                  expense_list=newList;
+           print("njdnj  $expense_list");
+                }else{
+                  isApiCall=true;
+                }
+              //  calculateTotalAmt();
+              });
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }

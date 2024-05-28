@@ -324,6 +324,7 @@ class ApiRequestHelper {
             print("API");
             print(json.decode((response.body))['data']);
             onSuccess(json.decode((response.body))['data']);
+            print("kfngnggnj   ${response.body}");
           }
           catch(e){
             print(e);
