@@ -319,6 +319,8 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                         // await callGetLedger(page);
                       },
                       child: Card(
+                        elevation: 0,
+                        color: index%2==0?Colors.deepOrange.withOpacity(0.3):Colors.green.withOpacity(0.3),
                         child: Row(
                           children: [
                            Expanded(
