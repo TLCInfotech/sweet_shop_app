@@ -638,7 +638,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
             ],
           ):getPurchaseDateLayout(),
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-         // getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+         //getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
       ),
@@ -746,7 +746,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
         apiUrl: ApiConstants().ledgerWithoutImage+"?",
         titleIndicator: true,
         title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
-        franchiseeName: widget.come=="edit"? widget.editedItem['Sale_Ledger_Name']:"",
+        franchiseeName: widget.come=="edit"? selectedLedgerName:"",
         franchisee: widget.come,
         callback: (name,id){
           if(selectedFranchiseeId==id){
@@ -785,7 +785,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
             onSuccess:(data){
               print(data);
               setState(() {
-                isLoaderShow=false;
+
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['itemDetails']);
@@ -799,7 +799,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                   });
                   calculateTotalAmt();
                 }
-
+                isLoaderShow=false;
               });
                          print("  LedgerLedger  $data ");
             }, onFailure: (error) {
