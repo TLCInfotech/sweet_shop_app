@@ -373,9 +373,11 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         });
         await calculateRates();
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(
+          decimal: true
+      ),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
     );
 
     Container(
@@ -445,9 +447,11 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           });
           await calculateRates();
         },
-        textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -781,16 +785,26 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   }
 
   calculateRates() async {
+
+    if(amountedited && quantity.text!=""){
+      var amt = double.parse(amount.text)/ int.parse(quantity.text) ;
+
+      setState(() {
+        rate.text= amt.toString();
+      });
+    }
     if (quantity.text != "" && rate.text != "") {
       if(amountedited==false) {
         await calculateAmt();
       }
+
       await calculateGstAmt();
       await calculateDiscountAmt();
       await calculateTaxableAmt();
       await calculateNetAmt();
       await calculateNetRate();
     }
+
   }
 }
 
