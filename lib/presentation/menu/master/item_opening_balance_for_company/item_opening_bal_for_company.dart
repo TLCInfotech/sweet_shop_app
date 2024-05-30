@@ -346,140 +346,138 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   }
 
   Widget get_purchase_list_layout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight*.6,
-      child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: Item_list.length,
-        itemBuilder: (BuildContext context, int index) {
-          print(Item_list[index]['Amount']);
-          return  AnimationConfiguration.staggeredList(
-            position: index,
-            duration:
-            const Duration(milliseconds: 500),
-            child: SlideAnimation(
-              verticalOffset: -44.0,
-              child: FadeInAnimation(
-                delay: Duration(microseconds: 1500),
-                child: GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      editedItemIndex=index;
-                    });
-                    FocusScope.of(context).requestFocus(FocusNode());
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: Item_list.length,
+      itemBuilder: (BuildContext context, int index) {
+        print(Item_list[index]['Amount']);
+        return  AnimationConfiguration.staggeredList(
+          position: index,
+          duration:
+          const Duration(milliseconds: 500),
+          child: SlideAnimation(
+            verticalOffset: -44.0,
+            child: FadeInAnimation(
+              delay: Duration(microseconds: 1500),
+              child: GestureDetector(
+                onTap: (){
+                  setState(() {
+                    editedItemIndex=index;
+                  });
+                  FocusScope.of(context).requestFocus(FocusNode());
 
-                    if (context != null) {
-                      goToAddOrEditItem(Item_list[index],singleRecord['Update_Right']);
-                    }
-                  },
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                              child:Row(
-                                children: [
-                                  Container(
-                                      width: parentWidth*.1,
-                                      height:parentWidth*.1,
-                                      decoration: BoxDecoration(
-                                          color: Colors.purple.withOpacity(0.3),
-                                          borderRadius: BorderRadius.circular(15)
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
-                                  ),
+                  if (context != null) {
+                    goToAddOrEditItem(Item_list[index],singleRecord['Update_Right']);
+                  }
+                },
+                child: Card(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                            margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                            child:Row(
+                              children: [
+                                Container(
+                                    width: parentWidth*.1,
+                                    height:parentWidth*.1,
+                                    decoration: BoxDecoration(
+                                        color: Colors.purple.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                ),
 
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(left: 10),
-                                      width: parentWidth*.70,
-                                      //  height: parentHeight*.1,
-                                      child:  Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    width: parentWidth*.70,
+                                    //  height: parentHeight*.1,
+                                    child:  Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
 
-                                          SizedBox(height: 5,),
+                                        SizedBox(height: 5,),
 
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child:
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("${(Item_list[index]['Quantity'])} ${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                                Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                                Item_list[index]['Amount']!=null?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
-                                              ],
-                                            ),
-
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          width: SizeConfig.screenWidth,
+                                          child:
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("${(Item_list[index]['Quantity'])} ${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                              Item_list[index]['Amount']!=null?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                ),
 
-                                  singleRecord['Delete_Right']==true?Container(
-                                      width: parentWidth*.1,
-                                      // height: parentHeight*.1,
-                                      color: Colors.transparent,
-                                      child:IconButton(
-                                        icon:  FaIcon(
-                                          FontAwesomeIcons.trash,
-                                          size: 15,
-                                          color: Colors.redAccent,
-                                        ),
-                                        onPressed: ()async{
-                                          if(Item_list[index]['Seq_No']!=0){
-                                            var deletedItem=   {
-                                              "Seq_No": Item_list[index]['Seq_No'],
-                                              "Item_ID": Item_list[index]['Item_ID']
-                                            };
-                                            Deleted_list.add(deletedItem);
-                                            setState(() {
-                                              Deleted_list=Deleted_list;
-                                            });
-                                          }
-                                          var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
-                                          print(contain);
-                                          if(contain>=0){
-                                            print("REMOVE");
-                                            Inserted_list.remove(Inserted_list[contain]);
-                                          }
-                                          Item_list.remove(Item_list[index]);
+                                singleRecord['Delete_Right']==true?Container(
+                                    width: parentWidth*.1,
+                                    // height: parentHeight*.1,
+                                    color: Colors.transparent,
+                                    child:IconButton(
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.trash,
+                                        size: 15,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: ()async{
+                                        if(Item_list[index]['Seq_No']!=0){
+                                          var deletedItem=   {
+                                            "Seq_No": Item_list[index]['Seq_No'],
+                                            "Item_ID": Item_list[index]['Item_ID']
+                                          };
+                                          Deleted_list.add(deletedItem);
                                           setState(() {
-                                            Item_list=Item_list;
-                                            Inserted_list=Inserted_list;
+                                            Deleted_list=Deleted_list;
                                           });
-                                          print(Inserted_list);
-                                          await calculateTotalAmt();
-                                        },
-                                      )
-                                  ):Container(),
-                                ],
-                              )
-                          ),
-                        )
+                                        }
+                                        var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                        print(contain);
+                                        if(contain>=0){
+                                          print("REMOVE");
+                                          Inserted_list.remove(Inserted_list[contain]);
+                                        }
+                                        Item_list.remove(Item_list[index]);
+                                        setState(() {
+                                          Item_list=Item_list;
+                                          Inserted_list=Inserted_list;
+                                        });
+                                        print(Inserted_list);
+                                        await calculateTotalAmt();
+                                      },
+                                    )
+                                ):Container(),
+                              ],
+                            )
+                        ),
+                      )
 
 
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return SizedBox(
-            height: 5,
-          );
-        },
-      ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          height: 5,
+        );
+      },
     );
 
   }
