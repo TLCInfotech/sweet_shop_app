@@ -249,9 +249,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         });
         await calculateRates();
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
     );
 
 
@@ -307,9 +307,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           });
           await calculateRates();
         },
-        textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -504,7 +504,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       "Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": int.parse(quantity.text),
+                      "Quantity": double.parse(quantity.text),
                       "Unit": unit.text,
                       "Rate": rate.text,
                       "Amount": amount.text
@@ -517,7 +517,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       "Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": int.parse(quantity.text),
+                      "Quantity": double.parse(quantity.text),
                       "Unit": unit.text,
                       "Rate": rate.text,
                       "Amount": amount.text
@@ -530,7 +530,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                     "Name": selectedItemName,
                     "Store_ID": null,
                     "Batch_ID": batchno.text,
-                    "Quantity": int.parse(quantity.text),
+                    "Quantity": double.parse(quantity.text),
                     "Unit": unit.text,
                     "Rate": rate.text,
                     "Amount": amount.text
@@ -571,7 +571,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   }
 
   calculateAmt(){
-    var amt=int.parse(quantity.text)*double.parse(rate.text);
+    var amt=double.parse(quantity.text)*double.parse(rate.text);
     setState(() {
       amount.text=amt.toStringAsFixed(2);
     });
@@ -579,8 +579,17 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
 
   calculateRates()async{
+    if (amountedited && quantity.text != "") {
+      var amt = double.parse(amount.text) / double.parse(quantity.text);
+
+      setState(() {
+        rate.text = amt.toStringAsFixed(2);
+      });
+    }
     if(quantity.text!=""&&rate.text!="") {
-      await calculateAmt();
+      // if (amountedited == false) {
+        await calculateAmt();
+      // }
     }
 
   }

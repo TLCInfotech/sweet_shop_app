@@ -352,33 +352,40 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         ),
         GestureDetector(
           onTap: () {
+            if(selectedBankLedgerID!=null) {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "Date": widget.newdate,
+                  "New_Ledger_ID": selectedBankLedgerID,
+                  "Seq_No": widget.editproduct != null ? widget
+                      .editproduct['Seq_No'] : null,
+                  "Ledger_Name": selectedLedgerName,
+                  "Ledger_ID": widget.editproduct['Ledger_ID'],
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
+              else {
+                item = {
+                  "Date": widget.newdate,
+                  "Seq_No": widget.editproduct != null ? widget
+                      .editproduct['Seq_No'] : 0,
+                  "Ledger_Name": selectedLedgerName,
+                  "Ledger_ID": selectedBankLedgerID,
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
 
-            var item={};
-            if(widget.editproduct!=null){
-              item = {
-                "Date":widget.newdate,
-                "New_Ledger_ID": selectedBankLedgerID,
-                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Ledger_Name": selectedLedgerName,
-                "Ledger_ID": widget.editproduct['Ledger_ID'],
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
+              if (widget.mListener != null) {
+                widget.mListener.AddOrEditLedgerForPaymentDetail(item);
+                Navigator.pop(context);
+              }
             }
             else {
-              item = {
-                "Date":widget.newdate,
-                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : 0,
-                "Ledger_Name":selectedLedgerName,
-                "Ledger_ID": selectedBankLedgerID,
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
-            }
-
-            if(widget.mListener!=null){
-              widget.mListener.AddOrEditLedgerForPaymentDetail(item);
-              Navigator.pop(context);
+              CommonWidget.errorDialog(context,
+                  "Please add required fields ledger,amount !");
             }
           },
           onDoubleTap: () {},

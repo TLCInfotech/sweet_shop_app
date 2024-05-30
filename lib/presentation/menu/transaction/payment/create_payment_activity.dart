@@ -171,7 +171,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("payment_invoice_new")!,
+                                ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
                                 style: appbar_text_style,),
                             ),
                           ),
