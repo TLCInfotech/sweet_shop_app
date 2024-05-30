@@ -248,9 +248,9 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         });
         await calculateRates();
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
     );
 
 
@@ -328,9 +328,9 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           });
           await calculateRates();
         },
-        textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -511,16 +511,12 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         ),
         GestureDetector(
           onTap: (){
-            if(selectedItemID==null){
-              var snackBar = const SnackBar(content: Text('Select Item Fisrt'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else {
-              var isValid = _formkey.currentState?.validate();
 
-              print(isValid);
 
-              if (isValid == true && selectedItemID != null) {
+              if (selectedItemID != null &&
+                  amount.text != "" &&
+                  quantity.text != "" &&
+                  rate.text != "") {
                 var item = {};
                 if (widget.editproduct != null) {
                   if(oldItemID!=selectedItemID){
@@ -531,7 +527,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                       "Item_Name":selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": int.parse(quantity.text),
+                      "Quantity": double.parse(quantity.text),
                       "Unit": unit.text,
                       "Rate": rate.text,
                       "Amount": amount.text
@@ -557,7 +553,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                     "Item_Name": selectedItemName,
                     "Store_ID": null,
                     "Batch_ID": null,
-                    "Quantity": int.parse(quantity.text),
+                    "Quantity": double.parse(quantity.text),
                     "Unit": unit.text,
                     "Rate": rate.text,
                     "Amount": amount.text
@@ -569,7 +565,10 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                   Navigator.pop(context);
                 }
               }
-            }
+              else {
+                CommonWidget.errorDialog(context,
+                    "Please add required fields item,rate,quantity,amount !");
+              }
           },
           onDoubleTap: () {},
           child: Container(
@@ -598,7 +597,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   }
 
   calculateAmt(){
-    var amt=int.parse(quantity.text)*double.parse(rate.text);
+    var amt=double.parse(quantity.text)*double.parse(rate.text);
     setState(() {
       amount.text=amt.toStringAsFixed(2);
     });
@@ -606,9 +605,18 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
 
 
   calculateRates()async{
-    if(quantity.text!=""&&rate.text!="") {
-      await calculateAmt();
+    if (amountedited && quantity.text != "") {
+      var amt = double.parse(amount.text) / double.parse(quantity.text);
+
+      setState(() {
+        rate.text = amt.toStringAsFixed(2);
+      });
     }
+    if(quantity.text!=""&&rate.text!="") {
+      if (amountedited == false) {
+        await calculateAmt();
+      }
+     }
 
   }
 

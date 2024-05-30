@@ -37,7 +37,8 @@ class AddOrEditLedgerOpeningBal extends StatefulWidget {
   final  come;
   final  companyId;
   final  readOnly;
-  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi, this.come, this.companyId, this.readOnly});
+  final  list;
+  const AddOrEditLedgerOpeningBal({super.key, required this.mListener, required this.editproduct, required this.dateNew, this.dateApi, this.come, this.companyId, this.readOnly, this.list});
   @override
   State<AddOrEditLedgerOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -241,10 +242,22 @@ String amountTypeId="";
       readOnly: widget.readOnly,
       franchiseeName:widget.come=="edit"?widget.editproduct['Ledger_Name']:"",
       title: ApplicationLocalizations.of(context)!.translate("ledger_name")!,
-      callback: (name,id){
-        if(selectedItemID==id){
-          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-          ScaffoldMessenger.of(context).showSnackBar(snack);
+      callback: (name,id)async{
+
+        List l=widget.list;
+        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+          print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+        //    bool isPresent=false;
+        //
+        //   for(var i in n){
+        //     print("$i === $id");
+        //     if(i.toString()==id.toString()){
+        //       isPresent=true;
+        //     }
+        //   }
+        // print("FFFFFFFFFFFF ${isPresent}");
+        if(n.contains(id.toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
         }
         else {
           setState(() {
@@ -356,7 +369,7 @@ String amountTypeId="";
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
     );
 
   }
@@ -537,28 +550,33 @@ String amountTypeId="";
             Item_list[index]['Amnt_Type']=item['Amnt_Type'];
             Item_list[index]['New_Ledger_ID']=item['New_Ledger_ID'];*/
 
-            var item={
-              // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
-              "Ledger_Name":_textController.text,
-              "Ledger_ID":selectedItemID,
-              "Amount":double.parse(amount.text),
-              "Amount_Type":amountType
-            };
-            if(widget.editproduct!=null){
-              print("#############3");
-              Updated_list.add(item);
-              setState(() {
-                Updated_list = Updated_list;
-              });
-            }else{
-              Inserted_list.add(item);
-              setState(() {
-                Inserted_list = Inserted_list;
-              });
-              print("erererre  ${Inserted_list}");
+            if(selectedItemID!=null&&amountType!=null&&amount.text!="") {
+              var item = {
+                // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
+                "Ledger_Name": _textController.text,
+                "Ledger_ID": selectedItemID,
+                "Amount": double.parse(amount.text),
+                "Amount_Type": amountType
+              };
+              if (widget.editproduct != null) {
+                print("#############3");
+                Updated_list.add(item);
+                setState(() {
+                  Updated_list = Updated_list;
+                });
+              } else {
+                Inserted_list.add(item);
+                setState(() {
+                  Inserted_list = Inserted_list;
+                });
+                print("erererre  ${Inserted_list}");
+              }
+              callLedgerOpeningBal(Inserted_list, Updated_list);
             }
-            callLedgerOpeningBal(Inserted_list,Updated_list);
-
+            else{
+              CommonWidget.errorDialog(context,
+                  "Please add required fields ledger,amount ,amount type !");
+            }
           },
           onDoubleTap: () {},
           child: Container(
@@ -625,12 +643,24 @@ String amountTypeId="";
           }, onFailure: (error) {
             setState(() {
               isLoaderShow=false;
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+              _textController.clear();
+              amount.clear();
+              amountType=null;
             });
             CommonWidget.errorDialog(context, error.toString());
           },
           onException: (e) {
             setState(() {
               isLoaderShow=false;
+              Inserted_list=[];
+              Updated_list=[];
+              Deleted_list=[];
+              _textController.clear();
+              amount.clear();
+              amountType=null;
             });
             CommonWidget.errorDialog(context, e.toString());
 

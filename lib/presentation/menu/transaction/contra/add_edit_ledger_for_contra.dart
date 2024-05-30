@@ -396,31 +396,36 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
         ),
         GestureDetector(
           onTap: () {
-            var item = {};
-            if (widget.editproduct != null) {
-              item = {
-                "New_Ledger_ID": selectedItemID,
-                "Ledger_Name": selectedbankCashLedger,
-                "Seq_No": widget.editproduct != null
-                    ? widget.editproduct['Seq_No']
-                    : null,
-                "Ledger_ID": widget.editproduct['Ledger_ID'],
-                "Amount": double.parse(amount.text),
-                "Date": widget.newDate,
-                "Remark": narration.text,
-              };
+            if (selectedItemID != null) {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "New_Ledger_ID": selectedItemID,
+                  "Ledger_Name": selectedbankCashLedger,
+                  "Seq_No": widget.editproduct != null
+                      ? widget.editproduct['Seq_No']
+                      : null,
+                  "Ledger_ID": widget.editproduct['Ledger_ID'],
+                  "Amount": double.parse(amount.text),
+                  "Date": widget.newDate,
+                  "Remark": narration.text,
+                };
+              } else {
+                item = {
+                  "Ledger_Name": selectedbankCashLedger,
+                  "Date": widget.newDate,
+                  //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                  "Ledger_ID": selectedItemID,
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
+              widget.mListener.AddOrEditLedgerForContraDetail(item);
+              Navigator.pop(context);
             } else {
-              item = {
-                "Ledger_Name": selectedbankCashLedger,
-                "Date": widget.newDate,
-                //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Ledger_ID": selectedItemID,
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
+              CommonWidget.errorDialog(
+                  context, "Please add required fields ledger,amount !");
             }
-            widget.mListener.AddOrEditLedgerForContraDetail(item);
-            Navigator.pop(context);
           },
           onDoubleTap: () {},
           child: Container(

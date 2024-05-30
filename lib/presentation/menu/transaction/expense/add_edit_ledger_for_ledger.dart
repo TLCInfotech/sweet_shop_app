@@ -353,30 +353,38 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         GestureDetector(
           onTap: () {
 
-            var item={};
-            if(widget.editproduct!=null){
-              item = {
-                "New_Expense_ID": selectedItemID,
-                "Expense_Name": selectedLedgerName,
-                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Expense_ID": widget.editproduct['Expense_ID'],
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
+            if(selectedItemID!=null) {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "New_Expense_ID": selectedItemID,
+                  "Expense_Name": selectedLedgerName,
+                  "Seq_No": widget.editproduct != null ? widget
+                      .editproduct['Seq_No'] : null,
+                  "Expense_ID": widget.editproduct['Expense_ID'],
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
+              else {
+                item = {
+                  "Expense_Name": selectedLedgerName,
+                  "Seq_No": widget.editproduct != null ? widget
+                      .editproduct['Seq_No'] : null,
+                  "Expense_ID": selectedItemID,
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
+
+              if (widget.mListener != null) {
+                widget.mListener.AddOrEditLedgerForLedgerDetail(item);
+                Navigator.pop(context);
+              }
             }
             else {
-               item = {
-                "Expense_Name": selectedLedgerName,
-                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Expense_ID": selectedItemID,
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
-            }
-
-            if(widget.mListener!=null){
-              widget.mListener.AddOrEditLedgerForLedgerDetail(item);
-              Navigator.pop(context);
+              CommonWidget.errorDialog(context,
+                  "Please add required fields ledger,amount !");
             }
           },
           onDoubleTap: () {},

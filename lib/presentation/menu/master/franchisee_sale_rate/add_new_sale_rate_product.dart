@@ -191,10 +191,9 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
        selectedItemName=widget.editproduct['Name'];
         selectedItemID=widget.editproduct['Item_ID'];
         rate.text=widget.editproduct['Rate'].toString();
-        gst.text=widget.editproduct['GST'].toString();
-        net.text=widget.editproduct['Net_Rate'].toString();
-        gstAmt.text=widget.editproduct['GSt_Amount'].toString();
-
+        gst.text=widget.editproduct['GST']==null?"":widget.editproduct['GST'].toString();
+        net.text=widget.editproduct['Net_Rate']==null?"":widget.editproduct['Net_Rate'].toString();
+        gstAmt.text=widget.editproduct['GSt_Amount']==null?"":widget.editproduct['GSt_Amount'].toString();
       });
     }
     await fetchItems();
@@ -266,7 +265,12 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         net.text=(netAmt.toStringAsFixed(2)).toString();
       });
     }
-    else{
+    else if(rate.text!=""){
+      setState(() {
+        net.text=rate.text;
+      });
+    }
+    else {
       net.clear();
     }
   }
@@ -425,6 +429,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           rate.text=item['Rate'].toString();
           gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
         });
+        await calculateGstAmt();
+        await calculateNetAmt();
       },
 
     );
@@ -547,33 +553,40 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           ),
         ),
         GestureDetector(
-          onTap: () {
-            var item={};
-            if(widget.editproduct!=null){
-               item={
-                "Item_ID":widget.editproduct['Item_ID'],
-                "ID": widget.editproduct['ID'],
-                "Name":selectedItemName,
-                "New_Item_ID":selectedItemID,
-                "Rate":double.parse(rate.text),
-                "GST":gst.text!=""?double.parse(gst.text):"",
-                "GST_Amount":double.parse(gstAmt.text),
-                "Net_Rate":double.parse(net.text)
-              };
-            }else{
-               item={
-                "Name":selectedItemName,
-                "Item_ID":selectedItemID,
-                "Rate":double.parse(rate.text),
-                "GST":double.parse(gst.text),
-                "GST_Amount":double.parse(gstAmt.text),
-                "Net_Rate":double.parse(net.text)
-              };
-            }
 
-            if(widget.mListener!=null){
-              widget.mListener.addProductSaleRateDetail(item);
-              Navigator.pop(context);
+          onTap: () {
+            if(selectedItemID!=null &&  rate.text!="") {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "Item_ID": widget.editproduct['Item_ID'],
+                  "ID": widget.editproduct['ID'],
+                  "Name": selectedItemName,
+                  "New_Item_ID": selectedItemID,
+                  "Rate": double.parse(rate.text),
+                  "GST": gst.text != "" ? double.parse(gst.text) : null,
+                  "GST_Amount":gst.text != "" ? double.parse(gstAmt.text):null,
+                  "Net_Rate": double.parse(net.text)
+                };
+              } else {
+                item = {
+                  "Name": selectedItemName,
+                  "Item_ID": selectedItemID,
+                  "Rate": double.parse(rate.text),
+                  "GST": gst.text != "" ? double.parse(gst.text) : null,
+                  "GST_Amount":gst.text != "" ? double.parse(gstAmt.text):null,
+                  "Net_Rate": double.parse(net.text)
+                };
+              }
+
+              if (widget.mListener != null) {
+                widget.mListener.addProductSaleRateDetail(item);
+                Navigator.pop(context);
+              }
+            }
+            else{
+              CommonWidget.errorDialog(context,
+                  "Please add required fields item,rate,!");
             }
           },
           onDoubleTap: () {},

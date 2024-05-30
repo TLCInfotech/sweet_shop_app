@@ -388,6 +388,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 dateNew:CommonWidget.getDateLayout(invoiceDate) ,
                 dateApi:DateFormat('yyyy-MM-dd').format(invoiceDate) ,
                 come: status,
+                list:ledgerList,
                 companyId: compId,
               ),
             ),
