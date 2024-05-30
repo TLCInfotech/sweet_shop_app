@@ -421,6 +421,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
               setState(() {
                 isLoaderShow=false;
                 users_list.removeAt(index);
+                getUser(1);
               });
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {

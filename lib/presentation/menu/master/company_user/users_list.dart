@@ -323,7 +323,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             //     ))
                           ],
                         )),
-                        singleRecord['Delete_Right']==true?  DeleteDialogLayout(
+                        singleRecord['Delete_Right']==false?Container():  DeleteDialogLayout(
                           callback: (response) async {
                             if (response == "yes") {
                               print("##############$response");
@@ -332,7 +332,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                   index);
                             }
                           },
-                        ):Container()
+                        )
                       ],
                     ),
                   ),

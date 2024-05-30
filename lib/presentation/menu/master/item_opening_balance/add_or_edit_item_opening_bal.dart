@@ -344,10 +344,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         maxlines: 1,
         format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
-      /* GetDisableTextFormField(
-          parentWidth: (parentWidth),
-          title: ApplicationLocalizations.of(context)!.translate("amount")!,
-          controller: amount)*/
     ]);
   }
 
