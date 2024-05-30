@@ -104,7 +104,6 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
     double amt = total % 1;
-
     print("%%%%%%%%%%%%%%%%%%%%% $amt");
     if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
       var total1=(total).floorToDouble();

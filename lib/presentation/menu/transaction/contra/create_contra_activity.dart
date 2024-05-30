@@ -1018,7 +1018,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
         Inserted_list=Inserted_list;
       });
       print(itemLlist);
-
+print("kfknnvnng    $itemLlist   \n    neeeeeeeee   $Inserted_list");
       setState(() {
         Item_list = itemLlist;
       });

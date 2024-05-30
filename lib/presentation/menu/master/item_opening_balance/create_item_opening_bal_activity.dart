@@ -319,9 +319,6 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                             FocusScope.of(context).requestFocus(FocusNode());
                             if(selectedFranchiseeID!=null) {
                               if (context != null) {
-                                Deleted_list=[];
-                                Updated_list=[];
-                                Inserted_list=[];
                                 editedItemIndex=null;
                                 goToAddOrEditItem(null);
 
@@ -820,7 +817,6 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
-    //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;

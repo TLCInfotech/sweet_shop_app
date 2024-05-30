@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
+import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -205,11 +206,12 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                   children: [
                     getPurchaseDateLayout(),
                     const SizedBox(
-                      height: 5,
+                      height: 1,
                     ),
-                    getTotalCountAndAmount(),
                     Franchisee_list.length>0?getFranchiseeSearchLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth):Container(),
-                    const SizedBox(
+
+                    getTotalCountAndAmount(),
+                  const SizedBox(
                       height: 10,
                     ),
                     get_purchase_list_layout()
@@ -230,7 +232,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
 
   Widget getTotalCountAndAmount() {
     return Franchisee_list.length>0?Container(
-      margin: const EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 8),
+      margin: const EdgeInsets.only(top: 10),
       child: Container(
           height: 40,
           // width: SizeConfig.halfscreenWidth,
@@ -378,16 +380,16 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                                         ],
                                       ),
                                     ),
-                                    singleRecord['Delete_Right']==true?   Positioned(
+                                    singleRecord['Delete_Right']==true?     Positioned(
                                         top: 0,
                                         right: 0,
-                                        child:IconButton(
-                                          icon:  const FaIcon(
-                                            FontAwesomeIcons.trash,
-                                            size: 18,
-                                            color: Colors.redAccent,
-                                          ),
-                                          onPressed: (){},
+                                        child: DeleteDialogLayout(
+                                          callback: (response ) async{
+                                            if(response=="yes"){
+                                              print("##############$response");
+                                              await   callDeleteContra(Franchisee_list[index]['Franchisee_ID'].toString(),index);
+                                            }
+                                          },
                                         ) ):Container()
                                   ],
                                 )
@@ -552,4 +554,63 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     });
     Navigator.pop(context);
   }
+  callDeleteContra(String removeId,int index) async {
+    String uid = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        var model= {
+          "Franchisee_ID": removeId,
+          "Modifier": uid,
+          "Modifier_Machine": deviceId,
+          "Date":DateFormat("yyyy-MM-dd").format(invoiceDate)
+        };
+        String apiUrl = baseurl + ApiConstants().franchisee_item_opening+"?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                Franchisee_list.removeAt(index);
+                calculateTotalAmt();
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+
+
 }
