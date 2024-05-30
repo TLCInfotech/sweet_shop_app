@@ -111,7 +111,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
-        print("jfjhfhjfhjf   ${ widget.editproduct['Rate']}");
+        print("jfjhfhjfhjf   ${widget.editproduct['Rate']}");
         selectedItemID = widget.editproduct['Item_ID'] != null
             ? widget.editproduct['Item_ID']
             : null;
@@ -120,8 +120,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             : null;
         unit.text = widget.editproduct['Unit'].toString();
         quantity.text = widget.editproduct['Quantity'].toString();
-        rate.text =  widget.editproduct['Rate']==null?"0":
-        widget.editproduct['Rate'].toString();
+        rate.text = widget.editproduct['Rate'] == null
+            ? "0"
+            : widget.editproduct['Rate'].toString();
         amount.text = widget.editproduct['Amount'].toString();
         discount.text = widget.editproduct['Disc_Percent'] == null
             ? "0"
@@ -298,7 +299,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           selectedItemID = item['ID'].toString();
           selectedItemName = item['Name'].toString();
           unit.text = item['Unit'];
-          rate.text =item['Rate']==null?"0":item['Rate'].toString();
+          rate.text = item['Rate'] == null ? "0" : item['Rate'].toString();
           gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
         });
         await calculateRates();
@@ -369,13 +370,13 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       callbackOnchage: (value) async {
         setState(() {
           quantity.text = value;
-          amountedited=false;
+          amountedited = false;
         });
         await calculateRates();
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
     );
 
     Container(
@@ -420,7 +421,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       ),
     );
   }
-  var amountedited=false;
+
+  var amountedited = false;
 
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
@@ -441,13 +443,13 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         callbackOnchage: (value) async {
           setState(() {
             rate.text = value;
-            amountedited=false;
+            amountedited = false;
           });
           await calculateRates();
         },
-        textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -471,18 +473,16 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           print("########### $value");
           setState(() {
             amount.text = value;
-            amountedited=true;
+            amountedited = true;
           });
           await calculateRates();
           // await calculateRates();
         },
-        textInput: TextInputType.numberWithOptions(
-          decimal: true
-         ),
+        textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
         format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
       ),
-     /* GetDisableTextFormField(
+      /* GetDisableTextFormField(
           parentWidth: (parentWidth),
           title: ApplicationLocalizations.of(context)!.translate("amount")!,
           controller: amount)*/
@@ -641,61 +641,69 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         ),
         GestureDetector(
           onTap: () {
-            var item = {};
-            if (widget.editproduct != null) {
-              item = {
-                "New_Item_ID": selectedItemID,
-                "Seq_No": widget.editproduct != null
-                    ? widget.editproduct['Seq_No']
-                    : null,
-                "Item_ID": widget.editproduct != null
-                    ? widget.editproduct['Item_ID']
-                    : "",
-                "Item_Name": selectedItemName,
-                "Quantity": int.parse(quantity.text),
-                "Unit": "kg",
-                "Rate": double.parse(rate.text),
-                "Amount": double.parse(amount.text),
-                "Disc_Percent": discount.text == "" || discount.text == null
-                    ? double.parse("00.00")
-                    : double.parse(discount.text),
-                "Disc_Amount": double.parse(discountAmt.text),
-                "Taxable_Amount": double.parse(taxableAmt.text),
-                "GST_Rate": gst.text == "" || gst.text == null
-                    ? double.parse("00.00")
-                    : double.parse(gst.text),
-                "GST_Amount": double.parse(gstAmount.text),
-                "Net_Rate": double.parse(netRate.text),
-                "Net_Amount": double.parse(netAmount.text),
-              };
-            } else {
-              item = {
-                "Item_ID": selectedItemID,
-                "Item_Name": selectedItemName,
-                "Quantity": int.parse(quantity.text),
-                "Unit": "kg",
-                "Rate": double.parse(rate.text),
-                "Amount": double.parse(amount.text),
-                "Disc_Percent": discount.text == "" || discount.text == null
-                    ? double.parse("00.00")
-                    : double.parse(discount.text),
-                "Disc_Amount": double.parse(discountAmt.text),
-                "Taxable_Amount": double.parse(taxableAmt.text),
-                "GST_Rate": gst.text == "" || gst.text == null
-                    ? double.parse("00.00")
-                    : double.parse(gst.text),
-                "GST_Amount": double.parse(gstAmount.text),
-                "Net_Rate": double.parse(netRate.text),
-                "Net_Amount": double.parse(netAmount.text),
-                "Seq_No": widget.editproduct != null
-                    ? widget.editproduct['Seq_No']
-                    : null,
-              };
-            }
+            if (selectedItemID != null &&
+                amount.text != "" &&
+                quantity.text != "" &&
+                rate.text != "") {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "New_Item_ID": selectedItemID,
+                  "Seq_No": widget.editproduct != null
+                      ? widget.editproduct['Seq_No']
+                      : null,
+                  "Item_ID": widget.editproduct != null
+                      ? widget.editproduct['Item_ID']
+                      : "",
+                  "Item_Name": selectedItemName,
+                  "Quantity": int.parse(quantity.text),
+                  "Unit": "kg",
+                  "Rate": double.parse(rate.text),
+                  "Amount": double.parse(amount.text),
+                  "Disc_Percent": discount.text == "" || discount.text == null
+                      ? double.parse("00.00")
+                      : double.parse(discount.text),
+                  "Disc_Amount": double.parse(discountAmt.text),
+                  "Taxable_Amount": double.parse(taxableAmt.text),
+                  "GST_Rate": gst.text == "" || gst.text == null
+                      ? double.parse("00.00")
+                      : double.parse(gst.text),
+                  "GST_Amount": double.parse(gstAmount.text),
+                  "Net_Rate": double.parse(netRate.text),
+                  "Net_Amount": double.parse(netAmount.text),
+                };
+              } else {
+                item = {
+                  "Item_ID": selectedItemID,
+                  "Item_Name": selectedItemName,
+                  "Quantity": int.parse(quantity.text),
+                  "Unit": "kg",
+                  "Rate": double.parse(rate.text),
+                  "Amount": double.parse(amount.text),
+                  "Disc_Percent": discount.text == "" || discount.text == null
+                      ? double.parse("00.00")
+                      : double.parse(discount.text),
+                  "Disc_Amount": double.parse(discountAmt.text),
+                  "Taxable_Amount": double.parse(taxableAmt.text),
+                  "GST_Rate": gst.text == "" || gst.text == null
+                      ? double.parse("00.00")
+                      : double.parse(gst.text),
+                  "GST_Amount": double.parse(gstAmount.text),
+                  "Net_Rate": double.parse(netRate.text),
+                  "Net_Amount": double.parse(netAmount.text),
+                  "Seq_No": widget.editproduct != null
+                      ? widget.editproduct['Seq_No']
+                      : null,
+                };
+              }
 
-            if (widget.mListener != null) {
-              widget.mListener.AddOrEditItemSellDetail(item);
-              Navigator.pop(context);
+              if (widget.mListener != null) {
+                widget.mListener.AddOrEditItemSellDetail(item);
+                Navigator.pop(context);
+              }
+            } else {
+              CommonWidget.errorDialog(context,
+                  "Please add required fields item,rate,quantity,amount !");
             }
           },
           onDoubleTap: () {},
@@ -725,9 +733,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   }
 
   calculateAmt() {
-    var amt = int.parse(quantity.text) * double.parse(rate.text);
+    var amt = double.parse(quantity.text) * double.parse(rate.text);
     setState(() {
-      amount.text = amt.toString();
+      amount.text = amt.toStringAsFixed(2);
     });
   }
 
@@ -781,8 +789,15 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   }
 
   calculateRates() async {
+    if (amountedited && quantity.text != "") {
+      var amt = double.parse(amount.text) / double.parse(quantity.text);
+
+      setState(() {
+        rate.text = amt.toStringAsFixed(2);
+      });
+    }
     if (quantity.text != "" && rate.text != "") {
-      if(amountedited==false) {
+      if (amountedited == false) {
         await calculateAmt();
       }
       await calculateGstAmt();

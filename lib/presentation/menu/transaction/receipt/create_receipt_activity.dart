@@ -179,7 +179,7 @@ bool isLoaderShow=false;
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("receipt_invoice_new")!,
+                                ApplicationLocalizations.of(context)!.translate("receipt_invoice")!,
                                 style: appbar_text_style,),
                             ),
                           ),

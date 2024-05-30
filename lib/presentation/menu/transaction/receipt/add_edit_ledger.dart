@@ -12,6 +12,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
+
 class TestItem {
   String label;
   dynamic value;
@@ -21,69 +22,74 @@ class TestItem {
     return TestItem(label: json['label'], value: json['value']);
   }
 }
+
 class AddOrEditLedger extends StatefulWidget {
   final AddOrEditLedgerInterface mListener;
   final dynamic editproduct;
   final newDate;
   final readOnly;
-  const AddOrEditLedger({super.key, required this.mListener, required this.editproduct, this.newDate, this.readOnly});
+  const AddOrEditLedger(
+      {super.key,
+      required this.mListener,
+      required this.editproduct,
+      this.newDate,
+      this.readOnly});
   @override
   State<AddOrEditLedger> createState() => _AddOrEditLedgerState();
 }
 
-class _AddOrEditLedgerState extends State<AddOrEditLedger>{
-
+class _AddOrEditLedgerState extends State<AddOrEditLedger> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
-  FocusNode ledgerFocus = FocusNode() ;
+  FocusNode ledgerFocus = FocusNode();
 
   TextEditingController amount = TextEditingController();
-  FocusNode amountFocus = FocusNode() ;
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController narration = TextEditingController();
-  FocusNode narrationFocus = FocusNode() ;
+  FocusNode narrationFocus = FocusNode();
 
-  FocusNode searchFocus = FocusNode() ;
+  FocusNode searchFocus = FocusNode();
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   var itemsList = [];
-  var selectedItemID =null;
-  var companyId="0";
-  var selectedLedgerName="";
-  var oldItemId=0;
+  var selectedItemID = null;
+  var companyId = "0";
+  var selectedLedgerName = "";
+  var oldItemId = 0;
 
   var filteredItemsList = [];
 
-  fetchShows () async {
+  fetchShows() async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId";
+      String apiUrl = ApiConstants().baseUrl +
+          ApiConstants().getLedgerWithoutBankCash +
+          "?Company_ID=$companyId";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data)async{
-            if(data!=null) {
-              var topShowsJson = (data) as List;
-              setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
-                filteredItemsList=  topShowsJson.map((show) => (show)).toList();
-              });
-            }
-          }, onFailure: (error) {
-            CommonWidget.errorDialog(context, error);
-            return [];
-          }, onException: (e) {
-            CommonWidget.errorDialog(context, e);
-            return [];
-
-          },sessionExpire: (e) {
-            CommonWidget.gotoLoginScreen(context);
-            return [];
-            // widget.mListener.loaderShow(false);
+          onSuccess: (data) async {
+        if (data != null) {
+          var topShowsJson = (data) as List;
+          setState(() {
+            itemsList = topShowsJson.map((show) => (show)).toList();
+            filteredItemsList = topShowsJson.map((show) => (show)).toList();
           });
-
+        }
+      }, onFailure: (error) {
+        CommonWidget.errorDialog(context, error);
+        return [];
+      }, onException: (e) {
+        CommonWidget.errorDialog(context, e);
+        return [];
+      }, sessionExpire: (e) {
+        CommonWidget.gotoLoginScreen(context);
+        return [];
+        // widget.mListener.loaderShow(false);
+      });
     });
   }
 
@@ -94,12 +100,9 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       // if the search field is empty or only contains white-space, we'll display all users
       results = filteredItemsList;
     } else {
-
       results = filteredItemsList
           .where((user) =>
-          user["Name"]
-              .toLowerCase()
-              .contains(searchstring.toLowerCase()))
+              user["Name"].toLowerCase().contains(searchstring.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -111,7 +114,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
 
     //  for (var ele in data) _list.add(ele['TestName'].toString());
     for (var ele in itemsList) {
-      _list.add( TestItem.fromJson(
+      _list.add(TestItem.fromJson(
           {'label': "${ele['Name']}", 'value': "${ele['ID']}"}));
     }
     return _list;
@@ -124,14 +127,20 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
     setVal();
   }
 
-  setVal()async{
+  setVal() async {
     print(widget.editproduct);
-    if(widget.editproduct!=null){
+    if (widget.editproduct != null) {
       setState(() {
-        selectedItemID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:null;
-        selectedLedgerName=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:null;
-        amount.text=widget.editproduct['Amount'].toString();
-        narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
+        selectedItemID = widget.editproduct['Ledger_ID'] != null
+            ? widget.editproduct['Ledger_ID']
+            : null;
+        selectedLedgerName = widget.editproduct['Ledger_Name'] != null
+            ? widget.editproduct['Ledger_Name']
+            : null;
+        amount.text = widget.editproduct['Amount'].toString();
+        narration.text = widget.editproduct['Remark'] != null
+            ? widget.editproduct['Remark'].toString()
+            : narration.text;
       });
       print(oldItemId);
     }
@@ -157,9 +166,11 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+            padding: EdgeInsets.only(
+                left: SizeConfig.screenWidth * .05,
+                right: SizeConfig.screenWidth * .05),
             child: Container(
-              height: SizeConfig.screenHeight*0.7,
+              height: SizeConfig.screenHeight * 0.7,
               decoration: const BoxDecoration(
                 color: Color(0xFFfffff5),
                 borderRadius: BorderRadius.only(
@@ -171,46 +182,47 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
               child: Column(
                 children: [
                   Container(
-                    height: SizeConfig.screenHeight*.08,
+                    height: SizeConfig.screenHeight * .08,
                     child: Center(
                       child: Text(
-                          ApplicationLocalizations.of(context)!.translate("add_ledger")!,
-                          style: page_heading_textStyle
-                      ),
+                          ApplicationLocalizations.of(context)!
+                              .translate("add_ledger")!,
+                          style: page_heading_textStyle),
                     ),
                   ),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
-
-                  getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                  getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                  getLedgerNarrationLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                      .translate("ledger_name")!),
+                  getAddSearchLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  getILedgerAmountyLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  getLedgerNarrationLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                   /*   SizedBox(height: 20,),
                   getButtonLayout()*/
-                  
                 ],
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
-            child: getAddForButtonsLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-          ),        ],
+            padding: EdgeInsets.only(
+                left: SizeConfig.screenWidth * .05,
+                right: SizeConfig.screenWidth * .05),
+            child: getAddForButtonsLayout(
+                SizeConfig.screenHeight, SizeConfig.screenWidth),
+          ),
+        ],
       ),
     );
   }
 
-
-
   /* widget for product gst layout */
   Widget getLedgerNarrationLayout(double parentHeight, double parentWidth) {
-    return  SingleLineEditableTextFormField(
-
+    return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.NARRATION;
+          return StringEn.ENTER + StringEn.NARRATION;
         }
         return null;
       },
@@ -218,8 +230,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       controller: narration,
       focuscontroller: null,
       focusnext: null,
-      title:   ApplicationLocalizations.of(context)!.translate("narration")!,
-      callbackOnchage: (value)async {
+      title: ApplicationLocalizations.of(context)!.translate("narration")!,
+      callbackOnchage: (value) async {
         setState(() {
           narration.text = value;
         });
@@ -228,15 +240,14 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z ]')),
     );
-
   }
 
   /* widget for product rate layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
-    return      SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.AMOUNT;
+          return StringEn.ENTER + StringEn.AMOUNT;
         }
         return null;
       },
@@ -244,8 +255,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       controller: amount,
       focuscontroller: null,
       focusnext: null,
-      title:    ApplicationLocalizations.of(context)!.translate("amount")!,
-      callbackOnchage: (value)async {
+      title: ApplicationLocalizations.of(context)!.translate("amount")!,
+      callbackOnchage: (value) async {
         setState(() {
           amount.text = value;
         });
@@ -256,21 +267,20 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
     );
   }
 
-  Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return  SearchableDropdownWithObject(
+  Widget getAddSearchLayout(double parentHeight, double parentWidth) {
+    return SearchableDropdownWithObject(
       name: selectedLedgerName,
-      status:  "edit",
-      apiUrl:"${ApiConstants().getLedgerWithoutBankCash}?",
+      status: "edit",
+      apiUrl: "${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: false,
-      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
-      callback: (item)async{
+      title: ApplicationLocalizations.of(context)!
+          .translate("ledger_without_bank_cash")!,
+      callback: (item) async {
         setState(() {
-
           selectedItemID = item['ID'].toString();
-          selectedLedgerName=item['Name'].toString();
+          selectedLedgerName = item['Name'].toString();
         });
       },
-
     );
 
     //   Container(
@@ -318,7 +328,10 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      padding: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+      ),
       child: Text(
         "$title",
         style: page_heading_textStyle,
@@ -326,10 +339,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
     );
   }
 
-
-
   /* Widget for Buttons Layout0 */
-  Widget getAddForButtonsLayout(double parentHeight,double parentWidth) {
+  Widget getAddForButtonsLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -339,8 +350,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
           },
           onDoubleTap: () {},
           child: Container(
-            height:parentHeight*.05,
-            width: parentWidth*.45,
+            height: parentHeight * .05,
+            width: parentWidth * .45,
             // width: SizeConfig.blockSizeVertical * 20.0,
             decoration: const BoxDecoration(
               color: CommonColor.HINT_TEXT,
@@ -348,7 +359,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
                 bottomLeft: Radius.circular(5),
               ),
             ),
-            child:  Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
@@ -362,38 +373,44 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
         ),
         GestureDetector(
           onTap: () {
-            var item={};
-            if(widget.editproduct!=null){
-              item = {
-                "New_Ledger_ID": selectedItemID,
-                "Ledger_Name": selectedLedgerName,
-                "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Ledger_ID": widget.editproduct['Ledger_ID'],
-                "Amount": double.parse(amount.text),
-                "Date": widget.newDate,
-                "Remark": narration.text,
-              };
-            }
-            else {
-              item = {
-                "Ledger_Name": selectedLedgerName,
-                 "Date": widget.newDate,
-              //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
-                "Ledger_ID": selectedItemID,
-                "Amount": double.parse(amount.text),
-                "Remark": narration.text,
-              };
-            }
+            if (selectedItemID != null) {
+              var item = {};
+              if (widget.editproduct != null) {
+                item = {
+                  "New_Ledger_ID": selectedItemID,
+                  "Ledger_Name": selectedLedgerName,
+                  "Seq_No": widget.editproduct != null
+                      ? widget.editproduct['Seq_No']
+                      : null,
+                  "Ledger_ID": widget.editproduct['Ledger_ID'],
+                  "Amount": double.parse(amount.text),
+                  "Date": widget.newDate,
+                  "Remark": narration.text,
+                };
+              } else {
+                item = {
+                  "Ledger_Name": selectedLedgerName,
+                  "Date": widget.newDate,
+                  //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
+                  "Ledger_ID": selectedItemID,
+                  "Amount": double.parse(amount.text),
+                  "Remark": narration.text,
+                };
+              }
 
-            if(widget.mListener!=null){
-              widget.mListener.AddOrEditLedgerDetail(item);
-              Navigator.pop(context);
+              if (widget.mListener != null) {
+                widget.mListener.AddOrEditLedgerDetail(item);
+                Navigator.pop(context);
+              }
+            } else {
+              CommonWidget.errorDialog(
+                  context, "Please add required fields ledger,amount !");
             }
           },
           onDoubleTap: () {},
           child: Container(
             height: parentHeight * .05,
-            width: parentWidth*.45,
+            width: parentWidth * .45,
             decoration: const BoxDecoration(
               color: CommonColor.THEME_COLOR,
               borderRadius: BorderRadius.only(
@@ -415,11 +432,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger>{
       ],
     );
   }
-
-
 }
 
-
-abstract class AddOrEditLedgerInterface{
+abstract class AddOrEditLedgerInterface {
   AddOrEditLedgerDetail(dynamic item);
 }
