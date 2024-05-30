@@ -315,139 +315,137 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
 /* Widget for item list layout layout*/
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
-    return Container(
-      height: parentHeight*.6,
-      child: ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: Ledger_list.length,
-        itemBuilder: (BuildContext context, int index) {
-          return  AnimationConfiguration.staggeredList(
-            position: index,
-            duration:
-            const Duration(milliseconds: 500),
-            child: SlideAnimation(
-              verticalOffset: -44.0,
-              child: FadeInAnimation(
-                delay: const Duration(microseconds: 1500),
-                child: GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      editedItemIndex=index;
-                    });
-                    if(widget.readOnly==false){
-                  }else{
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
-                      goToAddOrEditItem(Ledger_list[index],widget.companyId,"edit");
-                    }}
-                  },
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                              child:Row(
-                                children: [
-                                  Container(
-                                      width: parentWidth*.1,
-                                      height:parentWidth*.1,
-                                      decoration: BoxDecoration(
-                                          color: Colors.purple.withOpacity(0.3),
-                                          borderRadius: BorderRadius.circular(15)
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
-                                  ),
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: Ledger_list.length,
+      itemBuilder: (BuildContext context, int index) {
+        return  AnimationConfiguration.staggeredList(
+          position: index,
+          duration:
+          const Duration(milliseconds: 500),
+          child: SlideAnimation(
+            verticalOffset: -44.0,
+            child: FadeInAnimation(
+              delay: const Duration(microseconds: 1500),
+              child: GestureDetector(
+                onTap: (){
+                  setState(() {
+                    editedItemIndex=index;
+                  });
+                  if(widget.readOnly==false){
+                }else{
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if (context != null) {
+                    goToAddOrEditItem(Ledger_list[index],widget.companyId,"edit");
+                  }}
+                },
+                child: Card(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                            margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
+                            child:Row(
+                              children: [
+                                Container(
+                                    width: parentWidth*.1,
+                                    height:parentWidth*.1,
+                                    decoration: BoxDecoration(
+                                        color: Colors.purple.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                                ),
 
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      width: parentWidth*.70,
-                                      //  height: parentHeight*.1,
-                                      child:  Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${Ledger_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    width: parentWidth*.70,
+                                    //  height: parentHeight*.1,
+                                    child:  Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${Ledger_list[index]['Ledger_Name']}",style: item_heading_textStyle,),
 
-                                          const SizedBox(height: 3,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child: Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount'])+" ${Ledger_list[index]['Amnt_Type']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                          // +" ${Ledger_list[index]['Amnt_Type']}"
-                                          ),
-                                          const SizedBox(height: 2 ,),
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            width: SizeConfig.screenWidth,
-                                            child: Text("${Ledger_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                          ),
+                                        const SizedBox(height: 3,),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          width: SizeConfig.screenWidth,
+                                          child: Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount'])+" ${Ledger_list[index]['Amnt_Type']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                        // +" ${Ledger_list[index]['Amnt_Type']}"
+                                        ),
+                                        const SizedBox(height: 2 ,),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          width: SizeConfig.screenWidth,
+                                          child: Text("${Ledger_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                        ),
 
 
-                                        ],
-                                      ),
+                                      ],
                                     ),
                                   ),
-                                  widget.readOnly==false?Container():
-                                  Container(
-                                      width: parentWidth*.1,
-                                      // height: parentHeight*.1,
-                                      color: Colors.transparent,
-                                      child:DeleteDialogLayout(
-                                          callback: (response ) async{
-                                            if(response=="yes"){
-                                              print("##############$response");
-                                              if(Ledger_list[index]['Seq_No']!=null){
-                                                var deletedItem=   {
-                                                  "Ledger_ID": Ledger_list[index]['Ledger_ID'],
-                                                  "Seq_No": Ledger_list[index]['Seq_No'],
-                                                  "Amnt_Type":Ledger_list[index]['Amnt_Type'],
-                                                  "Date":DateFormat('yyyy-MM-dd').format(invoiceDate)//"2024-03-26"
-                                                };
-                                                Deleted_list.add(deletedItem);
-                                                setState(() {
-                                                  Deleted_list=Deleted_list;
-                                                });
-                                              }
-
-                                              var contain = Inserted_list.indexWhere((element) => element['Ledger_ID']== Ledger_list[index]['Ledger_ID']);
-                                              print(contain);
-                                              if(contain>=0){
-                                                print("REMOVE");
-                                                Inserted_list.remove(Inserted_list[contain]);
-                                              }
-                                              Ledger_list.remove(Ledger_list[index]);
+                                ),
+                                widget.readOnly==false?Container():
+                                Container(
+                                    width: parentWidth*.1,
+                                    // height: parentHeight*.1,
+                                    color: Colors.transparent,
+                                    child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            print("##############$response");
+                                            if(Ledger_list[index]['Seq_No']!=null){
+                                              var deletedItem=   {
+                                                "Ledger_ID": Ledger_list[index]['Ledger_ID'],
+                                                "Seq_No": Ledger_list[index]['Seq_No'],
+                                                "Amnt_Type":Ledger_list[index]['Amnt_Type'],
+                                                "Date":DateFormat('yyyy-MM-dd').format(invoiceDate)//"2024-03-26"
+                                              };
+                                              Deleted_list.add(deletedItem);
                                               setState(() {
-                                                Ledger_list=Ledger_list;
-                                                Inserted_list=Inserted_list;
+                                                Deleted_list=Deleted_list;
                                               });
-                                              print(Inserted_list);
-                                              await calculateTotalAmt();  }
-                                          })
-                                  ),
-                                ],
-                              )
+                                            }
 
-                          ),
-                        )
+                                            var contain = Inserted_list.indexWhere((element) => element['Ledger_ID']== Ledger_list[index]['Ledger_ID']);
+                                            print(contain);
+                                            if(contain>=0){
+                                              print("REMOVE");
+                                              Inserted_list.remove(Inserted_list[contain]);
+                                            }
+                                            Ledger_list.remove(Ledger_list[index]);
+                                            setState(() {
+                                              Ledger_list=Ledger_list;
+                                              Inserted_list=Inserted_list;
+                                            });
+                                            print(Inserted_list);
+                                            await calculateTotalAmt();  }
+                                        })
+                                ),
+                              ],
+                            )
+
+                        ),
+                      )
 
 
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(
-            height: 5,
-          );
-        },
-      ),
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          height: 5,
+        );
+      },
     );
   }
 
@@ -751,7 +749,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getJournalVouchers}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Journal&Voucher_No=${widget.voucherNo}&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().getJournalVouchers}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Journal&Voucher_No=${widget.voucherNo}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);

@@ -44,83 +44,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   List<dynamic> Franchisee_list=[];
   bool isApiCall=false;
 
-  callGetFranchiseeItemOpeningList(int page) async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening_list}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              setState(() {
-                isLoaderShow=false;
 
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  _arrList=data;
-                  callGetFranchiseeNot(0);
-                  setState(() {
-
-                    Franchisee_list=_arrList;
-                  });
-                }else{
-                  isApiCall=true;
-                }
-                calculateTotalAmt();
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              print("Here2=> $e");
-
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
 
   @override
   void initState() {
@@ -543,7 +467,83 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
       CommonWidget.noInternetDialogNew(context);
     }
   }
+  callGetFranchiseeItemOpeningList(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_opening_list}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
 
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  callGetFranchiseeNot(0);
+                  setState(() {
+
+                    Franchisee_list=_arrList;
+                  });
+                }else{
+                  isApiCall=true;
+                }
+                calculateTotalAmt();
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
   @override
   backToList() {
     // TODO: implement backToList

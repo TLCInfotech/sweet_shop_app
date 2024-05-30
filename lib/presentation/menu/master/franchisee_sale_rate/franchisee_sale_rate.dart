@@ -531,7 +531,7 @@ String companyId="";
             child: getApplicableFromLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
           ),
           SearchableLedgerDropdown(
-          apiUrl:ApiConstants().franchisee+"?",
+          apiUrl:ApiConstants().getFilteredFranchisee+"?",
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name,id){

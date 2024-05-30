@@ -455,7 +455,6 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
           isLoaderShow=true;
         });
         DeleteIRequestModel model = DeleteIRequestModel(
-
             id:removeId,
             modifier: uid,
             modifierMachine: deviceId,
