@@ -541,6 +541,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                 mListener: this,
                 readOnly: update,
                 editproduct:product,
+                existList: Item_list,
                 date:invoiceDate.toString()
               ),
             ),

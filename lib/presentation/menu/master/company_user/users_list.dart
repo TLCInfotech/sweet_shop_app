@@ -294,33 +294,16 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("${userList[index]['Name']}",
+                                  Text("${userList[index]['UID']}",
                                       style: item_heading_textStyle),
                                   const SizedBox(height: 5),
                                   Text(
                                       "${userList[index]['Franchisee_Name']}",
                                       overflow: TextOverflow.clip,
                                       style: item_regular_textStyle),
-                                  // Text(
-                                  //     "Working Days: ${userList[index]['Working_Days']}",
-                                  //     overflow: TextOverflow.clip,
-                                  //     style: item_regular_textStyle)
                                 ],
                               ),
                             ),
-                            // Positioned(
-                            //     top: 0,
-                            //     right: 0,
-                            //     child: DeleteDialogLayout(
-                            //       callback: (response) async {
-                            //         if (response == "yes") {
-                            //           print("##############$response");
-                            //           await callDeleteUser(
-                            //               userList[index]['UID'].toString(),
-                            //               index);
-                            //         }
-                            //       },
-                            //     ))
                           ],
                         )),
                         singleRecord['Delete_Right']==false?Container():  DeleteDialogLayout(

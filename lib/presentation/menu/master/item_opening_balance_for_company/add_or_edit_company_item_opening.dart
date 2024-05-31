@@ -19,6 +19,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
+import '../../../searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 
 class TestItem {
   String label;
@@ -36,8 +37,9 @@ class AddOrEditItemOpeningBalForCompany extends StatefulWidget {
   final dynamic editproduct;
   final date;
   final readOnly;
+  final existList;
 
-  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct, this.date, this.readOnly});
+  const AddOrEditItemOpeningBalForCompany({super.key, required this.mListener, required this.editproduct, this.date, this.readOnly, this.existList});
   @override
   State<AddOrEditItemOpeningBalForCompany> createState() => _AddOrEditItemOpeningBalForCompanyState();
 }
@@ -153,8 +155,9 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
     // TODO: implement initState
     super.initState();
     setVal();
+    print("rfkjfrjfr");
   }
-
+  List insertedList=[];
   setVal()async{
     if(widget.editproduct!=null){
       setState(() {
@@ -167,9 +170,16 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         rate.text=widget.editproduct['Rate'].toString();
         amount.text=widget.editproduct['Amount'].toString();
       });
+
       await fetchItems();
       await calculateRates();
     }
+    List list= widget.existList;
+    setState(() {
+      insertedList=list.map((e) =>e['Item_Name'] ).toList();
+    });
+    print("###########");
+    print(insertedList);
   }
 
   @override
@@ -375,7 +385,36 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   var selectedItemName="";
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return SearchableDropdownWithObject(
+    return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedItemName=item['Name'].toString();
+            unit.text=item['Unit'];
+            rate.text=item['Rate'].toString();
+          });
+        }
+        await calculateRates();
+      },
+    );
+
+/*    return SearchableDropdownWithObject(
       name: selectedItemName,
       readOnly: widget.readOnly,
       status:  "edit",
@@ -393,50 +432,8 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         await calculateRates();
       },
 
-    );
+    );*/
 
-      Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-          minStringLength: 0,
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                unit.text=v.unit;
-                rate.text=v.rate;
-                itemsList = [];
-              });
-            },
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
-
-    );
   }
 
   /* widget for button layout */

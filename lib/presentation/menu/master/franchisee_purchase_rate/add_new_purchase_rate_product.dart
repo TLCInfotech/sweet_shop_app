@@ -16,6 +16,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_diable_textformfield.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
+import '../../../searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 
 class TestItem {
   String label;
@@ -39,6 +40,7 @@ class AddProductPurchaseRate extends StatefulWidget {
   final date;
   final id;
   final readOnly;
+  final existingList;
 
   const AddProductPurchaseRate(
       {super.key,
@@ -46,7 +48,7 @@ class AddProductPurchaseRate extends StatefulWidget {
       required this.editproduct,
       this.date,
       this.id,
-      this.readOnly});
+      this.readOnly, this.existingList});
 
   @override
   State<AddProductPurchaseRate> createState() => _AddProductPurchaseRateState();
@@ -199,7 +201,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
     super.initState();
     setVal();
   }
-
+  List insertedList=[];
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
@@ -223,6 +225,10 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
         // gstAmt.text=widget.editproduct['ID']!=null?widget.editproduct['GSt_Amount'].toString():widget.editproduct['GST_Amount'].toString();
       });
     }
+    List list= widget.existingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Name'] ).toList();
+    });
     await fetchItems();
     await calculateNetAmt();
     await calculateGstAmt();
@@ -411,7 +417,37 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
   }
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
-    return SearchableDropdownWithObject(
+    return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl: "${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.date}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+        await calculateGstAmt();
+        await calculateNetAmt();
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            unit = item['Unit'].toString();
+            rate.text = item['Rate'].toString();
+            selectedItemName = item['Name'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+
+          });
+        }
+      },
+    );
+    /*return SearchableDropdownWithObject(
       name: selectedItemName,
       status: "edit",
       apiUrl:
@@ -430,49 +466,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
         await calculateGstAmt();
         await calculateNetAmt();
       },
-    );
-    //   Container(
-    //     height: parentHeight * .055,
-    //     alignment: Alignment.center,
-    //     decoration: BoxDecoration(
-    //       color: CommonColor.WHITE_COLOR,
-    //       borderRadius: BorderRadius.circular(4),
-    //       boxShadow: [
-    //         BoxShadow(
-    //           offset: const Offset(0, 1),
-    //           blurRadius: 5,
-    //           color: Colors.black.withOpacity(0.1),
-    //         ),
-    //       ],
-    //     ),
-    //     child: TextFieldSearch(
-    //       minStringLength: 0,
-    //         label: 'Item',
-    //         controller: _textController,
-    //         decoration: textfield_decoration.copyWith(
-    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-    //           prefixIcon: Container(
-    //               width: 50,
-    //               padding: const EdgeInsets.all(10),
-    //               alignment: Alignment.centerLeft,
-    //               child: const FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-    //         ),
-    //         textStyle: item_regular_textStyle,
-    //         getSelectedValue: (v) {
-    //           setState(() {
-    //             selectedItemID = v.value;
-    //             unit=v.unit;
-    //             gst.text=v.gst=="null"?gst.text:v.gst;
-    //             itemsList = [];
-    //           });
-    //         },
-    //         future: () {
-    //           if (_textController.text != "")
-    //             return fetchSimpleData(
-    //                 _textController.text.trim());
-    //         })
-    //
-    // );
+    );*/
   }
 
   /* widget for button layout */

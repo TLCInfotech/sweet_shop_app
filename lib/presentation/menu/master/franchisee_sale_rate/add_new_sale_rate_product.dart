@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 import 'package:textfield_search/textfield_search.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
@@ -31,8 +32,9 @@ class AddProductSaleRate extends StatefulWidget {
   final String dateNew;
   final id;
   final readOnly;
+  final exstingList;
 
-  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew,  this.id, this.readOnly});
+  const AddProductSaleRate({super.key, required this.mListener, required this.editproduct, required this.dateNew,  this.id, this.readOnly, this.exstingList});
 
   @override
   State<AddProductSaleRate> createState() => _AddProductSaleRateState();
@@ -182,7 +184,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
 
 
-
+  List insertedList=[];
   var selectedItemID =null;
   setVal()async{
     if(widget.editproduct!=null){
@@ -196,6 +198,13 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         gstAmt.text=widget.editproduct['GSt_Amount']==null?"":widget.editproduct['GSt_Amount'].toString();
       });
     }
+
+    List list= widget.exstingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Name'] ).toList();
+    });
+    print("###########");
+    print(insertedList);
     await fetchItems();
     await calculateGstAmt();
     await calculateNetAmt();
@@ -415,7 +424,35 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
-    return SearchableDropdownWithObject(
+    print("sadas ${selectedItemName}");
+    return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateNew}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedItemName=item['Name'].toString();
+            rate.text=item['Rate'].toString();
+            gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+          });
+        }
+      },
+    );
+   /* return SearchableDropdownWithObject(
       name: selectedItemName,
       status:  "edit",
       apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateNew}&",
@@ -433,49 +470,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         await calculateNetAmt();
       },
 
-    );
+    );*/
 
-    //   Container(
-    //     height: parentHeight * .055,
-    //     alignment: Alignment.center,
-    //     decoration: BoxDecoration(
-    //       color: CommonColor.WHITE_COLOR,
-    //       borderRadius: BorderRadius.circular(4),
-    //       boxShadow: [
-    //         BoxShadow(
-    //           offset: Offset(0, 1),
-    //           blurRadius: 5,
-    //           color: Colors.black.withOpacity(0.1),
-    //         ),
-    //       ],
-    //     ),
-    //     child: TextFieldSearch(
-    //         label: 'Item',
-    //         minStringLength: 0,
-    //         controller: _textController,
-    //         decoration: textfield_decoration.copyWith(
-    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-    //           prefixIcon: Container(
-    //               width: 50,
-    //               padding: EdgeInsets.all(10),
-    //               alignment: Alignment.centerLeft,
-    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-    //         ),
-    //         textStyle: item_regular_textStyle,
-    //         getSelectedValue: (v) {
-    //           setState(() {
-    //             selectedItemID = v.value;
-    //             gst.text=v.gst=="null"?gst.text:v.gst;
-    //             itemsList = [];
-    //           });
-    //         },
-    //         future: () {
-    //           if (_textController.text != "")
-    //             return fetchSimpleData(
-    //                 _textController.text.trim());
-    //         })
-    //
-    // );
   }
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {

@@ -678,6 +678,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     mListener: this,
                     editproduct:product,
                     date:invoiceDate,
+                    existingList: Item_list,
                     readOnly: updateRight,
                   ),
                 ),

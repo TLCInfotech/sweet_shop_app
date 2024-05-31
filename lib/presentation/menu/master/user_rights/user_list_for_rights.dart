@@ -437,7 +437,6 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, e.toString());
-
             },sessionExpire: (e) {
               setState(() {
                 isLoaderShow=false;

@@ -594,6 +594,7 @@ String companyId="";
                 mListener: this,
                 id: selectedCopyFranchiseeId,
                 editproduct:product,
+                exstingList: Item_list,
                 dateNew:DateFormat('yyyy-MM-dd').format(applicablefrom),
               ),
             ),
