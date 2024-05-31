@@ -173,7 +173,7 @@ String amountTypeId="";
       setState(() {
         _textController.text=widget.editproduct['Ledger_Name'];
         selectedItemID=widget.editproduct['Ledger_ID'];
-        amount.text=widget.editproduct['Amount'].toString();
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
         amountType=widget.editproduct['Amount_Type'];
       });
     }
@@ -367,9 +367,11 @@ String amountTypeId="";
           amount.text = value;
         });
       },
-      textInput: TextInputType.numberWithOptions(decimal: true),
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
   }
@@ -555,7 +557,7 @@ String amountTypeId="";
                 // "Ledger_ID":widget.editproduct!=null?widget.editproduct['Ledger_ID']:"",
                 "Ledger_Name": _textController.text,
                 "Ledger_ID": selectedItemID,
-                "Amount": double.parse(amount.text),
+                "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                 "Amount_Type": amountType
               };
               if (widget.editproduct != null) {
