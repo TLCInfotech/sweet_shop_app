@@ -620,6 +620,7 @@ bool isLoaderShow=false;
                 mListener: this,
                 editproduct:product,
                 newDate:dateee,
+                  exstingList:Item_list
               ),
             ),
           );

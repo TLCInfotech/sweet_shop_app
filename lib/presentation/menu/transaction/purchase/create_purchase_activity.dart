@@ -590,6 +590,7 @@ if(widget.come=="edit"){
                 editproduct:product,
                 date: invoiceDate.toString(),
                 id: selectedFranchiseeId,
+                exstingList: Item_list,
                 dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
               ),
             ),

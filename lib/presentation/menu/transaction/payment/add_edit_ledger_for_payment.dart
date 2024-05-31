@@ -27,9 +27,10 @@ class AddOrEditLedgerForPayment extends StatefulWidget {
   final AddOrEditLedgerForPaymentInterface mListener;
   final dynamic editproduct;
   final newdate;
+  final exstingList;
 
 
-  const AddOrEditLedgerForPayment({super.key, required this.mListener, required this.editproduct,required this.newdate});
+  const AddOrEditLedgerForPayment({super.key, required this.mListener, required this.editproduct,required this.newdate ,this.exstingList});
 
   @override
   State<AddOrEditLedgerForPayment> createState() => _AddOrEditLedgerForPaymentState();
@@ -137,8 +138,9 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       setState(() {
         selectedLedgerName=widget.editproduct['Ledger_Name']!=null?widget.editproduct['Ledger_Name']:null;
         selectedBankLedgerID=widget.editproduct['Ledger_ID']!=null?widget.editproduct['Ledger_ID']:null;
-        amount.text=widget.editproduct['Amount'].toString();
-        narration.text=widget.editproduct['Remark'].toString();
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        narration.text=widget.editproduct['Remark']!=null && widget.editproduct['Remark']!=""?widget.editproduct['Remark'].toString():narration.text;
+
       });
     }
     await fetchShows();
@@ -214,6 +216,8 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
         setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
+
           narration.text = value;
         });
       },
@@ -244,7 +248,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
@@ -257,10 +261,24 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (item)async{
+        print("FFFFFFFFFFFF ${widget.exstingList}");
+
+        List l=widget.exstingList;
+        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+        if(n.contains(item['ID'].toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
+        }
+        else {
+          setState(() {
+            selectedBankLedgerID = item['ID'].toString();
+            selectedLedgerName=item['Name'].toString();
+          });
+        }
         setState(() {
-          selectedBankLedgerID = item['ID'].toString();
-          selectedLedgerName=item['Name'].toString();
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
+
       },
 
     );
@@ -362,8 +380,8 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                       .editproduct['Seq_No'] : null,
                   "Ledger_Name": selectedLedgerName,
                   "Ledger_ID": widget.editproduct['Ledger_ID'],
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
               else {
@@ -373,8 +391,8 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                       .editproduct['Seq_No'] : 0,
                   "Ledger_Name": selectedLedgerName,
                   "Ledger_ID": selectedBankLedgerID,
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
 

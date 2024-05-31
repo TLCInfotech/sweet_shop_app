@@ -28,12 +28,13 @@ class AddOrEditLedger extends StatefulWidget {
   final dynamic editproduct;
   final newDate;
   final readOnly;
+  final exstingList;
   const AddOrEditLedger(
       {super.key,
       required this.mListener,
       required this.editproduct,
       this.newDate,
-      this.readOnly});
+      this.readOnly, this.exstingList});
   @override
   State<AddOrEditLedger> createState() => _AddOrEditLedgerState();
 }
@@ -137,10 +138,9 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
         selectedLedgerName = widget.editproduct['Ledger_Name'] != null
             ? widget.editproduct['Ledger_Name']
             : null;
-        amount.text = widget.editproduct['Amount'].toString();
-        narration.text = widget.editproduct['Remark'] != null
-            ? widget.editproduct['Remark'].toString()
-            : narration.text;
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        narration.text=widget.editproduct['Remark']!=null && widget.editproduct['Remark']!=""?widget.editproduct['Remark'].toString():narration.text;
+
       });
       print(oldItemId);
     }
@@ -233,6 +233,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value) async {
         setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
+
           narration.text = value;
         });
       },
@@ -263,7 +265,7 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
       },
       textInput: const TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
@@ -276,10 +278,25 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
       title: ApplicationLocalizations.of(context)!
           .translate("ledger_without_bank_cash")!,
       callback: (item) async {
+        print("FFFFFFFFFFFF ${widget.exstingList}");
+
+        List l=widget.exstingList;
+        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+        if(n.contains(item['ID'].toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedLedgerName = item['Name'].toString();
+          });
+        }
         setState(() {
-          selectedItemID = item['ID'].toString();
-          selectedLedgerName = item['Name'].toString();
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
+
+
       },
     );
 
@@ -383,9 +400,10 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
                       ? widget.editproduct['Seq_No']
                       : null,
                   "Ledger_ID": widget.editproduct['Ledger_ID'],
-                  "Amount": double.parse(amount.text),
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                   "Date": widget.newDate,
-                  "Remark": narration.text,
+
                 };
               } else {
                 item = {
@@ -393,8 +411,8 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
                   "Date": widget.newDate,
                   //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                   "Ledger_ID": selectedItemID,
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
 

@@ -640,6 +640,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 mListener: this,
                 editproduct:product,
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
+                  exstingList:Ledger_list
               ),
             ),
           );

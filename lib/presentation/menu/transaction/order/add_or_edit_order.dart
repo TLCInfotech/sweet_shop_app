@@ -443,6 +443,8 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   }
   var amountedited=false;
 
+  var discountamtedited=false;
+
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -660,8 +662,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   }
 
   /* widget for product gst layout */
-  Widget getItemNetRateAndNetAmtLayout(
-      double parentHeight, double parentWidth) {
+  Widget getItemNetRateAndNetAmtLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -739,33 +740,33 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
                       ? widget.editproduct['Item_ID']
                       : "",
                   "Item_Name": selectedItemName,
-                  "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"",
+                  "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
                   "Unit": "kg",
-                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):"",
-                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):"",
-                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):"",
-                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):"",
-                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):"",
-                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):"",
-                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):"",
-                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):"",
-                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):"",
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
+                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):null,
+                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):null,
+                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):null,
+                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):null,
+                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):null,
                 };
               } else {
                 item = {
                   "Item_ID": selectedItemID,
                   "Item_Name": selectedItemName,
-                  "Quantity":quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"",
+                  "Quantity":quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
                   "Unit": "kg",
-                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):"",
-                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):"",
-                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):"",
-                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):"",
-                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):"",
-                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):"",
-                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):"",
-                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):"",
-                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):"",
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
+                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):null,
+                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):null,
+                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):null,
+                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):null,
+                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):null ,
                   "Seq_No": widget.editproduct != null
                       ? widget.editproduct['Seq_No']
                       : null,
@@ -813,8 +814,6 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       amount.text = amt.toStringAsFixed(2);
     });
   }
-
-  var discountamtedited=false;
 
   calculateDiscountAmt() {
     var amt = amount.text == "" ? null: double.parse(amount.text);
