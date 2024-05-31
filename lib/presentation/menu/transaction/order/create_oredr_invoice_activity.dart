@@ -118,7 +118,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+item['Net_Amount'];
+      total=total+double.parse(item['Net_Amount']);
       // print(item['Amount']);
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
@@ -481,7 +481,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                             Container(
                                               alignment: Alignment.centerLeft,
                                               child:
-                                              Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']).toString(),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                             ),
                                           ],
                                         ),
