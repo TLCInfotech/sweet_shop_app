@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -109,7 +110,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
     super.initState();
     setVal();
   }
-
+  List insertedList=[];
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
@@ -140,6 +141,10 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       });
       await calculateRates();
     }
+    List list= widget.exstingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Item_Name'] ).toList();
+    });
     // await fetchItems();
     // await getCompanyId();
   }
@@ -290,7 +295,38 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     print("sadas ${selectedItemName}");
-    return SearchableDropdownWithObject(
+   return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+        await calculateGstAmt();
+        await calculateNetAmt();
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedItemName = item['Name'].toString();
+            unit.text = item['Unit']!=null?item['Unit']:null;
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+          });
+        }
+        await calculateRates();
+      },
+    );
+
+   /* return SearchableDropdownWithObject(
       name: selectedItemName,
       status: "edit",
       apiUrl:
@@ -316,52 +352,8 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           await calculateRates();
         }
       }, 
-    );
+    );*/
 
-    //   Container(
-    //     height: parentHeight * .055,
-    //     alignment: Alignment.center,
-    //     decoration: BoxDecoration(
-    //       color: CommonColor.WHITE_COLOR,
-    //       borderRadius: BorderRadius.circular(4),
-    //       boxShadow: [
-    //         BoxShadow(
-    //           offset: Offset(0, 1),
-    //           blurRadius: 5,
-    //           color: Colors.black.withOpacity(0.1),
-    //         ),
-    //       ],
-    //     ),
-    //     child: TextFieldSearch(
-    //       minStringLength: 0,
-    //         label: 'Item',
-    //         controller: _textController,
-    //         decoration: textfield_decoration.copyWith(
-    //           hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-    //           prefixIcon: Container(
-    //               width: 50,
-    //               padding: EdgeInsets.all(10),
-    //               alignment: Alignment.centerLeft,
-    //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-    //         ),
-    //         textStyle: item_regular_textStyle,
-    //         getSelectedValue: (v) {
-    //           setState(() {
-    //             selectedItemID = v.value;
-    //             unit.text=v.unit;
-    //             rate.text=v.rate;
-    //             itemsList = [];
-    //             gst.text=v.gst!="null"?v.gst:"";
-    //           });
-    //           calculateRates();
-    //         },
-    //         future: () {
-    //           if (_textController.text != "")
-    //             return fetchSimpleData(
-    //                 _textController.text.trim());
-    //         })
-    //
-    // );
   }
 
   /* widget for item quantity layout */

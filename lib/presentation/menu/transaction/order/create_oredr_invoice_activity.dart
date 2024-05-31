@@ -57,7 +57,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
   String selectedLedgerId="";
 
   String TotalAmount="0.00";
-//  List<dynamic> Item_list=[];
+
   List<dynamic> Item_list=[];
 
   List<dynamic> Updated_list=[];

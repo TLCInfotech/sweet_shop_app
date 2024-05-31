@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -98,7 +99,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
     super.initState();
     setVal();
   }
-
+  List insertedList=[];
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
@@ -128,6 +129,10 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
       });
       await calculateRates();
     }
+    List list= widget.exstingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Item_Name'] ).toList();
+    });
     await fetchItems();
   }
 
@@ -277,7 +282,37 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
 
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
-    return SearchableDropdownWithObject(
+    return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl: "${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+        await calculateGstAmt();
+        await calculateNetAmt();
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedItemName = item['Name'].toString();
+            unit.text = item['Unit']!=null?item['Unit']:null;
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+          });
+        }
+        await calculateRates();
+      },
+    );
+   /* return SearchableDropdownWithObject(
       name: selectedItemName,
       status: "edit",
       apiUrl:
@@ -303,7 +338,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
           await calculateRates();
         }
       },
-    );
+    );*/
   }
 
 

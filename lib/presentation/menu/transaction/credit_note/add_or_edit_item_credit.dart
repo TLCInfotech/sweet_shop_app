@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -96,7 +97,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
     super.initState();
     setVal();
   }
-
+  List insertedList=[];
   setVal() async {
     if (widget.editproduct != null) {
       setState(() {
@@ -127,6 +128,10 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
       await calculateRates();
     }
     await fetchShows();
+    List list= widget.exstingList;
+    setState(() {
+      insertedList=list.map((e) =>e['Item_Name'] ).toList();
+    });
   }
 
   var itemsList = [];
@@ -275,7 +280,37 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
 
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
-    return SearchableDropdownWithObject(
+    return SearchableDropdownWithExistingList(
+      name: selectedItemName,
+      come: widget.editproduct!=null?"disable":"",
+      status: selectedItemName==""?"":"edit",
+      apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
+      titleIndicator: false,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      insertedList:insertedList,
+      callback: (item) async {
+        await calculateGstAmt();
+        await calculateNetAmt();
+        if(insertedList.contains(item['Name'])){
+          CommonWidget.errorDialog(context,"Already Exist");
+          setState(() {
+            selectedItemName="";
+            selectedItemID="";
+          });
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedItemName = item['Name'].toString();
+            unit.text = item['Unit']!=null?item['Unit']:null;
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+          });
+        }
+        await calculateRates();
+      },
+    );
+   /* return SearchableDropdownWithObject(
       name: selectedItemName,
       status: widget.status,
       apiUrl: ApiConstants().item_list + "?Date=${widget.date}&",
@@ -300,49 +335,6 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
           await calculateRates();
         }
       },
-    ); /*Container(
-        height: parentHeight * .055,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: CommonColor.WHITE_COLOR,
-          borderRadius: BorderRadius.circular(4),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 1),
-              blurRadius: 5,
-              color: Colors.black.withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: TextFieldSearch(
-            label: 'Item',
-            controller: _textController,
-            decoration: textfield_decoration.copyWith(
-              hintText: ApplicationLocalizations.of(context)!.translate("item_name")!,
-              prefixIcon: Container(
-                  width: 50,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            ),
-            textStyle: item_regular_textStyle,
-            getSelectedValue: (v) {
-              setState(() {
-                selectedItemID = v.value;
-                unit.text=v.unit;
-                rate.text=v.rate;
-                itemsList = [];
-                gst.text=v.gst!="null"?v.gst:"";
-              });
-              calculateRates();
-            },
-            minStringLength: 0,
-            future: () {
-              if (_textController.text != "")
-                return fetchSimpleData(
-                    _textController.text.trim());
-            })
-
     );*/
   }
 
