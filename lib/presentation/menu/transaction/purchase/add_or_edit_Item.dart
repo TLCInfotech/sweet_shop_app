@@ -112,6 +112,8 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
         unit.text = widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
         rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        previousRate=widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+
         amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
         discount.text = widget.editproduct['Disc_Percent']!=0 && widget.editproduct['Disc_Percent']!="" &&widget.editproduct['Disc_Percent']!=null?double.parse( widget.editproduct['Disc_Percent'].toString()).toStringAsFixed(2):"";
         discountAmt.text = widget.editproduct['Disc_Amount']!=0 &&widget.editproduct['Disc_Amount']!="" &&widget.editproduct['Disc_Amount']!=null?double.parse( widget.editproduct['Disc_Amount'].toString()).toStringAsFixed(2):"";
@@ -448,6 +450,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
               gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
               quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
               rate.text = value;
+              previousRate=value;
               amountedited=false;
               discountamtedited=false;
             });
@@ -875,7 +878,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
       netRate.text = netRates.toStringAsFixed(2);
     });
   }
-
+  var previousRate="";
   calculateRates() async {
 
     if(amountedited && quantity.text!=""){
@@ -884,6 +887,11 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
 
         setState(() {
           rate.text = amt.toStringAsFixed(2);
+        });
+      }
+      if(amount.text==""){
+        setState(() {
+          rate.text=double.parse(previousRate).toStringAsFixed(2);
         });
       }
     }
@@ -903,9 +911,9 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
         amount.clear();
       });
     }
-    if (quantity.text == "" || amount.text == "") {
+    if(amount.text==""){
       setState(() {
-        rate.clear();
+        rate.text=double.parse(previousRate).toStringAsFixed(2);
       });
     }
     if(quantity.text==""){

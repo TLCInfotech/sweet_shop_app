@@ -124,6 +124,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         unit.text = widget.editproduct['Unit'].toString();
         quantity.text =widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
         rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        previousRate=widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
         amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
         discount.text = widget.editproduct['Disc_Percent']!=0 && widget.editproduct['Disc_Percent']!="" &&widget.editproduct['Disc_Percent']!=null?double.parse( widget.editproduct['Disc_Percent'].toString()).toStringAsFixed(2):"";
         discountAmt.text = widget.editproduct['Disc_Amount']!=0 &&widget.editproduct['Disc_Amount']!="" &&widget.editproduct['Disc_Amount']!=null?double.parse( widget.editproduct['Disc_Amount'].toString()).toStringAsFixed(2):"";
@@ -295,7 +296,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     print("sadas ${selectedItemName}");
-   return SearchableDropdownWithExistingList(
+    return SearchableDropdownWithExistingList(
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
@@ -326,7 +327,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       },
     );
 
-   /* return SearchableDropdownWithObject(
+    /* return SearchableDropdownWithObject(
       name: selectedItemName,
       status: "edit",
       apiUrl:
@@ -351,7 +352,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           });
           await calculateRates();
         }
-      }, 
+      },
     );*/
 
   }
@@ -359,36 +360,36 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
-      suffix: Text("${unit.text}"),
-      validation: (value) {
-        if (value!.isEmpty) {
-          return StringEn.ENTER + StringEn.QUANTITY;
-        }
-        return null;
-      },
-      readOnly: widget.readOnly,
-      controller: quantity,
-      focuscontroller: null,
-      focusnext: null,
-      title: ApplicationLocalizations.of(context)!.translate("quantity")!,
-      callbackOnchage: (value) async {
-        setState(() {
-          rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
-          discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
-          discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
-          gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
-          // quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
-          quantity.text = value;
-          amountedited=false;
-          discountamtedited=false;
-        });
-        await calculateRates();
-      },
-      textInput: TextInputType.numberWithOptions(
-          decimal: true
-      ),
-      maxlines: 1,
-      format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+        suffix: Text("${unit.text}"),
+        validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER + StringEn.QUANTITY;
+          }
+          return null;
+        },
+        readOnly: widget.readOnly,
+        controller: quantity,
+        focuscontroller: null,
+        focusnext: null,
+        title: ApplicationLocalizations.of(context)!.translate("quantity")!,
+        callbackOnchage: (value) async {
+          setState(() {
+            rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+            discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+            discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+            gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+            // quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+            quantity.text = value;
+            amountedited=false;
+            discountamtedited=false;
+          });
+          await calculateRates();
+        },
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
     Container(
@@ -441,37 +442,38 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
-        parentWidth: (parentWidth),
-        validation: (value) {
-          if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
-          }
-          return null;
-        },
-        readOnly: widget.readOnly,
-        controller: rate,
-        focuscontroller: null,
-        focusnext: null,
-        title: ApplicationLocalizations.of(context)!.translate("rate")!,
-        callbackOnchage: (value) async {
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER + StringEn.QUANTITY;
+            }
+            return null;
+          },
+          readOnly: widget.readOnly,
+          controller: rate,
+          focuscontroller: null,
+          focusnext: null,
+          title: ApplicationLocalizations.of(context)!.translate("rate")!,
+          callbackOnchage: (value) async {
 
-          setState(() {
-            // rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
-            discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
-            discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
-            gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
-            quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
-            rate.text = value;
-            amountedited=false;
-            discountamtedited=false;
-          });
-          await calculateRates();
-        },
-        textInput: TextInputType.numberWithOptions(
-            decimal: true
-        ),
-        maxlines: 1,
-        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+            setState(() {
+              // rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+              rate.text = value;
+              previousRate=value;
+              amountedited=false;
+              discountamtedited=false;
+            });
+            await calculateRates();
+          },
+          textInput: TextInputType.numberWithOptions(
+              decimal: true
+          ),
+          maxlines: 1,
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -479,38 +481,38 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             controller: rate
         ),*/
       SingleLineEditableTextFormField(
-        parentWidth: (parentWidth),
-        validation: (value) {
-          if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
-          }
-          return null;
-        },
-        readOnly: widget.readOnly,
-        controller: amount,
-        focuscontroller: null,
-        focusnext: null,
-        title: ApplicationLocalizations.of(context)!.translate("amount")!,
-        callbackOnchage: (value) async {
-          print("########### $value");
-          setState(() {
-            rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
-            discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
-            discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
-            gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
-            quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
-            amount.text = value;
-            amountedited=true;
-            discountamtedited=false;
-          });
-          await calculateRates();
-          // await calculateRates();
-        },
-        textInput: TextInputType.numberWithOptions(
-            decimal: true
-        ),
-        maxlines: 1,
-        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER + StringEn.QUANTITY;
+            }
+            return null;
+          },
+          readOnly: widget.readOnly,
+          controller: amount,
+          focuscontroller: null,
+          focusnext: null,
+          title: ApplicationLocalizations.of(context)!.translate("amount")!,
+          callbackOnchage: (value) async {
+            print("########### $value");
+            setState(() {
+              rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+              amount.text = value;
+              amountedited=true;
+              discountamtedited=false;
+            });
+            await calculateRates();
+            // await calculateRates();
+          },
+          textInput: TextInputType.numberWithOptions(
+              decimal: true
+          ),
+          maxlines: 1,
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
       /* GetDisableTextFormField(
           parentWidth: (parentWidth),
@@ -557,37 +559,37 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})')),
         ),
         SingleLineEditableTextFormField(
-          parentWidth: (parentWidth),
-          validation: (value) {
-            if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
-            }
-            return null;
-          },
-          readOnly: widget.readOnly,
-          controller: discountAmt,
-          focuscontroller: null,
-          focusnext: null,
-          title:
-          ApplicationLocalizations.of(context)!.translate("disc_amount")!,
-          callbackOnchage: (value) async {
-            setState(() {
-              rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
-              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
-              // discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
-              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
-              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
-              discountAmt.text = value;
-              discountamtedited=true;
-            });
-            await calculateRates();
+            parentWidth: (parentWidth),
+            validation: (value) {
+              if (value!.isEmpty) {
+                return StringEn.ENTER + StringEn.DICOUNT;
+              }
+              return null;
+            },
+            readOnly: widget.readOnly,
+            controller: discountAmt,
+            focuscontroller: null,
+            focusnext: null,
+            title:
+            ApplicationLocalizations.of(context)!.translate("disc_amount")!,
+            callbackOnchage: (value) async {
+              setState(() {
+                rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+                discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+                // discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+                gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+                quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+                discountAmt.text = value;
+                discountamtedited=true;
+              });
+              await calculateRates();
 
-          },
-          textInput: TextInputType.numberWithOptions(
-              decimal: true
-          ),
-          maxlines: 1,
-          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+            },
+            textInput: TextInputType.numberWithOptions(
+                decimal: true
+            ),
+            maxlines: 1,
+            format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
         ),
         // GetDisableTextFormField(
         //     parentWidth: (parentWidth),
@@ -612,37 +614,37 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SingleLineEditableTextFormField(
-          parentWidth: (parentWidth),
-          validation: (value) {
-            if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
-            }
-            return null;
-          },
-          readOnly: widget.readOnly,
-          controller: gst,
-          focuscontroller: null,
-          focusnext: null,
-          title:
-          ApplicationLocalizations.of(context)!.translate("gst_percent")!,
-          callbackOnchage: (value) async {
-            setState(() {
-              rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
-              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
-              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
-              // gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
-              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
-              amountedited=false;
-              discountamtedited=false;
-              gst.text = value;
-            });
-            await calculateRates();
-          },
+            parentWidth: (parentWidth),
+            validation: (value) {
+              if (value!.isEmpty) {
+                return StringEn.ENTER + StringEn.DICOUNT;
+              }
+              return null;
+            },
+            readOnly: widget.readOnly,
+            controller: gst,
+            focuscontroller: null,
+            focusnext: null,
+            title:
+            ApplicationLocalizations.of(context)!.translate("gst_percent")!,
+            callbackOnchage: (value) async {
+              setState(() {
+                rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+                discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+                discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+                // gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+                quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+                amountedited=false;
+                discountamtedited=false;
+                gst.text = value;
+              });
+              await calculateRates();
+            },
             textInput: TextInputType.numberWithOptions(
                 decimal: true
             ),
-          maxlines: 1,
-          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+            maxlines: 1,
+            format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
         ),
         GetDisableTextFormField(
             parentWidth: (parentWidth),
@@ -888,14 +890,23 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   }
 
 
+  var previousRate="";
+
   calculateRates() async {
 
+    print("EEEEEEEEEEE ${previousRate}");
     if(amountedited && quantity.text!=""){
+      print("DDDDDDD ${amount.text}");
       if(amount.text!="" && quantity.text!="") {
         var amt = double.parse(amount.text) / double.parse(quantity.text);
-
+        print("RRRRRr ${amt}");
         setState(() {
           rate.text = amt.toStringAsFixed(2);
+        });
+      }
+      if(amount.text==""){
+        setState(() {
+          rate.text=double.parse(previousRate).toStringAsFixed(2);
         });
       }
     }
@@ -904,15 +915,20 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         await calculateAmt();
       }
 
-      await calculateGstAmt();
-      await calculateDiscountAmt();
-      await calculateTaxableAmt();
-      await calculateNetAmt();
-      await calculateNetRate();
+      // await calculateGstAmt();
+      // await calculateDiscountAmt();
+      // await calculateTaxableAmt();
+      // await calculateNetAmt();
+      // await calculateNetRate();
     }
     if (quantity.text == "" || rate.text == "") {
       setState(() {
         amount.clear();
+      });
+    }
+    if(amount.text==""){
+      setState(() {
+        rate.text=double.parse(previousRate).toStringAsFixed(2);
       });
     }
     if(quantity.text==""){
@@ -926,5 +942,3 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
 abstract class AddOrEditOrderInterface {
   AddOrEditOrderDetail(dynamic item);
 }
-
-

@@ -113,6 +113,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
         amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
         discount.text = widget.editproduct['Disc_Percent']!=0 && widget.editproduct['Disc_Percent']!="" &&widget.editproduct['Disc_Percent']!=null?double.parse( widget.editproduct['Disc_Percent'].toString()).toStringAsFixed(2):"";
         discountAmt.text = widget.editproduct['Disc_Amount']!=0 &&widget.editproduct['Disc_Amount']!="" &&widget.editproduct['Disc_Amount']!=null?double.parse( widget.editproduct['Disc_Amount'].toString()).toStringAsFixed(2):"";
+        previousRate=widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
 
         taxableAmt.text =widget.editproduct['Taxable_Amount']!=0 &&widget.editproduct['Taxable_Amount']!="" &&widget.editproduct['Taxable_Amount']!=null?double.parse( widget.editproduct['Taxable_Amount'].toString()).toStringAsFixed(2):"";
 
@@ -444,6 +445,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
               gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
               quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
               rate.text = value;
+              previousRate=value;
               amountedited=false;
               discountamtedited=false;
             });
@@ -861,6 +863,8 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
     });
   }
 
+  var previousRate="";
+
   calculateNetRate() {
     double netAmt = netAmount.text == "" ? 0.0 : double.parse(netAmount.text);
     double quantityAmt =
@@ -882,6 +886,11 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
           rate.text = amt.toStringAsFixed(2);
         });
       }
+      if(amount.text==""){
+        setState(() {
+          rate.text=double.parse(previousRate).toStringAsFixed(2);
+        });
+      }
     }
     if (quantity.text != "" && rate.text != "") {
       if(amountedited==false) {
@@ -899,9 +908,9 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
         amount.clear();
       });
     }
-    if (quantity.text == "" || amount.text == "") {
+    if(amount.text==""){
       setState(() {
-        rate.clear();
+        rate.text=double.parse(previousRate).toStringAsFixed(2);
       });
     }
     if(quantity.text==""){
