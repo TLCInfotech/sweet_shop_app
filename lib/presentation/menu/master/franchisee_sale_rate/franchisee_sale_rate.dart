@@ -739,7 +739,8 @@ String companyId="";
       editedItemIndex=null;
     });
     await calculateTotalAmt();
-
+    // Sort itemDetails by Item_Name
+    itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
     print(Updated_list);
 
   }

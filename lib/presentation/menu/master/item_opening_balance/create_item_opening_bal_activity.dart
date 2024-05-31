@@ -788,6 +788,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     });
     await calculateTotalAmt();
     print("List");
+    // Sort itemDetails by Item_Name
+    itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
+
     print(Inserted_list);
     print(Updated_list);
   }

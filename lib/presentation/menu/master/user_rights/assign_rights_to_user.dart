@@ -287,6 +287,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                    addAll = !addAll;
                                  });
                                  getAllForms();
+
                                }
                              },
                             child: Container(
@@ -442,7 +443,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return ListView.separated(
       shrinkWrap: true,
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       itemCount: Item_list.length,
       //padding: EdgeInsets.only(bottom: 500),
       itemBuilder: (BuildContext context, int index) {
@@ -538,6 +539,9 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
                                               setState(() {
                                                 Item_list.remove(Item_list[index]);
+                                               //  Item_list.remove(Item_list);
+                                               //  Item_list=[];
+                                               // getUserRights(1,widget.editedItem['UID']);
                                               });
                                             // }
                                           }
@@ -671,7 +675,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     });
     print("List");
     print(Item_list);
-
+    // Sort itemDetails by Item_Name
+    itemLlist.sort((a, b) => a['Form'].compareTo(b['Form']));
 
   }
   
@@ -849,6 +854,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                         "Delete_Right": true,
                         "Seq_No": null
                       });
+
                     }
                     else{
                       _arrList.add(Deleted_list[i]);
@@ -860,7 +866,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                   });
 
                 }
-
+                // Sort itemDetails by Item_Name
+                Item_list.sort((a, b) => a['Form'].compareTo(b['Form']));
               });
 
               // _arrListNew.addAll(data.map((arrData) =>

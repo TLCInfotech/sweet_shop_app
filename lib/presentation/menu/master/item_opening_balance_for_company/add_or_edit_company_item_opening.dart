@@ -109,7 +109,6 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           },sessionExpire: (e) {
             CommonWidget.gotoLoginScreen(context);
             return [];
-            // widget.mListener.loaderShow(false);
           });
 
     });
@@ -187,11 +186,10 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
     SizeConfig().init(context);
     return Material(
       color: Colors.transparent,
-      child:  Column(
+      child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
+          Padding(padding: EdgeInsets.only(left: SizeConfig.screenWidth*.05,right: SizeConfig.screenWidth*.05),
             child: Container(
               height: SizeConfig.screenHeight*0.6 ,
               decoration: const BoxDecoration(

@@ -445,6 +445,8 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
 
           });
         }
+        await calculateGstAmt();
+        await calculateNetAmt();
       },
     );
     /*return SearchableDropdownWithObject(

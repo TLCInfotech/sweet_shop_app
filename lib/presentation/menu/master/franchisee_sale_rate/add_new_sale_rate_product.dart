@@ -448,8 +448,11 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
             selectedItemName=item['Name'].toString();
             rate.text=item['Rate'].toString();
             gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
+
           });
         }
+        await calculateGstAmt();
+        await calculateNetAmt();
       },
     );
    /* return SearchableDropdownWithObject(
@@ -466,8 +469,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           rate.text=item['Rate'].toString();
           gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
         });
-        await calculateGstAmt();
-        await calculateNetAmt();
+
       },
 
     );*/
