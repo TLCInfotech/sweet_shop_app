@@ -875,11 +875,13 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
   calculateRates() async {
 
     if(amountedited && quantity.text!=""){
-      var amt = double.parse(amount.text)/ double.parse(quantity.text) ;
+      if(amount.text!="" && quantity.text!="") {
+        var amt = double.parse(amount.text) / double.parse(quantity.text);
 
-      setState(() {
-        rate.text= amt.toStringAsFixed(2);
-      });
+        setState(() {
+          rate.text = amt.toStringAsFixed(2);
+        });
+      }
     }
     if (quantity.text != "" && rate.text != "") {
       if(amountedited==false) {
@@ -892,7 +894,21 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
       await calculateNetAmt();
       await calculateNetRate();
     }
-
+    if (quantity.text == "" || rate.text == "") {
+      setState(() {
+        amount.clear();
+      });
+    }
+    if (quantity.text == "" || amount.text == "") {
+      setState(() {
+        rate.clear();
+      });
+    }
+    if(quantity.text==""){
+      setState(() {
+        amount.clear();
+      });
+    }
   }
 }
 
