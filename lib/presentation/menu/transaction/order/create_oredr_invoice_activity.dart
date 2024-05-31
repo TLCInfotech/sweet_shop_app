@@ -477,7 +477,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                           children: [
                                             Container(
                                                 alignment: Alignment.centerRight,
-                                                child: Text("${(Item_list[index]['Quantity'])}.00${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                child: Text("${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
                                             Container(
                                               alignment: Alignment.centerLeft,
                                               child:
@@ -592,6 +592,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                 date: invoiceDate.toString(),
                 id: selectedFranchiseeId,
                 dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
+                exstingList:Item_list,
               ),
             ),
           );
