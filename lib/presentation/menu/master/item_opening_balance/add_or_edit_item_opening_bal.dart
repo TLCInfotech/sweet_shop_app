@@ -161,10 +161,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         selectedItemID=widget.editproduct['Item_ID'];
         selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:_textController.text;
         batchno.text=widget.editproduct['Batch_ID']!=null?widget.editproduct['Batch_ID']:batchno.text;
-        unit.text=widget.editproduct['Unit'].toString();
-        quantity.text=widget.editproduct['Quantity'].toString();
-        rate.text =  widget.editproduct['Rate']==null?"0": widget.editproduct['Rate'].toString();
-        amount.text=widget.editproduct['Amount'].toString();
+        unit.text = widget.editproduct['Unit'].toString();
+        quantity.text=widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
+        rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+
       });
       await calculateRates();
     }
@@ -253,13 +254,16 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
+          rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+          // quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+          amount.text=amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           quantity.text = value;
         });
         await calculateRates();
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
 
@@ -279,6 +283,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       title: ApplicationLocalizations.of(context)!.translate("batch_id")!,
       callbackOnchage: (value)async {
         setState(() {
+          rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+          quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+          amount.text=amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           batchno.text = value;
         });
         await calculateRates();
@@ -310,6 +317,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         title: ApplicationLocalizations.of(context)!.translate("rate")!,
         callbackOnchage: (value) async {
           setState(() {
+            // rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+            quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+            amount.text=amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
             rate.text = value;
             amountedited=false;
           });
@@ -317,7 +327,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         },
         textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -340,17 +350,20 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         callbackOnchage: (value) async {
           print("########### $value");
           setState(() {
+            rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+            quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+            // amount.text=amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
             amount.text = value;
             amountedited=true;
           });
-          // await calculateRates();
+          await calculateRates();
           // await calculateRates();
         },
         textInput: TextInputType.numberWithOptions(
             decimal: true
         ),
         maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
     ]);
   }
@@ -399,9 +412,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         else {
           setState(() {
             selectedItemID = item['ID'].toString();
-            selectedItemName=item['Name'].toString();
-            unit.text=item['Unit'];
-            rate.text =item['Rate']==null?"0":item['Rate'].toString();
+            selectedItemName = item['Name'].toString();
+            unit.text = item['Unit']!=null?item['Unit']:null;
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
           });
         }
         await calculateRates();
@@ -496,10 +509,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       "Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": double.parse(quantity.text),
-                      "Unit": unit.text,
-                      "Rate": rate.text,
-                      "Amount": amount.text
+                      "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
+                      "Unit": unit.text!=""?unit.text:null,
+                      "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                      "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                     };
                   }
                   else {
@@ -509,10 +522,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       "Name": selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": double.parse(quantity.text),
-                      "Unit": unit.text,
-                      "Rate": rate.text,
-                      "Amount": amount.text
+                      "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
+                      "Unit": unit.text!=""?unit.text:null,
+                      "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                      "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                     };
                   }
                 }
@@ -522,10 +535,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                     "Name": selectedItemName,
                     "Store_ID": null,
                     "Batch_ID": batchno.text,
-                    "Quantity": double.parse(quantity.text),
-                    "Unit": unit.text,
-                    "Rate": rate.text,
-                    "Amount": amount.text
+                    "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
+                    "Unit": unit.text!=""?unit.text:null,
+                    "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                    "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                   };
                 }
                 if (widget.mListener != null) {
@@ -563,25 +576,56 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   }
 
   calculateAmt(){
-    var amt=double.parse(quantity.text)*double.parse(rate.text);
-    setState(() {
-      amount.text=amt.toStringAsFixed(2);
-    });
+      var amt = double.parse(quantity.text) * double.parse(rate.text);
+      setState(() {
+        amount.text = amt.toStringAsFixed(2);
+      });
   }
 
 
   calculateRates()async{
-    if (amountedited && quantity.text != "") {
-      var amt = double.parse(amount.text) / double.parse(quantity.text);
+    // if (amountedited && quantity.text != "") {
+    //   var amt = double.parse(amount.text) / double.parse(quantity.text);
+    //
+    //   setState(() {
+    //     rate.text = amt.toStringAsFixed(2);
+    //   });
+    // }
+    // if(quantity.text!=""&&rate.text!="") {
+    //   // if (amountedited == false) {
+    //     await calculateAmt();
+    //   // }
+    // }
 
+    if(amountedited && quantity.text!=""){
+      if(amount.text!="" && quantity.text!="") {
+        var amt = double.parse(amount.text) / double.parse(quantity.text);
+
+        setState(() {
+          rate.text = amt.toStringAsFixed(2);
+        });
+      }
+    }
+    if (quantity.text != "" && rate.text != "") {
+      if(amountedited==false) {
+        await calculateAmt();
+      }
+
+    }
+    if (quantity.text == "" || rate.text == "") {
+        setState(() {
+          amount.clear();
+        });
+    }
+    if (quantity.text == "" || amount.text == "") {
       setState(() {
-        rate.text = amt.toStringAsFixed(2);
+        rate.clear();
       });
     }
-    if(quantity.text!=""&&rate.text!="") {
-      // if (amountedited == false) {
-        await calculateAmt();
-      // }
+    if(quantity.text==""){
+      setState(() {
+        amount.clear();
+      });
     }
 
   }

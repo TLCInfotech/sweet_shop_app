@@ -369,20 +369,36 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
           gst.text = value;
         });
         await calculateNetAmt();
-        await calculateOriginalAmt();
+        // await calculateOriginalAmt();
         await calculateGstAmt();
       },
-      textInput: TextInputType.number,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
   calculateGstAmt() {
-    if (rate.text != "" && gst.text != "") {
-      var gstAmtt = double.parse(rate.text) * (double.parse(gst.text) / 100);
+    // if (rate.text != "" && gst.text != "") {
+    //   var gstAmtt = double.parse(rate.text) * (double.parse(gst.text) / 100);
+    //   setState(() {
+    //     gstAmt.text = gstAmtt.toStringAsFixed(2).toString();
+    //   });
+    // }
+    var taxbleAmunt = rate.text == "" ? null : double.parse(rate.text);
+    var gstText = gst.text == "" ? null : double.parse(gst.text);
+
+    if(rate!=null && gstText!=null) {
+      var gstAmtt = taxbleAmunt! * (gstText / 100);
       setState(() {
-        gstAmt.text = gstAmtt.toStringAsFixed(2).toString();
+        gstAmt.text = gstAmtt.toStringAsFixed(2);
+      });
+    }
+    if(gstText==null){
+      setState(() {
+        gstAmt.clear();
       });
     }
   }
@@ -410,9 +426,11 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
         await calculateNetAmt();
         await calculateGstAmt();
       },
-      textInput: TextInputType.number,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
@@ -439,8 +457,9 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
           setState(() {
             selectedItemID = item['ID'].toString();
             unit = item['Unit'].toString();
-            rate.text = item['Rate'].toString();
+
             selectedItemName = item['Name'].toString();
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
             gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
 
           });
@@ -533,11 +552,10 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
                     "Name": selectedItemName,
                     "New_Item_ID": selectedItemID,
                     "Disc_Percent": null,
-                    "Rate": double.parse(rate.text),
-                    "GST": gst.text != "" ? double.parse(gst.text) : null,
-                    "GST_Amount":
-                        gst.text != "" ? double.parse(gstAmt.text) : null,
-                    "Net_Rate": double.parse(net.text)
+                    "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                    "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                    "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                    "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
                   };
                 } else {
                   item = {
@@ -546,11 +564,10 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
                     "Item_ID": selectedItemID,
                     "Name": selectedItemName,
                     "Disc_Percent": null,
-                    "Rate": double.parse(rate.text),
-                    "GST": gst.text != "" ? double.parse(gst.text) : null,
-                    "GST_Amount":
-                        gst.text != "" ? double.parse(gstAmt.text) : null,
-                    "Net_Rate": double.parse(net.text)
+                    "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                    "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                    "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                    "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
                   };
                 }
               } else {

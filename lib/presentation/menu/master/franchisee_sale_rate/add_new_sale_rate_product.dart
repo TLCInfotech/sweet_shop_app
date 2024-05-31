@@ -192,10 +192,11 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         selectedItemName=widget.editproduct['Name']!=null?widget.editproduct['Name']:null;
        selectedItemName=widget.editproduct['Name'];
         selectedItemID=widget.editproduct['Item_ID'];
-        rate.text=widget.editproduct['Rate'].toString();
-        gst.text=widget.editproduct['GST']==null?"":widget.editproduct['GST'].toString();
-        net.text=widget.editproduct['Net_Rate']==null?"":widget.editproduct['Net_Rate'].toString();
-        gstAmt.text=widget.editproduct['GSt_Amount']==null?"":widget.editproduct['GSt_Amount'].toString();
+        rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        gst.text =widget.editproduct['GST']!=0 &&widget.editproduct['GST']!="" &&widget.editproduct['GST']!=null?double.parse( widget.editproduct['GST'].toString()).toStringAsFixed(2):"";
+        net.text =widget.editproduct['Net_Rate']!=0 &&widget.editproduct['Net_Rate']!="" &&widget.editproduct['Net_Rate']!=null?double.parse( widget.editproduct['Net_Rate'].toString()).toStringAsFixed(2):"";
+        gstAmt.text =widget.editproduct['GSt_Amount']!=0 &&widget.editproduct['GSt_Amount']!="" &&widget.editproduct['GSt_Amount']!=null?double.parse( widget.editproduct['GSt_Amount'].toString()).toStringAsFixed(2):"";
+
       });
     }
 
@@ -335,25 +336,37 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       callbackOnchage: (value) async{
         print("here");
         setState(() {
+          rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
           gst.text = value;
         });
         await calculateNetAmt();
-        await calculateOriginalAmt();
+        // await calculateOriginalAmt();
         await calculateGstAmt();
       },
-      textInput: TextInputType.number,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
   }
   calculateGstAmt(){
-    if(rate.text!="" && gst.text!="") {
-      var gstAmtt = double.parse(rate.text) * (double.parse(gst.text) / 100);
+    var taxbleAmunt = rate.text == "" ? null : double.parse(rate.text);
+    var gstText = gst.text == "" ? null : double.parse(gst.text);
+
+    if(rate!=null && gstText!=null) {
+      var gstAmtt = taxbleAmunt! * (gstText / 100);
       setState(() {
-        gstAmt.text = gstAmtt.toStringAsFixed(2).toString();
+        gstAmt.text = gstAmtt.toStringAsFixed(2);
       });
     }
+    if(gstText==null){
+      setState(() {
+        gstAmt.clear();
+      });
+    }
+
   }
 
   /* widget for product rate layout */
@@ -374,14 +387,17 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       callbackOnchage: (value)async {
         print("#");
         setState(() {
+          gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
           rate.text = value;
         });
         await calculateNetAmt();
         await calculateGstAmt();
       },
-      textInput: TextInputType.number,
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 $.]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
   }
@@ -446,9 +462,9 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           setState(() {
             selectedItemID = item['ID'].toString();
             selectedItemName=item['Name'].toString();
-            rate.text=item['Rate'].toString();
-            gst.text=item['GST_Rate']!=null?item['GST_Rate']:"";
 
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
           });
         }
         await calculateGstAmt();
@@ -561,19 +577,19 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   "ID": widget.editproduct['ID'],
                   "Name": selectedItemName,
                   "New_Item_ID": selectedItemID,
-                  "Rate": double.parse(rate.text),
-                  "GST": gst.text != "" ? double.parse(gst.text) : null,
-                  "GST_Amount":gst.text != "" ? double.parse(gstAmt.text):null,
-                  "Net_Rate": double.parse(net.text)
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
                 };
               } else {
                 item = {
                   "Name": selectedItemName,
-                  "Item_ID": selectedItemID,
-                  "Rate": double.parse(rate.text),
-                  "GST": gst.text != "" ? double.parse(gst.text) : null,
-                  "GST_Amount":gst.text != "" ? double.parse(gstAmt.text):null,
-                  "Net_Rate": double.parse(net.text)
+                  "Item_ID": selectedItemID,  
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
                 };
               }
 
