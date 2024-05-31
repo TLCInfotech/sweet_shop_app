@@ -118,8 +118,8 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     });
     var total=0.00;
     for(var item  in Item_list ){
-      total=total+double.parse(item['Net_Amount']);
-      // print(item['Amount']);
+      total=total+item['Net_Amount'];
+      print("item['Amount']");
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
     double amt = total % 1;

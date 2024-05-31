@@ -281,7 +281,6 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
       name: selectedItemName,
-      come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
       titleIndicator: false,

@@ -915,11 +915,6 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         amount.clear();
       });
     }
-    if (quantity.text == "" || amount.text == "") {
-      setState(() {
-        rate.clear();
-      });
-    }
     if(quantity.text==""){
       setState(() {
         amount.clear();

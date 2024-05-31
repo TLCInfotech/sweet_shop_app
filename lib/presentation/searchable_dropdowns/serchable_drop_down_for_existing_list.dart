@@ -238,7 +238,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     }
                   },
                   textInputAction: TextInputAction.none,
-                  enabled: widget.come=="disable"?false:true, // Change input action to "none"
+                //  enabled: widget.come=="disable"?false:true, // Change input action to "none"
                   focusNode: searchFocus,
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
