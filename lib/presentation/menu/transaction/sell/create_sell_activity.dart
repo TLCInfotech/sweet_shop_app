@@ -597,6 +597,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                 editproduct:product,
                 date: invoiceDate.toString(),
                 id: selectedFranchiseeId,
+                exstingList: Item_list,
                 dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
               ),
             ),

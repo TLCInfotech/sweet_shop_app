@@ -649,6 +649,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
                 companyId: companyId,
                 come: status,
+                  exstingList:Ledger_list
               ),
             ),
           );

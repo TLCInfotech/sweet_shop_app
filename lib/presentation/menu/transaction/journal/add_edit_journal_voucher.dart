@@ -35,13 +35,14 @@ class AddOrEditLedgerForJournals extends StatefulWidget {
   final newdate;
   final come;
   final companyId;
+  final exstingList;
   const AddOrEditLedgerForJournals(
       {super.key,
       required this.mListener,
       required this.editproduct,
       required this.newdate,
       this.come,
-      this.companyId});
+      this.companyId, this.exstingList});
 
   @override
   State<AddOrEditLedgerForJournals> createState() =>
@@ -153,9 +154,10 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
         selectedBankLedgerID = widget.editproduct['Ledger_ID'] != null
             ? widget.editproduct['Ledger_ID']
             : "";
-        amount.text = widget.editproduct['Amount'].toString();
-        narration.text = widget.editproduct['Remark'].toString();
-        selectedLimitUnit = widget.editproduct['Amnt_Type'].toString();
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        narration.text=widget.editproduct['Remark']!=null && widget.editproduct['Remark']!=""?widget.editproduct['Remark'].toString():narration.text;
+
+        selectedLimitUnit = widget.editproduct['Amnt_Type']!=null && widget.editproduct['Amnt_Type']!=""?widget.editproduct['Amnt_Type'].toString():null;
       });
     }
     await fetchShows();
@@ -239,6 +241,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value) async {
         setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           narration.text = value;
         });
       },
@@ -268,12 +271,13 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
             title: ApplicationLocalizations.of(context)!.translate("amount")!,
             callbackOnchage: (value) async {
               setState(() {
+
                 amount.text = value;
               });
             },
             textInput: TextInputType.numberWithOptions(decimal: true),
             maxlines: 1,
-            format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+              format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
           ),
         ),
         AmountTypeDialog(
@@ -298,17 +302,33 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
       franchiseeName: selectedbankCashLedger,
       title: ApplicationLocalizations.of(context)!
           .translate("ledger_without_bank_cash")!,
-      callback: (name, id) {
-        if (selectedBankLedgerID == id) {
-          var snack =
-              SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-          ScaffoldMessenger.of(context).showSnackBar(snack);
-        } else {
-          setState(() {
-            selectedbankCashLedger = name!;
-            selectedBankLedgerID = id;
-          });
+      callback: (name, id) async{
+        print("FFFFFFFFFFFF ${widget.exstingList}");
+
+        List l=widget.exstingList;
+        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+        if(n.contains(id.toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
         }
+        else {
+          if (selectedBankLedgerID == id) {
+            var snack =
+            SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+          } else {
+            setState(() {
+              selectedbankCashLedger = name!;
+              selectedBankLedgerID = id;
+            });
+          }
+        }
+        setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
+        });
+
+
+
       },
     ); /*Container(
         height: parentHeight * .055,
@@ -413,9 +433,10 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                       : null,
                   "Ledger_Name": selectedbankCashLedger,
                   "Ledger_ID": widget.editproduct['Ledger_ID'],
-                  "Amount": double.parse(amount.text),
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                   "Amnt_Type": selectedLimitUnit,
-                  "Remark": narration.text,
+
                 };
               } else {
                 item = {
@@ -425,9 +446,10 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
                       : 0,
                   "Ledger_Name": selectedbankCashLedger,
                   "Ledger_ID": selectedBankLedgerID,
-                  "Amount": double.parse(amount.text),
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                   "Amnt_Type": selectedLimitUnit,
-                  "Remark": narration.text,
+
                 };
               }
               if (widget.mListener != null) {

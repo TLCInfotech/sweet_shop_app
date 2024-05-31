@@ -25,9 +25,10 @@ class TestItem {
 
 class AddOrEditLedgerForLedger extends StatefulWidget {
   final AddOrEditLedgerForLedgerInterface mListener;
+  final exstingList;
   final dynamic editproduct;
 final readOnly;
-  const AddOrEditLedgerForLedger({super.key, required this.mListener, required this.editproduct, this.readOnly});
+  const AddOrEditLedgerForLedger({super.key, required this.mListener, required this.editproduct, this.readOnly,this.exstingList});
 
   @override
   State<AddOrEditLedgerForLedger> createState() => _AddOrEditLedgerForLedgerState();
@@ -133,8 +134,8 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       setState(() {
         selectedItemID=widget.editproduct['Expense_ID']!=null?widget.editproduct['Expense_ID']:null;
         selectedLedgerName=widget.editproduct['Expense_Name']!=null?widget.editproduct['Expense_Name']:null;
-        amount.text=widget.editproduct['Amount'].toString();
-        narration.text=widget.editproduct['Remark']!=null?widget.editproduct['Remark'].toString():narration.text;
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        narration.text=widget.editproduct['Remark']!=null && widget.editproduct['Remark']!=""?widget.editproduct['Remark'].toString():narration.text;
       });
       print(oldItemId);
     }
@@ -209,6 +210,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       title:  ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
         setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           narration.text = value;
         });
       },
@@ -240,7 +242,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
@@ -254,10 +256,22 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("expense_name")!,
       callback: (item)async{
-        setState(() {
+        print("FFFFFFFFFFFF ${widget.exstingList}");
 
-          selectedItemID = item['ID'].toString();
-          selectedLedgerName=item['Name'].toString();
+        List l=widget.exstingList;
+        List n= await l.map((i) => i['Expense_ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+        if(n.contains(item['ID'].toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
+        }
+        else {
+          setState(() {
+            selectedItemID = item['ID'].toString();
+            selectedLedgerName = item['Name'].toString();
+          });
+        }
+        setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
       },
 
@@ -362,8 +376,8 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                   "Seq_No": widget.editproduct != null ? widget
                       .editproduct['Seq_No'] : null,
                   "Expense_ID": widget.editproduct['Expense_ID'],
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
               else {
@@ -372,8 +386,8 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                   "Seq_No": widget.editproduct != null ? widget
                       .editproduct['Seq_No'] : null,
                   "Expense_ID": selectedItemID,
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
 

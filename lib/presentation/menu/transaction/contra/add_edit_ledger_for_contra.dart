@@ -34,6 +34,7 @@ class AddOrEditLedgerForContra extends StatefulWidget {
   final debitNote;
   final companyId;
   final readOnly;
+  final existingList;
   const AddOrEditLedgerForContra(
       {super.key,
       required this.mListener,
@@ -43,7 +44,7 @@ class AddOrEditLedgerForContra extends StatefulWidget {
       this.come,
       this.debitNote,
       this.companyId,
-      this.readOnly});
+      this.readOnly, this.existingList});
   @override
   State<AddOrEditLedgerForContra> createState() =>
       _AddOrEditLedgerForContraState();
@@ -144,10 +145,9 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
             ? widget.editproduct['Ledger_ID']
             : null;
         selectedbankCashLedger = widget.editproduct['Ledger_Name'];
-        amount.text = widget.editproduct['Amount'].toString();
-        narration.text = widget.editproduct['Remark'] != null
-            ? widget.editproduct['Remark'].toString()
-            : narration.text;
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        narration.text=widget.editproduct['Remark']!=null && widget.editproduct['Remark']!=""?widget.editproduct['Remark'].toString():narration.text;
+
       });
       print(oldItemId);
     }
@@ -240,6 +240,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value) async {
         setState(() {
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           narration.text = value;
         });
       },
@@ -270,7 +271,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
   }
 
@@ -284,17 +285,31 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
       franchisee: widget.come,
       franchiseeName: widget.come == "edit" ? selectedbankCashLedger : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
-      callback: (name, id) {
+      callback: (name, id) async{
+        print("FFFFFFFFFFFF ${widget.existingList}");
+
+        List l=widget.existingList;
+        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+        if(n.contains(id.toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
+        }
+        else {
+          setState(() {
+            if (widget.franId == id) {
+              selectedbankCashLedger = "";
+              CommonWidget.errorDialog(
+                  context, "You can not select same ledger.");
+            } else {
+              selectedbankCashLedger = name!;
+              selectedItemID = id;
+            }
+          });
+        }
         setState(() {
-          if (widget.franId == id) {
-            selectedbankCashLedger = "";
-            CommonWidget.errorDialog(
-                context, "You can not select same ledger.");
-          } else {
-            selectedbankCashLedger = name!;
-            selectedItemID = id;
-          }
+          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
+
       },
     ); /*Container(
         height: parentHeight * .055,
@@ -406,9 +421,10 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
                       ? widget.editproduct['Seq_No']
                       : null,
                   "Ledger_ID": widget.editproduct['Ledger_ID'],
-                  "Amount": double.parse(amount.text),
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                   "Date": widget.newDate,
-                  "Remark": narration.text,
+
                 };
               } else {
                 item = {
@@ -416,8 +432,8 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
                   "Date": widget.newDate,
                   //  "Seq_No": widget.editproduct != null ? widget.editproduct['Seq_No'] : null,
                   "Ledger_ID": selectedItemID,
-                  "Amount": double.parse(amount.text),
-                  "Remark": narration.text,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Remark": narration.text!=""?narration.text:null,
                 };
               }
               widget.mListener.AddOrEditLedgerForContraDetail(item);

@@ -586,6 +586,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 franId: fid,
                 companyId: companyId,
                 come: status,
+                existingList:Item_list
               ),
             ),
           );

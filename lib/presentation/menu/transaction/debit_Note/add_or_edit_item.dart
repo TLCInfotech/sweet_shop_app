@@ -38,14 +38,15 @@ class AddOrEditItemDebit extends StatefulWidget {
   final date;
   final companyId;
   final status;
-
+  final exstingList;
+  final readOnly;
   const AddOrEditItemDebit(
       {super.key,
       required this.mListener,
       required this.editproduct,
       required this.date,
       this.companyId,
-      this.status});
+      this.status,this.exstingList,this.readOnly});
 
   @override
   State<AddOrEditItemDebit> createState() => _AddOrEditItemDebitState();
@@ -105,20 +106,22 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
             ? widget.editproduct['Item_Name']
             : "";
         unit.text = widget.editproduct['Unit'].toString();
-        quantity.text = widget.editproduct['Quantity'].toString();
-        rate.text = widget.editproduct['Rate'] == null
-            ? "0"
-            : widget.editproduct['Rate'].toString();
-        amount.text = widget.editproduct['Amount'].toString();
-        discount.text = widget.editproduct['Disc_Percent'] == null
-            ? "0"
-            : widget.editproduct['Disc_Percent'].toString();
-        discountAmt.text = widget.editproduct['Disc_Amount'].toString();
-        taxableAmt.text = widget.editproduct['Taxable_Amount'].toString();
-        gst.text = widget.editproduct['GST_Rate'].toString();
-        gstAmount.text = widget.editproduct['GST_Amount'].toString();
-        netRate.text = widget.editproduct['Net_Rate'].toString();
-        netAmount.text = widget.editproduct['Net_Amount'].toString();
+        quantity.text=widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
+        rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
+        discount.text = widget.editproduct['Disc_Percent']!=0 && widget.editproduct['Disc_Percent']!="" &&widget.editproduct['Disc_Percent']!=null?double.parse( widget.editproduct['Disc_Percent'].toString()).toStringAsFixed(2):"";
+        discountAmt.text = widget.editproduct['Disc_Amount']!=0 &&widget.editproduct['Disc_Amount']!="" &&widget.editproduct['Disc_Amount']!=null?double.parse( widget.editproduct['Disc_Amount'].toString()).toStringAsFixed(2):"";
+
+        taxableAmt.text =widget.editproduct['Taxable_Amount']!=0 &&widget.editproduct['Taxable_Amount']!="" &&widget.editproduct['Taxable_Amount']!=null?double.parse( widget.editproduct['Taxable_Amount'].toString()).toStringAsFixed(2):"";
+
+        gst.text =widget.editproduct['GST_Rate']!=0 &&widget.editproduct['GST_Rate']!="" &&widget.editproduct['GST_Rate']!=null?double.parse( widget.editproduct['GST_Rate'].toString()).toStringAsFixed(2):"";
+
+        gstAmount.text =widget.editproduct['GST_Amount']!=0 &&widget.editproduct['GST_Amount']!="" &&widget.editproduct['GST_Amount']!=null?double.parse( widget.editproduct['GST_Amount'].toString()).toStringAsFixed(2):"";
+
+        netRate.text =widget.editproduct['Net_Rate']!=0 &&widget.editproduct['Net_Rate']!="" &&widget.editproduct['Net_Rate']!=null?double.parse( widget.editproduct['Net_Rate'].toString()).toStringAsFixed(2):"";
+
+        netAmount.text =widget.editproduct['Net_Amount']!=0 &&widget.editproduct['Net_Amount']!="" &&widget.editproduct['Net_Amount']!=null?double.parse( widget.editproduct['Net_Amount'].toString()).toStringAsFixed(2):"";
+
       });
       await calculateRates();
     }
@@ -276,14 +279,23 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callback: (item) async {
-        setState(() {
-          selectedItemID = item['ID'].toString();
-          selectedItemName = item['Name'].toString();
-          unit.text = item['Unit'];
-          rate.text = item['Rate'] == null ? "0" : item['Rate'].toString();
-          gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
-        });
-        await calculateRates();
+        List l=widget.exstingList;
+        List n= await l.map((i) => i['ID'].toString()).toList();
+        print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+        if(n.contains(item['ID'].toString())){
+          CommonWidget.errorDialog(context, "Already Exist!");
+        }
+        else {
+          setState(() {
+            // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
+            selectedItemID = item['ID'].toString();
+            selectedItemName = item['Name'].toString();
+            unit.text = item['Unit']!=null?item['Unit']:null;
+            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+          });
+          await calculateRates();
+        }
       },
     ); /*Container(
         height: parentHeight * .055,
@@ -330,31 +342,39 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
 
     );*/
   }
-
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
-      suffix: Text("${unit.text}"),
-      validation: (value) {
-        if (value!.isEmpty) {
-          return StringEn.ENTER + StringEn.QUANTITY;
-        }
-        return null;
-      },
-      controller: quantity,
-      focuscontroller: null,
-      focusnext: null,
-      title: ApplicationLocalizations.of(context)!.translate("quantity")!,
-      callbackOnchage: (value) async {
-        setState(() {
-          quantity.text = value;
-          amountedited = false;
-        });
-        await calculateRates();
-      },
-      textInput: TextInputType.numberWithOptions(decimal: true),
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+        suffix: Text("${unit.text}"),
+        validation: (value) {
+          if (value!.isEmpty) {
+            return StringEn.ENTER + StringEn.QUANTITY;
+          }
+          return null;
+        },
+        readOnly: widget.readOnly,
+        controller: quantity,
+        focuscontroller: null,
+        focusnext: null,
+        title: ApplicationLocalizations.of(context)!.translate("quantity")!,
+        callbackOnchage: (value) async {
+          setState(() {
+            rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+            discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+            discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+            gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+            // quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+            quantity.text = value;
+            amountedited=false;
+            discountamtedited=false;
+          });
+          await calculateRates();
+        },
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
     Container(
@@ -399,52 +419,45 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
       ),
     );
   }
+  var amountedited=false;
 
-  // // rate amount layout
-  // Widget getRateAndAmount(double parentHeight, double parentWidth){
-  //   return Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         GetDisableTextFormField(
-  //             parentWidth: (parentWidth),
-  //             title: ApplicationLocalizations.of(context)!.translate("rate")!,
-  //             controller: rate
-  //         ),
-  //         GetDisableTextFormField(
-  //             parentWidth: (parentWidth),
-  //             title:  ApplicationLocalizations.of(context)!.translate("amount")!,
-  //             controller: amount
-  //         )]
-  //   );
-  // }
-
-  var amountedited = false;
+  var discountamtedited=false;
 
   // rate amount layout
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
-        parentWidth: (parentWidth),
-        validation: (value) {
-          if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
-          }
-          return null;
-        },
-        controller: rate,
-        focuscontroller: null,
-        focusnext: null,
-        title: ApplicationLocalizations.of(context)!.translate("rate")!,
-        callbackOnchage: (value) async {
-          setState(() {
-            rate.text = value;
-            amountedited = false;
-          });
-          await calculateRates();
-        },
-        textInput: TextInputType.numberWithOptions(decimal: true),
-        maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER + StringEn.QUANTITY;
+            }
+            return null;
+          },
+          readOnly: widget.readOnly,
+          controller: rate,
+          focuscontroller: null,
+          focusnext: null,
+          title: ApplicationLocalizations.of(context)!.translate("rate")!,
+          callbackOnchage: (value) async {
+
+            setState(() {
+              // rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+              rate.text = value;
+              amountedited=false;
+              discountamtedited=false;
+            });
+            await calculateRates();
+          },
+          textInput: TextInputType.numberWithOptions(
+              decimal: true
+          ),
+          maxlines: 1,
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
       /*    SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
@@ -452,29 +465,38 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
             controller: rate
         ),*/
       SingleLineEditableTextFormField(
-        parentWidth: (parentWidth),
-        validation: (value) {
-          if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
-          }
-          return null;
-        },
-        controller: amount,
-        focuscontroller: null,
-        focusnext: null,
-        title: ApplicationLocalizations.of(context)!.translate("amount")!,
-        callbackOnchage: (value) async {
-          print("########### $value");
-          setState(() {
-            amount.text = value;
-            amountedited = true;
-          });
-          await calculateRates();
-          // await calculateRates();
-        },
-        textInput: TextInputType.numberWithOptions(decimal: true),
-        maxlines: 1,
-        format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ./]')),
+          parentWidth: (parentWidth),
+          validation: (value) {
+            if (value!.isEmpty) {
+              return StringEn.ENTER + StringEn.QUANTITY;
+            }
+            return null;
+          },
+          readOnly: widget.readOnly,
+          controller: amount,
+          focuscontroller: null,
+          focusnext: null,
+          title: ApplicationLocalizations.of(context)!.translate("amount")!,
+          callbackOnchage: (value) async {
+            print("########### $value");
+            setState(() {
+              rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+              discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+              amount.text = value;
+              amountedited=true;
+              discountamtedited=false;
+            });
+            await calculateRates();
+            // await calculateRates();
+          },
+          textInput: TextInputType.numberWithOptions(
+              decimal: true
+          ),
+          maxlines: 1,
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
       /* GetDisableTextFormField(
           parentWidth: (parentWidth),
@@ -496,26 +518,68 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
             }
             return null;
           },
+          readOnly: widget.readOnly,
           controller: discount,
           focuscontroller: null,
           focusnext: null,
           title:
-              ApplicationLocalizations.of(context)!.translate("disc_percent")!,
+          ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value) async {
             setState(() {
+              rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+              // discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+              discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+              gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+              quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+              discountamtedited=false;
               discount.text = value;
             });
             await calculateRates();
           },
-          textInput: TextInputType.number,
+          textInput: TextInputType.numberWithOptions(
+              decimal: true
+          ),
           maxlines: 1,
-          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+          format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})')),
         ),
-        GetDisableTextFormField(
+        SingleLineEditableTextFormField(
             parentWidth: (parentWidth),
+            validation: (value) {
+              if (value!.isEmpty) {
+                return StringEn.ENTER + StringEn.DICOUNT;
+              }
+              return null;
+            },
+            readOnly: widget.readOnly,
+            controller: discountAmt,
+            focuscontroller: null,
+            focusnext: null,
             title:
-                ApplicationLocalizations.of(context)!.translate("disc_amount")!,
-            controller: discountAmt),
+            ApplicationLocalizations.of(context)!.translate("disc_amount")!,
+            callbackOnchage: (value) async {
+              setState(() {
+                rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+                discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+                // discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+                gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+                quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+                discountAmt.text = value;
+                discountamtedited=true;
+              });
+              await calculateRates();
+
+            },
+            textInput: TextInputType.numberWithOptions(
+                decimal: true
+            ),
+            maxlines: 1,
+            format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+        ),
+        // GetDisableTextFormField(
+        //     parentWidth: (parentWidth),
+        //     title:
+        //     ApplicationLocalizations.of(context)!.translate("disc_amount")!,
+        //     controller: discountAmt),
       ],
     );
   }
@@ -524,7 +588,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   Widget getTaxableAmtLayout(double parentHeight, double parentWidth) {
     return GetDisableTextFormField(
         title:
-            ApplicationLocalizations.of(context)!.translate("taxable_amount")!,
+        ApplicationLocalizations.of(context)!.translate("taxable_amount")!,
         controller: taxableAmt);
   }
 
@@ -534,40 +598,49 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SingleLineEditableTextFormField(
-          parentWidth: (parentWidth),
-          validation: (value) {
-            if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
-            }
-            return null;
-          },
-          controller: gst,
-          focuscontroller: null,
-          focusnext: null,
-          title:
-              ApplicationLocalizations.of(context)!.translate("gst_percent")!,
-          callbackOnchage: (value) async {
-            setState(() {
-              gst.text = value;
-            });
-            await calculateRates();
-          },
-          textInput: TextInputType.number,
-          maxlines: 1,
-          format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+            parentWidth: (parentWidth),
+            validation: (value) {
+              if (value!.isEmpty) {
+                return StringEn.ENTER + StringEn.DICOUNT;
+              }
+              return null;
+            },
+            readOnly: widget.readOnly,
+            controller: gst,
+            focuscontroller: null,
+            focusnext: null,
+            title:
+            ApplicationLocalizations.of(context)!.translate("gst_percent")!,
+            callbackOnchage: (value) async {
+              setState(() {
+                rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
+                discount.text=discount.text!=""?double.parse(discount.text).toStringAsFixed(2):"";
+                discountAmt.text=discountAmt.text!=""?double.parse(discountAmt.text).toStringAsFixed(2):"";
+                // gst.text=gst.text!=""?double.parse(gst.text).toStringAsFixed(2):"";
+                quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
+                amountedited=false;
+                discountamtedited=false;
+                gst.text = value;
+              });
+              await calculateRates();
+            },
+            textInput: TextInputType.numberWithOptions(
+                decimal: true
+            ),
+            maxlines: 1,
+            format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
         ),
         GetDisableTextFormField(
             parentWidth: (parentWidth),
             title:
-                ApplicationLocalizations.of(context)!.translate("gst_amount")!,
+            ApplicationLocalizations.of(context)!.translate("gst_amount")!,
             controller: gstAmount),
       ],
     );
   }
 
   /* widget for product gst layout */
-  Widget getItemNetRateAndNetAmtLayout(
-      double parentHeight, double parentWidth) {
+  Widget getItemNetRateAndNetAmtLayout(double parentHeight, double parentWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -578,7 +651,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
         GetDisableTextFormField(
             parentWidth: (parentWidth),
             title:
-                ApplicationLocalizations.of(context)!.translate("net_amount")!,
+            ApplicationLocalizations.of(context)!.translate("net_amount")!,
             controller: netAmount),
       ],
     );
@@ -648,41 +721,33 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
                       ? widget.editproduct['Item_ID']
                       : "",
                   "Item_Name": selectedItemName,
-                  "Quantity": int.parse(quantity.text),
+                  "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
                   "Unit": "kg",
-                  "Rate": double.parse(rate.text),
-                  "Amount": double.parse(amount.text),
-                  "Disc_Percent": discount.text == "" || discount.text == null
-                      ? double.parse("00.00")
-                      : double.parse(discount.text),
-                  "Disc_Amount": double.parse(discountAmt.text),
-                  "Taxable_Amount": double.parse(taxableAmt.text),
-                  "GST_Rate": gst.text == "" || gst.text == null
-                      ? double.parse("00.00")
-                      : double.parse(gst.text),
-                  "GST_Amount": double.parse(gstAmount.text),
-                  "Net_Rate": double.parse(netRate.text),
-                  "Net_Amount": double.parse(netAmount.text),
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
+                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):null,
+                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):null,
+                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):null,
+                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):null,
+                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):null,
                 };
               } else {
                 item = {
                   "Item_ID": selectedItemID,
                   "Item_Name": selectedItemName,
-                  "Quantity": int.parse(quantity.text),
+                  "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
                   "Unit": "kg",
-                  "Rate": double.parse(rate.text),
-                  "Amount": double.parse(amount.text),
-                  "Disc_Percent": discount.text == "" || discount.text == null
-                      ? double.parse("00.00")
-                      : double.parse(discount.text),
-                  "Disc_Amount": double.parse(discountAmt.text),
-                  "Taxable_Amount": double.parse(taxableAmt.text),
-                  "GST_Rate": gst.text == "" || gst.text == null
-                      ? double.parse("00.00")
-                      : double.parse(gst.text),
-                  "GST_Amount": double.parse(gstAmount.text),
-                  "Net_Rate": double.parse(netRate.text),
-                  "Net_Amount": double.parse(netAmount.text),
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+                  "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
+                  "Disc_Amount": discountAmt.text!=""?double.parse(double.parse(discountAmt.text).toStringAsFixed(2)):null,
+                  "Taxable_Amount": taxableAmt.text!=""?double.parse(double.parse(taxableAmt.text).toStringAsFixed(2)):null,
+                  "GST_Rate": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmount.text!=""?double.parse(double.parse(gstAmount.text).toStringAsFixed(2)):null,
+                  "Net_Rate":netRate.text!=""?double.parse(double.parse(netRate.text).toStringAsFixed(2)):null,
+                  "Net_Amount": netAmount.text!=""?double.parse(double.parse(netAmount.text).toStringAsFixed(2)):null,
                   "Seq_No": widget.editproduct != null
                       ? widget.editproduct['Seq_No']
                       : null,
@@ -732,18 +797,41 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   }
 
   calculateDiscountAmt() {
-    double amt = amount.text == "" ? 0.0 : double.parse(amount.text);
-    double disAmts = discount.text == "" ? 0.0 : double.parse(discount.text);
-    var disAmt = amt * (disAmts / 100);
-    setState(() {
-      discountAmt.text = disAmt.toStringAsFixed(2);
-    });
+    var amt = amount.text == "" ? null: double.parse(amount.text);
+    var dis= discount.text == "" ? null : double.parse(discount.text);
+    var disamt= discountAmt.text == "" ? null : double.parse(discountAmt.text);
+    if(discountamtedited==false) {
+      if(dis==null){
+        setState(() {
+          discountAmt.clear();
+        });
+      }
+      if (dis != null && amt != null) {
+        var disAmt = amt * (dis / 100);
+        setState(() {
+          discountAmt.text = disAmt.toStringAsFixed(2);
+        });
+      }
+    }
+    else {
+      if(disamt==null){
+        setState(() {
+          discount.clear();
+        });
+      }
+      if (disamt != null && amt != null) {
+        var d = (disamt / amt) * 100;
+        setState(() {
+          discount.text = d.toStringAsFixed(2);
+        });
+      }
+    }
+
   }
 
   calculateTaxableAmt() {
     double amt = amount.text == "" ? 0.0 : double.parse(amount.text);
-    double disAmt =
-        discountAmt.text == "" ? 0.0 : double.parse(discountAmt.text);
+    double disAmt = discountAmt.text == "" ? 0.0 : double.parse(discountAmt.text);
     var taxAmt = amt - disAmt;
     setState(() {
       taxableAmt.text = taxAmt.toStringAsFixed(2);
@@ -751,18 +839,26 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   }
 
   calculateGstAmt() {
-    double taxbleAmunt =
-        taxableAmt.text == "" ? 0.0 : double.parse(taxableAmt.text);
-    double gstText = gst.text == "" ? 0.0 : double.parse(gst.text);
-    var gstAmt = taxbleAmunt * (gstText / 100);
-    setState(() {
-      gstAmount.text = gstAmt.toStringAsFixed(2);
-    });
+    var taxbleAmunt =
+    taxableAmt.text == "" ? null : double.parse(taxableAmt.text);
+    var gstText = gst.text == "" ? null : double.parse(gst.text);
+
+    if(taxableAmt!=null && gstText!=null) {
+      var gstAmt = taxbleAmunt! * (gstText / 100);
+      setState(() {
+        gstAmount.text = gstAmt.toStringAsFixed(2);
+      });
+    }
+    if(gstText==null){
+      setState(() {
+        gstAmount.clear();
+      });
+    }
   }
 
   calculateNetAmt() {
     double taxbleAmunt =
-        taxableAmt.text == "" ? 0.0 : double.parse(taxableAmt.text);
+    taxableAmt.text == "" ? 0.0 : double.parse(taxableAmt.text);
     double gstAmt = gstAmount.text == "" ? 0.0 : double.parse(gstAmount.text);
     var netamt = taxbleAmunt + gstAmt;
     setState(() {
@@ -773,35 +869,35 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   calculateNetRate() {
     double netAmt = netAmount.text == "" ? 0.0 : double.parse(netAmount.text);
     double quantityAmt =
-        quantity.text == "" ? 0.0 : double.parse(quantity.text);
+    quantity.text == "" ? 0.0 : double.parse(quantity.text);
     var netRates = netAmt / quantityAmt;
     setState(() {
       netRate.text = netRates.toStringAsFixed(2);
     });
   }
 
+
   calculateRates() async {
-    if (amountedited && quantity.text != "") {
-      var amt = double.parse(amount.text) / double.parse(quantity.text);
+
+    if(amountedited && quantity.text!=""){
+      var amt = double.parse(amount.text)/ double.parse(quantity.text) ;
 
       setState(() {
-        rate.text = amt.toStringAsFixed(2);
+        rate.text= amt.toStringAsFixed(2);
       });
     }
     if (quantity.text != "" && rate.text != "") {
-      if (amountedited == false) {
+      if(amountedited==false) {
         await calculateAmt();
       }
+
       await calculateGstAmt();
       await calculateDiscountAmt();
       await calculateTaxableAmt();
       await calculateNetAmt();
       await calculateNetRate();
-
-      if (discount.text != "") {
-        if (gst.text != "") {}
-      }
     }
+
   }
 }
 
