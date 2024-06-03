@@ -92,7 +92,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             mesuringText=name!;
           });
 
-         await add_unit_layout(context,singleRecord['Update_Right']);
+         await add_unit_layout(context,singleRecord['Update_Right'],editedItem);
          setState(() {
            selectedUnitName="";
          });
@@ -172,7 +172,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                   unitName.text="";
                   mesuringText=" ";
                 });
-                add_unit_layout(context,true);
+                add_unit_layout(context,true,null);
               }):Container(),
           body: Stack(
             alignment: Alignment.center,
@@ -232,7 +232,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                           mesuringText=measuring_unit[index];
                         });
 
-                        add_unit_layout(context,singleRecord['Update_Right']);
+                        add_unit_layout(context,singleRecord['Update_Right'],editedItem);
                       },
                       child: Card(
                         child: Row(
@@ -292,7 +292,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
 
   }
 
-  Future<dynamic> add_unit_layout(BuildContext context,updateRight) {
+  Future<dynamic> add_unit_layout(BuildContext context,updateRight,editedItemss) {
     return  showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -358,7 +358,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
                         ),
                       ),
                     ),
-                    getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getCloseButton(SizeConfig.screenHeight,SizeConfig.screenWidth,editedItemss),
                   ],
                 ),
               ),
@@ -374,7 +374,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
         });
   }
 
-  Widget getCloseButton(double parentHeight, double parentWidth){
+  Widget getCloseButton(double parentHeight, double parentWidth, editedItemss){
     return singleRecord['Update_Right']==false? GestureDetector(
       onTap: () {
         Navigator.pop(context);
@@ -434,7 +434,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           ),
           GestureDetector(
             onTap: () {
-              if(editedItem!=null){
+              if(editedItemss!=null){
                 print("jgbgbgbggn");
                 updateMeasuringUnit();
               }else{
@@ -562,6 +562,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           creator: creatorName,
           companyId: companyId
       );
+      print("bjbccbb  $model");
       //  print("IMGE2 : ${(model.Photo)?.length}");
       String apiUrl = baseurl + ApiConstants().measuring_unit;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
