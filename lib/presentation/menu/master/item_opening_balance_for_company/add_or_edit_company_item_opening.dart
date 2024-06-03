@@ -516,8 +516,6 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         ),
         GestureDetector(
           onTap: (){
-
-
               if (selectedItemID != null &&
                   amount.text != "" &&
                   quantity.text != "" &&
@@ -532,10 +530,11 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                       "Item_Name":selectedItemName,
                       "Store_ID": null,
                       "Batch_ID": batchno.text == "" ? null : batchno.text,
-                      "Quantity": double.parse(quantity.text),
-                      "Unit": unit.text,
-                      "Rate": rate.text,
-                      "Amount": amount.text
+                      "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
+                      "Unit": unit.text!=""?unit.text:null,
+                      "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                      "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
+
                     };
                   }
                   else {

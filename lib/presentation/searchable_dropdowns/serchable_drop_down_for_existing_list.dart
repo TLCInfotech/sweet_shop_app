@@ -245,7 +245,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon:  widget.come=="disable"?null:Icon(Icons.search)
+                      suffixIcon: Icon(Icons.search)
                   ),
                 ),
 

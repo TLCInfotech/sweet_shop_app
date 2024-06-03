@@ -1,21 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/ledger_dialog.dart';
-
 import '../../core/colors.dart';
-import '../../core/common.dart';
 import '../../core/common_style.dart';
-import '../../core/imagePicker/image_picker_dialog.dart';
-import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
-import '../../core/imagePicker/image_picker_handler.dart';
-import '../../core/localss/application_localizations.dart';
-import '../../core/string_en.dart';
-import '../dialog/franchisee_dialog.dart';
 
 class GetLedgerLayout extends StatefulWidget{
   final title;
