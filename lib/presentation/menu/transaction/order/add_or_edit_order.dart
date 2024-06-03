@@ -915,11 +915,11 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         await calculateAmt();
       }
 
-      // await calculateGstAmt();
-      // await calculateDiscountAmt();
-      // await calculateTaxableAmt();
-      // await calculateNetAmt();
-      // await calculateNetRate();
+      await calculateGstAmt();
+      await calculateDiscountAmt();
+      await calculateTaxableAmt();
+      await calculateNetAmt();
+      await calculateNetRate();
     }
     if (quantity.text == "" || rate.text == "") {
       setState(() {
