@@ -72,7 +72,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController.addListener(_scrollListener);
+    // _scrollController.addListener(_scrollListener);
     setVal();
   }
   setVal()async{
@@ -123,7 +123,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             page: page.toString()
         );
         // &Category_ID=$selectedCategoryID
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P&PageNumber=$page&PageSize=10";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+        // &PageNumber=$page&PageSize=10";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
                setState(() {
@@ -633,11 +634,11 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               titleIndicator: false,
               title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name,id){
-                if(selectedFranchiseeID==id){
-                  var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-                  ScaffoldMessenger.of(context).showSnackBar(snack);
-                }
-                else {
+                // if(selectedFranchiseeID==id){
+                //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+                //   ScaffoldMessenger.of(context).showSnackBar(snack);
+                // }
+                // else {
                   setState(() {
                     selectedCopyFranchiseeName=name!;
                     selectedFranchiseeID=id!;
@@ -648,7 +649,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     Deleted_list=[];
                     callGetFranchiseeItemOpeningList(1);
                   });
-                }
+                // }
                 print(selectedFranchiseeID);
               },
               ledgerName: selectedCopyFranchiseeName),

@@ -79,7 +79,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
    // getCompanyId();
     setVal();
     calculateTotalAmt();
-    _scrollController.addListener(_scrollListener);
+    // _scrollController.addListener(_scrollListener);
     if(selectedCopyFranchiseeId!=""){
       callGetFrenchisee(page);
     }
@@ -533,11 +533,11 @@ String companyId="";
         titleIndicator: false,
         title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
         callback: (name,id){
-          if(selectedCopyFranchiseeId==id){
-            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-            ScaffoldMessenger.of(context).showSnackBar(snack);
-          }
-          else {
+          // if(selectedCopyFranchiseeId==id){
+          //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          //   ScaffoldMessenger.of(context).showSnackBar(snack);
+          // }
+          // else {
             setState(() {
               selectedCopyFranchiseeName=name!;
               selectedCopyFranchiseeId=id!;
@@ -548,7 +548,7 @@ String companyId="";
                 Deleted_list=[];
                callGetFrenchisee(1);
             });
-          }
+          // }
           print(selectedCopyFranchiseeId);
         },
         ledgerName: selectedCopyFranchiseeName),
@@ -816,7 +816,8 @@ print("mosdeemmm  ${model.toJson()}");
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S&PageNumber=$page&PageSize=10";
+        String apiUrl = "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+        // &PageNumber=$page&PageSize=10";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
