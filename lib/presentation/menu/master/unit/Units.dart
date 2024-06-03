@@ -470,9 +470,6 @@ class _UnitsActivityState extends State<UnitsActivity> {
     );
   }
 
-
-
-
   getMeasuringUnit()async{
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
