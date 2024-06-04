@@ -378,11 +378,11 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                         // +" ${Ledger_list[index]['Amnt_Type']}"
                                         ),
                                         const SizedBox(height: 2 ,),
-                                        Container(
+                                        Ledger_list[index]['Remark']!=null? Container(
                                           alignment: Alignment.centerLeft,
                                           width: SizeConfig.screenWidth,
                                           child: Text("${Ledger_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        ),
+                                        ):Container(),
 
 
                                       ],
@@ -649,7 +649,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
                 companyId: companyId,
                 come: status,
-                  exstingList:Ledger_list
+                  // exstingList:Ledger_list
               ),
             ),
           );

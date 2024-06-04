@@ -379,11 +379,11 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                           Text(CommonWidget.getCurrencyFormat(Ledger_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                         ),
                                         const SizedBox(height: 2 ,),
-                                        Container(
+                                        Ledger_list[index]['Remark']!=null?Container(
                                           alignment: Alignment.centerLeft,
                                           width: SizeConfig.screenWidth,
                                           child: Text("${Ledger_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        ),
+                                        ):Container(),
 
 
                                       ],
@@ -640,7 +640,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                 mListener: this,
                 editproduct:product,
                 newdate: DateFormat("yyyy-MM-dd").format(invoiceDate),
-                  exstingList:Ledger_list
+                  // exstingList:Ledger_list
               ),
             ),
           );

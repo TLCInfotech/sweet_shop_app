@@ -320,6 +320,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             selectedItemName = item['Name'].toString();
             unit.text = item['Unit']!=null?item['Unit']:null;
             rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            previousRate=item['Rate'] == null? "" : item['Rate'].toString();
             gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
           });
         }
@@ -735,7 +736,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
                       : "",
                   "Item_Name": selectedItemName,
                   "Quantity": quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
-                  "Unit": "kg",
+                  "Unit": unit.text!=""?unit.text:null,
                   "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
                   "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                   "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
@@ -751,7 +752,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
                   "Item_ID": selectedItemID,
                   "Item_Name": selectedItemName,
                   "Quantity":quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):null,
-                  "Unit": "kg",
+                  "Unit": unit.text!=""?unit.text:null,
                   "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
                   "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
                   "Disc_Percent": discount.text!=""?double.parse(double.parse(discount.text).toStringAsFixed(2)):null,
@@ -897,14 +898,14 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
     print("EEEEEEEEEEE ${previousRate}");
     if(amountedited && quantity.text!=""){
       print("DDDDDDD ${amount.text}");
-      if(amount.text!="" && quantity.text!="") {
+      if(amount.text!=""  && quantity.text!="") {
         var amt = double.parse(amount.text) / double.parse(quantity.text);
         print("RRRRRr ${amt}");
         setState(() {
           rate.text = amt.toStringAsFixed(2);
         });
       }
-      if(amount.text==""){
+       if(amount.text==""){
         setState(() {
           rate.text=double.parse(previousRate).toStringAsFixed(2);
         });

@@ -767,7 +767,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
               child: AddOrEditLedgerForLedger(
                 mListener: this,
                 editproduct:product,
-                exstingList: Item_list,
+                // exstingList: Item_list,
               ),
             ),
           );

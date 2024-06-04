@@ -142,8 +142,10 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             isLoaderShow=false;
+            ledger_list=[];
             if(data!=null) {
 
+              print(" FFFFFFFFFFFFFF ${data.length}");
               if(widget.insertedList!=null||widget.insertedList!=[]){
                 List ext=widget.insertedList;
                 List l =(data).map((e) =>e['Name'] ).toList();
@@ -151,10 +153,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 for(var el in l)
                 {
                   var contains=ext.contains(el);
-                  print(contains);
                   if(contains==false){
                     var index=l.indexOf(el);
-                    print(data[index]);
+
                     ledger_list.add(data[index]);
                   }
                 }
@@ -169,7 +170,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                   filteredStates = ledger_list;
                 });
               }
-              print("  LedgerLedger  $data ");
+
+              print(" FFFFFFFFFFFFFF ${ledger_list.length} ${filteredStates.length}");
+
             }
           }, onFailure: (error) {
             CommonWidget.errorDialog(context, error);
@@ -249,8 +252,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                   ),
                 ),
 
-                suggestionsCallback: (pattern) {
-                  return _getSuggestions(pattern);
+                suggestionsCallback: (pattern)async  {
+                  return await _getSuggestions(pattern);
 
                 },
                 itemBuilder: (context, suggestion) {
@@ -282,8 +285,14 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     List matches = [];
     matches.addAll(ledger_list);
 
-    matches.retainWhere((s) => s['Name'].toLowerCase().contains(query.toLowerCase()));
-    return matches;
+    // matches.retainWhere((s) => s['Name'].toLowerCase().contains(query.toLowerCase()));
+    print(matches
+        .where((s) => s['Name'].toLowerCase().contains(query.toLowerCase()))
+        .toList());
+    // return matches;
+    return matches
+        .where((s) => s['Name'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 
 

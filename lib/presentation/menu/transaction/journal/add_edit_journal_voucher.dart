@@ -303,15 +303,15 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
       title: ApplicationLocalizations.of(context)!
           .translate("ledger_without_bank_cash")!,
       callback: (name, id) async{
-        print("FFFFFFFFFFFF ${widget.exstingList}");
-
-        List l=widget.exstingList;
-        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
-        print("FFFFFFFFFFFF ${n.contains(id.toString())}");
-        if(n.contains(id.toString())){
-          CommonWidget.errorDialog(context, "Already Exist!");
-        }
-        else {
+        // print("FFFFFFFFFFFF ${widget.exstingList}");
+        //
+        // List l=widget.exstingList;
+        // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        // print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+        // if(n.contains(id.toString())){
+        //   CommonWidget.errorDialog(context, "Already Exist!");
+        // }
+        // else {
           if (selectedBankLedgerID == id) {
             var snack =
             SnackBar(content: Text("Sale Ledger and Party can not be same!"));
@@ -322,7 +322,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
               selectedBankLedgerID = id;
             });
           }
-        }
+        // }
         setState(() {
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });

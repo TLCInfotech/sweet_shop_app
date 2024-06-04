@@ -359,11 +359,11 @@ bool isLoaderShow=false;
                                           Text(CommonWidget.getCurrencyFormat(Item_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                         ),
                                         SizedBox(height: 2 ,),
-                                        Container(
+                                        Item_list[index]['Remark']!=null?Container(
                                           alignment: Alignment.centerLeft,
                                           width: SizeConfig.screenWidth,
                                           child: Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        ),
+                                        ):Container(),
                                       ],
                                     ),
                                   ),
@@ -620,7 +620,7 @@ bool isLoaderShow=false;
                 mListener: this,
                 editproduct:product,
                 newDate:dateee,
-                  exstingList:Item_list
+                  // exstingList:Item_list
               ),
             ),
           );

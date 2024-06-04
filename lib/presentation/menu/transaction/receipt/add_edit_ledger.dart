@@ -278,20 +278,20 @@ class _AddOrEditLedgerState extends State<AddOrEditLedger> {
       title: ApplicationLocalizations.of(context)!
           .translate("ledger_without_bank_cash")!,
       callback: (item) async {
-        print("FFFFFFFFFFFF ${widget.exstingList}");
-
-        List l=widget.exstingList;
-        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
-        print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
-        if(n.contains(item['ID'].toString())){
-          CommonWidget.errorDialog(context, "Already Exist!");
-        }
-        else {
+        // print("FFFFFFFFFFFF ${widget.exstingList}");
+        //
+        // List l=widget.exstingList;
+        // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        // print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+        // if(n.contains(item['ID'].toString())){
+        //   CommonWidget.errorDialog(context, "Already Exist!");
+        // }
+        // else {
           setState(() {
             selectedItemID = item['ID'].toString();
             selectedLedgerName = item['Name'].toString();
           });
-        }
+        // }
         setState(() {
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
