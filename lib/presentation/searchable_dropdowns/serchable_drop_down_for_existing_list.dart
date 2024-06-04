@@ -249,7 +249,18 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.search)
+                      suffixIcon: Icon(Icons.search),
+                    errorStyle: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 16.0,
+                      height: 0
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                    ),
                   ),
                 ),
 
@@ -265,8 +276,10 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 validator: (value) {
                   print("kkjggkg   $value");
                   if (value!.isEmpty) {
-                    return 'Please select a city';
-                  }},
+                    return '';
+                  }
+
+                  },
                 onSuggestionSelected: (suggestion) {
                   setState(() {
                     selectedItem = suggestion['Name'];

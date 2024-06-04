@@ -58,51 +58,67 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-
-
-                TextFormField(
-                  onChanged: (value){widget.callbackOnchage(value);},
-                  readOnly: widget.readOnly!=false?false:true,
-                  inputFormatters:<TextInputFormatter>[widget.format],
-                  textAlignVertical: TextAlignVertical.center,
-                  textCapitalization: widget.capital!=null?TextCapitalization.characters: TextCapitalization.words,
-                  focusNode: widget.focuscontroller,
-                  keyboardType:widget.textInput,
-                  maxLines: widget.maxlines,
-                  maxLength: widget.maxlength==null?500:widget.maxlength,
-                  scrollPadding: EdgeInsets.only(bottom: (SizeConfig.screenHeight) * .2),
-                  textInputAction: TextInputAction.next,
-                  cursorColor: CommonColor.BLACK_COLOR,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only( left: (SizeConfig.screenWidth) * .04, right: (SizeConfig.screenWidth) * .02),
-                    border: InputBorder.none,
-
-                    counterText: '',
-                    isDense: true,
-                    hintText: widget.title,
-                    hintStyle: hint_textfield_Style,
-                    suffix: widget.suffix!=null?widget.suffix:Container(height: 2,width: 2,),
-                    errorStyle: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 16.0,
-                        height: 0,
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.redAccent),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
-                    ),
+                Container(
+                  width: widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
+                  height: widget.maxlines>1? (SizeConfig.screenHeight) * .15:(SizeConfig.screenHeight) * .055,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color:widget.readOnly!=false?CommonColor.WHITE_COLOR:CommonColor.TexField_COLOR ,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
                   ),
-                  controller: widget.controller,
-                  validator: widget.validation,
-                  onEditingComplete: () {
-                    if(widget.focuscontroller!=null) {
-                      widget.focuscontroller.unfocus();
-                      FocusScope.of(context).requestFocus(widget.focusnext);
-                    }
-                  },
-                  style: text_field_textStyle,
+                  child: TextFormField(
+                    onChanged: (value){widget.callbackOnchage(value);},
+                    readOnly: widget.readOnly!=false?false:true,
+                    inputFormatters:<TextInputFormatter>[widget.format],
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: widget.capital!=null?TextCapitalization.characters: TextCapitalization.words,
+                    focusNode: widget.focuscontroller,
+                    keyboardType:widget.textInput,
+                    maxLines: widget.maxlines,
+                    maxLength: widget.maxlength==null?500:widget.maxlength,
+                    scrollPadding: EdgeInsets.only(bottom: (SizeConfig.screenHeight) * .2),
+                    textInputAction: TextInputAction.next,
+                    cursorColor: CommonColor.BLACK_COLOR,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          left: (SizeConfig.screenWidth) * .04, right: (SizeConfig.screenWidth) * .02),
+                      border: InputBorder.none,
+
+                      counterText: '',
+                      isDense: false,
+                      hintText: widget.title,
+                      hintStyle: hint_textfield_Style,
+                      suffix: widget.suffix!=null?widget.suffix:Container(height: 2,width: 2,),
+                      errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                        height: 0
+
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                      ),
+                    ),
+                    controller: widget.controller,
+                    validator: widget.validation,
+                    onEditingComplete: () {
+                      if(widget.focuscontroller!=null) {
+                        widget.focuscontroller.unfocus();
+                        FocusScope.of(context).requestFocus(widget.focusnext);
+                      }
+                    },
+                    style: text_field_textStyle,
+                  ),
                 ),
               ],
             ),

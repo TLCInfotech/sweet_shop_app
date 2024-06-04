@@ -453,7 +453,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return " ";
+              return "";
             }
             return null;
           },
