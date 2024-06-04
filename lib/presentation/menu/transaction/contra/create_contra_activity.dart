@@ -340,11 +340,11 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                                           Text(CommonWidget.getCurrencyFormat(Item_list[index]['Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                         ),
                                         const SizedBox(height: 2 ,),
-                                        Container(
+                                        Item_list[index]['Remark']!=null? Container(
                                           alignment: Alignment.centerLeft,
                                           width: SizeConfig.screenWidth,
                                           child: Text("${Item_list[index]['Remark']}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        ),
+                                        ):Container(),
 
 
                                       ],
@@ -586,7 +586,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                 franId: fid,
                 companyId: companyId,
                 come: status,
-                existingList:Item_list
+                // existingList:Item_list
               ),
             ),
           );

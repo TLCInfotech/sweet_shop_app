@@ -288,13 +288,13 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
       callback: (name, id) async{
         print("FFFFFFFFFFFF ${widget.existingList}");
 
-        List l=widget.existingList;
-        List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
-        print("FFFFFFFFFFFF ${n.contains(id.toString())}");
-        if(n.contains(id.toString())){
-          CommonWidget.errorDialog(context, "Already Exist!");
-        }
-        else {
+        // List l=widget.existingList;
+        // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+        // print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+        // if(n.contains(id.toString())){
+        //   CommonWidget.errorDialog(context, "Already Exist!");
+        // }
+        // else {
           setState(() {
             if (widget.franId == id) {
               selectedbankCashLedger = "";
@@ -305,7 +305,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
               selectedItemID = id;
             }
           });
-        }
+        // }
         setState(() {
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });

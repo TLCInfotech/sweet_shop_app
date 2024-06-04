@@ -570,7 +570,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                 date: invoiceDate.toString(),
                 companyId: companyId,
                 status: statuss,
-                  exstingList:Item_list
+                  // exstingList:Item_list
               ),
             ),
           );

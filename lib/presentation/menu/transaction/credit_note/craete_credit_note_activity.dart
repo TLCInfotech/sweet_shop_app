@@ -571,7 +571,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                 date: invoiceDate.toString(),
                 companyId: compId,
                 status: status,
-                  exstingList:Item_list
+                  // exstingList:Item_list
               ),
             ),
           );

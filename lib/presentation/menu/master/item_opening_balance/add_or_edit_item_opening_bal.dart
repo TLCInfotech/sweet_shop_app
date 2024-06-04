@@ -402,22 +402,26 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       insertedList:insertedList,
       callback: (item) async {
 
-        if(insertedList.contains(item['Name'])){
-          CommonWidget.errorDialog(context,"Already Exist");
-          setState(() {
-            selectedItemName="";
-            selectedItemID="";
-          });
-        }
-        else {
+        // print("############## $item");
+        // if(insertedList.contains(item['Name'])){
+        //   CommonWidget.errorDialog(context,"Already Exist");
+        //   setState(() {
+        //     selectedItemName="";
+        //     selectedItemID="";
+        //   });
+        // }
+        // else {
           setState(() {
             selectedItemID = item['ID'].toString();
             selectedItemName = item['Name'].toString();
             unit.text = item['Unit']!=null?item['Unit']:null;
-            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            rate.text = item['Rate'] != null?  item['Rate'].toString():"";
+            PreviousRate=item['Rate'] != null?  item['Rate'].toString():"";
           });
-        }
+        // }
+          print("###############1 ${rate.text}");
         await calculateRates();
+        print("############### ${rate.text}");
       },
     );
 
@@ -582,6 +586,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       });
   }
 
+  var PreviousRate="";
 
   calculateRates()async{
     // if (amountedited && quantity.text != "") {
@@ -605,6 +610,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           rate.text = amt.toStringAsFixed(2);
         });
       }
+      if(amount.text==""){
+        setState(() {
+          rate.text=double.parse(PreviousRate).toStringAsFixed(2);
+        });
+      }
     }
     if (quantity.text != "" && rate.text != "") {
       if(amountedited==false) {
@@ -617,11 +627,11 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           amount.clear();
         });
     }
-    if (quantity.text == "" || amount.text == "") {
-      setState(() {
-        rate.clear();
-      });
-    }
+     // if (quantity.text == "" || amount.text == "") {
+    //   setState(() {
+    //     rate.clear();
+    //   });
+    // }
     if(quantity.text==""){
       setState(() {
         amount.clear();
