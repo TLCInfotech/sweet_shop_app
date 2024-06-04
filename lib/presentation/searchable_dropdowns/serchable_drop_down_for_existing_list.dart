@@ -45,7 +45,8 @@ class SearchableDropdownWithExistingList extends StatefulWidget{
   final status;
   final come;
   final insertedList;
-  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList});
+  final focuscontroller;
+  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList,this.focuscontroller});
 
   @override
   State<SearchableDropdownWithExistingList> createState() => _SingleLineEditableTextFormFieldState();
@@ -242,7 +243,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                   },
                   textInputAction: TextInputAction.none,
                 //  enabled: widget.come=="disable"?false:true, // Change input action to "none"
-                  focusNode: searchFocus,
+                  focusNode: widget.focuscontroller,
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',

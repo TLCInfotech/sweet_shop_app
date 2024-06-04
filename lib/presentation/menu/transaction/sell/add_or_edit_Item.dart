@@ -56,6 +56,7 @@ class AddOrEditItemSell extends StatefulWidget {
 }
 
 class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
+  final _formkey = GlobalKey<FormState>();
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
@@ -66,6 +67,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
 
   TextEditingController amount = TextEditingController();
 
@@ -248,37 +250,40 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
               ),
               padding: EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: SizeConfig.screenHeight * .08,
-                      child: Center(
-                        child: Text(
-                            ApplicationLocalizations.of(context)!
-                                .translate("item_detail")!,
-                            style: page_heading_textStyle),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight * .08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!
+                                  .translate("item_detail")!,
+                              style: page_heading_textStyle),
+                        ),
                       ),
-                    ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("item_name")!),
-                    getAddSearchLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemQuantityLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getRateAndAmount(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemDiscountandAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getTaxableAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getITemgstAndGstAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemNetRateAndNetAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                      getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                          .translate("item_name")!),
+                      getAddSearchLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemQuantityLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getRateAndAmount(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemDiscountandAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getTaxableAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getITemgstAndGstAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemNetRateAndNetAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -301,6 +306,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
+      focuscontroller: itemFocus,
       apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
@@ -371,7 +377,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         },
         readOnly: widget.readOnly,
         controller: quantity,
-        focuscontroller: null,
+        focuscontroller: quantityFocus,
         focusnext: null,
         title: ApplicationLocalizations.of(context)!.translate("quantity")!,
         callbackOnchage: (value) async {
@@ -453,7 +459,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           },
           readOnly: widget.readOnly,
           controller: rate,
-          focuscontroller: null,
+          focuscontroller: rateFocus,
           focusnext: null,
           title: ApplicationLocalizations.of(context)!.translate("rate")!,
           callbackOnchage: (value) async {
@@ -724,6 +730,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         ),
         GestureDetector(
           onTap: () {
+            bool v=_formkey.currentState!.validate();
+            print("ASSSSSSSSSSSSS $v");
             print(" ${selectedItemID} = ${rate.text} = ${amount.text} = ${quantity.text}");
             if (selectedItemID != null &&
                 amount.text != "" &&
