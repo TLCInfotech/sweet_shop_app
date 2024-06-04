@@ -371,7 +371,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         suffix: Text("${unit.text}"),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
@@ -453,7 +453,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return " ";
             }
             return null;
           },
@@ -492,7 +492,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
@@ -538,7 +538,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
+              return "";
             }
             return null;
           },
@@ -570,7 +570,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return " ";
               }
               return null;
             },
@@ -625,7 +625,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
