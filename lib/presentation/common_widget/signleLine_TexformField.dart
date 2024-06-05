@@ -26,8 +26,9 @@ class SingleLineEditableTextFormField extends StatefulWidget{
   final suffix;
   final readOnly;
   final capital;
+  final txtkey;
 
-  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly,  this.capital, });
+  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly,  this.capital, this.txtkey});
 
   @override
   State<SingleLineEditableTextFormField> createState() => _SingleLineEditableTextFormFieldState();
@@ -74,6 +75,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                     ],
                   ),
                   child: TextFormField(
+                    key: widget.txtkey,
                     onChanged: (value){widget.callbackOnchage(value);},
                     readOnly: widget.readOnly!=false?false:true,
                     inputFormatters:<TextInputFormatter>[widget.format],
@@ -108,6 +110,16 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent,width: 0.5),
+                        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.transparent,width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+                      ),
+
                     ),
                     controller: widget.controller,
                     validator: widget.validation,

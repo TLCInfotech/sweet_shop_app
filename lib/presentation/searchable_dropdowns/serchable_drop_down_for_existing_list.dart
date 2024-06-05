@@ -46,7 +46,9 @@ class SearchableDropdownWithExistingList extends StatefulWidget{
   final come;
   final insertedList;
   final focuscontroller;
-  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList,this.focuscontroller});
+  final txtkey;
+  final focusnext;
+  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList,this.focuscontroller,this.txtkey,this.focusnext});
 
   @override
   State<SearchableDropdownWithExistingList> createState() => _SingleLineEditableTextFormFieldState();
@@ -225,6 +227,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 ],
               ),
               child: TypeAheadFormField(
+                key: widget.txtkey,
                 textFieldConfiguration: TextFieldConfiguration(
                   onTap: (){
                     setState(() {
@@ -287,6 +290,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     _controller.text=suggestion['Name'];
                   });
                   widget.callback(suggestion);
+                  widget.focuscontroller.unfocus();
+                  FocusScope.of(context).requestFocus(widget.focusnext);
                 },
               ),
             ),

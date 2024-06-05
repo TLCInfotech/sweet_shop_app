@@ -60,21 +60,28 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode();
+  final _quantityKey = GlobalKey<FormFieldState>();
+
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
   FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
+
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController discount = TextEditingController();
   FocusNode discountFocus = FocusNode();
 
   TextEditingController discountAmt = TextEditingController();
+  FocusNode discountAmtFocus = FocusNode();
 
   TextEditingController taxableAmt = TextEditingController();
 
@@ -303,10 +310,12 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
+      txtkey: _itemKey,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       focuscontroller: itemFocus,
+      focusnext: quantityFocus,
       apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
@@ -332,6 +341,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           });
         }
         await calculateRates();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
+
       },
     );
 /*    print("sadas ${selectedItemName}");
@@ -368,6 +380,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
           if (value!.isEmpty) {
@@ -378,7 +391,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         readOnly: widget.readOnly,
         controller: quantity,
         focuscontroller: quantityFocus,
-        focusnext: null,
+        focusnext: rateFocus,
         title: ApplicationLocalizations.of(context)!.translate("quantity")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -392,6 +405,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             discountamtedited=false;
           });
           await calculateRates();
+          _quantityKey.currentState!.validate();
         },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -450,6 +464,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+        txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
@@ -460,7 +475,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           readOnly: widget.readOnly,
           controller: rate,
           focuscontroller: rateFocus,
-          focusnext: null,
+          focusnext: amountFocus,
           title: ApplicationLocalizations.of(context)!.translate("rate")!,
           callbackOnchage: (value) async {
 
@@ -476,6 +491,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
               discountamtedited=false;
             });
             await calculateRates();
+            _rateKey.currentState!.validate();
           },
           textInput: TextInputType.numberWithOptions(
               decimal: true
@@ -498,8 +514,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           },
           readOnly: widget.readOnly,
           controller: amount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: amountFocus,
+          focusnext: discountFocus,
           title: ApplicationLocalizations.of(context)!.translate("amount")!,
           callbackOnchage: (value) async {
             print("########### $value");
@@ -544,8 +560,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
           },
           readOnly: widget.readOnly,
           controller: discount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: discountFocus,
+          focusnext: discountAmtFocus,
           title:
           ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value) async {
@@ -570,14 +586,14 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return " ";
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: discountAmt,
-            focuscontroller: null,
-            focusnext: null,
+            focuscontroller: discountAmtFocus,
+            focusnext: gstFocus,
             title:
             ApplicationLocalizations.of(context)!.translate("disc_amount")!,
             callbackOnchage: (value) async {
@@ -631,7 +647,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             },
             readOnly: widget.readOnly,
             controller: gst,
-            focuscontroller: null,
+            focuscontroller: gstFocus,
             focusnext: null,
             title:
             ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -730,7 +746,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         ),
         GestureDetector(
           onTap: () {
-            bool v=_formkey.currentState!.validate();
+            bool v=_itemKey.currentState!.validate();
+            _quantityKey.currentState!.validate();
+            _rateKey.currentState!.validate();
             print("ASSSSSSSSSSSSS $v");
             print(" ${selectedItemID} = ${rate.text} = ${amount.text} = ${quantity.text}");
             if (selectedItemID != null &&

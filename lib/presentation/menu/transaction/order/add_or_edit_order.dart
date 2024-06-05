@@ -57,22 +57,31 @@ class AddOrEditOrder extends StatefulWidget {
 
 class _AddOrEditOrderState extends State<AddOrEditOrder> {
   bool isLoaderShow = false;
+  final _formkey = GlobalKey<FormState>();
+
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode();
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
+
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController discount = TextEditingController();
   FocusNode discountFocus = FocusNode();
 
   TextEditingController discountAmt = TextEditingController();
+  FocusNode discountAmtFocus = FocusNode();
 
   TextEditingController taxableAmt = TextEditingController();
 
@@ -246,37 +255,40 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
               ),
               padding: EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: SizeConfig.screenHeight * .08,
-                      child: Center(
-                        child: Text(
-                            ApplicationLocalizations.of(context)!
-                                .translate("item_detail")!,
-                            style: page_heading_textStyle),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight * .08,
+                        child: Center(
+                          child: Text(
+                              ApplicationLocalizations.of(context)!
+                                  .translate("item_detail")!,
+                              style: page_heading_textStyle),
+                        ),
                       ),
-                    ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("item_name")!),
-                    getAddSearchLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemQuantityLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getRateAndAmount(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemDiscountandAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getTaxableAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getITemgstAndGstAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getItemNetRateAndNetAmtLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                      getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                          .translate("item_name")!),
+                      getAddSearchLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemQuantityLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getRateAndAmount(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemDiscountandAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getTaxableAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getITemgstAndGstAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getItemNetRateAndNetAmtLayout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -297,6 +309,8 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     print("sadas ${selectedItemName}");
     return SearchableDropdownWithExistingList(
+      txtkey: _itemKey,
+      focusnext: quantityFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
@@ -304,6 +318,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       titleIndicator: false,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
+      focuscontroller: itemFocus,
       callback: (item) async {
         await calculateGstAmt();
         await calculateNetAmt();
@@ -325,6 +340,8 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           });
         }
         await calculateRates();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
       },
     );
 
@@ -361,17 +378,18 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
         readOnly: widget.readOnly,
         controller: quantity,
-        focuscontroller: null,
-        focusnext: null,
+        focuscontroller: quantityFocus,
+        focusnext: rateFocus,
         title: ApplicationLocalizations.of(context)!.translate("quantity")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -385,6 +403,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             discountamtedited=false;
           });
           await calculateRates();
+          _quantityKey.currentState!.validate();
         },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -443,17 +462,18 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: rate,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: rateFocus,
+          focusnext: amountFocus,
           title: ApplicationLocalizations.of(context)!.translate("rate")!,
           callbackOnchage: (value) async {
 
@@ -469,6 +489,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
               discountamtedited=false;
             });
             await calculateRates();
+            _rateKey.currentState!.validate();
           },
           textInput: TextInputType.numberWithOptions(
               decimal: true
@@ -485,14 +506,14 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: amount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: amountFocus,
+          focusnext: discountFocus,
           title: ApplicationLocalizations.of(context)!.translate("amount")!,
           callbackOnchage: (value) async {
             print("########### $value");
@@ -531,14 +552,14 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: discount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: discountFocus,
+          focusnext: discountAmtFocus,
           title:
           ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value) async {
@@ -563,14 +584,14 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: discountAmt,
-            focuscontroller: null,
-            focusnext: null,
+            focuscontroller: discountAmtFocus,
+            focusnext: gstFocus,
             title:
             ApplicationLocalizations.of(context)!.translate("disc_amount")!,
             callbackOnchage: (value) async {
@@ -618,13 +639,13 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: gst,
-            focuscontroller: null,
+            focuscontroller: gstFocus,
             focusnext: null,
             title:
             ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -723,6 +744,10 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         ),
         GestureDetector(
           onTap: () {
+            bool v=_itemKey.currentState!.validate();
+            _quantityKey.currentState!.validate();
+            _rateKey.currentState!.validate();
+
             if(selectedItemID!=null && amount.text!="" && quantity.text!="" && rate.text!="") {
               var item = {};
               if (widget.editproduct != null) {
