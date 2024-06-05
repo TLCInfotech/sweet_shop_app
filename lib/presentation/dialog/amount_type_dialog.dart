@@ -17,7 +17,8 @@ class AmountTypeDialog extends StatefulWidget {
   final selectedType;
   final width;
   final readOnly;
-  const AmountTypeDialog({super.key, required this.mListener, required this.selectedType,required this.width, this.readOnly});
+  final mandatory;
+  const AmountTypeDialog({super.key, required this.mListener, required this.selectedType,required this.width, this.readOnly, this.mandatory});
 
   @override
   State<AmountTypeDialog> createState() => _LedegerGroupDialogState();
@@ -89,7 +90,8 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                   ),
                 ],
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(5)
+                borderRadius: BorderRadius.circular(5),
+              border: Border.all(color:widget.mandatory?Colors.redAccent:Colors.transparent)
             ),
             child: DropdownButton<dynamic>(
               menuMaxHeight: 200,

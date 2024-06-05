@@ -44,7 +44,11 @@ class SearchableDropdownWithObject extends StatefulWidget{
   final apiUrl;
   final status;
   final readOnly;
-  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status, this.readOnly});
+  final txtkey;
+  final focusnext;
+  final mandatory;
+  final focuscontroller;
+  SearchableDropdownWithObject({required this.title, required this.callback, required this.name,this.titleIndicator,required this.apiUrl,this.status, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory});
 
 
 
@@ -170,11 +174,20 @@ final FocusNode reqFocus=FocusNode();
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
-        child: Column(
+      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.0):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.0),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.titleIndicator!=false? Text(
+            widget.titleIndicator!=false? widget.mandatory==true?
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text:widget.title,style: item_heading_textStyle,),
+                  TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+                ],
+              ),
+            )
+                : Text(
               widget.title,
               style: item_heading_textStyle,
             ):Container(),
@@ -195,6 +208,7 @@ final FocusNode reqFocus=FocusNode();
                   ],
                 ),
                 child: TypeAheadFormField(
+                  key: widget.txtkey,
                   textFieldConfiguration: TextFieldConfiguration(
                     onTap: (){
                       setState(() {
@@ -219,7 +233,18 @@ final FocusNode reqFocus=FocusNode();
                       // labelText: '${widget.title}',
                         hintText: "${widget.title}",
                         border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.search)
+                        suffixIcon: Icon(Icons.search),
+                      errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                          height: 0
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                      ),
                     ),
                   ),
 
@@ -232,11 +257,11 @@ final FocusNode reqFocus=FocusNode();
                       title: Text(suggestion['Name']),
                     );
                   },
-    validator: (value) {
-                    print("kkjggkg   $value");
-    if (value!.isEmpty) {
-    return 'Please select a city';
-    }},
+                  validator: (value) {
+                                  print("kkjggkg   $value");
+                  if (value!.isEmpty) {
+                  return '';
+                  }},
                   onSuggestionSelected: (suggestion) {
                     setState(() {
                       print("knjbnbnjbnbn2222  $suggestion  $selected");
@@ -245,6 +270,8 @@ final FocusNode reqFocus=FocusNode();
                       _controller.text=suggestion['Name'];
                     });
                     widget.callback(suggestion);
+                    widget.focuscontroller.unfocus();
+                    FocusScope.of(context).requestFocus(widget.focusnext);
                   },
                 ),
               ),

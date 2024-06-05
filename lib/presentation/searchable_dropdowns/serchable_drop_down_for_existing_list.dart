@@ -48,7 +48,8 @@ class SearchableDropdownWithExistingList extends StatefulWidget{
   final focuscontroller;
   final txtkey;
   final focusnext;
-  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList,this.focuscontroller,this.txtkey,this.focusnext});
+  final mandatory;
+  SearchableDropdownWithExistingList({required this.title, required this.callback, required this.name,this.titleIndicator,this.come,required this.apiUrl,this.status,this.insertedList,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory});
 
   @override
   State<SearchableDropdownWithExistingList> createState() => _SingleLineEditableTextFormFieldState();
@@ -206,7 +207,16 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.titleIndicator!=false? Text(
+          widget.titleIndicator!=false? widget.mandatory==true?
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text:widget.title,style: item_heading_textStyle,),
+                TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+              ],
+            ),
+          )
+              : Text(
             widget.title,
             style: item_heading_textStyle,
           ):Container(),

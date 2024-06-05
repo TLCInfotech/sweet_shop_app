@@ -96,7 +96,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
-      await calculateTotalAmt();
+      // await calculateTotalAmt();
 
       await gerSaleInvoice(1);
       print("#######################3 ${widget.editedItem}");
@@ -864,9 +864,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Sale_Ledger_Name'];
                     selectedLedgerId=data['voucherDetails']['Sale_Ledger'].toString();
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
 
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
                 isLoaderShow=false;
               });

@@ -41,9 +41,11 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode ledgerFocus = FocusNode() ;
+  final _ledgerKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
   FocusNode amountFocus = FocusNode() ;
+  final _amountKey = GlobalKey<FormFieldState>();
 
   TextEditingController narration = TextEditingController();
   FocusNode narrationFocus = FocusNode() ;
@@ -176,7 +178,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
+                  // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("ledger_name")!),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
 
@@ -205,12 +207,12 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
 
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.NARRATION;
+          return "";
         }
         return null;
       },
       controller: narration,
-      focuscontroller: null,
+      focuscontroller: narrationFocus,
       focusnext: null,
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
@@ -230,20 +232,23 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   /* widget for ledger amount layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
     return     SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _amountKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.AMOUNT;
+          return "";
         }
         return null;
       },
-      controller: amount,
-      focuscontroller: null,
-      focusnext: null,
+        controller: amount,
+        focuscontroller: amountFocus,
+        focusnext: narrationFocus,
       title: ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value)async {
         setState(() {
           amount.text = value;
         });
+        _amountKey.currentState!.validate();
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
@@ -254,10 +259,14 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   /* widget for ledger search layout */
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return SearchableDropdownWithObject(
+      mandatory: true,
+      txtkey: _ledgerKey,
+      focusnext: amountFocus,
+      focuscontroller: ledgerFocus,
       name: selectedLedgerName,
       status:  "edit",
       apiUrl:"${ApiConstants().getLedgerWithoutBankCash}?",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
       callback: (item)async{
         // print("FFFFFFFFFFFF ${widget.exstingList}");
@@ -277,7 +286,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         setState(() {
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
-
+          _ledgerKey.currentState!.validate();
       },
 
     );
@@ -369,7 +378,9 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
         ),
         GestureDetector(
           onTap: () {
-            if(selectedBankLedgerID!=null) {
+            bool v=_ledgerKey.currentState!.validate();
+            bool q=_amountKey.currentState!.validate();
+            if(selectedBankLedgerID!=null && v && q) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -400,10 +411,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
                 Navigator.pop(context);
               }
             }
-            else {
-              CommonWidget.errorDialog(context,
-                  "Please add required fields ledger,amount !");
-            }
+
           },
           onDoubleTap: () {},
           child: Container(

@@ -99,7 +99,7 @@ if(widget.come=="edit"){
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
-      await calculateTotalAmt();
+      // await calculateTotalAmt();
       setState(() {
         selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
         selectedFranchiseeName=widget.editedItem['Vendor_Name'];
@@ -900,8 +900,10 @@ String finInvoiceNo="";
                     selectedLedgerName=data['voucherDetails']['Purchase_Ledger_Name'];
                     print("hjjbjjbnbn  $selectedLedgerName");
                     selectedLedgerId=data['voucherDetails']['Purchase_Ledger'].toString();
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                   setData();
                 }
 

@@ -113,7 +113,7 @@ bool isLoaderShow=false;
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
-      await calculateTotalAmt();
+      // await calculateTotalAmt();
       await getRecipt(1);
       print("#######################3 ${widget.editedItem}");
       setState(() {
@@ -827,8 +827,9 @@ bool isLoaderShow=false;
                     Item_list=_arrList;
                     selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
                     selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
+                    TotalAmount=data['accountVoucherHeader']['Total_Amount'].toStringAsFixed(2) ;
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
                 isLoaderShow=false;
               });

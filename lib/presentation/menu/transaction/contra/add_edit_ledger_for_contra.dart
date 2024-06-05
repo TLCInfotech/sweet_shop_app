@@ -14,6 +14,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class TestItem {
   String label;
@@ -54,9 +55,11 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode ledgerFocus = FocusNode();
+  final _ledgerKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
   FocusNode amountFocus = FocusNode();
+  final _amountKey = GlobalKey<FormFieldState>();
 
   TextEditingController narration = TextEditingController();
   FocusNode narrationFocus = FocusNode();
@@ -197,8 +200,8 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
                           style: page_heading_textStyle),
                     ),
                   ),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                      .translate("ledger_name")!),
+                  // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                  //     .translate("ledger_name")!),
                   getAddSearchLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth),
                   getILedgerAmountyLayout(
@@ -229,13 +232,13 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
     return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER + StringEn.NARRATION;
+          return "";
         }
         return null;
       },
       readOnly: widget.readOnly,
       controller: narration,
-      focuscontroller: null,
+      focuscontroller: narrationFocus,
       focusnext: null,
       title: ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value) async {
@@ -253,21 +256,24 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
   /* widget for product rate layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _amountKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER + StringEn.AMOUNT;
+          return "";
         }
         return null;
       },
       readOnly: widget.readOnly,
-      controller: amount,
-      focuscontroller: null,
-      focusnext: null,
+        controller: amount,
+        focuscontroller: amountFocus,
+        focusnext: narrationFocus,
       title: ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value) async {
         setState(() {
           amount.text = value;
         });
+        _amountKey.currentState!.validate();
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
@@ -277,41 +283,86 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
 
   var selectedbankCashLedger = "";
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
-    return SearchableLedgerDropdown(
-      apiUrl:
-          ApiConstants().getBankCashLedger + "?Company_ID=${widget.companyId}",
-      titleIndicator: false,
-      ledgerName: selectedbankCashLedger,
-      franchisee: widget.come,
-      franchiseeName: widget.come == "edit" ? selectedbankCashLedger : "",
-      title: ApplicationLocalizations.of(context)!.translate("party")!,
-      callback: (name, id) async{
-        print("FFFFFFFFFFFF ${widget.existingList}");
-
-        // List l=widget.existingList;
-        // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
-        // print("FFFFFFFFFFFF ${n.contains(id.toString())}");
-        // if(n.contains(id.toString())){
-        //   CommonWidget.errorDialog(context, "Already Exist!");
-        // }
-        // else {
+    return
+      SearchableDropdownWithObject(
+        mandatory: true,
+        txtkey: _ledgerKey,
+        focusnext: amountFocus,
+        focuscontroller: ledgerFocus,
+        name: selectedbankCashLedger,
+        status:  "edit",
+        apiUrl:ApiConstants().getBankCashLedger + "?Company_ID=${widget.companyId}",
+        titleIndicator: true,
+        title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+        callback: (item)async{
+          // print("FFFFFFFFFFFF ${widget.exstingList}");
+          //
+          // List l=widget.exstingList;
+          // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+          // print("FFFFFFFFFFFF ${n.contains(item['ID'].toString())}");
+          // if(n.contains(item['ID'].toString())){
+          //   CommonWidget.errorDialog(context, "Already Exist!");
+          // }
+          // else {
           setState(() {
-            if (widget.franId == id) {
-              selectedbankCashLedger = "";
-              CommonWidget.errorDialog(
-                  context, "You can not select same ledger.");
-            } else {
-              selectedbankCashLedger = name!;
-              selectedItemID = id;
-            }
+            // selectedbankCashLedger = name!;
+            // selectedItemID = id;
+            selectedItemID = item['ID'].toString();
+            selectedbankCashLedger=item['Name'].toString();
           });
-        // }
-        setState(() {
-          amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
-        });
+          // }
+          setState(() {
+            amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
+          });
+          _ledgerKey.currentState!.validate();
+        },
 
-      },
-    ); /*Container(
+      );
+
+    //   SearchableLedgerDropdown(
+    //   mandatory: true,
+    //   txtkey: _ledgerKey,
+    //   focusnext: amountFocus,
+    //   focuscontroller: ledgerFocus,
+    //   apiUrl: ApiConstants().getBankCashLedger + "?Company_ID=${widget.companyId}",
+    //   titleIndicator: true,
+    //   ledgerName: selectedbankCashLedger,
+    //   franchisee: widget.come,
+    //   franchiseeName: widget.come == "edit" ? selectedbankCashLedger : "",
+    //   title: ApplicationLocalizations.of(context)!.translate("party")!,
+    //   callback: (name, id) async{
+    //     print("FFFFFFFFFFFF ${widget.existingList}");
+    //
+    //     // List l=widget.existingList;
+    //     // List n= await l.map((i) => i['Ledger_ID'].toString()).toList();
+    //     // print("FFFFFFFFFFFF ${n.contains(id.toString())}");
+    //     // if(n.contains(id.toString())){
+    //     //   CommonWidget.errorDialog(context, "Already Exist!");
+    //     // }
+    //     // else {
+    //       setState(() {
+    //         if (widget.franId == id) {
+    //           selectedbankCashLedger = "";
+    //           CommonWidget.errorDialog(
+    //               context, "You can not select same ledger.");
+    //         } else {
+    //           selectedbankCashLedger = name!;
+    //           selectedItemID = id;
+    //         }
+    //       });
+    //     // }
+    //     setState(() {
+    //       amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
+    //     });
+    //
+    //   },
+    // );
+
+
+
+
+
+    /*Container(
         height: parentHeight * .055,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -411,7 +462,9 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
         ),
         GestureDetector(
           onTap: () {
-            if (selectedItemID != null) {
+            bool v=_ledgerKey.currentState!.validate();
+            bool q=_amountKey.currentState!.validate();
+            if(selectedItemID!=null && v && q)  {
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -438,9 +491,6 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
               }
               widget.mListener.AddOrEditLedgerForContraDetail(item);
               Navigator.pop(context);
-            } else {
-              CommonWidget.errorDialog(
-                  context, "Please add required fields ledger,amount !");
             }
           },
           onDoubleTap: () {},

@@ -270,8 +270,8 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
                               style: page_heading_textStyle),
                         ),
                       ),
-                      getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                          .translate("item_name")!),
+                      // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                      //     .translate("item_name")!),
                       getAddSearchLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth),
                       getItemQuantityLayout(
@@ -310,6 +310,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
+      mandatory: true,
       txtkey: _itemKey,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
@@ -317,7 +318,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       focuscontroller: itemFocus,
       focusnext: quantityFocus,
       apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -380,6 +381,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
       txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
@@ -464,6 +466,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          mandatory: true,
         txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
@@ -747,14 +750,9 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         GestureDetector(
           onTap: () {
             bool v=_itemKey.currentState!.validate();
-            _quantityKey.currentState!.validate();
-            _rateKey.currentState!.validate();
-            print("ASSSSSSSSSSSSS $v");
-            print(" ${selectedItemID} = ${rate.text} = ${amount.text} = ${quantity.text}");
-            if (selectedItemID != null &&
-                amount.text != "" &&
-                quantity.text != "" &&
-                rate.text != "") {
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if (selectedItemID!=null && v && q && r) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {

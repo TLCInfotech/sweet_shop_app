@@ -57,20 +57,26 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode();
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController discount = TextEditingController();
   FocusNode discountFocus = FocusNode();
 
   TextEditingController discountAmt = TextEditingController();
+  FocusNode discountAmtFocus = FocusNode();
 
   TextEditingController taxableAmt = TextEditingController();
 
@@ -243,8 +249,8 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
                             style: page_heading_textStyle),
                       ),
                     ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("item_name")!),
+                    // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                    //     .translate("item_name")!),
                     getAddSearchLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getItemQuantityLayout(
@@ -282,10 +288,13 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
+      focusnext: quantityFocus,
       name: selectedItemName,
       status: selectedItemName==""?"":"edit",
       apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -309,6 +318,8 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
           });
         // }
         await calculateRates();
+          _itemKey.currentState!.validate();
+          _rateKey.currentState!.validate();
       },
     );
 /*    return SearchableDropdownWithObject(

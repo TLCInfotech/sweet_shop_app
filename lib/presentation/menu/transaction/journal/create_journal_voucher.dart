@@ -66,8 +66,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
 
   String TotalAmount="0.00";
-  double TotalCr=0.00;
-  double TotalDr=0.00;
+  String TotalCr="0.00";
+  String TotalDr="0.00";
 
 //  List<dynamic> Item_list=[];
 
@@ -92,7 +92,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    calculateTotalAmt();
+    // calculateTotalAmt();
     invoiceDate=widget.dateNew;
     if(widget.voucherNo!=null){
       getExpInvoice(1);
@@ -124,8 +124,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
     }
       setState(() {
         // TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
-        TotalCr=totalcr;
-        TotalDr=totaldr;
+        TotalCr=totalcr.toStringAsFixed(2);
+        TotalDr=totaldr.toStringAsFixed(2);
       });
 
   }
@@ -560,8 +560,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Total Cr : ${CommonWidget.getCurrencyFormat((TotalCr).ceilToDouble())} CR",style: item_heading_textStyle,),
-              Text("Total Dr : ${CommonWidget.getCurrencyFormat((TotalDr).ceilToDouble())} DR",style: item_heading_textStyle,),
+              Text("Total Cr : ${CommonWidget.getCurrencyFormat(double.parse(TotalCr))} CR",style: item_heading_textStyle,),
+              Text("Total Dr : ${CommonWidget.getCurrencyFormat(double.parse(TotalDr))} DR",style: item_heading_textStyle,),
             ],
           ):Container(),
         ),
@@ -581,7 +581,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 disableColor = false;
               });
             }
-            else if((TotalCr).ceilToDouble()!=(TotalDr).ceilToDouble()){
+            else if(double.parse(TotalCr)!=double.parse(TotalDr)){
               var snackBar = SnackBar(
                   content: Text('Match Total Credit and Debit!'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -589,7 +589,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                 disableColor = false;
               });
             }
-            else if((TotalCr).ceilToDouble()==(TotalDr).ceilToDouble()&&Ledger_list.length>0) {
+            else if(double.parse(TotalCr)==double.parse(TotalDr)&&Ledger_list.length>0) {
               if (widget.voucherNo == null) {
                 print("#######");
                 callPostBankLedgerPayment();
@@ -763,8 +763,10 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                   setState(() {
                     Ledger_list=_arrList;
                     selectedbankCashLedger=data['headerJournal']['Ledger_Name'];
+                    TotalCr=data['headerJournal']['Total_CR'].toStringAsFixed(2) ;
+                    TotalDr=data['headerJournal']['Total_DR'].toStringAsFixed(2) ;
                   });
-                 calculateTotalAmt();
+                 // calculateTotalAmt();
                 }
 
               });
@@ -952,8 +954,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
-
 
 }
 

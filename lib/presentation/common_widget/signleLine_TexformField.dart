@@ -27,8 +27,9 @@ class SingleLineEditableTextFormField extends StatefulWidget{
   final readOnly;
   final capital;
   final txtkey;
+  final mandatory;
 
-  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly,  this.capital, this.txtkey});
+  SingleLineEditableTextFormField({required this.title,required this.callbackOnchage,required this.controller,required this.focuscontroller,required this.focusnext,required this.textInput,required this.maxlines,required this.format, this.parentWidth,  this.maxlength, required this.validation, this.suffix,  this.readOnly,  this.capital, this.txtkey,this.mandatory});
 
   @override
   State<SingleLineEditableTextFormField> createState() => _SingleLineEditableTextFormFieldState();
@@ -50,7 +51,14 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.title==""?Container():  Text(
+          widget.title==""?Container(): widget.mandatory==true?Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text:widget.title,style: item_heading_textStyle,),
+                TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+              ],
+            ),
+          ): Text(
             widget.title,
             style: item_heading_textStyle,
           ),

@@ -112,7 +112,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     });
 
     print(selectedFranchiseeName);
-    await calculateTotalAmt();
+    // await calculateTotalAmt();
 
     await getExpInvoice(1);
   }
@@ -898,8 +898,10 @@ String finVoucherNo="";
                     selectedFranchiseeName=data['voucherDetails']['Ledger_Name'];
                     finVoucherNo=data['voucherDetails']['Fin_Voucher_No'];
                     selectedFranchiseeId=data['voucherDetails']['Ledger_ID'].toString();
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
                 isLoaderShow=false;
               });

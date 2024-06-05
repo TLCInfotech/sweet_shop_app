@@ -268,8 +268,8 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
                               style: page_heading_textStyle),
                         ),
                       ),
-                      getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                          .translate("item_name")!),
+                      // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                      //     .translate("item_name")!),
                       getAddSearchLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth),
                       getItemQuantityLayout(
@@ -309,13 +309,14 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     print("sadas ${selectedItemName}");
     return SearchableDropdownWithExistingList(
+      mandatory: true,
       txtkey: _itemKey,
       focusnext: quantityFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       focuscontroller: itemFocus,
@@ -378,6 +379,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      mandatory: true,
         txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
@@ -462,6 +464,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+        mandatory: true,
           txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
@@ -497,11 +500,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
           maxlines: 1,
           format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
       ),
-      /*    SingleLineEditableTextFormField(
-            parentWidth: (parentWidth),
-            title: ApplicationLocalizations.of(context)!.translate("rate")!,
-            controller: rate
-        ),*/
+
       SingleLineEditableTextFormField(
           parentWidth: (parentWidth),
           validation: (value) {
@@ -647,8 +646,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
             controller: gst,
             focuscontroller: gstFocus,
             focusnext: null,
-            title:
-            ApplicationLocalizations.of(context)!.translate("gst_percent")!,
+            title: ApplicationLocalizations.of(context)!.translate("gst_percent")!,
             callbackOnchage: (value) async {
               setState(() {
                 rate.text=rate.text!=""?double.parse(rate.text).toStringAsFixed(2):"";
@@ -745,10 +743,9 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         GestureDetector(
           onTap: () {
             bool v=_itemKey.currentState!.validate();
-            _quantityKey.currentState!.validate();
-            _rateKey.currentState!.validate();
-
-            if(selectedItemID!=null && amount.text!="" && quantity.text!="" && rate.text!="") {
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if ( selectedItemID!=null&& v && q && r) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {

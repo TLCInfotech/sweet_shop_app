@@ -89,7 +89,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
-      await calculateTotalAmt();
+      // await calculateTotalAmt();
 
       await getOrderInvoice(1);
       print("#######################3 ${widget.editedItem}");
@@ -787,9 +787,12 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
                     finInvoiceNo=data['voucherDetails']['Fin_Order_No'];
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
+
 
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
                 isLoaderShow=false;
               });

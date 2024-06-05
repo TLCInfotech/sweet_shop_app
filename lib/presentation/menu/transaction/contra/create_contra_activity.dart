@@ -109,7 +109,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
       getContra(1);
       voucherNoController.text="Voucher No: ${widget.voucherNo}";
     }
-    calculateTotalAmt();
+    // calculateTotalAmt();
     setData();
   }
   String companyId='';
@@ -163,7 +163,7 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("contra_new")!,
+                                ApplicationLocalizations.of(context)!.translate("contra")!,
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -785,8 +785,9 @@ class _CreateContraState extends State<CreateContra> with SingleTickerProviderSt
                     Item_list=_arrList;
                     selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
                     selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
+                    TotalAmount=data['accountVoucherHeader']['Total_Amount'].toStringAsFixed(2) ;
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
 
               });

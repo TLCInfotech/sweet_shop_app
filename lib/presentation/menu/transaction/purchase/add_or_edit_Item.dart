@@ -60,20 +60,26 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode();
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController discount = TextEditingController();
   FocusNode discountFocus = FocusNode();
 
   TextEditingController discountAmt = TextEditingController();
+  FocusNode discountAmtFocus = FocusNode();
 
   TextEditingController taxableAmt = TextEditingController();
 
@@ -129,7 +135,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
         netAmount.text =widget.editproduct['Net_Amount']!=0 &&widget.editproduct['Net_Amount']!="" &&widget.editproduct['Net_Amount']!=null?double.parse( widget.editproduct['Net_Amount'].toString()).toStringAsFixed(2):"";
 
       });
-      await calculateRates();
+      // await calculateRates();
     }
     List list= widget.exstingList;
     setState(() {
@@ -246,8 +252,8 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
                             style: page_heading_textStyle),
                       ),
                     ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("item_name")!),
+                    // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                    //     .translate("item_name")!),
                     getAddSearchLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getItemQuantityLayout(
@@ -285,11 +291,14 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
+      focusnext: quantityFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl: "${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -313,6 +322,8 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
           });
         // }
         await calculateRates();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
       },
     );
    /* return SearchableDropdownWithObject(
@@ -348,17 +359,19 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
         readOnly: widget.readOnly,
         controller: quantity,
-        focuscontroller: null,
-        focusnext: null,
+        focuscontroller: quantityFocus,
+        focusnext: rateFocus,
         title: ApplicationLocalizations.of(context)!.translate("quantity")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -372,6 +385,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
             discountamtedited=false;
           });
           await calculateRates();
+          _quantityKey.currentState!.validate();
         },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -430,17 +444,19 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          mandatory: true,
+          txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: rate,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: rateFocus,
+          focusnext: amountFocus,
           title: ApplicationLocalizations.of(context)!.translate("rate")!,
           callbackOnchage: (value) async {
 
@@ -456,6 +472,7 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
               discountamtedited=false;
             });
             await calculateRates();
+            _rateKey.currentState!.validate();
           },
           textInput: TextInputType.numberWithOptions(
               decimal: true
@@ -472,14 +489,14 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: amount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: amountFocus,
+          focusnext: discountFocus,
           title: ApplicationLocalizations.of(context)!.translate("amount")!,
           callbackOnchage: (value) async {
             print("########### $value");
@@ -518,14 +535,14 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: discount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: discountFocus,
+          focusnext: discountAmtFocus,
           title:
           ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value) async {
@@ -550,14 +567,14 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: discountAmt,
-            focuscontroller: null,
-            focusnext: null,
+            focuscontroller: discountAmtFocus,
+            focusnext: gstFocus,
             title:
             ApplicationLocalizations.of(context)!.translate("disc_amount")!,
             callbackOnchage: (value) async {
@@ -605,13 +622,13 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: gst,
-            focuscontroller: null,
+            focuscontroller: gstFocus,
             focusnext: null,
             title:
             ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -710,10 +727,10 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
         ),
         GestureDetector(
           onTap: () {
-            if (selectedItemID != null &&
-                amount.text != "" &&
-                quantity.text != "" &&
-                rate.text != "") {
+            bool v=_itemKey.currentState!.validate();
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if ( selectedItemID!=null&& v && q && r) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -761,9 +778,6 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
                 widget.mListener.AddOrEditItemDetail(item);
                 Navigator.pop(context);
               }
-            } else {
-              CommonWidget.errorDialog(context,
-                  "Please add required fields item,rate,quantity,amount !");
             }
           },
           onDoubleTap: () {},

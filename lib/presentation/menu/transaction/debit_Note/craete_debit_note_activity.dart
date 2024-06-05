@@ -81,7 +81,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    calculateTotalAmt();
+    // calculateTotalAmt();
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
       getDebitNote(1);
@@ -771,9 +771,10 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Ledger_Name'];
                     selectedLedgerId=data['voucherDetails']['Ledger_ID'].toString();
-
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
 
               });

@@ -39,9 +39,11 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode ledgerFocus = FocusNode() ;
+  final _ledgerKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
   FocusNode amountFocus = FocusNode() ;
+  final _amountKey = GlobalKey<FormFieldState>();
 
   TextEditingController narration = TextEditingController();
   FocusNode narrationFocus = FocusNode() ;
@@ -173,7 +175,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                       ),
                     ),
                   ),
-                  getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("expense")!,),
+                  // getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("expense")!,),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getILedgerAmountyLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -199,13 +201,13 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
 
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.NARRATION;
+          return "";
         }
         return null;
       },
       readOnly: widget.readOnly,
       controller: narration,
-      focuscontroller: null,
+      focuscontroller: narrationFocus,
       focusnext: null,
       title:  ApplicationLocalizations.of(context)!.translate("narration")!,
       callbackOnchage: (value)async {
@@ -213,6 +215,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
           narration.text = value;
         });
+
       },
       textInput: TextInputType.text,
       maxlines: 1,
@@ -224,21 +227,25 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   /* widget for ledger amount layout */
   Widget getILedgerAmountyLayout(double parentHeight, double parentWidth) {
     return     SingleLineEditableTextFormField(
+      mandatory: true,
+      txtkey: _amountKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.AMOUNT;
+          return "";
         }
         return null;
       },
       readOnly: widget.readOnly,
       controller: amount,
-      focuscontroller: null,
-      focusnext: null,
+      focuscontroller: amountFocus,
+      focusnext: narrationFocus,
       title: ApplicationLocalizations.of(context)!.translate("amount")!,
       callbackOnchage: (value)async {
         setState(() {
           amount.text = value;
         });
+        _ledgerKey.currentState!.validate();
+        _amountKey.currentState!.validate();
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
@@ -250,10 +257,14 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     // ApiConstants().baseUrl + ApiConstants().ledger_list+"?Company_ID=$companyId";
     return SearchableDropdownWithObject(
+      mandatory: true,
+      txtkey: _ledgerKey,
+      focusnext: amountFocus,
+      focuscontroller: ledgerFocus,
       name: selectedLedgerName,
       status:  "edit",
       apiUrl:"${ApiConstants().ledger_list}?",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("expense_name")!,
       callback: (item)async{
         print("FFFFFFFFFFFF ${widget.exstingList}");
@@ -273,6 +284,9 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         setState(() {
           amount.text = amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
         });
+        _ledgerKey.currentState!.validate();
+        _amountKey.currentState!.validate();
+
       },
 
     );
@@ -366,8 +380,9 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
         ),
         GestureDetector(
           onTap: () {
-
-            if(selectedItemID!=null) {
+            bool v=_ledgerKey.currentState!.validate();
+            bool q=_amountKey.currentState!.validate();
+            if(selectedItemID!=null && v && q) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -396,10 +411,7 @@ class _AddOrEditLedgerForLedgerState extends State<AddOrEditLedgerForLedger>{
                 Navigator.pop(context);
               }
             }
-            else {
-              CommonWidget.errorDialog(context,
-                  "Please add required fields ledger,amount !");
-            }
+
           },
           onDoubleTap: () {},
           child: Container(
