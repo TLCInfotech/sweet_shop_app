@@ -703,7 +703,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(
         top: 10,
-        bottom: 10,
+      //  bottom: 10,
       ),
       child: Text(
         "$title",
@@ -804,9 +804,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
                 Navigator.pop(context);
               }
             } else {
-              CommonWidget.errorDialog(context,
-                  "Please add required fields item,rate,quantity,amount !");
-            }
+       }
           },
           onDoubleTap: () {},
           child: Container(

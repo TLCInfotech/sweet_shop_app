@@ -974,7 +974,6 @@ String finVoucherNo="";
           createrMachine: deviceId,
           iNSERT: Inserted_list.toList(),
       );
-
       String apiUrl =baseurl + ApiConstants().expense_voucher;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{

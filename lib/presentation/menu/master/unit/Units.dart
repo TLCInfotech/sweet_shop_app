@@ -566,7 +566,6 @@ class _UnitsActivityState extends State<UnitsActivity> {
           onSuccess:(data){
             print("  ITEM  $data ");
             setState(() {
-        
               isLoaderShow=false;
             });
             getMeasuringUnit();

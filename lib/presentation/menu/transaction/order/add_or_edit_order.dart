@@ -701,11 +701,11 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(
         top: 10,
-        bottom: 10,
+      //  bottom: 10,
       ),
       child: Text(
         "$title",
-        style: page_heading_textStyle,
+        style: item_heading_textStyle,
       ),
     );
   }
@@ -799,8 +799,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
               }
             }
             else {
-              CommonWidget.errorDialog(context, "Please add required fields item,rate,quantity,amount !");
-            }
+           }
           },
           onDoubleTap: () {},
           child: Container(

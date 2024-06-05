@@ -435,6 +435,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
         );
         String apiUrl;
           apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
+     print("njnjfjfvnjn  $apiUrl");
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
