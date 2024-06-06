@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_credit_debit_reuest_model.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/add_or_edit_item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -41,6 +42,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
 
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
+  bool showButton = false;
   late AnimationController _Controller;
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -173,9 +175,40 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: ()async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -252,7 +285,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
             ],
           ),
         )/*:Container()*/,
-        widget.readOnly==false?Container():   GestureDetector(
+        widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
             if(selectedLedgerId=="" ){
               var snackBar = SnackBar(content: Text('Select Account Ledger!'));
@@ -483,6 +516,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
+                                                showButton=true;
                                                 Deleted_list=Deleted_list;
                                               });
                                             }
@@ -661,6 +695,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
           title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
+              showButton=true;
               invoiceDate=date!;
               Item_list=[];
               Updated_list=[];
@@ -693,6 +728,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         }
         else {
           setState(() {
+            showButton=true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString()!;
           });
@@ -722,6 +758,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
         }
         else {
           setState(() {
+            showButton=true;
             selectedLedgerName = name!;
             selectedLedgerId = id.toString();
           });
@@ -977,7 +1014,7 @@ class _CreateDebitNoteState extends State<CreateDebitNote> with SingleTickerProv
   AddOrEditItemDebitDetail(item) async {
     // TODO: implement AddOrEditItemDebitDetail
     var itemLlist=Item_list;
-
+showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {

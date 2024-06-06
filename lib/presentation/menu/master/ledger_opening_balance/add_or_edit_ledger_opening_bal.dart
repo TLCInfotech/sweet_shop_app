@@ -375,7 +375,7 @@ String amountTypeId="";
     );
 
   }
-
+  var amttypemandatory=false;
   Widget getAmtType(double parentHeight, double parentWidth){
     return Padding(
       padding:  EdgeInsets.only(top: parentHeight*.02),
@@ -386,7 +386,7 @@ String amountTypeId="";
             ApplicationLocalizations.of(context)!.translate("amount_type")!,
             style: item_heading_textStyle,
           ),
-          AmountTypeDialog(mListener: this,  readOnly: widget.readOnly,
+          AmountTypeDialog(mListener: this,mandatory: amttypemandatory,
             selectedType:amountType,width: parentWidth,),
         ],
       ),

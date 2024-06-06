@@ -15,7 +15,9 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/itemOpeningbalForCompany/item_opening_bal_for_company_req_model.dart';
+import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -66,6 +68,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
 
   bool isLoaderShow=false;
+  bool showButton=false;
 
   var editedItemIndex=null;
 
@@ -225,10 +228,41 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                         GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                          GestureDetector(
+                            onTap: () async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -423,42 +457,40 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                 ),
 
                                 singleRecord['Delete_Right']==true?Container(
-                                    width: parentWidth*.1,
-                                    // height: parentHeight*.1,
-                                    color: Colors.transparent,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 15,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: ()async{
-                                        if(Item_list[index]['Seq_No']!=0){
+                                  width: parentWidth*.1,
+                                  color: Colors.transparent,
+                                  child: DeleteDialogLayout(
+                                      callback: (response ) async{
+                                        if(response=="yes"){
+                                          showButton=true;
+                                          if(Item_list[index]['Seq_No']!=0){
                                           var deletedItem=   {
-                                            "Seq_No": Item_list[index]['Seq_No'],
-                                            "Item_ID": Item_list[index]['Item_ID']
+                                          "Seq_No": Item_list[index]['Seq_No'],
+                                          "Item_ID": Item_list[index]['Item_ID']
                                           };
                                           Deleted_list.add(deletedItem);
                                           setState(() {
-                                            Deleted_list=Deleted_list;
+                                          Deleted_list=Deleted_list;
                                           });
-                                        }
-                                        var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
-                                        print(contain);
-                                        if(contain>=0){
+                                          }
+                                          var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                          print(contain);
+                                          if(contain>=0){
                                           print("REMOVE");
                                           Inserted_list.remove(Inserted_list[contain]);
-                                        }
-                                        Item_list.remove(Item_list[index]);
-                                        setState(() {
+                                          }
+                                          Item_list.remove(Item_list[index]);
+                                          setState(() {
                                           Item_list=Item_list;
                                           Inserted_list=Inserted_list;
-                                        });
-                                        print(Inserted_list);
-                                        await calculateTotalAmt();
-                                      },
-                                    )
-                                ):Container(),
+                                          });
+                                          print(Inserted_list);
+                                          await calculateTotalAmt();
+                                          }; }
+                                      ),
+                                )
+
+    :Container(),
                               ],
                             )
                         ),
@@ -581,7 +613,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
               ],
             ),
           ),
-          singleRecord['Update_Right']==false&&singleRecord['Insert_Right']==false?Container():GestureDetector(
+          singleRecord['Update_Right']==false&&singleRecord['Insert_Right']==false||showButton==false?Container():GestureDetector(
             onTap: ()async {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -642,7 +674,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   AddOrEditItemOpeningBalForCompanyDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
-
+showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {

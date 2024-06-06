@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/order_invoice_req_model.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/order/add_or_edit_order.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -21,57 +22,65 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
-
 class CreateOrderInvoice extends StatefulWidget {
   final CreateOrderInvoiceInterface mListener;
-  final  dateNew;
-  final  Invoice_No;
+  final dateNew;
+  final Invoice_No;
   final editedItem;
   final come;
   final readOnly;
 
-  const CreateOrderInvoice({super.key, required this.dateNew, required this.mListener,required this.Invoice_No,this.editedItem,this.come, this.readOnly});
+  const CreateOrderInvoice(
+      {super.key,
+      required this.dateNew,
+      required this.mListener,
+      required this.Invoice_No,
+      this.editedItem,
+      this.come,
+      this.readOnly});
   @override
   _CreateOrderInvoiceState createState() => _CreateOrderInvoiceState();
 }
 
-class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTickerProviderStateMixin,AddOrEditOrderInterface {
-
+class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
+    with SingleTickerProviderStateMixin, AddOrEditOrderInterface {
   final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
 
-  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  DateTime invoiceDate =
+      DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   final _voucherNoFocus = FocusNode();
   final VoucherNoController = TextEditingController();
 
-  TextEditingController invoiceNo=TextEditingController();
+  TextEditingController invoiceNo = TextEditingController();
 
-  String selectedFranchiseeName="";
-  String selectedFranchiseeId="";
+  String selectedFranchiseeName = "";
+  String selectedFranchiseeId = "";
 
-  String selectedLedgerName="";
-  String selectedLedgerId="";
+  String selectedLedgerName = "";
+  String selectedLedgerId = "";
 
-  String TotalAmount="0.00";
+  String TotalAmount = "0.00";
 
-  List<dynamic> Item_list=[];
+  List<dynamic> Item_list = [];
 
-  List<dynamic> Updated_list=[];
+  List<dynamic> Updated_list = [];
 
-  List<dynamic> Inserted_list=[];
+  List<dynamic> Inserted_list = [];
 
-  List<dynamic> Deleted_list=[];
+  List<dynamic> Deleted_list = [];
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  var companyId="0";
-  bool isLoaderShow=false;
+  var companyId = "0";
+  bool isLoaderShow = false;
+  bool showButton = false;
 
-  var editedItemIndex=null;
+  var editedItemIndex = null;
 
   @override
   void initState() {
@@ -84,75 +93,70 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     setData();
   }
 
-  String finInvoiceNo="";
-  setData()async{
+  String finInvoiceNo = "";
+  setData() async {
     await getCompanyId();
-    invoiceDate=widget.dateNew;
-    if(widget.come=="edit"){
+    invoiceDate = widget.dateNew;
+    if (widget.come == "edit") {
       // await calculateTotalAmt();
 
       await getOrderInvoice(1);
       print("#######################3 ${widget.editedItem}");
       setState(() {
-
-        selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
-        selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+        selectedFranchiseeId = widget.editedItem['Vendor_ID'].toString();
+        selectedFranchiseeName = widget.editedItem['Vendor_Name'];
       });
     }
 
     print("#######################33 ${selectedFranchiseeName}");
-
   }
 
-  getCompanyId()async{
+  getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
     setState(() {
-      companyId=companyId1;
+      companyId = companyId1;
     });
   }
 
-  calculateTotalAmt()async{
+  calculateTotalAmt() async {
     setState(() {
-      TotalAmount="0.00";
-      roundoff="0.00";
+      TotalAmount = "0.00";
+      roundoff = "0.00";
     });
-    var total=0.00;
-    for(var item  in Item_list ){
-      total=total+item['Net_Amount'];
+    var total = 0.00;
+    for (var item in Item_list) {
+      total = total + item['Net_Amount'];
       print("item['Amount']");
     }
     // var amt = double.parse((total.toString()).substring((total.toString()).length - 3, (total.toString()).length)).toStringAsFixed(3);
     double amt = total % 1;
 
     print("%%%%%%%%%%%%%%%%%%%%% $amt");
-    if(double.parse((total.toString()).substring((total.toString()).length-3,(total.toString()).length))==0.0){
-      var total1=(total).floorToDouble();
+    if (double.parse((total.toString()).substring(
+            (total.toString()).length - 3, (total.toString()).length)) ==
+        0.0) {
+      var total1 = (total).floorToDouble();
       setState(() {
-        roundoff="0.00";
-        TotalAmount=total1.toStringAsFixed(2) ;
+        roundoff = "0.00";
+        TotalAmount = total1.toStringAsFixed(2);
       });
-    }
-    else {
+    } else {
       if ((amt) < 0.50) {
         print("Here");
-        var total1=(total).floorToDouble();
-        var roff=total1-(total);
+        var total1 = (total).floorToDouble();
+        var roff = total1 - (total);
         setState(() {
-          TotalAmount=total1.toStringAsFixed(2) ;
-          roundoff=roff.toStringAsFixed(2);
+          TotalAmount = total1.toStringAsFixed(2);
+          roundoff = roff.toStringAsFixed(2);
+        });
+      } else if ((amt) >= 0.50) {
+        setState(() {
+          roundoff = (1 - amt).toStringAsFixed(2);
+          TotalAmount = (total.ceilToDouble()).toStringAsFixed(2);
         });
       }
-      else if ((amt) >= 0.50){
-        setState(() {
-          roundoff=(1-amt).toStringAsFixed(2);
-          TotalAmount=(total.ceilToDouble()).toStringAsFixed(2) ;
-        });
-      }
-
     }
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -180,40 +184,70 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                 child: Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  ),
+                      borderRadius: BorderRadius.circular(25)),
                   color: Colors.transparent,
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
                     leadingWidth: 0,
                     automaticallyImplyLeading: false,
-                    title:  Container(
+                    title: Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: () async {
+                              if(showButton==true){
+                              await showGeneralDialog(
+                                  barrierColor: Colors.black.withOpacity(0.5),
+                                  transitionBuilder: (context, a1, a2, widget) {
+                                    final curvedValue = Curves.easeInOutBack
+                                            .transform(a1.value) -
+                                        1.0;
+                                  return Transform.scale(
+                                      scale: a1.value,
+                                      child: Opacity(
+                                        opacity: a1.value,
+                                        child: BackPageDialog(
+                                            onCallBack: (value) async {
+                                              if(value=="yes"){
+                                                setState(() {
+                                                  Navigator.pop(context);
+                                                });}
+                                        }),
+                                      ),
+                                    );
+                                  },
+                                  transitionDuration:
+                                      Duration(milliseconds: 200),
+                                  barrierDismissible: true,
+                                  barrierLabel: '',
+                                  context: context,
+                                  pageBuilder:
+                                      (context, animation2, animation1) {
+                                    return Container();
+                                  });
+                            }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("order_invoice")!,
-                                style: appbar_text_style,),
+                                ApplicationLocalizations.of(context)!
+                                    .translate("order_invoice")!,
+                                style: appbar_text_style,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)
-                    ),
+                        borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-
                   ),
                 ),
               ),
@@ -223,8 +257,9 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
               children: [
                 Expanded(
                   child: Container(
-                    // color: CommonColor.DASHBOARD_BACKGROUND,
-                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                      // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
                 Container(
                     decoration: BoxDecoration(
@@ -241,7 +276,6 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                         SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
               ],
             ),
           ),
@@ -256,98 +290,109 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TotalAmount!="0.00"? Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 10,bottom:10),
-          decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: $roundoff",style: item_regular_textStyle.copyWith(fontSize: 17),),
-              SizedBox(height: 4,),
-              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
-            ],
-          ),
-        ):Container(),
-        widget.readOnly==false?Container():GestureDetector(
-          onTap: () {
-    if(widget.readOnly==false){
-    Navigator.pop(context);
-    }else {
-      if (selectedFranchiseeId == "") {
-        var snackBar = SnackBar(content: Text("Select Party Name !"));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      else if (Item_list.length == 0) {
-        var snackBar = SnackBar(content: Text("Add atleast one Item!"));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId != " " &&
-          Item_list.length > 0) {
-        if (mounted) {
-          setState(() {
-            disableColor = true;
-          });
-        }
-        print(widget.Invoice_No);
-        if (widget.Invoice_No == null) {
-          print("#######");
-          callPostSaleInvoice();
-        }
-        else {
-          print("dfsdf");
-          updatecallPostSaleInvoice();
-        }
-      }
-    }
-          },
-          onDoubleTap: () {},
-          child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 50,
-            decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child:  Text(
-                    ApplicationLocalizations.of(context)!.translate("save")!,
-                    style: page_heading_textStyle,
+        TotalAmount != "0.00"
+            ? Container(
+                width: SizeConfig.halfscreenWidth,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                  // color:  CommonColor.DARK_BLUE,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${Item_list.length} Items",
+                      style:
+                          item_regular_textStyle.copyWith(color: Colors.grey),
+                    ),
+                    Text(
+                      "Round off: $roundoff",
+                      style: item_regular_textStyle.copyWith(fontSize: 17),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",
+                      style: item_heading_textStyle,
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+        widget.readOnly == false || showButton == false
+            ? Container()
+            : GestureDetector(
+                onTap: () {
+                  if (widget.readOnly == false) {
+                    Navigator.pop(context);
+                  } else {
+                    if (selectedFranchiseeId == "") {
+                      var snackBar =
+                          SnackBar(content: Text("Select Party Name !"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (Item_list.length == 0) {
+                      var snackBar =
+                          SnackBar(content: Text("Add atleast one Item!"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId !=
+                            " " &&
+                        Item_list.length > 0) {
+                      if (mounted) {
+                        setState(() {
+                          disableColor = true;
+                        });
+                      }
+                      print(widget.Invoice_No);
+                      if (widget.Invoice_No == null) {
+                        print("#######");
+                        callPostSaleInvoice();
+                      } else {
+                        print("dfsdf");
+                        updatecallPostSaleInvoice();
+                      }
+                    }
+                  }
+                },
+                onDoubleTap: () {},
+                child: Container(
+                  width: SizeConfig.halfscreenWidth,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: disableColor == true
+                        ? CommonColor.THEME_COLOR.withOpacity(.5)
+                        : CommonColor.THEME_COLOR,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: parentWidth * .005),
+                        child: Text(
+                          ApplicationLocalizations.of(context)!
+                              .translate("save")!,
+                          style: page_heading_textStyle,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        )
-       ,
+              ),
       ],
     );
   }
 
-
-  var roundoff="0.00";
-
-
-
+  var roundoff = "0.00";
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
       shrinkWrap: true,
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-
       children: [
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
@@ -357,53 +402,62 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
               child: Column(
                 children: [
                   InvoiceInfo(),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
-                      widget.readOnly==false?Container():
-                      GestureDetector(
-                          onTap: (){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            if(selectedFranchiseeId!="") {
-                              if (context != null) {
-                                editedItemIndex=null;
-                                goToAddOrEditItem(null);
-                              }
-                            }
-                            else{
-                              CommonWidget.errorDialog(context, "Select Party !");
-                            }
-                          },
-                          child: Container(
-                              width: 120,
-                              padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                              margin: EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                  color: CommonColor.THEME_COLOR,
-                                  border: Border.all(color: Colors.grey.withOpacity(0.5))
-                              ),
-                              child:  Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    ApplicationLocalizations.of(context)!.translate("add_item")!,
-                                    style: item_heading_textStyle,),
-                                  FaIcon(FontAwesomeIcons.plusCircle,
-                                    color: Colors.black87, size: 20,)
-                                ],
-                              )
-
-                          )
-                      )
+                      widget.readOnly == false
+                          ? Container()
+                          : GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                if (selectedFranchiseeId != "") {
+                                  if (context != null) {
+                                    editedItemIndex = null;
+                                    goToAddOrEditItem(null);
+                                  }
+                                } else {
+                                  CommonWidget.errorDialog(
+                                      context, "Select Party !");
+                                }
+                              },
+                              child: Container(
+                                  width: 120,
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 10, top: 5, bottom: 5),
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                      color: CommonColor.THEME_COLOR,
+                                      border: Border.all(
+                                          color: Colors.grey.withOpacity(0.5))),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        ApplicationLocalizations.of(context)!
+                                            .translate("add_item")!,
+                                        style: item_heading_textStyle,
+                                      ),
+                                      FaIcon(
+                                        FontAwesomeIcons.plusCircle,
+                                        color: Colors.black87,
+                                        size: 20,
+                                      )
+                                    ],
+                                  )))
                     ],
                   ),
-
-                  SizedBox(height: 10,),
-
-                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
-
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Item_list.length > 0
+                      ? get_Item_list_layout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)
+                      : Container()
                 ],
               ),
             ),
@@ -411,7 +465,6 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
         ),
       ],
     );
-
   }
 
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
@@ -420,68 +473,94 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
       physics: NeverScrollableScrollPhysics(),
       itemCount: Item_list.length,
       itemBuilder: (BuildContext context, int index) {
-        return  AnimationConfiguration.staggeredList(
+        return AnimationConfiguration.staggeredList(
           position: index,
-          duration:
-          const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           child: SlideAnimation(
             verticalOffset: -44.0,
             child: FadeInAnimation(
               delay: Duration(microseconds: 1500),
               child: GestureDetector(
-                onTap: (){
-
+                onTap: () {
                   setState(() {
-                    editedItemIndex=index;
+                    editedItemIndex = index;
                   });
-        if(widget.readOnly==false){
-      }else{
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  if (context != null) {
-                    goToAddOrEditItem(Item_list[index]);
-                  }}
+                  if (widget.readOnly == false) {
+                  } else {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (context != null) {
+                      goToAddOrEditItem(Item_list[index]);
+                    }
+                  }
                 },
                 child: Card(
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
-                            margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                            child:Row(
+                            margin: const EdgeInsets.only(
+                                top: 10, left: 10, right: 10, bottom: 10),
+                            child: Row(
                               children: [
                                 Container(
-                                    width: parentWidth*.1,
-                                    height:parentWidth*.1,
+                                    width: parentWidth * .1,
+                                    height: parentWidth * .1,
                                     decoration: BoxDecoration(
                                         color: Colors.purple.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(15)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     alignment: Alignment.center,
-                                    child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
-                                ),
-
+                                    child: Text(
+                                      "${index + 1}",
+                                      textAlign: TextAlign.center,
+                                      style: item_heading_textStyle.copyWith(
+                                          fontSize: 14),
+                                    )),
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.only(left: 10),
-                                    width: parentWidth*.70,
+                                    width: parentWidth * .70,
                                     //  height: parentHeight*.1,
-                                    child:  Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
-
-                                        SizedBox(height: 5,),
+                                        Text(
+                                          "${Item_list[index]['Item_Name']}",
+                                          style: item_heading_textStyle,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                                alignment: Alignment.centerRight,
-                                                child: Text("${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                  "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",
+                                                  overflow: TextOverflow.clip,
+                                                  style: item_heading_textStyle
+                                                      .copyWith(
+                                                          color:
+                                                              Colors.black87),
+                                                )),
                                             Container(
                                               alignment: Alignment.centerLeft,
-                                              child:
-                                              Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']).toString(),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              child: Text(
+                                                CommonWidget.getCurrencyFormat(
+                                                        Item_list[index]
+                                                            ['Net_Amount'])
+                                                    .toString(),
+                                                overflow: TextOverflow.clip,
+                                                style: item_heading_textStyle
+                                                    .copyWith(
+                                                        color: Colors.blue),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -489,47 +568,55 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
                                     ),
                                   ),
                                 ),
-                                widget.readOnly==false?Container():
-                                Container(
-                                    width: parentWidth*.1,
-                                    // height: parentHeight*.1,
-                                    color: Colors.transparent,
-                                    child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
+                                widget.readOnly == false
+                                    ? Container()
+                                    : Container(
+                                        width: parentWidth * .1,
+                                        // height: parentHeight*.1,
+                                        color: Colors.transparent,
+                                        child: DeleteDialogLayout(
+                                            callback: (response) async {
+                                          if (response == "yes") {
                                             print("##############$response");
-                                            if(Item_list[index]['Seq_No']!=null){
-                                              var deletedItem=   {
-                                                "Item_ID": Item_list[index]['Item_ID'],
-                                                "Seq_No": Item_list[index]['Seq_No'],
+                                            if (Item_list[index]['Seq_No'] !=
+                                                null) {
+                                              var deletedItem = {
+                                                "Item_ID": Item_list[index]
+                                                    ['Item_ID'],
+                                                "Seq_No": Item_list[index]
+                                                    ['Seq_No'],
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
-                                                Deleted_list=Deleted_list;
+                                                Deleted_list = Deleted_list;
+                                                showButton = true;
                                               });
                                             }
 
-                                            var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                            var contain =
+                                                Inserted_list.indexWhere(
+                                                    (element) =>
+                                                        element['Item_ID'] ==
+                                                        Item_list[index]
+                                                            ['Item_ID']);
                                             print(contain);
-                                            if(contain>=0){
+                                            if (contain >= 0) {
                                               print("REMOVE");
-                                              Inserted_list.remove(Inserted_list[contain]);
+                                              Inserted_list.remove(
+                                                  Inserted_list[contain]);
                                             }
                                             Item_list.remove(Item_list[index]);
                                             setState(() {
-                                              Item_list=Item_list;
-                                              Inserted_list=Inserted_list;
+                                              Item_list = Item_list;
+                                              Inserted_list = Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
-                                        })
-                                ),
+                                            await calculateTotalAmt();
+                                          }
+                                        })),
                               ],
-                            )
-
-                        ),
+                            )),
                       )
-
                     ],
                   ),
                 ),
@@ -547,7 +634,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
   }
 
   /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -560,18 +647,21 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
+              border: Border.all(color: Colors.grey.withOpacity(0.5))),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
+              Text(
+                "Add New Item",
+                style: item_heading_textStyle,
+              ),
+              FaIcon(
+                FontAwesomeIcons.plusCircle,
+                color: Colors.black87,
+                size: 20,
+              )
             ],
-          )
-      ),
+          )),
     );
   }
 
@@ -579,20 +669,18 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
           return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
               child: AddOrEditOrder(
                 mListener: this,
-                editproduct:product,
+                editproduct: product,
                 date: invoiceDate.toString(),
                 id: selectedFranchiseeId,
                 dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
-                exstingList:Item_list,
+                exstingList: Item_list,
               ),
             ),
           );
@@ -603,34 +691,44 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
         context: context,
         pageBuilder: (context, animation2, animation1) {
           throw Exception('No widget to return in pageBuilder');
-        }
-    );
+        });
   }
 
   Container InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
+      padding: EdgeInsets.only(
+        bottom: 10,
+        left: 5,
+        right: 5,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Colors.grey,width: 1),
+        border: Border.all(color: Colors.grey, width: 1),
       ),
       child: Column(
         children: [
-          widget.Invoice_No!=null? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  width:widget.Invoice_No!=null?SizeConfig.halfscreenWidth:(SizeConfig.screenWidth)*.32,
-                  child: getPurchaseDateLayout()),
-
-              SizedBox(width: 5,),
-              Expanded(
-                  child:getInvoiceNo(SizeConfig.screenHeight,SizeConfig.halfscreenWidth)),
-            ],
-          ):getPurchaseDateLayout(),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-         //getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          widget.Invoice_No != null
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                        width: widget.Invoice_No != null
+                            ? SizeConfig.halfscreenWidth
+                            : (SizeConfig.screenWidth) * .32,
+                        child: getPurchaseDateLayout()),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                        child: getInvoiceNo(SizeConfig.screenHeight,
+                            SizeConfig.halfscreenWidth)),
+                  ],
+                )
+              : getPurchaseDateLayout(),
+          getFranchiseeNameLayout(
+              SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+          //getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
       ),
@@ -638,14 +736,14 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
   }
 
   Widget getInvoiceNo(double parentHeight, double parentWidth) {
-    return   Container(
+    return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(left: 10),
-      width:parentWidth,
+      width: parentWidth,
       height: (SizeConfig.screenHeight) * .055,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color:CommonColor.WHITE_COLOR,
+        color: CommonColor.WHITE_COLOR,
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
@@ -655,16 +753,21 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
           ),
         ],
       ),
-      child: Text("Invoice No : $finInvoiceNo",style:text_field_textStyle ,),
+      child: Text(
+        "Invoice No : $finInvoiceNo",
+        style: text_field_textStyle,
+      ),
     );
-
   }
 
   /* widget for button layout */
   Widget getFieldTitleLayout(String title) {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.only(top: 10, bottom: 10,),
+      padding: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+      ),
       child: Text(
         "$title",
         style: page_heading_textStyle,
@@ -672,50 +775,47 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     );
   }
 
-
-
   /* Widget to get add Invoice date Layout */
-  Widget getPurchaseDateLayout(){
-    return
-      GetDateLayout(
+  Widget getPurchaseDateLayout() {
+    return GetDateLayout(
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("date")!,
+        callback: (date) {
+          setState(() {
+            showButton = true;
+            invoiceDate = date!;
+            Item_list = [];
+            Updated_list = [];
+            Deleted_list = [];
+            Inserted_list = [];
+          });
 
-          titleIndicator: false,
-          title: ApplicationLocalizations.of(context)!.translate("date")!,
-          callback: (date){
-            setState(() {
-              invoiceDate=date!;
-              Item_list=[];
-              Updated_list=[];
-              Deleted_list=[];
-              Inserted_list=[];
-            });
-
-            if(widget.Invoice_No!=null){
-              getOrderInvoice(1);
-            }
-          },
-          applicablefrom: invoiceDate
-      );
+          if (widget.Invoice_No != null) {
+            getOrderInvoice(1);
+          }
+        },
+        applicablefrom: invoiceDate);
   }
-
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: ApiConstants().ledgerWithoutImage+"?",
+      apiUrl: ApiConstants().ledgerWithoutImage + "?",
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
+      franchiseeName:
+          widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
-      callback: (name,id){
-        if(selectedLedgerId==id){
-          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+      callback: (name, id) {
+        if (selectedLedgerId == id) {
+          var snack =
+              SnackBar(content: Text("Sale Ledger and Party can not be same!"));
           ScaffoldMessenger.of(context).showSnackBar(snack);
-        }
-        else {
+        } else {
           setState(() {
+            showButton = true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString()!;
             // Item_list=[];
@@ -725,27 +825,25 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
           });
         }
         print("############3");
-        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+        print(selectedFranchiseeId + "\n" + selectedFranchiseeName);
       },
-
     );
-
   }
 
   /* Widget to get sale ledger Name Layout */
   Widget getSaleLedgerLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-        apiUrl: ApiConstants().ledgerWithoutImage+"?",
+        apiUrl: ApiConstants().ledgerWithoutImage + "?",
         titleIndicator: true,
         title: ApplicationLocalizations.of(context)!.translate("sale_ledger")!,
-        franchiseeName: widget.come=="edit"? selectedLedgerName:"",
+        franchiseeName: widget.come == "edit" ? selectedLedgerName : "",
         franchisee: widget.come,
-        callback: (name,id){
-          if(selectedFranchiseeId==id){
-            var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+        callback: (name, id) {
+          if (selectedFranchiseeId == id) {
+            var snack = SnackBar(
+                content: Text("Sale Ledger and Party can not be same!"));
             ScaffoldMessenger.of(context).showSnackBar(snack);
-          }
-          else {
+          } else {
             setState(() {
               selectedLedgerName = name!;
               selectedLedgerId = id!;
@@ -756,72 +854,67 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
         ledgerName: selectedLedgerName);
   }
 
-
-
   getOrderInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.Invoice_No}";
+        TokenRequestModel model =
+            TokenRequestModel(token: sessionToken, page: page.toString());
+        String apiUrl =
+            "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.Invoice_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              print(data);
-              setState(() {
+            onSuccess: (data) {
+          print(data);
+          setState(() {
+            if (data != null) {
+              List<dynamic> _arrList = [];
+              _arrList = (data['itemDetails']);
 
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  _arrList=(data['itemDetails']);
-
-                  setState(() {
-                    Item_list=_arrList;
-                    selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
-                    finInvoiceNo=data['voucherDetails']['Fin_Order_No'];
-                    selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
-                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
-                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
-
-
-                  });
-                  // calculateTotalAmt();
-                }
-                isLoaderShow=false;
-              });
-                         print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
               setState(() {
-                isLoaderShow=false;
+                Item_list = _arrList;
+                selectedFranchiseeName = data['voucherDetails']['Vendor_Name'];
+                finInvoiceNo = data['voucherDetails']['Fin_Order_No'];
+                selectedFranchiseeId =
+                    data['voucherDetails']['Vendor_ID'].toString();
+                TotalAmount =
+                    data['voucherDetails']['Total_Amount'].toStringAsFixed(2);
+                roundoff =
+                    data['voucherDetails']['Round_Off'].toStringAsFixed(2);
               });
-              CommonWidget.errorDialog(context, error.toString());
-              },
-            onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
+              // calculateTotalAmt();
+            }
+            isLoaderShow = false;
+          });
+          print("  LedgerLedger  $data ");
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          print("Here2=> $e");
+          setState(() {
+            isLoaderShow = false;
+          });
+          var val = CommonWidget.errorDialog(context, e);
+          print("YES");
+          if (val == "yes") {
+            print("Retry");
+          }
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+        });
       });
-    }
-    else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -834,66 +927,61 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
   callPostSaleInvoice() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
+    String baseurl = await AppPreferences.getDomainLink();
 
     // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    double TotalAmountInt = double.parse(TotalAmount).ceilToDouble();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if(netStatus==InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
         PostOrderInvoiceReq model = PostOrderInvoiceReq(
-          //  saleLedger:selectedLedgerId ,
-            vendorID:selectedFranchiseeId ,
-            companyID: companyId ,
+            //  saleLedger:selectedLedgerId ,
+            vendorID: selectedFranchiseeId,
+            companyID: companyId,
             voucherName: "Sale Order",
-            roundOff:double.parse(roundoff) ,
-            totalAmount:TotalAmountInt,
+            roundOff: double.parse(roundoff),
+            totalAmount: TotalAmountInt,
             date: DateFormat('yyyy-MM-dd').format(invoiceDate),
             creator: creatorName,
             creatorMachine: deviceId,
             iNSERT: Inserted_list.toList(),
-            remark: "Inserted"
-        );
+            remark: "Inserted");
 
-        String apiUrl =baseurl + ApiConstants().saleOrder;
+        String apiUrl = baseurl + ApiConstants().saleOrder;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              print("  ITEM  $data ");
-              setState(() {
-                isLoaderShow=true;
-                Item_list=[];
-                Inserted_list=[];
-                Updated_list=[];
-                Deleted_list=[];
-              });
-              widget.mListener.backToList(invoiceDate);
-
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-
-      }); }
-    else{
+            onSuccess: (data) async {
+          print("  ITEM  $data ");
+          setState(() {
+            isLoaderShow = true;
+            Item_list = [];
+            Inserted_list = [];
+            Updated_list = [];
+            Deleted_list = [];
+          });
+          widget.mListener.backToList(invoiceDate);
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, e.toString());
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
+      });
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -903,75 +991,73 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
     }
   }
 
-
   updatecallPostSaleInvoice() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
+    String baseurl = await AppPreferences.getDomainLink();
+    var matchDate = DateFormat('yyyy-MM-dd')
+        .format(invoiceDate)
+        .compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
     print("newOne    $matchDate");
-    double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
+    double TotalAmountInt = double.parse(TotalAmount).ceilToDouble();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if(netStatus==InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
         PostOrderInvoiceReq model = PostOrderInvoiceReq(
-         //   saleLedger:selectedLedgerId ,
-            vendorID:selectedFranchiseeId ,
-            Order_No:widget.Invoice_No.toString() ,
-            companyID: companyId ,
+            //   saleLedger:selectedLedgerId ,
+            vendorID: selectedFranchiseeId,
+            Order_No: widget.Invoice_No.toString(),
+            companyID: companyId,
             voucherName: "Sale Order",
-            roundOff:double.parse(roundoff),
-            totalAmount:TotalAmountInt,
-            dateNew:matchDate !=0?DateFormat('yyyy-MM-dd').format(invoiceDate):null,
+            roundOff: double.parse(roundoff),
+            totalAmount: TotalAmountInt,
+            dateNew: matchDate != 0
+                ? DateFormat('yyyy-MM-dd').format(invoiceDate)
+                : null,
             date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
             modifier: creatorName,
             modifierMachine: deviceId,
             iNSERT: Inserted_list.toList(),
             dELETE: Deleted_list.toList(),
             uPDATE: Updated_list.toList(),
-            remark:"Modified"
-        );
+            remark: "Modified");
 
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().saleOrder;
+        String apiUrl = baseurl + ApiConstants().saleOrder;
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              print("  ITEM  $data ");
-              setState(() {
-                isLoaderShow=true;
-                Item_list=[];
-                Inserted_list=[];
-                Updated_list=[];
-                Deleted_list=[];
-              });
-              widget.mListener.backToList(invoiceDate);
-
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-
-      }); }
-    else{
+            onSuccess: (data) async {
+          print("  ITEM  $data ");
+          setState(() {
+            isLoaderShow = true;
+            Item_list = [];
+            Inserted_list = [];
+            Updated_list = [];
+            Deleted_list = [];
+          });
+          widget.mListener.backToList(invoiceDate);
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, e.toString());
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
+      });
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -982,40 +1068,41 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
   }
 
   @override
-  AddOrEditOrderDetail(item) async{
+  AddOrEditOrderDetail(item) async {
     // TODO: implement AddOrEditOrderDetail
-    var itemLlist=Item_list;
-
-    if(editedItemIndex!=null){
-      var index=editedItemIndex;
+    var itemLlist = Item_list;
+    showButton = true;
+    if (editedItemIndex != null) {
+      var index = editedItemIndex;
       setState(() {
-        Item_list[index]['Item_Name']=item['Item_Name'];
-        Item_list[index]['Item_ID']=item['New_Item_ID'];
-        Item_list[index]['Quantity']=item['Quantity'];
-        Item_list[index]['Unit']=item['Unit'];
-        Item_list[index]['Rate']=item['Rate'];
-        Item_list[index]['Amount']=item['Amount'];
-        Item_list[index]['Disc_Percent']=item['Disc_Percent'];
-        Item_list[index]['Disc_Amount']=item['Disc_Amount'];
-        Item_list[index]['Taxable_Amount']=item['Taxable_Amount'];
-        Item_list[index]['GST_Rate']=item['GST_Rate'];
-        Item_list[index]['GST_Amount']=item['GST_Amount'];
-        Item_list[index]['Net_Rate']=item['Net_Rate'];
-        Item_list[index]['Net_Amount']=item['Net_Amount'];
+        Item_list[index]['Item_Name'] = item['Item_Name'];
+        Item_list[index]['Item_ID'] = item['New_Item_ID'];
+        Item_list[index]['Quantity'] = item['Quantity'];
+        Item_list[index]['Unit'] = item['Unit'];
+        Item_list[index]['Rate'] = item['Rate'];
+        Item_list[index]['Amount'] = item['Amount'];
+        Item_list[index]['Disc_Percent'] = item['Disc_Percent'];
+        Item_list[index]['Disc_Amount'] = item['Disc_Amount'];
+        Item_list[index]['Taxable_Amount'] = item['Taxable_Amount'];
+        Item_list[index]['GST_Rate'] = item['GST_Rate'];
+        Item_list[index]['GST_Amount'] = item['GST_Amount'];
+        Item_list[index]['Net_Rate'] = item['Net_Rate'];
+        Item_list[index]['Net_Amount'] = item['Net_Amount'];
       });
       print("#############3");
       print(item['Seq_No']);
-      if(item['New_Item_ID']!=null){
-        Item_list[index]['New_Item_ID']=item['New_Item_ID'];
+      if (item['New_Item_ID'] != null) {
+        Item_list[index]['New_Item_ID'] = item['New_Item_ID'];
       }
-      if(item['Seq_No']!=null) {
-        var contain = Updated_list.indexWhere((element) => element['Item_ID']== item['Item_ID']);
+      if (item['Seq_No'] != null) {
+        var contain = Updated_list.indexWhere(
+            (element) => element['Item_ID'] == item['Item_ID']);
         print(contain);
-        if(contain>=0){
+        if (contain >= 0) {
           print("REMOVE");
           Updated_list.remove(Updated_list[contain]);
           Updated_list.add(item);
-        }else{
+        } else {
           Updated_list.add(item);
         }
         setState(() {
@@ -1023,13 +1110,11 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
           print("hvhfvbfbv   $Updated_list");
         });
       }
-    }
-    else
-    {
+    } else {
       itemLlist.add(item);
       Inserted_list.add(item);
       setState(() {
-        Inserted_list=Inserted_list;
+        Inserted_list = Inserted_list;
       });
       print(itemLlist);
 
@@ -1038,15 +1123,13 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice> with SingleTick
       });
     }
     setState(() {
-      editedItemIndex=null;
+      editedItemIndex = null;
     });
     await calculateTotalAmt();
     print("List");
     print(Inserted_list);
     print(Updated_list);
-
   }
-
 }
 
 abstract class CreateOrderInvoiceInterface {

@@ -13,6 +13,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -84,6 +85,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   int page = 1;
   bool isPagination = true;
   bool isApiCall = false;
+  bool showButton = false;
 
 
   _scrollListener() {
@@ -268,9 +270,40 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: () async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -343,7 +376,8 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 ],
           ),
         ),
-        singleRecord['Insert_Right']==true || singleRecord['Update_Right']==true ?  GestureDetector(
+        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false ?  Container():
+        GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -397,7 +431,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               ],
             ),
           ),
-        ):Container(),
+        ),
       ],
     );
   }
@@ -566,6 +600,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                         color: Colors.redAccent,
                                       ),
                                       onPressed: ()async{
+                                        showButton=true;
                                         if(Item_list[index]['ID']!=null){
                                           var deletedItem=   {
                                             "ID": Item_list[index]['ID'],
@@ -640,6 +675,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 // }
                 // else {
                   setState(() {
+                    showButton=true;
                     selectedCopyFranchiseeName=name!;
                     selectedFranchiseeID=id!;
 
@@ -701,6 +737,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         title:      ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
+            showButton=true;
             invoiceDate=name!;
           });
           if(selectedFranchiseeID!=null){
@@ -729,6 +766,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         callback: (name,id){
 
           setState(() {
+            showButton=true;
             selectedProductCategory=name!;
             selectedCategoryID=id;
           });
@@ -754,7 +792,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   addProductPurchaseRateDetail( dynamic item)async {
     // TODO: implement addProductDetail
     var itemLlist=Item_list;
-
+showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {

@@ -14,6 +14,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/itemOpeningbalForCompany/item_opening_bal_for_company_req_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -72,6 +73,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
 
   bool isLoaderShow=false;
+  bool showButton=false;
 
   var editedItemIndex=null;
 
@@ -242,9 +244,40 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
                      GestureDetector(
-                       onTap: () {
-                         Navigator.pop(context);
-                       },
+                       onTap: () async {
+                         if(showButton==true){
+                           await showGeneralDialog(
+                               barrierColor: Colors.black.withOpacity(0.5),
+                               transitionBuilder: (context, a1, a2, widget) {
+                                 final curvedValue = Curves.easeInOutBack
+                                     .transform(a1.value) -
+                                     1.0;
+                                 return Transform.scale(
+                                   scale: a1.value,
+                                   child: Opacity(
+                                     opacity: a1.value,
+                                     child: BackPageDialog(
+                                         onCallBack: (value) async {
+                                           if(value=="yes"){
+                                             setState(() {
+                                               Navigator.pop(context);
+                                             });}
+                                         }),
+                                   ),
+                                 );
+                               },
+                               transitionDuration:
+                               Duration(milliseconds: 200),
+                               barrierDismissible: true,
+                               barrierLabel: '',
+                               context: context,
+                               pageBuilder:
+                                   (context, animation2, animation1) {
+                                 return Container();
+                               });
+                         }else{
+                           Navigator.pop(context);
+                         }},
                        child: FaIcon(Icons.arrow_back),
                      ),
                      Expanded(
@@ -451,6 +484,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                         color: Colors.redAccent,
                                       ),
                                       onPressed: ()async{
+                                        showButton=true;
                                         if(Item_list[index]['Seq_No']!=0){
                                           var deletedItem=   {
                                             "Seq_No": Item_list[index]['Seq_No'],
@@ -518,6 +552,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           }
           else {
             setState(() {
+              showButton=true;
               selectedFranchiseeName = name!;
               selectedFranchiseeID = id;
               Item_list = [];
@@ -674,7 +709,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               ],
             ),
           ),
-          widget.readOnly==false?Container():  GestureDetector(
+          widget.readOnly==false||showButton==false?Container():  GestureDetector(
             onTap: ()async {
               // if(widget.comeFrom=="clientInfoList"){
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -739,7 +774,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   AddOrEditItemOpeningBalDetail(item)async {
     // TODO: implement AddOrEditItemSellDetail
     var itemLlist=Item_list;
-
+showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {

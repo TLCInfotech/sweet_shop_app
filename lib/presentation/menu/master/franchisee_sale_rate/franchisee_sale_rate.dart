@@ -10,6 +10,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -72,6 +73,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate> with AddProduct
 
   List<dynamic> Deleted_list=[];
   bool isLoaderShow=false;
+  bool showButton=false;
   @override
   void initState() {
     // TODO: implement initState
@@ -164,9 +166,40 @@ String companyId="";
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: () async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -240,7 +273,8 @@ String companyId="";
                 ],
           ),
         ),
-        singleRecord['Insert_Right']==true || singleRecord['Update_Right']==true ? GestureDetector(
+        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false ?  Container():
+        GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
             //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
@@ -294,7 +328,7 @@ String companyId="";
               ],
             ),
           ),
-        ):Container(),
+        ),
       ],
     );
   }
@@ -465,6 +499,7 @@ String companyId="";
                                     child:DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
+                                          showButton=true;
                                           print("##############$response");
                                           if(Item_list[index]['ID']!=0){
                                             var deletedItem=   {
@@ -539,6 +574,7 @@ String companyId="";
           // }
           // else {
             setState(() {
+              showButton=true;
               selectedCopyFranchiseeName=name!;
               selectedCopyFranchiseeId=id!;
 
@@ -616,6 +652,7 @@ String companyId="";
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
+            showButton=true;
             applicablefrom=name!;
           });
           if(selectedCopyFranchiseeId!=""){
@@ -642,6 +679,7 @@ String companyId="";
         callback: (name,id){
 
             setState(() {
+              showButton=true;
               selectedProductCategory=name!;
               //selectedCopyFranchiseeId=id!;
             });

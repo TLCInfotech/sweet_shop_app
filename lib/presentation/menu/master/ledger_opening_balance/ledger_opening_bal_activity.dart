@@ -20,7 +20,6 @@ import '../../../../data/domain/ledger_opening_bal/item_opening_bal_request_mode
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'add_or_edit_ledger_opening_bal.dart';
-import 'create_ledger_opening_bal_activity.dart';
 
 class LedgerOpeningBal extends StatefulWidget {
   final  formId;
@@ -31,7 +30,7 @@ class LedgerOpeningBal extends StatefulWidget {
   State<LedgerOpeningBal> createState() => _ItemOpeningBalState();
 }
 
-class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpeningBalInterface, CreateItemOpeningBalInterface{
+class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpeningBalInterface{
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isApiCall = false;

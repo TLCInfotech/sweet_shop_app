@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -71,6 +72,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
 
  var companyId="0";
   bool isLoaderShow=false;
+  bool showButton=false;
 
   var editedItemIndex=null;
 
@@ -200,9 +202,40 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: () async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -280,7 +313,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             ],
           ),
         ):Container(),
-        widget.readOnly==false?Container(): GestureDetector(
+        widget.readOnly==false||showButton==false?Container(): GestureDetector(
           onTap: () {
             if(widget.readOnly==false){
               Navigator.pop(context);
@@ -511,6 +544,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
+                                                showButton=true;
                                                 Deleted_list=Deleted_list;
                                               });
                                             }
@@ -637,7 +671,6 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           ):getPurchaseDateLayout(),
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-          // SizedBox(width: 5,),
         ],
       ),
     );
@@ -684,11 +717,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   Widget getPurchaseDateLayout(){
     return
       GetDateLayout(
-
           titleIndicator: false,
           title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
+              showButton=true;
               invoiceDate=date!;
               Item_list=[];
               Updated_list=[];
@@ -722,6 +755,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
           }
           else {
             setState(() {
+              showButton=true;
               selectedFranchiseeName = name!;
               selectedFranchiseeId = id.toString()!;
               // Item_list=[];
@@ -754,6 +788,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
             }
             else {
               setState(() {
+                showButton=true;
                 selectedLedgerName = name!;
                 selectedLedgerId = id!;
                 // Item_list=[];
@@ -771,7 +806,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   AddOrEditItemSellDetail(item)async {
     // TODO: implement AddOrEditItemDetail
       var itemLlist=Item_list;
-
+     showButton=true;
       if(editedItemIndex!=null){
         var index=editedItemIndex;
       setState(() {

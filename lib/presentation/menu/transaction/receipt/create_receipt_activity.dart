@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/add_edit_ledger.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -63,6 +64,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 
   List<dynamic> Deleted_list=[];
 bool isLoaderShow=false;
+bool showButton=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 /*  List<dynamic> Item_list=[
     {
@@ -171,9 +173,40 @@ bool isLoaderShow=false;
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                            onTap: () async {
+                              if(showButton==true){
+                                await showGeneralDialog(
+                                    barrierColor: Colors.black.withOpacity(0.5),
+                                    transitionBuilder: (context, a1, a2, widget) {
+                                      final curvedValue = Curves.easeInOutBack
+                                          .transform(a1.value) -
+                                          1.0;
+                                      return Transform.scale(
+                                        scale: a1.value,
+                                        child: Opacity(
+                                          opacity: a1.value,
+                                          child: BackPageDialog(
+                                              onCallBack: (value) async {
+                                                if(value=="yes"){
+                                                  setState(() {
+                                                    Navigator.pop(context);
+                                                  });}
+                                              }),
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                    Duration(milliseconds: 200),
+                                    barrierDismissible: true,
+                                    barrierLabel: '',
+                                    context: context,
+                                    pageBuilder:
+                                        (context, animation2, animation1) {
+                                      return Container();
+                                    });
+                              }else{
+                                Navigator.pop(context);
+                              }},
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(
@@ -384,6 +417,7 @@ bool isLoaderShow=false;
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
+                                                showButton=true;
                                                 Deleted_list=Deleted_list;
                                               });
                                             }
@@ -498,6 +532,7 @@ bool isLoaderShow=false;
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            showButton=true;
             invoiceDate=date!;
           });
         },
@@ -546,6 +581,7 @@ bool isLoaderShow=false;
       title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name,id){
         setState(() {
+          showButton=true;
           selectedbankCashLedger=name!;
           selectedBankLedgerID=id!;
           // Item_list=[];
@@ -660,7 +696,7 @@ bool isLoaderShow=false;
             ],
           ),
         ):Container(),
-        widget.readOnly==false?Container():   GestureDetector(
+        widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
             if(selectedBankLedgerID==null){
               var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
@@ -722,7 +758,7 @@ bool isLoaderShow=false;
     // TODO: implement AddOrEditItemDetail
 
     var itemLlist=Item_list;
-
+showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
