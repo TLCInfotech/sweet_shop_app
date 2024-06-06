@@ -423,7 +423,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                     ),
                                   ),
                                 ),
-                                widget.readOnly==false||showButton==false?Container():
+                                widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
                                     // height: parentHeight*.1,
@@ -603,7 +603,7 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
             ],
           ),
         ),
-        widget.readOnly==false?Container():    GestureDetector(
+        widget.readOnly==false || showButton==false ?Container():    GestureDetector(
           onTap: () {
               if(selectedBankLedgerID==null){
               var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));

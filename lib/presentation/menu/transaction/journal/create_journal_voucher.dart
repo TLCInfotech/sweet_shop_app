@@ -435,8 +435,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                               var deletedItem=   {
                                                 "Ledger_ID": Ledger_list[index]['Ledger_ID'],
                                                 "Seq_No": Ledger_list[index]['Seq_No'],
-                                                "Amnt_Type":Ledger_list[index]['Amnt_Type'],
-                                                "Date":DateFormat('yyyy-MM-dd').format(invoiceDate)//"2024-03-26"
+                                                // "Amnt_Type":Ledger_list[index]['Amnt_Type'],
+                                                // "Date":DateFormat('yyyy-MM-dd').format(invoiceDate)//"2024-03-26"
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
@@ -596,8 +596,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Text("${Ledger_list.length} Ledgers",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Total Cr : ${CommonWidget.getCurrencyFormat(double.parse(TotalCr))} CR",style: item_heading_textStyle,),
-              Text("Total Dr : ${CommonWidget.getCurrencyFormat(double.parse(TotalDr))} DR",style: item_heading_textStyle,),
+              Text("Cr: ${CommonWidget.getCurrencyFormat(double.parse(TotalCr))}",style: item_heading_textStyle,),
+              Text("Dr: ${CommonWidget.getCurrencyFormat(double.parse(TotalDr))}",style: item_heading_textStyle,),
             ],
           ):Container(),
         ),

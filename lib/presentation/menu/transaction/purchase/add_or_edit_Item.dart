@@ -926,6 +926,13 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
         amount.clear();
       });
     }
+    if(rate.text==""){
+      setState(() {
+        taxableAmt.clear();
+        netRate.clear();
+        netAmount.clear();
+      });
+    }
     if(amount.text==""){
       setState(() {
         rate.text=double.parse(previousRate).toStringAsFixed(2);

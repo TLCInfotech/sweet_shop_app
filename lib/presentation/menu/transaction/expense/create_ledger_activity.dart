@@ -123,7 +123,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
     await getCompanyId();
     invoiceDate=widget.dateNew;
     if(widget.come=="edit"){
-      await calculateTotalAmt();
+      // await calculateTotalAmt();
 
       await getExpInvoice(1);
       print("#######################3 ${widget.editedItem}");
@@ -132,7 +132,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       });
     }
 
-    print("#######################33 ${selectedFranchiseeName}");
+    print("#######################33 ${widget.readOnly}");
 
   }
 
@@ -575,7 +575,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                     ),
                                   ),
                                 ),
-                                widget.readOnly==false?Container():
+                                widget.readOnly==false  ?Container():
                                 Container(
                                     width: parentWidth*.1,
                                     // height: parentHeight*.1,
@@ -591,6 +591,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                               };
                                               Deleted_list.add(deletedItem);
                                               setState(() {
+                                                showButton=true;
                                                 Deleted_list=Deleted_list;
                                               });
                                             }
