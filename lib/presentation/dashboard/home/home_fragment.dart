@@ -290,6 +290,10 @@ class _HomeFragmentState extends State<HomeFragment> {
 
                      itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
                      FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+
+                     profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
+                     additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
+                     additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
                    });
 
                 }else{
@@ -520,7 +524,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       children: [
                           GestureDetector(
                             onTap: (){
-                            },child: getThreeLayout("Additional Profit","${CommonWidget.getCurrencyFormat(100000000)}",Color(0xFF00A36C))),
+                            },child: getThreeLayout(additionalProfitLoss>=0?"Additional Profit ":"Additional Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
                       GestureDetector(
                             onTap: (){
@@ -528,7 +532,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               //   formId: "AT009",
                               //   arrData: dataArr,
                               // )));
-                            },child: getThreeLayout( "Additional Profit Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",Colors.orange))
+                            },child: getThreeLayout(additionalProfitLossShare>=0? "Additional Profit Share":"Additional Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                       ],
                     ),
                      SizedBox(height: 10,),
@@ -730,7 +734,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profit>=0?"Profit ":"Loss",
+                        profit>0?"Profit ":"Loss",
                         style: item_heading_textStyle.copyWith(
                             color:Colors.white,
                             fontSize: 20,
@@ -756,7 +760,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profit>=0?"Profit Share":"Loss Share",
+                        profitLossShare>0?"Profit Share":"Loss Share",
                         style: item_heading_textStyle.copyWith(
                             color:Colors.white,
                             fontSize: 20,
@@ -770,7 +774,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                 ),
                 Padding(
                   padding:  EdgeInsets.only(left: 10,right: 10),
-                  child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(10000000)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                  child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
                 )
                   ],
             )
