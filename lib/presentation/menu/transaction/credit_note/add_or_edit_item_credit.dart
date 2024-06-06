@@ -58,20 +58,26 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode();
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController discount = TextEditingController();
   FocusNode discountFocus = FocusNode();
 
   TextEditingController discountAmt = TextEditingController();
+  FocusNode discountAmtFocus = FocusNode();
 
   TextEditingController taxableAmt = TextEditingController();
 
@@ -241,8 +247,8 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
                             style: page_heading_textStyle),
                       ),
                     ),
-                    getFieldTitleLayout(ApplicationLocalizations.of(context)!
-                        .translate("item_name")!),
+                    // getFieldTitleLayout(ApplicationLocalizations.of(context)!
+                    //     .translate("item_name")!),
                     getAddSearchLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth),
                     getItemQuantityLayout(
@@ -282,11 +288,14 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
   //franchisee name
   Widget getAddSearchLayout(double parentHeight, double parentWidth) {
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
+      focusnext: quantityFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -310,6 +319,8 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
           });
         // }
         await calculateRates();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
       },
     );
    /* return SearchableDropdownWithObject(
@@ -343,17 +354,19 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
   /* widget for item quantity layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _quantityKey,
         suffix: Text("${unit.text}"),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
         readOnly: widget.readOnly,
         controller: quantity,
-        focuscontroller: null,
-        focusnext: null,
+        focuscontroller: quantityFocus,
+        focusnext: rateFocus,
         title: ApplicationLocalizations.of(context)!.translate("quantity")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -367,6 +380,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
             discountamtedited=false;
           });
           await calculateRates();
+          _quantityKey.currentState!.validate();
         },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -425,17 +439,19 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          mandatory: true,
+          txtkey: _rateKey,
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: rate,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: rateFocus,
+          focusnext: amountFocus,
           title: ApplicationLocalizations.of(context)!.translate("rate")!,
           callbackOnchage: (value) async {
 
@@ -451,6 +467,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
               discountamtedited=false;
             });
             await calculateRates();
+            _rateKey.currentState!.validate();
           },
           textInput: TextInputType.numberWithOptions(
               decimal: true
@@ -467,14 +484,14 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.QUANTITY;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: amount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: amountFocus,
+          focusnext: discountFocus,
           title: ApplicationLocalizations.of(context)!.translate("amount")!,
           callbackOnchage: (value) async {
             print("########### $value");
@@ -513,14 +530,14 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
           parentWidth: (parentWidth),
           validation: (value) {
             if (value!.isEmpty) {
-              return StringEn.ENTER + StringEn.DICOUNT;
+              return "";
             }
             return null;
           },
           readOnly: widget.readOnly,
           controller: discount,
-          focuscontroller: null,
-          focusnext: null,
+          focuscontroller: discountFocus,
+          focusnext: discountAmtFocus,
           title:
           ApplicationLocalizations.of(context)!.translate("disc_percent")!,
           callbackOnchage: (value) async {
@@ -545,14 +562,14 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: discountAmt,
-            focuscontroller: null,
-            focusnext: null,
+            focuscontroller: discountAmtFocus,
+            focusnext: gstFocus,
             title:
             ApplicationLocalizations.of(context)!.translate("disc_amount")!,
             callbackOnchage: (value) async {
@@ -600,13 +617,13 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
             parentWidth: (parentWidth),
             validation: (value) {
               if (value!.isEmpty) {
-                return StringEn.ENTER + StringEn.DICOUNT;
+                return "";
               }
               return null;
             },
             readOnly: widget.readOnly,
             controller: gst,
-            focuscontroller: null,
+            focuscontroller: gstFocus,
             focusnext: null,
             title:
             ApplicationLocalizations.of(context)!.translate("gst_percent")!,
@@ -705,10 +722,10 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
         ),
         GestureDetector(
           onTap: () {
-            if (selectedItemID != null &&
-                amount.text != "" &&
-                quantity.text != "" &&
-                rate.text != "") {
+            bool v=_itemKey.currentState!.validate();
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if ( selectedItemID!=null&& v && q && r){
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -757,9 +774,6 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
                 widget.mListener.AddOrEditItemCreditNoteDetail(item);
                 Navigator.pop(context);
               }
-            } else {
-              CommonWidget.errorDialog(context,
-                  "Please add required fields item,rate,quantity,amount !");
             }
           },
           onDoubleTap: () {},
@@ -907,6 +921,13 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
     if (quantity.text == "" || rate.text == "") {
       setState(() {
         amount.clear();
+      });
+    }
+    if(rate.text==""){
+      setState(() {
+        taxableAmt.clear();
+        netRate.clear();
+        netAmount.clear();
       });
     }
     if(amount.text==""){

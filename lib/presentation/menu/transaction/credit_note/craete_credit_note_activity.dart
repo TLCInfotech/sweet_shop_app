@@ -86,7 +86,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
       duration: const Duration(milliseconds: 500),
     );
     print("kjjhfjdfjdgj  ${widget.readOnly}");
-    calculateTotalAmt();
+    // calculateTotalAmt();
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
       getCreditNote(1);
@@ -891,9 +891,11 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                     selectedFranchiseeId=data['voucherDetails']['Vendor_ID'].toString();
                     selectedLedgerName=data['voucherDetails']['Ledger_Name'];
                     selectedLedgerId=data['voucherDetails']['Ledger_ID'].toString();
+                    TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
+                    roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
 
                   });
-                  calculateTotalAmt();
+                  // calculateTotalAmt();
                 }
 
               });

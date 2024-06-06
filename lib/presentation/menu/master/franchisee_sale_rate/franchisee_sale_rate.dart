@@ -258,7 +258,7 @@ String companyId="";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Container(
+        Item_list.length==0?Container():Container(
           width: SizeConfig.halfscreenWidth,
           padding: EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
@@ -273,7 +273,7 @@ String companyId="";
                 ],
           ),
         ),
-        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false ?  Container():
+        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false || Item_list.length==0?  Container():
         GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){

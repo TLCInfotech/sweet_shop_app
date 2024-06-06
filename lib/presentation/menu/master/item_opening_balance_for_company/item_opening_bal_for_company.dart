@@ -596,7 +596,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
+          Item_list.length==0?Container():Container(
             width: SizeConfig.halfscreenWidth,
             padding: EdgeInsets.only(top: 10,bottom:10),
             decoration: BoxDecoration(

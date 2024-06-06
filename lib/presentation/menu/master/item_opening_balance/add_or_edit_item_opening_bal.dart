@@ -55,15 +55,20 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode() ;
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode() ;
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController batchno = TextEditingController();
 
@@ -213,7 +218,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                           ),
                         ),
                       ),
-                      getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
+                      // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
 
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
@@ -240,16 +245,18 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   /* widget for product rate layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _quantityKey,
       suffix: Text("${unit.text}"),
       validation: (value) {
         if (value!.isEmpty) {
-          return  ApplicationLocalizations.of(context)!.translate("enter")! + " "+ApplicationLocalizations.of(context)!.translate("quantity")!;
+          return "";
         }
         return null;
       },
-      controller: quantity,
-      focuscontroller: null,
-      focusnext: null,
+        controller: quantity,
+        focuscontroller: quantityFocus,
+        focusnext: rateFocus,
       readOnly: widget.readOnly,
       title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
@@ -260,6 +267,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
           quantity.text = value;
         });
         await calculateRates();
+        _quantityKey.currentState!.validate();
       },
       textInput: TextInputType.numberWithOptions(decimal: true),
       maxlines: 1,
@@ -303,17 +311,18 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          mandatory: true,
+          txtkey: _rateKey,
         parentWidth: (parentWidth),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
-        controller: rate,
-        focuscontroller: null,
-        readOnly: widget.readOnly,
-        focusnext: null,
+          controller: rate,
+          focuscontroller: rateFocus,
+          focusnext: amountFocus,
         title: ApplicationLocalizations.of(context)!.translate("rate")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -324,6 +333,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
             amountedited=false;
           });
           await calculateRates();
+          _rateKey.currentState!.validate();
         },
         textInput: TextInputType.numberWithOptions(decimal: true),
         maxlines: 1,
@@ -338,14 +348,15 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         parentWidth: (parentWidth),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
-        controller: amount,
+          controller: amount,
+          focuscontroller: amountFocus,
+          focusnext: null,
         readOnly: widget.readOnly,
-        focuscontroller: null,
-        focusnext: null,
+
         title: ApplicationLocalizations.of(context)!.translate("amount")!,
         callbackOnchage: (value) async {
           print("########### $value");
@@ -393,11 +404,14 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
+      focusnext: quantityFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -421,6 +435,8 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         // }
           print("###############1 ${rate.text}");
         await calculateRates();
+          _itemKey.currentState!.validate();
+          _rateKey.currentState!.validate();
         print("############### ${rate.text}");
       },
     );
@@ -493,16 +509,12 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         ),
         GestureDetector(
           onTap: (){
-            if(selectedItemID==null){
-              var snackBar = const SnackBar(content: Text('Select Item Fisrt'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else {
-              var isValid = _formkey.currentState?.validate();
 
-              print(isValid);
 
-              if (isValid == true && selectedItemID != null) {
+            bool v=_itemKey.currentState!.validate();
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if ( selectedItemID!=null&& v && q && r){
                 var item = {};
                 if (widget.editproduct != null) {
                   if(oldItemID!=selectedItemID){
@@ -551,7 +563,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                   Navigator.pop(context);
                 }
               }
-            }
+
           },
           onDoubleTap: () {},
           child: Container(

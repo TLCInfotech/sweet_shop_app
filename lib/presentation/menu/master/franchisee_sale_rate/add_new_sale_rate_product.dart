@@ -44,8 +44,16 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
 
   bool isLoaderShow = false;
   TextEditingController _textController = TextEditingController();
+  FocusNode itemFocus = FocusNode();
+  final _itemKey = GlobalKey<FormFieldState>();
+
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
+
   TextEditingController gst = TextEditingController();
+  FocusNode gstFocus = FocusNode();
+
   TextEditingController net = TextEditingController();
   TextEditingController gstAmt = TextEditingController();
 
@@ -242,7 +250,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                       ),
                     ),
                   ),
-                  getFieldTitleLayout(   ApplicationLocalizations.of(context)!.translate("item")!,),
+                  // getFieldTitleLayout(   ApplicationLocalizations.of(context)!.translate("item")!,),
                   getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                   getProductRateLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -324,13 +332,13 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
       suffix:Text("%"),
       validation: (value) {
         if (value!.isEmpty) {
-          return    ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("gst_percent")!;
+          return    "";
         }
         return null;
       },
       controller: gst,
       readOnly: widget.readOnly,
-      focuscontroller: null,
+      focuscontroller: gstFocus,
       focusnext: null,
       title:ApplicationLocalizations.of(context)!.translate("gst_percent")!,
       callbackOnchage: (value) async{
@@ -372,16 +380,17 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   /* widget for product rate layout */
   Widget getProductRateLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
-
+        mandatory: true,
+        txtkey: _rateKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("sale_rate")!;
+          return "";
         }
         return null;
       },
-      controller: rate,
-      focuscontroller: null,
-      focusnext: null,
+        controller: rate,
+        focuscontroller: rateFocus,
+        focusnext: gstFocus,
       readOnly: widget.readOnly,
       title:  ApplicationLocalizations.of(context)!.translate("sale_rate")!,
       callbackOnchage: (value)async {
@@ -392,6 +401,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         });
         await calculateNetAmt();
         await calculateGstAmt();
+        _rateKey.currentState!.validate();
       },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -442,11 +452,14 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     print("sadas ${selectedItemName}");
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
+      focusnext: rateFocus,
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.id}&Date=${widget.dateNew}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -469,6 +482,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         }
         await calculateGstAmt();
         await calculateNetAmt();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
       },
     );
    /* return SearchableDropdownWithObject(
@@ -569,7 +584,9 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         GestureDetector(
 
           onTap: () {
-            if(selectedItemID!=null &&  rate.text!="") {
+            bool v=_itemKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if ( selectedItemID!=null&& v &&  r) {
               var item = {};
               if (widget.editproduct != null) {
                 item = {
@@ -598,10 +615,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                 Navigator.pop(context);
               }
             }
-            else{
-              CommonWidget.errorDialog(context,
-                  "Please add required fields item,rate,!");
-            }
+
           },
           onDoubleTap: () {},
           child: Container(

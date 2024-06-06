@@ -131,7 +131,44 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                     ),
                     controller: widget.controller,
                     validator: widget.validation,
+                    onFieldSubmitted: (v){
+                      if(widget.controller.text!="" && widget.controller.text!=null) {
+                        setState(() {
+                          widget.controller.text =
+                              double.parse(widget.controller.text)
+                                  .toStringAsFixed(2);
+                        });
+                      }
+                    },
+                    onTapOutside: (event) {
+                      if(widget.controller.text!="" && widget.controller.text!=null) {
+                        setState(() {
+                          widget.controller.text =
+                              double.parse(widget.controller.text)
+                                  .toStringAsFixed(2);
+                        });
+                      }
+                    },
+                    onSaved: (v){
+                      if(widget.controller.text!="" && widget.controller.text!=null) {
+                        setState(() {
+                          widget.controller.text =
+                              double.parse(widget.controller.text)
+                                  .toStringAsFixed(2);
+                        });
+                      }
+                    },
                     onEditingComplete: () {
+                      if(widget.controller.text!="" && widget.controller.text!=null) {
+                        setState(() {
+                          widget.controller.text =
+                              double.parse(widget.controller.text)
+                                  .toStringAsFixed(2);
+                        });
+                      }
+                      // setState(() {
+                      //   widget.controller.text=double.parse(widget.controller.text).toStringAsFixed(2);
+                      // });
                       if(widget.focuscontroller!=null) {
                         widget.focuscontroller.unfocus();
                         FocusScope.of(context).requestFocus(widget.focusnext);

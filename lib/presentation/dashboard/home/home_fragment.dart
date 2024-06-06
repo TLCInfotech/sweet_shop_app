@@ -57,6 +57,11 @@ class _HomeFragmentState extends State<HomeFragment> {
   var itemOpening=0.0;
   var itemClosing=0.0;
 
+  var profitLossShare=0.0;
+
+  var additionalProfitLoss=0.0;
+  var additionalProfitLossShare=0.0;
+
  @override
   void initState() {
     // TODO: implement initState
@@ -500,13 +505,6 @@ class _HomeFragmentState extends State<HomeFragment> {
                       ],
                     ):Container(),
                     const SizedBox(height: 10,),
-                    // getFieldTitleLayout("Profit/Loss "),
-                    // const SizedBox(height: 5,),
-                    // getFieldTitleLayout("Payment-Outanding "),
-                    // const SizedBox(height: 5,),
-                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
-                        (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-                    getProfitLayout():Container(),
                     (TransactionMenu.contains("AT002"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -514,6 +512,33 @@ class _HomeFragmentState extends State<HomeFragment> {
                         getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
                       ],
                     ):Container(),
+
+                    const SizedBox(height: 10,),
+                    // getAdditonalProfitLayout(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                          GestureDetector(
+                            onTap: (){
+                            },child: getThreeLayout("Additional Profit","${CommonWidget.getCurrencyFormat(100000000)}",Color(0xFF00A36C))),
+
+                      GestureDetector(
+                            onTap: (){
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                              //   formId: "AT009",
+                              //   arrData: dataArr,
+                              // )));
+                            },child: getThreeLayout( "Additional Profit Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",Colors.orange))
+                      ],
+                    ),
+                     SizedBox(height: 10,),
+                    // getFieldTitleLayout("Profit/Loss "),
+                    // const SizedBox(height: 5,),
+                    // getFieldTitleLayout("Payment-Outanding "),
+                    // const SizedBox(height: 5,),
+                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                        (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+                    getProfitLayout():Container(),
                   ],
                 ),
               ),
@@ -575,8 +600,105 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-  Widget getProfitLayout(){
+  Widget getAdditonalProfitLayout(){
     return GestureDetector(
+      onTap: (){
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+        //   comeFor: profit>=0?"Profit ":"Loss" ,
+        //   profit:profit ,
+        //   date:dateTime,
+        // )));
+      },
+      onDoubleTap: (){},
+      child: Container(
+        padding: EdgeInsets.only(top: 10,bottom: 10),
+        margin: const EdgeInsets.only(bottom: 10),
+        width: (SizeConfig.screenWidth),
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: additionalProfitLoss<0?Colors.red:Colors.green,
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child:  Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 100,
+                  padding:  EdgeInsets.only(left: 10),
+                  child:  Text(
+                    additionalProfitLoss>=0?"Additional Profit ":" Additional Loss",
+                    style: item_heading_textStyle.copyWith(
+                        color:Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+
+                    ),
+                  ),
+                ),
+                Padding(
+                    padding:  EdgeInsets.only(left: 10,right: 10),
+                    child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(10000000)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                )
+              ],
+            ),
+            Divider(height: 1,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 100,
+                  padding:  EdgeInsets.only(left: 10),
+                  child: Text(
+                    additionalProfitLossShare>=0?"Add. Profit Share":"Add. Loss Share",
+                    style: item_heading_textStyle.copyWith(
+                        color:Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+
+                    ),
+                  ),
+                ),
+                Padding(
+                    padding:  EdgeInsets.only(left: 10,right: 10),
+                    child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(1000000000)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getProfitLayout(){
+    return
+    //   Row(
+    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //   children: [
+    //     GestureDetector(
+    //         onTap: (){
+    //           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+    //             comeFor: profit>=0?"Profit ":"Loss" ,
+    //             profit:profit ,
+    //             date:dateTime,
+    //           )));
+    //         },child: getThreeLayout(profit>=0?"Profit ":"Loss","${CommonWidget.getCurrencyFormat(profit)}",profit<0?Colors.red:Colors.green)),
+    //
+    //     GestureDetector(
+    //         onTap: (){
+    //           // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+    //           //   formId: "AT009",
+    //           //   arrData: dataArr,
+    //           // )));
+    //         },child: getThreeLayout(profitLossShare>=0?"Profit Share":"Loss Share","${CommonWidget.getCurrencyFormat(profitLossShare)}",profitLossShare<0?Colors.red:Colors.green))
+    //   ],
+    // );
+
+    GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Profit ":"Loss" ,
@@ -586,7 +708,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       },
       onDoubleTap: (){},
       child: Container(
-        height:70 ,
+        height:80 ,
         margin: const EdgeInsets.only(bottom: 10),
         width: (SizeConfig.screenWidth),
         // margin: EdgeInsets.all(10),
@@ -594,29 +716,64 @@ class _HomeFragmentState extends State<HomeFragment> {
             color: profit<0?Colors.red:Colors.green,
             borderRadius: BorderRadius.circular(5)),
         alignment: Alignment.center,
-        child:  Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child:  Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding:  EdgeInsets.only(left: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    profit>=0?"Profit ":"Loss",
-                    style: item_heading_textStyle.copyWith(
-                        color:Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding:  EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        profit>=0?"Profit ":"Loss",
+                        style: item_heading_textStyle.copyWith(
+                            color:Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
 
-                    ),
+                        ),
+                      ),
+
+                    ],
                   ),
-
-                ],
-              ),
+                ),
+                getAnimatedFunction(),
+              ],
             ),
-            getAnimatedFunction(),
+            Divider(height: 1,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding:  EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        profit>=0?"Profit Share":"Loss Share",
+                        style: item_heading_textStyle.copyWith(
+                            color:Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:  EdgeInsets.only(left: 10,right: 10),
+                  child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(10000000)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                )
+                  ],
+            )
           ],
         ),
       ),
@@ -682,7 +839,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
    getAnimatedFunction(){
    return  Padding(
-     padding:  EdgeInsets.only(left: 50),
+     padding:  EdgeInsets.only(left: 10,right: 10),
      child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
      // Countup(
      //   locale: Locale('HI', 'IN'),

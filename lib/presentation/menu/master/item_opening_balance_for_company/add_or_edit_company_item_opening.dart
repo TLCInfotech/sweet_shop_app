@@ -56,15 +56,20 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
 
   TextEditingController _textController = TextEditingController();
   FocusNode itemFocus = FocusNode() ;
+  final _itemKey = GlobalKey<FormFieldState>();
 
   TextEditingController quantity = TextEditingController();
   FocusNode quantityFocus = FocusNode() ;
+  final _quantityKey = GlobalKey<FormFieldState>();
 
   TextEditingController unit = TextEditingController();
 
   TextEditingController rate = TextEditingController();
+  FocusNode rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
 
   TextEditingController amount = TextEditingController();
+  FocusNode amountFocus = FocusNode();
 
   TextEditingController batchno = TextEditingController();
 
@@ -215,7 +220,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                           ),
                         ),
                       ),
-                      getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
+                      // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
@@ -239,17 +244,20 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   /* widget for product rate layout */
   Widget getItemQuantityLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+        mandatory: true,
+        txtkey: _quantityKey,
       suffix: Text("${unit.text}"),
       validation: (value) {
         if (value!.isEmpty) {
-          return  ApplicationLocalizations.of(context)!.translate("enter")! + " "+ApplicationLocalizations.of(context)!.translate("quantity")!;
+          return  "";
         }
         return null;
       },
-      controller: quantity,
+        controller: quantity,
+        focuscontroller: quantityFocus,
+        focusnext: rateFocus,
       readOnly: widget.readOnly,
-      focuscontroller: null,
-      focusnext: null,
+
       title: ApplicationLocalizations.of(context)!.translate("quantity")!,
       callbackOnchage: (value)async {
         setState(() {
@@ -259,6 +267,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           quantity.text = value;
         });
         await calculateRates();
+        _quantityKey.currentState!.validate();
       },
         textInput: TextInputType.numberWithOptions(
             decimal: true
@@ -323,17 +332,20 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
   Widget getRateAndAmount(double parentHeight, double parentWidth) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       SingleLineEditableTextFormField(
+          mandatory: true,
+          txtkey: _rateKey,
         parentWidth: (parentWidth),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return "";
           }
           return null;
         },
-        controller: rate,
+          controller: rate,
+          focuscontroller: rateFocus,
+          focusnext: amountFocus,
         readOnly: widget.readOnly,
-        focuscontroller: null,
-        focusnext: null,
+
         title: ApplicationLocalizations.of(context)!.translate("rate")!,
         callbackOnchage: (value) async {
           setState(() {
@@ -343,6 +355,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
             amountedited=false;
           });
           await calculateRates();
+          _rateKey.currentState!.validate();
         },
           textInput: TextInputType.numberWithOptions(decimal: true),
           maxlines: 1,
@@ -361,9 +374,10 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           }
           return null;
         },
-        controller: amount,
-        focuscontroller: null,
-        focusnext: null,
+          controller: amount,
+          focuscontroller: amountFocus,
+          focusnext: null,
+
         readOnly: widget.readOnly,
         title: ApplicationLocalizations.of(context)!.translate("amount")!,
         callbackOnchage: (value) async {
@@ -394,11 +408,15 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
 
   Widget getAddSearchLayout(double parentHeight, double parentWidth){
     return SearchableDropdownWithExistingList(
+      mandatory: true,
+      txtkey: _itemKey,
       name: selectedItemName,
+      focusnext: quantityFocus,
+      focuscontroller: itemFocus,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
       apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
-      titleIndicator: false,
+      titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
@@ -419,6 +437,8 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           });
         }
         await calculateRates();
+        _itemKey.currentState!.validate();
+        _rateKey.currentState!.validate();
       },
     );
 
@@ -516,10 +536,10 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         ),
         GestureDetector(
           onTap: (){
-              if (selectedItemID != null &&
-                  amount.text != "" &&
-                  quantity.text != "" &&
-                  rate.text != "") {
+            bool v=_itemKey.currentState!.validate();
+            bool q=_quantityKey.currentState!.validate();
+            bool r=_rateKey.currentState!.validate();
+            if (selectedItemID!=null && v && q && r) {
                 var item = {};
                 if (widget.editproduct != null) {
                   if(oldItemID!=selectedItemID){
@@ -569,10 +589,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                   Navigator.pop(context);
                 }
               }
-              else {
-                CommonWidget.errorDialog(context,
-                    "Please add required fields item,rate,quantity,amount !");
-              }
+
           },
           onDoubleTap: () {},
           child: Container(

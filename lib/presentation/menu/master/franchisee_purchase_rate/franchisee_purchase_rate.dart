@@ -23,6 +23,7 @@ import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_model.dart';
+import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../dialog/exit_screen_dialog.dart';
@@ -361,7 +362,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Container(
+    Item_list.length==0?Container():Container(
           width: SizeConfig.halfscreenWidth,
           padding: EdgeInsets.only(top: 10,bottom:10),
           decoration: BoxDecoration(
@@ -376,7 +377,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 ],
           ),
         ),
-        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false ?  Container():
+        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false  || Item_list.length==0?  Container():
         GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
@@ -593,39 +594,69 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                     width: parentWidth*.1,
                                     // height: parentHeight*.1,
                                     color: Colors.transparent,
-                                    child:IconButton(
-                                      icon:  FaIcon(
-                                        FontAwesomeIcons.trash,
-                                        size: 15,
-                                        color: Colors.redAccent,
-                                      ),
-                                      onPressed: ()async{
-                                        showButton=true;
-                                        if(Item_list[index]['ID']!=null){
-                                          var deletedItem=   {
-                                            "ID": Item_list[index]['ID'],
-                                            "Item_ID": Item_list[index]['Item_ID']
-                                          };
-                                          Deleted_list.add(deletedItem);
-                                          setState(() {
-                                            Deleted_list=Deleted_list;
-                                          });
-                                        }
-                                        var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
-                                        print(contain);
-                                        if(contain>=0){
-                                          print("REMOVE");
-                                          Inserted_list.remove(Inserted_list[contain]);
-                                        }
-                                        Item_list.remove(Item_list[index]);
-                                        setState(() {
-                                          Item_list=Item_list;
-                                          Inserted_list=Inserted_list;
-                                        });
-                                        print(Inserted_list);
-                                        await calculateTotalAmt();
-                                      },
-                                    )
+                                    child:DeleteDialogLayout(
+                                        callback: (response ) async{
+                                          if(response=="yes"){
+                                            showButton=true;
+                                            print("##############$response");
+                                            if(Item_list[index]['ID']!=0){
+                                              var deletedItem=   {
+                                                "Item_ID": Item_list[index]['Item_ID'],
+                                                "ID": Item_list[index]['ID'],
+                                              };
+                                              Deleted_list.add(deletedItem);
+                                              setState(() {
+                                                Deleted_list=Deleted_list;
+                                              });
+                                            }
+
+                                            var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                            print(contain);
+                                            if(contain>=0){
+                                              print("REMOVE");
+                                              Inserted_list.remove(Inserted_list[contain]);
+                                            }
+                                            Item_list.remove(Item_list[index]);
+                                            setState(() {
+                                              Item_list=Item_list;
+                                              Inserted_list=Inserted_list;
+                                            });
+                                            print(Inserted_list);
+                                            await calculateTotalAmt();  }
+                                        })
+                                    // IconButton(
+                                    //   icon:  FaIcon(
+                                    //     FontAwesomeIcons.trash,
+                                    //     size: 15,
+                                    //     color: Colors.redAccent,
+                                    //   ),
+                                    //   onPressed: ()async{
+                                    //     showButton=true;
+                                    //     if(Item_list[index]['ID']!=null){
+                                    //       var deletedItem=   {
+                                    //         "ID": Item_list[index]['ID'],
+                                    //         "Item_ID": Item_list[index]['Item_ID']
+                                    //       };
+                                    //       Deleted_list.add(deletedItem);
+                                    //       setState(() {
+                                    //         Deleted_list=Deleted_list;
+                                    //       });
+                                    //     }
+                                    //     var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                    //     print(contain);
+                                    //     if(contain>=0){
+                                    //       print("REMOVE");
+                                    //       Inserted_list.remove(Inserted_list[contain]);
+                                    //     }
+                                    //     Item_list.remove(Item_list[index]);
+                                    //     setState(() {
+                                    //       Item_list=Item_list;
+                                    //       Inserted_list=Inserted_list;
+                                    //     });
+                                    //     print(Inserted_list);
+                                    //     await calculateTotalAmt();
+                                    //   },
+                                    // )
                                 ):Container(),
                               ],
                             )
