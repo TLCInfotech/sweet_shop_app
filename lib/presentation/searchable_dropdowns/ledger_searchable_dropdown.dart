@@ -211,7 +211,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                       }, icon: Icon(Icons.clear))
                   ),
                 ),
-
                 suggestionsCallback: (pattern) {
                   return _getSuggestions(pattern);
                 },

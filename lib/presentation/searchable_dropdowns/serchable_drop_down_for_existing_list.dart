@@ -262,7 +262,12 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: _controller.text=="" ?Icon(Icons.search):IconButton(onPressed: (){
+    setState(() {
+    _controller.clear();
+    });
+    widget.callback("");
+    }, icon: Icon(Icons.clear)),
                     errorStyle: TextStyle(
                       color: Colors.redAccent,
                       fontSize: 16.0,

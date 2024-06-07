@@ -245,7 +245,12 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon:  widget.come=="disable"?null:Icon(Icons.search)
+                      suffixIcon:  widget.come=="disable"?null: _controller.text=="" ?Icon(Icons.search):IconButton(onPressed: (){
+                        setState(() {
+                          _controller.clear();
+                        });
+                        widget.callback("");
+                      }, icon: Icon(Icons.clear)),
                   ),
                 ),
 
@@ -274,50 +279,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 },
               ),
             ),
-
-            // Container(
-            //     height: SizeConfig.screenHeight * .055,
-            //     alignment: Alignment.center,
-            //     decoration: BoxDecoration(
-            //       color: CommonColor.WHITE_COLOR,
-            //       borderRadius: BorderRadius.circular(4),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           offset: Offset(0, 1),
-            //           blurRadius: 5,
-            //           color: Colors.black.withOpacity(0.1),
-            //         ),
-            //       ],
-            //     ),
-            //     child: TextFieldSearch(
-            //         initialList: filteredStates,
-            //         minStringLength: 0,
-            //         label: 'Ledger',
-            //         controller: _textController,
-            //         decoration: textfield_decoration.copyWith(
-            //           hintText:widget.title,
-            //           prefixIcon: Container(
-            //               width: 50,
-            //               padding: EdgeInsets.all(10),
-            //               alignment: Alignment.centerLeft,
-            //               child: FaIcon(FontAwesomeIcons.search,size: 20,color: Colors.grey,)),
-            //         ),
-            //         textStyle: item_regular_textStyle,
-            //         getSelectedValue: (v)async {
-            //           await widget.callback(v.label,v.value);
-            //           setState(() {
-            //             ledger_list=[];
-            //           });
-            //
-            //         },
-            //         future: () {
-            //           // if (_textController.text != "")
-            //             return
-            //               fetchSimpleData(
-            //                 _textController.text.trim());
-            //         })
-            //
-            // ),
           )
         ],
       ),
