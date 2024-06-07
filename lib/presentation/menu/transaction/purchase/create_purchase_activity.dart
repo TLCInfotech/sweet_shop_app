@@ -508,12 +508,21 @@ if(widget.come=="edit"){
                                           children: [
                                             Container(
                                                 alignment: Alignment.centerRight,
-                                                child: Text("${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
+                                                child: Text(
+                                                  // "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",
+                                                  CommonWidget.getCurrencyFormat(
+                                                      double.parse(Item_list[index]
+                                                      ['Quantity'].toString()))
+                                                      .toString() + "${Item_list[index]['Unit']}",
+                                                  overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),)),
 
                                             Container(
-                                              alignment: Alignment.centerLeft,
+                                              alignment: Alignment.centerRight,
+                                              width: SizeConfig.halfscreenWidth-50,
                                               child:
-                                              Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              Text(CommonWidget.getCurrencyFormat(Item_list[index]['Net_Amount']),
+                                                  overflow: TextOverflow.ellipsis,
+                                                style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                             ),
                                           ],
                                         ),
