@@ -293,7 +293,7 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
         status:  "edit",
         apiUrl:ApiConstants().getBankCashLedger + "?Company_ID=${widget.companyId}",
         titleIndicator: true,
-        title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+        title: ApplicationLocalizations.of(context)!.translate("ledger")!,
         callback: (item)async{
           // print("FFFFFFFFFFFF ${widget.exstingList}");
           //

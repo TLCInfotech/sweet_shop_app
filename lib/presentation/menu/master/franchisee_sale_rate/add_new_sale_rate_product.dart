@@ -58,6 +58,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
   TextEditingController gstAmt = TextEditingController();
 
   FocusNode searchFocus = FocusNode() ;
+  TextEditingController unit = TextEditingController();
 
   @override
   void initState() {
@@ -204,7 +205,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
         gst.text =widget.editproduct['GST']!=0 &&widget.editproduct['GST']!="" &&widget.editproduct['GST']!=null?double.parse( widget.editproduct['GST'].toString()).toStringAsFixed(2):"";
         net.text =widget.editproduct['Net_Rate']!=0 &&widget.editproduct['Net_Rate']!="" &&widget.editproduct['Net_Rate']!=null?double.parse( widget.editproduct['Net_Rate'].toString()).toStringAsFixed(2):"";
         gstAmt.text =widget.editproduct['GSt_Amount']!=0 &&widget.editproduct['GSt_Amount']!="" &&widget.editproduct['GSt_Amount']!=null?double.parse( widget.editproduct['GSt_Amount'].toString()).toStringAsFixed(2):"";
-
+        unit.text= widget.editproduct['Unit']!="" &&widget.editproduct['Unit']!=null? widget.editproduct['Unit']:"";
       });
     }
 
@@ -475,9 +476,10 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
           setState(() {
             selectedItemID = item['ID'].toString();
             selectedItemName=item['Name'].toString();
-
             rate.text = item['Rate'] == null? "" : item['Rate'].toString();
             gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
+            unit.text= item['Unit'] != null ? item['Unit'] : "";
+
           });
         }
         await calculateGstAmt();
@@ -598,6 +600,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
                   "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
                   "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit.text!=""?unit.text:null,
                 };
               } else {
                 item = {
@@ -607,6 +610,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
                   "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
                   "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit.text!=""?unit.text:null,
+
                 };
               }
 

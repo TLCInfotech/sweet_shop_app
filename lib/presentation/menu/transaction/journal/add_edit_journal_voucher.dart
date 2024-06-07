@@ -310,7 +310,7 @@ class _AddOrEditLedgerForJournalsState extends State<AddOrEditLedgerForJournals>
       status:  "edit",
       apiUrl: ApiConstants().getLedgerWithoutBankCash + "?Company_ID=${widget.companyId}",
       titleIndicator: true,
-      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (item)async{
         // print("FFFFFFFFFFFF ${widget.exstingList}");
         //

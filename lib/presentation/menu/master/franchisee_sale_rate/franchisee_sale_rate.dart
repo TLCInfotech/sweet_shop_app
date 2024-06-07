@@ -475,9 +475,26 @@ String companyId="";
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("${(Item_list[index]['Rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
+                                              Text(
+                                          CommonWidget.getCurrencyFormat(
+                                          double.parse(Item_list[index]
+                                          ['Rate'].toString()))
+                                      .toString() + "${Item_list[index]['Unit']}"
+                                            // "${(Item_list[index]['Rate']).toStringAsFixed(2)}/kg "
+                                                ,overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
                                               //Text("${(Item_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                              Text("${(Item_list[index]['Net_Rate']).toStringAsFixed(2)}/kg ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                               Container(
+
+                                                 alignment: Alignment.centerRight,
+                                                 width: SizeConfig.halfscreenWidth-50,
+                                                 child: Text(
+                                                  CommonWidget.getCurrencyFormat(
+                                                      double.parse(Item_list[index]
+                                                      ['Net_Rate'].toString()))
+                                                      .toString() + "${Item_list[index]['Unit']}",
+                                                  // "${(Item_list[index]['Net_Rate']).toStringAsFixed(2)}/kg ",
+                                                  overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                               ),
 
                                               //  Text(CommonWidget.getCurrencyFormat(Item_list[index]['net']),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
 
@@ -735,6 +752,7 @@ String companyId="";
         Item_list[index]['GST']=item['GST'];
         Item_list[index]['GST_Amount']=item['GST_Amount'];
         Item_list[index]['Net_Rate']=item['Net_Rate'];
+        Item_list[index]['Unit']=item['Unit'];
       });
       if(item['New_Item_ID']!=null){
         print("#############3");

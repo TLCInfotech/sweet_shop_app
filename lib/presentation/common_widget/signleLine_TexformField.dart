@@ -135,7 +135,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
                       if(widget.controller.text!="" && widget.controller.text!=null) {
                         setState(() {
                           widget.controller.text =
-                              double.parse(widget.controller.text)
+                              CommonWidget.getCurrencyFormat(double.parse(widget.controller.text))
                                   .toStringAsFixed(2);
                         });
                       }

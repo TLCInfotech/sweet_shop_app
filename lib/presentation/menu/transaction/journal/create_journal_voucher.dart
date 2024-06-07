@@ -550,7 +550,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       franchisee: widget.come,
       readOnly: widget.readOnly,
       franchiseeName:widget.come=="edit"?selectedbankCashLedger:"",
-      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name,id){
         if(selectedBankLedgerID==id){
           var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));

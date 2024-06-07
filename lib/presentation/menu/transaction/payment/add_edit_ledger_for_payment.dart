@@ -267,7 +267,7 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
       status:  "edit",
       apiUrl:"${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: true,
-      title: ApplicationLocalizations.of(context)!.translate("ledger_without_bank_cash")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (item)async{
         // print("FFFFFFFFFFFF ${widget.exstingList}");
         //

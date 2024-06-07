@@ -111,6 +111,10 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
     print("#######################33 ${selectedFranchiseeName}");
   }
 
+  var saleinvoice=null;
+  var isinvoiceGenreted=false;
+  var franchiseereadonly=true;
+
   getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
     setState(() {
@@ -408,7 +412,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      widget.readOnly == false
+                      widget.readOnly == false || saleinvoice !=null
                           ? Container()
                           : GestureDetector(
                               onTap: () {
@@ -542,7 +546,11 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                                 alignment:
                                                     Alignment.centerRight,
                                                 child: Text(
-                                                  "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",
+                                                  // "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']}",
+                                                  CommonWidget.getCurrencyFormat(
+                                                      double.parse(Item_list[index]
+                                                      ['Quantity'].toString()))
+                                                      .toString() + "${Item_list[index]['Unit']}",
                                                   overflow: TextOverflow.clip,
                                                   style: item_heading_textStyle
                                                       .copyWith(
@@ -550,13 +558,14 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                                               Colors.black87),
                                                 )),
                                             Container(
-                                              alignment: Alignment.centerLeft,
+                                              alignment: Alignment.centerRight,
+                                              width: SizeConfig.halfscreenWidth-50,
                                               child: Text(
                                                 CommonWidget.getCurrencyFormat(
                                                         Item_list[index]
                                                             ['Net_Amount'])
                                                     .toString(),
-                                                overflow: TextOverflow.clip,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: item_heading_textStyle
                                                     .copyWith(
                                                         color: Colors.blue),
@@ -568,7 +577,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                     ),
                                   ),
                                 ),
-                                widget.readOnly == false
+                                widget.readOnly == false || saleinvoice !=null
                                     ? Container()
                                     : Container(
                                         width: parentWidth * .1,
@@ -726,8 +735,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                   ],
                 )
               : getPurchaseDateLayout(),
-          getFranchiseeNameLayout(
-              SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+          getFranchiseeNameLayout(SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
           //getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
@@ -802,11 +810,10 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
     return SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage + "?",
       titleIndicator: true,
-      ledgerName: selectedFranchiseeName,
+      ledgerName: widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
       franchisee: widget.come,
-      readOnly: widget.readOnly,
-      franchiseeName:
-          widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
+      readOnly: franchiseereadonly,
+      franchiseeName: widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name, id) {
         if (selectedLedgerId == id) {
@@ -869,7 +876,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
         String apiUrl =
             "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.Invoice_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess: (data) {
+            onSuccess: (data)async {
           print(data);
           setState(() {
             if (data != null) {
@@ -884,9 +891,17 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                     data['voucherDetails']['Vendor_ID'].toString();
                 TotalAmount =
                     data['voucherDetails']['Total_Amount'].toStringAsFixed(2);
-                roundoff =
-                    data['voucherDetails']['Round_Off'].toStringAsFixed(2);
+                roundoff = data['voucherDetails']['Round_Off'].toStringAsFixed(2);
+                 if(widget.readOnly==true) {
+                  if (data['voucherDetails']['Invoice_No'] != null) {
+                    setState(() {
+                      franchiseereadonly = false;
+                      isinvoiceGenreted=true;
+                    });
+                  }
+                }
               });
+              print("###################3333 $isinvoiceGenreted ${widget.readOnly}");
               // calculateTotalAmt();
             }
             isLoaderShow = false;

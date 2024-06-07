@@ -55,6 +55,10 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   var saleAmt=0.0;
   var itemOpening=0.0;
   var itemClosing=0.0;
+  var profitLossShare=0.0;
+
+  var additionalProfitLoss=0.0;
+  var additionalProfitLossShare=0.0;
 
   @override
   void initState() {
@@ -211,6 +215,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
 
                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+                    profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
+                    additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
+                    additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
 
                   });
 
@@ -416,9 +423,27 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                ],
              ),
              const SizedBox(height: 10,),
-             getProfitLayout(),
+             // getProfitLayout(),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 GestureDetector(
+                     onTap: (){
+                     },child: getThreeLayout(additionalProfitLoss>=0?"Additional Profit ":"Additional Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
-
+                 GestureDetector(
+                     onTap: (){
+                       // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                       //   formId: "AT009",
+                       //   arrData: dataArr,
+                       // )));
+                     },child: getThreeLayout(additionalProfitLossShare>=0? "Additional Profit Share":"Additional Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
+               ],
+             ),
+             SizedBox(height: 10,),
+             (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                 (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+             getProfitLayout():Container(),
            ],
          ),
        ),
@@ -483,51 +508,132 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
 
 
   Widget getProfitLayout(){
-    return GestureDetector(
-      onTap: (){
-        /*   Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-        comeFor: profit>=0?"Profit ":"Loss" ,
-          profit:profit ,
-          date:dateTime,
-        )));*/
-      },
-      onDoubleTap: (){},
-      child: Container(
-        height:70 ,
-        margin: const EdgeInsets.only(bottom: 10),
-        width: (SizeConfig.screenWidth),
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: profit<0?Colors.red:Colors.green,
-            borderRadius: BorderRadius.circular(5)),
-        alignment: Alignment.center,
-        child:  Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(left: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return
+    //   GestureDetector(
+    //   onTap: (){
+    //     /*   Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+    //     comeFor: profit>=0?"Profit ":"Loss" ,
+    //       profit:profit ,
+    //       date:dateTime,
+    //     )));*/
+    //   },
+    //   onDoubleTap: (){},
+    //   child: Container(
+    //     height:70 ,
+    //     margin: const EdgeInsets.only(bottom: 10),
+    //     width: (SizeConfig.screenWidth),
+    //     // margin: EdgeInsets.all(10),
+    //     decoration: BoxDecoration(
+    //         color: profit<0?Colors.red:Colors.green,
+    //         borderRadius: BorderRadius.circular(5)),
+    //     alignment: Alignment.center,
+    //     child:  Row(
+    //       mainAxisAlignment: MainAxisAlignment.start,
+    //       children: [
+    //         Padding(
+    //           padding:  EdgeInsets.only(left: 40),
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.start,
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //               Text(
+    //                 profit>=0?"Profit ":"Loss",
+    //                 style: item_heading_textStyle.copyWith(
+    //                     color:Colors.white,
+    //                     fontSize: 20,
+    //                     fontWeight: FontWeight.bold
+    //
+    //                 ),
+    //               ),
+    //
+    //             ],
+    //           ),
+    //         ),
+    //         getAnimatedFunction(),
+    //       ],
+    //     ),
+    //   ),
+    // );
+      GestureDetector(
+        onTap: (){
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+          //   comeFor: profit>=0?"Profit ":"Loss" ,
+          //   profit:profit ,
+          //   date:dateTime,
+          // )));
+        },
+        onDoubleTap: (){},
+        child: Container(
+          height:80 ,
+          margin: const EdgeInsets.only(bottom: 10),
+          width: (SizeConfig.screenWidth),
+          // margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: profit<0?Colors.red:Colors.green,
+              borderRadius: BorderRadius.circular(5)),
+          alignment: Alignment.center,
+          child:  Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    profit>=0?"Profit ":"Loss",
-                    style: item_heading_textStyle.copyWith(
-                        color:Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profit>0?"Profit ":"Loss",
+                          style: item_heading_textStyle.copyWith(
+                              color:Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
 
+                          ),
+                        ),
+
+                      ],
                     ),
                   ),
-
+                  getAnimatedFunction(),
                 ],
               ),
-            ),
-            getAnimatedFunction(),
-          ],
+              Divider(height: 1,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profitLossShare>0?"Profit Share":"Loss Share",
+                          style: item_heading_textStyle.copyWith(
+                              color:Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  Padding(
+                      padding:  EdgeInsets.only(left: 10,right: 10),
+                      child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
 
