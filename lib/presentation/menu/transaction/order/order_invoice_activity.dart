@@ -151,7 +151,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                 await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                     CreateOrderInvoice(
                       dateNew:   invoiceDate,
-                      Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
+                      order_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                       mListener:this,
                     )));
                 selectedFranchiseeId="";
@@ -338,10 +338,11 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                         CreateOrderInvoice(
                         dateNew: invoiceDate,
-                        Invoice_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                        order_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
                         readOnly:  singleRecord['Update_Right'],
                         editedItem:saleInvoice_list[index],
+                        invoiceNo: saleInvoice_list[index]['Invoice_No'],
                         come:"edit",
                         )));
                         selectedFranchiseeId="";
@@ -402,14 +403,14 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                                         ),
                                       ),
                                     ),
-                                    singleRecord['Delete_Right']==true?    DeleteDialogLayout(
+                                    singleRecord['Delete_Right']==false?Container(): saleInvoice_list[index]['Invoice_No']!=null?Container():    DeleteDialogLayout(
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           print("##############$response");
                                           await   callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
                                         }
                                       },
-                                    ):Container()
+                                    )
                                   ],
                                 )
 

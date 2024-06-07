@@ -25,19 +25,20 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class CreateOrderInvoice extends StatefulWidget {
   final CreateOrderInvoiceInterface mListener;
   final dateNew;
-  final Invoice_No;
+  final order_No;
   final editedItem;
   final come;
   final readOnly;
+  final invoiceNo;
 
   const CreateOrderInvoice(
       {super.key,
       required this.dateNew,
       required this.mListener,
-      required this.Invoice_No,
+      required this.order_No,
       this.editedItem,
       this.come,
-      this.readOnly});
+      this.readOnly, this.invoiceNo});
   @override
   _CreateOrderInvoiceState createState() => _CreateOrderInvoiceState();
 }
@@ -349,8 +350,8 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                           disableColor = true;
                         });
                       }
-                      print(widget.Invoice_No);
-                      if (widget.Invoice_No == null) {
+                      print(widget.order_No);
+                      if (widget.order_No == null) {
                         print("#######");
                         callPostSaleInvoice();
                       } else {
@@ -413,8 +414,8 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       widget.readOnly == false || saleinvoice !=null
-                          ? Container()
-                          : GestureDetector(
+                          ? Container():widget.invoiceNo!=null?Container():
+                           GestureDetector(
                               onTap: () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
@@ -452,8 +453,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                         size: 20,
                                       )
                                     ],
-                                  )))
-                    ],
+                                  )))],
                   ),
                   SizedBox(
                     height: 10,
@@ -490,7 +490,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                     editedItemIndex = index;
                   });
                   if (widget.readOnly == false) {
-                  } else {
+                  }else if(widget.invoiceNo!=null){} else {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
@@ -578,8 +578,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                   ),
                                 ),
                                 widget.readOnly == false || saleinvoice !=null
-                                    ? Container()
-                                    : Container(
+                                    ? Container():widget.invoiceNo!=null?Container(): Container(
                                         width: parentWidth * .1,
                                         // height: parentHeight*.1,
                                         color: Colors.transparent,
@@ -717,12 +716,12 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
       ),
       child: Column(
         children: [
-          widget.Invoice_No != null
+          widget.order_No != null
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                        width: widget.Invoice_No != null
+                        width: widget.order_No != null
                             ? SizeConfig.halfscreenWidth
                             : (SizeConfig.screenWidth) * .32,
                         child: getPurchaseDateLayout()),
@@ -790,7 +789,13 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date) {
           setState(() {
-            showButton = true;
+            if(widget.readOnly==false){
+              showButton=false;
+            }else if(widget.invoiceNo!=null){
+              showButton=false;
+            }else{
+              showButton=true;
+            }
             invoiceDate = date!;
             Item_list = [];
             Updated_list = [];
@@ -798,7 +803,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
             Inserted_list = [];
           });
 
-          if (widget.Invoice_No != null) {
+          if (widget.order_No != null) {
             getOrderInvoice(1);
           }
         },
@@ -812,7 +817,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
       titleIndicator: true,
       ledgerName: widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
       franchisee: widget.come,
-      readOnly: franchiseereadonly,
+      readOnly: widget.invoiceNo!=null?false:franchiseereadonly,
       franchiseeName: widget.come == "edit" ? widget.editedItem['Vendor_Name'] : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name, id) {
@@ -824,11 +829,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
           setState(() {
             showButton = true;
             selectedFranchiseeName = name!;
-            selectedFranchiseeId = id.toString()!;
-            // Item_list=[];
-            // Updated_list=[];
-            // Deleted_list=[];
-            // Inserted_list=[];
+            selectedFranchiseeId = id.toString();
           });
         }
         print("############3");
@@ -874,7 +875,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.Invoice_No}";
+            "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.order_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data)async {
           print(data);
@@ -893,7 +894,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                     data['voucherDetails']['Total_Amount'].toStringAsFixed(2);
                 roundoff = data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                  if(widget.readOnly==true) {
-                  if (data['voucherDetails']['Invoice_No'] != null) {
+                  if (data['voucherDetails']['order_No'] != null) {
                     setState(() {
                       franchiseereadonly = false;
                       isinvoiceGenreted=true;
@@ -1024,7 +1025,7 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
         PostOrderInvoiceReq model = PostOrderInvoiceReq(
             //   saleLedger:selectedLedgerId ,
             vendorID: selectedFranchiseeId,
-            Order_No: widget.Invoice_No.toString(),
+            Order_No: widget.order_No.toString(),
             companyID: companyId,
             voucherName: "Sale Order",
             roundOff: double.parse(roundoff),

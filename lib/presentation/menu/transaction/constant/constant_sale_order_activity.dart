@@ -360,7 +360,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                     MaterialPageRoute(
                       builder: (context) => CreateOrderInvoice(
                         dateNew: invoiceDate,
-                        Invoice_No: saleInvoice_list[index]['Order_No'],
+                        order_No: saleInvoice_list[index]['Order_No'],
                         mListener: this,
                         editedItem: saleInvoice_list[index],
                         come: "edit",
