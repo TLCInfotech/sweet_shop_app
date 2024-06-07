@@ -702,13 +702,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10,bottom: 10),
+      padding: const EdgeInsets.only(top: 0,bottom: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
             width: SizeConfig.halfscreenWidth,
-            padding: EdgeInsets.only(top: 10,bottom:10),
+            padding: EdgeInsets.only(top: 0,bottom:0),
             decoration: BoxDecoration(
               // color:  CommonColor.DARK_BLUE,
               borderRadius: BorderRadius.circular(8),
@@ -718,7 +718,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                SizedBox(height: 4,),
+                SizedBox(height: 2,),
                 Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,)
               ],
             ),

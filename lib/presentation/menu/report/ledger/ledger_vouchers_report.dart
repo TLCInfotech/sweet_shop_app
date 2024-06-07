@@ -368,7 +368,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         openingBal==null?Container():  Container(
-          padding: EdgeInsets.only(top: 10,bottom:5,left: 10),
+          padding: EdgeInsets.only(top: 0,bottom:0,left: 10),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),

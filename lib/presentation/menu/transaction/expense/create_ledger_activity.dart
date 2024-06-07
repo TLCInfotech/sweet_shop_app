@@ -640,7 +640,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
       children: [
         TotalAmount!="0.00"? Container(
           width: SizeConfig.halfscreenWidth,
-          padding: const EdgeInsets.only(top: 10,bottom:10),
+          padding: const EdgeInsets.only(top:0,bottom:0),
           decoration: BoxDecoration(
             // color:  CommonColor.DARK_BLUE,
             borderRadius: BorderRadius.circular(8),

@@ -74,7 +74,7 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
       children: <Widget>[
         Expanded(
           child: Text(
-              "Do you back to the without save changes?",
+              "Do you want to exit without saving?",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: SizeConfig.blockSizeVertical * 2.3,
@@ -93,6 +93,7 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
       children: [
         GestureDetector(
           onTap: () async{
+
             await widget.onCallBack("yes");
             Navigator.pop(context);
           },
