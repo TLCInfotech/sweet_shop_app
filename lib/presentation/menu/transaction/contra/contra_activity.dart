@@ -139,6 +139,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateContra(
                   mListener: this,
                   newDate: newDate,
+                  readOnly: true,
                   voucherNo: null,
                   dateNew:newDate,
                   companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),

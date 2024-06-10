@@ -979,7 +979,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                 // getUser(1);
               });
               print("  LedgerLedger  $data ");
-              Navigator.pop(context);
+               widget.mListener.backToUserList();
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;

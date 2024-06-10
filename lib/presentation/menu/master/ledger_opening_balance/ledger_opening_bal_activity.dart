@@ -464,7 +464,6 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
-
                   print("ledger opening data....  $data");
                   if (_arrList.length < 10) {
                     if (mounted) {
