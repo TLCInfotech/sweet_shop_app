@@ -282,7 +282,14 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                               style: item_regular_textStyle.copyWith(
                                                 color:Colors.black87,
                                                 fontWeight: FontWeight.bold
-                                              ))
+                                              )),
+                                          Text(
+                                              "Total Rights : ${users_list[index]['Total_Rights']}",
+                                              overflow: TextOverflow.clip,
+                                              style: item_regular_textStyle.copyWith(
+                                                  color:Colors.black87,
+                                                  fontWeight: FontWeight.bold
+                                              )),
                                         ],
                                       ),
                                     ),
@@ -293,9 +300,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                callback: (response) async {
                                  if (response == "yes") {
                                    print("##############$response");
-                                   await callDeleteUser(
-                                       users_list[index]['UID'].toString(),
-                                       index);
+                                   await callDeleteUser(users_list[index]['UID'].toString(), index);
                                  }
                                },
                              )

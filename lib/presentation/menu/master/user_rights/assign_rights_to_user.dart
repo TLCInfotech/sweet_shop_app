@@ -198,6 +198,39 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+       Item_list.length>0? GestureDetector(
+          onTap: () async{
+            setState(() {
+              Item_list=[];
+            });
+               await callDeleteUser(selectedFranchiseeId,0);
+          },
+          onDoubleTap: () {},
+          child: Container(
+            width: SizeConfig.halfscreenWidth,
+            height: 40,
+            decoration: BoxDecoration(
+              color: disableColor == true
+                  ? Colors.redAccent.withOpacity(.5)
+                  : Colors.redAccent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: parentWidth * .005),
+                  child:  Text(
+                    "Delete All",
+                    style: page_heading_textStyle.copyWith(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ):Container(),
+
         GestureDetector(
           onTap: () {
             getUserPermissions();
@@ -205,11 +238,11 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
               var snackBar=SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(Item_list.length==0){
-              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if( selectedFranchiseeId!= " " && Item_list.length>0){
+            // else if(Item_list.length==0){
+            //   var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+            //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // }
+            else if( selectedFranchiseeId!= " " ){
               if (mounted) {
                 setState(() {
                   disableColor = true;
@@ -229,7 +262,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           },
           onDoubleTap: () {},
           child: Container(
-            width: SizeConfig.screenWidth*.90,
+            width: SizeConfig.halfscreenWidth,
             height: 40,
             decoration: BoxDecoration(
               color: disableColor == true
@@ -355,36 +388,6 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                     // SizedBox(height: 5,),
 
                     widget.readOnly==false?Container():
-                    Item_list.length>0?GestureDetector(
-                        onTap: (){
-                            setState(() {
-                              Item_list.clear();
-                            });
-                        },
-                        child: Container(
-                          // width: SizeConfig.halfscreenWidth,
-                            width: SizeConfig.screenWidth,
-
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                            margin: EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                                color:addAll? CommonColor.THEME_COLOR:Colors.transparent,
-                                border: Border.all(color: Colors.grey.withOpacity(0.5))
-                            ),
-                            child:  Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Delete All",
-                                  style: item_heading_textStyle,),
-                                SizedBox(width: 10,),
-                                FaIcon(FontAwesomeIcons.minusCircle,
-                                  color: Colors.red, size: 20,)
-                              ],
-                            )
-                        )
-                    ):Container(),
-
                     Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
                   ],
                 ),
@@ -811,8 +814,9 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           companyID: companyId ,
           creater: creatorName,
           createrMachine: deviceId,
-          iNSERT: Item_list.toList(),
+          iNSERT:Item_list.length>0? Item_list.toList():[],
         );
+        print("############33 ${model.toJson()}");
 
         String apiUrl =baseurl + ApiConstants().userPermission;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -962,21 +966,20 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           isLoaderShow=true;
         });
         var model= {
-          "Form_ID": removeId,
           "UID": selectedFranchiseeId,
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
         String apiUrl = baseurl + ApiConstants().userPermission+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
-            onSuccess:(data)async{
+            onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
-                Item_list.removeAt(index);
-                var i=Deleted_list.indexWhere((element) => element['Form_ID']==removeId);
-                Deleted_list.removeAt(i);
+                // users_list.removeAt(index);
+                // getUser(1);
               });
-              print(" ######## LedgerLedger  $Item_list \n $Deleted_list ");
+              print("  LedgerLedger  $data ");
+              Navigator.pop(context);
             }, onFailure: (error) {
               setState(() {
                 isLoaderShow=false;
@@ -990,7 +993,6 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                 isLoaderShow=false;
               });
               CommonWidget.errorDialog(context, e.toString());
-
             },sessionExpire: (e) {
               setState(() {
                 isLoaderShow=false;

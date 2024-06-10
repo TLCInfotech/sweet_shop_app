@@ -172,6 +172,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         unit.text=widget.editproduct['Unit'].toString();
         quantity.text=widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
         rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
+        previousRate=widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
         amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
 
       });
@@ -352,6 +353,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
             quantity.text=quantity.text!=""?double.parse(quantity.text).toStringAsFixed(2):"";
             amount.text=amount.text!=""?double.parse(amount.text).toStringAsFixed(2):"";
             rate.text = value;
+            previousRate=value;
             amountedited=false;
           });
           await calculateRates();
@@ -433,12 +435,18 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
             selectedItemID = item['ID'].toString();
             selectedItemName=item['Name'].toString();
             unit.text = item['Unit']!=null?item['Unit']:null;
-            rate.text = item['Rate'] == null? "" : item['Rate'].toString();
+            rate.text = item['Rate'] == null? "":item['Rate'].toString();
+            previousRate=item['Rate'] == null? "" : item['Rate'].toString();
           });
         }
+        print("########### ${item['Rate']}");
+        print("########### ${rate.text}");
+
         await calculateRates();
         _itemKey.currentState!.validate();
         _rateKey.currentState!.validate();
+        print("########### ${rate.text}");
+
       },
     );
 
@@ -623,6 +631,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       amount.text=amt.toStringAsFixed(2);
     });
   }
+  var previousRate="";
 
 
   calculateRates()async{
@@ -638,7 +647,8 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
     //     await calculateAmt();
     //   }
     //  }
-    if(amountedited && quantity.text!=""){
+
+     if(amountedited && quantity.text!=""){
       if(amount.text!="" && quantity.text!="") {
         var amt = double.parse(amount.text) / double.parse(quantity.text);
 
@@ -646,6 +656,12 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
           rate.text = amt.toStringAsFixed(2);
         });
       }
+      if(amount.text==""){
+        setState(() {
+          rate.text=double.parse(previousRate).toStringAsFixed(2);
+        });
+      }
+
     }
     if (quantity.text != "" && rate.text != "") {
       if(amountedited==false) {
@@ -658,11 +674,11 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         amount.clear();
       });
     }
-    if (quantity.text == "" || amount.text == "") {
-      setState(() {
-        rate.clear();
-      });
-    }
+    // if (quantity.text == "" || amount.text == "") {
+    //   setState(() {
+    //     rate.clear();
+    //   });
+    // }
     if(quantity.text==""){
       setState(() {
         amount.clear();
