@@ -271,6 +271,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
               child: Form(
                 key: _formkey,
                 child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InvoiceInfo(),
                     SizedBox(height: 10,),
@@ -310,6 +312,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                 )
                             )
                         ),
+
+
                         widget.readOnly==false?Container():
                         GestureDetector(
                             onTap: (){
@@ -326,6 +330,8 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                             },
                             child: Container(
                                 width: SizeConfig.halfscreenWidth,
+
+                                // width: SizeConfig.halfscreenWidth,
                                 padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
                                 margin: EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
@@ -346,7 +352,38 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                         )
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    // SizedBox(height: 5,),
+
+                    widget.readOnly==false?Container():
+                    Item_list.length>0?GestureDetector(
+                        onTap: (){
+                            setState(() {
+                              Item_list.clear();
+                            });
+                        },
+                        child: Container(
+                          // width: SizeConfig.halfscreenWidth,
+                            width: SizeConfig.screenWidth,
+
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                            margin: EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                                color:addAll? CommonColor.THEME_COLOR:Colors.transparent,
+                                border: Border.all(color: Colors.grey.withOpacity(0.5))
+                            ),
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Delete All",
+                                  style: item_heading_textStyle,),
+                                SizedBox(width: 10,),
+                                FaIcon(FontAwesomeIcons.minusCircle,
+                                  color: Colors.red, size: 20,)
+                              ],
+                            )
+                        )
+                    ):Container(),
 
                     Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
                   ],
