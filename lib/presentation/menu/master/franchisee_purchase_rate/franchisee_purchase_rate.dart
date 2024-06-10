@@ -844,7 +844,8 @@ showButton=true;
       var index=editedItemIndex;
       setState(() {
         Item_list[index]['ID']=item['ID'];
-        Item_list[index]['Item_ID']=item['New_Item_ID'];
+        // Item_list[index]['Item_ID']=item['New_Item_ID'];
+        Item_list[index]['Item_ID']=item['ID']!=null?item['New_Item_ID']:item['Item_ID'];
         Item_list[index]['Name']=item['Name'];
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
         Item_list[index]['Rate']=item['Rate'];
@@ -874,6 +875,11 @@ showButton=true;
         setState(() {
           Updated_list = Updated_list;
           print("hvhfvbfbv   $Updated_list");
+        });
+      }
+      else{
+        setState(() {
+          Item_list[index]=item;
         });
       }
     }

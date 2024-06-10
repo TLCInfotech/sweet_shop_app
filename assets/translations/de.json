@@ -238,7 +238,7 @@
  "password":"Password",
  "company_item_opening": "Company Item Opening Balance",
  "batch_id": "Batch ID",
- "exit_screen": "Do you want to exit from screen without changes?",
+ "exit_screen": "Do you want to save the changes?",
  "contra": "Contra",
  "contra_new": "Contra - New",
  "bank_cash_ledger": "Bank Cash Ledger",

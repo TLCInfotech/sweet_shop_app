@@ -559,49 +559,87 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
             bool r=_rateKey.currentState!.validate();
             if ( selectedItemID!=null&& v &&  r) {
               var item = {};
-              if (widget.editproduct != null) {
-                if (oldItemID != selectedItemID) {
-                  item = {
-                    "ID": widget.editproduct['ID'],
-                    "Item_ID": widget.editproduct != null
-                        ? widget.editproduct['Item_ID']
-                        : "",
-                    "Unit": unit,
-                    "Name": selectedItemName,
-                    "New_Item_ID": selectedItemID,
-                    "Disc_Percent": null,
-                    "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
-                    "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
-                    "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
-                    "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
-                  };
-                } else {
-                  item = {
-                    "ID": widget.editproduct['ID'],
-                    "Unit": widget.editproduct['Unit'],
-                    "Item_ID": selectedItemID,
-                    "Name": selectedItemName,
-                    "Disc_Percent": null,
-                    "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
-                    "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
-                    "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
-                    "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
-                  };
-                }
-              } else {
+              // if (widget.editproduct != null) {
+              //   if (oldItemID != selectedItemID) {
+              //     item = {
+              //       "ID": widget.editproduct['ID'],
+              //       "Item_ID": widget.editproduct != null
+              //           ? widget.editproduct['Item_ID']
+              //           : "",
+              //       "Unit": unit,
+              //       "Name": selectedItemName,
+              //       "New_Item_ID": selectedItemID,
+              //       "Disc_Percent": null,
+              //       "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+              //       "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+              //       "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+              //       "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+              //     };
+              //   } else {
+              //     item = {
+              //       "ID": widget.editproduct['ID'],
+              //       "Unit": widget.editproduct['Unit'],
+              //       "Item_ID": selectedItemID,
+              //       "Name": selectedItemName,
+              //       "Disc_Percent": null,
+              //       "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+              //       "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+              //       "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+              //       "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+              //     };
+              //   }
+              // } else {
+              //   item = {
+              //     "ID": 0,
+              //     "Unit": unit,
+              //     "Item_ID": selectedItemID,
+              //     "Disc_Percent": null,
+              //     "Name": selectedItemName,
+              //     "Rate": double.parse(rate.text),
+              //     "GST": gst.text != "" ? double.parse(gst.text) : null,
+              //     "GST_Amount":
+              //         gst.text != "" ? double.parse(gstAmt.text) : null,
+              //     "Net_Rate": double.parse(net.text)
+              //   };
+              // }
+              if (widget.editproduct != null && widget.editproduct['ID']!=null) {
                 item = {
-                  "ID": 0,
-                  "Unit": unit,
-                  "Item_ID": selectedItemID,
-                  "Disc_Percent": null,
+                  "Item_ID": widget.editproduct['Item_ID'],
+                  "ID": widget.editproduct['ID'],
                   "Name": selectedItemName,
-                  "Rate": double.parse(rate.text),
-                  "GST": gst.text != "" ? double.parse(gst.text) : null,
-                  "GST_Amount":
-                      gst.text != "" ? double.parse(gstAmt.text) : null,
-                  "Net_Rate": double.parse(net.text)
+                  "New_Item_ID": selectedItemID,
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit!=""?unit:null,
                 };
               }
+              else if(widget.editproduct != null){
+                item = {
+                  "Item_ID": selectedItemID,
+                  "Name": selectedItemName,
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit!=""?unit:null,
+                };
+
+              }
+              else {
+                item = {
+                  "Name": selectedItemName,
+                  "Item_ID": selectedItemID,
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit!=""?unit:null,
+
+                };
+              }
+
               if (widget.mListener != null) {
                 widget.mListener.addProductPurchaseRateDetail(item);
                 Navigator.pop(context);
