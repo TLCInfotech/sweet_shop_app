@@ -471,13 +471,15 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                                   // "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']} ",
                                                   overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                               ),
-                                              Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                            //  Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                               Item_list[index]['Amount']!=null?
-                                              Container(
+                                              Expanded(
+                                                child: Container(
 
-                                                  alignment: Alignment.centerRight,
-                                                  width: SizeConfig.halfscreenWidth-70,
-                                                  child: Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)):Text("00.00",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                                    alignment: Alignment.centerRight,
+                                                    width: SizeConfig.halfscreenWidth-70,
+                                                    child: Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
+                                              ):Container(),
                                             ],
                                           ),
 

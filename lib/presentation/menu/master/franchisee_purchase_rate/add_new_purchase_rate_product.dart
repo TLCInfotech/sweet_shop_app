@@ -413,6 +413,7 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
   /* widget for product rate layout */
   Widget getProductRateLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      suffix: Text(unit),
         mandatory: true,
         txtkey: _rateKey,
       validation: (value) {

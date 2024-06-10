@@ -273,7 +273,7 @@ String companyId="";
                 ],
           ),
         ),
-        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false || Item_list.length==0?  Container():
+        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false?  Container():
         GestureDetector(
           onTap: () {
             // if(widget.comeFrom=="clientInfoList"){
@@ -291,18 +291,16 @@ String companyId="";
               var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(Item_list.length==0){
-              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(selectedCopyFranchiseeId!="" && Item_list.length>0) {
+
+            else if(selectedCopyFranchiseeId!="") {
               if (mounted) {
                 setState(() {
-                  disableColor = true;
+                  showButton=false;
                 });
               }
               callPostItemOpeningBal();
             }
+
           },
           onDoubleTap: () {},
           child: Container(
@@ -479,7 +477,7 @@ String companyId="";
                                           CommonWidget.getCurrencyFormat(
                                           double.parse(Item_list[index]
                                           ['Rate'].toString()))
-                                      .toString() + "${Item_list[index]['Unit']}"
+                                      .toString() + "/${Item_list[index]['Unit']}"
                                             // "${(Item_list[index]['Rate']).toStringAsFixed(2)}/kg "
                                                 ,overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),),
                                               //Text("${(Item_list[index]['gst']).toStringAsFixed(2)}% ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
@@ -491,7 +489,7 @@ String companyId="";
                                                   CommonWidget.getCurrencyFormat(
                                                       double.parse(Item_list[index]
                                                       ['Net_Rate'].toString()))
-                                                      .toString() + "${Item_list[index]['Unit']}",
+                                                      .toString() + "/${Item_list[index]['Unit']}",
                                                   // "${(Item_list[index]['Net_Rate']).toStringAsFixed(2)}/kg ",
                                                   overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                                ),
@@ -517,7 +515,6 @@ String companyId="";
                                       callback: (response ) async{
                                         if(response=="yes"){
                                           showButton=true;
-                                          print("##############$response");
                                           if(Item_list[index]['ID']!=0){
                                             var deletedItem=   {
                                               "Item_ID": Item_list[index]['Item_ID'],
@@ -739,7 +736,7 @@ String companyId="";
     // TODO: implement addProductDetail
     print(item);
     var itemLlist=Item_list;
-
+    showButton=true;
     if(editedItemIndex!=null){
       var index=editedItemIndex;
       setState(() {
@@ -796,7 +793,7 @@ String companyId="";
     });
     await calculateTotalAmt();
     // Sort itemDetails by Item_Name
-    itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
+   // itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
     print(Updated_list);
 
   }

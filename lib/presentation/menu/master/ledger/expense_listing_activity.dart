@@ -69,7 +69,6 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
   setVal()async{
     List<dynamic> jsonArray = jsonDecode(widget.arrData);
     singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
-    print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
   List<dynamic> ledgerList = [];
 //FUNC: REFRESH LIST
@@ -193,10 +192,6 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             setState(() {
               selectedLedgerName = name!;
               selectedLedgerId = id!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
             });
           print(selectedLedgerId);
           var item={
@@ -211,7 +206,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             setState(() {
               page=0;
             });
-            await callGetLedger(0);
+            await callGetLedger(1);
         },
         ledgerName: selectedLedgerName);
   }
@@ -372,7 +367,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList.clear();
+                  //_arrList.clear();
                   _arrList=data;
                   if (_arrList.length < 10) {
                     if (mounted) {

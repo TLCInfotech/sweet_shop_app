@@ -276,7 +276,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal>
           "?Company_ID=${widget.companyId}&PartyID=null&Date=${widget.dateApi}",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!
-          .translate("ledger_without_bank_cash")!,
+          .translate("ledger")!,
       callback: (item) async {
         // print("FFFFFFFFFFFF ${widget.exstingList}");
         //

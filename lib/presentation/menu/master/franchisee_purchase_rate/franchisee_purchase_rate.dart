@@ -394,14 +394,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               var snackBar=SnackBar(content: Text("Select Franchisee Id !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(Item_list.length==0){
-              var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(selectedFranchiseeID!=null && Item_list.length>0) {
+            else if(selectedFranchiseeID!=null) {
               if (mounted) {
                 setState(() {
-                  disableColor = true;
+                  showButton=false;
                 });
               }
               callPostIFranchiseetemOpeningBal();
@@ -899,7 +895,7 @@ showButton=true;
     });
     await calculateTotalAmt();
     // Sort itemDetails by Item_Name
-    itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
+   // itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
     print(Updated_list);
   }
 

@@ -436,21 +436,6 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                         Text("${Item_list[index]['Item_Name']}",style: item_heading_textStyle,),
 
                                         SizedBox(height: 5,),
-
-                                        // Container(
-                                        //   alignment: Alignment.centerLeft,
-                                        //   width: SizeConfig.screenWidth,
-                                        //   child:
-                                        //   Row(
-                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //     children: [
-                                        //       Text("${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)} ${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
-                                        //       Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                        //       Item_list[index]['Amount']!=null?Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),):Container(),
-                                        //     ],
-                                        //   ),
-                                        //
-                                        // ),
                                         Container(
                                           alignment: Alignment.centerLeft,
                                           width: SizeConfig.screenWidth,
@@ -468,13 +453,14 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                                   // "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']} ",
                                                   overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                               ),
-                                              Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
+                                          //    Text("${(Item_list[index]['Rate'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,),
                                               Item_list[index]['Amount']!=null?
-                                              Container(
-
-                                                  alignment: Alignment.centerRight,
-                                                  width: SizeConfig.halfscreenWidth-70,
-                                                  child: Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)):Text("00.00",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              Expanded(
+                                                child: Container(
+                                                    alignment: Alignment.centerRight,
+                                                    width: SizeConfig.halfscreenWidth-70,
+                                                    child: Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
+                                              ):Container(),
                                             ],
                                           ),
 
@@ -485,7 +471,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                 ),
 
                                 singleRecord['Delete_Right']==true?Container(
-                                  width: parentWidth*.1,
+                                  width: parentWidth*.08,
                                   color: Colors.transparent,
                                   child: DeleteDialogLayout(
                                       callback: (response ) async{
@@ -643,29 +629,12 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
           ),
           singleRecord['Update_Right']==false&&singleRecord['Insert_Right']==false||showButton==false?Container():GestureDetector(
             onTap: ()async {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
-              if(Item_list.length==0){
-                var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
-              else {
-                if (mounted) {
+              if (mounted) {
                   setState(() {
-                    disableColor = true;
+                    showButton = false;
                   });
                   await callPostItemOpeningBal();
-                }
-              }
-            },
+                }},
             onDoubleTap: () {},
             child: Container(
               width: SizeConfig.halfscreenWidth,
