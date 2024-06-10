@@ -550,7 +550,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
             if (selectedItemID!=null && v && q && r) {
                 var item = {};
                 if (widget.editproduct != null) {
-                  if(oldItemID!=selectedItemID){
+                  if( widget.editproduct['Seq_No']!=null){
                     item = {
                       "Seq_No": widget.editproduct['Seq_No'],
                       "Item_ID": oldItemID,
