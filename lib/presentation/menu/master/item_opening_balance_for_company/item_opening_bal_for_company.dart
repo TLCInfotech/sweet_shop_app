@@ -676,7 +676,9 @@ showButton=true;
       var index=editedItemIndex;
       setState(() {
         Item_list[index]['Seq_No']=item['Seq_No'];
-        Item_list[index]['Item_ID']=item['New_Item_ID'];
+        Item_list[index]['Item_ID']=item['Seq_No']!=null?item['New_Item_ID']:item['Item_ID'];
+
+        // Item_list[index]['Item_ID']=item['New_Item_ID'];
         Item_list[index]['Batch_ID']=item['Batch_ID'];
         Item_list[index]['Item_Name']=item['Item_Name'];
         Item_list[index]['Quantity']=item['Quantity'];
@@ -705,6 +707,11 @@ showButton=true;
         setState(() {
           Updated_list = Updated_list;
           print("hvhfvbfbv   $Updated_list");
+        });
+      }
+      else{
+        setState(() {
+          Item_list[index]=item;
         });
       }
     }
