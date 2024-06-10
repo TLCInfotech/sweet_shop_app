@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import '../../../core/localss/application_localizations.dart';
 import '../../common_widget/signleLine_TexformField.dart';
+import '../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../dashboard/dashboard_activity.dart';
 
 class DomainLinkActivity extends StatefulWidget {
@@ -237,7 +238,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
 
 
 Widget getCompanyId(double parentHeight, double parentWidth){
-    return    SingleLineEditableTextFormField(
+    return    SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("company_id")!;
