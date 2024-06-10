@@ -591,7 +591,7 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
             bool r=_rateKey.currentState!.validate();
             if ( selectedItemID!=null&& v &&  r) {
               var item = {};
-              if (widget.editproduct != null) {
+              if (widget.editproduct != null && widget.editproduct['ID']!=null) {
                 item = {
                   "Item_ID": widget.editproduct['Item_ID'],
                   "ID": widget.editproduct['ID'],
@@ -603,7 +603,20 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
                   "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
                   "Unit":unit.text!=""?unit.text:null,
                 };
-              } else {
+              }
+              else if(widget.editproduct != null){
+                  item = {
+                  "Item_ID": selectedItemID,
+                  "Name": selectedItemName,
+                  "Rate":rate.text!=""?double.parse(double.parse(rate.text).toStringAsFixed(2)):null,
+                  "GST": gst.text!=""?double.parse(double.parse(gst.text).toStringAsFixed(2)):null,
+                  "GST_Amount":gstAmt.text!=""?double.parse(double.parse(gstAmt.text).toStringAsFixed(2)):null,
+                  "Net_Rate": net.text!=""?double.parse(double.parse(net.text).toStringAsFixed(2)):null,
+                  "Unit":unit.text!=""?unit.text:null,
+                  };
+
+              }
+              else {
                 item = {
                   "Name": selectedItemName,
                   "Item_ID": selectedItemID,  
@@ -617,6 +630,8 @@ class _AddProductSaleRateState extends State<AddProductSaleRate>{
               }
 
               if (widget.mListener != null) {
+
+                print("********************************* \n ${item}");
                 widget.mListener.addProductSaleRateDetail(item);
                 Navigator.pop(context);
               }

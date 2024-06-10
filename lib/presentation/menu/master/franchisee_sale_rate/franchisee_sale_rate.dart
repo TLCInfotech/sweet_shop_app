@@ -741,7 +741,7 @@ String companyId="";
       var index=editedItemIndex;
       setState(() {
         Item_list[index]['ID']=item['ID'];
-        Item_list[index]['Item_ID']=item['New_Item_ID'];
+        Item_list[index]['Item_ID']=item['ID']!=null?item['New_Item_ID']:item['Item_ID'];
         Item_list[index]['New_Item_ID']=item['New_Item_ID'];
         Item_list[index]['Name']=item['Name'];
         Item_list[index]['Disc_Percent']=item['Disc_Percent'];
@@ -774,6 +774,11 @@ String companyId="";
           print("hvhfvbfbv   $Updated_list");
         });
       }
+      else{
+        setState(() {
+          Item_list[index]=item;
+        });
+      }
     }
     else
     {
@@ -794,6 +799,10 @@ String companyId="";
     await calculateTotalAmt();
     // Sort itemDetails by Item_Name
    // itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
+
+    print("#############################################3\n ${Inserted_list}");
+    print("#############################################3\n ${Updated_list}");
+
     print(Updated_list);
 
   }
