@@ -467,18 +467,36 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
             if(selectedItemID!=null && v && q)  {
               var item = {};
               if (widget.editproduct != null) {
-                item = {
-                  "New_Ledger_ID": selectedItemID,
-                  "Ledger_Name": selectedbankCashLedger,
-                  "Seq_No": widget.editproduct != null
-                      ? widget.editproduct['Seq_No']
-                      : null,
-                  "Ledger_ID": widget.editproduct['Ledger_ID'],
-                  "Amount": amount.text!=""?double.parse(double.parse(amount.text).toStringAsFixed(2)):null,
-                  "Remark": narration.text!=""?narration.text:null,
-                  "Date": widget.newDate,
+                if(widget.editproduct['Seq_No']!=null) {
+                  item = {
+                    "New_Ledger_ID": selectedItemID,
+                    "Ledger_Name": selectedbankCashLedger,
+                    "Seq_No": widget.editproduct != null
+                        ? widget.editproduct['Seq_No']
+                        : null,
+                    "Ledger_ID": widget.editproduct['Ledger_ID'],
+                    "Amount": amount.text != "" ? double.parse(
+                        double.parse(amount.text).toStringAsFixed(2)) : null,
+                    "Remark": narration.text != "" ? narration.text : null,
+                    "Date": widget.newDate,
 
-                };
+                  };
+                }
+                else{
+                  item = {
+                    "New_Ledger_ID": selectedItemID,
+                    "Ledger_Name": selectedbankCashLedger,
+                    "Seq_No": widget.editproduct != null
+                        ? widget.editproduct['Seq_No']
+                        : null,
+                    "Ledger_ID":selectedItemID,
+                    "Amount": amount.text != "" ? double.parse(
+                        double.parse(amount.text).toStringAsFixed(2)) : null,
+                    "Remark": narration.text != "" ? narration.text : null,
+                    "Date": widget.newDate,
+
+                  };
+                }
               } else {
                 item = {
                   "Ledger_Name": selectedbankCashLedger,

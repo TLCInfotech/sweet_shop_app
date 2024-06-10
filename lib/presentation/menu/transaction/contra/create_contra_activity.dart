@@ -1112,6 +1112,11 @@ class _CreateContraState extends State<CreateContra>
           print("hvhfvbfbv   $Updated_list");
         });
       }
+      else{
+        setState(() {
+          Item_list[index]=item;
+        });
+      }
     } else {
       itemLlist.add(item);
       Inserted_list.add(item);
