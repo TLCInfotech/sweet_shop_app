@@ -87,7 +87,7 @@ bool showButton=false;
 
 
   var companyId="0";
-
+var voucherNo;
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
@@ -105,6 +105,7 @@ bool showButton=false;
   void initState() {
     // TODO: implement initState
     super.initState();
+    voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -188,9 +189,29 @@ bool showButton=false;
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                                                  if(selectedBankLedgerID==null){
+                                                    var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(Item_list.length==0){
+                                                    var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedBankLedgerID!=null &&Item_list.length>0) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        disableColor = true;
+                                                      });
+                                                    }
+                                                    if(voucherNo==null) {
+                                                      print("#######");
+                                                      callPostReceipt();
+                                                    }
+                                                    else {
+                                                      print("dfsdf");
+                                                      updatecallPostReceipt();
+                                                    }
+                                                  }}
                                               }),
                                         ),
                                       );

@@ -74,11 +74,12 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
 
   var editedItemIndex=null;
   var companyId="0";
-
+var voucherNo;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -180,9 +181,31 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                                                  if(selectedBankLedgerID==null){
+                                                    var snackBar=SnackBar(content: Text("Select Bank Cash Ledger !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(Ledger_list.length==0){
+                                                    var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedBankLedgerID!=null &&Ledger_list.length>0) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        showButton = false;
+                                                      });
+                                                    }
+
+                                                    if (voucherNo == null) {
+                                                      print("#######   $voucherNo");
+                                                      callPostBankLedgerPayment();
+                                                    }
+                                                    else {
+                                                      print("dfsdf");
+                                                      updatecallPostBankLedgerPayment();
+                                                    }
+
+                                                  }}
                                               }),
                                         ),
                                       );

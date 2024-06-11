@@ -199,7 +199,8 @@ String companyId="";
                                     });
                               }else{
                                 Navigator.pop(context);
-                              }},
+                              }
+                    },
                             child: FaIcon(Icons.arrow_back),
                           ),
                           Expanded(

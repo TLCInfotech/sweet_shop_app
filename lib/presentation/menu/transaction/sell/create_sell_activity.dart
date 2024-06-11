@@ -75,11 +75,12 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
   bool showButton=false;
 
   var editedItemIndex=null;
-
+var invoice_No;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    invoice_No=widget.Invoice_No;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -217,9 +218,37 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+
+                                                    if (selectedLedgerId == "") {
+                                                      var snackBar = SnackBar(content: Text('Select Sale Ledger!'));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                    else if (selectedFranchiseeId == "") {
+                                                      var snackBar = SnackBar(content: Text("Select Party Name !"));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                    else if (Item_list.length == 0) {
+                                                      var snackBar = SnackBar(content: Text("Add atleast one Item!"));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    }
+                                                    else if (selectedLedgerId != "" && selectedFranchiseeId != " " &&
+                                                        Item_list.length > 0) {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          disableColor = true;
+                                                        });
+                                                      }
+
+                                                      if (invoice_No == null) {
+                                                        print("#######");
+                                                        callPostSaleInvoice();
+                                                      }
+                                                      else {
+                                                        print("dfsdf");
+                                                        updatecallPostSaleInvoice();
+                                                      }
+                                                    }
+                                                  }
                                               }),
                                         ),
                                       );
@@ -334,7 +363,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice> with SingleTicker
                   Item_list.length > 0) {
                 if (mounted) {
                   setState(() {
-                    disableColor = true;
+                    showButton = false
+                    ;
                   });
                 }
                 print(widget.Invoice_No);

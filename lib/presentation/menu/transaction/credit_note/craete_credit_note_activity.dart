@@ -76,7 +76,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
   bool showButton=false;
 
   var editedItemIndex=null;
-
+var invoice_No;
   @override
   void initState() {
     // TODO: implement initState
@@ -87,6 +87,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
     );
     print("kjjhfjdfjdgj  ${widget.readOnly}");
     // calculateTotalAmt();
+    invoice_No=widget.Invoice_No;
     invoiceDate=widget.dateNew;
     if(widget.Invoice_No!=null){
       getCreditNote(1);
@@ -192,9 +193,38 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                                                  if(selectedLedgerId=="" ){
+                                                    var snackBar = SnackBar(content: Text('Select Account Ledger!'));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedFranchiseeId==""){
+                                                    var snackBar=SnackBar(content: Text("Select Party Name !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(Item_list.length==0){
+                                                    var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        showButton = true;
+                                                      });
+                                                    }
+
+                                                    if(invoice_No==null) {
+                                                      print("#######");
+                                                      addCreditNote();
+                                                    }
+                                                    else {
+                                                      print("dfsdf");
+                                                      updateCreditNote();
+                                                    }
+                                                  }
+
+                                                }else{
+                                                  Navigator.pop(context);
+                                                }
                                               }),
                                         ),
                                       );
@@ -208,8 +238,6 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
                                         (context, animation2, animation1) {
                                       return Container();
                                     });
-                              }else{
-                                Navigator.pop(context);
                               }},
                             child: FaIcon(Icons.arrow_back),
                           ),
@@ -303,7 +331,7 @@ class _CreateCreditNoteState extends State<CreateCreditNote> with SingleTickerPr
             else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
               if (mounted) {
                 setState(() {
-                  disableColor = true;
+                  showButton = true;
                 });
               }
               print(widget.Invoice_No);

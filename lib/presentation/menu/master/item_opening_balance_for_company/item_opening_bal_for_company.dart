@@ -244,9 +244,11 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                    if (mounted) {
+                    setState(() {
+                    showButton = false;
+                    });
+                    await callPostItemOpeningBal();}}
                                               }),
                                         ),
                                       );

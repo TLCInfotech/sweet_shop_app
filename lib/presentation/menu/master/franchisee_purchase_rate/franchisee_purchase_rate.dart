@@ -286,9 +286,19 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                                                  if(selectedFranchiseeID==null){
+                                                    var snackBar=SnackBar(content: Text("Select Franchisee Id !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedFranchiseeID!=null) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        showButton=false;
+                                                      });
+                                                    }
+                                                    callPostIFranchiseetemOpeningBal();
+                                                  }
+                                                }
                                               }),
                                         ),
                                       );

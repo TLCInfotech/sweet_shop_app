@@ -82,11 +82,12 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
   bool showButton = false;
 
   var editedItemIndex = null;
-
+var order_No;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    order_No=widget.order_No;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -217,9 +218,32 @@ class _CreateOrderInvoiceState extends State<CreateOrderInvoice>
                                         child: BackPageDialog(
                                             onCallBack: (value) async {
                                               if(value=="yes"){
-                                                setState(() {
-                                                  Navigator.pop(context);
-                                                });}
+
+                                                  if (selectedFranchiseeId == "") {
+                                                    var snackBar =
+                                                    SnackBar(content: Text("Select Party Name !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  } else if (Item_list.length == 0) {
+                                                    var snackBar =
+                                                    SnackBar(content: Text("Add atleast one Item!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  } else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId !=
+                                                      " " &&
+                                                      Item_list.length > 0) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        disableColor = true;
+                                                      });
+                                                    }
+                                                    if (order_No == null) {
+                                                      print("#######");
+                                                      callPostSaleInvoice();
+                                                    } else {
+                                                      print("dfsdf");
+                                                      updatecallPostSaleInvoice();
+                                                    }
+                                                  }
+                                                }
                                         }),
                                       ),
                                     );

@@ -102,7 +102,7 @@ class _CreateContraState extends State<CreateContra>
       TotalAmount = total.toStringAsFixed(2);
     });
   }
-
+var voucherNo;
   @override
   void initState() {
     // TODO: implement initState
@@ -112,6 +112,7 @@ class _CreateContraState extends State<CreateContra>
       duration: const Duration(milliseconds: 500),
     );
     invoiceDate = widget.dateNew;
+    voucherNo=widget.voucherNo;
     if (widget.voucherNo != null) {
       getContra(1);
       voucherNoController.text = "Voucher No: ${widget.voucherNo}";
@@ -178,9 +179,34 @@ class _CreateContraState extends State<CreateContra>
                                           opacity: a1.value,
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
+                                                print("goooodddd   $value");
                                                 if(value=="yes"){
+                                                  print("fhhjfbhjhbvf   $value");
                                                   setState(() {
-                                                    Navigator.pop(context);
+                                                    if (selectedBankLedgerID == null) {
+                                                      var snackBar =
+                                                      SnackBar(content: Text("Select Bank Cash Ledger !"));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    } else if (Item_list.length == 0) {
+                                                      var snackBar = SnackBar(
+                                                          content: Text("Add atleast one Expense ledger!"));
+                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    } else if (selectedBankLedgerID != null &&
+                                                        Item_list.length > 0) {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          showButton = false;
+
+                                                        });
+                                                      }
+                                                      if (voucherNo == null) {
+                                                        print("#######");
+                                                        callPostContra();
+                                                      } else {
+                                                        print("dfsdf");
+                                                        updatecallPostContra();
+                                                      }
+                                                    }
                                                   });}
                                           }),
                                         ),

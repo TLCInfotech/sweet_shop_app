@@ -244,7 +244,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                       callGetLedger();
                     });
                   },
-
                   onChanged: (v)async{
                     if(v.isEmpty) {
                       setState(() {
@@ -256,7 +255,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                   },
                   textInputAction: TextInputAction.none,
                 //  enabled: widget.come=="disable"?false:true, // Change input action to "none"
-                  focusNode: widget.focuscontroller,
+                  focusNode: searchFocus,
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(
                     // labelText: '${widget.title}',

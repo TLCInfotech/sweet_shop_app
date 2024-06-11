@@ -85,11 +85,13 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   bool showButton=false;
 
   var editedItemIndex=null;
+  var voucherNo;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -188,9 +190,34 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+
+                                                  if(Ledger_list.length==0){
+                                                    var snackBar=SnackBar(content: Text("Add atleast one ledger!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    setState(() {
+                                                      disableColor = false;
+                                                    });
+                                                  }
+                                                  else if(double.parse(TotalCr)!=double.parse(TotalDr)){
+                                                    var snackBar = SnackBar(
+                                                        content: Text('Match Total Credit and Debit!'));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    setState(() {
+                                                      showButton = false;
+                                                    });
+                                                  }
+                                                  else if(double.parse(TotalCr)==double.parse(TotalDr)&&Ledger_list.length>0) {
+                                                    if (voucherNo == null) {
+                                                      print("#######  $voucherNo");
+                                                      callPostBankLedgerPayment();
+                                                    }
+                                                    else {
+
+
+                                                      updatecallPostBankLedgerPayment();
+                                                    }
+                                                  }
+                                                }
                                               }),
                                         ),
                                       );
@@ -622,7 +649,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                   content: Text('Match Total Credit and Debit!'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               setState(() {
-                disableColor = false;
+                showButton = false;
               });
             }
             else if(double.parse(TotalCr)==double.parse(TotalDr)&&Ledger_list.length>0) {

@@ -76,11 +76,12 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
 
   var companyId="0";
-
+var voucherNo;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -207,9 +208,31 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                setState(() {
-                                                  Navigator.pop(context);
-                                                });}
+                                                  if(selectedFranchiseeId==""){
+                                                    var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(Item_list.length==0){
+                                                    var snackBar=SnackBar(content: Text("Add atleast one Expense ledger!"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedFranchiseeId!="" &&Item_list.length>0) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        disableColor = true;
+                                                      });
+                                                    }
+
+                                                    if (voucherNo == null) {
+                                                      print("#######");
+                                                      callPostExpense();
+                                                    }
+                                                    else {
+                                                      print("dfsdf");
+                                                      updatecallPostExpense();
+                                                    }
+                                                  }
+                                                }
                                               }),
                                         ),
                                       );

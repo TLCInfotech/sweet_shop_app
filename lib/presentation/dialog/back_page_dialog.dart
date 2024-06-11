@@ -93,7 +93,7 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
       children: [
         GestureDetector(
           onTap: () async{
-            await widget.onCallBack("no");
+            await widget.onCallBack("yes");
             Navigator.pop(context);
 
           },
@@ -126,9 +126,9 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
         ),
         GestureDetector(
           onTap: ()async {
-             await widget.onCallBack("yes");
+             await widget.onCallBack("no");
             Navigator.pop(context);
-
+             Navigator.pop(context);
           },
           onDoubleTap: () {},
           child: Container(
@@ -147,72 +147,6 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
                   ApplicationLocalizations.of(context)!.translate("no")!,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: SizeConfig.blockSizeVertical * 2.1,
-                  ),
-                  textScaleFactor: 1.05,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-  /* Widget for Buttons Layout0 */
-  Widget getCloseButtonLayout(double parentHeight,double parentWidth) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            height: parentHeight * .05,
-            width: parentWidth*.8,
-            decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR.withOpacity(0.4),
-              borderRadius: const BorderRadius.only(
-                bottomRight: Radius.circular(5),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  ApplicationLocalizations.of(context)!.translate("no")!,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: SizeConfig.blockSizeVertical * 2.1,
-                  ),
-                  textScaleFactor: 1.05,
-                ),
-              ],
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            widget.onCallBack("Yes");
-            Navigator.pop(context);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            height: parentHeight * .05,
-            width: parentWidth*.8,
-            decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR.withOpacity(0.4),
-              borderRadius: const BorderRadius.only(
-                bottomRight: Radius.circular(5),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  ApplicationLocalizations.of(context)!.translate("yes")!,
-                  style: TextStyle(
-                    color: Colors.black,
                     fontSize: SizeConfig.blockSizeVertical * 2.1,
                   ),
                   textScaleFactor: 1.05,

@@ -259,9 +259,22 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                      child: BackPageDialog(
                                          onCallBack: (value) async {
                                            if(value=="yes"){
-                                             setState(() {
-                                               Navigator.pop(context);
-                                             });}
+                                             if(selectedFranchiseeID==null){
+                                               var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                             }
+                                             else if(Item_list.length==0){
+                                               var snackBar=SnackBar(content: Text("Add atleast one Item!"));
+                                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                             }
+                                             else if(selectedFranchiseeID!=null && Item_list.length>0) {
+                                               if (mounted) {
+                                                 setState(() {
+                                                   disableColor = true;
+                                                 });
+                                                 await callPostIFranchiseetemOpeningBal();
+                                               }
+                                             }}
                                          }),
                                    ),
                                  );
