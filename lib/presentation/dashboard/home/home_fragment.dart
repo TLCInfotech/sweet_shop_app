@@ -706,7 +706,6 @@ class _HomeFragmentState extends State<HomeFragment> {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Profit ":"Loss" ,
-          profit:profit ,
           date:dateTime,
         )));
       },

@@ -275,7 +275,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
           width: SizeConfig.screenWidth*0.6,
           padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color:int.parse(TotalAmount)>=0? Colors.green:Colors.red,
+              color:TotalAmount>=0? Colors.green:Colors.red,
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
@@ -290,7 +290,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //  Text("${_outstandingPartywise.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text("Total : ${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}", style: subHeading_withBold,),
+              Text("Total : ${CommonWidget.getCurrencyFormat(TotalAmount)}", style: subHeading_withBold,),
             ],
           )
       ),
@@ -421,7 +421,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
 
   List<FranchiseeOutstandingData> _outstandingPartywise = [];
 
-  String TotalAmount="0.00";
+  var TotalAmount=0.00;
 
   getOutstandings(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -448,7 +448,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
                   for (var item in data['OutstandingPartywise']) {
                     _outstandingPartywise.add(FranchiseeOutstandingData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Outstanding']),(item['Vendor_Name']),(item['Vendor_ID'])));
                   }
-                  TotalAmount= data['TotalOutstandingAmount'].toString();
+                  TotalAmount= double.parse(data['TotalOutstandingAmount'].toString());
                   print("getDashboardProfitDetailpartywise    $_outstandingPartywise");
                 }else{
                   isApiCall=true;
@@ -494,8 +494,8 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
 class FranchiseeOutstandingData {
   final String Date;
   final String Vendor_Name;
-  final int Outstanding;
-  final int Vendor_ID;
+  var Outstanding;
+  var Vendor_ID;
 
   FranchiseeOutstandingData(this.Date, this.Outstanding, this.Vendor_Name,this.Vendor_ID);
 }

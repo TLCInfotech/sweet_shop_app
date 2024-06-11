@@ -21,8 +21,8 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;
   final date;
-  final profit;
-  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date, this.profit});
+
+  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date});
 
   @override
   State<ProfitLossDetailActivity> createState() => _ProfitLossDetailActivityState();
@@ -280,7 +280,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
           width: SizeConfig.screenWidth*0.6,
           padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
-              color:int.parse(TotalAmount)>=0? Colors.green:Colors.red,
+              color:TotalAmount>=0? Colors.green:Colors.red,
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
@@ -295,7 +295,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
             //  Text("${_profitPartywise.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
-              Text("Total : ${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}", style: subHeading_withBold,),
+              Text("Total : ${CommonWidget.getCurrencyFormat(TotalAmount)}", style: subHeading_withBold,),
             ],
           )
       ),
@@ -480,7 +480,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
 
   List<ProfitPartyWiseData> _profitPartywise = [];
 
-  String TotalAmount="0.00";
+  var TotalAmount=0.00;
 
   getExpense(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -507,7 +507,8 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
                   for (var item in data['DashboardProfitDetailPartywise']) {
                     _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Profit']),(item['Vendor_Name']),(item['Sale_Amount']),(item['Expense_Amount']),(item['Return_Amount']),(item['Vendor_ID'])));
                   }
-                  TotalAmount= data['TotalProfit'].toString();
+                  //TotalAmount= data['TotalProfit'].toString();
+                  TotalAmount=double.parse(data['TotalProfit'].toString());
                   print("getDashboardProfitDetailpartywise    $_profitPartywise");
                 }else{
                   isApiCall=true;
@@ -553,11 +554,11 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
 class ProfitPartyWiseData {
   final String Date;
   final String Vendor_Name;
-  final int Profit;
-  final int Sale_Amount;
-  final int Expense_Amount;
-  final int Return_Amount;
-  final int Vendor_ID;
+   var Profit;
+  var Sale_Amount;
+  var Expense_Amount;
+  var Return_Amount;
+ var Vendor_ID;
 
   ProfitPartyWiseData(this.Date, this.Profit, this.Vendor_Name,this.Sale_Amount,this.Expense_Amount,this.Return_Amount,this.Vendor_ID);
 }
