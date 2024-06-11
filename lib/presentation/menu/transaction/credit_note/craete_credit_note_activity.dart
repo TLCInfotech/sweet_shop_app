@@ -222,8 +222,6 @@ var invoice_No;
                                                     }
                                                   }
 
-                                                }else{
-                                                  Navigator.pop(context);
                                                 }
                                               }),
                                         ),
@@ -238,6 +236,8 @@ var invoice_No;
                                         (context, animation2, animation1) {
                                       return Container();
                                     });
+                              }else{
+                                Navigator.pop(context);
                               }},
                             child: FaIcon(Icons.arrow_back),
                           ),

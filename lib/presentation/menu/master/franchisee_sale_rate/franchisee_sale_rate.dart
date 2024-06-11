@@ -181,9 +181,19 @@ String companyId="";
                                           child: BackPageDialog(
                                               onCallBack: (value) async {
                                                 if(value=="yes"){
-                                                  setState(() {
-                                                    Navigator.pop(context);
-                                                  });}
+                                                  if(selectedCopyFranchiseeId==""){
+                                                    var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                  }
+                                                  else if(selectedCopyFranchiseeId!="") {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        showButton=false;
+                                                      });
+                                                    }
+                                                    callPostItemOpeningBal();
+                                                  }
+                                                }
                                               }),
                                         ),
                                       );

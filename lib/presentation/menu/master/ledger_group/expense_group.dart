@@ -465,6 +465,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   }
   /* widget for Category layout */
   Widget getSequenceNatureLayout(double parentHeight, double parentWidth) {
+    print("hhhghhh  $parentCategory");
     return  Padding(
         padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
         child: parentCategory==""? SearchableDropdownWithObjectForTax(
@@ -474,12 +475,8 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
           titleIndicator: true,
           title: ApplicationLocalizations.of(context)!.translate("group_nature")!,
           callback: (item)async{
-
             setState(() {
-              // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-
               selectedgroup=item['name'].toString();
-
             });
           },
 
@@ -511,102 +508,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             )),
     );
 
-      Padding(
-          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("group_nature")!,
-            style: item_heading_textStyle,
-          ),
-          parentCategoryId==0?GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              if (context != null) {
-                showGeneralDialog(
-                    barrierColor: Colors.black.withOpacity(0.5),
-                    transitionBuilder: (context, a1, a2, widget) {
-                      final curvedValue =
-                          Curves.easeInOutBack.transform(a1.value) -
-                              1.0;
-                      return Transform(
-                        transform: Matrix4.translationValues(
-                            0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: GroupNatureDialog(
-                            mListener: this,
-                          ),
-                        ),
-                      );
-                    },
-                    transitionDuration: Duration(milliseconds: 200),
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    context: context,
-                    pageBuilder: (context, animation2, animation1) {
-                      throw Exception(
-                          'No widget to return in pageBuilder');
-                    });
-              }
-            },
-            child: Container(
-                height: parentHeight * .055,
-                margin: EdgeInsets.only(top: 10),
-                padding: EdgeInsets.only(left: 10, right: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(0, 1),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      selectedgroup == null ? ApplicationLocalizations.of(context)!.translate("group_nature")!
-                          : selectedgroup,
-                      style: selectedgroup == null ? item_regular_textStyle : text_field_textStyle,
-                    ),
-                    FaIcon(
-                      FontAwesomeIcons.caretDown,
-                      color: Colors.black87.withOpacity(0.8),
-                      size: 16,
-                    )
-                  ],
-                )),
-          ):
-          Container(
-            height: parentHeight * .055,
-            margin: EdgeInsets.only(top: 10),
-            padding: EdgeInsets.only(left: 10, right: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: CommonColor.WHITE_COLOR,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
-            ),
-            child:Container(
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(color:CommonColor.TexField_COLOR),
-                child: Text("$selectedgroup",style: item_regular_textStyle,)),
-          ),
-        ],
-      ),
-    );
 
   }
 
@@ -701,8 +602,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth,StateSetter setState){
-    return
-      Padding(
+    return Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
           child:  SearchableDropdownWithObject(
             name:editedItem!=null && parentCategory!=null?parentCategory:"",
@@ -752,118 +652,6 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
 
           )
       );
-      Padding(
-      padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            ApplicationLocalizations.of(context)!.translate("parent_group")!,
-            style: item_heading_textStyle,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child:  Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: (SizeConfig.screenHeight) * .055,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.01),
-                        ),
-                      ],
-                    ),
-                    child:  GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        if (context != null) {
-                          showGeneralDialog(
-                              barrierColor: Colors.black.withOpacity(0.5),
-                              transitionBuilder: (context, a1, a2, widget) {
-                                final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-                                    1.0;
-                                return Transform(
-                                  transform:
-                                  Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
-                                  child: Opacity(
-                                    opacity: a1.value,
-                                    child: LedegerGroupDialog(
-                                      mListener: this,
-
-                                    ),
-                                  ),
-                                );
-                              },
-                              transitionDuration: Duration(milliseconds: 200),
-                              barrierDismissible: true,
-                              barrierLabel: '',
-                              context: context,
-                              pageBuilder: (context, animation2, animation1) {
-                                throw Exception('No widget to return in pageBuilder');
-                              });
-                        }
-                      },
-                      child: Container(
-                          height: 50,
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(0, 1),
-                                blurRadius: 5,
-                                color: Colors.black.withOpacity(0.1),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(parentCategory==""?ApplicationLocalizations.of(context)!.translate("parent_group")!:parentCategory.toString(),
-                                style:parentCategory=="" ? item_regular_textStyle:text_field_textStyle,),
-                              FaIcon(FontAwesomeIcons.caretDown,
-                                color: Colors.black87.withOpacity(0.8), size: 16,)
-                            ],
-                          )
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: (SizeConfig.screenHeight) * .055,
-                  margin: EdgeInsets.only(left: 5),
-                  decoration: BoxDecoration(
-                    color: CommonColor.WHITE_COLOR,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                        color: Colors.black.withOpacity(0.05),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(onPressed: (){
-                    setState(() {
-                      parentCategoryId=0;
-                      parentCategory="";
-                      selectedgroup=null;
-                    });
-                  }, icon: Icon(Icons.clear,color: Colors.red,)),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
 
   }
 
