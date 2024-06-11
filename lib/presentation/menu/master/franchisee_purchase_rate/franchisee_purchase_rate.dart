@@ -722,7 +722,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 // }
                 // else {
                   setState(() {
-                    showButton=true;
+                    //showButton=true;
                     selectedCopyFranchiseeName=name!;
                     selectedFranchiseeID=id!;
 
@@ -813,7 +813,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         callback: (name,id){
 
           setState(() {
-            showButton=true;
+         //   showButton=true;
             selectedProductCategory=name!;
             selectedCategoryID=id;
           });

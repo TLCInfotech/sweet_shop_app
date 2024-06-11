@@ -157,6 +157,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     // TODO: implement initState
     super.initState();
     setVal();
+
   }
   List insertedList=[];
   setVal()async{
@@ -170,7 +171,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
         quantity.text=widget.editproduct['Quantity']!="" &&widget.editproduct['Quantity']!=null?double.parse(widget.editproduct['Quantity'].toString()).toStringAsFixed(2):"";
         rate.text  =widget.editproduct['Rate']!=0 && widget.editproduct['Rate']!="" &&widget.editproduct['Rate']!=null?double.parse( widget.editproduct['Rate'].toString()).toStringAsFixed(2):"";
         amount.text =widget.editproduct['Amount']!=0 && widget.editproduct['Amount']!="" &&widget.editproduct['Amount']!=null?double.parse( widget.editproduct['Amount'].toString()).toStringAsFixed(2):"";
-
       });
       await calculateRates();
     }
@@ -279,9 +279,9 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
   /* widget for product rate layout */
   Widget getBatchLayout(double parentHeight, double parentWidth) {
+    print("newwwww    ${selectedItemName}");
     return SingleLineEditableTextFormField(
       validation: (value) {
-
         return null;
       },
       controller: batchno,
@@ -379,26 +379,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     ]);
   }
 
-  //
-  // Widget getRateAndAmount(double parentHeight, double parentWidth){
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       GetDisableTextFormField(
-  //           parentWidth: (parentWidth),
-  //           title: ApplicationLocalizations.of(context)!.translate("rate")!,
-  //           controller: rate
-  //       ),
-  //       GetDisableTextFormField(
-  //           parentWidth: (parentWidth),
-  //           title:ApplicationLocalizations.of(context)!.translate("amount")!,
-  //           controller: amount
-  //       ),
-  //
-  //
-  //     ],
-  //   );
-  // }
 
   var selectedItemName="";
 
@@ -416,15 +396,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       insertedList:insertedList,
       callback: (item) async {
 
-        // print("############## $item");
-        // if(insertedList.contains(item['Name'])){
-        //   CommonWidget.errorDialog(context,"Already Exist");
-        //   setState(() {
-        //     selectedItemName="";
-        //     selectedItemID="";
-        //   });
-        // }
-        // else {
           setState(() {
             selectedItemID = item['ID'].toString();
             selectedItemName = item['Name'].toString();
@@ -432,8 +403,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
             rate.text = item['Rate'] != null?  item['Rate'].toString():"";
             PreviousRate=item['Rate'] != null?  item['Rate'].toString():"";
           });
-        // }
-          print("###############1 ${rate.text}");
+          print("###############1 ${selectedItemName}");
         await calculateRates();
           _itemKey.currentState!.validate();
           _rateKey.currentState!.validate();
@@ -441,25 +411,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       },
     );
 
-
-  /*  return SearchableDropdownWithObject(
-      name: selectedItemName,
-      status:  "edit",
-      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
-      titleIndicator: false,
-      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
-      callback: (item)async{
-        setState(() {
-          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-          selectedItemID = item['ID'].toString();
-          selectedItemName=item['Name'].toString();
-          unit.text=item['Unit'];
-          rate.text =item['Rate']==null?"0":item['Rate'].toString();
-        });
-        await calculateRates();
-      },
-
-    );*/
 
   }
 
@@ -562,7 +513,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                       item);
                   Navigator.pop(context);
                 }
-              }
+              }else{
+              var snackBar=const SnackBar(content: Text("Item does not exist !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
 
           },
           onDoubleTap: () {},

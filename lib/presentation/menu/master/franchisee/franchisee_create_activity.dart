@@ -134,127 +134,6 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       getData();
 
   }
-  getData()async{
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee}/${widget.editItem['ID']}?Company_ID=$companyId";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              setState(()  {
-
-                if(data!=null){
-                  setState(() {
-                    itemData=data;
-                  });
-                  print("%%%%%%%%%%%%%%%%%%%%% $itemData");
-
-                }else{
-                  isApiCall=true;
-                }
-
-              });
-              await setData();
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-
-              print("Here2=> $e");
-
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-  setData()async{
-    print("EDITED: ${widget.editItem}");
-    if(widget.editItem!=null){
-      File ?f=null;
-      File ?a=null;
-      File ?p=null;
-      File ?g=null;
-      if(itemData[0]['Photo']!=null&&itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10) {
-        f = await CommonWidget.convertBytesToFile(itemData[0]['Photo']['data']);
-      }
-      if(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10) {
-        a = await CommonWidget.convertBytesToFile(itemData[0]['Adhar_Card_Image']['data']);
-      }
-      if(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10) {
-        p = await CommonWidget.convertBytesToFile(itemData[0]['PAN_Card_Image']['data']);
-      }
-      if(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10) {
-        g = await CommonWidget.convertBytesToFile(itemData[0]['GST_Image']['data']);
-      }
-      setState(()  {
-        picImageBytes=(itemData[0]['Photo']!=null && itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10)?(itemData[0]['Photo']['data']).whereType<int>().toList():[];
-        picImage=f!=null?f:picImage;
-        adharImageBytes=(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10)?(itemData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
-        adharFile=a!=null?a:adharFile;
-        panImageBytes=(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10)?(itemData[0]['PAN_Card_Image']['data']).whereType<int>().toList():[];
-        panFile=p!=null?p:panFile;
-        gstImageBytes=(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10)?(itemData[0]['GST_Image']['data']).whereType<int>().toList():[];
-        gstFile=g!=null?g:gstFile;
-        adharNoController.text=itemData[0]['Adhar_No']!=null?itemData[0]['Adhar_No'].toString():adharNoController.text;
-        panNoController.text=itemData[0]['PAN_No']!=null?itemData[0]['PAN_No'].toString():panNoController.text;
-        gstNoController.text=itemData[0]['GST_No']!=null?itemData[0]['GST_No'].toString():gstNoController.text;
-        bankNameController.text=itemData[0]['Bank_Name']!=null?itemData[0]['Bank_Name'].toString():bankNameController.text;
-        bankBranchController.text=itemData[0]['Bank_Branch']!=null?itemData[0]['Bank_Branch'].toString():bankBranchController.text;
-        IFSCCodeController.text=itemData[0]['IFSC_Code']!=null?itemData[0]['IFSC_Code'].toString():IFSCCodeController.text;
-        accountNoController.text=itemData[0]['Account_No']!=null?itemData[0]['Account_No'].toString():accountNoController.text;
-        aCHolderNameController.text=itemData[0]['AC_Holder_Name']!=null?itemData[0]['AC_Holder_Name'].toString(): aCHolderNameController.text;
-        franchiseeName.text=itemData[0]['Name']!=null?itemData[0]['Name'].toString(): franchiseeName.text;
-        franchiseeContactPerson.text=itemData[0]['Contact_Person']!=null?itemData[0]['Contact_Person'].toString(): franchiseeContactPerson.text;
-        franchiseeAddress.text=itemData[0]['Address']!=null?itemData[0]['Address'].toString(): franchiseeAddress.text;
-        selectedCity=itemData[0]['District']!=null?itemData[0]['District'].toString(): selectedCity;
-        stateName=itemData[0]['State']!=null?itemData[0]['State'].toString(): stateName;
-        pincode.text=itemData[0]['Pin_Code']!=null?itemData[0]['Pin_Code'].toString(): pincode.text;
-        countryName=itemData[0]['Country']!=null?itemData[0]['Country'].toString(): countryName;
-        franchiseeMobileNo.text=itemData[0]['Contact_No']!=null?itemData[0]['Contact_No'].toString(): franchiseeMobileNo.text;
-       franchiseeEmail.text=itemData[0]['EMail']!=null?itemData[0]['EMail'].toString(): franchiseeEmail.text;
-      franchiseefssaiNo.text=itemData[0]['FSSAI_No']!=null?itemData[0]['FSSAI_No'].toString(): franchiseefssaiNo.text;
-        franchiseeOutstandingLimit.text=itemData[0]['Outstanding_Limit']!=null?itemData[0]['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
-        selectedLimitUnit= itemData[0]['Outstanding_Limit_Type']!=null?itemData[0]['Outstanding_Limit_Type'].toString():selectedLimitUnit;
-          franchiseePaymentDays.text=itemData[0]['Payment_Days']!=null?itemData[0]['Payment_Days'].toString(): franchiseePaymentDays.text;
-      isLoaderShow=false;
-      });
-    }
-  }
 
 
   @override
@@ -263,89 +142,95 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
 
   Widget contentBox(BuildContext context) {
-    return Container(
-      height: SizeConfig.safeUsedHeight,
-      width: SizeConfig.screenWidth,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: const Color(0xFFfffff5),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFfffff5),
-        appBar: PreferredSize(
-          preferredSize: AppBar().preferredSize,
-          child: SafeArea(
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: SizeConfig.safeUsedHeight,
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: const Color(0xFFfffff5),
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Scaffold(
+            backgroundColor: const Color(0xFFfffff5),
+            appBar: PreferredSize(
+              preferredSize: AppBar().preferredSize,
+              child: SafeArea(
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  color: Colors.transparent,
+                  // color: Colors.red,
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                 child: AppBar(
+                      leadingWidth: 0,
+                      automaticallyImplyLeading: false,
+                    title:  Container(
+                          width: SizeConfig.screenWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const FaIcon(Icons.arrow_back),
+                              ),
+                              Expanded(
+                                child:  Center(
+                                  child: Text(
+                                    ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
+                                    style: appbar_text_style,),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ),
+
+                    backgroundColor: Colors.white,
+
+                  ),
+                ),
               ),
-              color: Colors.transparent,
-              // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-             child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
-                title:  Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: const FaIcon(Icons.arrow_back),
-                          ),
-                          Expanded(
-                            child:  Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
-                                style: appbar_text_style,),
-                            ),
-                          ),
-                        ],
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                widget.readOnly==false?Container():    Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
                       ),
                     ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
+                    height: SizeConfig.safeUsedHeight * .08,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
-                backgroundColor: Colors.white,
-
-              ),
+              ],
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
-                  child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            ),
-            widget.readOnly==false?Container():    Container(
-                decoration: BoxDecoration(
-                  color: CommonColor.WHITE_COLOR,
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black.withOpacity(0.08),
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                height: SizeConfig.safeUsedHeight * .08,
-                child: getSaveAndFinishButtonLayout(
-                    SizeConfig.screenHeight, SizeConfig.screenWidth)),
-            CommonWidget.getCommonPadding(
-                SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
-          ],
-        ),
-      ),
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
     );
   }
 
@@ -1266,6 +1151,127 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     setState(() {
       selectedLimitUnit=name;
     });
+  }
+  getData()async{
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().franchisee}/${widget.editItem['ID']}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data)async{
+              setState(()  {
+
+                if(data!=null){
+                  setState(() {
+                    itemData=data;
+                  });
+                  print("%%%%%%%%%%%%%%%%%%%%% $itemData");
+
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+              await setData();
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setData()async{
+    print("EDITED: ${widget.editItem}");
+    if(widget.editItem!=null){
+      File ?f=null;
+      File ?a=null;
+      File ?p=null;
+      File ?g=null;
+      if(itemData[0]['Photo']!=null&&itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10) {
+        f = await CommonWidget.convertBytesToFile(itemData[0]['Photo']['data']);
+      }
+      if(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10) {
+        a = await CommonWidget.convertBytesToFile(itemData[0]['Adhar_Card_Image']['data']);
+      }
+      if(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10) {
+        p = await CommonWidget.convertBytesToFile(itemData[0]['PAN_Card_Image']['data']);
+      }
+      if(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10) {
+        g = await CommonWidget.convertBytesToFile(itemData[0]['GST_Image']['data']);
+      }
+      setState(()  {
+        picImageBytes=(itemData[0]['Photo']!=null && itemData[0]['Photo']['data']!=null && itemData[0]['Photo']['data'].length>10)?(itemData[0]['Photo']['data']).whereType<int>().toList():[];
+        picImage=f!=null?f:picImage;
+        adharImageBytes=(itemData[0]['Adhar_Card_Image']!=null&&itemData[0]['Adhar_Card_Image']['data']!=null && itemData[0]['Adhar_Card_Image']['data'].length>10)?(itemData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
+        adharFile=a!=null?a:adharFile;
+        panImageBytes=(itemData[0]['PAN_Card_Image']!=null&&itemData[0]['PAN_Card_Image']['data']!=null && itemData[0]['PAN_Card_Image']['data'].length>10)?(itemData[0]['PAN_Card_Image']['data']).whereType<int>().toList():[];
+        panFile=p!=null?p:panFile;
+        gstImageBytes=(itemData[0]['GST_Image']!=null&&itemData[0]['GST_Image']['data']!=null && itemData[0]['GST_Image']['data'].length>10)?(itemData[0]['GST_Image']['data']).whereType<int>().toList():[];
+        gstFile=g!=null?g:gstFile;
+        adharNoController.text=itemData[0]['Adhar_No']!=null?itemData[0]['Adhar_No'].toString():adharNoController.text;
+        panNoController.text=itemData[0]['PAN_No']!=null?itemData[0]['PAN_No'].toString():panNoController.text;
+        gstNoController.text=itemData[0]['GST_No']!=null?itemData[0]['GST_No'].toString():gstNoController.text;
+        bankNameController.text=itemData[0]['Bank_Name']!=null?itemData[0]['Bank_Name'].toString():bankNameController.text;
+        bankBranchController.text=itemData[0]['Bank_Branch']!=null?itemData[0]['Bank_Branch'].toString():bankBranchController.text;
+        IFSCCodeController.text=itemData[0]['IFSC_Code']!=null?itemData[0]['IFSC_Code'].toString():IFSCCodeController.text;
+        accountNoController.text=itemData[0]['Account_No']!=null?itemData[0]['Account_No'].toString():accountNoController.text;
+        aCHolderNameController.text=itemData[0]['AC_Holder_Name']!=null?itemData[0]['AC_Holder_Name'].toString(): aCHolderNameController.text;
+        franchiseeName.text=itemData[0]['Name']!=null?itemData[0]['Name'].toString(): franchiseeName.text;
+        franchiseeContactPerson.text=itemData[0]['Contact_Person']!=null?itemData[0]['Contact_Person'].toString(): franchiseeContactPerson.text;
+        franchiseeAddress.text=itemData[0]['Address']!=null?itemData[0]['Address'].toString(): franchiseeAddress.text;
+        selectedCity=itemData[0]['District']!=null?itemData[0]['District'].toString(): selectedCity;
+        stateName=itemData[0]['State']!=null?itemData[0]['State'].toString(): stateName;
+        pincode.text=itemData[0]['Pin_Code']!=null?itemData[0]['Pin_Code'].toString(): pincode.text;
+        countryName=itemData[0]['Country']!=null?itemData[0]['Country'].toString(): countryName;
+        franchiseeMobileNo.text=itemData[0]['Contact_No']!=null?itemData[0]['Contact_No'].toString(): franchiseeMobileNo.text;
+        franchiseeEmail.text=itemData[0]['EMail']!=null?itemData[0]['EMail'].toString(): franchiseeEmail.text;
+        franchiseefssaiNo.text=itemData[0]['FSSAI_No']!=null?itemData[0]['FSSAI_No'].toString(): franchiseefssaiNo.text;
+        franchiseeOutstandingLimit.text=itemData[0]['Outstanding_Limit']!=null?itemData[0]['Outstanding_Limit'].toString(): franchiseeOutstandingLimit.text;
+        selectedLimitUnit= itemData[0]['Outstanding_Limit_Type']!=null?itemData[0]['Outstanding_Limit_Type'].toString():selectedLimitUnit;
+        franchiseePaymentDays.text=itemData[0]['Payment_Days']!=null?itemData[0]['Payment_Days'].toString(): franchiseePaymentDays.text;
+        isLoaderShow=false;
+      });
+    }
   }
 
 }

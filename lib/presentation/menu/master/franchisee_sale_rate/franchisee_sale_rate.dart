@@ -588,7 +588,7 @@ String companyId="";
           // }
           // else {
             setState(() {
-              showButton=true;
+             // showButton=true;
               selectedCopyFranchiseeName=name!;
               selectedCopyFranchiseeId=id!;
 
@@ -693,27 +693,13 @@ String companyId="";
         callback: (name,id){
 
             setState(() {
-              showButton=true;
+            //  showButton=true;
               selectedProductCategory=name!;
               //selectedCopyFranchiseeId=id!;
             });
-
-          print(selectedProductCategory);
+            print(selectedProductCategory);
         },
         ledgerName: selectedProductCategory);
-
-
-
-    /*  GetCategoryLayout(
-        titleIndicator:false,
-        title:    ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (name,id){
-          setState(() {
-            selectedProductCategory=name!;
-          });
-        },
-        selectedProductCategory: selectedProductCategory);*/
-
   }
 
   String TotalAmount="0.00";
