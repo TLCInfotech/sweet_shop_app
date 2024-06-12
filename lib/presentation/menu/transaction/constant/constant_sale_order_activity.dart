@@ -194,7 +194,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
           print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^ $selectedItems");
           if (mounted) {
             setState(() {
-              disableColor = true;
+          //    s = true;
             });
           }
          await callPostToConverOrderToSale();
@@ -525,6 +525,9 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                 disableColor = false;
                 saleInvoice_list=[];
               });
+              var snackBar=const SnackBar(content: Text("Order converted successfully !"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
               await getSaleOrderedList(1);
 
             }, onFailure: (error) {

@@ -592,80 +592,73 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       child:  Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: parentWidth * .30,
-            child: SearchableDropdownForStringArray(
-                readOnly: widget.readOnly,
-                apiUrl:ApiConstants().measuring_unit+"?",
-                title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
-                callback: (name){
+          Column(
+            children: [
+              Container(
+                width: parentWidth * .30,
+                child: SearchableDropdownForStringArray(
+                    readOnly: widget.readOnly,
+                    apiUrl:ApiConstants().measuring_unit+"?",
+                    title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
+                    callback: (name){
 
-                  setState(() {
-                    unitTwoName=name!;
-                    // cityId=id.toString()!;
-                  });
+                      setState(() {
+                        unitTwoName=name!;
+                        // cityId=id.toString()!;
+                      });
 
-                  print(unitTwoName);
-                },
-                franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Unit2'].toString():"",
-                franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
-                ledgerName: unitTwoName),
-          ),
-       //    GetUnitLayout(
-       //    parentWidth:parentWidth * .25,
-       //  title: ApplicationLocalizations.of(context)!.translate("unit_two")!,
-       //  callback: (value){
-       //    setState(() {
-       //      unitTwoName=value!;
-       //    });
-       //  },
-       //  measuringUnit: unitTwoName
-       // ),
-          Container(
-            margin: EdgeInsets.only(top: 35),
-            height: parentHeight * .055,
-            width: parentWidth * .2,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: CommonColor.WHITE_COLOR,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
-            ),
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.center,
-              textCapitalization: TextCapitalization.words,
-              focusNode: _unitTwofactor,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-              cursorColor: CommonColor.BLACK_COLOR,
-              readOnly: widget.readOnly!=false?false:true,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(
-                    left: parentWidth * .04, right: parentWidth * .02),
-                border: InputBorder.none,
-                counterText: '',
-                isDense: true,
-                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                hintStyle: hint_textfield_Style,
+                      print(unitTwoName);
+                    },
+                    franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Unit2'].toString():"",
+                    franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
+                    ledgerName: unitTwoName),
               ),
-              controller: unitTwofactorController,
-              onEditingComplete: () {
-                 _unitTwofactor.unfocus();
-                FocusScope.of(context).requestFocus(_unitTwoBase);
-              },
-              style: text_field_textStyle,
-            ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                height: parentHeight * .055,
+                width: parentWidth * .30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  textCapitalization: TextCapitalization.words,
+                  focusNode: _unitTwofactor,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  cursorColor: CommonColor.BLACK_COLOR,
+                  readOnly: widget.readOnly!=false?false:true,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(
+                        left: parentWidth * .04, right: parentWidth * .02),
+                    border: InputBorder.none,
+                    counterText: '',
+                    isDense: true,
+                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                    hintStyle: hint_textfield_Style,
+                  ),
+                  controller: unitTwofactorController,
+                  onEditingComplete: () {
+                    _unitTwofactor.unfocus();
+                    FocusScope.of(context).requestFocus(_unitTwoBase);
+                  },
+                  style: text_field_textStyle,
+                ),
+              ),
+            ],
           ),
-
           Container(
-            margin: EdgeInsets.only(top: 35),
-            child: const Text(
+            margin: EdgeInsets.only(top: 35,left: 10,right: 10),
+            child: Text(
               "=",
               style:
               text_field_textStyle,
@@ -674,12 +667,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               // textScaleFactor: 1.02,
             ),
           ),
-
           Container(
             margin: EdgeInsets.only(top: 35),
             height: parentHeight * .055,
             alignment: Alignment.center,
-            width: parentWidth * .2,
+            width: parentWidth * .45,
             decoration: BoxDecoration(
               color: CommonColor.WHITE_COLOR,
               borderRadius: BorderRadius.circular(4),
@@ -697,6 +689,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               focusNode: _unitTwoBase,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
+              maxLines: null,
               cursorColor: CommonColor.BLACK_COLOR,
               readOnly: widget.readOnly!=false?false:true,
               decoration: InputDecoration(
@@ -705,6 +698,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 border: InputBorder.none,
                 suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
                 counterText: '',
+
                 isDense: true,
                 hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                 hintStyle: hint_textfield_Style,

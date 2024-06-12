@@ -553,7 +553,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
 class SalesDataDash {
   final String Date;
   final String Vendor_Name;
-  final int Amount;
+   var Amount;
 
   SalesDataDash(this.Date, this.Amount, this.Vendor_Name);
 }
@@ -561,7 +561,7 @@ class SalesDataDash {
 class SalesItemWise {
   final String Date;
   final String Item_Name;
-  final int Amount;
+  var Amount;
 
   SalesItemWise(this.Date, this.Amount, this.Item_Name);
 }

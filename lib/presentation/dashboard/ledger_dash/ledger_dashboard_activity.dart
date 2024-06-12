@@ -544,7 +544,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
 class SalesDataDash {
   final String Date;
   final String Vendor_Name;
-  final int Amount;
+ var Amount;
 
   SalesDataDash(this.Date, this.Amount, this.Vendor_Name);
 }
@@ -552,7 +552,7 @@ class SalesDataDash {
 class SalesItemWise {
   final String Date;
   final String Expense_Name;
-  final int Amount;
+  var Amount;
 
   SalesItemWise(this.Date, this.Amount, this.Expense_Name);
 }

@@ -161,7 +161,8 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                       // labelText: '${widget.title}',
                         hintText: "${widget.title}",
                         border: OutlineInputBorder(),
-                        suffixIcon:  _controller.text=="" ?Icon(Icons.search):IconButton(onPressed: (){
+                        suffixIcon:  _controller.text=="" ?Icon(Icons.search):
+                        IconButton(onPressed: (){
                           setState(() {
                             _controller.clear();
                           });

@@ -247,6 +247,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                           editedItem=expense_group[index];
                           groupName.text=expense_group[index]['Name'];
                           parentCategory=expense_group[index]['Parent_Name']==null?"":expense_group[index]['Parent_Name'];
+                          selectedgroup=expense_group[index]['Group_Nature']==null?"":expense_group[index]['Group_Nature'];
                           parentCategoryId=expense_group[index]['Parent_ID']==null?0:expense_group[index]['Parent_ID'];
                           sequenseNoName.text=expense_group[index]['Seq_No'].toString();
                           print("ggfhfghgfhvg  $parentCategory");
@@ -390,7 +391,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                               // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_no")!),
                               getSequenceNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                               // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("sequence_nature")!),
-                              getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                           getSequenceNatureLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                               const SizedBox(height: 20,),
 
@@ -480,32 +481,47 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             });
           },
 
-        ): Container(
-            height: parentHeight * .055,
-            margin: EdgeInsets.only(top: 10),
-            padding: EdgeInsets.only(left: 10, right: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: CommonColor.WHITE_COLOR,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  selectedgroup == null ? ApplicationLocalizations.of(context)!.translate("group_nature")!
-                      : selectedgroup,
-                  style: selectedgroup == null ? item_regular_textStyle : text_field_textStyle,
-                ),
-              ],
-            )),
+        ): Padding(
+          padding:  EdgeInsets.only(top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                ApplicationLocalizations.of(context)!.translate("group_nature")!,
+                style: item_heading_textStyle,
+              ),
+              Container(
+                  height: parentHeight * .055,
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding:  EdgeInsets.only(left: 05),
+                        child: Text(
+                          selectedgroup == null ? ApplicationLocalizations.of(context)!.translate("group_nature")!
+                              : selectedgroup,
+                         style: item_heading_textStyle,
+                         // style: selectedgroup == null ? item_regular_textStyle : text_field_textStyle,
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ),
     );
 
 
@@ -603,7 +619,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   /* Widget For Category Layout */
   Widget getParentGroupLayout(double parentHeight, double parentWidth,StateSetter setState){
     return Padding(
-          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
+          padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .01),
           child:  SearchableDropdownWithObject(
             name:editedItem!=null && parentCategory!=null?parentCategory:"",
             status:   editedItem!=null?"edit":"",
