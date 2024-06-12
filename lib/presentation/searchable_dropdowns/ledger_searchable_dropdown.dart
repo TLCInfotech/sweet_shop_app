@@ -91,6 +91,107 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
 
   var filteredStates = [];
 
+  @override
+  Widget build(BuildContext context) {
+    return
+
+      Padding(
+      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.titleIndicator!=false? Text(
+            widget.title,
+            style: item_heading_textStyle,
+          ):Container(),
+          Padding(
+            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+            child:  Container(
+              height: SizeConfig.screenHeight * .055,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: CommonColor.WHITE_COLOR,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.1),
+                  ),
+                ],
+              ),
+              child:    TypeAheadFormField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  onChanged: (value){
+                    print("onchangedddddd  $value");
+                  },
+                  onSubmitted: (v){
+                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                      setState(() {
+                        _controller.clear();
+                      });
+                      widget.callback("","");
+                      searchFocus.unfocus();
+                    }},
+                  onTapOutside: (event) {
+                 },
+                  onEditingComplete: () {
+                    print("onchangedddddd2222  ");
+                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                      setState(() {
+                        _controller.clear();
+                      });
+                      widget.callback("","");
+                      searchFocus.unfocus();
+                    }
+                  },
+                  onTap: (){
+                   // _controller.clear();
+                    setState(() {
+                      callGetLedger();
+                    });
+                  },
+                  textInputAction: TextInputAction.none, // Change input action to "none"
+                  controller: _controller,
+                  //enabled: widget.come=="disable"?false:true,
+                  enabled: widget.readOnly==false?false:true,
+                  focusNode: searchFocus,
+                  decoration: textfield_decoration.copyWith(
+                    // labelText: '${widget.title}',
+                    hintText: "${widget.title}",
+                    border: OutlineInputBorder(),
+                    suffixIcon: widget.come=="disable"?null: (_controller.text=="" || _controller.text==null)?Icon(Icons.search):IconButton(onPressed: (){
+                      setState(() {
+                        _controller.clear();
+                      });
+                      widget.callback("","");
+                      }, icon: Icon(Icons.clear))
+                  ),
+                ),
+                suggestionsCallback: (pattern) {
+                  return _getSuggestions(pattern);
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion['Name']),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  setState(() {
+                    selectedItem = suggestion['Name'];
+                    _controller.text=suggestion['Name'];
+                  });
+                  widget.callback(suggestion['Name'],(suggestion['ID']).toString());
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
   Future<List> fetchSimpleData(searchstring) async {
     List<dynamic> _list = [];
     List<dynamic> results = [];
@@ -99,13 +200,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
     //   results = filteredStates;
     // } else {
 
-      results = filteredStates
-          .where((user) =>
-          user["Name"]
-              .toLowerCase()
-              .contains(searchstring.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
+    results = filteredStates
+        .where((user) =>
+        user["Name"]
+            .toLowerCase()
+            .contains(searchstring.toLowerCase()))
+        .toList();
+    // we use the toLowerCase() method to make it case-insensitive
     // }
 
     // Refresh the UI
@@ -162,115 +263,6 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
 
 
 
-  @override
-  Widget build(BuildContext context) {
-    return
-
-      Padding(
-      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          widget.titleIndicator!=false? Text(
-            widget.title,
-            style: item_heading_textStyle,
-          ):Container(),
-          Padding(
-            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
-            child:  Container(
-              height: SizeConfig.screenHeight * .055,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: CommonColor.WHITE_COLOR,
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child:    TypeAheadFormField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  onChanged: (value){
-                  },
-                  onSubmitted: (v){
-
-                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
-                      setState(() {
-                        _controller.clear();
-                      });
-                      widget.callback("","");
-                      searchFocus.unfocus();
-                    }
-
-                  },
-                  onTapOutside: (event) {
-                    // if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
-                    //   setState(() {
-                    //     _controller.clear();
-                    //   });
-                    //  widget.callback("","");
-                    // }
-                    // searchFocus.unfocus();
-
-                  },
-                  onEditingComplete: () {
-                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
-                      setState(() {
-                        _controller.clear();
-                      });
-                      widget.callback("","");
-                      searchFocus.unfocus();
-                    }
-                  },
-                  onTap: (){
-                   // _controller.clear();
-                    setState(() {
-                      callGetLedger();
-                    });
-                  },
-                  textInputAction: TextInputAction.none, // Change input action to "none"
-                  controller: _controller,
-                  //enabled: widget.come=="disable"?false:true,
-                  enabled: widget.readOnly==false?false:true,
-                  focusNode: searchFocus,
-                  decoration: textfield_decoration.copyWith(
-                    // labelText: '${widget.title}',
-                    hintText: "${widget.title}",
-                    border: OutlineInputBorder(),
-                    suffixIcon: widget.come=="disable"?null: (_controller.text=="" || _controller.text==null)?Icon(Icons.search):IconButton(onPressed: (){
-                      setState(() {
-                        _controller.clear();
-                      });
-                      widget.callback("","");
-                      }, icon: Icon(Icons.clear))
-                  ),
-                ),
-                suggestionsCallback: (pattern) {
-                  return _getSuggestions(pattern);
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion['Name']),
-                  );
-                },
-
-                onSuggestionSelected: (suggestion) {
-                  setState(() {
-                    selectedItem = suggestion['Name'];
-                    _controller.text=suggestion['Name'];
-                  });
-                  widget.callback(suggestion['Name'],(suggestion['ID']).toString());
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
   List _getSuggestions(String query) {
     List matches = [];
     matches.addAll(ledger_list);

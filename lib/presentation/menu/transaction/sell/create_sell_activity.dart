@@ -796,15 +796,10 @@ var invoice_No;
             setState(() {
               showButton=true;
               selectedFranchiseeName = name!;
-              selectedFranchiseeId = id.toString()!;
-              // Item_list=[];
-              // Updated_list=[];
-              // Deleted_list=[];
-              // Inserted_list=[];
+              selectedFranchiseeId = id.toString();
             });
           }
           print("############3");
-          print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
         },
 
     );

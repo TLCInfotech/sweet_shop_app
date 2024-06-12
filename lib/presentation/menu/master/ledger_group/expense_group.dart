@@ -437,8 +437,8 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
     );
-
   }
+
   /* widget for Category layout */
   Widget getSequenceNoLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(

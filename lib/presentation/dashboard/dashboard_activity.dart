@@ -149,7 +149,6 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
       onWillPop: _onBackPressed,
       //onWillPop: () async => false,
       child: Scaffold(
-
         backgroundColor: CommonColor.MAIN_BG,
         resizeToAvoidBottomInset: false,
         // drawerEnableOpenDragGesture: false,
