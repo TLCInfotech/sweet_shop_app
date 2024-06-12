@@ -53,7 +53,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
     // TODO: implement initState
     super.initState();
     setdata();
-    searchFocus.addListener(_onFocusChange);
+    // searchFocus.addListener(() {
+    //   if (!searchFocus.hasFocus) {
+    //     // Clear text when the field loses focus
+    //     _controller.clear();
+    //   }
+    // });
+    searchFocus.addListener(_onFocusChange);  
   }
 
   void _onFocusChange() {
@@ -185,14 +191,45 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                   ),
                 ],
               ),
-              child: TypeAheadFormField(
+              child:    TypeAheadFormField(
                 textFieldConfiguration: TextFieldConfiguration(
+                  onChanged: (value){
+                  },
+                  onSubmitted: (v){
+
+                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                      setState(() {
+                        _controller.clear();
+                      });
+                      widget.callback("","");
+                      searchFocus.unfocus();
+                    }
+
+                  },
+                  onTapOutside: (event) {
+                    // if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                    //   setState(() {
+                    //     _controller.clear();
+                    //   });
+                    //  widget.callback("","");
+                    // }
+                    // searchFocus.unfocus();
+
+                  },
+                  onEditingComplete: () {
+                    if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                      setState(() {
+                        _controller.clear();
+                      });
+                      widget.callback("","");
+                      searchFocus.unfocus();
+                    }
+                  },
                   onTap: (){
                    // _controller.clear();
                     setState(() {
                       callGetLedger();
                     });
-
                   },
                   textInputAction: TextInputAction.none, // Change input action to "none"
                   controller: _controller,
@@ -219,6 +256,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     title: Text(suggestion['Name']),
                   );
                 },
+
                 onSuggestionSelected: (suggestion) {
                   setState(() {
                     selectedItem = suggestion['Name'];
