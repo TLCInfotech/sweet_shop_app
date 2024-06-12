@@ -74,7 +74,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
   }
   setdata()async{
     await callGetLedger();
-    if(widget.franchisee=="edit"){
+    if(widget.franchisee=="edit" && widget.franchiseeName!=null ){
       print(":::::: ${widget.franchiseeName}\n ${widget.ledgerName}");
       _controller.text=widget.franchiseeName;
     }

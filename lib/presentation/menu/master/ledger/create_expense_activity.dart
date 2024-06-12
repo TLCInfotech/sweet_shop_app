@@ -240,9 +240,13 @@ var ledgerData=null;
     if(ledgerData[0]['GST_Image']!=null&&ledgerData[0]['GST_Image']['data']!=null && ledgerData[0]['GST_Image']['data'].length>10) {
       g = await CommonWidget.convertBytesToFile(ledgerData[0]['GST_Image']['data']);
     }
+    print("###################333");
+    print(ledgerData[0]['District']);
       setState(()  {
-      districtController.text=ledgerData[0]['District']!=null?ledgerData[0]['District'].toString(): "";
-      stateName=ledgerData[0]['State']!=null?ledgerData[0]['State']:"";
+      districtController.text=ledgerData[0]['District']!=null?ledgerData[0]['District'].toString():districtController.text;
+      countryName=ledgerData[0]['Country']!=null?ledgerData[0]['Country'].toString():countryName;
+
+      stateName=ledgerData[0]['State']!=null?ledgerData[0]['State']:stateName;
       picImageBytes=(ledgerData[0]['Photo']!=null && ledgerData[0]['Photo']['data']!=null && ledgerData[0]['Photo']['data'].length>10)?(ledgerData[0]['Photo']['data']).whereType<int>().toList():[];
       picImage=f!=null?f:picImage;
       adharImageBytes=(ledgerData[0]['Adhar_Card_Image']!=null&&ledgerData[0]['Adhar_Card_Image']['data']!=null && ledgerData[0]['Adhar_Card_Image']['data'].length>10)?(ledgerData[0]['Adhar_Card_Image']['data']).whereType<int>().toList():[];
@@ -346,7 +350,7 @@ var ledgerData=null;
             body: Column(
               children: [
                 Expanded(
-                  child: Container(
+                  child: isLoaderShow?Center(child: CircularProgressIndicator(color: Colors.transparent,)):Container(
                     // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllTextFormFieldLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
@@ -953,7 +957,7 @@ var ledgerData=null;
             )
 
         ),
-        AmountTypeDialog(mListener: this,selectedType:selectedLimitUnit,width: 130,)
+        AmountTypeDialog(mListener: this,selectedType:selectedLimitUnit,width: 130,mandatory: false,)
         // Container(
         //   height: 50,
         //   width: 130,
@@ -1051,7 +1055,7 @@ var ledgerData=null;
       child: Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
           child:  SearchableDropdownWithObjectForTax(
-            name:widget.ledgerList!=null && ledgerData!=null?ledgerData[0]['Tax_Type']:"",
+            name:widget.ledgerList!=null && ledgerData!=null?ledgerData[0]['Tax_Type']!=null?ledgerData[0]['Tax_Type']:null:null,
             status:   widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_type+"?",
@@ -1299,8 +1303,8 @@ var ledgerData=null;
       child: Padding(
           padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
           child:  SearchableDropdownWithObjectForTax(
-            name:widget.ledgerList!=null && ledgerData!=null? ledgerData[0]['Tax_Category']:"",
-            status:   widget.ledgerList!=null?"edit":"",
+            name:widget.ledgerList!=null && ledgerData!=null? ledgerData[0]['Tax_Category']!=null?ledgerData[0]['Tax_Category']:null:null,
+             status:   widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
             apiUrl:ApiConstants().tax_category+"?",
             titleIndicator: false,
@@ -1537,7 +1541,7 @@ var ledgerData=null;
           readOnly: widget.readOnly,
           apiUrl:ApiConstants().city+"?",
           ledgerName: districtController.text,
-          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['District'].toString(): "",
+          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['District']!=null?ledgerData[0]['District'].toString():null:null,
           franchisee: widget.ledgerList!=null&& ledgerData!=null?"edit":"",
           title:  ApplicationLocalizations.of(context)!.translate("city")!,
           callback: (name){
@@ -1580,7 +1584,7 @@ var ledgerData=null;
 
             print(stateName);
           },
-          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['State'].toString(): "",
+          franchiseeName:widget.ledgerList!=null &&ledgerData!=null?ledgerData[0]['State']!=null?ledgerData[0]['State'].toString():null:null,
           franchisee:  widget.ledgerList!=null &&  ledgerData!=null?"edit":"",
           ledgerName: stateName),
     );
@@ -1643,7 +1647,7 @@ var ledgerData=null;
 
             print(countryName);
           },
-          franchiseeName: widget.ledgerList!=null&&ledgerData!=null?ledgerData[0]['Country'].toString(): "",
+          franchiseeName: widget.ledgerList!=null&&ledgerData!=null?ledgerData[0]['Country']!=null?ledgerData[0]['Country'].toString():null:null,
           franchisee:  widget.ledgerList!=null?"edit":"",
           ledgerName: countryName),
     );

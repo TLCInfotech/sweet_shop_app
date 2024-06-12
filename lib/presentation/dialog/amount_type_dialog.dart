@@ -43,8 +43,9 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    selctedAmtType=widget.selectedType;
-
+    if(widget.selectedType!=null) {
+      selctedAmtType = widget.selectedType;
+    }
     _scrollController.addListener(_scrollListener);
     callGetAmountType(page);
   }

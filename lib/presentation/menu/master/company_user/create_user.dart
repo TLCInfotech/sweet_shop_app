@@ -20,6 +20,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/user/post_user_request_model.dart';
 import '../../../../data/domain/user/put_user_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../dialog/working_under_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
@@ -97,7 +98,7 @@ class _UserCreateState extends State<UserCreate>with WorkingUnderDialogInterface
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().users}/${widget.editUser['Name']}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().users}/${widget.editUser['UID']}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               setState(()  {
@@ -163,7 +164,7 @@ String oldUid="";
       userController.text=userData[0]["UID"];
       oldUid=userData[0]["UID"];
       print("jhjfhjf  ${userData[0]["Active"]}  $oldUid");
-      workingdaysController.text=userData[0]["Working_Days"].toString();
+      workingdaysController.text=userData[0]["Working_Days"]!=null?userData[0]["Working_Days"].toString():workingdaysController.text;
       franchiseeId=userData[0]["Ledger_ID"].toString();
       franchiseeName=userData[0]["Ledger_Name"];
       checkActiveValue=userData[0]["Active"];
@@ -331,14 +332,14 @@ String oldUid="";
 
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
           if (value!.isEmpty) {
             return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("user_name")!;
           }
           return null;
         },
-      readOnly: widget.readOnly,
+      readOnly:widget.editUser!=null?false: widget.readOnly,
       controller: userController,
       focuscontroller: _userFocus,
       focusnext: _workingdaysFocus,
@@ -357,7 +358,7 @@ String oldUid="";
 
   /* Widget for working days text from field layout */
   Widget getWorkingDaysLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
           if (value!.isEmpty) {
             return     ApplicationLocalizations.of(context)!.translate("enter")!+    ApplicationLocalizations.of(context)!.translate("working_days")!;
@@ -761,6 +762,7 @@ String oldUid="";
     String tokan = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
+      print("FFFFFFFFFFFFFFFFFFFFFFFFF $userName");
       AppPreferences.getDeviceId().then((deviceId) {
         PutUserRequestModel model = PutUserRequestModel(
           uid: userName,
