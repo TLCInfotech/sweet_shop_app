@@ -678,32 +678,36 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                 isLoaderShow=false;
                 isShowSkeleton=false;
                 if(data!=null){
-                  if (mounted) {
-                    for (var item in data['DashboardSaleDateWise']) {
-                      _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
-                    }
-                    for (var item in data['DashboardProfitPartywise']) {
-                      _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
-                    }
-                  }
+                  // if (mounted) {
+                  //   for (var item in data['DashboardSaleDateWise']) {
+                  //     _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
+                  //   }
+                  //   for (var item in data['DashboardProfitPartywise']) {
+                  //     _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
+                  //   }
+                  // }
                   // _saleData=_saleData;
                   // print("nessssss  $_saleData");
 
                   setState(() {
-                //    profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
-                    _profitPartywise=_profitPartywise;
-                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Purchase_Amount'].toString());
-                    expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
-                    returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
-                    receiptAmt=double.parse(data['DashboardMainData'][0]['Payment_Amount'].toString());
-                    saleAmt=double.parse(data['DashboardMainData'][0]['Sale_Amount'].toString());
+                   // profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
+                //     _profitPartywise=_profitPartywise;
                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
-                    FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+
+                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
+                    expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
+                    returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
+                    // receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
+                    saleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
+                    //
+                    // FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+
+
                     profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
                     additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
-                    additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
-
+                     additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
+                    print("############################### ${additionalProfitLoss}");
                   });
 
                 }else{
