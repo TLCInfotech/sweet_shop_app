@@ -277,10 +277,10 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      },child: getThreeLayout(additionalProfitLossShare>=0? "Additional Profit Share":"Additional Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                ],
              ),
-             // SizedBox(height: 10,),
-             // (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
-             //     (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-             // getProfitLayout():Container(),
+             SizedBox(height: 10,),
+             (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                 (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+             getProfitLayout():Container(),
            ],
          ),
        ),
@@ -702,8 +702,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                     saleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     //
                     // FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
-
-
                     profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
                     additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
                      additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());

@@ -128,7 +128,17 @@ var voucherNo;
 
   @override
   Widget build(BuildContext context) {
-    return contentBox(context);
+    return WillPopScope(
+        onWillPop: ()async{
+          if(showButton==true){
+            await  showCustomDialog(context);
+            return false;
+          }
+          else {
+            return true;
+          }
+        },
+        child: contentBox(context));
   }
 
   Widget contentBox(BuildContext context) {
@@ -166,61 +176,7 @@ var voucherNo;
                           GestureDetector(
                             onTap: () async {
                               if (showButton == true) {
-                                await showGeneralDialog(
-                                    barrierColor: Colors.black.withOpacity(0.5),
-                                    transitionBuilder:
-                                        (context, a1, a2, widget) {
-                                      final curvedValue = Curves.easeInOutBack
-                                              .transform(a1.value) -
-                                          1.0;
-                                      return Transform.scale(
-                                        scale: a1.value,
-                                        child: Opacity(
-                                          opacity: a1.value,
-                                          child: BackPageDialog(
-                                              onCallBack: (value) async {
-                                                print("goooodddd   $value");
-                                                if(value=="yes"){
-                                                  print("fhhjfbhjhbvf   $value");
-                                                  setState(() {
-                                                    if (selectedBankLedgerID == null) {
-                                                      var snackBar =
-                                                      SnackBar(content: Text("Select Bank Cash Ledger !"));
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                    } else if (Item_list.length == 0) {
-                                                      var snackBar = SnackBar(
-                                                          content: Text("Add atleast one Expense ledger!"));
-                                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                    } else if (selectedBankLedgerID != null &&
-                                                        Item_list.length > 0) {
-                                                      if (mounted) {
-                                                        setState(() {
-                                                          showButton = false;
-
-                                                        });
-                                                      }
-                                                      if (voucherNo == null) {
-                                                        print("#######");
-                                                        callPostContra();
-                                                      } else {
-                                                        print("dfsdf");
-                                                        updatecallPostContra();
-                                                      }
-                                                    }
-                                                  });}
-                                          }),
-                                        ),
-                                      );
-                                    },
-                                    transitionDuration:
-                                        Duration(milliseconds: 200),
-                                    barrierDismissible: true,
-                                    barrierLabel: '',
-                                    context: context,
-                                    pageBuilder:
-                                        (context, animation2, animation1) {
-                                      return Container();
-                                    });
+                                showCustomDialog(context);
                               } else {
                                 Navigator.pop(context);
                               }
@@ -275,6 +231,61 @@ var voucherNo;
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
+    );
+  }
+
+  Future<void> showCustomDialog(BuildContext context) async {
+    await showGeneralDialog(
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, a1, a2, widget) {
+        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: BackPageDialog(
+              onCallBack: (value) async {
+                if (value == "yes") {
+                  print("fhhjfbhjhbvf   $value");
+                  setState(() {
+                    if (selectedBankLedgerID == null) {
+                      var snackBar =
+                      SnackBar(content: Text("Select Bank Cash Ledger !"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (Item_list.length == 0) {
+                      var snackBar = SnackBar(
+                          content: Text("Add atleast one Expense ledger!"));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (selectedBankLedgerID != null &&
+                        Item_list.length > 0) {
+                      if (mounted) {
+                        setState(() {
+                          showButton = false;
+
+                        });
+                      }
+                      if (voucherNo == null) {
+                        print("#######");
+                        callPostContra();
+                      } else {
+                        print("dfsdf");
+                        updatecallPostContra();
+                      }
+                    }
+                  });
+                }
+              },
+            ),
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation2, animation1) {
+        return Container();
+      },
     );
   }
 

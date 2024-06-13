@@ -167,19 +167,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: ()async{
-          print("${Deleted_list.length} ${Updated_list.length} ${Inserted_list.length}");
-          if(Inserted_list.length!=0||Deleted_list.length!=0||Updated_list.length!=0){
-            print("Without saving");
-            showCupertinoDialog(
-              context: context,
-              useRootNavigator: true,
-              barrierDismissible: true,
-              builder: (context) {
-                return ExitScreenDialog(
-                  isDialogType: "1",
-                );
-              },
-            );
+     if(showButton==true){
+       await  showCustomDialog(context);
             return false;
           }
           else {
@@ -231,37 +220,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                           GestureDetector(
                             onTap: () async {
                               if(showButton==true){
-                                await showGeneralDialog(
-                                    barrierColor: Colors.black.withOpacity(0.5),
-                                    transitionBuilder: (context, a1, a2, widget) {
-                                      final curvedValue = Curves.easeInOutBack
-                                          .transform(a1.value) -
-                                          1.0;
-                                      return Transform.scale(
-                                        scale: a1.value,
-                                        child: Opacity(
-                                          opacity: a1.value,
-                                          child: BackPageDialog(
-                                              onCallBack: (value) async {
-                                                if(value=="yes"){
-                    if (mounted) {
-                    setState(() {
-                    showButton = false;
-                    });
-                    await callPostItemOpeningBal();}}
-                                              }),
-                                        ),
-                                      );
-                                    },
-                                    transitionDuration:
-                                    Duration(milliseconds: 200),
-                                    barrierDismissible: true,
-                                    barrierLabel: '',
-                                    context: context,
-                                    pageBuilder:
-                                        (context, animation2, animation1) {
-                                      return Container();
-                                    });
+                              await  showCustomDialog(context);
                               }else{
                                 Navigator.pop(context);
                               }},
@@ -313,6 +272,40 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
       ],
     );
   }
+
+  Future<void> showCustomDialog(BuildContext context) async {
+    await showGeneralDialog(
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, a1, a2, widget) {
+        final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: BackPageDialog(
+              onCallBack: (value) async {
+                if (value == "yes") {
+                  if (mounted) {
+                    setState(() {
+                      showButton = false;
+                    });
+                    await callPostItemOpeningBal();}
+                }
+              },
+            ),
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation2, animation1) {
+        return Container();
+      },
+    );
+  }
+
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
