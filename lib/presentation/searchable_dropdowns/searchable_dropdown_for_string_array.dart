@@ -29,7 +29,11 @@ class SearchableDropdownForStringArray extends StatefulWidget{
   final franchisee;
   final franchiseeName;
   final readOnly;
-  SearchableDropdownForStringArray({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.readOnly});
+  final focuscontroller;
+  final txtkey;
+  final focusnext;
+  final mandatory;
+  SearchableDropdownForStringArray({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory});
 
 
 
@@ -134,7 +138,16 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.titleIndicator!=false? Text(
+            widget.titleIndicator!=false? widget.mandatory==true?
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text:widget.title,style: item_heading_textStyle,),
+                  TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+                ],
+              ),
+            )
+                : Text(
               widget.title,
               style: item_heading_textStyle,
             ):Container(),
@@ -155,7 +168,37 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
                   ],
                 ),
                 child: TypeAheadFormField(
+                  key: widget.txtkey,
                   textFieldConfiguration: TextFieldConfiguration(
+                    onChanged: (v)async{
+                      if(v.isEmpty) {
+                        setState(() {
+                          selectedItem=null;
+                          print("knjbnbnjbnbn  $v");
+                        });
+                        await widget.callback(null);
+                      }
+                    },
+                    onSubmitted: (v){
+                      if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                        setState(() {
+                          _controller.clear();
+                        });
+                        widget.callback("");
+                        searchFocus.unfocus();
+                      }},
+                    onTapOutside: (event) {
+                    },
+                    onEditingComplete: () {
+                      print("onchangedddddd2222  ");
+                      if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
+                        setState(() {
+                          _controller.clear();
+                        });
+                        widget.callback("");
+                        searchFocus.unfocus();
+                      }
+                    },
                     onTap: (){
                       setState(() {
                         callGetLedger();
@@ -175,6 +218,17 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
                           });
                           widget.callback("");
                         }, icon: Icon(Icons.clear)),
+                      errorStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16.0,
+                          height: 0
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                      ),
                     ),
                   ),
 
@@ -185,6 +239,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownForS
                     return ListTile(
                       title: Text(suggestion),
                     );
+                  },
+                  validator: (value) {
+                    print("kkjggkg   $value");
+                    if (value!.isEmpty) {
+                      return '';
+                    }
+
                   },
                   onSuggestionSelected: (suggestion) {
                     setState(() {

@@ -258,7 +258,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                      opacity: a1.value,
                                      child: BackPageDialog(
                                          onCallBack: (value) async {
-                                           if(value=="yes"){
+                                           print("#####################f");
+                                           print(Inserted_list);
+                                           if(value=="Yes"){
                                              if(selectedFranchiseeID==null){
                                                var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);

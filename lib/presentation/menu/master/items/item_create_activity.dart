@@ -25,6 +25,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/item/put_item_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
@@ -40,23 +41,32 @@ class ItemCreateActivity extends StatefulWidget {
 }
 
 class _ItemCreateActivityState extends State<ItemCreateActivity> {
+  final _formkey = GlobalKey<FormState>();
+
   final _itemNameFocus = FocusNode();
   final itemNameController = TextEditingController();
+  final _itemNameKey = GlobalKey<FormFieldState>();
 
-  final _branchNameFocus = FocusNode();
-  final branchNameController = TextEditingController();
+  final _unitFocus = FocusNode();
+  final unitController = TextEditingController();
+  final _unitKey = GlobalKey<FormFieldState>();
+
+  final _categoryFocus = FocusNode();
+  final categoryController = TextEditingController();
 
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
 
   final _unitTwofactor = FocusNode();
   final unitTwofactorController = TextEditingController();
+
   final _unitTwoBase = FocusNode();
   final unitTwoBaseController = TextEditingController();
 
 
   final _unitThreefactor = FocusNode();
   final unitThreefactorController = TextEditingController();
+
   final _unitThreeBase = FocusNode();
   final unitThreeBaseController = TextEditingController();
 
@@ -191,6 +201,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   final rateController = TextEditingController();
   final _rateFocus = FocusNode();
+  final _rateKey = GlobalKey<FormFieldState>();
+
   final minController = TextEditingController();
   final _minFocus = FocusNode();
   final maxController = TextEditingController();
@@ -446,38 +458,41 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                children: [
-                  getImageLayout(parentHeight, parentWidth),
-                  SizedBox(height: 20,),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!),
-                  Container(
+              child:  Form(
+                key: _formkey,
+                child: Column(
+                  children: [
+                    getImageLayout(parentHeight, parentWidth),
+                    SizedBox(height: 20,),
+                    getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!),
+                    Container(
 
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey,width: 1),
-                    ),
-                    child: Column(children: [
-                      getNameLayout(parentHeight, parentWidth),
-                      getAddCategoryLayout(parentHeight, parentWidth),
-                      getMeasuringUnitLayout(parentHeight, parentWidth),
-                      getUnitTwoLayout(parentHeight, parentWidth),
-                      getUnitThreeLayout(parentHeight, parentWidth),
-                      getPackSizeLayout(parentHeight, parentWidth),
-                      getRateLayout(parentHeight, parentWidth),
-                      getHSNNOLayout(parentHeight, parentWidth),
-                      getDefaultStoreLayout(parentHeight, parentWidth),
-                      getMinStockLayout(parentHeight, parentWidth),
-                      getMaxStockLayout(parentHeight, parentWidth),
-                      getExtNameLayout(parentHeight, parentWidth),
-                      getAddDescriptionLayout(parentHeight, parentWidth),
-                    ],
-                    ),
-                  )
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey,width: 1),
+                      ),
+                      child: Column(children: [
+                        getNameLayout(parentHeight, parentWidth),
+                        getAddCategoryLayout(parentHeight, parentWidth),
+                        getMeasuringUnitLayout(parentHeight, parentWidth),
+                        getUnitTwoLayout(parentHeight, parentWidth),
+                        getUnitThreeLayout(parentHeight, parentWidth),
+                        getPackSizeLayout(parentHeight, parentWidth),
+                        getRateLayout(parentHeight, parentWidth),
+                        getHSNNOLayout(parentHeight, parentWidth),
+                        getDefaultStoreLayout(parentHeight, parentWidth),
+                        getMinStockLayout(parentHeight, parentWidth),
+                        getMaxStockLayout(parentHeight, parentWidth),
+                        getExtNameLayout(parentHeight, parentWidth),
+                        getAddDescriptionLayout(parentHeight, parentWidth),
+                      ],
+                      ),
+                    )
 
 
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -489,21 +504,24 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      mandatory: true,
+      txtkey: _itemNameKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("working_days")!;
+          return "";
         }
         return null;
       },
       controller: itemNameController,
       readOnly: widget.readOnly,
       focuscontroller: _itemNameFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _categoryFocus,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callbackOnchage: (value) {
         setState(() {
           itemNameController.text = value;
         });
+        _itemNameKey.currentState!.validate();
       },
       textInput: TextInputType.text,
       maxlines: 1,
@@ -511,13 +529,17 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     );
 
   }
-
+  final _categoryKey = GlobalKey<FormFieldState>();
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
     return   Padding(
       padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
       child:  SearchableLedgerDropdown(
+          mandatory: true,
+          txtkey: _categoryKey,
+          focuscontroller: categoryController,
+          focusnext: _unitFocus,
           apiUrl:ApiConstants().item_category+"?",
           franchisee: widget.editItem!=null?"edit":"",
           readOnly: widget.readOnly,
@@ -529,7 +551,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 categoryName=name!;
                 categoryId=int.parse(id!);
               });
-
+              _categoryKey.currentState!.validate();
           },
           ledgerName: categoryName)
     );
@@ -554,6 +576,10 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+          mandatory: true,
+          txtkey: _unitKey,
+          focuscontroller: unitController,
+          focusnext: unitTwofactorController,
           readOnly: widget.readOnly,
           apiUrl:ApiConstants().measuring_unit+"?",
           title:  ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
@@ -563,7 +589,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               measuringUnit=name!;
               // cityId=id.toString()!;
             });
-
+            _unitKey.currentState!.validate();
             print(measuringUnit);
           },
           franchiseeName: widget.editItem!=null&& itemData!=null?itemData[0]['Unit']:"",
@@ -825,6 +851,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               ],
             ),
             child: TextFormField(
+              controller: unitThreeBaseController,
               textAlignVertical: TextAlignVertical.center,
               textCapitalization: TextCapitalization.words,
               focusNode: _unitThreeBase,
@@ -881,7 +908,6 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   }
 
-
   /* Widget for max text from field layout */
   Widget getMinStockLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
@@ -903,7 +929,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       textInput: TextInputType.number,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
     );
 
   }
@@ -911,7 +937,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget for max text from field layout */
   Widget getExtNameLayout(double parentHeight, double parentWidth) {
-    return  SingleLineEditableTextFormField(
+    return  SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("ext_name")!;
@@ -937,7 +963,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget for max text from field layout */
   Widget getPackSizeLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pack_size")!;
@@ -947,7 +973,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       controller: packSizeController,
       readOnly: widget.readOnly,
       focuscontroller: _packSizeFocus,
-      focusnext: _hsnNoFocus,
+      focusnext: _rateFocus,
       title: ApplicationLocalizations.of(context)!.translate("pack_size")!,
       callbackOnchage: (value) {
         setState(() {
@@ -965,9 +991,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   /* Widget for rate text from field layout */
   Widget getRateLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      mandatory: true,
+      txtkey: _rateKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("pack_size")!;
+          return "";
         }
         return null;
       },
@@ -981,17 +1009,20 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         setState(() {
           rateController.text = value;
         });
+        _rateKey.currentState!.validate();
       },
-      textInput: TextInputType.numberWithOptions(decimal: true),
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 \.]')),
+        textInput: TextInputType.numberWithOptions(
+            decimal: true
+        ),
+        maxlines: 1,
+        format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
   }
 
   /* Widget for max text from field layout */
   Widget getHSNNOLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("hsn_no")!;
@@ -1002,7 +1033,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       readOnly: widget.readOnly,
       controller: hsnNoController,
       focuscontroller: _hsnNoFocus,
-      focusnext: _branchNameFocus,
+      focusnext: _defaultStoreFocus,
       title: ApplicationLocalizations.of(context)!.translate("hsn_no")!,
       callbackOnchage: (value) {
         setState(() {
@@ -1019,7 +1050,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget for Description Layout */
   Widget getAddDescriptionLayout(double parentHeight, double parentWidth){
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("item_description")!;
@@ -1029,7 +1060,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       readOnly: widget.readOnly,
       controller: descController,
       focuscontroller: _descFocus,
-      focusnext: _branchNameFocus,
+      focusnext: null,
       maxlength: 500,
       title: ApplicationLocalizations.of(context)!.translate("item_description")!,
       callbackOnchage: (value) {
@@ -1046,7 +1077,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   /* Widget for max text from field layout */
   Widget getDefaultStoreLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("default_store")!;
@@ -1095,7 +1126,12 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
               //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
               //   )));
               // }
-              if (mounted) {
+              bool v=_itemNameKey.currentState!.validate();
+              bool q=_categoryKey.currentState!.validate();
+              bool u=_unitKey.currentState!.validate();
+              bool r=_rateKey.currentState!.validate();
+
+              if (mounted && v && q && r && u ) {
                 setState(() {
                   disableColor = true;
                 });

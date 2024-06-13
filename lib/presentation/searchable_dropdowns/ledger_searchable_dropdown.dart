@@ -31,7 +31,11 @@ class SearchableLedgerDropdown extends StatefulWidget{
   final franchiseeName;
   final suffixicon;
   final readOnly;
-  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come,this.suffixicon, this.readOnly});
+  final focuscontroller;
+  final txtkey;
+  final focusnext;
+  final mandatory;
+  SearchableLedgerDropdown({required this.title, required this.callback, required this.ledgerName,this.titleIndicator,required this.apiUrl, this.franchisee, this.franchiseeName, this.come,this.suffixicon, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory});
 
 
 
@@ -100,7 +104,16 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.titleIndicator!=false? Text(
+          widget.titleIndicator!=false? widget.mandatory==true?
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text:widget.title,style: item_heading_textStyle,),
+                TextSpan(text:"*",style: item_heading_textStyle.copyWith(color: Colors.red),),
+              ],
+            ),
+          )
+              : Text(
             widget.title,
             style: item_heading_textStyle,
           ):Container(),
@@ -121,9 +134,17 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                 ],
               ),
               child:    TypeAheadFormField(
+                key: widget.txtkey,
                 textFieldConfiguration: TextFieldConfiguration(
-                  onChanged: (value){
-                    print("onchangedddddd  $value");
+
+                  onChanged: (v)async{
+                    if(v.isEmpty) {
+                      setState(() {
+                        selectedItem=null;
+                        print("knjbnbnjbnbn  $v");
+                      });
+                      await widget.callback(null,null);
+                    }
                   },
                   onSubmitted: (v){
                     if(_controller.text.replaceAll(" ", "").length!=widget.ledgerName.toString().replaceAll(" ", "").length){
@@ -165,7 +186,18 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                         _controller.clear();
                       });
                       widget.callback("","");
-                      }, icon: Icon(Icons.clear))
+                      }, icon: Icon(Icons.clear)),
+                    errorStyle: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 16.0,
+                        height: 0
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.redAccent, width: 2.0),
+                    ),
                   ),
                 ),
                 suggestionsCallback: (pattern) {
@@ -176,12 +208,21 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     title: Text(suggestion['Name']),
                   );
                 },
+                validator: (value) {
+                  print("kkjggkg   $value");
+                  if (value!.isEmpty) {
+                    return '';
+                  }
+
+                },
                 onSuggestionSelected: (suggestion) {
                   setState(() {
                     selectedItem = suggestion['Name'];
                     _controller.text=suggestion['Name'];
                   });
                   widget.callback(suggestion['Name'],(suggestion['ID']).toString());
+                  widget.focuscontroller.unfocus();
+                  FocusScope.of(context).requestFocus(widget.focusnext);
                 },
               ),
             ),
