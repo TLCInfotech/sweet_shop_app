@@ -26,6 +26,7 @@ import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../dialog/parent_ledger_group_dialoug.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
@@ -47,9 +48,16 @@ class CreateExpenseActivity extends StatefulWidget {
 class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     with
         SingleTickerProviderStateMixin, TaxDialogInterface , TaxCategoryDialogInterface, LedegerGroupDialogInterface,AmountTypeDialogInterface {
+
+  final _formKey = GlobalKey<FormState>();
+
   bool checkActiveValue = false;
   final _nameFocus = FocusNode();
   final nameController = TextEditingController();
+  final _nameKey = GlobalKey<FormFieldState>();
+
+  final _ledgergroupKey = GlobalKey<FormFieldState>();
+
 
   final _addressFocus = FocusNode();
   final addressController = TextEditingController();
@@ -405,184 +413,187 @@ var ledgerData=null;
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                children: [
-                  getImageLayout(parentHeight, parentWidth),
-                  SizedBox(height: 20,),
-                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!, ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey,width: 1),
-                    ),
-                    child: Column(children: [
-                      getNameLayout(parentHeight, parentWidth),
-                      getParentGroupLayout(parentHeight, parentWidth),
-                      getContactPersonLayout(parentHeight, parentWidth),
-                      getAddressLayout(parentHeight, parentWidth),
-                      // Row(
-                      //   children: [
-                      //     getLeftLayout(parentHeight, parentWidth),
-                      //     getRightLayout(parentHeight, parentWidth),
-                      //   ],
-                      // ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          getDistrictCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                          SizedBox(width: 5,),
-                          getPinCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    getImageLayout(parentHeight, parentWidth),
+                    SizedBox(height: 20,),
+                    getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("basic_information")!, ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey,width: 1),
                       ),
-                      getStateLayout(parentHeight, parentWidth),
-                      getCountryLayout(parentHeight, parentWidth),
-                      getContactNoLayout(parentHeight, parentWidth),
-                      getEmilLayout(parentHeight, parentWidth),
-                      getOutstandingLimitLayout(parentHeight, parentWidth),
-                      getExtNameLayout(parentHeight, parentWidth),
-                    ],
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("document_information")!, ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey,width: 1),
-                    ),
-                    child: Column(children: [
-                      // addhar
-                      PickDocument(
-                        callbackOnchage: (value ) {
-                          setState(() {
-                            adharNoController.text=value;
-                          });
-                        },
-                        callbackFile: (File? file) async{
-                          Uint8List? bytes = await file?.readAsBytes();
-                          setState(() {
-                            adharFile=file;
-                            adharImageBytes = (bytes)!.whereType<int>().toList();
-                          });
-                          print("IMGE1 : ${adharImageBytes.length}");
-                        },
-                        readOnly: widget.readOnly,
-                        title: ApplicationLocalizations.of(context)!.translate("adhar_number")!, 
-                        documentFile: adharFile,
-                        controller: adharNoController,
-
-                        focuscontroller: _adharoFocus,
-                        focusnext: _panNoFocus,
+                      child: Column(children: [
+                        getNameLayout(parentHeight, parentWidth),
+                        getParentGroupLayout(parentHeight, parentWidth),
+                        getContactPersonLayout(parentHeight, parentWidth),
+                        getAddressLayout(parentHeight, parentWidth),
+                        // Row(
+                        //   children: [
+                        //     getLeftLayout(parentHeight, parentWidth),
+                        //     getRightLayout(parentHeight, parentWidth),
+                        //   ],
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            getDistrictCityLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            SizedBox(width: 5,),
+                            getPinCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                          ],
+                        ),
+                        getStateLayout(parentHeight, parentWidth),
+                        getCountryLayout(parentHeight, parentWidth),
+                        getContactNoLayout(parentHeight, parentWidth),
+                        getEmilLayout(parentHeight, parentWidth),
+                        getOutstandingLimitLayout(parentHeight, parentWidth),
+                        getExtNameLayout(parentHeight, parentWidth),
+                      ],
                       ),
-                      // pan
-                      PickDocument(
-                        callbackOnchage: (value ) {
-                          setState(() {
-                            panNoController.text=value;
-                          });
-                        },
-                        callbackFile: (File? file)async {
-                          Uint8List? bytes = await file?.readAsBytes();
-                          setState(() {
-                            panFile=file;
-                            panImageBytes = (bytes)!.whereType<int>().toList();
-                          });
-                          print("IMGE1 : ${panImageBytes.length}");
-
-                        },
-                        title:      ApplicationLocalizations.of(context)!.translate("pan_number")! ,
-                        documentFile: panFile,
-                        readOnly: widget.readOnly,
-                        controller: panNoController,
-                        focuscontroller: _panNoFocus,
-                        focusnext: _gstNoFocus,
+                    ),
+                    SizedBox(height: 20,),
+                    getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("document_information")!, ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey,width: 1),
                       ),
-                      // gst
-                      PickDocument(
-                        callbackOnchage: (value ) {
-                          setState(() {
-                            gstNoController.text=value;
-                          });
-                        },
-                        callbackFile: (File? file) async{
-                          Uint8List? bytes = await file?.readAsBytes();
-                          setState(() {
-                            gstFile=file;
-                            gstImageBytes = (bytes)!.whereType<int>().toList();
-                          });
-                          print("IMGE1 : ${gstImageBytes.length}");
+                      child: Column(children: [
+                        // addhar
+                        PickDocument(
+                          callbackOnchage: (value ) {
+                            setState(() {
+                              adharNoController.text=value;
+                            });
+                          },
+                          callbackFile: (File? file) async{
+                            Uint8List? bytes = await file?.readAsBytes();
+                            setState(() {
+                              adharFile=file;
+                              adharImageBytes = (bytes)!.whereType<int>().toList();
+                            });
+                            print("IMGE1 : ${adharImageBytes.length}");
+                          },
+                          readOnly: widget.readOnly,
+                          title: ApplicationLocalizations.of(context)!.translate("adhar_number")!,
+                          documentFile: adharFile,
+                          controller: adharNoController,
 
-                        },
-                        title:      ApplicationLocalizations.of(context)!.translate("gst_number")!,
-                        documentFile: gstFile,
-                        readOnly: widget.readOnly,
-                        controller: gstNoController,
-                        focuscontroller: _gstNoFocus,
-                        focusnext: _cinNoFocus,
+                          focuscontroller: _adharoFocus,
+                          focusnext: _panNoFocus,
+                        ),
+                        // pan
+                        PickDocument(
+                          callbackOnchage: (value ) {
+                            setState(() {
+                              panNoController.text=value;
+                            });
+                          },
+                          callbackFile: (File? file)async {
+                            Uint8List? bytes = await file?.readAsBytes();
+                            setState(() {
+                              panFile=file;
+                              panImageBytes = (bytes)!.whereType<int>().toList();
+                            });
+                            print("IMGE1 : ${panImageBytes.length}");
+
+                          },
+                          title:      ApplicationLocalizations.of(context)!.translate("pan_number")! ,
+                          documentFile: panFile,
+                          readOnly: widget.readOnly,
+                          controller: panNoController,
+                          focuscontroller: _panNoFocus,
+                          focusnext: _gstNoFocus,
+                        ),
+                        // gst
+                        PickDocument(
+                          callbackOnchage: (value ) {
+                            setState(() {
+                              gstNoController.text=value;
+                            });
+                          },
+                          callbackFile: (File? file) async{
+                            Uint8List? bytes = await file?.readAsBytes();
+                            setState(() {
+                              gstFile=file;
+                              gstImageBytes = (bytes)!.whereType<int>().toList();
+                            });
+                            print("IMGE1 : ${gstImageBytes.length}");
+
+                          },
+                          title:      ApplicationLocalizations.of(context)!.translate("gst_number")!,
+                          documentFile: gstFile,
+                          readOnly: widget.readOnly,
+                          controller: gstNoController,
+                          focuscontroller: _gstNoFocus,
+                          focusnext: _cinNoFocus,
+                        ),
+                      ],
                       ),
-                    ],
                     ),
-                  ),
-                  SizedBox(height: 20,),
-                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("tax_information")!, ),
+                    SizedBox(height: 20,),
+                    getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("tax_information")!, ),
 
-                  Container(
+                    Container(
 
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey,width: 1),
-                    ),
-                    child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          getTaxTypeLayout(parentHeight,parentWidth),
-                          SizedBox(width: 5,),
-                          getTaxCategoryLayout(parentHeight,parentWidth),
-                        ],
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey,width: 1),
                       ),
-                      Row(
-                        children: [
-                          getTaxLeftLayout(parentHeight, parentWidth),
-                          getTaxRightLayout(parentHeight, parentWidth),
-                        ],
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            getTaxTypeLayout(parentHeight,parentWidth),
+                            SizedBox(width: 5,),
+                            getTaxCategoryLayout(parentHeight,parentWidth),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            getTaxLeftLayout(parentHeight, parentWidth),
+                            getTaxRightLayout(parentHeight, parentWidth),
+                          ],
+                        ),
+                      ],
                       ),
-                    ],
                     ),
-                  ),
 
 
-                  // getTaxLayout(parentHeight, parentWidth),
+                    // getTaxLayout(parentHeight, parentWidth),
 
-                  SizedBox(height: 20,),
-                  getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("account_information")!, ),
-                  Container(
+                    SizedBox(height: 20,),
+                    getFieldTitleLayout(    ApplicationLocalizations.of(context)!.translate("account_information")!, ),
+                    Container(
 
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey,width: 1),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey,width: 1),
+                      ),
+                      child: Column(children: [
+
+                        // getAccountInfoLayout(parentHeight, parentWidth),
+                        getBankNameLayout(parentHeight, parentWidth),
+                        getBankBranchNameLayout(parentHeight, parentWidth),
+                        getFSCCodeLayout(parentHeight, parentWidth),
+                        getACHolderNameLayout(parentHeight, parentWidth),
+                        getAcoountNoLayout(parentHeight, parentWidth),
+
+                      ],
+                      ),
                     ),
-                    child: Column(children: [
-
-                      // getAccountInfoLayout(parentHeight, parentWidth),
-                      getBankNameLayout(parentHeight, parentWidth),
-                      getBankBranchNameLayout(parentHeight, parentWidth),
-                      getFSCCodeLayout(parentHeight, parentWidth),
-                      getACHolderNameLayout(parentHeight, parentWidth),
-                      getAcoountNoLayout(parentHeight, parentWidth),
-
-                    ],
-                    ),
-                  ),
 
 
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -634,14 +645,15 @@ var ledgerData=null;
 
   /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
-          return     ApplicationLocalizations.of(context)!.translate("enter")! + ApplicationLocalizations.of(context)!.translate("name")! ;
+          return     "";
         }
         return null;
       },
-
+      mandatory: true,
+      txtkey: _nameKey,
       controller: nameController,
       focuscontroller: _nameFocus,
       readOnly: widget.readOnly,
@@ -651,6 +663,7 @@ var ledgerData=null;
         setState(() {
           nameController.text = value;
         });
+        _nameKey.currentState!.validate();
       },
       textInput: TextInputType.text,
       maxlines: 1,
@@ -692,6 +705,8 @@ var ledgerData=null;
     return   Padding(
         padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .00),
         child:  SearchableLedgerDropdown(
+          mandatory: true,
+            txtkey: _ledgergroupKey,
             apiUrl:ApiConstants().ledger_group+"?",
             franchisee: widget.ledgerList!=null?"edit":"",
             readOnly: widget.readOnly,
@@ -703,6 +718,7 @@ var ledgerData=null;
                 parentCategoryId=(id!);
               });
 
+              _ledgergroupKey.currentState!.validate();
             },
             ledgerName: parentCategory)
     );
@@ -1910,7 +1926,9 @@ var ledgerData=null;
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              if (mounted) {
+              bool v = _nameKey.currentState!.validate();
+              bool q = _ledgergroupKey.currentState!.validate();
+              if (mounted && v && q) {
                 setState(() {
                   disableColor = true;
                   if(widget.ledgerList!=null){

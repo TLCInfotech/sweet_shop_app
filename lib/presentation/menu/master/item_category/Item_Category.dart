@@ -22,6 +22,7 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/itemCategory/post_item_category_request_model.dart';
 import '../../../../data/domain/itemCategory/put_item_category_request_model.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
@@ -35,7 +36,10 @@ class ItemCategoryActivity extends StatefulWidget {
 }
 
 class _ItemCategoryActivityState extends State<ItemCategoryActivity> {
+  final _formkey = GlobalKey<FormState>();
   TextEditingController categoryName = TextEditingController();
+  final _categoryKey = GlobalKey<FormFieldState>();
+
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   String parentCategory="";
   int parentCategoryId=0;
@@ -266,22 +270,25 @@ bool isLoaderShow=false;
                           ),
                         ),
                         padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: SizeConfig.screenHeight*.08,
-                              child: Center(
-                                child: Text(
-                                    ApplicationLocalizations.of(context)!.translate("item_category")!,
-                                    style: page_heading_textStyle
+                        child: Form(
+                          key: _formkey,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: SizeConfig.screenHeight*.08,
+                                child: Center(
+                                  child: Text(
+                                      ApplicationLocalizations.of(context)!.translate("item_category")!,
+                                      style: page_heading_textStyle
+                                  ),
                                 ),
                               ),
-                            ),
-                            getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
-                            getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth,updateRight),
-                            getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
-                            const SizedBox(height: 20,),
-                          ],
+                              getCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
+                              getAddCategoryLayout(SizeConfig.screenHeight, SizeConfig.screenWidth,updateRight),
+                              getseqNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth,updateRight),
+                              const SizedBox(height: 20,),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -303,10 +310,10 @@ bool isLoaderShow=false;
 
   /* widget for seq no layout */
   Widget getseqNoLayout(double parentHeight, double parentWidth, bool updateRight) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("sequence_no")!;
+          return "";
         }
         return null;
       },
@@ -366,9 +373,11 @@ bool isLoaderShow=false;
   /* widget for Category layout */
   Widget getCategoryLayout(double parentHeight, double parentWidth, bool updateRight) {
     return SingleLineEditableTextFormField(
+      mandatory: true,
+      txtkey: _categoryKey,
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("enter")!+ ApplicationLocalizations.of(context)!.translate("category")!;
+          return "";
         }
         return null;
       },
@@ -382,6 +391,7 @@ bool isLoaderShow=false;
         setState(() {
           categoryName.text = value;
         });
+        _categoryKey.currentState!.validate();
       },
       textInput: TextInputType.text,
       maxlines: 1,
@@ -462,12 +472,15 @@ bool isLoaderShow=false;
           ),
           GestureDetector(
             onTap: () {
-             if(editedItem!=null){
-               print("jgbgbgbggn");
-               callUpdateItemCategory();
-             }else{
-               callPostItemCategory();
-             }
+              bool v=_categoryKey.currentState!.validate();
+              if(v) {
+                if (editedItem != null) {
+                  print("jgbgbgbggn");
+                  callUpdateItemCategory();
+                } else {
+                  callPostItemCategory();
+                }
+              }
              //Navigator.pop(context);
             },
             onDoubleTap: () {},
