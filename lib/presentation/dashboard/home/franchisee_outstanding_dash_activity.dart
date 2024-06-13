@@ -206,11 +206,11 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                   setState(() {
                     profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
                     _profitPartywise=_profitPartywise;
-                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Purchase_Amount'].toString());
+                    // purchaseAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
-                    receiptAmt=double.parse(data['DashboardMainData'][0]['Payment_Amount'].toString());
-                    saleAmt=double.parse(data['DashboardMainData'][0]['Sale_Amount'].toString());
+                    receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString()); 
+                    saleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
 
                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
 
@@ -345,7 +345,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                               )));
                               await callGetFranchiseeNot(0);
                               await getDashboardData();
-                            },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((purchaseAmt))}", "Sale")),
+                            },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((saleAmt))}", "Sale")),
 
                         GestureDetector(
                             onTap: ()async{
