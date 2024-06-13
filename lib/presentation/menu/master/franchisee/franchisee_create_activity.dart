@@ -28,6 +28,7 @@ import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../dialog/amount_type_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
@@ -44,7 +45,7 @@ class CreateFranchisee extends StatefulWidget {
 
 class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerProviderStateMixin,AmountTypeDialogInterface
 {
-
+  final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
   final _panNoFocus = FocusNode();
@@ -60,12 +61,23 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   TextEditingController franchiseeName = TextEditingController();
   final _franchiseeNameFocus=FocusNode();
+  final _fnameKey = GlobalKey<FormFieldState>();
+
   TextEditingController franchiseeContactPerson = TextEditingController();
   final _franchiseeContactPersonFocus=FocusNode();
+
   TextEditingController franchiseeAddress = TextEditingController();
   final _franchiseeAddressFocus=FocusNode();
+  final _faddressKey = GlobalKey<FormFieldState>();
+
+  final _fcityKey = GlobalKey<FormFieldState>();
+  final _fstateKey = GlobalKey<FormFieldState>();
+  final _fcountryKey = GlobalKey<FormFieldState>();
+  final _mobilenoKey = GlobalKey<FormFieldState>();
+
   TextEditingController franchiseeMobileNo = TextEditingController();
   final _franchiseeMobileNoFocus=FocusNode();
+
   TextEditingController franchiseeEmail = TextEditingController();
   final _franchiseeEmailFocus=FocusNode();
 
@@ -247,7 +259,15 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () async{
-              if (mounted) {
+              bool v=_fnameKey.currentState!.validate();
+              bool q=_faddressKey.currentState!.validate();
+              bool u=_fcityKey.currentState!.validate();
+              bool r=_fstateKey.currentState!.validate();
+              bool s=_fcountryKey.currentState!.validate();
+              bool t=_mobilenoKey.currentState!.validate();
+
+
+              if (mounted && v && q && u && r && s && t) {
                 String baseurl=await AppPreferences.getDomainLink();
                 String companyId = await AppPreferences.getCompanyId();
                 setState(() {
@@ -301,35 +321,38 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         Padding(
           padding: EdgeInsets.only(top: parentHeight * .01),
           child: Container(
-            child: Column(
-              children: [
-                const SizedBox(height: 20,),
-                getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                const SizedBox(height: 20,),
-                getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("basic_information")!),
-                BasicInfo(),
-                const SizedBox(height: 20,),
-                getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("document_information")!),
-                Document_Information(),
-                const SizedBox(height: 20.0),
-                getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("account_information")!),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.grey,width: 1),
+            child: Form(
+              key: _formkey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20,),
+                  getImageLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  const SizedBox(height: 20,),
+                  getFieldTitleLayout( ApplicationLocalizations.of(context)!.translate("basic_information")!),
+                  BasicInfo(),
+                  const SizedBox(height: 20,),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("document_information")!),
+                  Document_Information(),
+                  const SizedBox(height: 20.0),
+                  getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("account_information")!),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.grey,width: 1),
+                    ),
+                    child: Column(children: [
+                      getBankNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getBankBranchNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFSCCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getACHolderNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getAcoountNoLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    ],
+                    ),
                   ),
-                  child: Column(children: [
-                    getBankNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getBankBranchNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getFSCCodeLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getACHolderNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    getAcoountNoLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
-                  ],
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-              ],
+                  const SizedBox(height: 20.0),
+                ],
+              ),
             ),
           ),
         ),
@@ -459,7 +482,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for bank name text from field layout */
   Widget getBankNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: bankNameController,
       focuscontroller: _bankNameFocus,
       focusnext: _bankBranchFocus,
@@ -486,7 +509,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for bank branch name text from field layout */
   Widget getBankBranchNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: bankBranchController,
       focuscontroller: _bankBranchFocus,
       focusnext: _IFSCCodeFocus,
@@ -511,7 +534,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   }
   /* Widget for IFSC Code text from field layout */
   Widget getFSCCodeLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: IFSCCodeController,
       focuscontroller: _IFSCCodeFocus,
       readOnly: widget.readOnly,
@@ -537,7 +560,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for Account holder name text from field layout */
   Widget getACHolderNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: aCHolderNameController,
       focuscontroller: _aCHolderNameFocus,
       focusnext: _accountNoFocus,
@@ -563,7 +586,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* Widget for Account No name text from field layout */
   Widget getAcoountNoLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: accountNoController,
       focuscontroller: _accountNoFocus,
       focusnext: _franchiseeNameFocus,
@@ -592,6 +615,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+        mandatory: true,
+          txtkey: _fcountryKey,
           readOnly: widget.readOnly,
           apiUrl:ApiConstants().country+"?",
           title:  ApplicationLocalizations.of(context)!.translate("country")!,
@@ -602,6 +627,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               // cityId=id.toString()!;
             });
 
+            _fcountryKey.currentState!.validate();
             print(countryName);
           },
           franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Country'].toString(): "",
@@ -625,6 +651,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     return  Padding(
       padding: const EdgeInsets.only(top:3),
       child: SearchableDropdownForStringArray(
+        mandatory: true,
+          txtkey: _fstateKey,
           readOnly: widget.readOnly,
           apiUrl:ApiConstants().state+"?",
 
@@ -635,7 +663,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               stateName=name!;
               // cityId=id.toString()!;
             });
-
+            _fstateKey.currentState!.validate();
             print(stateName);
           },
           franchiseeName:widget.editItem!=null && itemData!=null?itemData[0]['State'].toString(): "",
@@ -725,7 +753,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* widget for franchisee payment days layout */
   Widget getPaymentDaysLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: franchiseePaymentDays,
       focuscontroller: _franchiseePaymentDaysFocus,
       focusnext: _bankNameFocus,
@@ -758,7 +786,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: SingleLineEditableTextFormField(
+          child: SingleLineEditableTextFormFieldWithoubleDouble(
       controller: franchiseeOutstandingLimit,
         focuscontroller: _franchiseeOutstandingLimitFocus,
         focusnext: _adharoFocus,
@@ -782,7 +810,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       )
         ),
         AmountTypeDialog(mListener: this,
-          selectedType: selectedLimitUnit,width:130,)
+          selectedType: selectedLimitUnit,width:130,mandatory: false,)
         // Container(
         //   height: 50,
         //   width: 130,
@@ -858,7 +886,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* widget for franchisee email layout */
   Widget getEmailLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       controller: franchiseeEmail,
       focuscontroller: _franchiseeEmailFocus,
       focusnext: _adharoFocus,
@@ -888,7 +916,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   /* widget for franchisee mobile layout */
 
   Widget getMobileNoLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
+      mandatory: true,
+      txtkey: _mobilenoKey,
       controller: franchiseeMobileNo,
       focuscontroller: _franchiseeMobileNoFocus,
       focusnext: _franchiseeEmailFocus,
@@ -898,6 +928,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         setState(() {
           franchiseeMobileNo.text = value;
         });
+        _mobilenoKey.currentState!.validate();
       },
       textInput: TextInputType.number,
       maxlines: 1,
@@ -908,7 +939,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         // RegExp regExp = new RegExp(pattern);
         // print(Util.isMobileValid(value!));
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("mobile_no")!;
+          return "";
         }
         else if (Util.isMobileValid(value)) {
           return ApplicationLocalizations.of(context)!.translate("valid")!+ApplicationLocalizations.of(context)!.translate("mobile_no")!;
@@ -923,7 +954,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* widget for Contact Person layout */
   Widget getPincodeLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
       parentWidth: parentWidth,
       controller: pincode,
       readOnly: widget.readOnly,
@@ -953,9 +984,11 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       child:  Padding(
         padding: const EdgeInsets.only(top:3),
         child:  SearchableDropdownForStringArray(
+            mandatory: true,
+            txtkey: _fcityKey,
             apiUrl:ApiConstants().city+"?",
             ledgerName: selectedCity,
-          readOnly: widget.readOnly,
+            readOnly: widget.readOnly,
             franchiseeName: widget.editItem!=null && itemData!=null?itemData[0]['District'].toString(): "",
             franchisee: widget.editItem!=null&& itemData!=null?"edit":"",
             title:  ApplicationLocalizations.of(context)!.translate("city")!,
@@ -966,6 +999,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
               });
 
               print(selectedCity);
+              _fcityKey.currentState!.validate();
             },
             ),
       ),
@@ -1012,6 +1046,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   /* widget for Address layout */
   Widget getAddressLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+      mandatory: true,
+      txtkey: _faddressKey,
       controller: franchiseeAddress,
       focuscontroller: _franchiseeAddressFocus,
       focusnext: _pincodeFocus,
@@ -1021,13 +1057,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         setState(() {
           franchiseeAddress.text = value;
         });
+        _faddressKey.currentState!.validate();
       },
       textInput: TextInputType.streetAddress,
-      maxlines: 3,
+      maxlines: 5,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z \,]')),
       validation: (value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("address")!;
+          return "";
         }
         return null;
       },
@@ -1038,7 +1075,9 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
   /* widget for Franchisee name layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SingleLineEditableTextFormFieldWithoubleDouble(
+      mandatory: true,
+      txtkey:_fnameKey,
       controller: franchiseeName,
       focuscontroller: _franchiseeNameFocus,
       focusnext: _franchiseeContactPersonFocus,
@@ -1048,13 +1087,14 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         setState(() {
           franchiseeName.text = value;
         });
+        _fnameKey.currentState!.validate();
       },
       textInput: TextInputType.text,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format:FilteringTextInputFormatter.allow(RegExp(r'^[A-zÀ\s*&^%0-9,.-:)(]+')),
       validation: ((value) {
         if (value!.isEmpty) {
-          return ApplicationLocalizations.of(context)!.translate("franchisee_name")!;
+          return "";
         }
         return null;
       }),
