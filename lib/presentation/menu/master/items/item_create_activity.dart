@@ -175,19 +175,23 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         categoryName=itemData[0]['Category_Name']!=null?itemData[0]['Category_Name']:categoryName;
         categoryId=itemData[0]['Category_ID']!=null?itemData[0]['Category_ID']:categoryId;
          unitTwoId=itemData[0]['Unit2']!=null?itemData[0]['Unit2']:unitTwoId;
-          unitTwofactorController.text=itemData[0]['Unit2_Factor']!=null?(itemData[0]['Unit2_Factor']).toString():unitTwofactorController.text;
-           unitTwoBaseController.text=itemData[0]['Unit2_Base']!=null?(itemData[0]['Unit2_Base']).toString():unitTwoBaseController.text;
+         unitTwoName=itemData[0]['Unit2']!=null?itemData[0]['Unit2']:"";
+          unitTwofactorController.text=itemData[0]['Unit2_Factor']!=null?(double.parse(itemData[0]['Unit2_Factor'].toString()).toStringAsFixed(2)).toString():unitTwofactorController.text;
+           unitTwoBaseController.text=itemData[0]['Unit2_Base']!=null?(double.parse(itemData[0]['Unit2_Base'].toString())).toStringAsFixed(2):unitTwoBaseController.text;
           unitThreeId=itemData[0]['Unit3']!=null?itemData[0]['Unit3']:unitThreeId;
-         unitThreeBaseController.text=itemData[0]['Unit3_Base']!=null?(itemData[0]['Unit3_Base']).toString():unitThreeBaseController.text;
-         unitThreefactorController.text=itemData[0]['Unit3_Factor']!=null?(itemData[0]['Unit3_Factor']).toString():unitTwofactorController.text;
+          unitThreeName=itemData[0]['Unit3']!=null?itemData[0]['Unit3']:"";
+
+        unitThreeBaseController.text=itemData[0]['Unit3_Base']!=null?(double.parse(itemData[0]['Unit3_Base'].toString())).toStringAsFixed(2):unitThreeBaseController.text;
+         unitThreefactorController.text=itemData[0]['Unit3_Factor']!=null?(double.parse(itemData[0]['Unit3_Factor'].toString())).toStringAsFixed(2):unitTwofactorController.text;
          packSizeController.text=itemData[0]['Pack_Size']!=null?(itemData[0]['Pack_Size']).toString():packSizeController.text;
-        rateController.text=itemData[0]['Rate']!=null?(itemData[0]['Rate']).toString():rateController.text;
-         minController.text=itemData[0]['Min_Stock']!=null?(itemData[0]['Min_Stock']).toString():minController.text;
-        maxController.text=itemData[0]['Max_Stock']!=null?(itemData[0]['Max_Stock']).toString():maxController.text;
+        rateController.text=itemData[0]['Rate']!=null?double.parse((itemData[0]['Rate']).toString()).toStringAsFixed(2):rateController.text;
+         minController.text=itemData[0]['Min_Stock']!=null?(double.parse(itemData[0]['Min_Stock'].toString())).toStringAsFixed(2):minController.text;
+        maxController.text=itemData[0]['Max_Stock']!=null?(double.parse(itemData[0]['Max_Stock'].toString())).toStringAsFixed(2):maxController.text;
         hsnNoController.text=itemData[0]['HSN_No']!=null?itemData[0]['HSN_No']:hsnNoController.text;
         extNameController.text=itemData[0]['Ext_Name']!=null?itemData[0]['Ext_Name']:extNameController.text;
         defaultStoreController.text=itemData[0]['Default_Store']!=null?itemData[0]['Default_Store']:defaultStoreController.text;
          descController.text=itemData[0]['Detail_Desc']!=null?itemData[0]['Detail_Desc']:descController.text;
+         measuringUnit=itemData[0]['Unit']!=""?itemData[0]['Unit']:"";
          measuringUnit=itemData[0]['Unit']!=""?itemData[0]['Unit']:"";
         isLoaderShow=false;
       });
@@ -525,7 +529,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       },
       textInput: TextInputType.text,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format:FilteringTextInputFormatter.allow(RegExp(r'^[A-zÀ\s*&^%0-9,.-:)(]+')), 
     );
 
   }
@@ -615,30 +619,30 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     return Padding(
       padding: EdgeInsets.only(
         top: parentHeight * .015),
-      child:  Row(
+      child:  Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
+          Container(
+            width: parentWidth,
+            child: SearchableDropdownForStringArray(
+                readOnly: widget.readOnly,
+                apiUrl:ApiConstants().measuring_unit+"?",
+                title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
+                callback: (name){
+
+                  setState(() {
+                    unitTwoName=name!;
+                    // cityId=id.toString()!;
+                  });
+
+                  print(unitTwoName);
+                },
+                franchiseeName: unitTwoName,
+                franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
+                ledgerName: unitTwoName),
+          ),
+          Row(
             children: [
-              Container(
-                width: parentWidth * .30,
-                child: SearchableDropdownForStringArray(
-                    readOnly: widget.readOnly,
-                    apiUrl:ApiConstants().measuring_unit+"?",
-                    title:  ApplicationLocalizations.of(context)!.translate("unit_two")!,
-                    callback: (name){
-
-                      setState(() {
-                        unitTwoName=name!;
-                        // cityId=id.toString()!;
-                      });
-
-                      print(unitTwoName);
-                    },
-                    franchiseeName: widget.editItem!=null&&itemData!=null?itemData[0]['Unit2'].toString():"",
-                    franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
-                    ledgerName: unitTwoName),
-              ),
               Container(
                 margin: EdgeInsets.only(top: 10),
                 height: parentHeight * .055,
@@ -659,91 +663,351 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                   textAlignVertical: TextAlignVertical.center,
                   textCapitalization: TextCapitalization.words,
                   focusNode: _unitTwofactor,
-                  keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   cursorColor: CommonColor.BLACK_COLOR,
                   readOnly: widget.readOnly!=false?false:true,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(
-                        left: parentWidth * .04, right: parentWidth * .02),
+                    contentPadding: EdgeInsets.only(left: parentWidth * .04, right: parentWidth * .02),
+                    suffix: unitTwoName==""?Text(""):Text(unitTwoName,style: item_regular_textStyle,),
                     border: InputBorder.none,
                     counterText: '',
                     isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!+ " "+ApplicationLocalizations.of(context)!.translate("unit_two")!,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller: unitTwofactorController,
                   onEditingComplete: () {
                     _unitTwofactor.unfocus();
                     FocusScope.of(context).requestFocus(_unitTwoBase);
+                    setState(() {
+                      unitTwofactorController.text =
+                          double.parse(unitTwofactorController.text)
+                              .toStringAsFixed(2);
+                    });
                   },
+                  onFieldSubmitted: (v){
+                    setState(() {
+                      unitTwofactorController.text =
+                          double.parse(unitTwofactorController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+                  onSaved: (v){
+                    setState(() {
+                      unitTwofactorController.text =
+                          double.parse(unitTwofactorController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+                  onTapOutside: (event){
+                    setState(() {
+                      unitTwofactorController.text =
+                          double.parse(unitTwofactorController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true
+                  ),
+                  maxLines: 1,
+                 inputFormatters:  <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
                   style: text_field_textStyle,
                 ),
               ),
+              Container(
+                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                child: Text(
+                  "=",
+                  style:
+                  text_field_textStyle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  // textScaleFactor: 1.02,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                height: parentHeight * .055,
+                alignment: Alignment.center,
+                width: parentWidth * .45,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  textCapitalization: TextCapitalization.words,
+                  focusNode: _unitTwoBase,
+                  textInputAction: TextInputAction.next,
+                  cursorColor: CommonColor.BLACK_COLOR,
+                  readOnly: widget.readOnly!=false?false:true,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: parentWidth * .04, right: parentWidth * .02),
+                    border: InputBorder.none,
+                    suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
+                    counterText: '',
+
+                    isDense: true,
+                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                    hintStyle: hint_textfield_Style,
+                  ),
+                  controller: unitTwoBaseController,
+                  onEditingComplete: () {
+                    _unitTwoBase.unfocus();
+                    FocusScope.of(context).requestFocus(_unitThreefactor);
+                    setState(() {
+                      unitTwoBaseController.text =
+                          double.parse(unitTwoBaseController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+                  onFieldSubmitted: (v){
+                    setState(() {
+                      unitTwoBaseController.text =
+                          double.parse(unitTwoBaseController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+                  onSaved: (v){
+                    setState(() {
+                      unitTwoBaseController.text =
+                          double.parse(unitTwoBaseController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+                  onTapOutside: (event){
+                    setState(() {
+                      unitTwoBaseController.text =
+                          double.parse(unitTwoBaseController.text)
+                              .toStringAsFixed(2);
+                    });
+                  },
+
+                  keyboardType: TextInputType.numberWithOptions(
+                      decimal: true
+                  ),
+                  maxLines: 1,
+                  inputFormatters:  <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
+
+                  style: text_field_textStyle,
+                ),
+              ),
+
             ],
           ),
-          Container(
-            margin: EdgeInsets.only(top: 35,left: 10,right: 10),
-            child: Text(
-              "=",
-              style:
-              text_field_textStyle,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              // textScaleFactor: 1.02,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 35),
-            height: parentHeight * .055,
-            alignment: Alignment.center,
-            width: parentWidth * .45,
-            decoration: BoxDecoration(
-              color: CommonColor.WHITE_COLOR,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                ),
-              ],
-            ),
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.center,
-              textCapitalization: TextCapitalization.words,
-              focusNode: _unitTwoBase,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-              maxLines: null,
-              cursorColor: CommonColor.BLACK_COLOR,
-              readOnly: widget.readOnly!=false?false:true,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(
-                    left: parentWidth * .04, right: parentWidth * .02),
-                border: InputBorder.none,
-                suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
-                counterText: '',
 
-                isDense: true,
-                hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
-                hintStyle: hint_textfield_Style,
-              ),
-              controller: unitTwoBaseController,
-              onEditingComplete: () {
-                _unitTwoBase.unfocus();
-                FocusScope.of(context).requestFocus(_unitThreefactor);
-              },
-              style: text_field_textStyle,
-            ),
-          ),
         ],
       ),
     );
   }
   /* Widget For measuring unit Layout */
   Widget getUnitThreeLayout(double parentHeight, double parentWidth){
-    return Padding(
+    return
+
+      Padding(
+        padding: EdgeInsets.only(
+            top: parentHeight * .015),
+        child:  Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: parentWidth,
+              child: SearchableDropdownForStringArray(
+                  readOnly: widget.readOnly,
+                  apiUrl:ApiConstants().measuring_unit+"?",
+                  title:  ApplicationLocalizations.of(context)!.translate("unit_three")!,
+                  callback: (name){
+
+                    setState(() {
+                      unitThreeName=name!;
+                      // cityId=id.toString()!;
+                    });
+
+                    print(unitThreeName);
+                  },
+                  franchiseeName: unitThreeName,
+                  franchisee:widget.editItem!=null&&itemData!=null?"edit":"",
+                  ledgerName: unitThreeName),
+            ),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  height: parentHeight * .055,
+                  width: parentWidth * .30,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: TextCapitalization.words,
+                    focusNode: _unitThreefactor,
+                    textInputAction: TextInputAction.next,
+                    cursorColor: CommonColor.BLACK_COLOR,
+                    readOnly: widget.readOnly!=false?false:true,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          left: parentWidth * .04, right: parentWidth * .02),
+                      border: InputBorder.none,
+                      suffix: unitThreeName==""?Text(""):Text(unitThreeName,style: item_regular_textStyle,),
+                      counterText: '',
+                      isDense: true,
+                      hintText: ApplicationLocalizations.of(context)!.translate("enter")!+" "+  ApplicationLocalizations.of(context)!.translate("unit_three")!,
+                      hintStyle: hint_textfield_Style,
+                    ),
+                    controller: unitThreefactorController,
+                    onEditingComplete: () {
+                      _unitThreefactor.unfocus();
+                      FocusScope.of(context).requestFocus(_unitThreeBase);
+                      setState(() {
+                        unitThreefactorController.text =
+                            double.parse(unitThreefactorController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    onFieldSubmitted: (v){
+                      setState(() {
+                        unitThreefactorController.text =
+                            double.parse(unitThreefactorController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    onSaved: (v){
+                      setState(() {
+                        unitThreefactorController.text =
+                            double.parse(unitThreefactorController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    onTapOutside: (event){
+                      setState(() {
+                        unitThreefactorController.text =
+                            double.parse(unitThreefactorController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    keyboardType: TextInputType.numberWithOptions(
+                        decimal: true
+                    ),
+                    maxLines: 1,
+                    inputFormatters:  <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
+
+                    style: text_field_textStyle,
+                  ),
+                ),
+
+                Container(
+                  margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                  child: Text(
+                    "=",
+                    style:
+                    text_field_textStyle,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    // textScaleFactor: 1.02,
+                  ),
+                ),
+
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  width: parentWidth * .45,
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                    ],
+                  ),
+                  child: TextFormField(
+                    controller: unitThreeBaseController,
+                    textAlignVertical: TextAlignVertical.center,
+                    textCapitalization: TextCapitalization.words,
+                    focusNode: _unitThreeBase,
+                    textInputAction: TextInputAction.next,
+                    readOnly: widget.readOnly!=false?false:true,
+                    cursorColor: CommonColor.BLACK_COLOR,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                          left: parentWidth * .04, right: parentWidth * .02),
+                      border: InputBorder.none,
+                      counterText: '',
+                      suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
+                      isDense: true,
+                      hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                      hintStyle: hint_textfield_Style,
+                    ),
+                    //controller: itemNameController,
+                    onEditingComplete: () {
+                      _unitThreeBase.unfocus();
+                      FocusScope.of(context).requestFocus(_packSizeFocus);
+                      setState(() {
+                        unitThreeBaseController.text =
+                            double.parse(unitThreeBaseController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+
+                    onFieldSubmitted: (v){
+                      setState(() {
+                        unitThreeBaseController.text =
+                            double.parse(unitThreeBaseController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    onSaved: (v){
+                      setState(() {
+                        unitThreeBaseController.text =
+                            double.parse(unitThreeBaseController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    onTapOutside: (event){
+                      setState(() {
+                        unitThreeBaseController.text =
+                            double.parse(unitThreeBaseController.text)
+                                .toStringAsFixed(2);
+                      });
+                    },
+                    keyboardType: TextInputType.numberWithOptions(
+                        decimal: true
+                    ),
+                    maxLines: 1,
+                    inputFormatters:  <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))],
+
+                    style: text_field_textStyle,
+                  ),
+                ),
+              ],
+            ),
+
+          ],
+        ),
+      );
+
+      Padding(
       padding: EdgeInsets.only(
           top: parentHeight * .015),
       child: Row(
@@ -901,9 +1165,13 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           maxController.text = value;
         });
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(
+          decimal: true
+      ),
+
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})')),
+
     );
 
   }
@@ -911,6 +1179,9 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   /* Widget for max text from field layout */
   Widget getMinStockLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
+
+
+
       validation: (value) {
         if (value!.isEmpty) {
           return ApplicationLocalizations.of(context)!.translate("enter")!+ApplicationLocalizations.of(context)!.translate("min_stock")!;
@@ -927,9 +1198,14 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
           minController.text = value;
         });
       },
-      textInput: TextInputType.number,
+      textInput: TextInputType.numberWithOptions(
+    decimal: true
+    ),
+
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      format: FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
+
+
     );
 
   }

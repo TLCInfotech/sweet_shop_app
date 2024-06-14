@@ -667,7 +667,7 @@ var ledgerData=null;
       },
       textInput: TextInputType.text,
       maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 a-z A-Z]')),
+      format:FilteringTextInputFormatter.allow(RegExp(r'^[A-zÀ\s*&^%0-9,.-:)(]+')),
     );
 
   }
