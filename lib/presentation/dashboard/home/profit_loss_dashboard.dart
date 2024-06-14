@@ -423,7 +423,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profit>0?"Profit ":"Loss",
+                          profit>=0?"Profit ":"Loss",
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
@@ -449,7 +449,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profitLossShare>0?"Profit Share":"Loss Share",
+                          profitLossShare>=0?"Profit Share":"Loss Share",
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
