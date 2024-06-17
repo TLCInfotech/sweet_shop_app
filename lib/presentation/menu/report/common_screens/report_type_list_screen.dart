@@ -6,6 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/presentation/menu/report/common_screens/detail_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
@@ -330,15 +331,10 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        // await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        //     CreatePurchaseInvoice(
-                        //
-                        //       readOnly: singleRecord['Update_Right'],
-                        //       Invoice_No: saleInvoice_list[index]['Invoice_No'],
-                        //       mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
-                        //       editedItem:saleInvoice_list[index],
-                        //       come:"edit",
-                        //     )));
+                        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            DetailReportActivity(
+                              franchisee: selectedFranchiseeName,
+                            )));
                         selectedFranchiseeId="";
                         partyBlank=false;
                         saleInvoice_list=[];
