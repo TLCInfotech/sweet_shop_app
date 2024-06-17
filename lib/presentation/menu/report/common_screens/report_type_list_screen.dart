@@ -285,7 +285,10 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                       onTap: ()async{
                         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             DetailReportActivity(
-                              franchisee: selectedFranchiseeName,
+                              partId: array_list[index]['Party_ID'],
+                              party:array_list[index]['Party_ID'],
+                              fromDate: applicablefrom,
+                              toDate: applicableTwofrom,
                             )));
                         selectedFranchiseeId="";
                         partyBlank=false;

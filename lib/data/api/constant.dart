@@ -87,6 +87,7 @@ class ApiConstants {
   String getFetchFranchiseeName="FetchFranchiseeName";
   String ledgerOpeningBalance="LedgerOpenningBalance";
   String report="Report";
-
+  String getMISFranchiseeProfitDatewise="MISFranchiseeProfitDatewise";
+  String misprofit="MISProft";
 
 }

@@ -24,6 +24,8 @@ class MisReportActivity extends StatefulWidget {
 
 class _MisReportActivityState extends State<MisReportActivity> {
 
+  final _formkey = GlobalKey<FormState>();
+  final _reportTypeKey = GlobalKey<FormFieldState>();
 
   final bankcashFocus = FocusNode();
   final bankCashController = TextEditingController();
@@ -143,24 +145,27 @@ class _MisReportActivityState extends State<MisReportActivity> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getReportTypeLayout(parentHeight, parentWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getReportTypeLayout(parentHeight, parentWidth),
+                    Row(
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateONELayout(parentHeight, parentWidth)),
+                        Container(
 
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                  getFranchiseeNameLayout(parentHeight, parentWidth),
-                ],
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateTwoLayout(parentHeight, parentWidth)),
+                      ],
+                    ),
+                    getFranchiseeNameLayout(parentHeight, parentWidth),
+                  ],
+                ),
               ),
             ),
           ),
@@ -172,6 +177,9 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return  SearchableLedgerDropdown(
+
+      mandatory: true,
+      txtkey: _reportTypeKey,
       apiUrl: "${ApiConstants().report}?Form_Name=MIS&",
       titleIndicator: true,
       ledgerName: reportType,
@@ -182,6 +190,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
           reportType = name!;
           reportId = id.toString()!;
         });
+        _reportTypeKey.currentState!.validate();
       },
     );
   }
@@ -247,13 +256,26 @@ class _MisReportActivityState extends State<MisReportActivity> {
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {//ReportTypeList
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
-                mListener: this,
-            reportName:reportType,
-            party:"K.K Pedha Shri Datta Dairy & Foods, Girim",
+            onTap: () {//ReportTypeLis
 
-              )));
+              bool v=_reportTypeKey.currentState!.validate();
+              if(v) {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                //     ReportTypeList(
+                //       mListener: this,
+                //       reportName: reportType,
+                //       party: "K.K Pedha Shri Datta Dairy & Foods, Girim",
+                //
+                //     )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
+                  mListener: this,
+                  reportName:reportType,
+                  partId: selectedFranchiseeId,
+                  party:selectedFranchiseeName,
+                  applicablefrom: applicablefrom,
+                  applicableTwofrom: applicableTwofrom,
+                )));
+              }
             },
             onDoubleTap: () {},
             child: Container(
@@ -270,7 +292,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
                     child:  Text(
-                      ApplicationLocalizations.of(context)!.translate("save")!,
+                      ApplicationLocalizations.of(context)!.translate("show_report")!,
                       style: page_heading_textStyle,
                     ),
                   ),

@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
+import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
+import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
 
@@ -17,10 +23,11 @@ class DetailReportActivity extends StatefulWidget {
   final apiurl;
   final fromDate;
   final toDate;
-  final franchisee;
+  final  party;
+  final  partId;
 
   const DetailReportActivity(
-      {super.key, this.apiurl, this.fromDate, this.toDate, this.franchisee});
+      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId,});
 
   @override
   State<DetailReportActivity> createState() => _DetailReportActivityState();
@@ -47,7 +54,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
         _scrollController.position.maxScrollExtent) {
       if (isPagination) {
         page = page + 1;
-        // callGetFranchisee(page);
+        callDetailReportList(page);
       }
     }
   }
@@ -57,11 +64,17 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+
+    setVal();
+  }
+
+  setVal()async{
     setState(() {
-      franchiseeName.text=widget.franchisee;
+      franchiseeName.text=widget.party.toString();
+      applicablefrom=widget.fromDate;
+      applicableTwofrom=widget.toDate;
     });
-    // callGetFranchisee(page);
-    // setVal();
+    await callDetailReportList(page);
   }
 
   Future<void> refreshList() async {
@@ -71,7 +84,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
       page = 1;
     });
     isPagination = true;
-    // await callGetFranchisee(page);
+    await callDetailReportList(page);
   }
 
   @override
@@ -156,7 +169,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
   /* widget for Franchisee name layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
-      readOnly: true,
+      readOnly: false,
       title:
           ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
       callbackOnchage: (value) {},
@@ -186,7 +199,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
         physics: const AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
         // itemCount: reportDetailList.length,
-        itemCount: 10,
+        itemCount: reportDetailList.length,
         controller: _scrollController,
         itemBuilder: (BuildContext context, int index) {
           return AnimationConfiguration.staggeredList(
@@ -224,7 +237,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                                         width: 10,
                                       ),
                                       Text(
-                                        CommonWidget.getDateLayout(DateTime.now()),
+                                        CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
                                         style: item_heading_textStyle,
                                       ),
                                     ],
@@ -235,7 +248,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
 
-                                      Expanded(child: Text("Online Amount: 1,20,348,000.00",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      Expanded(child: Text("Online Amount: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Bank_Receipt_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                     ],
                                   ),
                                   SizedBox(height: 5,),
@@ -243,12 +256,12 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      Expanded(child: Text("Share: 1,20,348,000.00",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      Expanded(child: Text("Share: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                       Container(
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
                                         child:
-                                        Text(CommonWidget.getCurrencyFormat(7892345679),
+                                        Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
                                           overflow: TextOverflow.ellipsis,
                                           style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
@@ -382,10 +395,11 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
         title: ApplicationLocalizations.of(context)!.translate("from_date")!,
-        callback: (date) {
+        callback: (date) async{
           setState(() {
             applicablefrom = date!;
           });
+          await callDetailReportList(0);
         },
         applicablefrom: applicablefrom);
   }
@@ -394,11 +408,113 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
         title: ApplicationLocalizations.of(context)!.translate("to_date")!,
-        callback: (date) {
+        callback: (date) async{
           setState(() {
             applicableTwofrom = date!;
           });
+          await callDetailReportList(0);
+
         },
         applicablefrom: applicableTwofrom);
+  }
+
+  callDetailReportList(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getMISFranchiseeProfitDatewise}?Company_ID=$companyId&Party_ID=3113&From_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicablefrom.toString()))}&To_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicableTwofrom.toString()))}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+              setState(() {
+                isLoaderShow=false;
+                if(data!=null){
+                  List<dynamic> _arrList = [];
+                  _arrList=data;
+                  if (_arrList.length < 10) {
+                    if (mounted) {
+                      setState(() {
+                        isPagination = false;
+                      });
+                    }
+                  }
+                  if (page == 1) {
+                    setDataToList(_arrList);
+                  } else {
+                    setMoreDataToList(_arrList);
+                  }
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  franchisee   $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  setDataToList(List<dynamic> _list) {
+    if (reportDetailList.isNotEmpty) reportDetailList.clear();
+    if (mounted) {
+      setState(() {
+        reportDetailList.addAll(_list);
+      });
+    }
+  }
+
+  setMoreDataToList(List<dynamic> _list) {
+    if (mounted) {
+      setState(() {
+        reportDetailList.addAll(_list);
+      });
+    }
   }
 }
