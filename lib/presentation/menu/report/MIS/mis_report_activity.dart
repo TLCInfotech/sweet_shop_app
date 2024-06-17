@@ -7,6 +7,9 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/presentation/menu/report/common_screens/report_type_list_screen.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
@@ -20,12 +23,12 @@ class MisReportActivity extends StatefulWidget {
 }
 
 class _MisReportActivityState extends State<MisReportActivity> {
-  final _leaderFocus = FocusNode();
-  final  franchisee = TextEditingController();
+
 
   final bankcashFocus = FocusNode();
   final bankCashController = TextEditingController();
-
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
   String reportType = "";
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
@@ -168,14 +171,19 @@ class _MisReportActivityState extends State<MisReportActivity> {
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
-        callback: (name){
-          setState(() {
-            reportType=name!;
-          });
-        },
-        reportType: reportType);
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().report}?Form_Name=MIS&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name,id){
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+      },
+    );
   }
 
 
@@ -209,14 +217,19 @@ class _MisReportActivityState extends State<MisReportActivity> {
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            franchisee.text=name!;
-          });
-        },
-        franchiseeName:  franchisee.text);
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().franchisee}?",
+      titleIndicator: true,
+      ledgerName: selectedFranchiseeName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+        });
+      },
+    );
 
   }
 
@@ -234,12 +247,13 @@ class _MisReportActivityState extends State<MisReportActivity> {
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
-              }
+            onTap: () {//ReportTypeList
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
+                mListener: this,
+            reportName:reportType,
+            party:"K.K Pedha Shri Datta Dairy & Foods, Girim",
+
+              )));
             },
             onDoubleTap: () {},
             child: Container(

@@ -36,10 +36,14 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   double distanceInMeters = 0;
 
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
     addNewScreen(
         HomeFragment(
           mListener: this,

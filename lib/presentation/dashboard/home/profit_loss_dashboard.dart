@@ -534,14 +534,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     return  Padding(
       padding:  EdgeInsets.only(left: 50),
       child:Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
-      // Countup(
-      //     precision: 2,
-      //     begin: 0,
-      //     end: double.parse((profit).toString()),
-      //     duration: const Duration(seconds: 2),
-      //     separator: ',',
-      //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-      // ),
     );
   }
 
