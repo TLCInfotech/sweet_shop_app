@@ -439,19 +439,8 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  _arrList=data;
-                  if (_arrList.length < 10) {
-                    if (mounted) {
-                      setState(() {
-                        isPagination = false;
-                      });
-                    }
-                  }
-                  if (page == 1) {
-                    setDataToList(_arrList);
-                  } else {
-                    setMoreDataToList(_arrList);
-                  }
+                  reportDetailList=data;
+
                 }else{
                   isApiCall=true;
                 }
