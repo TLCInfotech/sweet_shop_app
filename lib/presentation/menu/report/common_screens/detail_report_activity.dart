@@ -269,7 +269,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      Expanded(child: Text("Share: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,
+                                      Expanded(child: Text("Share: " + CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               color:reportDetailList[index]['Profit_Share']<0? Colors.red:Colors.green,

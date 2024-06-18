@@ -325,7 +325,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child: Text("Share:+${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                        Expanded(child: Text("Share: ${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
                                             style: TextStyle(
                                                 fontSize: 16.0,
                                                 color:array_list[index]['Profit_Share']<0? Colors.red:Colors.green,
