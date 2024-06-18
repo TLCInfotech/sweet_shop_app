@@ -29,7 +29,8 @@ class ProfitLossDash extends StatefulWidget {
   final fid;
   final vName;
   final date;
-  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date}) : super(key: key);
+  final come;
+  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date, this.come}) : super(key: key);
 
   @override
   State<ProfitLossDash> createState() => _ProfitLossDashState();
@@ -64,9 +65,14 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   void initState() {
     // TODO: implement initState
     super.initState();
-    addDate();
+    if(widget.come=="report"){
+      dateTime=DateTime.parse(widget.date);
+    }else {
+      addDate();
+    }
     callGetFranchiseeNot(0);
     getDashboardData();
+
     print("hfshjffhfbh  $dateString");
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     getLocal();

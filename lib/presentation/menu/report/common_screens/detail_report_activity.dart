@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_dashboard.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -33,7 +34,7 @@ class DetailReportActivity extends StatefulWidget {
   State<DetailReportActivity> createState() => _DetailReportActivityState();
 }
 
-class _DetailReportActivityState extends State<DetailReportActivity> {
+class _DetailReportActivityState extends State<DetailReportActivity> with ProfitLossDashInterface{
   bool isLoaderShow = false;
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -210,10 +211,17 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
               child: FadeInAnimation(
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
-                  onTap: () async {},
+                  onTap: () async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(mListener: this,
+                      fid:widget.partId,
+                      vName: widget.party,
+                      date: reportDetailList[index]['Date'],
+                      come: "report",
+                    )));
+                  },
                   child: Card(
                     child: Container(
-                      color: index %2==0? Colors.orange.withOpacity(0.1): Colors.green.withOpacity(0.1),
+                   //   color: index %2==0? Colors.orange.withOpacity(0.1): Colors.green.withOpacity(0.1),
                       // color: index %2==0? (Color(0xFFFFC300)).withOpacity(0.3): Colors.orange.withOpacity(0.3),
 
                       child: Row(
@@ -248,7 +256,12 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
 
-                                      Expanded(child: Text("Online Amount: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Bank_Receipt_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      Expanded(child: Text("Online Amount: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Bank_Receipt_Amount']),overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color:reportDetailList[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
+                                              fontFamily: "Inter_Light_Font"
+                                          ))),
                                     ],
                                   ),
                                   SizedBox(height: 5,),
@@ -256,14 +269,23 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      Expanded(child: Text("Share: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      Expanded(child: Text("Share: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color:reportDetailList[index]['Profit_Share']<0? Colors.red:Colors.green,
+                                              fontFamily: "Inter_Light_Font"
+                                          ))),
                                       Container(
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
                                         child:
                                         Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
                                           overflow: TextOverflow.ellipsis,
-                                          style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              color:reportDetailList[index]['Profit']<0? Colors.red:Colors.green,
+                                              fontFamily: "Inter_Medium_Font"
+                                          ),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                       )],
                                   ),
@@ -374,8 +396,6 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
   getTopLayout(double parentHeight, double parentWidth) {
     return Column(
       children: [
-        getFranchiseeNameLayout(
-            SizeConfig.screenHeight, SizeConfig.screenWidth),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -387,6 +407,9 @@ class _DetailReportActivityState extends State<DetailReportActivity> {
                 child: getDateTwoLayout(parentHeight, parentWidth)),
           ],
         ),
+        getFranchiseeNameLayout(
+            SizeConfig.screenHeight, SizeConfig.screenWidth),
+
       ],
     );
   }

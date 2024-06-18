@@ -84,7 +84,7 @@ class StringEn{
   static const POST = "Post";
   static const NAME = "Name";
   static const BRAND_NAME = "Brand Name";
-  static const FRANCHISEE = "Franchisee";
+  static const FRANCHISEE = "Branch";
   static const ADDRESS = "Address";
   static const SAVE = "Save";
   static const DISTRICTCITY = "District/City";

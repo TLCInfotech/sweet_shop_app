@@ -256,7 +256,7 @@
  "return": "Return",
  "party_wise": "Partywise",
  "item_wise": "Itemwise",
- "franchisee_outstanding": "Franchisee Outstanding",
+ "franchisee_outstanding": "Branch Outstanding",
  "bank_wise": "Bankwise",
  "order_invoice": "Sale Order",
  "constant_order_invoice": "Convert Sale Order",

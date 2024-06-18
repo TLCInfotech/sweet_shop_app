@@ -286,7 +286,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             DetailReportActivity(
                               partId: array_list[index]['Party_ID'],
-                              party:array_list[index]['Party_ID'],
+                              party:array_list[index]['Party_Name'],
                               fromDate: applicablefrom,
                               toDate: applicableTwofrom,
                             )));
@@ -306,13 +306,18 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  //  Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
+                                    Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
                                     SizedBox(height: 5,),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child: Text("Online Amount: ${CommonWidget.getCurrencyFormat(array_list[index]['Bank_Receipt_Amount'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                        Expanded(child: Text("Online Amount: ${CommonWidget.getCurrencyFormat(array_list[index]['Bank_Receipt_Amount'])}",overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color:array_list[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
+                                            fontFamily: "Inter_Light_Font"
+                                        ),)),
                                       ],
                                     ),
                                     SizedBox(height: 5,),
@@ -320,14 +325,23 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child: Text("Share:+${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                        Expanded(child: Text("Share:+${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color:array_list[index]['Profit_Share']<0? Colors.red:Colors.green,
+                                                fontFamily: "Inter_Light_Font"
+                                            ))),
                                         Container(
                                           alignment: Alignment.centerRight,
                                           width: SizeConfig.halfscreenWidth-20,
                                           child:
                                           Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
                                             overflow: TextOverflow.ellipsis,
-                                            style: item_heading_textStyle.copyWith(color: Colors.blue),),
+                                              style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  color:array_list[index]['Profit']<0? Colors.red:Colors.green,
+                                                  fontFamily: "Inter_Medium_Font"
+                                              ),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                         )],
                                     ),
