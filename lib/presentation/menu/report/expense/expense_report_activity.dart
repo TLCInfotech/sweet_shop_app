@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -31,10 +33,9 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   String selectedFranchiseeName="";
-
-  final _expenseFocus = FocusNode();
-  final expenseController = TextEditingController();
-
+  String selectedFranchiseeId="";
+  String selectedLedgerName="";
+  String selectedLedgerId="";
 
   @override
   Widget build(BuildContext context) {
@@ -158,19 +159,26 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
       ],
     );
   }
-
+  final _reportTypeKey = GlobalKey<FormFieldState>();
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
-        callback: (name){
-          setState(() {
-            reportType=name!;
-          });
-        },
-        reportType: reportType);
+    return  SearchableLedgerDropdown(
+      mandatory: true,
+      txtkey:_reportTypeKey,
+      apiUrl: "${ApiConstants().report}?Form_Name=EXPENSE&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name,id){
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+        _reportTypeKey.currentState!.validate();
+      },
+    );
   }
-
 
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
@@ -202,22 +210,39 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            selectedFranchiseeName=name!;
-          });
-        },
-        franchiseeName: selectedFranchiseeName);
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().franchisee}?",
+      titleIndicator: true,
+      ledgerName: selectedFranchiseeName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name,id){
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+        });
+      },
+    );
 
   }
 
 
-
   /* Widget for expense text from field layout */
   Widget getExpenseNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().ledger_list}?",
+      titleIndicator: true,
+      ledgerName: selectedLedgerName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("expense")!,
+      callback: (name,id){
+        setState(() {
+          selectedLedgerName = name!;
+          selectedLedgerId = id.toString()!;
+        });
+      },
+    );
+  /*  return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
           return StringEn.ENTER+StringEn.EXPENSES;
@@ -236,7 +261,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
       textInput: TextInputType.text,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
-    );
+    );*/
 
   }
 

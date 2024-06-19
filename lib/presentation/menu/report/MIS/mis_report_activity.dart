@@ -177,7 +177,6 @@ class _MisReportActivityState extends State<MisReportActivity> {
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
     return  SearchableLedgerDropdown(
-
       mandatory: true,
       txtkey: _reportTypeKey,
       apiUrl: "${ApiConstants().report}?Form_Name=MIS&",
@@ -270,6 +269,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
                   mListener: this,
                   reportName:reportType,
+                  reportId:reportId,
                   partId: selectedFranchiseeId,
                   party:selectedFranchiseeName,
                   applicablefrom: applicablefrom,

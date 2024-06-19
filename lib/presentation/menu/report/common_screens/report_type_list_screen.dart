@@ -24,12 +24,13 @@ import '../../../common_widget/get_date_layout.dart';
 
 class ReportTypeList extends StatefulWidget {
   final  reportName;
+  final  reportId;
   final  party;
   final  partId;
   final  applicablefrom;
   final  applicableTwofrom;
 
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom});
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
@@ -408,7 +409,12 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().misprofit}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
+        String apiUrl="" ;
+        if(selectedFranchiseeId!=""){
+          apiUrl= "${baseurl}${ApiConstants().misprofit}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
+        }else{
+          apiUrl= "${baseurl}${ApiConstants().misprofit}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
