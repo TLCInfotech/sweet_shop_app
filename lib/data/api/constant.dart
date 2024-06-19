@@ -90,4 +90,7 @@ class ApiConstants {
   String getMISFranchiseeProfitDatewise="MISFranchiseeProfitDatewise";
   String misprofit="MISProfit";
   String expenseProfit="ExpenseProfit";
+  String getExpensePartywise="ExpensePartywise";
+  String getExpenseExpensewise="ExpenseExpensewise";
+
 }
