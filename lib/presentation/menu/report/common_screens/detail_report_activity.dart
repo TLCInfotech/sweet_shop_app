@@ -269,21 +269,39 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      Expanded(child: Text("Share: " + CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share']),overflow: TextOverflow.clip,
+                                      Expanded(child:
+                                      reportDetailList[index]['Profit_Share']<0?
+                                      Text("Share: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
                                           style: TextStyle(
                                               fontSize: 16.0,
-                                              color:reportDetailList[index]['Profit_Share']<0? Colors.red:Colors.green,
+                                              color: Colors.red,
                                               fontFamily: "Inter_Light_Font"
-                                          ))),
+                                          ))
+                                          :
+                                      Text("Share: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color:Colors.green,
+                                              fontFamily: "Inter_Light_Font"
+                                          ))
+
+                                      ),
                                       Container(
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
-                                        child:
+                                        child:reportDetailList[index]['Profit']<0?
+                                        Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']*-1),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.red,
+                                              fontFamily: "Inter_Medium_Font"
+                                          ),):
                                         Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 18.0,
-                                              color:reportDetailList[index]['Profit']<0? Colors.red:Colors.green,
+                                              color:Colors.green,
                                               fontFamily: "Inter_Medium_Font"
                                           ),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),

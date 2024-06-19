@@ -325,21 +325,39 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child: Text("Share: ${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                        Expanded(child:
+                                        array_list[index]['Profit_Share']<0?
+                                        Text("Share: ${CommonWidget.getCurrencyFormat((array_list[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
                                             style: TextStyle(
                                                 fontSize: 16.0,
-                                                color:array_list[index]['Profit_Share']<0? Colors.red:Colors.green,
+                                                color: Colors.red,
                                                 fontFamily: "Inter_Light_Font"
-                                            ))),
+                                            ))
+                                            :
+                                        Text("Share: ${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color:Colors.green,
+                                                fontFamily: "Inter_Light_Font"
+                                            ))
+
+                                        ),
                                         Container(
                                           alignment: Alignment.centerRight,
                                           width: SizeConfig.halfscreenWidth-20,
-                                          child:
+                                          child:array_list[index]['Profit']<0?
+                                          Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.red,
+                                                fontFamily: "Inter_Medium_Font"
+                                            ),):
                                           Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
                                             overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: 18.0,
-                                                  color:array_list[index]['Profit']<0? Colors.red:Colors.green,
+                                                  color:Colors.green,
                                                   fontFamily: "Inter_Medium_Font"
                                               ),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
