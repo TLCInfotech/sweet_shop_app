@@ -906,7 +906,8 @@ var dataArrM;
   Widget getReportSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .4,
+      margin: const EdgeInsets.only(bottom: 5),
+     // height: parentHeight * .4,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -1131,7 +1132,7 @@ var dataArrM;
       },
       onDoubleTap: (){},
       child: Padding(
-        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01,bottom: parentHeight*.01),
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
