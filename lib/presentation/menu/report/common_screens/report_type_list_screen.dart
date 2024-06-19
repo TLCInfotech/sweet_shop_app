@@ -339,6 +339,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                             party:array_list[index]['Party_Name'],
                             fromDate: applicablefrom,
                             toDate: applicableTwofrom,
+                            come:"partyName"
                           )));
                       array_list=[];
                       await  getReportList(1);
@@ -462,18 +463,20 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
               DetailReportActivity(
                 apiurl: ApiConstants().getExpensePartywise,
-                partId: array_list[index]['Vendor_ID'],
-                party: array_list[index]['Vendor_Name'],
+                venderId: array_list[index]['Vendor_ID'],
+                venderName: array_list[index]['Vendor_Name'],
                 fromDate: applicablefrom,
+                come:"vendorName",
                 toDate: applicableTwofrom,
               )));
         }else if(widget.reportId=="EXSM"){
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
               DetailReportActivity(
                 apiurl: ApiConstants().getExpenseExpensewise,
-                partId: array_list[index]['Expense_ID'],
-                party: array_list[index]['Expense_Name'],
+                expense: array_list[index]['Expense_ID'],
+                expenseName: array_list[index]['Expense_Name'],
                 fromDate: applicablefrom,
+                come:"expanseName",
                 toDate: applicableTwofrom,
               )));
         }else {

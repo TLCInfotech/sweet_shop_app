@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -26,10 +28,14 @@ class DetailReportActivity extends StatefulWidget {
   final toDate;
   final  party;
   final  partId;
-
+  final  expenseName;
+  final  expense;
+  final  venderId;
+  final  venderName;
+  final  come;
 
   const DetailReportActivity(
-      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId,});
+      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId, this.expenseName, this.expense, this.venderId, this.venderName, this.come,});
 
   @override
   State<DetailReportActivity> createState() => _DetailReportActivityState();
@@ -68,11 +74,28 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
     _scrollController.addListener(_scrollListener);
 
     setVal();
+
   }
+  List MasterMenu=[];
+  List TransactionMenu=[];
+  var dataArr;
 
   setVal()async{
+    var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
     setState(() {
-      franchiseeName.text=widget.party.toString();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    });
+    setState(() {
+      print("hbjfbhfbbf ${widget.come} ${widget.venderId}");
+
+      if(widget.come=="expanseName"){
+        franchiseeName.text=widget.expenseName.toString();
+      }else if(widget.come=="vendorName"){
+        franchiseeName.text=widget.venderName.toString();
+      }else{
+        franchiseeName.text=widget.party.toString();
+      }
       applicablefrom=widget.fromDate;
       applicableTwofrom=widget.toDate;
     });
@@ -200,7 +223,6 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
-        // itemCount: reportDetailList.length,
         itemCount: reportDetailList.length,
         controller: _scrollController,
         itemBuilder: (BuildContext context, int index) {
@@ -222,10 +244,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                   },
                   child: Card(
                     child: Container(
-                   //   color: index %2==0? Colors.orange.withOpacity(0.1): Colors.green.withOpacity(0.1),
-                      // color: index %2==0? (Color(0xFFFFC300)).withOpacity(0.3): Colors.orange.withOpacity(0.3),
-
-                      child: Row(
+                  child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
@@ -252,7 +271,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                     ],
                                   ),
                                   SizedBox(height: 5,),
-                                  Row(
+                                  reportDetailList[index]['Bank_Receipt_Amount']!=null?  Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
@@ -264,13 +283,13 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                               fontFamily: "Inter_Light_Font"
                                           ))),
                                     ],
-                                  ),
+                                  ):Container(),
                                   SizedBox(height: 5,),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      Expanded(child:
+                                      reportDetailList[index]['Profit_Share']!=null?Expanded(child:
                                       reportDetailList[index]['Profit_Share']<0?
                                       Text("Share: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
                                           style: TextStyle(
@@ -286,8 +305,8 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                               fontFamily: "Inter_Light_Font"
                                           ))
 
-                                      ),
-                                      Container(
+                                      ):Container(),
+                                      reportDetailList[index]['Profit']!=null? Container(
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
                                         child:reportDetailList[index]['Profit']<0?
@@ -306,21 +325,28 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                               fontFamily: "Inter_Medium_Font"
                                           ),),
                                         //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                      )],
+                                      ):Container()],
                                   ),
+
+                                  reportDetailList[index]['Amount']<0?
+                                  Text("Amount: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.red,
+                                          fontFamily: "Inter_Light_Font"
+                                      ))
+                                      :
+                                  Text("Amount: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          color:Colors.green,
+                                          fontFamily: "Inter_Light_Font"
+                                      ))
 
                                 ],
                               ),
                             ),
                           ),
-                          /*     DeleteDialogLayout(
-                                callback: (response ) async{
-                                  if(response=="yes"){
-                                    print("##############$response");
-                                    await   callDeleteSaleInvoice(saleInvoice_list[index]['Invoice_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
-                                  }
-                                },
-                              )*/
                         ],
                       ),
                     ),
@@ -474,19 +500,25 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${widget.apiurl}?Company_ID=$companyId&Party_ID=3113&From_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicablefrom.toString()))}&To_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicableTwofrom.toString()))}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+        String apiUrl="";
+        if(widget.come=="vendorName"){
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+        }else
+        if(widget.come=="expanseName"){
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=${widget.expense}";
+        }else{
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";
+        }
+     apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   reportDetailList=data;
-
                 }else{
                   isApiCall=true;
                 }
-
               });
 
               // _arrListNew.addAll(data.map((arrData) =>
