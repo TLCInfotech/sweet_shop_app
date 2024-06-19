@@ -29,8 +29,9 @@ class ReportTypeList extends StatefulWidget {
   final  partId;
   final  applicablefrom;
   final  applicableTwofrom;
+  final  url;
 
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId});
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
@@ -305,7 +306,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
+                                    array_list[index]['Party_Name']==null?Container():  Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
                                     SizedBox(height: 5,),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -409,9 +410,9 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
         );
         String apiUrl="" ;
         if(selectedFranchiseeId!=""){
-          apiUrl= "${baseurl}${ApiConstants().misprofit}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
+          apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
         }else{
-          apiUrl= "${baseurl}${ApiConstants().misprofit}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+          apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/presentation/menu/report/common_screens/report_type_list_screen.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -278,10 +279,25 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
               top: parentHeight * .015),
           child: GestureDetector(
             onTap: () {
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
+              bool v=_reportTypeKey.currentState!.validate();
+              if(v) {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                //     ReportTypeList(
+                //       mListener: this,
+                //       reportName: reportType,
+                //       party: "K.K Pedha Shri Datta Dairy & Foods, Girim",
+                //
+                //     )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
+                  mListener: this,
+                  reportName:reportType,
+                  reportId:reportId,
+                  url: ApiConstants().expenseProfit,
+                  partId: selectedFranchiseeId,
+                  party:selectedFranchiseeName,
+                  applicablefrom: applicablefrom,
+                  applicableTwofrom: applicableTo,
+                )));
               }
             },
             onDoubleTap: () {},
