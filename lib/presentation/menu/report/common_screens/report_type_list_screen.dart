@@ -303,7 +303,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
         ));
   }
 
- GestureDetector getUIForMISReport(BuildContext context, int index) {
+
+ Widget getUIForMISReport(BuildContext context, int index) {
    return GestureDetector(
                     onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
@@ -404,7 +405,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
  }
 
 
-  GestureDetector getUIForExpenseReportPartyWise(BuildContext context, int index) {
+  Widget getUIForExpenseReportPartyWise(BuildContext context, int index) {
     return GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
@@ -428,10 +429,30 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    array_list[index]['Date']!=null? Row(
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.calendar,
+                          color: Colors.black87,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          CommonWidget.getDateLayout(DateTime.parse(array_list[index]['Date'])),
+                          style: item_heading_textStyle,
+                        ),
+                      ],
+                    ):Container(),
+
                     array_list[index]['Expense_Name']==null?Container():  Text(array_list[index]['Expense_Name'],style: item_heading_textStyle,),
                     SizedBox(height: 5,),
 
-
+                    array_list[index]['Vendor_Name']==null?Container():  Text(array_list[index]['Vendor_Name'],style: item_heading_textStyle,),
+                    SizedBox(height: 5,),
+                    
+                    
                     Container(
                       alignment: Alignment.centerLeft,
                       child:array_list[index]['Amount']<0?
@@ -442,7 +463,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                             color: Colors.red,
                             fontFamily: "Inter_Medium_Font"
                         ),):
-                      Text(CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
+                      Text("Amount : "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18.0,
