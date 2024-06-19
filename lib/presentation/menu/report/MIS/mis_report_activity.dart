@@ -275,6 +275,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                   party:selectedFranchiseeName,
                   applicablefrom: applicablefrom,
                   applicableTwofrom: applicableTwofrom,
+                  comeFrom: "MIS",
                 )));
               }
             },

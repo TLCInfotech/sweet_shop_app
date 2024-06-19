@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/menu/report/common_screens/detail_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
@@ -60,12 +61,27 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
     super.initState();
     print("ommmmmm${widget.reportId}");
     _scrollController.addListener(_scrollListener);
-    selectedFranchiseeName=widget.party;
-    selectedFranchiseeId=widget.partId;
+    if(widget.comeFrom=="MIS"){
+      selectedFranchiseeName=widget.party;
+      selectedFranchiseeId=widget.partId;
+    }
+
+    selectedLedgerName=widget.party;
+    selectedLedgerId=widget.partId;
     applicablefrom=widget.applicablefrom;
     applicableTwofrom=widget.applicableTwofrom;
     getReportList(page);
-
+    getLocal();
+  }
+  List MasterMenu=[];
+  List TransactionMenu=[];
+  var dataArr;
+  getLocal()async{
+    var tr =await (AppPreferences.getTransactionMenuList());
+    dataArr=tr;
+    setState(() {
+    TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    });
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -249,7 +265,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
       apiUrl: "${ApiConstants().franchisee}?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
-      franchiseeName: selectedFranchiseeName,
+      franchiseeName:widget.party,
       franchisee: "edit",
       readOnly:true,
       title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
@@ -311,6 +327,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                     onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           DetailReportActivity(
+                            apiurl: ApiConstants().getMISFranchiseeProfitDatewise,
                             partId: array_list[index]['Party_ID'],
                             party:array_list[index]['Party_Name'],
                             fromDate: applicablefrom,
@@ -413,7 +430,9 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
     return  SearchableLedgerDropdown(
       apiUrl: "${ApiConstants().ledger_list}?",
       titleIndicator: false,
-      ledgerName: selectedLedgerName,
+      ledgerName: widget.party,
+      franchisee: "edit",
+      franchiseeName: widget.party,
       readOnly:true,
       title: ApplicationLocalizations.of(context)!.translate("expense")!,
       callback: (name,id){
@@ -430,13 +449,33 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   Widget getUIForExpenseReportPartyWise(BuildContext context, int index) {
     return GestureDetector(
       onTap: ()async{
-        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            DetailReportActivity(
-              partId: array_list[index]['Party_ID'],
-              party:array_list[index]['Party_Name'],
-              fromDate: applicablefrom,
-              toDate: applicableTwofrom,
-            )));
+        if(widget.reportId=="PTSM"){
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              DetailReportActivity(
+                apiurl: ApiConstants().getExpensePartywise,
+                partId: array_list[index]['Vendor_ID'],
+                party: array_list[index]['Vendor_Name'],
+                fromDate: applicablefrom,
+                toDate: applicableTwofrom,
+              )));
+        }else if(widget.reportId=="EXSM"){
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              DetailReportActivity(
+                apiurl: ApiConstants().getExpenseExpensewise,
+                partId: array_list[index]['Expense_ID'],
+                party: array_list[index]['Expense_Name'],
+                fromDate: applicablefrom,
+                toDate: applicableTwofrom,
+              )));
+        }else {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              LedgerActivity(
+               mListener: this,
+                dateNew:DateTime.parse(array_list[index]['Date']),
+                formId: "AT009",
+                arrData: dataArr,
+              )));
+        }
         array_list=[];
         await  getReportList(1);
       },

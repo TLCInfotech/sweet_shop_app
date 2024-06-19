@@ -27,6 +27,7 @@ class DetailReportActivity extends StatefulWidget {
   final  party;
   final  partId;
 
+
   const DetailReportActivity(
       {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId,});
 
@@ -473,7 +474,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getMISFranchiseeProfitDatewise}?Company_ID=$companyId&Party_ID=3113&From_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicablefrom.toString()))}&To_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicableTwofrom.toString()))}";
+        String apiUrl = "${baseurl}${widget.apiurl}?Company_ID=$companyId&Party_ID=3113&From_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicablefrom.toString()))}&To_Date=${DateFormat("yyyy-MM-dd").format(DateTime.parse(applicableTwofrom.toString()))}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
