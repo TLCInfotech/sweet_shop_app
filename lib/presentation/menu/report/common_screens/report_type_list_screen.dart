@@ -28,12 +28,15 @@ class ReportTypeList extends StatefulWidget {
   final  reportId;
   final  party;
   final  partId;
+  final  venderId;
+  final  expenseName;
+  final  expenseId;
   final  applicablefrom;
   final  applicableTwofrom;
   final  url;
   final comeFrom;
 
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom});
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom, this.venderId, this.expenseId, this.expenseName});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
@@ -64,10 +67,14 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
     if(widget.comeFrom=="MIS"){
       selectedFranchiseeName=widget.party;
       selectedFranchiseeId=widget.partId;
+    }else{
+      selectedFranchiseeName=widget.party;
+      selectedFranchiseeId=widget.venderId;
+      selectedLedgerName=widget.expenseName;
+      selectedLedgerId=widget.expenseId;
     }
 
-    selectedLedgerName=widget.party;
-    selectedLedgerId=widget.partId;
+
     applicablefrom=widget.applicablefrom;
     applicableTwofrom=widget.applicableTwofrom;
     getReportList(page);
@@ -430,9 +437,9 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
     return  SearchableLedgerDropdown(
       apiUrl: "${ApiConstants().ledger_list}?",
       titleIndicator: false,
-      ledgerName: widget.party,
+      ledgerName:widget.expenseName,
       franchisee: "edit",
-      franchiseeName: widget.party,
+      franchiseeName: widget.expenseName,
       readOnly:true,
       title: ApplicationLocalizations.of(context)!.translate("expense")!,
       callback: (name,id){
@@ -440,6 +447,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
           selectedLedgerName = name!;
           selectedLedgerId = id.toString()!;
         });
+        array_list=[];
+        getReportList(1);
       },
     );
   }
@@ -568,10 +577,20 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
             page: page.toString()
         );
         String apiUrl="" ;
+        if(widget.comeFrom=="MIS"){
         if(selectedFranchiseeId!=""){
           apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
         }else{
           apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+        }}else{
+          if(selectedFranchiseeId!=""){
+            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
+          }else
+          if(selectedLedgerId!=""){
+            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=$selectedLedgerId";
+          }else{
+            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+          }
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
