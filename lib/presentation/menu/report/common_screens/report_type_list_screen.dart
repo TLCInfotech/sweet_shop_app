@@ -291,8 +291,6 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                               fromDate: applicablefrom,
                               toDate: applicableTwofrom,
                             )));
-                        selectedFranchiseeId="";
-                        partyBlank=false;
                         array_list=[];
                         await  getReportList(1);
                       },

@@ -209,9 +209,11 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
         franchisee:selectedLedgerName,
         callback: (name,id)async{
           setState(() {
+            openingBal=null;
+            closingBal=null;
             selectedLedgerName = name!;
             selectedLedgerId = id!;
-
+            print("fhhjfhjfhjf");
           });
            await getReportLedger(page);
         },
