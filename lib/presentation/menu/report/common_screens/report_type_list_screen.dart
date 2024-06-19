@@ -58,6 +58,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("ommmmmm${widget.reportId}");
     _scrollController.addListener(_scrollListener);
     selectedFranchiseeName=widget.party;
     selectedFranchiseeId=widget.partId;
@@ -173,7 +174,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                     const SizedBox(
                       height: 2,
                     ),
-                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    widget.reportId=="PTSM"||widget.reportId=="PROFIT"?getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                    widget.reportId=="EXSM"?getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -243,7 +245,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   String selectedFranchiseeId="";
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return partyBlank==false?Container():  SearchableLedgerDropdown(
+    return   SearchableLedgerDropdown(
       apiUrl: "${ApiConstants().franchisee}?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
@@ -403,6 +405,26 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                     ),
                   );
  }
+
+  String selectedLedgerName="";
+  String selectedLedgerId="";
+  /* Widget for expense text from field layout */
+  Widget getExpenseNameLayout(double parentHeight, double parentWidth) {
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().ledger_list}?",
+      titleIndicator: false,
+      ledgerName: selectedLedgerName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("expense")!,
+      callback: (name,id){
+        setState(() {
+          selectedLedgerName = name!;
+          selectedLedgerId = id.toString()!;
+        });
+      },
+    );
+  }
+
 
 
   Widget getUIForExpenseReportPartyWise(BuildContext context, int index) {
