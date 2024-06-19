@@ -275,8 +275,10 @@ final FocusNode reqFocus=FocusNode();
                       _controller.text=suggestion['Name'];
                     });
                     widget.callback(suggestion);
-                    widget.focuscontroller.unfocus();
-                    FocusScope.of(context).requestFocus(widget.focusnext);
+                    if(widget.focuscontroller!=null) {
+                      widget.focuscontroller.unfocus();
+                      FocusScope.of(context).requestFocus(widget.focusnext);
+                    }
                   },
                 ),
               ),

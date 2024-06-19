@@ -221,8 +221,10 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                     _controller.text=suggestion['Name'];
                   });
                   widget.callback(suggestion['Name'],(suggestion['ID']).toString());
-                  widget.focuscontroller.unfocus();
-                  FocusScope.of(context).requestFocus(widget.focusnext);
+                  if(widget.focuscontroller!=null) {
+                    widget.focuscontroller.unfocus();
+                    FocusScope.of(context).requestFocus(widget.focusnext);
+                  }
                 },
               ),
             ),

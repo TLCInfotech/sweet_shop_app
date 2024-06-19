@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
+import '../../../../data/api/constant.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_item_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
+
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class PurchaseReportActivity extends StatefulWidget {
   const PurchaseReportActivity({super.key});
@@ -18,6 +23,8 @@ class PurchaseReportActivity extends StatefulWidget {
 }
 
 class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
+  final _formkey = GlobalKey<FormState>();
+  final _reportTypeKey = GlobalKey<FormFieldState>();
 
   String reportType = "";
   String reportId = "";
@@ -28,8 +35,10 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
   DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   String selectedFranchiseeName="";
+  String selectedFranchiseeId = "";
 
   String ItemName="";
+  String ItemID = "";
 
   String categoryId="";
   String categoryName="";
@@ -133,26 +142,29 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getReportTypeLayout(parentHeight, parentWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getReportTypeLayout(parentHeight, parentWidth),
+                    Row(
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateONELayout(parentHeight, parentWidth)),
+                        Container(
 
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                  getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  getItemameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  getAddCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                ],
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateTwoLayout(parentHeight, parentWidth)),
+                      ],
+                    ),
+                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getItemameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                    getAddCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                  ],
+                ),
               ),
             ),
           ),
@@ -163,14 +175,22 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
-        callback: (name){
-          setState(() {
-            reportType=name!;
-          });
-        },
-        reportType: reportType);
+    return SearchableLedgerDropdown(
+      mandatory: true,
+      txtkey: _reportTypeKey,
+      apiUrl: "${ApiConstants().report}?Form_Name=PURCHASE&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly: true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name, id) {
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+        _reportTypeKey.currentState!.validate();
+      },
+    );
   }
 
 
@@ -204,21 +224,42 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            selectedFranchiseeName=name!;
-          });
-        },
-        franchiseeName: selectedFranchiseeName);
+    return SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().franchisee}?",
+      titleIndicator: true,
+      ledgerName: selectedFranchiseeName,
+      readOnly: true,
+      title:
+      ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name, id) {
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+        });
+      },
+    );
 
   }
 
 
   /* Widget to get Franchisee Name Layout */
   Widget getItemameLayout(double parentHeight, double parentWidth) {
-    return
+    return SearchableDropdownWithObject(
+      name: ItemName,
+      focuscontroller: null,
+      focusnext: null,
+      apiUrl:
+      "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+      titleIndicator: true,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item) async {
+        setState(() {
+          // ItemName=item['Name'];
+          ItemID = item['ID'].toString();
+          ItemName = item['Name'].toString();
+        });
+      },
+    );
       GetItemLayout(
           title:ApplicationLocalizations.of(context)!.translate("item")!,
           callback: (value){
@@ -233,7 +274,22 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
 
   /* Widget For Category Layout */
   Widget getAddCategoryLayout(double parentHeight, double parentWidth){
-    return GetCategoryLayout(
+    return SearchableDropdownWithObject(
+      name: categoryName,
+      focuscontroller: null,
+      focusnext: null,
+      apiUrl: "${ApiConstants().item_category}?",
+      titleIndicator: true,
+      title: ApplicationLocalizations.of(context)!.translate("item_category")!,
+      callback: (item) async {
+        setState(() {
+          // ItemName=item['Name'];
+          categoryId = item['ID'].toString();
+          categoryName = item['Name'].toString();
+        });
+      },
+    );
+      GetCategoryLayout(
         title:ApplicationLocalizations.of(context)!.translate("item_category")!,
         callback: (value,id){
           setState(() {

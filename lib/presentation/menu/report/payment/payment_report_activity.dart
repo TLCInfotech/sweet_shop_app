@@ -12,9 +12,11 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
 
+import '../../../../data/api/constant.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/get_report_type_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class PaymentReportActivity extends StatefulWidget {
   const PaymentReportActivity({super.key});
@@ -24,6 +26,12 @@ class PaymentReportActivity extends StatefulWidget {
 }
 
 class _PaymentReportActivityState extends State<PaymentReportActivity> {
+  final _formkey = GlobalKey<FormState>();
+  final _reportTypeKey = GlobalKey<FormFieldState>();
+
+  String ledgerName="";
+  String ledgerID = "";
+
   final _leaderFocus = FocusNode();
   final leaderController = TextEditingController();
 
@@ -32,6 +40,10 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
 
   String reportType = "";
   String reportId = "";
+
+  String selectedbankCashLedgerName="";
+  String selectedbankCashLedgerId = "";
+
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
@@ -139,25 +151,28 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getReportTypeLayout(parentHeight, parentWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getReportTypeLayout(parentHeight, parentWidth),
+                    Row(
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateONELayout(parentHeight, parentWidth)),
+                        Container(
 
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                  getLeaderNameLayout(parentHeight, parentWidth),
-                  getBankCashLedgerLayout(parentHeight, parentWidth),
-                ],
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateTwoLayout(parentHeight, parentWidth)),
+                      ],
+                    ),
+                    getLeaderNameLayout(parentHeight, parentWidth),
+                    getBankCashLedgerLayout(parentHeight, parentWidth),
+                  ],
+                ),
               ),
             ),
           ),
@@ -168,7 +183,23 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
+    return SearchableLedgerDropdown(
+      mandatory: true,
+      txtkey: _reportTypeKey,
+      apiUrl: "${ApiConstants().report}?Form_Name=PAYMENT&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly: true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name, id) {
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+        _reportTypeKey.currentState!.validate();
+      },
+    );
+      GetReportTypeLayout(
         title:ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
@@ -208,7 +239,20 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
 
   /* Widget for name text from field layout */
   Widget getLeaderNameLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormField(
+    return SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().ledger_list}?",
+      titleIndicator: true,
+      ledgerName: ledgerName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("expense")!,
+      callback: (name,id){
+        setState(() {
+          ledgerName = name!;
+          ledgerID = id.toString()!;
+        });
+      },
+    );
+    SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
           return StringEn.ENTER+StringEn.LEDGER;
@@ -232,7 +276,21 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
 
   /* Widget for bank cash ledger layout */
   Widget getBankCashLedgerLayout(double parentHeight, double parentWidth) {
-    return  SingleLineEditableTextFormField(
+    return
+      SearchableLedgerDropdown(
+        apiUrl: "${ApiConstants().getBankCashLedger}?",
+        titleIndicator: true,
+        ledgerName: selectedbankCashLedgerName,
+        readOnly:true,
+        title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+        callback: (name,id){
+          setState(() {
+            selectedbankCashLedgerName = name!;
+            selectedbankCashLedgerId = id.toString()!;
+          });
+        },
+      );
+      SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
           return StringEn.ENTER+StringEn.BANK_CASH_LEDGER;

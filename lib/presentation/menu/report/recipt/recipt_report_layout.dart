@@ -10,10 +10,12 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../../../core/localss/application_localizations.dart';
+import '../../../../data/api/constant.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/get_report_type_layout.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class RecieptReportActivity extends StatefulWidget {
@@ -24,6 +26,9 @@ class RecieptReportActivity extends StatefulWidget {
 }
 
 class _RecieptReportActivityState extends State<RecieptReportActivity> {
+  final _formkey = GlobalKey<FormState>();
+  final _reportTypeKey = GlobalKey<FormFieldState>();
+
   final _leaderFocus = FocusNode();
   final franchisee = TextEditingController();
 
@@ -34,6 +39,12 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
+
+  String selectedbankCashLedgerName="";
+  String selectedbankCashLedgerId = "";
+
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId = "";
 
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -138,25 +149,28 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getReportTypeLayout(parentHeight, parentWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getReportTypeLayout(parentHeight, parentWidth),
+                    Row(
+                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateONELayout(parentHeight, parentWidth)),
+                        Container(
 
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                  getFranchiseeNameLayout(parentHeight, parentWidth),
-                  getBankCashLedgerLayout(parentHeight, parentWidth),
-                ],
+                            width:(SizeConfig.halfscreenWidth),
+                            child: getDateTwoLayout(parentHeight, parentWidth)),
+                      ],
+                    ),
+                    getFranchiseeNameLayout(parentHeight, parentWidth),
+                    getBankCashLedgerLayout(parentHeight, parentWidth),
+                  ],
+                ),
               ),
             ),
           ),
@@ -167,7 +181,23 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
+    return SearchableLedgerDropdown(
+      mandatory: true,
+      txtkey: _reportTypeKey,
+      apiUrl: "${ApiConstants().report}?Form_Name=RECIPT&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly: true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name, id) {
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+        _reportTypeKey.currentState!.validate();
+      },
+    );
+      GetReportTypeLayout(
         title:       ApplicationLocalizations.of(context)!.translate("report_type")!,
         callback: (name){
           setState(() {
@@ -207,7 +237,21 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
+    return SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().franchisee}?",
+      titleIndicator: true,
+      ledgerName: selectedFranchiseeName,
+      readOnly: true,
+      title:
+      ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name, id) {
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+        });
+      },
+    );
+      GetFranchiseeLayout(
         title:       ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
         callback: (name,id){
           setState(() {
@@ -220,7 +264,20 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
 
   /* Widget for bank cash ledger layout */
   Widget getBankCashLedgerLayout(double parentHeight, double parentWidth) {
-    return  SingleLineEditableTextFormField(
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().getBankCashLedger}?",
+      titleIndicator: true,
+      ledgerName: selectedbankCashLedgerName,
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+      callback: (name,id){
+        setState(() {
+          selectedbankCashLedgerName = name!;
+          selectedbankCashLedgerId = id.toString()!;
+        });
+      },
+    );
+      SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
           return StringEn.ENTER+StringEn.BANK_CASH_LEDGER;

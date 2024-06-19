@@ -9,9 +9,14 @@ import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
 import '../../../../core/string_en.dart';
+import '../../../../data/api/constant.dart';
 import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
+import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
+import '../../../searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
+import '../common_screens/report_type_list_screen.dart';
 
 class SaleReportActivity extends StatefulWidget {
   const SaleReportActivity({super.key});
@@ -19,23 +24,28 @@ class SaleReportActivity extends StatefulWidget {
   State<SaleReportActivity> createState() => _SaleReportActivityState();
 }
 
-class _SaleReportActivityState extends State<SaleReportActivity>{
+class _SaleReportActivityState extends State<SaleReportActivity> {
+  final _formkey = GlobalKey<FormState>();
+  final _reportTypeKey = GlobalKey<FormFieldState>();
 
   String reportType = "";
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-  DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  DateTime applicablefrom =
+      DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  DateTime applicableTo =
+      DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
-  String selectedFranchiseeName="";
+  String selectedFranchiseeName = "";
+  String selectedFranchiseeId = "";
 
-  String ItemName="";
+  String ItemName = "";
+  String ItemID = "";
 
-  String categoryId="";
-  String categoryName="";
-
+  String categoryId = "";
+  String categoryName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -56,33 +66,34 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
               color: Colors.transparent,
               // color: Colors.red,
               margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-             child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
+              child: AppBar(
+                leadingWidth: 0,
+                automaticallyImplyLeading: false,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 backgroundColor: Colors.white,
-               title:  Container(
-                 width: SizeConfig.screenWidth,
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     GestureDetector(
-                       onTap: () {
-                         Navigator.pop(context);
-                       },
-                       child: const FaIcon(Icons.arrow_back),
-                     ),
-                     const Expanded(
-                       child: Center(
-                         child: Text(
-                           StringEn.SALE_REPORT,
-                           style: appbar_text_style,),
-                       ),
-                     ),
-                   ],
-                 ),
-               ),
+                title: Container(
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const FaIcon(Icons.arrow_back),
+                      ),
+                      const Expanded(
+                        child: Center(
+                          child: Text(
+                            StringEn.SALE_REPORT,
+                            style: appbar_text_style,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -91,7 +102,7 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
           children: [
             Expanded(
               child: Container(
-                // color: CommonColor.DASHBOARD_BACKGROUND,
+                  // color: CommonColor.DASHBOARD_BACKGROUND,
                   child: getAllTextFormFieldLayout(
                       SizeConfig.screenHeight, SizeConfig.screenWidth)),
             ),
@@ -116,7 +127,6 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
     );
   }
 
-
   /* Widget for all text form field widget layout */
   Widget getAllTextFormFieldLayout(double parentHeight, double parentWidth) {
     return ListView(
@@ -135,26 +145,37 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
             child: Padding(
               padding: EdgeInsets.only(
                   left: parentWidth * .01, right: parentWidth * .01),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  getReportTypeLayout(parentHeight, parentWidth),
-                  Row(
-                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateONELayout(parentHeight, parentWidth)),
-                      Container(
-
-                          width:(SizeConfig.halfscreenWidth),
-                          child: getDateTwoLayout(parentHeight, parentWidth)),
-                    ],
-                  ),
-                  getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  getItemameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                  getAddCategoryLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                ],
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    getReportTypeLayout(parentHeight, parentWidth),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width: (SizeConfig.halfscreenWidth),
+                            child: getDateONELayout(parentHeight, parentWidth)),
+                        Container(
+                            width: (SizeConfig.halfscreenWidth),
+                            child: getDateTwoLayout(parentHeight, parentWidth)),
+                      ],
+                    ),
+                    getFranchiseeNameLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    getItemameLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    getAddCategoryLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth),
+                  ],
+                ),
               ),
             ),
           ),
@@ -165,87 +186,121 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
 
   /* Widget for report type  layout */
   Widget getReportTypeLayout(double parentHeight, double parentWidth) {
-    return GetReportTypeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("report_type")!,
-        callback: (name){
-          setState(() {
-            reportType=name!;
-          });
-        },
-        reportType: reportType);
+    return SearchableLedgerDropdown(
+      mandatory: true,
+      txtkey: _reportTypeKey,
+      apiUrl: "${ApiConstants().report}?Form_Name=SALE&",
+      titleIndicator: true,
+      ledgerName: reportType,
+      readOnly: true,
+      title: ApplicationLocalizations.of(context)!.translate("report_type")!,
+      callback: (name, id) {
+        setState(() {
+          reportType = name!;
+          reportId = id.toString()!;
+        });
+        _reportTypeKey.currentState!.validate();
+      },
+    );
   }
-
 
   /* Widget for date one layout */
   Widget getDateONELayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title:ApplicationLocalizations.of(context)!.translate("from_date")!,
-        callback: (date){
+        title: ApplicationLocalizations.of(context)!.translate("from_date")!,
+        callback: (date) {
           setState(() {
-            applicablefrom=date!;
+            applicablefrom = date!;
           });
         },
-        applicablefrom: applicablefrom
-    );
-
+        applicablefrom: applicablefrom);
   }
 
   /* Widget for date two layout */
   Widget getDateTwoLayout(double parentHeight, double parentWidth) {
     return GetDateLayout(
-        title:ApplicationLocalizations.of(context)!.translate("to_date")!,
-        callback: (date){
+        title: ApplicationLocalizations.of(context)!.translate("to_date")!,
+        callback: (date) {
           setState(() {
-            applicableTo=date!;
+            applicableTo = date!;
           });
         },
-        applicablefrom: applicableTo
-    );
+        applicablefrom: applicableTo);
   }
-
 
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return GetFranchiseeLayout(
-        title:ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            selectedFranchiseeName=name!;
-          });
-        },
-        franchiseeName: selectedFranchiseeName);
-
-  }
-
-
-  /* Widget to get Franchisee Name Layout */
-  Widget getItemameLayout(double parentHeight, double parentWidth) {
-    return
-      GetItemLayout(
-          title:ApplicationLocalizations.of(context)!.translate("item")!,
-          callback: (value){
-            setState(() {
-              ItemName=value!;
-            });
-          },
-          selectedItem: ItemName
-      );
-  }
-
-
-  /* Widget For Category Layout */
-  Widget getAddCategoryLayout(double parentHeight, double parentWidth){
-    return GetCategoryLayout(
-        title:ApplicationLocalizations.of(context)!.translate("item_category")!,
-        callback: (value,id){
-          setState(() {
-            categoryName=value!;
-          });
-        },
-        selectedProductCategory: categoryName
+    return SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().franchisee}?",
+      titleIndicator: true,
+      ledgerName: selectedFranchiseeName,
+      readOnly: true,
+      title:
+          ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      callback: (name, id) {
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = id.toString()!;
+        });
+      },
     );
   }
 
+  /* Widget to get Franchisee Name Layout */
+  Widget getItemameLayout(double parentHeight, double parentWidth) {
+    return SearchableDropdownWithObject(
+      name: ItemName,
+      focuscontroller: null,
+      focusnext: null,
+      apiUrl:
+          "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+      titleIndicator: true,
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item) async {
+        setState(() {
+          // ItemName=item['Name'];
+          ItemID = item['ID'].toString();
+          ItemName = item['Name'].toString();
+        });
+      },
+    );
+    GetItemLayout(
+        title: ApplicationLocalizations.of(context)!.translate("item")!,
+        callback: (value) {
+          setState(() {
+            ItemName = value!;
+          });
+        },
+        selectedItem: ItemName);
+  }
+
+  /* Widget For Category Layout */
+  Widget getAddCategoryLayout(double parentHeight, double parentWidth) {
+    return SearchableDropdownWithObject(
+      name: categoryName,
+      focuscontroller: null,
+      focusnext: null,
+      apiUrl: "${ApiConstants().item_category}?",
+      titleIndicator: true,
+      title: ApplicationLocalizations.of(context)!.translate("item_category")!,
+      callback: (item) async {
+        setState(() {
+          // ItemName=item['Name'];
+          categoryId = item['ID'].toString();
+          categoryName = item['Name'].toString();
+        });
+      },
+    );
+    GetCategoryLayout(
+        title:
+            ApplicationLocalizations.of(context)!.translate("item_category")!,
+        callback: (value, id) {
+          setState(() {
+            categoryName = value!;
+          });
+        },
+        selectedProductCategory: categoryName);
+  }
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
@@ -258,11 +313,27 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
               right: parentWidth * 0.04,
               top: parentHeight * .015),
           child: GestureDetector(
-            onTap: () {
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
+            onTap: () async {
+              bool v = _reportTypeKey.currentState!.validate();
+              if (v) {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                //     ReportTypeList(
+                //       mListener: this,
+                //       reportName: reportType,
+                //       party: "K.K Pedha Shri Datta Dairy & Foods, Girim",
+                //
+                //     )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReportTypeList(
+                              mListener: this,
+                              reportName: reportType,
+                              partId: selectedFranchiseeId,
+                              party: selectedFranchiseeName,
+                              applicablefrom: applicablefrom,
+                              applicableTwofrom: applicableTo,
+                            )));
               }
             },
             onDoubleTap: () {},
@@ -279,8 +350,9 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
-                    child:  Text(
-                      ApplicationLocalizations.of(context)!.translate("show_report")!,
+                    child: Text(
+                      ApplicationLocalizations.of(context)!
+                          .translate("show_report")!,
                       style: page_heading_textStyle,
                     ),
                   ),
@@ -292,6 +364,4 @@ class _SaleReportActivityState extends State<SaleReportActivity>{
       ],
     );
   }
-
 }
-
