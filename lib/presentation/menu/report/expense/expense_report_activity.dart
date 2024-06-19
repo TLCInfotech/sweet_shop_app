@@ -288,6 +288,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                 //       party: "K.K Pedha Shri Datta Dairy & Foods, Girim",
                 //
                 //     )));
+                print("############3 $reportType");
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
                   mListener: this,
                   reportName:reportType,
@@ -297,6 +298,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                   party:selectedFranchiseeName,
                   applicablefrom: applicablefrom,
                   applicableTwofrom: applicableTo,
+                  comeFrom:"EXPENSE",
                 )));
               }
             },

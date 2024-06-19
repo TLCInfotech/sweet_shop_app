@@ -30,8 +30,9 @@ class ReportTypeList extends StatefulWidget {
   final  applicablefrom;
   final  applicableTwofrom;
   final  url;
+  final comeFrom;
 
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url});
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
@@ -283,102 +284,11 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
                     delay: Duration(microseconds: 1500),
-                    child: GestureDetector(
-                      onTap: ()async{
-                        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            DetailReportActivity(
-                              partId: array_list[index]['Party_ID'],
-                              party:array_list[index]['Party_Name'],
-                              fromDate: applicablefrom,
-                              toDate: applicableTwofrom,
-                            )));
-                        array_list=[];
-                        await  getReportList(1);
-                      },
-                      child: Card(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    array_list[index]['Party_Name']==null?Container():  Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
-                                    SizedBox(height: 5,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                      //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child: Text("Online Amount: ${CommonWidget.getCurrencyFormat(array_list[index]['Bank_Receipt_Amount'])}",overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            color:array_list[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
-                                            fontFamily: "Inter_Light_Font"
-                                        ),)),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5,),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                      //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                        Expanded(child:
-                                        array_list[index]['Profit_Share']<0?
-                                        Text("Share: ${CommonWidget.getCurrencyFormat((array_list[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.red,
-                                                fontFamily: "Inter_Light_Font"
-                                            ))
-                                            :
-                                        Text("Share: ${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color:Colors.green,
-                                                fontFamily: "Inter_Light_Font"
-                                            ))
-
-                                        ),
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          width: SizeConfig.halfscreenWidth-20,
-                                          child:array_list[index]['Profit']<0?
-                                          Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                color: Colors.red,
-                                                fontFamily: "Inter_Medium_Font"
-                                            ),):
-                                          Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
-                                            overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 18.0,
-                                                  color:Colors.green,
-                                                  fontFamily: "Inter_Medium_Font"
-                                              ),),
-                                        //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                        )],
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-                         /*     DeleteDialogLayout(
-                              callback: (response ) async{
-                                if(response=="yes"){
-                                  print("##############$response");
-                                  await   callDeleteSaleInvoice(array_list[index]['Invoice_No'].toString(),array_list[index]['Seq_No'].toString(),index);
-                                }
-                              },
-                            )*/
-                          ],
-                        ),
-                      ),
+                    child: Column(
+                      children: [
+                        widget.comeFrom=="EXPENSE"?
+                        getUIForExpenseReportPartyWise(context,index)
+                            :getUIForMISReport(context, index)                      ],
                     ),
                   ),
                 ),
@@ -391,6 +301,173 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
             },
           ),
         ));
+  }
+
+ GestureDetector getUIForMISReport(BuildContext context, int index) {
+   return GestureDetector(
+                    onTap: ()async{
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          DetailReportActivity(
+                            partId: array_list[index]['Party_ID'],
+                            party:array_list[index]['Party_Name'],
+                            fromDate: applicablefrom,
+                            toDate: applicableTwofrom,
+                          )));
+                      array_list=[];
+                      await  getReportList(1);
+                    },
+                    child: Card(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  array_list[index]['Party_Name']==null?Container():  Text(array_list[index]['Party_Name'],style: item_heading_textStyle,),
+                                  SizedBox(height: 5,),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                    //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                      Expanded(child: Text("Online Amount: ${CommonWidget.getCurrencyFormat(array_list[index]['Bank_Receipt_Amount'])}",overflow: TextOverflow.clip,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color:array_list[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
+                                          fontFamily: "Inter_Light_Font"
+                                      ),)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                      Expanded(child:
+                                      array_list[index]['Profit_Share']<0?
+                                      Text("Share: ${CommonWidget.getCurrencyFormat((array_list[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.red,
+                                              fontFamily: "Inter_Light_Font"
+                                          ))
+                                          :
+                                      Text("Share: ${CommonWidget.getCurrencyFormat(array_list[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color:Colors.green,
+                                              fontFamily: "Inter_Light_Font"
+                                          ))
+
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerRight,
+                                        width: SizeConfig.halfscreenWidth-20,
+                                        child:array_list[index]['Profit']<0?
+                                        Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.red,
+                                              fontFamily: "Inter_Medium_Font"
+                                          ),):
+                                        Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
+                                          overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                color:Colors.green,
+                                                fontFamily: "Inter_Medium_Font"
+                                            ),),
+                                      //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                      )],
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                       /*     DeleteDialogLayout(
+                            callback: (response ) async{
+                              if(response=="yes"){
+                                print("##############$response");
+                                await   callDeleteSaleInvoice(array_list[index]['Invoice_No'].toString(),array_list[index]['Seq_No'].toString(),index);
+                              }
+                            },
+                          )*/
+                        ],
+                      ),
+                    ),
+                  );
+ }
+
+
+  GestureDetector getUIForExpenseReportPartyWise(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: ()async{
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            DetailReportActivity(
+              partId: array_list[index]['Party_ID'],
+              party:array_list[index]['Party_Name'],
+              fromDate: applicablefrom,
+              toDate: applicableTwofrom,
+            )));
+        array_list=[];
+        await  getReportList(1);
+      },
+      child: Card(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    array_list[index]['Expense_Name']==null?Container():  Text(array_list[index]['Expense_Name'],style: item_heading_textStyle,),
+                    SizedBox(height: 5,),
+
+
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child:array_list[index]['Amount']<0?
+                      Text("Amount : "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']*-1),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.red,
+                            fontFamily: "Inter_Medium_Font"
+                        ),):
+                      Text(CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color:Colors.green,
+                            fontFamily: "Inter_Medium_Font"
+                        ),),
+                      //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+            /*     DeleteDialogLayout(
+                            callback: (response ) async{
+                              if(response=="yes"){
+                                print("##############$response");
+                                await   callDeleteSaleInvoice(array_list[index]['Invoice_No'].toString(),array_list[index]['Seq_No'].toString(),index);
+                              }
+                            },
+                          )*/
+          ],
+        ),
+      ),
+    );
   }
 
 
