@@ -20,6 +20,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
+import '../../transaction/expense/ledger_activity.dart';
 
 
 class DetailReportActivity extends StatefulWidget {
@@ -235,12 +236,25 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                 delay: Duration(microseconds: 1500),
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(mListener: this,
-                      fid:widget.partId,
-                      vName: widget.party,
-                      date: reportDetailList[index]['Date'],
-                      come: "report",
-                    )));
+                    if(widget.come=="vendorName" || widget.come=="expanseName") {
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          LedgerActivity(
+                            mListener: this,
+                            dateNew:DateTime.parse(reportDetailList[index]['Date']),
+                            formId: "AT009",
+                            arrData: dataArr,
+                          )));
+                    }
+                    else{
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) =>
+                              ProfitLossDash(mListener: this,
+                                fid: widget.partId,
+                                vName: widget.party,
+                                date: reportDetailList[index]['Date'],
+                                come: "report",
+                              )));
+                    }
                   },
                   child: Card(
                     child: Container(
@@ -328,7 +342,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                       ):Container()],
                                   ),
 
-                                  reportDetailList[index]['Amount']<0?
+                                  reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
                                   Text("Amount: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
                                       style: TextStyle(
                                           fontSize: 16.0,
@@ -336,12 +350,12 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                           fontFamily: "Inter_Light_Font"
                                       ))
                                       :
-                                  Text("Amount: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
+                                  reportDetailList[index]['Amount']!=null?Text("Amount: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
                                       style: TextStyle(
                                           fontSize: 16.0,
                                           color:Colors.green,
                                           fontFamily: "Inter_Light_Font"
-                                      ))
+                                      )):Container()
 
                                 ],
                               ),
