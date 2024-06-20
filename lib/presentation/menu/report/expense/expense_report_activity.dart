@@ -175,6 +175,10 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
         setState(() {
           reportType = name!;
           reportId = id.toString()!;
+          selectedFranchiseeId="";
+          selectedFranchiseeName="";
+          selectedLedgerId="";
+          selectedLedgerName="";
         });
         _reportTypeKey.currentState!.validate();
       },

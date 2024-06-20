@@ -196,6 +196,10 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
         setState(() {
           reportType = name!;
           reportId = id.toString()!;
+          selectedFranchiseeId="";
+          selectedFranchiseeName="";
+          ItemName="";
+          ItemID="";
         });
         _reportTypeKey.currentState!.validate();
       },
@@ -250,8 +254,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
       name: ItemName,
       focuscontroller: null,
       focusnext: null,
-      apiUrl:
-          "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+      apiUrl: "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callback: (item) async {
