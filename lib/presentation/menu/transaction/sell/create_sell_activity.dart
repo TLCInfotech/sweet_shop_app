@@ -102,11 +102,11 @@ var invoice_No;
       // await calculateTotalAmt();
 
       await gerSaleInvoice(1);
-      print("#######################3 ${widget.editedItem}");
-      setState(() {
-        selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
-        selectedFranchiseeName=widget.editedItem['Vendor_Name'];
-      });
+      // print("#######################3 ${widget.editedItem}");
+      // setState(() {
+      //   selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+      //   selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+      // });
     }
 
     print("#######################33 ${selectedFranchiseeName}");
@@ -795,7 +795,7 @@ var invoice_No;
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName: widget.come=="edit"? widget.editedItem['Vendor_Name']:"",
+      franchiseeName: widget.come=="edit"? selectedFranchiseeName:"",
         title: ApplicationLocalizations.of(context)!.translate("party")!,
         callback: (name,id){
           if(selectedLedgerId==id){

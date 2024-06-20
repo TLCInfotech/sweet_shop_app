@@ -20,6 +20,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
+import '../../transaction/expense/create_ledger_activity.dart';
 import '../../transaction/expense/ledger_activity.dart';
 
 
@@ -80,6 +81,8 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
   List MasterMenu=[];
   List TransactionMenu=[];
   var dataArr;
+
+  String TotalAmount="0.00";
 
   setVal()async{
     var tr =await (AppPreferences.getTransactionMenuList());
@@ -146,9 +149,11 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                           ),
                           Expanded(
                             child: Center(
-                              child: Text(
+                              child: widget.come!="expanseName"?Text(
                                 ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                                    .translate("franchisee")!):Text(
+    ApplicationLocalizations.of(context)!
+        .translate("expense")!,
                                 style: appbar_text_style,
                               ),
                             ),
@@ -163,23 +168,38 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                 ),
               ),
             ),
-            body: Stack(
-              alignment: Alignment.center,
+            body: Column(
+              // alignment: Alignment.center,
               children: [
-                Container(
-                  margin: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getTopLayout(
-                          SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      get_detail_report_list_layout()
-                    ],
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getTopLayout(
+                            SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        get_detail_report_list_layout()
+                      ],
+                    ),
                   ),
                 ),
+                TotalAmount!="0.00"?Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
                 Visibility(
                     visible:
                         reportDetailList.isEmpty && isApiCall ? true : false,
@@ -192,6 +212,35 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
     );
   }
 
+  Widget getTotalCountAndAmount() {
+    return Container(
+      margin: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      child: Container(
+          height: 40,
+          width: SizeConfig.screenWidth*0.9,
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, 1),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                ),]
+
+          ),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${reportDetailList.length} ${ApplicationLocalizations.of(context)!.translate("invoices")!}", style: subHeading_withBold,),
+              Text(CommonWidget.getCurrencyFormat(double.parse(TotalAmount)), style: subHeading_withBold,),
+            ],
+          )
+      ),
+    );
+  }
   /* widget for Franchisee name layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
@@ -237,13 +286,26 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                 child: GestureDetector(
                   onTap: () async {
                     if(widget.come=="vendorName" || widget.come=="expanseName") {
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          LedgerActivity(
-                            mListener: this,
-                            dateNew:DateTime.parse(reportDetailList[index]['Date']),
-                            formId: "AT009",
-                            arrData: dataArr,
-                          )));
+                      // await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                      //     LedgerActivity(
+                      //       mListener: this,
+                      //       dateNew:DateTime.parse(reportDetailList[index]['Date']),
+                      //       formId: "AT009",
+                      //       arrData: dataArr,
+                      //     )));
+                      List<dynamic> jsonArray = jsonDecode(dataArr);
+                      var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT009");
+                      print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+
+                      await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
+                        mListener: this,
+                        voucherNo: reportDetailList[index]["Voucher_No"].toString(),
+                        dateNew: DateTime.parse(reportDetailList[index]['Date']),
+                        readOnly:singleRecord['Update_Right'],
+                        editedItem:reportDetailList[index],
+                        come:"edit",
+                        // DateFormat('dd-MM-yyyy').format(newDate),
+                      )));
                     }
                     else{
                       Navigator.push(context,
@@ -264,99 +326,108 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                           Expanded(
                             child: Container(
                               margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.calendar,
-                                        color: Colors.black87,
-                                        size: 20,
+                                  Container(
+                                      width: SizeConfig.screenWidth*.1,
+                                      height:SizeConfig.screenHeight*.05,
+                                      margin: EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.purple.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(15)
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
-                                        style: item_heading_textStyle,
-                                      ),
-                                    ],
+                                      alignment: Alignment.center,
+                                      child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                   ),
-                                  SizedBox(height: 5,),
-                                  reportDetailList[index]['Bank_Receipt_Amount']!=null?  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-
-                                      Expanded(child: Text("Online Amount: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Bank_Receipt_Amount']),overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color:reportDetailList[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
-                                              fontFamily: "Inter_Light_Font"
-                                          ))),
-                                    ],
-                                  ):Container(),
-                                  SizedBox(height: 5,),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                      reportDetailList[index]['Profit_Share']!=null?Expanded(child:
-                                      reportDetailList[index]['Profit_Share']<0?
-                                      Text("Share: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.red,
-                                              fontFamily: "Inter_Light_Font"
-                                          ))
-                                          :
-                                      Text("Share: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share'])}",overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color:Colors.green,
-                                              fontFamily: "Inter_Light_Font"
-                                          ))
-
-                                      ):Container(),
-                                      reportDetailList[index]['Profit']!=null? Container(
-                                        alignment: Alignment.centerRight,
-                                        width: SizeConfig.halfscreenWidth-20,
-                                        child:reportDetailList[index]['Profit']<0?
-                                        Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']*-1),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.red,
-                                              fontFamily: "Inter_Medium_Font"
-                                          ),):
-                                        Text(CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color:Colors.green,
-                                              fontFamily: "Inter_Medium_Font"
-                                          ),),
-                                        //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                      ):Container()],
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5,right: 5),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          reportDetailList[index]['Date']!=null?Text(
+                                            CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
+                                            style: item_heading_textStyle,
+                                          ):Container(),
+                                          SizedBox(height: 5,),
+                                          reportDetailList[index]['Bank_Receipt_Amount']!=null?  Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                    
+                                              Expanded(child: Text("Online Amount: "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Bank_Receipt_Amount']),overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color:reportDetailList[index]['Bank_Receipt_Amount']<0? Colors.red:Colors.green,
+                                                      fontFamily: "Inter_Light_Font"
+                                                  ))),
+                                            ],
+                                          ):Container(),
+                                          SizedBox(height: 5,),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              //  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                              reportDetailList[index]['Profit_Share']!=null?Expanded(child:
+                                              reportDetailList[index]['Profit_Share']<0?
+                                              Text("Share: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Profit_Share']*-1))}",overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: Colors.red,
+                                                      fontFamily: "Inter_Light_Font"
+                                                  ))
+                                                  :
+                                              Text("Share: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit_Share'])}",overflow: TextOverflow.clip,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color:Colors.green,
+                                                      fontFamily: "Inter_Light_Font"
+                                                  ))
+                                    
+                                              ):Container(),
+                                              reportDetailList[index]['Profit']!=null? Container(
+                                                alignment: Alignment.centerRight,
+                                                width: SizeConfig.halfscreenWidth-20,
+                                                child:reportDetailList[index]['Profit']<0?
+                                                Text("INR "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']*-1),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 18.0,
+                                                      color: Colors.red,
+                                                      fontFamily: "Inter_Medium_Font"
+                                                  ),):
+                                                Text("INR "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 18.0,
+                                                      color:Colors.green,
+                                                      fontFamily: "Inter_Medium_Font"
+                                                  ),),
+                                                //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ):Container()],
+                                          ),
+                                    
+                                     
+                                    
+                                        ],
+                                      ),
+                                    ),
                                   ),
-
                                   reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
-                                  Text("Amount: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                  Text("INR ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
                                       style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.red,
-                                          fontFamily: "Inter_Light_Font"
+                                          fontSize: 18.0,
+                                          color:Colors.green,
+                                          fontFamily: "Inter_Medium_Font"
                                       ))
                                       :
-                                  reportDetailList[index]['Amount']!=null?Text("Amount: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
+                                  reportDetailList[index]['Amount']!=null?Text("INR ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
                                       style: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 18.0,
                                           color:Colors.green,
-                                          fontFamily: "Inter_Light_Font"
+                                          fontFamily: "Inter_Medium_Font"
                                       )):Container()
-
                                 ],
                               ),
                             ),
@@ -500,6 +571,32 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
         applicablefrom: applicableTwofrom);
   }
 
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${reportDetailList.length} Items",style: item_regular_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+      ],
+    );
+  }
+
+
   callDetailReportList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -529,7 +626,14 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  reportDetailList=data;
+
+                  if(widget.come=="partyName"){
+                    reportDetailList = data;
+                  }
+                  else {
+                    reportDetailList = data['Details'];
+                    TotalAmount = data['TotalAmount'].toString();
+                  }
                 }else{
                   isApiCall=true;
                 }

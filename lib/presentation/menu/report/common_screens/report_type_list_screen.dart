@@ -58,6 +58,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   final ScrollController _scrollController =  ScrollController();
   bool isApiCall=false;
 
+  String TotalAmount="0.00";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -174,38 +176,54 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
               ),
             ),
           ),
-          body: Stack(
-            alignment: Alignment.center,
+          body: Column(
+            // alignment: Alignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            width:(SizeConfig.halfscreenWidth),
-                            child: getDateONELayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                        Container(
 
-                            width:(SizeConfig.halfscreenWidth),
-                            child: getDateTwoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                      ],
+               Expanded(
+                 child: Container(
+                  margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              width:(SizeConfig.halfscreenWidth),
+                              child: getDateONELayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                          Container(
+                 
+                              width:(SizeConfig.halfscreenWidth),
+                              child: getDateTwoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      widget.reportId=="PTSM"||widget.reportId=="PROFIT"?getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                      widget.reportId=="EXSM"?getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      get_purchase_list_layout()
+                    ],
+                  ),
+                               ),
+               ),
+              TotalAmount!="0.00"?Container(
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.black.withOpacity(0.08),
+                        width: 1.0,
+                      ),
                     ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    widget.reportId=="PTSM"||widget.reportId=="PROFIT"?getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                    widget.reportId=="EXSM"?getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    get_purchase_list_layout()
-                  ],
-                ),
-              ),
+                  ),
+                  height: SizeConfig.safeUsedHeight * .12,
+                  child: getSaveAndFinishButtonLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
               Visibility(
                   visible: array_list.isEmpty && isApiCall  ? true : false,
                   child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),],
@@ -215,6 +233,31 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
       ],
     );
   }
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${array_list.length} Items",style: item_regular_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+      ],
+    );
+  }
+
   /*widget for no data d*/
   Widget getNoData(double parentHeight,double parentWidth){
     return Row(
@@ -348,6 +391,17 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Container(
+                              width: SizeConfig.screenWidth*.1,
+                              height:SizeConfig.screenHeight*.05,
+                              margin: EdgeInsets.only(left: 5),
+                              decoration: BoxDecoration(
+                                  color: Colors.purple.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              alignment: Alignment.center,
+                              child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                          ),
                           Expanded(
                             child: Container(
                               margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
@@ -395,14 +449,14 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
                                         child:array_list[index]['Profit']<0?
-                                        Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
+                                        Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 18.0,
                                               color: Colors.red,
                                               fontFamily: "Inter_Medium_Font"
                                           ),):
-                                        Text(CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
+                                        Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
                                           overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: 18.0,
@@ -498,51 +552,64 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
             Expanded(
               child: Container(
                 margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    array_list[index]['Date']!=null? Row(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.calendar,
-                          color: Colors.black87,
-                          size: 20,
+                    Container(
+                        width: SizeConfig.screenWidth*.1,
+                        height:SizeConfig.screenHeight*.05,
+                        margin: EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.purple.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(15)
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
+                        alignment: Alignment.center,
+                        child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
+                    ),
+                    array_list[index]['Date']!=null?
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0,right: 5),
+                        child: Text(
                           CommonWidget.getDateLayout(DateTime.parse(array_list[index]['Date'])),
                           style: item_heading_textStyle,
                         ),
-                      ],
+                      ),
                     ):Container(),
 
-                    array_list[index]['Expense_Name']==null?Container():  Text(array_list[index]['Expense_Name'],style: item_heading_textStyle,),
+                    array_list[index]['Expense_Name']==null?Container():
+
+                    Expanded(child:
+                    Padding(
+                        padding: const EdgeInsets.only(left: 5.0,right: 5),
+                        child: Text(array_list[index]['Expense_Name'],style: item_heading_textStyle,))),
                     SizedBox(height: 5,),
 
-                    array_list[index]['Vendor_Name']==null?Container():  Text(array_list[index]['Vendor_Name'],style: item_heading_textStyle,),
+                    array_list[index]['Vendor_Name']==null?Container():
+                     Expanded(child: Padding(
+                         padding: const EdgeInsets.only(left: 5.0,right: 5),
+                         child: Text(array_list[index]['Vendor_Name'],style: item_heading_textStyle,))),
                     SizedBox(height: 5,),
-                    
+
                     
                     Container(
                       alignment: Alignment.centerLeft,
-                      child:array_list[index]['Amount']<0?
-                      Text("Amount : "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']*-1),
+                      child: array_list[index]['Amount']!=null && array_list[index]['Amount']<0?
+                      Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']*-1),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18.0,
                             color: Colors.red,
                             fontFamily: "Inter_Medium_Font"
                         ),):
-                      Text("Amount : "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
+                      array_list[index]['Amount']!=null && array_list[index]['Amount']>0?Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18.0,
                             color:Colors.green,
                             fontFamily: "Inter_Medium_Font"
-                        ),),
+                        ),):Container(),
                       //   Expanded(child: Text(CommonWidget.getCurrencyFormat("Share: ${400096543}"),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                     ),
 
@@ -602,7 +669,13 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
 
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  array_list=data;
+                  if(widget.comeFrom=="MIS"){
+                    array_list = data;
+                  }
+                  else {
+                    array_list = data['Details'];
+                    TotalAmount = data['TotalAmount'].toString();
+                  }
                   partyBlank=true;
                 }else{
                   isApiCall=true;

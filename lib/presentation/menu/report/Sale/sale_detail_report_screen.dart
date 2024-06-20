@@ -18,6 +18,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
+import '../../transaction/sell/create_sell_activity.dart';
 import '../../transaction/sell/sell_activity.dart';
 class SaleDetailReportActivity extends StatefulWidget {
 
@@ -35,7 +36,7 @@ class SaleDetailReportActivity extends StatefulWidget {
   State<SaleDetailReportActivity> createState() => _SaleDetailReportActivityState();
 }
 
-class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> {
+class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> with CreateSellInvoiceInterface{
   bool isLoaderShow = false;
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -138,7 +139,11 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> {
                           ),
                           Expanded(
                             child: Center(
-                              child: Text(
+                              child: widget.come=="itemName"? Text(
+                                ApplicationLocalizations.of(context)!
+                                    .translate("item")!,
+                                style: appbar_text_style,
+                              ): Text(
                                 ApplicationLocalizations.of(context)!
                                     .translate("franchisee")!,
                                 style: appbar_text_style,
@@ -228,64 +233,104 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> {
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: () async {
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            SellActivity(
-                              mListener: this,
-                              dateNew:DateTime.parse(reportDetailList[index]['Date']),
-                              formId: "ST003",
-                              arrData: dataArr,
+                        // await Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                        //     SellActivity(
+                        //       mListener: this,
+                        //       dateNew:DateTime.parse(reportDetailList[index]['Date']),
+                        //       formId: "ST003",
+                        //       arrData: dataArr,
+                        //     )));
+                        List<dynamic> jsonArray = jsonDecode(dataArr);
+                        var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "ST003");
+                        print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+
+                        await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            CreateSellInvoice(
+                              dateNew: DateTime.parse(reportDetailList[index]['Date']),
+                              Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                              mListener:this,
+                              readOnly:singleRecord['Update_Right'] ,
+                              editedItem:reportDetailList[index],
+                              come:"edit",
                             )));
 
                       },
                       child: Card(
                         child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 10),
-                                  child: Column(
+
+                               Expanded(
+                                 child: Container(
+                                  margin:  EdgeInsets.only(top: 10,left: 5,right: 0 ,bottom: 10),
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          FaIcon(
-                                            FontAwesomeIcons.calendar,
-                                            color: Colors.black87,
-                                            size: 20,
+                                      Container(
+                                          width: SizeConfig.screenWidth*.1,
+                                          height:SizeConfig.screenHeight*.05,
+                                          margin: EdgeInsets.only(left: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.purple.withOpacity(0.3),
+                                              borderRadius: BorderRadius.circular(15)
                                           ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
-                                            style: item_heading_textStyle,
-                                          ),
-                                        ],
+                                          alignment: Alignment.center,
+                                          child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                       ),
-
-
-                                      reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
-                                      Text("Amount: ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.red,
-                                              fontFamily: "Inter_Light_Font"
-                                          ))
-                                          :
-                                      reportDetailList[index]['Amount']!=null?Text("Amount: ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              color:Colors.green,
-                                              fontFamily: "Inter_Light_Font"
-                                          )):Container()
-
+                                      Padding(
+                                        padding:  EdgeInsets.all(8.0),
+                                        child:  Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                 Text(
+                                                  CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
+                                                  style: item_heading_textStyle,
+                                                ),
+                                                Text("Invoice : "+
+                                                    reportDetailList[index]['Invoice_No'].toString(),
+                                                  style: item_regular_textStyle,
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Container(
+                                              
+                                              alignment: Alignment.centerRight,
+                                              child: reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
+                                              Text("INR  ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                               textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    color:Colors.red,
+                                                    fontFamily: "Inter_Medium_Font"
+                                                ),)
+                                                  :
+                                              reportDetailList[index]['Amount']!=null?
+                                              Text("INR "+
+                                                  "${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",
+                                                overflow: TextOverflow.clip,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    color:Colors.green,
+                                                    fontFamily: "Inter_Medium_Font"
+                                                ),):Container(),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
+                                                               ),
+                               ),
                             ],
                           ),
                         ),
@@ -448,5 +493,16 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> {
         reportDetailList.addAll(_list);
       });
     }
+  }
+
+  @override
+  backToList(DateTime updateDate) {
+    // TODO: implement backToList
+    setState(() {
+      reportDetailList.clear();
+
+    });
+    callDetailReportList(1);
+    Navigator.pop(context);
   }
 }
