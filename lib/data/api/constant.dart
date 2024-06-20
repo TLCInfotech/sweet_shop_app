@@ -92,5 +92,9 @@ class ApiConstants {
   String expenseProfit="ExpenseProfit";
   String getExpensePartywise="ExpensePartywise";
   String getExpenseExpensewise="ExpenseExpensewise";
+  String saleProfit="SaleProfit";
+  String getSaleItemwise="SaleItemwise";
+  String getSalePartywise="SalePartywise";
+
 
 }

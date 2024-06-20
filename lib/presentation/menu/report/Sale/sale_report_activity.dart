@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_item_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
+import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_type_list.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -162,18 +164,14 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
                             child: getDateTwoLayout(parentHeight, parentWidth)),
                       ],
                     ),
-                    getFranchiseeNameLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    getItemameLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    getAddCategoryLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth),
+                    reportId == "PTSM"
+                        ? getFranchiseeNameLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth)
+                        : Container(),
+                    reportId == "ITSM"
+                        ? getItemameLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth)
+                        : Container(),
                   ],
                 ),
               ),
@@ -274,34 +272,6 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
         selectedItem: ItemName);
   }
 
-  /* Widget For Category Layout */
-  Widget getAddCategoryLayout(double parentHeight, double parentWidth) {
-    return SearchableDropdownWithObject(
-      name: categoryName,
-      focuscontroller: null,
-      focusnext: null,
-      apiUrl: "${ApiConstants().item_category}?",
-      titleIndicator: true,
-      title: ApplicationLocalizations.of(context)!.translate("item_category")!,
-      callback: (item) async {
-        setState(() {
-          // ItemName=item['Name'];
-          categoryId = item['ID'].toString();
-          categoryName = item['Name'].toString();
-        });
-      },
-    );
-    GetCategoryLayout(
-        title:
-            ApplicationLocalizations.of(context)!.translate("item_category")!,
-        callback: (value, id) {
-          setState(() {
-            categoryName = value!;
-          });
-        },
-        selectedProductCategory: categoryName);
-  }
-
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
     return Column(
@@ -326,11 +296,15 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ReportTypeList(
-                              mListener: this,
+                        builder: (context) => SaleReportTypeList(
                               reportName: reportType,
-                              partId: selectedFranchiseeId,
-                              party: selectedFranchiseeName,
+                              reportId: reportId,
+                              mListener: this,
+                              url: ApiConstants().saleProfit,
+                              vandorId: selectedFranchiseeId,
+                              vendorName: selectedFranchiseeName,
+                              itemId: ItemID,
+                              itemName: ItemName,
                               applicablefrom: applicablefrom,
                               applicableTwofrom: applicableTo,
                             )));
