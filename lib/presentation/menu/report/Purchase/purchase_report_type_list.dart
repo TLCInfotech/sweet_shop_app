@@ -5,7 +5,9 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_detail_report_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_detail_report_screen.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -21,7 +23,7 @@ import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../transaction/sell/sell_activity.dart';
 
-class SaleReportTypeList extends StatefulWidget {
+class PurchaseReportTypeList extends StatefulWidget {
   final mListener;
   final reportName;
   final reportId;
@@ -33,7 +35,7 @@ class SaleReportTypeList extends StatefulWidget {
   final applicableTwofrom;
   final url;
 
-  const SaleReportTypeList(
+  const PurchaseReportTypeList(
       {super.key,
       this.reportName,
       this.reportId,
@@ -47,10 +49,10 @@ class SaleReportTypeList extends StatefulWidget {
       this.mListener});
 
   @override
-  State<SaleReportTypeList> createState() => _SaleReportTypeListState();
+  State<PurchaseReportTypeList> createState() => _PurchaseReportTypeListState();
 }
 
-class _SaleReportTypeListState extends State<SaleReportTypeList> {
+class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
@@ -174,7 +176,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Sale ${widget.reportName}",
+                              "Purchase ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -279,8 +281,8 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSalePartywise,
+                                      PurchaseDetailReportActivity(
+                                        apiurl: ApiConstants().getPurchasePartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
                                         venderName: array_list[index]
@@ -294,8 +296,8 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSaleItemwise,
+                                      PurchaseDetailReportActivity(
+                                        apiurl: ApiConstants().getPurchaseItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],
@@ -307,7 +309,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SellActivity(
+                                  builder: (context) => PurchaseActivity(
                                         mListener: this,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),

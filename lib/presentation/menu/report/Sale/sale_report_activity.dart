@@ -5,7 +5,6 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_item_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_type_list.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/sell/create_sell_activity.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';

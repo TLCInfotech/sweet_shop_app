@@ -153,9 +153,10 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                           Expanded(
                             child: Center(
                               child: widget.come!="expanseName"?Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!):Text(
-    ApplicationLocalizations.of(context)!
+    widget.come=="partyName"?ApplicationLocalizations.of(context)!
+                                    .translate("franchisee")!+"Profit": ApplicationLocalizations.of(context)!
+        .translate("franchisee")!):Text(
+                                  ApplicationLocalizations.of(context)!
         .translate("expense")!,
                                 style: appbar_text_style,
                               ),
@@ -190,7 +191,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                     ),
                   ),
                 ),
-                TotalAmount!="0.00"?Container(
+                Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -202,7 +203,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth))
               ],
             )),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -571,6 +572,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    print("fhfbhbfvfv  ${widget.come}");
     return widget.come=="partyName"? Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

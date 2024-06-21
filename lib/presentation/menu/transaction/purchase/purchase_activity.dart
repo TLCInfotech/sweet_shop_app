@@ -25,7 +25,8 @@ class PurchaseActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
-  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
+  final  dateNew;
+  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, this.dateNew});
 
   @override
   State<PurchaseActivity> createState() => _PurchaseActivityState();
@@ -51,6 +52,11 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.dateNew!=null){
+      setState(() {
+        invoiceDate=widget.dateNew!;
+      });
+    }
     gerSaleInvoice(page);
     setVal();
   }
