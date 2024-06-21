@@ -210,7 +210,7 @@ var voucherNo;
                       child: getAllFields(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Container(
+               Item_list.length>0? Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -222,7 +222,7 @@ var voucherNo;
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
               ],
@@ -290,84 +290,123 @@ var voucherNo;
   }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return ListView(
-      shrinkWrap: true,
-      controller: _scrollController,
-      physics: const AlwaysScrollableScrollPhysics(),
+    return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: parentHeight * .01),
-          child: Container(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  ReceiptInfo(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+        ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .01),
+              child: Container(
+                child: Form(
+                  key: _formkey,
+                  child: Column(
                     children: [
-                      widget.readOnly == false
-                          ? Container()
-                          : GestureDetector(
-                              onTap: () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                if (selectedBankLedgerID != null) {
-                                  if (context != null) {
-                                    editedItemIndex = null;
-                                    goToAddOrEditItem(
-                                        null,
-                                        DateFormat("yyyy-MM-dd")
-                                            .format(widget.newDate),
-                                        selectedBankLedgerID,
-                                        widget.companyId,
-                                        "");
-                                  }
-                                } else {
-                                  CommonWidget.errorDialog(
-                                      context, "Select bank name first.");
-                                }
-                              },
-                              child: Container(
-                                  width: 140,
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, top: 5, bottom: 5),
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                      color: CommonColor.THEME_COLOR,
-                                      border: Border.all(
-                                          color: Colors.grey.withOpacity(0.5))),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        ApplicationLocalizations.of(context)!
-                                            .translate("add_ledger")!,
-                                        style: item_heading_textStyle,
-                                      ),
-                                      const FaIcon(
-                                        FontAwesomeIcons.plusCircle,
-                                        color: Colors.black87,
-                                        size: 20,
-                                      )
-                                    ],
-                                  )))
+                      ReceiptInfo(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     widget.readOnly == false
+                      //         ? Container()
+                      //         : GestureDetector(
+                      //             onTap: () {
+                      //               FocusScope.of(context)
+                      //                   .requestFocus(FocusNode());
+                      //               if (selectedBankLedgerID != null) {
+                      //                 if (context != null) {
+                      //                   editedItemIndex = null;
+                      //                   goToAddOrEditItem(
+                      //                       null,
+                      //                       DateFormat("yyyy-MM-dd")
+                      //                           .format(widget.newDate),
+                      //                       selectedBankLedgerID,
+                      //                       widget.companyId,
+                      //                       "");
+                      //                 }
+                      //               } else {
+                      //                 CommonWidget.errorDialog(
+                      //                     context, "Select bank name first.");
+                      //               }
+                      //             },
+                      //             child: Container(
+                      //                 width: 140,
+                      //                 padding: const EdgeInsets.only(
+                      //                     left: 10, right: 10, top: 5, bottom: 5),
+                      //                 margin: const EdgeInsets.only(bottom: 10),
+                      //                 decoration: BoxDecoration(
+                      //                     color: CommonColor.THEME_COLOR,
+                      //                     border: Border.all(
+                      //                         color: Colors.grey.withOpacity(0.5))),
+                      //                 child: Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceBetween,
+                      //                   children: [
+                      //                     Text(
+                      //                       ApplicationLocalizations.of(context)!
+                      //                           .translate("add_ledger")!,
+                      //                       style: item_heading_textStyle,
+                      //                     ),
+                      //                     const FaIcon(
+                      //                       FontAwesomeIcons.plusCircle,
+                      //                       color: Colors.black87,
+                      //                       size: 20,
+                      //                     )
+                      //                   ],
+                      //                 )))
+                      //   ],
+                      // ),
+                      Item_list.length > 0
+                          ? get_Item_list_layout(
+                              SizeConfig.screenHeight, SizeConfig.screenWidth)
+                          : Container(),
+                      const SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
-                  Item_list.length > 0
-                      ? get_Item_list_layout(
-                          SizeConfig.screenHeight, SizeConfig.screenWidth)
-                      : Container(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
+                ),
               ),
             ),
+          ],
+        ),
+        widget.readOnly==false?Container():  Positioned(
+          bottom: 5,
+          right: 10,
+          child: Container(
+            width: SizeConfig.screenWidth,
+            alignment: Alignment.centerRight,
+            margin: EdgeInsets.only(bottom: 5),
+            child: FloatingActionButton(
+                backgroundColor: Color(0xFFFBE404),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: () async{
+                  FocusScope.of(context)
+                      .requestFocus(FocusNode());
+                  if (selectedBankLedgerID != null) {
+                    if (context != null) {
+                      editedItemIndex = null;
+                      goToAddOrEditItem(
+                          null,
+                          DateFormat("yyyy-MM-dd")
+                              .format(widget.newDate),
+                          selectedBankLedgerID,
+                          widget.companyId,
+                          "");
+                    }
+                  } else {
+                    CommonWidget.errorDialog(
+                        context, "Select bank name first.");
+                  }
+                }),
           ),
         ),
       ],

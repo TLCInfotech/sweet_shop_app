@@ -29,6 +29,8 @@ import 'package:sweet_shop_app/presentation/menu/master/ledger_opening_balance/l
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/report/credi_note/credit_note_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/report/debit_note/debit_note_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/ledger/ledger_vouchers_report.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/constant_sale_order_activity.dart';
@@ -945,7 +947,9 @@ var dataArrM;
             getExpenseReportLayout(parentHeight,parentWidth),
             getPaymentReportLayout(parentHeight,parentWidth),
             getReciptReportLayout(parentHeight,parentWidth),
-            getMISReportLayout(parentHeight, parentWidth)
+            getMISReportLayout(parentHeight, parentWidth),
+            getCreditNoteReportLayout(parentHeight,parentWidth),
+            getDebitNoteReportLayout(parentHeight,parentWidth),
           ],
         ),
       ),
@@ -1124,6 +1128,66 @@ var dataArrM;
   }
 
   /* Widget for mis report Layout */
+  Widget getCreditNoteReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const CreditReportActivity(
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding( 
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("credit_note_voucher")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for mis report Layout */
+  Widget getDebitNoteReportLayout(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const DebitReportActivity(
+        )));
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01,bottom: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+              ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for mis report Layout */
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
@@ -1132,7 +1196,7 @@ var dataArrM;
       },
       onDoubleTap: (){},
       child: Padding(
-        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01,bottom: parentHeight*.01),
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
         child:   Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
