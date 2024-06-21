@@ -305,30 +305,7 @@ var invoice_No;
                     // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-               widget.readOnly==false?Container():  Container(
-                 width: SizeConfig.screenWidth,
-                 alignment: Alignment.centerRight,
-                 margin: EdgeInsets.only(bottom: 5),
-                 child: FloatingActionButton(
-                      backgroundColor: Color(0xFFFBE404),
-                      child: const Icon(
-                        Icons.add,
-                        size: 30,
-                        color: Colors.black87,
-                      ),
-                      onPressed: () async{
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
-                          if (context != null) {
-                            editedItemIndex=null;
-                            goToAddOrEditItem(null);
-                          }
-                        }
-                        else{
-                          CommonWidget.errorDialog(context, "Select Sale Ledger and Party !");
-                        }
-                      }),
-               ),
+
                 Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
@@ -450,65 +427,98 @@ var invoice_No;
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return isLoaderShow?Container():ListView(
-      shrinkWrap: true,
-      controller: _scrollController,
-      physics: const AlwaysScrollableScrollPhysics(),
-
+    return isLoaderShow?Container():Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(top: parentHeight * .01),
-          child: Container(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  InvoiceInfo(),
-                  SizedBox(height: 10,),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     widget.readOnly==false?Container():
-                  //     GestureDetector(
-                  //         onTap: (){
-                  //           FocusScope.of(context).requestFocus(FocusNode());
-                  //           if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
-                  //             if (context != null) {
-                  //               editedItemIndex=null;
-                  //               goToAddOrEditItem(null);
-                  //             }
-                  //           }
-                  //           else{
-                  //             CommonWidget.errorDialog(context, "Select Sale Ledger and Party !");
-                  //           }
-                  //         },
-                  //         child: Container(
-                  //             width: 120,
-                  //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                  //             margin: EdgeInsets.only(bottom: 10),
-                  //             decoration: BoxDecoration(
-                  //                 color: CommonColor.THEME_COLOR,
-                  //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
-                  //             ),
-                  //             child:  Row(
-                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //               children: [
-                  //                 Text(
-                  //                   ApplicationLocalizations.of(context)!.translate("add_item")!,
-                  //                   style: item_heading_textStyle,),
-                  //                 FaIcon(FontAwesomeIcons.plusCircle,
-                  //                   color: Colors.black87, size: 20,)
-                  //               ],
-                  //             )
-                  //         )
-                  //     )
-                  //   ],
-                  // ),
-                  // SizedBox(height: 10,),
-                  Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
-                ],
+
+        ListView(
+          shrinkWrap: true,
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: parentHeight * .01),
+              child: Container(
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      InvoiceInfo(),
+                      SizedBox(height: 10,),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     widget.readOnly==false?Container():
+                      //     GestureDetector(
+                      //         onTap: (){
+                      //           FocusScope.of(context).requestFocus(FocusNode());
+                      //           if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                      //             if (context != null) {
+                      //               editedItemIndex=null;
+                      //               goToAddOrEditItem(null);
+                      //             }
+                      //           }
+                      //           else{
+                      //             CommonWidget.errorDialog(context, "Select Sale Ledger and Party !");
+                      //           }
+                      //         },
+                      //         child: Container(
+                      //             width: 120,
+                      //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                      //             margin: EdgeInsets.only(bottom: 10),
+                      //             decoration: BoxDecoration(
+                      //                 color: CommonColor.THEME_COLOR,
+                      //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
+                      //             ),
+                      //             child:  Row(
+                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //               children: [
+                      //                 Text(
+                      //                   ApplicationLocalizations.of(context)!.translate("add_item")!,
+                      //                   style: item_heading_textStyle,),
+                      //                 FaIcon(FontAwesomeIcons.plusCircle,
+                      //                   color: Colors.black87, size: 20,)
+                      //               ],
+                      //             )
+                      //         )
+                      //     )
+                      //   ],
+                      // ),
+                      // SizedBox(height: 10,),
+                      Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
+                    ],
+                  ),
+                ),
               ),
             ),
+          ],
+        ),
+        widget.readOnly==false?Container():  Positioned(
+          bottom: 5,
+          right: 10,
+          child: Container(
+            width: SizeConfig.screenWidth,
+            alignment: Alignment.centerRight,
+            margin: EdgeInsets.only(bottom: 5),
+            child: FloatingActionButton(
+                backgroundColor: Color(0xFFFBE404),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: () async{
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                    if (context != null) {
+                      editedItemIndex=null;
+                      goToAddOrEditItem(null);
+                    }
+                  }
+                  else{
+                    CommonWidget.errorDialog(context, "Select Sale Ledger and Party !");
+                  }
+                }),
           ),
         ),
       ],
