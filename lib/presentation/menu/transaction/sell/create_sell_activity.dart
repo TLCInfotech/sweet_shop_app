@@ -306,7 +306,7 @@ var invoice_No;
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
 
-                Container(
+               Item_list.length>0? Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -318,7 +318,7 @@ var invoice_No;
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
