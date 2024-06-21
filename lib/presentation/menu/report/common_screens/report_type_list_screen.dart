@@ -59,6 +59,9 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   bool isApiCall=false;
 
   String TotalAmount="0.00";
+  String totalProfit="0.00";
+  String totalProfitShare="0.00";
+  String bankRAmount="0.00";
 
   @override
   void initState() {
@@ -179,9 +182,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
           body: Column(
             // alignment: Alignment.center,
             children: [
-
-               Expanded(
-                 child: Container(
+              Expanded(
+                child: Container(
                   margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +195,7 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                               width:(SizeConfig.halfscreenWidth),
                               child: getDateONELayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
                           Container(
-                 
+                
                               width:(SizeConfig.halfscreenWidth),
                               child: getDateTwoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
                         ],
@@ -210,8 +212,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                     ],
                   ),
                                ),
-               ),
-              TotalAmount!="0.00"?Container(
+              ),
+           Container(
                   decoration: BoxDecoration(
                     color: CommonColor.WHITE_COLOR,
                     border: Border(
@@ -223,10 +225,8 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                   ),
                   height: SizeConfig.safeUsedHeight * .12,
                   child: getSaveAndFinishButtonLayout(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
-              Visibility(
-                  visible: array_list.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),],
+                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
+            ],
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -235,7 +235,29 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
   }
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
+    return widget.comeFrom=="MIS"? Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${array_list.length} Items",style: item_regular_textStyle,),
+              totalProfit=="0.00"?Container():Text("Total Profit: ${CommonWidget.getCurrencyFormat(double.parse(totalProfit))}",style: item_heading_textStyle,),
+              totalProfitShare=="0.00"?Container():  Text("Profit Share: ${CommonWidget.getCurrencyFormat(double.parse(totalProfitShare))}",style: item_heading_textStyle,),
+              bankRAmount=="0.00"?Container():  Text("Bank Receipt Amount: ${CommonWidget.getCurrencyFormat(double.parse(bankRAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        )
+      ],
+    ): Row(
 mainAxisAlignment: MainAxisAlignment.start,
       children: [
         TotalAmount!="0.00"? Container(
@@ -671,6 +693,9 @@ mainAxisAlignment: MainAxisAlignment.start,
                   List<dynamic> _arrList = [];
                   if(widget.comeFrom=="MIS"){
                     array_list = data['Details'];
+                    totalProfit = data['TotalProfit'].toString();
+                    totalProfitShare = data['TotalProfitShare'].toString();
+                    bankRAmount = data['TotalBankReceiptAmount'].toString();
                   }
                   else {
                     array_list = data['Details'];

@@ -160,28 +160,38 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                 ),
               ),
             ),
-            body: Stack(
-              alignment: Alignment.center,
+            body: Column(
+           
               children: [
-                Container(
-                  margin: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getTopLayout(
-                          SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      get_detail_report_list_layout()
-                    ],
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getTopLayout(
+                            SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        get_detail_report_list_layout()
+                      ],
+                    ),
                   ),
                 ),
-                Visibility(
-                    visible:
-                    reportDetailList.isEmpty && isApiCall ? true : false,
-                    child: CommonWidget.getNoData(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                TotalAmount!="0.00"?Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .10,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
               ],
             )),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -398,6 +408,34 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
         applicablefrom: applicableTwofrom);
   }
 
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${reportDetailList.length} Items",style: item_regular_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+      ],
+    );
+  }
+  String TotalAmount="0.00";
+
+
   callDetailReportList(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -429,6 +467,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   reportDetailList=data['Details'];
+                  TotalAmount = data['TotalAmount'].toString();
                 }else{
                   isApiCall=true;
                 }

@@ -189,50 +189,60 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
               ),
             ),
           ),
-          body: Stack(
-            alignment: Alignment.center,
+          body: Column(
             children: [
-              Container(
-                margin: const EdgeInsets.only(
-                    top: 4, left: 15, right: 15, bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            width: (SizeConfig.halfscreenWidth),
-                            child: getDateONELayout(SizeConfig.screenHeight,
-                                SizeConfig.screenWidth)),
-                        Container(
-                            width: (SizeConfig.halfscreenWidth),
-                            child: getDateTwoLayout(SizeConfig.screenHeight,
-                                SizeConfig.screenWidth)),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    widget.reportId == "PTSM"
-                        ? getFranchiseeNameLayout(
-                            SizeConfig.screenHeight, SizeConfig.screenWidth)
-                        : Container(),
-                    widget.reportId == "ITSM"
-                        ? getItemNameLayout(
-                            SizeConfig.screenHeight, SizeConfig.screenWidth)
-                        : Container(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    get_purchase_list_layout()
-                  ],
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                      top: 4, left: 15, right: 15, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                              width: (SizeConfig.halfscreenWidth),
+                              child: getDateONELayout(SizeConfig.screenHeight,
+                                  SizeConfig.screenWidth)),
+                          Container(
+                              width: (SizeConfig.halfscreenWidth),
+                              child: getDateTwoLayout(SizeConfig.screenHeight,
+                                  SizeConfig.screenWidth)),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      widget.reportId == "PTSM"
+                          ? getFranchiseeNameLayout(
+                              SizeConfig.screenHeight, SizeConfig.screenWidth)
+                          : Container(),
+                      widget.reportId == "ITSM"
+                          ? getItemNameLayout(
+                              SizeConfig.screenHeight, SizeConfig.screenWidth)
+                          : Container(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      get_purchase_list_layout()
+                    ],
+                  ),
                 ),
               ),
-              Visibility(
-                  visible: array_list.isEmpty && isApiCall ? true : false,
-                  child: getNoData(
-                      SizeConfig.screenHeight, SizeConfig.screenWidth)),
+              TotalAmount!="0.00"?Container(
+                  decoration: BoxDecoration(
+                    color: CommonColor.WHITE_COLOR,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.black.withOpacity(0.08),
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  height: SizeConfig.safeUsedHeight * .12,
+                  child: getSaveAndFinishButtonLayout(
+                      SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
             ],
           ),
         ),
@@ -532,6 +542,32 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
     );
   }
 
+  /* Widget for navigate to next screen button layout */
+  Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TotalAmount!="0.00"? Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${array_list.length} Items",style: item_regular_textStyle,),
+              Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        ):Container(),
+      ],
+    );
+  }
+  String TotalAmount="0.00";
+
   getReportList(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -564,6 +600,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
             if (data != null) {
               List<dynamic> _arrList = [];
               array_list = data['Details'];
+              TotalAmount = data['TotalAmount'].toString();
               partyBlank = true;
             } else {
               isApiCall = true;

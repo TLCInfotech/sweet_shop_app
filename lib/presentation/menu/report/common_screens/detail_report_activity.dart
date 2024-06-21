@@ -83,6 +83,9 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
   var dataArr;
 
   String TotalAmount="0.00";
+  String totalProfit="0.00";
+  String totalProfitShare="0.00";
+  String bankRAmount="0.00";
 
   setVal()async{
     var tr =await (AppPreferences.getTransactionMenuList());
@@ -200,11 +203,6 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
                         SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
-                Visibility(
-                    visible:
-                        reportDetailList.isEmpty && isApiCall ? true : false,
-                    child: CommonWidget.getNoData(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
               ],
             )),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -573,7 +571,29 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
+    return widget.come=="partyName"? Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+       Container(
+          width: SizeConfig.screenWidth,
+          padding: const EdgeInsets.only(top:0,bottom:0,left: 10),
+          decoration: BoxDecoration(
+            // color:  CommonColor.DARK_BLUE,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${reportDetailList.length} Items",style: item_regular_textStyle,),
+              totalProfit=="0.00"?Container():Text("Total Profit: ${CommonWidget.getCurrencyFormat(double.parse(totalProfit))}",style: item_heading_textStyle,),
+              totalProfitShare=="0.00"?Container():  Text("Profit Share: ${CommonWidget.getCurrencyFormat(double.parse(totalProfitShare))}",style: item_heading_textStyle,),
+              bankRAmount=="0.00"?Container():  Text("Bank Receipt Amount: ${CommonWidget.getCurrencyFormat(double.parse(bankRAmount))}",style: item_heading_textStyle,),
+            ],
+          ),
+        )
+      ],
+    ): Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         TotalAmount!="0.00"? Container(
@@ -629,6 +649,9 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
 
                   if(widget.come=="partyName"){
                     reportDetailList = data['Details'];
+                    totalProfit = data['TotalProfit'].toString();
+                    totalProfitShare = data['TotalProfitShare'].toString();
+                    bankRAmount = data['TotalBankReceiptAmount'].toString();
                   }
                   else {
                     reportDetailList = data['Details'];
