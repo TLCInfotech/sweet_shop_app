@@ -563,7 +563,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
 
             if (data != null) {
               List<dynamic> _arrList = [];
-              array_list = data;
+              array_list = data['Details'];
               partyBlank = true;
             } else {
               isApiCall = true;

@@ -628,7 +628,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                   List<dynamic> _arrList = [];
 
                   if(widget.come=="partyName"){
-                    reportDetailList = data;
+                    reportDetailList = data['Details'];
                   }
                   else {
                     reportDetailList = data['Details'];

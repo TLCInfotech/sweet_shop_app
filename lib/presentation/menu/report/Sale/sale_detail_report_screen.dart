@@ -428,7 +428,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
-                  reportDetailList=data;
+                  reportDetailList=data['Details'];
                 }else{
                   isApiCall=true;
                 }

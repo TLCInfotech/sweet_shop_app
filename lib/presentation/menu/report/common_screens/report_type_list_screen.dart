@@ -670,7 +670,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   if(widget.comeFrom=="MIS"){
-                    array_list = data;
+                    array_list = data['Details'];
                   }
                   else {
                     array_list = data['Details'];
