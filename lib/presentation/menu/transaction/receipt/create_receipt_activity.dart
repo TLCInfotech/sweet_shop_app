@@ -293,6 +293,8 @@ var voucherNo;
     );
   }
 
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
   Widget getAllFields(double parentHeight, double parentWidth) {
     return isLoaderShow?Container():Stack(
       children: [
@@ -361,12 +363,14 @@ var voucherNo;
           ],
         ),
         widget.readOnly==false?Container():  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child:  GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -378,7 +382,7 @@ var voucherNo;
                   FocusScope.of(context).requestFocus(FocusNode());
                   if(selectedBankLedgerID!=null) {
                     if (context != null) {
-                      editedItemIndex=null; 
+                      editedItemIndex=null;
                       goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
                     }
                   }
@@ -500,7 +504,13 @@ var voucherNo;
                                               Inserted_list=Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
+                                            await calculateTotalAmt();
+                                            if(Item_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
+                                          }
                                         })/*IconButton(
                                       icon:  FaIcon(
                                         FontAwesomeIcons.trash,
@@ -931,6 +941,9 @@ showButton=true;
                     selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
                     TotalAmount=data['accountVoucherHeader']['Total_Amount'].toStringAsFixed(2) ;
                   });
+                  if(Item_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  }
                   // calculateTotalAmt();
                 }
                 isLoaderShow=false;

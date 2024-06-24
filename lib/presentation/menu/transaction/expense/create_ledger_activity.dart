@@ -77,6 +77,8 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
 
   var companyId="0";
 var voucherNo;
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
   @override
   void initState() {
     // TODO: implement initState
@@ -167,6 +169,7 @@ var voucherNo;
           }
         },child: contentBox(context));
   }
+
   Widget contentBox(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -377,12 +380,14 @@ var voucherNo;
           ],
         ),
         widget.readOnly==false?Container():  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -673,7 +678,13 @@ var voucherNo;
                                               Inserted_list=Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
+                                            await calculateTotalAmt();
+                                            if(Item_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
+                                          }
                                         })
                                 ),
                               ],
@@ -942,7 +953,11 @@ showButton=true;
     print(Inserted_list);
     print(Updated_list);
 
-
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
 
 /*
     var itemLlist=Item_list;
@@ -1002,6 +1017,9 @@ String finVoucherNo="";
                     TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
                     roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
+                  if(Item_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  }
                   // calculateTotalAmt();
                 }
                 isLoaderShow=false;

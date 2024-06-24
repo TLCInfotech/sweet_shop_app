@@ -86,6 +86,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
 
   var editedItemIndex=null;
   var voucherNo;
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
 
   @override
   void initState() {
@@ -348,12 +349,14 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
           ],
         ),
         widget.readOnly==false?Container():  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -519,7 +522,14 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                               Inserted_list=Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
+                                            await calculateTotalAmt();
+                                            if(Ledger_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
+
+                                          }
                                         })
                                 ),
                               ],
@@ -829,7 +839,11 @@ showButton=true;
     print("List");
     print(Inserted_list);
     print(Updated_list);
-
+    if(Ledger_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 
 
@@ -864,6 +878,9 @@ showButton=true;
                     TotalCr=data['headerJournal']['Total_CR'].toStringAsFixed(2) ;
                     TotalDr=data['headerJournal']['Total_DR'].toStringAsFixed(2) ;
                   });
+                  if(Ledger_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  }
                  // calculateTotalAmt();
                 }
 

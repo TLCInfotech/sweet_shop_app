@@ -75,6 +75,8 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   var editedItemIndex=null;
   var companyId="0";
 var voucherNo;
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
   @override
   void initState() {
     // TODO: implement initState
@@ -341,12 +343,14 @@ var voucherNo;
           ],
         ),
         widget.readOnly==false?Container():  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -519,7 +523,14 @@ var voucherNo;
                                               Inserted_list=Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
+                                            await calculateTotalAmt();
+                                            if(Ledger_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
+
+                                          }
                                         })
                                 ),
                               ],
@@ -821,7 +832,11 @@ var voucherNo;
     print("List");
     print(Inserted_list);
     print(Updated_list);
-
+    if(Ledger_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 
 
@@ -856,6 +871,9 @@ var voucherNo;
                     selectedBankLedgerID=data['accountVoucherHeader']['Ledger_ID'].toString();
                     TotalAmount=data['accountVoucherHeader']['Total_Amount'].toStringAsFixed(2) ;
                   });
+                  if(Ledger_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  }
                   // calculateTotalAmt();
                 }
                 isLoaderShow=false;

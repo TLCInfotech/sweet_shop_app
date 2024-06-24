@@ -116,6 +116,7 @@ var order_No;
   var saleinvoice=null;
   var isinvoiceGenreted=false;
   var franchiseereadonly=true;
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
 
   getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
@@ -506,12 +507,14 @@ var order_No;
           ],
         ),
         widget.readOnly==false?Container():  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -687,6 +690,11 @@ var order_No;
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
+                                            if(Item_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
                                           }
                                         })),
                               ],
@@ -968,6 +976,9 @@ var order_No;
                     });
                   }
                 }
+                if(Item_list.length>0){
+                  position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                }
               });
               print("###################3333 $isinvoiceGenreted ${widget.readOnly}");
               // calculateTotalAmt();
@@ -1212,6 +1223,11 @@ var order_No;
     print("List");
     print(Inserted_list);
     print(Updated_list);
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 }
 
