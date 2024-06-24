@@ -88,6 +88,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   bool isApiCall = false;
   bool showButton = false;
 
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
 
   _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -149,6 +150,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     setDataToList(_arrList);
                   } else {
                     setMoreDataToList(_arrList);
+                  }
+                  if(Item_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
                   }
                 }else{
                   isApiCall=true;
@@ -511,12 +515,15 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           ],
         ),
         singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true? Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child:
+          GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -677,7 +684,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                               Inserted_list=Inserted_list;
                                             });
                                             print(Inserted_list);
-                                            await calculateTotalAmt();  }
+                                            await calculateTotalAmt();
+                                            if(Item_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
+                                          }
                                         })
                                     // IconButton(
                                     //   icon:  FaIcon(
@@ -874,6 +887,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     });
 
   }
+
   @override
   addProductPurchaseRateDetail( dynamic item)async {
     // TODO: implement addProductDetail
@@ -942,6 +956,11 @@ showButton=true;
     // Sort itemDetails by Item_Name
    // itemLlist.sort((a, b) => a['Name'].compareTo(b['Name']));
     print(Updated_list);
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 
   // calculateTotalAmt()async{

@@ -76,6 +76,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
   List<dynamic> Deleted_list = [];
   bool isLoaderShow = false;
   bool showButton = false;
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -434,12 +437,14 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         ),
         singleRecord['Insert_Right'] == true ||
             singleRecord['Update_Right'] == true?  Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -635,6 +640,11 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
+                                            if(Item_list.length>0){
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }
                                           }
                                         }))
                                     : Container(),
@@ -880,6 +890,11 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     print("#############################################3\n ${Updated_list}");
 
     print(Updated_list);
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 
   callPostItemOpeningBal() async {
@@ -974,6 +989,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 setDataToList(_arrList);
               } else {
                 setMoreDataToList(_arrList);
+              }
+              if(Item_list.length>0){
+                position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
               }
             } else {
               isApiCall = true;

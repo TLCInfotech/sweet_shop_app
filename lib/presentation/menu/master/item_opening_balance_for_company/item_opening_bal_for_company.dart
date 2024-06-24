@@ -66,6 +66,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
 
   bool isLoaderShow=false;
   bool showButton=false;
@@ -101,6 +102,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                     Item_list=_arrList;
                   });
                   calculateTotalAmt();
+                  if(Item_list.length>0){
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  }
                 }
 
               });
@@ -374,12 +378,14 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
           ],
         ),
         singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ? Positioned(
-          bottom: 5,
-          right: 10,
-          child: Container(
-            width: SizeConfig.screenWidth,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(bottom: 5),
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              });
+            },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
                 child: const Icon(
@@ -522,6 +528,11 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                           });
                                           print(Inserted_list);
                                           await calculateTotalAmt();
+                                          if(Item_list.length>0){
+                                            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                                          }else{
+                                            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                          }
                                           }; }
                                       ),
                                 )
@@ -757,6 +768,11 @@ showButton=true;
     // Sort itemDetails by Item_Name
     itemLlist.sort((a, b) => a['Item_Name'].compareTo(b['Item_Name']));
     print(Updated_list);
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }
   }
 
   calculateTotalAmt()async{
