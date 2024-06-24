@@ -392,7 +392,7 @@ var invoice_No;
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return Stack(
+    return  isLoaderShow?Container():Stack(
       children: [
         ListView(
           shrinkWrap: true,
@@ -806,7 +806,7 @@ var invoice_No;
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: widget.readOnly,
-      franchiseeName:widget.come=="edit"?widget.debitNote['Vendor_Name']:"",
+      franchiseeName:widget.come=="edit"?selectedFranchiseeName:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
         if(selectedLedgerId==id){
@@ -836,7 +836,7 @@ var invoice_No;
       readOnly: widget.readOnly,
       ledgerName: selectedLedgerName,
       franchisee: widget.come,
-      franchiseeName:widget.come=="edit"?widget.debitNote['Ledger_Name']:"",
+      franchiseeName:widget.come=="edit"?selectedLedgerName:"",
       title: ApplicationLocalizations.of(context)!.translate("account_ledger")!,
       callback: (name,id){
         if(selectedLedgerId==id){

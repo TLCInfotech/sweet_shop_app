@@ -255,7 +255,7 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateCreditNote(
-                              dateNew: reportDetailList[index]['Date'],
+                              dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               readOnly:singleRecord['Update_Right'] ,

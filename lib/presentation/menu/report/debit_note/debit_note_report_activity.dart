@@ -281,6 +281,8 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                   vendorName: selectedFranchiseeName,
                   itemId: selectedLedgerId,
                   itemName: selectedLedgerName,
+                  applicablefrom: applicablefrom,
+                  applicableTwofrom: applicableTo,
                 )));
               }
             },
