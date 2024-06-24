@@ -688,8 +688,9 @@ var invoice_No;
               child: AddOrEditItemDebit(
                 mListener: this,
                 editproduct:product,
-                date: invoiceDate.toString(),
+                date: invoiceDate,
                 companyId: companyId,
+                partyId: selectedFranchiseeId,
                 status: statuss,
                   // exstingList:Item_list
               ),

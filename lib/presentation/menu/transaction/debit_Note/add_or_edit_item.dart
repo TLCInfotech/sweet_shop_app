@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -40,6 +41,7 @@ class AddOrEditItemDebit extends StatefulWidget {
   final companyId;
   final status;
   final exstingList;
+  final partyId;
   final readOnly;
   const AddOrEditItemDebit(
       {super.key,
@@ -47,7 +49,7 @@ class AddOrEditItemDebit extends StatefulWidget {
       required this.editproduct,
       required this.date,
       this.companyId,
-      this.status,this.exstingList,this.readOnly});
+      this.status,this.exstingList,this.readOnly, this.partyId});
 
   @override
   State<AddOrEditItemDebit> createState() => _AddOrEditItemDebitState();
@@ -293,7 +295,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
       focusnext: quantityFocus,
       name: selectedItemName,
       status: selectedItemName==""?"":"edit",
-      apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
+      apiUrl:"${ApiConstants().purchasePartyItem}?PartyID=${widget.partyId}&Date=${DateFormat('yyyy-MM-dd').format(widget.date)}&",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,

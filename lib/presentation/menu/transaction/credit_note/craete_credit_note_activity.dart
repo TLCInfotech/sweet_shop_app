@@ -412,50 +412,6 @@ var invoice_No;
                     children: [
                       InvoiceInfo(),
                       SizedBox(height: 10,),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     widget.readOnly==false?Container():
-                      //     GestureDetector(
-                      //         onTap: (){
-                      //           FocusScope.of(context).requestFocus(FocusNode());
-                      //           if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
-                      //             if (context != null) {
-                      //               editedItemIndex=null;
-                      //               goToAddOrEditItem(null,widget.companyId,"");
-                      //             }
-                      //           }
-                      //           else{
-                      //             CommonWidget.errorDialog(context, "Select Account Ledger and Party !");
-                      //           }
-                      //
-                      //         },
-                      //         child: Container(
-                      //             width: 120,
-                      //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                      //             margin: EdgeInsets.only(bottom: 10),
-                      //             decoration: BoxDecoration(
-                      //                 color: CommonColor.THEME_COLOR,
-                      //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
-                      //             ),
-                      //             child:  Row(
-                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //               children: [
-                      //                 Text(
-                      //                   ApplicationLocalizations.of(context)!.translate("add_item")!,
-                      //                   style: item_heading_textStyle,),
-                      //                 FaIcon(FontAwesomeIcons.plusCircle,
-                      //                   color: Colors.black87, size: 20,)
-                      //               ],
-                      //             )
-                      //
-                      //         )
-                      //     )
-                      //   ],
-                      // ),
-                      //
-                      // SizedBox(height: 10,),
-                      //
                       Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
 
                     ],
@@ -648,34 +604,6 @@ var invoice_No;
     );
   }
 
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null,widget.companyId,"");
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add New Item",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
-            ],
-          )
-      ),
-    );
-  }
 
   Future<Object?> goToAddOrEditItem(product,compId,status) {
     return showGeneralDialog(
@@ -691,8 +619,9 @@ var invoice_No;
               child: AddOrEditItemCreditNote(
                 mListener: this,
                 editproduct:product,
-                date: invoiceDate.toString(),
+                date: invoiceDate,
                 companyId: compId,
+                partyId: selectedFranchiseeId,
                 status: status,
                   // exstingList:Item_list
               ),

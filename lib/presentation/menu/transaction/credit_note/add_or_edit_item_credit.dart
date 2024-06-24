@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
@@ -41,13 +42,14 @@ class AddOrEditItemCreditNote extends StatefulWidget {
   final status;
   final exstingList;
   final readOnly;
+  final partyId;
   const AddOrEditItemCreditNote(
       {super.key,
       required this.mListener,
       required this.editproduct,
       required this.date,
       this.companyId,
-      this.status,this.exstingList,this.readOnly});
+      this.status,this.exstingList,this.readOnly, this.partyId});
 
   @override
   State<AddOrEditItemCreditNote> createState() =>
@@ -294,7 +296,7 @@ class _AddOrEditItemCreditNoteState extends State<AddOrEditItemCreditNote> {
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
-      apiUrl:ApiConstants().item_list + "?Date=${widget.date}&",
+      apiUrl:"${ApiConstants().purchasePartyItem}?PartyID=${widget.partyId}&Date=${DateFormat('yyyy-MM-dd').format(widget.date)}&",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
