@@ -88,14 +88,15 @@ class ApiConstants {
   String ledgerOpeningBalance="LedgerOpenningBalance";
   String report="Report";
   String getMISFranchiseeProfitDatewise="MISFranchiseeProfitDatewise";
-  String misprofit="MISReport";
-  String expenseProfit="ExpenseReport";
+//  String misprofit="MISReport";
+ // String expenseProfit="ExpenseReport";
   String getExpensePartywise="ExpensePartywise";
   String getExpenseExpensewise="ExpenseExpensewise";
-  String saleProfit="SaleReport";
-  String purchaseProfit="PurchaseReport";
+ // String saleProfit="SaleReport";
+ // String purchaseProfit="PurchaseReport";
   String getSaleItemwise="SaleItemwise";
   String getSalePartywise="SalePartywise";
   String getPurchaseItemwise="PurchaseItemwise";
   String getPurchasePartywise="PurchasePartywise";
+  String reports="Reports";
 }

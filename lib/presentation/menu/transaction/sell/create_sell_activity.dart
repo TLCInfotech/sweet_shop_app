@@ -80,6 +80,7 @@ var invoice_No;
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("njnfbf  ${widget.Invoice_No}");
     invoice_No=widget.Invoice_No;
     _Controller = AnimationController(
       vsync: this,
@@ -962,12 +963,14 @@ var invoice_No;
         String apiUrl = "${baseurl}${ApiConstants().getSaleInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
+              isLoaderShow=false;
               print(data);
+              if(mounted){
               setState(() {
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['itemDetails']);
-                  setState(() {
+
                     Item_list=_arrList;
                     selectedFranchiseeName=data['voucherDetails']['Vendor_Name'];
                     finInvoiceNo=data['voucherDetails']['Fin_Invoice_No'];
@@ -977,11 +980,11 @@ var invoice_No;
                     TotalAmount=data['voucherDetails']['Total_Amount'].toStringAsFixed(2) ;
                     roundoff=data['voucherDetails']['Round_Off'].toStringAsFixed(2);
 
-                  });
+
                   // calculateTotalAmt();
                 }
                 isLoaderShow=false;
-              });
+              });}
               // _arrListNew.addAll(data.map((arrData) =>
               // new EmailPhoneRegistrationModel.fromJson(arrData)));
               print("  LedgerLedger  $data ");

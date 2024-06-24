@@ -22,8 +22,10 @@ import 'craete_debit_note_activity.dart';
 class DebitNoteActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
+  final  dateNew;
+  final  come;
   final  arrData;
-  const DebitNoteActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData});
+  const DebitNoteActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, this.dateNew, this.come});
 
   @override
   State<DebitNoteActivity> createState() => _DebitNoteState();
@@ -45,6 +47,9 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.come=="report"){
+    invoiceDate=widget.dateNew;
+    }
     getDebitNotes(page);
     setData();
     setVal();

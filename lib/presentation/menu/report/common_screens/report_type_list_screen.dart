@@ -671,17 +671,17 @@ mainAxisAlignment: MainAxisAlignment.start,
         String apiUrl="" ;
         if(widget.comeFrom=="MIS"){
         if(selectedFranchiseeId!=""){
-          apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
+          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=$selectedFranchiseeId";
         }else{
-          apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }}else{
           if(selectedFranchiseeId!=""){
-            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
           }else
           if(selectedLedgerId!=""){
-            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=$selectedLedgerId";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=$selectedLedgerId";
           }else{
-            apiUrl= "${baseurl}${widget.url}?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
           }
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",

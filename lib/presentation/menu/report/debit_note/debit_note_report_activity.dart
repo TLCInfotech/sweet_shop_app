@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/menu/report/common_screens/report_type_list_screen.dart';
+import 'package:sweet_shop_app/presentation/menu/report/debit_note/debit_note_report_type_list.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -166,7 +167,7 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
     return  SearchableLedgerDropdown(
       mandatory: true,
       txtkey:_reportTypeKey,
-      apiUrl: "${ApiConstants().report}?Form_Name=EXPENSE&",
+      apiUrl: "${ApiConstants().report}?Form_Name=Debit Note&",
       titleIndicator: true,
       ledgerName: reportType,
       readOnly:true,
@@ -293,18 +294,11 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                 //
                 //     )));
                 print("############3 $reportType");
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>    DebitNoteReportTypeList(
                   mListener: this,
                   reportName:reportType,
                   reportId:reportId,
-                  url: ApiConstants().expenseProfit,
-                  venderId: selectedFranchiseeId,
-                  expenseId:selectedLedgerId ,
-                  party:selectedFranchiseeName,
-                  expenseName:selectedLedgerName,
-                  applicablefrom: applicablefrom,
-                  applicableTwofrom: applicableTo,
-                  comeFrom:"EXPENSE",
+                  url: ApiConstants().reports,
                 )));
               }
             },

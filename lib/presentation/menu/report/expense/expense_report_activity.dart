@@ -297,7 +297,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                   mListener: this,
                   reportName:reportType,
                   reportId:reportId,
-                  url: ApiConstants().expenseProfit,
+                  url: ApiConstants().reports,
                   venderId: selectedFranchiseeId,
                   expenseId:selectedLedgerId ,
                   party:selectedFranchiseeName,

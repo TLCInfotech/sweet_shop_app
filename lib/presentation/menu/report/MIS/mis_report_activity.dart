@@ -270,7 +270,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                   mListener: this,
                   reportName:reportType,
                   reportId:reportId,
-                  url: ApiConstants().misprofit,
+                  url: ApiConstants().reports,
                   partId: selectedFranchiseeId,
                   party:selectedFranchiseeName,
                   applicablefrom: applicablefrom,

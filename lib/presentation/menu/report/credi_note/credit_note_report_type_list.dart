@@ -1,14 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
-import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_detail_report_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_detail_report_screen.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_activity.dart';
-
+import 'package:sweet_shop_app/presentation/menu/report/credi_note/credit_note_detail_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -23,7 +21,7 @@ import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../transaction/sell/sell_activity.dart';
 
-class PurchaseReportTypeList extends StatefulWidget {
+class CreditNoteReportTypeList extends StatefulWidget {
   final mListener;
   final reportName;
   final reportId;
@@ -35,7 +33,7 @@ class PurchaseReportTypeList extends StatefulWidget {
   final applicableTwofrom;
   final url;
 
-  const PurchaseReportTypeList(
+  const CreditNoteReportTypeList(
       {super.key,
       this.reportName,
       this.reportId,
@@ -49,10 +47,10 @@ class PurchaseReportTypeList extends StatefulWidget {
       this.mListener});
 
   @override
-  State<PurchaseReportTypeList> createState() => _PurchaseReportTypeListState();
+  State<CreditNoteReportTypeList> createState() => _CreditNoteReportTypeListState();
 }
 
-class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
+class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
@@ -176,7 +174,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Purchase ${widget.reportName}",
+                              "Sale ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -281,8 +279,8 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      PurchaseDetailReportActivity(
-                                        apiurl: ApiConstants().getPurchasePartywise,
+                                      CreditNoteDetailReportActivity(
+                                        apiurl: ApiConstants().getSalePartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
                                         venderName: array_list[index]
@@ -296,8 +294,8 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      PurchaseDetailReportActivity(
-                                        apiurl: ApiConstants().getPurchaseItemwise,
+                                      CreditNoteDetailReportActivity(
+                                        apiurl: ApiConstants().getSaleItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],
@@ -309,11 +307,11 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PurchaseActivity(
+                                  builder: (context) => CreditNoteActivity(
                                         mListener: this,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
-                                        formId: "ST003",
+                                        formId: "AT006",
                                         arrData: dataArr,
                                       )));
                         }
@@ -586,13 +584,13 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
 
         if (selectedFranchiseeId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Purchase&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
         } else if (selectedItemId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Purchase&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=$selectedItemId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=$selectedItemId";
         } else {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Purchase&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {

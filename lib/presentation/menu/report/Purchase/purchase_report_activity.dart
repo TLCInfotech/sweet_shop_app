@@ -296,7 +296,7 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
                           reportName: reportType,
                           reportId: reportId,
                           mListener: this,
-                          url: ApiConstants().purchaseProfit,
+                          url: ApiConstants().reports,
                           vandorId: selectedFranchiseeId,
                           vendorName: selectedFranchiseeName,
                           itemId: ItemID,

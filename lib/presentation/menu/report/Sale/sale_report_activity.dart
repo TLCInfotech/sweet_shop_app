@@ -302,7 +302,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
                               reportName: reportType,
                               reportId: reportId,
                               mListener: this,
-                              url: ApiConstants().saleProfit,
+                              url: ApiConstants().reports,
                               vandorId: selectedFranchiseeId,
                               vendorName: selectedFranchiseeName,
                               itemId: ItemID,
