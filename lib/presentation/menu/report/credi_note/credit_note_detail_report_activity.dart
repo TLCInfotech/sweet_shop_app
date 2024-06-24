@@ -255,11 +255,11 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateCreditNote(
-                              dateNew: DateTime.parse(reportDetailList[index]['Date']),
+                              dateNew: reportDetailList[index]['Date'],
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               readOnly:singleRecord['Update_Right'] ,
-                             // editedItem:reportDetailList[index],
+                              // editedItem:reportDetailList[index],
                               come:"edit",
                             )));
 
@@ -451,14 +451,12 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Credit Note&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
         }else
         if(widget.come=="itemName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Credit Note&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
         }
-        // else{
-        //   apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";
-        // }
+
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

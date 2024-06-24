@@ -95,6 +95,8 @@ class ApiConstants {
  // String saleProfit="SaleReport";
  // String purchaseProfit="PurchaseReport";
   String getSaleItemwise="SaleItemwise";
+  String voucherItemwise="VoucherItemwise";
+  String voucherPartywise="VoucherPartywise";
   String getSalePartywise="SalePartywise";
   String getPurchaseItemwise="PurchaseItemwise";
   String getPurchasePartywise="PurchasePartywise";

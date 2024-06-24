@@ -452,10 +452,10 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Debit Note&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
         }else
         if(widget.come=="itemName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Debit Note&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
         }
         // else{
         //   apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";

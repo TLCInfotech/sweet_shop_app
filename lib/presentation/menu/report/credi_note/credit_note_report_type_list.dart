@@ -174,7 +174,7 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Sale ${widget.reportName}",
+                              "Credit Note ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -280,7 +280,7 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CreditNoteDetailReportActivity(
-                                        apiurl: ApiConstants().getSalePartywise,
+                                        apiurl: ApiConstants().voucherPartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
                                         venderName: array_list[index]
@@ -295,7 +295,7 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CreditNoteDetailReportActivity(
-                                        apiurl: ApiConstants().getSaleItemwise,
+                                        apiurl: ApiConstants().voucherItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],

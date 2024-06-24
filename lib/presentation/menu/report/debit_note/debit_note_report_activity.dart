@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/presentation/menu/report/common_screens/report_type_list_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/report/debit_note/debit_note_report_type_list.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_dropdown_with_object.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
@@ -152,7 +154,8 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                     ],
                   ),
                   reportId=="PTSM"?  getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                  reportId=="EXSM"?   getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                  const SizedBox(height: 15),
+                  reportId=="ITSM"?   getItemameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                 ],
               ),
             ),
@@ -233,41 +236,23 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
   }
 
 
-  /* Widget for expense text from field layout */
-  Widget getExpenseNameLayout(double parentHeight, double parentWidth) {
-    return  SearchableLedgerDropdown(
-      apiUrl: "${ApiConstants().ledger_list}?",
+  /* Widget to get Franchisee Name Layout */
+  Widget getItemameLayout(double parentHeight, double parentWidth) {
+    return SearchableDropdownWithObject(
+      name: selectedLedgerName,
+      focuscontroller: null,
+      focusnext: null,
+      apiUrl: "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
       titleIndicator: true,
-      ledgerName: selectedLedgerName,
-      readOnly:true,
-      title: ApplicationLocalizations.of(context)!.translate("expense")!,
-      callback: (name,id){
+      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      callback: (item) async {
         setState(() {
-          selectedLedgerName = name!;
-          selectedLedgerId = id.toString()!;
+          // ItemName=item['Name'];
+          selectedLedgerId = item['ID'].toString();
+          selectedLedgerName = item['Name'].toString();
         });
       },
     );
-    /*  return SingleLineEditableTextFormField(
-      validation: (value) {
-        if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.EXPENSES;
-        }
-        return null;
-      },
-      controller: expenseController,
-      focuscontroller: _expenseFocus,
-      focusnext: null,
-      title:ApplicationLocalizations.of(context)!.translate("expense")!,
-      callbackOnchage: (value) {
-        setState(() {
-          expenseController.text = value;
-        });
-      },
-      textInput: TextInputType.text,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
-    );*/
 
   }
 
@@ -286,19 +271,16 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
             onTap: () {
               bool v=_reportTypeKey.currentState!.validate();
               if(v) {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                //     ReportTypeList(
-                //       mListener: this,
-                //       reportName: reportType,
-                //       party: "K.K Pedha Shri Datta Dairy & Foods, Girim",
-                //
-                //     )));
                 print("############3 $reportType");
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    DebitNoteReportTypeList(
                   mListener: this,
                   reportName:reportType,
                   reportId:reportId,
                   url: ApiConstants().reports,
+                  vandorId: selectedFranchiseeId,
+                  vendorName: selectedFranchiseeName,
+                  itemId: selectedLedgerId,
+                  itemName: selectedLedgerName,
                 )));
               }
             },

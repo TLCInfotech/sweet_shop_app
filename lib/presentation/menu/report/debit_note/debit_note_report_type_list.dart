@@ -176,7 +176,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Sale ${widget.reportName}",
+                              "Debit Note ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -282,7 +282,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       DebitNoteDetailReportActivity(
-                                        apiurl: ApiConstants().getSalePartywise,
+                                        apiurl: ApiConstants().voucherPartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
                                         venderName: array_list[index]
@@ -297,7 +297,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       DebitNoteDetailReportActivity(
-                                        apiurl: ApiConstants().getSaleItemwise,
+                                        apiurl: ApiConstants().voucherItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],
