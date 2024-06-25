@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/presentation/menu/report/recipt/recipt_report_type_list.dart';
 
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
@@ -29,11 +30,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   final _formkey = GlobalKey<FormState>();
   final _reportTypeKey = GlobalKey<FormFieldState>();
 
-  final _leaderFocus = FocusNode();
-  final franchisee = TextEditingController();
 
-  final bankcashFocus = FocusNode();
-  final bankCashController = TextEditingController();
 
   String reportType = "";
   String reportId = "";
@@ -167,8 +164,8 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                             child: getDateTwoLayout(parentHeight, parentWidth)),
                       ],
                     ),
-                    getFranchiseeNameLayout(parentHeight, parentWidth),
-                    getBankCashLedgerLayout(parentHeight, parentWidth),
+                  reportId=="PTSM"?getFranchiseeNameLayout(parentHeight, parentWidth):Container(),
+                  reportId=="BKSM"?getBankCashLedgerLayout(parentHeight, parentWidth):Container(),
                   ],
                 ),
               ),
@@ -184,27 +181,26 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
     return SearchableLedgerDropdown(
       mandatory: true,
       txtkey: _reportTypeKey,
-      apiUrl: "${ApiConstants().report}?Form_Name=RECIPT&",
+      apiUrl: "${ApiConstants().report}?Form_Name=RECEIPT&",
       titleIndicator: true,
       ledgerName: reportType,
       readOnly: true,
       title: ApplicationLocalizations.of(context)!.translate("report_type")!,
       callback: (name, id) {
         setState(() {
+          selectedbankCashLedgerName="";
+          selectedbankCashLedgerId="";
+          selectedFranchiseeName="";
+          selectedFranchiseeId="";
+
           reportType = name!;
           reportId = id.toString()!;
         });
+
         _reportTypeKey.currentState!.validate();
       },
     );
-      GetReportTypeLayout(
-        title:       ApplicationLocalizations.of(context)!.translate("report_type")!,
-        callback: (name){
-          setState(() {
-            reportType=name!;
-          });
-        },
-        reportType: reportType);
+
   }
 
   /* Widget for date one layout */
@@ -238,12 +234,12 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: "${ApiConstants().franchisee}?",
+      apiUrl: "${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       readOnly: true,
       title:
-      ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name, id) {
         setState(() {
           selectedFranchiseeName = name!;
@@ -251,14 +247,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
         });
       },
     );
-      GetFranchiseeLayout(
-        title:       ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
-        callback: (name,id){
-          setState(() {
-            franchisee.text=name!;
-          });
-        },
-        franchiseeName: franchisee.text);
+
 
   }
 
@@ -277,26 +266,6 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
         });
       },
     );
-      SingleLineEditableTextFormField(
-      validation: (value) {
-        if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANK_CASH_LEDGER;
-        }
-        return null;
-      },
-      controller: bankCashController,
-      focuscontroller: bankcashFocus,
-      focusnext: null,
-      title:ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
-      callbackOnchage: (value) {
-        setState(() {
-          bankCashController.text = value;
-        });
-      },
-      textInput: TextInputType.number,
-      maxlines: 1,
-      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-    );
 
   }
 
@@ -312,12 +281,25 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
               left: parentWidth * .04,
               right: parentWidth * 0.04,
               top: parentHeight * .015),
-          child: GestureDetector(
-            onTap: () {
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
+          child:  GestureDetector(
+            onTap: () async {
+              bool v = _reportTypeKey.currentState!.validate();
+              if (v) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ReceiptReportTypeList(
+                          reportName: reportType,
+                          reportId: reportId,
+                          mListener: this,
+                          url: ApiConstants().reports,
+                          vandorId: selectedFranchiseeId,
+                          vendorName: selectedFranchiseeName,
+                          itemId: selectedbankCashLedgerId,
+                          itemName: selectedbankCashLedgerName,
+                          applicablefrom: applicablefrom,
+                          applicableTwofrom: applicableTwofrom,
+                        )));
               }
             },
             onDoubleTap: () {},

@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_detail_report_screen.dart';
+import 'package:sweet_shop_app/presentation/menu/report/recipt/recipt_detail_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -21,7 +23,7 @@ import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../transaction/sell/sell_activity.dart';
 
-class SaleReportTypeList extends StatefulWidget {
+class ReceiptReportTypeList extends StatefulWidget {
   final mListener;
   final reportName;
   final reportId;
@@ -33,7 +35,7 @@ class SaleReportTypeList extends StatefulWidget {
   final applicableTwofrom;
   final url;
 
-  const SaleReportTypeList(
+  const ReceiptReportTypeList(
       {super.key,
       this.reportName,
       this.reportId,
@@ -47,10 +49,10 @@ class SaleReportTypeList extends StatefulWidget {
       this.mListener});
 
   @override
-  State<SaleReportTypeList> createState() => _SaleReportTypeListState();
+  State<ReceiptReportTypeList> createState() => _ReceiptReportTypeListState();
 }
 
-class _SaleReportTypeListState extends State<SaleReportTypeList> {
+class _ReceiptReportTypeListState extends State<ReceiptReportTypeList> {
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
@@ -84,7 +86,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
     selectedFranchiseeId = widget.vandorId;
     selectedItemName = widget.itemName;
     selectedItemId = widget.itemId;
-
+print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
     applicablefrom = widget.applicablefrom;
     applicableTwofrom = widget.applicableTwofrom;
     getReportList(page);
@@ -174,7 +176,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Sale ${widget.reportName}",
+                              "Receipt ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -218,8 +220,8 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                           ? getFranchiseeNameLayout(
                               SizeConfig.screenHeight, SizeConfig.screenWidth)
                           : Container(),
-                      widget.reportId == "ITSM"
-                          ? getItemNameLayout(
+                      widget.reportId == "BKSM"
+                          ? getBankCashLedgerLayout(
                               SizeConfig.screenHeight, SizeConfig.screenWidth)
                           : Container(),
                       const SizedBox(
@@ -279,26 +281,26 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSalePartywise,
+                                      ReciptDetailReportActivity(
+                                        apiurl: ApiConstants().getAcctVoucherPartywise,
                                         venderId: array_list[index]
-                                            ['Vendor_ID'],
+                                            ['Ledger_ID'],
                                         venderName: array_list[index]
-                                            ['Vendor_Name'],
+                                            ['Ledger_Name'],
                                         fromDate: applicablefrom,
                                         come: "partyName",
                                         toDate: applicableTwofrom,
                                       )));
-                        } else if (widget.reportId == "ITSM") {
+                        } else if (widget.reportId == "BKSM") {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSaleItemwise,
-                                        itemId: array_list[index]['Item_ID'],
+                                      ReciptDetailReportActivity(
+                                        apiurl: ApiConstants().getAcctVoucherBankwise,
+                                        itemId: array_list[index]['Ledger_ID'],
                                         itemName: array_list[index]
-                                            ['Item_Name'],
+                                            ['Ledger_Name'],
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
@@ -307,11 +309,11 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SellActivity(
+                                  builder: (context) => ReceiptActivity(
                                         mListener: this,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
-                                        formId: "ST003",
+                                        formId: "AT002",
                                         arrData: dataArr,
                                       )));
                         }
@@ -364,11 +366,11 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                             ),
                                         )
                                         : Container(),
-                                    array_list[index]['Item_Name'] == null
+                                    array_list[index]['Ledger_Name'] == null
                                         ? Container()
                                         : Expanded(
                                           child: Text(
-                                              array_list[index]['Item_Name'],
+                                              array_list[index]['Ledger_Name'],
                                           
                                               style: item_heading_textStyle,
                                             ),
@@ -426,14 +428,6 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                 ),
                               ),
                             ),
-                            /*     DeleteDialogLayout(
-                            callback: (response ) async{
-                              if(response=="yes"){
-                                print("##############$response");
-                                await   callDeleteSaleInvoice(array_list[index]['Invoice_No'].toString(),array_list[index]['Seq_No'].toString(),index);
-                              }
-                            },
-                          )*/
                           ],
                         ),
                       ),
@@ -500,14 +494,14 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
 
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: "${ApiConstants().franchisee}?",
+      apiUrl: "${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       franchiseeName: widget.vendorName,
       franchisee: "edit",
       readOnly: true,
       title:
-          ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+          ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name, id) {
         setState(() {
           selectedFranchiseeName = name!;
@@ -521,25 +515,24 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
     );
   }
 
-  Widget getItemNameLayout(double parentHeight, double parentWidth) {
-    return SearchableLedgerDropdown(
-      apiUrl:
-          "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+  /* Widget for bank cash ledger layout */
+  Widget getBankCashLedgerLayout(double parentHeight, double parentWidth) {
+    return  SearchableLedgerDropdown(
+      apiUrl: "${ApiConstants().getBankCashLedger}?",
       titleIndicator: false,
       ledgerName: widget.itemName,
-      franchisee: "edit",
       franchiseeName: widget.itemName,
-      readOnly: true,
-      title: ApplicationLocalizations.of(context)!.translate("item")!,
-      callback: (name, id) {
+      franchisee: "edit",
+      readOnly:true,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+      callback: (name,id){
         setState(() {
           selectedItemName = name!;
           selectedItemId = id.toString()!;
         });
-        array_list = [];
-        getReportList(1);
       },
     );
+
   }
 
   /* Widget for navigate to next screen button layout */
@@ -584,13 +577,13 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
 
         if (selectedFranchiseeId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Receipt&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
         } else if (selectedItemId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=$selectedItemId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Receipt&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedItemId";
         } else {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Receipt&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {

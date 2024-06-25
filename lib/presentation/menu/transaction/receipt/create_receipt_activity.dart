@@ -66,24 +66,7 @@ class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProvider
 bool isLoaderShow=false;
 bool showButton=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-/*  List<dynamic> Item_list=[
-    {
-      "id":1,
-      "ledgerName":"Mahesh Kirana Store",
-      "currentBal":10,
-      "amount":780.00,
-      "narration":"narration1"
 
-    },
-    {
-      "id":2,
-      "ledgerName":"Rajesh Furnicture",
-      "currentBal":20,
-      "amount":5300.00,
-      "narration":"narration2"
-
-    },
-  ];*/
 
 
   var companyId="0";
@@ -118,7 +101,7 @@ var voucherNo;
     if(widget.come=="edit"){
       // await calculateTotalAmt();
       await getRecipt(1);
-      print("#######################3 ${widget.editedItem}");
+      print("#######################3 ${widget.voucherNo}  ${widget.dateNew}");
       setState(() {
         voucherNoController.text="Voucher No: ${widget.voucherNo}";
       });
@@ -312,46 +295,7 @@ var voucherNo;
                     children: [
                       ReceiptInfo(),
                       SizedBox(height: 10,),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     widget.readOnly==false?Container():  GestureDetector(
-                      //         onTap: (){
-                      //           FocusScope.of(context).requestFocus(FocusNode());
-                      //           if(selectedBankLedgerID!=null) {
-                      //             if (context != null) {
-                      //               editedItemIndex=null;
-                      //               goToAddOrEditItem(null,DateFormat("yyyy-MM-dd").format(widget.newDate));
-                      //             }
-                      //           }
-                      //           else{
-                      //             CommonWidget.errorDialog(context, "Select Bank !");
-                      //           }
-                      //
-                      //         },
-                      //         child: Container(
-                      //             width: 140,
-                      //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                      //             margin: EdgeInsets.only(bottom: 10),
-                      //             decoration: BoxDecoration(
-                      //                 color: CommonColor.THEME_COLOR,
-                      //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
-                      //             ),
-                      //             child:  Row(
-                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //               children: [
-                      //                 Text(
-                      //                   ApplicationLocalizations.of(context)!.translate("add_ledger")!,
-                      //                   style: item_heading_textStyle,),
-                      //                 FaIcon(FontAwesomeIcons.plusCircle,
-                      //                   color: Colors.black87, size: 20,)
-                      //               ],
-                      //             )
-                      //
-                      //         )
-                      //     )
-                      //   ],
-                      // ),
+
                       Item_list.length>0? get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
                       // Item_list.length>0? getLedgerListLayout():Container(),
                       SizedBox(height: 10,),

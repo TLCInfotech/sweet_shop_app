@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/craete_credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/craete_debit_note_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/receipt/create_receipt_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -36,7 +37,7 @@ class ReciptDetailReportActivity extends StatefulWidget {
   State<ReciptDetailReportActivity> createState() => _ReciptDetailReportActivityState();
 }
 
-class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity> with CreateDebitNoteInterface{
+class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity> with CreateReceiptInterface{
   bool isLoaderShow = false;
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -203,8 +204,8 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
       readOnly: false,
-      title:widget.come=="itemName"? ApplicationLocalizations.of(context)!.translate("item")!:
-      ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      title:widget.come=="itemName"? ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!:
+      ApplicationLocalizations.of(context)!.translate("ledger")!,
       callbackOnchage: (value) {},
       textInput: TextInputType.text,
       maxlines: 1,
@@ -243,21 +244,15 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: () async {
-                        // await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        //     SellActivity(
-                        //       mListener: this,
-                        //       dateNew:DateTime.parse(reportDetailList[index]['Date']),
-                        //       formId: "ST003",
-                        //       arrData: dataArr,
-                        //     )));
                         List<dynamic> jsonArray = jsonDecode(dataArr);
-                        var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT006");
+                        var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT002");
 
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreateDebitNote(
+                            CreateReceipt(
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
-                              Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                              newDate: DateTime.parse(reportDetailList[index]['Date']),
+                              voucherNo: reportDetailList[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               readOnly:singleRecord['Update_Right'] ,
                               // editedItem:reportDetailList[index],
@@ -303,7 +298,7 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                                                   style: item_heading_textStyle,
                                                 ),
                                                 Text("Invoice : "+
-                                                    reportDetailList[index]['Invoice_No'].toString(),
+                                                    reportDetailList[index]['Voucher_No'].toString(),
                                                   style: item_regular_textStyle,
                                                 ),
                                               ],
@@ -452,14 +447,11 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Receipt&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.venderId}";
         }else
         if(widget.come=="itemName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&Vouchar_Type=Receipt&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Bank_ID=${widget.itemId}";
         }
-        // else{
-        //   apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";
-        // }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
