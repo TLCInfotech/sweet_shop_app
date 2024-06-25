@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_detail_report_screen.dart';
+import 'package:sweet_shop_app/presentation/menu/report/payment/payment_detail_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/payment/payment_activity.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -27,8 +29,8 @@ class PaymentReportTypeList extends StatefulWidget {
   final reportId;
   final vendorName;
   final vandorId;
-  final itemName;
-  final itemId;
+  final ledgerName;
+  final ledgerId;
   final applicablefrom;
   final applicableTwofrom;
   final url;
@@ -39,8 +41,8 @@ class PaymentReportTypeList extends StatefulWidget {
       this.reportId,
       this.vendorName,
       this.vandorId,
-      this.itemName,
-      this.itemId,
+      this.ledgerName,
+      this.ledgerId,
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
@@ -70,8 +72,8 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
   String selectedFranchiseeName = "";
   String selectedFranchiseeId = "";
 
-  String selectedItemName = "";
-  String selectedItemId = "";
+  String selectedBankCashName = "";
+  String selectedBankCashId = "";
 
   @override
   void initState() {
@@ -82,8 +84,8 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
 
     selectedFranchiseeName = widget.vendorName;
     selectedFranchiseeId = widget.vandorId;
-    selectedItemName = widget.itemName;
-    selectedItemId = widget.itemId;
+    selectedBankCashName = widget.ledgerName;
+    selectedBankCashId = widget.ledgerId;
 
     applicablefrom = widget.applicablefrom;
     applicableTwofrom = widget.applicableTwofrom;
@@ -174,7 +176,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              "Sale ${widget.reportName}",
+                              "Payment ${widget.reportName}",
                               style: appbar_text_style,
                             ),
                           ),
@@ -218,8 +220,8 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                           ? getFranchiseeNameLayout(
                               SizeConfig.screenHeight, SizeConfig.screenWidth)
                           : Container(),
-                      widget.reportId == "ITSM"
-                          ? getItemNameLayout(
+                      widget.reportId == "BKSM"
+                          ? getIBankLedgerNameLayout(
                               SizeConfig.screenHeight, SizeConfig.screenWidth)
                           : Container(),
                       const SizedBox(
@@ -279,39 +281,38 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSalePartywise,
+                                      PaymentDetailReportActivity(
+                                        apiurl: ApiConstants().getAcctVoucherPartywise,
                                         venderId: array_list[index]
-                                            ['Vendor_ID'],
+                                            ['Ledger_ID'],
                                         venderName: array_list[index]
-                                            ['Vendor_Name'],
+                                            ['Ledger_Name'],
                                         fromDate: applicablefrom,
                                         come: "partyName",
                                         toDate: applicableTwofrom,
                                       )));
-                        } else if (widget.reportId == "ITSM") {
+                        } else if (widget.reportId == "BKSM") {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SaleDetailReportActivity(
-                                        apiurl: ApiConstants().getSaleItemwise,
-                                        itemId: array_list[index]['Item_ID'],
-                                        itemName: array_list[index]
-                                            ['Item_Name'],
+                                      PaymentDetailReportActivity(
+                                        apiurl: ApiConstants().getAcctVoucherBankwise,
+                                        ledgerId: array_list[index]['Ledger_ID'],
+                                        ledgerName: array_list[index]['Ledger_Name'],
                                         fromDate: applicablefrom,
-                                        come: "itemName",
+                                        come: "ledgerName",
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SellActivity(
+                                  builder: (context) => PaymentActivity(
                                         mListener: this,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
-                                        formId: "ST003",
+                                        formId: "AT001",
                                         arrData: dataArr,
                                       )));
                         }
@@ -343,32 +344,20 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                   children: [
                                     array_list[index]['Date'] != null
                                         ? Expanded(
-                                          child: Row(
-                                              children: [
-                                                FaIcon(
-                                                  FontAwesomeIcons.calendar,
-                                                  color: Colors.black87,
-                                                  size: 20,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  CommonWidget.getDateLayout(
-                                                      DateTime.parse(
-                                                          array_list[index]
-                                                              ['Date'])),
-                                                  style: item_heading_textStyle,
-                                                ),
-                                              ],
-                                            ),
+                                          child:   Text(
+                                            CommonWidget.getDateLayout(
+                                                DateTime.parse(
+                                                    array_list[index]
+                                                        ['Date'])),
+                                            style: item_heading_textStyle,
+                                          ),
                                         )
                                         : Container(),
-                                    array_list[index]['Item_Name'] == null
+                                    array_list[index]['Ledger_Name'] == null
                                         ? Container()
                                         : Expanded(
                                           child: Text(
-                                              array_list[index]['Item_Name'],
+                                              array_list[index]['Ledger_Name'],
                                           
                                               style: item_heading_textStyle,
                                             ),
@@ -500,14 +489,14 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
 
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: "${ApiConstants().franchisee}?",
+      apiUrl: "${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       franchiseeName: widget.vendorName,
       franchisee: "edit",
       readOnly: true,
       title:
-          ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+          ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name, id) {
         setState(() {
           selectedFranchiseeName = name!;
@@ -521,20 +510,19 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
     );
   }
 
-  Widget getItemNameLayout(double parentHeight, double parentWidth) {
+  Widget getIBankLedgerNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl:
-          "${ApiConstants().item_list}?Date=${DateFormat("yyyy-MM-dd").format(DateTime.now())}&",
+      apiUrl: "${ApiConstants().getBankCashLedger}?",
       titleIndicator: false,
-      ledgerName: widget.itemName,
+      ledgerName: widget.ledgerName,
       franchisee: "edit",
-      franchiseeName: widget.itemName,
+      franchiseeName: widget.ledgerName,
       readOnly: true,
-      title: ApplicationLocalizations.of(context)!.translate("item")!,
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
       callback: (name, id) {
         setState(() {
-          selectedItemName = name!;
-          selectedItemId = id.toString()!;
+          selectedBankCashName = name!;
+          selectedBankCashId = id.toString()!;
         });
         array_list = [];
         getReportList(1);
@@ -584,13 +572,13 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
 
         if (selectedFranchiseeId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vendor_ID=$selectedFranchiseeId";
-        } else if (selectedItemId != "") {
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Payment&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
+        } else if (selectedBankCashId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=$selectedItemId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Payment&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedBankCashId";
         } else {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Sale&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Payment&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {

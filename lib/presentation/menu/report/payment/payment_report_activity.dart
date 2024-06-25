@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/report_type_dialog.dart';
+import 'package:sweet_shop_app/presentation/menu/report/payment/payment_report_type_list.dart';
 
 import '../../../../data/api/constant.dart';
 import '../../../common_widget/get_date_layout.dart';
@@ -169,8 +170,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                             child: getDateTwoLayout(parentHeight, parentWidth)),
                       ],
                     ),
-                    getLeaderNameLayout(parentHeight, parentWidth),
-                    getBankCashLedgerLayout(parentHeight, parentWidth),
+                    reportId=="PTSM"?getLeaderNameLayout(parentHeight, parentWidth):Container(),
+                  reportId=="BKSM"?  getBankCashLedgerLayout(parentHeight, parentWidth):Container(),
                   ],
                 ),
               ),
@@ -196,6 +197,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
           reportType = name!;
           reportId = id.toString()!;
         });
+        print(reportId);
         _reportTypeKey.currentState!.validate();
       },
     );
@@ -240,11 +242,11 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
   /* Widget for name text from field layout */
   Widget getLeaderNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: "${ApiConstants().ledger_list}?",
+      apiUrl: "${ApiConstants().getLedgerWithoutBankCash}?",
       titleIndicator: true,
       ledgerName: ledgerName,
       readOnly:true,
-      title: ApplicationLocalizations.of(context)!.translate("expense")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name,id){
         setState(() {
           ledgerName = name!;
@@ -329,9 +331,24 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
           child: GestureDetector(
             onTap: () {
               if (mounted) {
-                setState(() {
-                  disableColor = true;
-                });
+                bool v = _reportTypeKey.currentState!.validate();
+                if (v) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PaymentReportTypeList(
+                            reportName: reportType,
+                            reportId: reportId,
+                            mListener: this,
+                            url: ApiConstants().reports,
+                            vandorId: ledgerID,
+                            vendorName: ledgerName,
+                            ledgerId: selectedbankCashLedgerId,
+                            ledgerName: selectedbankCashLedgerName,
+                            applicablefrom: applicablefrom,
+                            applicableTwofrom: applicableTwofrom,
+                          )));
+                }
               }
             },
             onDoubleTap: () {},

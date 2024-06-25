@@ -22,10 +22,11 @@ import '../../../common_widget/get_date_layout.dart';
 
 
 class PaymentActivity extends StatefulWidget {
+  final dateNew;
   final String? comeFor;
   final  formId;
   final  arrData;
-  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
+  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData,this.dateNew});
   @override
   State<PaymentActivity> createState() => _PaymentActivityState();
 }
@@ -46,6 +47,11 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.dateNew!=null){
+      setState(() {
+        newDate=widget.dateNew!;
+      });
+    }
     getPayment(page);
     setVal();
   }
