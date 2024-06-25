@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/craete_credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/craete_debit_note_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/payment/create_payment_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -25,18 +26,18 @@ class PaymentDetailReportActivity extends StatefulWidget {
   final apiurl;
   final venderId;
   final venderName;
-  final itemId;
-  final itemName;
+  final ledgerId;
+  final ledgerName;
   final fromDate;
   final toDate;
   final come;
-  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come});
+  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.ledgerId, this.ledgerName, this.fromDate, this.toDate, this.come});
 
   @override
   State<PaymentDetailReportActivity> createState() => _PaymentDetailReportActivityState();
 }
 
-class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivity> with CreateDebitNoteInterface{
+class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivity> with CreatePaymentInterface{
   bool isLoaderShow = false;
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -84,8 +85,8 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
     setState(() {
       print("hbjfbhfbbf ${widget.come} ${widget.venderId}");
 
-      if(widget.come=="itemName"){
-        franchiseeName.text=widget.itemName.toString();
+      if(widget.come=="ledgerName"){
+        franchiseeName.text=widget.ledgerName.toString();
       }else if(widget.come=="partyName"){
         franchiseeName.text=widget.venderName.toString();
       }
@@ -139,7 +140,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
+                              child: widget.come=="ledgerName"? Text(
                                 ApplicationLocalizations.of(context)!
                                     .translate("item")!,
                                 style: appbar_text_style,
@@ -203,7 +204,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
       readOnly: false,
-      title:widget.come=="itemName"? ApplicationLocalizations.of(context)!.translate("item")!:
+      title:widget.come=="ledgerName"? ApplicationLocalizations.of(context)!.translate("item")!:
       ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
       callbackOnchage: (value) {},
       textInput: TextInputType.text,
@@ -251,13 +252,13 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                         //       arrData: dataArr,
                         //     )));
                         List<dynamic> jsonArray = jsonDecode(dataArr);
-                        var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT006");
+                        var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT001");
 
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreateDebitNote(
+                            CreatePayment(
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
-                              Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
+                              voucherNo: reportDetailList[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               readOnly:singleRecord['Update_Right'] ,
                               // editedItem:reportDetailList[index],
@@ -302,8 +303,8 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                                                   CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
                                                   style: item_heading_textStyle,
                                                 ),
-                                                Text("Invoice : "+
-                                                    reportDetailList[index]['Invoice_No'].toString(),
+                                                Text("Voucher : "+
+                                                    reportDetailList[index]['Voucher_No'].toString(),
                                                   style: item_regular_textStyle,
                                                 ),
                                               ],
@@ -452,11 +453,13 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}";
         }else
-        if(widget.come=="itemName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
+        if(widget.come=="ledgerName"){
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}";
         }
+
+
         // else{
         //   apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";
         // }
