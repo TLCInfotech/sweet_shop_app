@@ -5,7 +5,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
-import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_detail_report_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/report/recipt/recipt_detail_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 
@@ -21,7 +20,6 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
-import '../../transaction/sell/sell_activity.dart';
 
 class ReceiptReportTypeList extends StatefulWidget {
   final mListener;

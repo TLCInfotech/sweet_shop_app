@@ -140,13 +140,11 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="ledgerName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child:widget.come=="ledgerName"? Text("Payment ${ApplicationLocalizations.of(context)!
+                                  .translate("bank_cash_ledger")!}",
                                 style: appbar_text_style,
-                              ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                              ): Text("Payment ${ApplicationLocalizations.of(context)!
+                                  .translate("ledger")!}",
                                 style: appbar_text_style,
                               ),
                             ),
@@ -204,8 +202,8 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
       readOnly: false,
-      title:widget.come=="ledgerName"? ApplicationLocalizations.of(context)!.translate("item")!:
-      ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      title:widget.come=="ledgerName"? ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!:
+      ApplicationLocalizations.of(context)!.translate("ledger")!,
       callbackOnchage: (value) {},
       textInput: TextInputType.text,
       maxlines: 1,

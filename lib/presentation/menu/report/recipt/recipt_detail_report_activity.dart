@@ -140,13 +140,11 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child: widget.come=="itemName"? Text("Receipt ${ApplicationLocalizations.of(context)!
+                                    .translate("bank_cash_ledger")!}",
                                 style: appbar_text_style,
-                              ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                              ): Text("Receipt ${ApplicationLocalizations.of(context)!
+                                    .translate("ledger")!}",
                                 style: appbar_text_style,
                               ),
                             ),

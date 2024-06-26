@@ -378,8 +378,8 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal).ceilToDouble().abs())}",style: item_heading_textStyle,),
-              int.parse(closingBal)==0?Container():( int.parse(openingBal)<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
+              Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal.toString()).ceilToDouble().abs())}",style: item_heading_textStyle,),
+              closingBal==0?Container():(openingBal<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
             ],
           ),
         ),
@@ -392,8 +392,8 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           ),
           child:  Row(
             children: [
-              Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse(closingBal).ceilToDouble().abs())}",style: item_heading_textStyle,),
-              int.parse(closingBal)==0?Container():(int.parse(closingBal)<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
+              Text("Closing Bal: ${CommonWidget.getCurrencyFormat(double.parse(closingBal.toString()).ceilToDouble().abs())}",style: item_heading_textStyle,),
+              closingBal==0?Container():(closingBal<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
             ],
           ),
         ),
@@ -430,8 +430,8 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                 if(data!=null){
                   // openingBal=data['Opening_Balance']<0?"${data['Opening_Balance']}":"${data['Opening_Balance']}DR";
                   // closingBal=data['Closing_Balance']<0?"${data['Closing_Balance']}CR":"${data['Closing_Balance']}DR";
-                  openingBal= (data['Opening_Balance']).toString();
-                  closingBal=data['Closing_Balance'].toString();
+                  openingBal= (data['Opening_Balance']);
+                  closingBal=data['Closing_Balance'];
                   List<dynamic>  newList=(data['Ledger_vouchers']);
                   expense_list=newList;
            print("njdnj  $expense_list");

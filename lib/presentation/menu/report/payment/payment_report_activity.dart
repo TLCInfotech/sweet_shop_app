@@ -366,7 +366,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                   Padding(
                     padding: EdgeInsets.only(left: parentWidth * .005),
                     child:  Text(
-                      ApplicationLocalizations.of(context)!.translate("save")!,
+                      ApplicationLocalizations.of(context)!.translate("show_report")!,
                       style: page_heading_textStyle,
                     ),
                   ),
