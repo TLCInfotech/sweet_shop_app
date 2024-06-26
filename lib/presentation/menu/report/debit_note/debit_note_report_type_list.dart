@@ -391,7 +391,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                       padding: EdgeInsets.only(left: 5),
                                       child: array_list[index]['Amount'] < 0
                                           ? Text(
-                                              "INR " +
+                                              " " +
                                                   CommonWidget
                                                       .getCurrencyFormat(
                                                           array_list[index]
@@ -405,7 +405,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                                       "Inter_Medium_Font"),
                                             )
                                           : Text(
-                                              "INR "
+                                              " "
                                                   +
                                                   CommonWidget
                                                       .getCurrencyFormat(

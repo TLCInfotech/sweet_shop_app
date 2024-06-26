@@ -390,7 +390,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                                       padding: EdgeInsets.only(left: 5),
                                       child: array_list[index]['Amount'] < 0
                                           ? Text(
-                                              "INR " +
+                                              " " +
                                                   CommonWidget
                                                       .getCurrencyFormat(
                                                           array_list[index]
@@ -404,7 +404,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                                                       "Inter_Medium_Font"),
                                             )
                                           : Text(
-                                              "INR "
+                                              " "
                                                   +
                                                   CommonWidget
                                                       .getCurrencyFormat(

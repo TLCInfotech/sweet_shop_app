@@ -471,14 +471,14 @@ mainAxisAlignment: MainAxisAlignment.start,
                                         alignment: Alignment.centerRight,
                                         width: SizeConfig.halfscreenWidth-20,
                                         child:array_list[index]['Profit']<0?
-                                        Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
+                                        Text(" "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']*-1),
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 18.0,
                                               color: Colors.red,
                                               fontFamily: "Inter_Medium_Font"
                                           ),):
-                                        Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
+                                        Text(" "+CommonWidget.getCurrencyFormat(array_list[index]['Profit']),
                                           overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontSize: 18.0,
@@ -618,14 +618,14 @@ mainAxisAlignment: MainAxisAlignment.start,
                     Container(
                       alignment: Alignment.centerLeft,
                       child: array_list[index]['Amount']!=null && array_list[index]['Amount']<0?
-                      Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']*-1),
+                      Text(" "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']*-1),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18.0,
                             color: Colors.red,
                             fontFamily: "Inter_Medium_Font"
                         ),):
-                      array_list[index]['Amount']!=null && array_list[index]['Amount']>0?Text("INR "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
+                      array_list[index]['Amount']!=null && array_list[index]['Amount']>0?Text(" "+CommonWidget.getCurrencyFormat(array_list[index]['Amount']),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 18.0,

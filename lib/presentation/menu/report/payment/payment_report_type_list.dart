@@ -378,7 +378,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                       padding: EdgeInsets.only(left: 5),
                                       child: array_list[index]['Amount'] < 0
                                           ? Text(
-                                              "INR " +
+                                              " " +
                                                   CommonWidget
                                                       .getCurrencyFormat(
                                                           array_list[index]
@@ -392,7 +392,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                                       "Inter_Medium_Font"),
                                             )
                                           : Text(
-                                              "INR "
+                                              " "
                                                   +
                                                   CommonWidget
                                                       .getCurrencyFormat(

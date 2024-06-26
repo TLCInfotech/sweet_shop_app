@@ -389,14 +389,14 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                                 alignment: Alignment.centerRight,
                                                 width: SizeConfig.halfscreenWidth-20,
                                                 child:reportDetailList[index]['Profit']<0?
-                                                Text("INR "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']*-1),
+                                                Text(" "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']*-1),
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       fontSize: 18.0,
                                                       color: Colors.red,
                                                       fontFamily: "Inter_Medium_Font"
                                                   ),):
-                                                Text("INR "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
+                                                Text(" "+CommonWidget.getCurrencyFormat(reportDetailList[index]['Profit']),
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       fontSize: 18.0,
@@ -414,14 +414,14 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                                     ),
                                   ),
                                   reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
-                                  Text("INR ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                  Text(" ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           color:Colors.green,
                                           fontFamily: "Inter_Medium_Font"
                                       ))
                                       :
-                                  reportDetailList[index]['Amount']!=null?Text("INR ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
+                                  reportDetailList[index]['Amount']!=null?Text(" ${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",overflow: TextOverflow.clip,
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           color:Colors.green,

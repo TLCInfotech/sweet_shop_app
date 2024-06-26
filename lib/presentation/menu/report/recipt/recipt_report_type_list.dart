@@ -392,7 +392,7 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                       padding: EdgeInsets.only(left: 5),
                                       child: array_list[index]['Amount'] < 0
                                           ? Text(
-                                              "INR " +
+                                              " " +
                                                   CommonWidget
                                                       .getCurrencyFormat(
                                                           array_list[index]
@@ -406,7 +406,7 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                                       "Inter_Medium_Font"),
                                             )
                                           : Text(
-                                              "INR "
+                                              " "
                                                   +
                                                   CommonWidget
                                                       .getCurrencyFormat(

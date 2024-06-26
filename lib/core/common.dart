@@ -22,7 +22,7 @@ import 'app_preferance.dart';
 import 'common_style.dart';
 class CommonWidget {
   static getCurrencyFormat(var amount) {
-    return NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+    return NumberFormat.currency(locale: 'en_IN', symbol: '₹', name: "", decimalDigits: 2,).format(amount);
   }
 
   static getCommonPadding(double padding, Color colors) {

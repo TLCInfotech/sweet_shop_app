@@ -308,7 +308,7 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
 
                                               alignment: Alignment.centerRight,
                                               child: reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
-                                              Text("INR  ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                              Text("  ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                     fontSize: 18.0,
@@ -317,7 +317,7 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                                                 ),)
                                                   :
                                               reportDetailList[index]['Amount']!=null?
-                                              Text("INR "+
+                                              Text(" "+
                                                   "${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",
                                                 overflow: TextOverflow.clip,
                                                 textAlign: TextAlign.end,
