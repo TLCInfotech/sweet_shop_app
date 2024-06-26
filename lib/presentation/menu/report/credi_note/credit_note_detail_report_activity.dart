@@ -138,13 +138,11 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child: widget.come=="itemName"? Text("Credit Note ${ApplicationLocalizations.of(context)!
+                                    .translate("item")!}",
                                 style: appbar_text_style,
-                              ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                              ): Text("Credit Note ${ApplicationLocalizations.of(context)!
+                                    .translate("franchisee")!}",
                                 style: appbar_text_style,
                               ),
                             ),

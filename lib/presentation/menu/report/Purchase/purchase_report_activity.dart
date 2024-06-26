@@ -3,22 +3,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_item_layout.dart';
-import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_type_list.dart';
-import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_type_list.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
-import '../../../../core/string_en.dart';
 import '../../../../data/api/constant.dart';
-import '../../../common_widget/getFranchisee.dart';
-import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
-import '../../../searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
-import '../common_screens/report_type_list_screen.dart';
 
 class PurchaseReportActivity extends StatefulWidget {
   const PurchaseReportActivity({super.key});

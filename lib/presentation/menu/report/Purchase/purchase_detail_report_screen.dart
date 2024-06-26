@@ -140,13 +140,12 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child: widget.come=="itemName"? Text("Purchase ${ApplicationLocalizations.of(context)!
+                                    .translate("item")!}",
                                 style: appbar_text_style,
                               ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                                "Purchase ${ApplicationLocalizations.of(context)!
+                                    .translate("franchisee")!}",
                                 style: appbar_text_style,
                               ),
                             ),

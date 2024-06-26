@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
-import 'package:sweet_shop_app/presentation/menu/report/common_screens/report_type_list_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/report/debit_note/debit_note_report_type_list.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_dropdown_with_object.dart';
@@ -12,12 +10,7 @@ import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
-import '../../../../core/string_en.dart';
-import '../../../common_widget/getFranchisee.dart';
 import '../../../common_widget/get_date_layout.dart';
-import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout.dart';
-
-import '../../../common_widget/signleLine_TexformField.dart';
 
 class DebitReportActivity extends StatefulWidget {
   const DebitReportActivity({super.key});

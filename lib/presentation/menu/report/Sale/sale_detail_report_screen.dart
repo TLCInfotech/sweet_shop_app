@@ -139,13 +139,12 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child: widget.come=="itemName"? Text("Sale ${ApplicationLocalizations.of(context)!
+                                    .translate("item")!}",
                                 style: appbar_text_style,
                               ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                                "Sale ${ApplicationLocalizations.of(context)!
+                                    .translate("franchisee")!}",
                                 style: appbar_text_style,
                               ),
                             ),

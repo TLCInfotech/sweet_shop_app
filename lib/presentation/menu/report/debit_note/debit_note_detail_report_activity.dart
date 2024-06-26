@@ -139,13 +139,11 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
                           ),
                           Expanded(
                             child: Center(
-                              child: widget.come=="itemName"? Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("item")!,
+                              child: widget.come=="itemName"? Text("Debit Note ${ApplicationLocalizations.of(context)!
+                                    .translate("item")!}",
                                 style: appbar_text_style,
-                              ): Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("franchisee")!,
+                              ): Text("Debit Note ${ApplicationLocalizations.of(context)!
+                                    .translate("franchisee")!}",
                                 style: appbar_text_style,
                               ),
                             ),
