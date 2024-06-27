@@ -116,7 +116,22 @@ var order_No;
   var saleinvoice=null;
   var isinvoiceGenreted=false;
   var franchiseereadonly=true;
-  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
+  double minX = 30;
+  double minY = 30;
+  double maxX = SizeConfig.screenWidth*0.78;
+  double maxY = SizeConfig.screenHeight*0.9;
+
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+
+  void _updateOffset(Offset newOffset) {
+    setState(() {
+      // Clamp the Offset values to stay within the defined constraints
+      double clampedX = newOffset.dx.clamp(minX, maxX);
+      double clampedY = newOffset.dy.clamp(minY, maxY);
+      position = Offset(clampedX, clampedY);
+    });
+  }
 
   getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
@@ -320,6 +335,39 @@ var order_No;
             ),
           ),
         ),
+        widget.readOnly==false?Container():  Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // setState(() {
+              //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              // });
+              _updateOffset(position + details.delta);
+            },
+            child: FloatingActionButton(
+                backgroundColor: Color(0xFFFBE404),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: () async{
+                  FocusScope.of(context)
+                      .requestFocus(FocusNode());
+                  if (selectedFranchiseeId != "") {
+                    if (context != null) {
+                      editedItemIndex = null;
+                      goToAddOrEditItem(null);
+                    }
+                  } else {
+                    CommonWidget.errorDialog(
+                        context, "Select Party !");
+                  }
+                }),
+          ),
+        ),
+
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
@@ -429,112 +477,77 @@ var order_No;
   var roundoff = "0.00";
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return Stack(
+    return ListView(
+      shrinkWrap: true,
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        ListView(
-          shrinkWrap: true,
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .01),
-              child: Container(
-                child: Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      InvoiceInfo(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     widget.readOnly == false || saleinvoice !=null
-                      //         ? Container():widget.invoiceNo!=null?Container():
-                      //          GestureDetector(
-                      //             onTap: () {
-                      //               FocusScope.of(context)
-                      //                   .requestFocus(FocusNode());
-                      //               if (selectedFranchiseeId != "") {
-                      //                 if (context != null) {
-                      //                   editedItemIndex = null;
-                      //                   goToAddOrEditItem(null);
-                      //                 }
-                      //               } else {
-                      //                 CommonWidget.errorDialog(
-                      //                     context, "Select Party !");
-                      //               }
-                      //             },
-                      //             child: Container(
-                      //                 width: 120,
-                      //                 padding: EdgeInsets.only(
-                      //                     left: 10, right: 10, top: 5, bottom: 5),
-                      //                 margin: EdgeInsets.only(bottom: 10),
-                      //                 decoration: BoxDecoration(
-                      //                     color: CommonColor.THEME_COLOR,
-                      //                     border: Border.all(
-                      //                         color: Colors.grey.withOpacity(0.5))),
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                       MainAxisAlignment.spaceBetween,
-                      //                   children: [
-                      //                     Text(
-                      //                       ApplicationLocalizations.of(context)!
-                      //                           .translate("add_item")!,
-                      //                       style: item_heading_textStyle,
-                      //                     ),
-                      //                     FaIcon(
-                      //                       FontAwesomeIcons.plusCircle,
-                      //                       color: Colors.black87,
-                      //                       size: 20,
-                      //                     )
-                      //                   ],
-                      //                 )))],
-                      // ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      Item_list.length > 0
-                          ? get_Item_list_layout(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth)
-                          : Container()
-                    ],
+        Padding(
+          padding: EdgeInsets.only(top: parentHeight * .01),
+          child: Container(
+            child: Form(
+              key: _formkey,
+              child: Column(
+                children: [
+                  InvoiceInfo(),
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     widget.readOnly == false || saleinvoice !=null
+                  //         ? Container():widget.invoiceNo!=null?Container():
+                  //          GestureDetector(
+                  //             onTap: () {
+                  //               FocusScope.of(context)
+                  //                   .requestFocus(FocusNode());
+                  //               if (selectedFranchiseeId != "") {
+                  //                 if (context != null) {
+                  //                   editedItemIndex = null;
+                  //                   goToAddOrEditItem(null);
+                  //                 }
+                  //               } else {
+                  //                 CommonWidget.errorDialog(
+                  //                     context, "Select Party !");
+                  //               }
+                  //             },
+                  //             child: Container(
+                  //                 width: 120,
+                  //                 padding: EdgeInsets.only(
+                  //                     left: 10, right: 10, top: 5, bottom: 5),
+                  //                 margin: EdgeInsets.only(bottom: 10),
+                  //                 decoration: BoxDecoration(
+                  //                     color: CommonColor.THEME_COLOR,
+                  //                     border: Border.all(
+                  //                         color: Colors.grey.withOpacity(0.5))),
+                  //                 child: Row(
+                  //                   mainAxisAlignment:
+                  //                       MainAxisAlignment.spaceBetween,
+                  //                   children: [
+                  //                     Text(
+                  //                       ApplicationLocalizations.of(context)!
+                  //                           .translate("add_item")!,
+                  //                       style: item_heading_textStyle,
+                  //                     ),
+                  //                     FaIcon(
+                  //                       FontAwesomeIcons.plusCircle,
+                  //                       color: Colors.black87,
+                  //                       size: 20,
+                  //                     )
+                  //                   ],
+                  //                 )))],
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  Item_list.length > 0
+                      ? get_Item_list_layout(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)
+                      : Container()
+                ],
               ),
             ),
-          ],
-        ),
-        widget.readOnly==false?Container():  Positioned(
-          left: position.dx,
-          top: position.dy,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
-              });
-            },
-            child: FloatingActionButton(
-                backgroundColor: Color(0xFFFBE404),
-                child: const Icon(
-                  Icons.add,
-                  size: 30,
-                  color: Colors.black87,
-                ),
-                onPressed: () async{
-                  FocusScope.of(context)
-                      .requestFocus(FocusNode());
-                  if (selectedFranchiseeId != "") {
-                    if (context != null) {
-                      editedItemIndex = null;
-                      goToAddOrEditItem(null);
-                    }
-                  } else {
-                    CommonWidget.errorDialog(
-                        context, "Select Party !");
-                  }
-                }),
           ),
         ),
       ],
@@ -691,9 +704,9 @@ var order_No;
                                             print(Inserted_list);
                                             await calculateTotalAmt();
                                             if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-                                            }else{
                                               position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
                                             }
                                           }
                                         })),
@@ -977,7 +990,7 @@ var order_No;
                   }
                 }
                 if(Item_list.length>0){
-                  position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                  position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.78);
                 }
               });
               print("###################3333 $isinvoiceGenreted ${widget.readOnly}");
@@ -1224,9 +1237,9 @@ var order_No;
     print(Inserted_list);
     print(Updated_list);
     if(Item_list.length>0){
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-    }else{
       position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
     }
   }
 }

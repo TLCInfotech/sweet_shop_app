@@ -286,54 +286,56 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
                                           alignment: Alignment.center,
                                           child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
                                       ),
-                                      Padding(
-                                        padding:  EdgeInsets.all(8.0),
-                                        child:  Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
-                                                  style: item_heading_textStyle,
-                                                ),
-                                                Text("Invoice : "+
-                                                    reportDetailList[index]['Invoice_No'].toString(),
-                                                  style: item_regular_textStyle,
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Container(
+                                       Expanded(
+                                         child: Padding(
+                                          padding:  EdgeInsets.all(8.0),
+                                          child:  Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    CommonWidget.getDateLayout(DateTime.parse(reportDetailList[index]['Date'])),
+                                                    style: item_heading_textStyle,
+                                                  ),
+                                                  Text("Invoice : "+
+                                                      reportDetailList[index]['Invoice_No'].toString(),
+                                                    style: item_regular_textStyle,
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Container(
 
-                                              alignment: Alignment.centerRight,
-                                              child: reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
-                                              Text("  ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color:Colors.red,
-                                                    fontFamily: "Inter_Medium_Font"
-                                                ),)
-                                                  :
-                                              reportDetailList[index]['Amount']!=null?
-                                              Text(" "+
-                                                  "${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",
-                                                overflow: TextOverflow.clip,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    fontSize: 18.0,
-                                                    color:Colors.green,
-                                                    fontFamily: "Inter_Medium_Font"
-                                                ),):Container(),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                                alignment: Alignment.centerRight,
+                                                child: reportDetailList[index]['Amount']!=null&& reportDetailList[index]['Amount']<0?
+                                                Text("  ${CommonWidget.getCurrencyFormat((reportDetailList[index]['Amount']*-1))}",overflow: TextOverflow.clip,
+                                                  textAlign: TextAlign.end,
+                                                  style: TextStyle(
+                                                      fontSize: 18.0,
+                                                      color:Colors.red,
+                                                      fontFamily: "Inter_Medium_Font"
+                                                  ),)
+                                                    :
+                                                reportDetailList[index]['Amount']!=null?
+                                                Text(" "+
+                                                    "${CommonWidget.getCurrencyFormat(reportDetailList[index]['Amount'])}",
+                                                  overflow: TextOverflow.clip,
+                                                  textAlign: TextAlign.end,
+                                                  style: TextStyle(
+                                                      fontSize: 18.0,
+                                                      color:Colors.green,
+                                                      fontFamily: "Inter_Medium_Font"
+                                                  ),):Container(),
+                                              )
+                                            ],
+                                          ),
+                                                                               ),
+                                       ),
                                     ],
                                   ),
                                 ),

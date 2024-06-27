@@ -75,7 +75,23 @@ class _CreatePaymentState extends State<CreatePayment> with SingleTickerProvider
   var editedItemIndex=null;
   var companyId="0";
 var voucherNo;
-  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
+  double minX = 30;
+  double minY = 30;
+  double maxX = SizeConfig.screenWidth*0.78;
+  double maxY = SizeConfig.screenHeight*0.9;
+
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+
+  void _updateOffset(Offset newOffset) {
+    setState(() {
+      // Clamp the Offset values to stay within the defined constraints
+      double clampedX = newOffset.dx.clamp(minX, maxX);
+      double clampedY = newOffset.dy.clamp(minY, maxY);
+      position = Offset(clampedX, clampedY);
+    });
+  }
+
 
   @override
   void initState() {
@@ -270,86 +286,15 @@ var voucherNo;
             ),
           ),
         ),
-        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
-      ],
-    );
-  }
-
-
-/* Widget for all field layout*/
-  Widget getAllFields(double parentHeight, double parentWidth) {
-    return isLoaderShow?Container(): Stack(
-      children: [
-        ListView(
-          shrinkWrap: true,
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-           children: [
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .01),
-              child: Container(
-                child: Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
-                      PaymentInfo(),
-                      const SizedBox(height: 10,),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
-                      //     widget.readOnly==false?Container():  GestureDetector(
-                      //         onTap: (){
-                      //           FocusScope.of(context).requestFocus(FocusNode());
-                      //           if(selectedBankLedgerID!=null) {
-                      //             if (context != null) {
-                      //               editedItemIndex=null;
-                      //               goToAddOrEditItem(null);
-                      //             }
-                      //           }
-                      //           else{
-                      //             CommonWidget.errorDialog(context, "Select Bank !");
-                      //           }
-                      //
-                      //         },
-                      //         child: Container(
-                      //             width: 140,
-                      //             padding: const EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                      //             margin: const EdgeInsets.only(bottom: 10),
-                      //             decoration: BoxDecoration(
-                      //                 color: CommonColor.THEME_COLOR,
-                      //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
-                      //             ),
-                      //             child: const Row(
-                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //               children: [
-                      //                 Text(StringEn.ADD_LEADER,
-                      //                   style: item_heading_textStyle,),
-                      //                 FaIcon(FontAwesomeIcons.plusCircle,
-                      //                   color: Colors.black87, size: 20,)
-                      //               ],
-                      //             )
-                      //
-                      //         )
-                      //     )
-                      //   ],
-                      // ),
-                      Ledger_list.length>0?    get_Item_list_layout(parentHeight,parentWidth):Container(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
           child: GestureDetector(
             onPanUpdate: (details) {
-              setState(() {
-                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
-              });
+              // setState(() {
+              //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              // });
+              _updateOffset(position + details.delta);
             },
             child: FloatingActionButton(
                 backgroundColor: Color(0xFFFBE404),
@@ -370,6 +315,75 @@ var voucherNo;
                     CommonWidget.errorDialog(context, "Select Bank !");
                   }
                 }),
+          ),
+        ),
+
+        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+      ],
+    );
+  }
+
+
+/* Widget for all field layout*/
+  Widget getAllFields(double parentHeight, double parentWidth) {
+    return isLoaderShow?Container(): ListView(
+      shrinkWrap: true,
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+       children: [
+        Padding(
+          padding: EdgeInsets.only(top: parentHeight * .01),
+          child: Container(
+            child: Form(
+              key: _formkey,
+              child: Column(
+                children: [
+                  PaymentInfo(),
+                  const SizedBox(height: 10,),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     //  Ledger_list.length>0?getFieldTitleLayout(StringEn.LEADER_DETAIL):Container(),
+                  //     widget.readOnly==false?Container():  GestureDetector(
+                  //         onTap: (){
+                  //           FocusScope.of(context).requestFocus(FocusNode());
+                  //           if(selectedBankLedgerID!=null) {
+                  //             if (context != null) {
+                  //               editedItemIndex=null;
+                  //               goToAddOrEditItem(null);
+                  //             }
+                  //           }
+                  //           else{
+                  //             CommonWidget.errorDialog(context, "Select Bank !");
+                  //           }
+                  //
+                  //         },
+                  //         child: Container(
+                  //             width: 140,
+                  //             padding: const EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                  //             margin: const EdgeInsets.only(bottom: 10),
+                  //             decoration: BoxDecoration(
+                  //                 color: CommonColor.THEME_COLOR,
+                  //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
+                  //             ),
+                  //             child: const Row(
+                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 Text(StringEn.ADD_LEADER,
+                  //                   style: item_heading_textStyle,),
+                  //                 FaIcon(FontAwesomeIcons.plusCircle,
+                  //                   color: Colors.black87, size: 20,)
+                  //               ],
+                  //             )
+                  //
+                  //         )
+                  //     )
+                  //   ],
+                  // ),
+                  Ledger_list.length>0?    get_Item_list_layout(parentHeight,parentWidth):Container(),
+                ],
+              ),
+            ),
           ),
         ),
       ],
@@ -525,9 +539,9 @@ var voucherNo;
                                             print(Inserted_list);
                                             await calculateTotalAmt();
                                             if(Ledger_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-                                            }else{
                                               position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
                                             }
 
                                           }
@@ -833,10 +847,11 @@ var voucherNo;
     print(Inserted_list);
     print(Updated_list);
     if(Ledger_list.length>0){
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-    }else{
       position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
     }
+
   }
 
 
@@ -864,7 +879,6 @@ var voucherNo;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=(data['accountDetails']);
-
                   setState(() {
                     Ledger_list=_arrList;
                     selectedbankCashLedger=data['accountVoucherHeader']['Ledger_Name'];
@@ -872,7 +886,7 @@ var voucherNo;
                     TotalAmount=data['accountVoucherHeader']['Total_Amount'].toStringAsFixed(2) ;
                   });
                   if(Ledger_list.length>0){
-                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.78);
                   }
                   // calculateTotalAmt();
                 }

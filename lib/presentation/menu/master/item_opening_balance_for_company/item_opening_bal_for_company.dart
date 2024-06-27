@@ -66,7 +66,22 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+
+  double minX = 30;
+  double minY = 30;
+  double maxX = SizeConfig.screenWidth*0.78;
+  double maxY = SizeConfig.screenHeight*0.9;
+
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+
+  void _updateOffset(Offset newOffset) {
+    setState(() {
+      // Clamp the Offset values to stay within the defined constraints
+      double clampedX = newOffset.dx.clamp(minX, maxX);
+      double clampedY = newOffset.dy.clamp(minY, maxY);
+      position = Offset(clampedX, clampedY);
+    });
+  }
 
   bool isLoaderShow=false;
   bool showButton=false;
@@ -103,7 +118,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                   });
                   calculateTotalAmt();
                   if(Item_list.length>0){
-                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.78);
                   }
                 }
 
@@ -272,6 +287,34 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             ),
           ),
         ),
+        singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ? Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // setState(() {
+              //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              // });
+              _updateOffset(position + details.delta);
+
+            },
+            child: FloatingActionButton(
+                backgroundColor: Color(0xFFFBE404),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: () async{
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  if (context != null) {
+                    editedItemIndex=null;
+                    goToAddOrEditItem(null,true);
+                  }
+                }),
+          ),
+        ):Container(),
+
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
@@ -313,95 +356,66 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
 
 
   Widget getAllFields(double parentHeight, double parentWidth) {
-    return Stack(
+    return ListView(
+      shrinkWrap: true,
+      controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+
       children: [
-        ListView(
-          shrinkWrap: true,
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
+        Padding(
+          padding: EdgeInsets.only(top: parentHeight * .01),
+          child: Container(
+            child: Form(
+              key: _formkey,
+              child: Column(
+                children: [
 
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: parentHeight * .01),
-              child: Container(
-                child: Form(
-                  key: _formkey,
-                  child: Column(
-                    children: [
+                  //    getFieldTitleLayout("Invoice Detail"),
+                  InvoiceInfo(),
+                  SizedBox(height: 10,),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //
+                  //     singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ?GestureDetector(
+                  //         onTap: (){
+                  //           FocusScope.of(context).requestFocus(FocusNode());
+                  //           if (context != null) {
+                  //             editedItemIndex=null;
+                  //             goToAddOrEditItem(null,true);
+                  //           }
+                  //         },
+                  //         child: Container(
+                  //             width: 120,
+                  //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
+                  //             margin: EdgeInsets.only(bottom: 10),
+                  //             decoration: BoxDecoration(
+                  //                 color: CommonColor.THEME_COLOR,
+                  //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
+                  //             ),
+                  //             child:  Row(
+                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 Text("${ApplicationLocalizations.of(context)!.translate("add_item")!}", style: item_heading_textStyle,),
+                  //                 FaIcon(FontAwesomeIcons.plusCircle,
+                  //                   color: Colors.black87, size: 20,)
+                  //               ],
+                  //             )
+                  //
+                  //         )
+                  //     ):Container()
+                  //   ],
+                  // ),
+                  Item_list.length>0? get_purchase_list_layout(parentHeight,parentWidth):Container(),
 
-                      //    getFieldTitleLayout("Invoice Detail"),
-                      InvoiceInfo(),
-                      SizedBox(height: 10,),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //
-                      //     singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ?GestureDetector(
-                      //         onTap: (){
-                      //           FocusScope.of(context).requestFocus(FocusNode());
-                      //           if (context != null) {
-                      //             editedItemIndex=null;
-                      //             goToAddOrEditItem(null,true);
-                      //           }
-                      //         },
-                      //         child: Container(
-                      //             width: 120,
-                      //             padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                      //             margin: EdgeInsets.only(bottom: 10),
-                      //             decoration: BoxDecoration(
-                      //                 color: CommonColor.THEME_COLOR,
-                      //                 border: Border.all(color: Colors.grey.withOpacity(0.5))
-                      //             ),
-                      //             child:  Row(
-                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //               children: [
-                      //                 Text("${ApplicationLocalizations.of(context)!.translate("add_item")!}", style: item_heading_textStyle,),
-                      //                 FaIcon(FontAwesomeIcons.plusCircle,
-                      //                   color: Colors.black87, size: 20,)
-                      //               ],
-                      //             )
-                      //
-                      //         )
-                      //     ):Container()
-                      //   ],
-                      // ),
-                      Item_list.length>0? get_purchase_list_layout(parentHeight,parentWidth):Container(),
+                  SizedBox(height: 10,),
 
-                      SizedBox(height: 10,),
-
-                      //:Container(),
-                    ],
-                  ),
-                ),
+                  //:Container(),
+                ],
               ),
             ),
-          ],
-        ),
-        singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ? Positioned(
-          left: position.dx,
-          top: position.dy,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
-              });
-            },
-            child: FloatingActionButton(
-                backgroundColor: Color(0xFFFBE404),
-                child: const Icon(
-                  Icons.add,
-                  size: 30,
-                  color: Colors.black87,
-                ),
-                onPressed: () async{
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  if (context != null) {
-                    editedItemIndex=null;
-                    goToAddOrEditItem(null,true);
-                  }
-                }),
           ),
-        ):Container(),
+        ),
       ],
     );
 
@@ -529,9 +543,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                           print(Inserted_list);
                                           await calculateTotalAmt();
                                           if(Item_list.length>0){
-                                            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-                                          }else{
                                             position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+                                          }else{
+                                            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
                                           }
                                           }; }
                                       ),
@@ -769,9 +783,9 @@ showButton=true;
     itemLlist.sort((a, b) => a['Item_Name'].compareTo(b['Item_Name']));
     print(Updated_list);
     if(Item_list.length>0){
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-    }else{
       position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
     }
   }
 

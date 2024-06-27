@@ -238,8 +238,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
   }
    double minX = 30;
    double minY = 30;
-   double maxX = SizeConfig.screenWidth*0.73;
-   double maxY = SizeConfig.screenHeight*0.75;
+   double maxX = SizeConfig.screenWidth*0.78;
+   double maxY = SizeConfig.screenHeight*0.9;
 
   void _updateOffset(Offset newOffset) {
     setState(() {
@@ -311,74 +311,70 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                 ),
               ),
             ),
-            body: Stack(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        // color: CommonColor.DASHBOARD_BACKGROUND,
-                          child: getAllFields(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                    ),
-                    Item_list.length > 0
-                        ? Container(
-                        decoration: BoxDecoration(
-                          color: CommonColor.WHITE_COLOR,
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.black.withOpacity(0.08),
-                              width: 1.0,
-                            ),
-                          ),
+                Expanded(
+                  child: Container(
+                    // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                ),
+                Item_list.length > 0
+                    ? Container(
+                    decoration: BoxDecoration(
+                      color: CommonColor.WHITE_COLOR,
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black.withOpacity(0.08),
+                          width: 1.0,
                         ),
-                        height: SizeConfig.safeUsedHeight * .12,
-                        child: getSaveAndFinishButtonLayout(
-                            SizeConfig.screenHeight, SizeConfig.screenWidth))
-                        : Container(),
-                    CommonWidget.getCommonPadding(
-                        SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-                  ],
-                ),
-                widget.readOnly == false
-                    ? Container()
-                    :  Positioned(
-                  left: position.dx,
-                  top: position.dy,
-                  child: GestureDetector(
-                      onPanUpdate: (details) {
-
-                        // setState(() {
-                        //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
-                        // });
-                        _updateOffset(position + details.delta);
-                      },
-                      child: FloatingActionButton(
-                          backgroundColor: Color(0xFFFBE404),
-                          child: const Icon(
-                            Icons.add,
-                            size: 30,
-                            color: Colors.black87,
-                          ),
-                          onPressed: () async {
-                            FocusScope.of(context)
-                                .requestFocus(FocusNode());
-                            if (selectedFranchiseeId != "" &&
-                                selectedLedgerId != "") {
-                              if (context != null) {
-                                editedItemIndex = null;
-                                goToAddOrEditItem(null);
-                              }
-                            } else {
-                              CommonWidget.errorDialog(context,
-                                  "Select Sale Ledger and Party !");
-                            }
-                          })
-                  ),
-                ),
+                      ),
+                    ),
+                    height: SizeConfig.safeUsedHeight * .12,
+                    child: getSaveAndFinishButtonLayout(
+                        SizeConfig.screenHeight, SizeConfig.screenWidth))
+                    : Container(),
+                CommonWidget.getCommonPadding(
+                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
               ],
             ),
+          ),
+        ),
+        widget.readOnly == false
+            ? Container()
+            :  Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+              onPanUpdate: (details) {
+
+                // setState(() {
+                //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+                // });
+                _updateOffset(position + details.delta);
+              },
+              child: FloatingActionButton(
+                  backgroundColor: Color(0xFFFBE404),
+                  child: const Icon(
+                    Icons.add,
+                    size: 30,
+                    color: Colors.black87,
+                  ),
+                  onPressed: () async {
+                    FocusScope.of(context)
+                        .requestFocus(FocusNode());
+                    if (selectedFranchiseeId != "" &&
+                        selectedLedgerId != "") {
+                      if (context != null) {
+                        editedItemIndex = null;
+                        goToAddOrEditItem(null);
+                      }
+                    } else {
+                      CommonWidget.errorDialog(context,
+                          "Select Sale Ledger and Party !");
+                    }
+                  })
           ),
         ),
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
@@ -493,7 +489,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
 
   var roundoff = "0.00";
 
-  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return isLoaderShow
@@ -724,11 +720,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                                             print(Inserted_list);
                                             await calculateTotalAmt();
                                             if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-                                              maxY=SizeConfig.screenHeight*0.63;
-                                            }else{
                                               position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-                                              maxY=SizeConfig.screenHeight*0.75;
+                                              // maxY=SizeConfig.screenHeight*0.63;
+                                            }else{
+                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+                                              // maxY=SizeConfig.screenHeight*0.75;
                                             }
                                           }
                                         })),
@@ -1031,11 +1027,11 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
     print(Inserted_list);
     print(Updated_list);
     if(Item_list.length>0){
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-      maxY=SizeConfig.screenHeight*0.63;
-    }else{
       position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-      maxY=SizeConfig.screenHeight*0.75;
+      // maxY=SizeConfig.screenHeight*0.63;
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+      // maxY=SizeConfig.screenHeight*0.75;
     }
   }
 
@@ -1075,8 +1071,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                         data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
                   if(Item_list.length>0){
-                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.63);
-                    maxY=SizeConfig.screenHeight*0.63;
+                    position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.78);
+                    // maxY=SizeConfig.screenHeight*0.63;
                   }
                   // calculateTotalAmt();
                 }
