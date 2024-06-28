@@ -320,8 +320,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                       child: getAllFields(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Item_list.length > 0
-                    ? Container(
+                Item_list.isEmpty && showButton==false?Container(): Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -333,8 +332,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth))
-                    : Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
               ],
@@ -719,14 +717,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
-                                            if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-                                              // maxY=SizeConfig.screenHeight*0.63;
-                                            }else{
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-                                              // maxY=SizeConfig.screenHeight*0.75;
-                                            }
+                                            setState(() {
+                                              showButton=true;});
                                           }
+
                                         })),
                               ],
                             )),
@@ -931,6 +925,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             showButton = true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString();
+            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
           });
         }
         print("############3");
@@ -957,6 +952,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
               showButton = true;
               selectedLedgerName = name!;
               selectedLedgerId = id!;
+              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
             });
           }
           print(selectedLedgerId);

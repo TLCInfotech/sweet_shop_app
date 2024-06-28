@@ -319,7 +319,7 @@ if(widget.come=="edit"){
                   child: Container(
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Item_list.length>0?Container(
+                Item_list.isEmpty && showButton==false?Container():Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -331,7 +331,7 @@ if(widget.come=="edit"){
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
 
@@ -651,14 +651,10 @@ if(widget.come=="edit"){
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
-                                            if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-                                              // maxY=SizeConfig.screenHeight*0.63;
-                                            }else{
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-                                              // maxY=SizeConfig.screenHeight*0.75;
-                                            }
+
                                           }
+                                          setState(() {
+                                            showButton=true;});
                                         })
                                 ),
                               ],
@@ -856,7 +852,7 @@ if(widget.come=="edit"){
             showButton=true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString()!;
-            // Item_list=[];
+            position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);            // Item_list=[];
             // Updated_list=[];
             // Deleted_list=[];
             // Inserted_list=[];
@@ -864,6 +860,7 @@ if(widget.come=="edit"){
         }
         print("############3");
         print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+
       },
 
     );
@@ -910,6 +907,7 @@ if(widget.come=="edit"){
               showButton=true;
               selectedLedgerName = name!;
               selectedLedgerId = id!;
+              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
               // Item_list=[];
               // Updated_list=[];
               // Deleted_list=[];

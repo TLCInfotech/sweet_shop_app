@@ -207,7 +207,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                       child: getAllFields(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Item_list.length>0?Container(
+                Item_list.isEmpty && showButton==false?Container():Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -219,7 +219,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                     ),
                     height: SizeConfig.safeUsedHeight * .08,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
               ],
@@ -650,11 +650,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
-                                            if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.8);
-                                            }else{
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-                                            }
+                                            setState(() {
+                                              showButton=true;});
                                           }
                                         }))
                                     : Container(),
@@ -715,6 +712,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   Updated_list = [];
                   Inserted_list = [];
                   Deleted_list = [];
+                  position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
                   callGetFrenchisee(1);
                 });
                 // }

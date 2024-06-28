@@ -275,13 +275,13 @@ var voucherNo;
                   child: Container(
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-               Ledger_list.length>0? Container(
+                Ledger_list.isEmpty && showButton==false?Container():Container(
                     decoration: const BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
               ],
             ),
           ),
@@ -538,13 +538,11 @@ var voucherNo;
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
-                                            if(Ledger_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-                                            }else{
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-                                            }
+                                            setState(() {
+                                              showButton=true;});
 
                                           }
+
                                         })
                                 ),
                               ],
@@ -645,6 +643,7 @@ var voucherNo;
           showButton=true;
           selectedbankCashLedger=name!;
           selectedBankLedgerID=id!;
+          position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
         });
         print(selectedBankLedgerID);
         print(selectedbankCashLedger);

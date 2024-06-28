@@ -270,7 +270,7 @@ var voucherNo;
                     // color: CommonColor.DASHBOARD_BACKGROUND,
                       child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                Item_list.length>0?Container(
+                Item_list.isEmpty && showButton==false?Container():Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
                       border: Border(
@@ -282,7 +282,7 @@ var voucherNo;
                     ),
                     height: SizeConfig.safeUsedHeight * .12,
                     child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)):Container(),
+                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
               ],
@@ -465,12 +465,10 @@ var voucherNo;
                                             });
                                             print(Inserted_list);
                                             await calculateTotalAmt();
-                                            if(Item_list.length>0){
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-                                            }else{
-                                              position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-                                            }
+                                            setState(() {
+                                              showButton=true;});
                                           }
+
                                         })/*IconButton(
                                       icon:  FaIcon(
                                         FontAwesomeIcons.trash,
@@ -620,6 +618,7 @@ var voucherNo;
           showButton=true;
           selectedbankCashLedger=name!;
           selectedBankLedgerID=id!;
+          position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
           // Item_list=[];
           // Updated_list=[];
           // Deleted_list=[];
