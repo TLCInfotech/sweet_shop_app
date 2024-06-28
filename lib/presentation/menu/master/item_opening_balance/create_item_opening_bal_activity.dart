@@ -141,7 +141,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
+        String apiUrl;
+        if(selectedFranchiseeID==null){
+          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
+
+        }else{
+          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -231,11 +237,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                     var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                  else if(Item_list.length==0){
-                    var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                  else if(selectedFranchiseeID!=null && Item_list.length>0) {
+                  else if(selectedFranchiseeID!=null) {
                     if (mounted) {
                       setState(() {
                         disableColor = true;
@@ -688,7 +690,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   /* Widget to get add Invoice date Layout */
   Widget getPurchaseDateLayout(){
-    return Container(
+    return Item_list.isNotEmpty? Container(
         height: 42,
         margin: EdgeInsets.only(top: 10),
         padding: EdgeInsets.all(10),
@@ -712,7 +714,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               color: Colors.black87, size: 16,)
           ],
         )
-    );
+    ):
 
       GetDateLayout(
 
@@ -792,25 +794,11 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
           ),
           widget.readOnly==false||showButton==false?Container():  GestureDetector(
             onTap: ()async {
-              // if(widget.comeFrom=="clientInfoList"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-              //   )));
-              // }if(widget.comeFrom=="Projects"){
-              //   Navigator.pop(context,false);
-              // }
-              // else if(widget.comeFrom=="edit"){
-              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-              //   )));
-              // }
               if(selectedFranchiseeID==null){
                 var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
-              else if(Item_list.length==0){
-                var snackBar=SnackBar(content: Text("Add atleast one Item!"));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
-              else if(selectedFranchiseeID!=null && Item_list.length>0) {
+              else if(selectedFranchiseeID!=null ) {
                 if (mounted) {
                   setState(() {
                     disableColor = true;

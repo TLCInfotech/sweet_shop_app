@@ -200,7 +200,12 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     var snackBar =
                     SnackBar(content: Text("Select Party Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else if (Item_list.length == 0) {
+                  } else
+                  if(selectedFranchiseeId==selectedLedgerId){
+                    CommonWidget.errorDialog(context,
+                        ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
+                  }
+                  else if (Item_list.length == 0) {
                     var snackBar =
                     SnackBar(content: Text("Add atleast one Item!"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -360,15 +365,19 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     color: Colors.black87,
                   ),
                   onPressed: () async {
+                    print("bhfbbgfvb  $selectedFranchiseeId  $selectedLedgerId");
                     FocusScope.of(context)
                         .requestFocus(FocusNode());
                     if (selectedFranchiseeId != "" &&
                         selectedLedgerId != "") {
-                      if (context != null) {
-                        editedItemIndex = null;
-                        goToAddOrEditItem(null);
-                      }
-                    } else {
+                      if(selectedFranchiseeId==selectedLedgerId){
+                        CommonWidget.errorDialog(context,
+                            ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
+                      }else{
+                          editedItemIndex = null;
+                          goToAddOrEditItem(null);
+                        }
+                    }else {
                       CommonWidget.errorDialog(context,
                           "Select Sale Ledger and Party !");
                     }
@@ -432,6 +441,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                 var snackBar =
                 SnackBar(content: Text("Select Party Name !"));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }else
+              if(selectedFranchiseeId==selectedLedgerId){
+                CommonWidget.errorDialog(context,
+                    ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
               } else if (Item_list.length == 0) {
                 var snackBar =
                 SnackBar(content: Text("Add atleast one Item!"));
@@ -943,19 +956,21 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
         franchisee: widget.come,
         readOnly: widget.readOnly,
         callback: (name, id) {
-          if (selectedFranchiseeId == id) {
+      /*    if (selectedFranchiseeId == id) {
+            selectedLedgerId="";
+            selectedLedgerName="";
             var snack = SnackBar(
                 content: Text("Sale Ledger and Party can not be same!"));
             ScaffoldMessenger.of(context).showSnackBar(snack);
-          } else {
+
+          }*/
             setState(() {
               showButton = true;
               selectedLedgerName = name!;
               selectedLedgerId = id!;
               position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
             });
-          }
-          print(selectedLedgerId);
+
         },
         ledgerName: selectedLedgerName);
   }

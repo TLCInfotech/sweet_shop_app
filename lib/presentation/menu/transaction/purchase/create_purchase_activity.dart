@@ -214,6 +214,10 @@ if(widget.come=="edit"){
                   else if(selectedFranchiseeId==""){
                     var snackBar=SnackBar(content: Text("Select Party Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }else
+                  if(selectedFranchiseeId==selectedLedgerId){
+                    CommonWidget.errorDialog(context,
+                        "Party name and Purchase Ledger can't be same!");
                   }
                   else if(Item_list.length==0){
                     var snackBar=SnackBar(content: Text("Add atleast one Item!"));
@@ -359,8 +363,11 @@ if(widget.come=="edit"){
                 onPressed: () async{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
-                    if (context != null) {
-                      editedItemIndex=null;
+                    if(selectedFranchiseeId==selectedLedgerId){
+                      CommonWidget.errorDialog(context,
+                          "Party name and Purchase Ledger can't be same!");
+                    }else{
+                      editedItemIndex = null;
                       goToAddOrEditItem(null);
                     }
                   }
@@ -409,6 +416,10 @@ if(widget.come=="edit"){
             else if(selectedFranchiseeId==""){
               var snackBar=SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }else
+            if(selectedFranchiseeId==selectedLedgerId){
+              CommonWidget.errorDialog(context,
+                  "Party name and Purchase Ledger can't be same!");
             }
             else if(Item_list.length==0){
               var snackBar=SnackBar(content: Text("Add atleast one Item!"));

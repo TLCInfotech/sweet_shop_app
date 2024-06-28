@@ -183,35 +183,44 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
             // alignment: Alignment.center,
             children: [
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                              width:(SizeConfig.halfscreenWidth),
-                              child: getDateONELayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-                          Container(
-                
-                              width:(SizeConfig.halfscreenWidth),
-                              child: getDateTwoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                          Row(
+                            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width:(SizeConfig.halfscreenWidth),
+                                  child: getDateONELayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                              Container(
+
+                                  width:(SizeConfig.halfscreenWidth),
+                                  child: getDateTwoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          widget.reportId=="PTSM"||widget.reportId=="PROFIT"?getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                          widget.reportId=="EXSM"?getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          get_purchase_list_layout()
                         ],
                       ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      widget.reportId=="PTSM"||widget.reportId=="PROFIT"?getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                      widget.reportId=="EXSM"?getExpenseNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      get_purchase_list_layout()
-                    ],
-                  ),
-                               ),
+                                   ),
+                    Visibility(
+                        visible: array_list.isEmpty && isApiCall  ? true : false,
+                        child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+                  ],
+                ),
               ),
            Container(
                   decoration: BoxDecoration(
@@ -639,14 +648,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                 ),
               ),
             ),
-            /*     DeleteDialogLayout(
-                            callback: (response ) async{
-                              if(response=="yes"){
-                                print("##############$response");
-                                await   callDeleteSaleInvoice(array_list[index]['Invoice_No'].toString(),array_list[index]['Seq_No'].toString(),index);
-                              }
-                            },
-                          )*/
+
           ],
         ),
       ),

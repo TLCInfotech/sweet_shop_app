@@ -267,6 +267,7 @@
   "user_right": "User Right",
   "add_screen": "Add Screen",
   "add_all": "Add All",
+  "different_ledger_party": "Party name and Sale Ledger can't be same!",
   "ledger_voucher": "Ledger Balance"
 
 }

@@ -190,42 +190,51 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
           body: Column(
             children: [
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(
-                      top: 4, left: 15, right: 15, bottom: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          top: 4, left: 15, right: 15, bottom: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                              width: (SizeConfig.halfscreenWidth),
-                              child: getDateONELayout(SizeConfig.screenHeight,
-                                  SizeConfig.screenWidth)),
-                          Container(
-                              width: (SizeConfig.halfscreenWidth),
-                              child: getDateTwoLayout(SizeConfig.screenHeight,
-                                  SizeConfig.screenWidth)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width: (SizeConfig.halfscreenWidth),
+                                  child: getDateONELayout(SizeConfig.screenHeight,
+                                      SizeConfig.screenWidth)),
+                              Container(
+                                  width: (SizeConfig.halfscreenWidth),
+                                  child: getDateTwoLayout(SizeConfig.screenHeight,
+                                      SizeConfig.screenWidth)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          widget.reportId == "PTSM"
+                              ? getFranchiseeNameLayout(
+                                  SizeConfig.screenHeight, SizeConfig.screenWidth)
+                              : Container(),
+                          widget.reportId == "ITSM"
+                              ? getItemNameLayout(
+                                  SizeConfig.screenHeight, SizeConfig.screenWidth)
+                              : Container(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          get_purchase_list_layout()
                         ],
                       ),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      widget.reportId == "PTSM"
-                          ? getFranchiseeNameLayout(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth)
-                          : Container(),
-                      widget.reportId == "ITSM"
-                          ? getItemNameLayout(
-                              SizeConfig.screenHeight, SizeConfig.screenWidth)
-                          : Container(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      get_purchase_list_layout()
-                    ],
-                  ),
+                    ),
+                    Visibility(
+                        visible: array_list.isEmpty && isApiCall  ? true : false,
+                        child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+                  ],
                 ),
               ),
               TotalAmount!="0.00"?Container(
