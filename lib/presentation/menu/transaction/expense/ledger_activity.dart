@@ -25,9 +25,10 @@ class LedgerActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;
   final franhiseeID;
+  final franchiseeName;
   final  formId;
   final  arrData;
-  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData});
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -36,7 +37,9 @@ class LedgerActivity extends StatefulWidget {
 class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterface {
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  bool partyBlank=false;
   bool isLoaderShow=false;
   bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -49,6 +52,12 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     // TODO: implement initState
     super.initState();
     _scrollController.addListener(_scrollListener);
+    if(widget.comeFor=="frDash"){
+      selectedFranchiseeName=widget.franchiseeName;
+      selectedFranchiseeId=widget.franhiseeID.toString();
+    }
+
+    print("nnvngnngvngn  ${widget.franchiseeName}    $selectedFranchiseeName");
     if(widget.dateNew!=null){
       setState(() {
         newDate=widget.dateNew;
@@ -206,15 +215,15 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     );
   }
 
-  String selectedFranchiseeName="";
-  String selectedFranchiseeId="";
-  bool partyBlank=true;
+
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return partyBlank==false?Container():SearchableLedgerDropdown(
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
+      franchisee: "edit",
+      franchiseeName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
@@ -439,12 +448,13 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
-                partyBlank=true;
+
                 isLoaderShow=false;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList.clear();
                   _arrList=data;
+                  partyBlank=true;
                   if (_arrList.length < 10) {
                     if (mounted) {
                       setState(() {

@@ -221,7 +221,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            mListener: this,
                            formId: "ST003",
                            arrData: dataArr,
-                           franhiseeID:widget.fid!
+                         comeFor: "frDash",
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
                        )));
                      },
                      child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
@@ -232,7 +234,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            mListener: this,
                            formId: "AT006",
                            arrData: dataArr,
-                           franhiseeID:widget.fid!
+                         comeFor: "frDash",
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
                        )));
                      },
                      child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
@@ -251,7 +255,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            mListener: this,
                            formId: "AT009",
                            arrData: dataArr,
-                           franhiseeID:widget.fid!
+                           comeFor: "frDash",
+                           franhiseeID:widget.fid!,
+                           franchiseeName:widget.vName!,
                        )));
                        // Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                        //   mListener: this,
