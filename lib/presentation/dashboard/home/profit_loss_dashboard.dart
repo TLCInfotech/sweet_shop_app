@@ -266,6 +266,15 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                ],
              ),
              const SizedBox(height: 10,),
+             (TransactionMenu.contains("AT002"))?  Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
+                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+
+               ],
+             ):Container(),
+             const SizedBox(height: 10,),
              // getProfitLayout(),
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,7 +304,101 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
         ));
   }
 
+  Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
+    return   GestureDetector(
+      onTap: (){
 
+      },
+      child: Container(
+        height: 120,
+        width: (SizeConfig.screenWidth * 0.85) / 2,
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: boxcolor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              width: (SizeConfig.screenWidth * 0.85) / 2,
+              // margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  color: boxcolor, borderRadius: BorderRadius.circular(5)),
+              alignment: Alignment.center,
+              child: Text(
+                amount,
+                style: subHeading_withBold.copyWith(fontSize:18 ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "$title",
+                  style: item_heading_textStyle.copyWith(
+                      color: boxcolor,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+                // const SizedBox(
+                //   width: 10,
+                // ),
+                // FaIcon(
+                //   FontAwesomeIcons.solidArrowAltCircleRight,
+                //   color: boxcolor,
+                // )
+              ],
+            )
+
+          ],
+        ),
+      ),
+    );
+
+    //   Container(
+    //   height: 170,
+    //   width: (SizeConfig.screenWidth * 0.85) / 3,
+    //   // margin: EdgeInsets.all(10),
+    //   decoration: BoxDecoration(
+    //       color: boxcolor.withOpacity(0.3),
+    //       borderRadius: BorderRadius.circular(5)),
+    //   alignment: Alignment.center,
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         height: 60,
+    //         width: (SizeConfig.screenWidth * 0.85) / 3,
+    //         margin: const EdgeInsets.all(15),
+    //         decoration: BoxDecoration(
+    //             color: boxcolor, borderRadius: BorderRadius.circular(5)),
+    //         alignment: Alignment.center,
+    //         child: Text(
+    //           "$amount",
+    //           style: subHeading_withBold,
+    //         ),
+    //       ),
+    //       Text(
+    //         "$title",
+    //         style: item_heading_textStyle.copyWith(
+    //           color: boxcolor,
+    //         ),
+    //       ),
+    //       const SizedBox(
+    //         height: 10,
+    //       ),
+    //       FaIcon(
+    //         FontAwesomeIcons.solidArrowAltCircleRight,
+    //         color: boxcolor,
+    //       )
+    //     ],
+    //   ),
+    // );
+  }
 
   Widget getThreeLayout(title,amount,boxcolor){
     return Container(
@@ -538,8 +641,20 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
 
   getAnimatedFunction(){
     return  Padding(
-      padding:  EdgeInsets.only(left: 50),
-      child:Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+        padding:  EdgeInsets.only(left: 10,right: 10),
+        child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+      // Countup(
+      //   locale: Locale('HI', 'IN'),
+      //   precision: 2,
+      //   begin: 0,
+      //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+      //   end: double.parse((profit).toString()),
+      //   duration: const Duration(seconds: 2),
+      //   separator: ',',
+      //
+      //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+      //
+      // ),
     );
   }
 
@@ -688,7 +803,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                   // print("nessssss  $_saleData");
 
                   setState(() {
-                   // profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
+                   profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
                 //     _profitPartywise=_profitPartywise;
                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
@@ -696,10 +811,10 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                     purchaseAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
-                    // receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
+                    receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
                     saleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     //
-                    // FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+                    FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
                     profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
                     additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
                      additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
