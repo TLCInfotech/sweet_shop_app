@@ -872,7 +872,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       listArrya: Item_list,
       titleIndicator: false,
       readOnly: singleRecord['Update_Right'] || singleRecord['Insert_Right'],
-      title: ApplicationLocalizations.of(context)!.translate("category")!,
+      title: ApplicationLocalizations.of(context)!.translate("item")!,
       callback: (item) {
         print("fkjjjggg   $item");
         var indexx=Item_list.indexOf(item);

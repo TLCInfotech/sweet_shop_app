@@ -411,6 +411,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     // Refresh the UI
     setState(() {
       filterItemList = results;
+      calculateTotalAmt();
     });
     return _list;
   }
@@ -987,7 +988,7 @@ showButton=true;
   calculateTotalAmt()async{
     print("Here");
     var total=0.00;
-    for(var item  in Item_list ){
+    for(var item  in filterItemList ){
       if(item['Amount']!=null||item['Amount']!="") {
         total = total + double.parse(item['Amount'].toString());
         print(item['Amount']);
