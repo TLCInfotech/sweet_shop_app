@@ -259,14 +259,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            franhiseeID:widget.fid!,
                            franchiseeName:widget.vName!,
                        )));
-                       // Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                       //   mListener: this,
-                       //   voucherNo: null,
-                       //   dateNew: dateTime.add(Duration(days: 1)),
-                       //   franchiseeDetails:[widget.vName!,widget.fid!],
-                       //   come:"edit",
-                       //   // DateFormat('dd-MM-yyyy').format(newDate),
-                       // )));
                      },
                      child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
                ],

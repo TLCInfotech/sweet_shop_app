@@ -25,7 +25,8 @@ final DateTime? dateNew;
 final franhiseeID;
 final  formId;
 final  arrData;
-  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData});
+final franchiseeName;
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
@@ -52,6 +53,13 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         invoiceDate=widget.dateNew!;
       });
     }
+
+    if(widget.franhiseeID!=null){
+      setState(() {
+        selectedFranchiseeId=widget.franhiseeID.toString();
+        selectedFranchiseeName=widget.franchiseeName;
+      });
+    }
     gerSaleInvoice(page);
     setVal();
   }
@@ -60,6 +68,9 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     List<dynamic> jsonArray = jsonDecode(widget.arrData);
     singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
     print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@2 ${widget.franchiseeName}");
+
+    print(partyBlank);
   }
   _scrollListener() {
     if (_scrollController.position.pixels==_scrollController.position.maxScrollExtent) {
@@ -303,6 +314,8 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
+      franchisee: "edit",
+      franchiseeName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
        title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){

@@ -25,7 +25,8 @@ class CreditNoteActivity extends StatefulWidget {
   final franhiseeID;
   final  formId;
   final  arrData;
-  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData});
+  final franchiseeName;
+  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
 
   @override
   State<CreditNoteActivity> createState() => _CreditNoteState();
@@ -50,6 +51,12 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     if(widget.dateNew!=null){
       setState(() {
         invoiceDate=widget.dateNew!;
+      });
+    }
+    if(widget.franhiseeID!=null){
+      setState(() {
+        selectedFranchiseeId=widget.franhiseeID.toString();
+        selectedFranchiseeName=widget.franchiseeName;
       });
     }
     getCreditNote(page);
@@ -310,6 +317,8 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
       apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
+      franchisee: "edit",
+      franchiseeName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
