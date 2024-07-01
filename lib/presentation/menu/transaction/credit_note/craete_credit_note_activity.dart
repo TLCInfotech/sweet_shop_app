@@ -409,11 +409,9 @@ var invoice_No;
               }
               print(widget.Invoice_No);
               if(widget.Invoice_No==null) {
-                print("#######");
                 addCreditNote();
               }
               else {
-                print("dfsdf");
                 updateCreditNote();
               }
             }

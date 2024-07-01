@@ -38,8 +38,9 @@ class AddOrEditItemOpeningBal extends StatefulWidget {
   final date;
   final readOnly;
   final existList;
+  final franchiseeID;
 
-  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct,required this.date, this.readOnly, this.existList});
+  const AddOrEditItemOpeningBal({super.key, required this.mListener, required this.editproduct,required this.date, this.readOnly, this.existList, this.franchiseeID});
   @override
   State<AddOrEditItemOpeningBal> createState() => _AddOrEditItemOpeningBalState();
 }
@@ -390,7 +391,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       name: selectedItemName,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
-      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
+      apiUrl:"${ApiConstants().salePartyItem}?PartyID=${widget.franchiseeID}&Date=${widget.date}&",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,

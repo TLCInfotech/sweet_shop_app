@@ -753,6 +753,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                 mListener: this,
                 editproduct:product,
                 existList: Item_list,
+                franchiseeID: selectedFranchiseeID,
                 date: invoiceDate.toString(),
               ),
             ),
