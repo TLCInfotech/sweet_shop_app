@@ -512,8 +512,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                     (TransactionMenu.contains("AT002"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        getThreeLayout( "Payment", "${CommonWidget.getCurrencyFormat((receiptAmt))}",Colors.deepPurple,),
-                        getThreeLayout("Outstanding", "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", Colors.deepOrange),
+                        getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
                       ],
                     ):Container(),
 
@@ -1047,43 +1047,50 @@ class _HomeFragmentState extends State<HomeFragment> {
         }
       },
       child: Container(
-        height: 120,
+        height: 100,
         width: (SizeConfig.screenWidth * 0.89) / 2,
         // margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: boxcolor.withOpacity(0.3),
+          // color: (Colors.orange).withOpacity(0.3),
+            border: Border.all(color: boxcolor),
             borderRadius: BorderRadius.circular(5)),
         alignment: Alignment.center,
         child: Column(
           children: [
             Container(
-              height: 60,
+              height: 40,
               width: (SizeConfig.screenWidth * 0.89) / 2,
               // margin: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: boxcolor, borderRadius: BorderRadius.circular(5)),
+                // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
+              ),
               alignment: Alignment.center,
               child: Text(
-                amount,
-                style: subHeading_withBold.copyWith(fontSize:18 ),
+                "$amount",
+                style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
+
+            Expanded(
+              child: Container(
+                width: (SizeConfig.screenWidth * 0.89) / 2,
+                alignment: Alignment.center,
+                color: boxcolor,
+                padding: EdgeInsets.all(5),
+                child: Text(
                   "$title",
                   style: item_heading_textStyle.copyWith(
-                    color: boxcolor,
-                    fontWeight: FontWeight.bold
+                      color: (Colors.white),
+                      fontWeight: FontWeight.bold
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            )
+              ),
+            ),
+
           ],
         ),
       ),
