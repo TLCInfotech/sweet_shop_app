@@ -269,8 +269,8 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
              (TransactionMenu.contains("AT002"))?  Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-                 getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
-                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+                 getThreeLayout( "Payment", "${CommonWidget.getCurrencyFormat((receiptAmt))}",Colors.deepPurple,),
+                 getThreeLayout("Outstanding", "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", Colors.deepOrange),
 
                ],
              ):Container(),

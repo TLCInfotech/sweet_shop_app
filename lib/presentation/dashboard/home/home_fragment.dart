@@ -512,8 +512,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                     (TransactionMenu.contains("AT002"))?  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+                        getThreeLayout( "Payment", "${CommonWidget.getCurrencyFormat((receiptAmt))}",Colors.deepPurple,),
+                        getThreeLayout("Outstanding", "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", Colors.deepOrange),
                       ],
                     ):Container(),
 
