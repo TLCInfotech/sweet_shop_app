@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_branch_sale_and_purchase.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -797,20 +798,25 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
 
   /* Widget to get Product categoryLayout */
   Widget getProductCategoryLayout() {
-    return SearchableLedgerDropdown(
-        apiUrl: ApiConstants().item_category + "?",
+    return SearchableSPDropdown(
+        listArrya: Item_list,
         titleIndicator: false,
         readOnly: singleRecord['Update_Right'] || singleRecord['Insert_Right'],
         title: ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (name, id) {
+        callback: (item) {
+          print("fkjjjggg   $item");
+          var indexx=Item_list.indexOf(item);
           setState(() {
-            //  showButton=true;
-            selectedProductCategory = name!;
-            //selectedCopyFranchiseeId=id!;
+            if (singleRecord['Update_Right'] == true) {
+              setState(() {
+                editedItemIndex = indexx;
+              });
+              FocusScope.of(context).requestFocus(FocusNode());
+                goToAddOrEditProduct(item);
+
+            }
           });
-          print(selectedProductCategory);
-        },
-        ledgerName: selectedProductCategory);
+        },);
   }
 
   String TotalAmount = "0.00";

@@ -15,6 +15,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_branch_sale_and_purchase.dart';
 
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -866,23 +867,25 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   }
 
   /* Widget to get Product categoryLayout */
-  Widget getProductCategoryLayout(){
-    return SearchableLedgerDropdown(
-        apiUrl:ApiConstants().item_category+"?",
-        titleIndicator: false,
-        readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
-        title:  ApplicationLocalizations.of(context)!.translate("category")!,
-        callback: (name,id){
+  Widget getProductCategoryLayout() {
+    return SearchableSPDropdown(
+      listArrya: Item_list,
+      titleIndicator: false,
+      readOnly: singleRecord['Update_Right'] || singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("category")!,
+      callback: (item) {
+        print("fkjjjggg   $item");
+        var indexx=Item_list.indexOf(item);
+        setState(() {
+            setState(() {
+              editedItemIndex = indexx;
+            });
+            FocusScope.of(context).requestFocus(FocusNode());
+            goToAddOrEditProduct(item, singleRecord['Update_Right']);
 
-          setState(() {
-         //   showButton=true;
-            selectedProductCategory=name!;
-            selectedCategoryID=id;
-          });
 
-          print(selectedProductCategory);
-        },
-        ledgerName: selectedProductCategory);
+        });
+      },);
   }
 
   calculateTotalAmt()async{

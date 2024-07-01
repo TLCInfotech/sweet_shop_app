@@ -259,14 +259,6 @@ class _PurchaseReportActivityState extends State<PurchaseReportActivity> {
         });
       },
     );
-    GetItemLayout(
-        title: ApplicationLocalizations.of(context)!.translate("item")!,
-        callback: (value) {
-          setState(() {
-            ItemName = value!;
-          });
-        },
-        selectedItem: ItemName);
   }
 
   /* Widget for navigate to next screen button layout */

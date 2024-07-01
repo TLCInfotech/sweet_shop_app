@@ -91,7 +91,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.date}";
+      String apiUrl = "${baseurl}${ApiConstants().item_list}?Company_ID=$companyId&PartyID=null&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {
@@ -417,7 +417,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       focuscontroller: itemFocus,
       come: widget.editproduct!=null?"disable":"",
       status: selectedItemName==""?"":"edit",
-      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
+      apiUrl:"${ApiConstants().item_list}?Date=${widget.date}&",
       titleIndicator: true,
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
@@ -450,25 +450,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
       },
     );
 
-/*    return SearchableDropdownWithObject(
-      name: selectedItemName,
-      readOnly: widget.readOnly,
-      status:  "edit",
-      apiUrl:"${ApiConstants().salePartyItem}?PartyID=null&Date=${widget.date}&",
-      titleIndicator: false,
-      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
-      callback: (item)async{
-        setState(() {
-          // {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-          selectedItemID = item['ID'].toString();
-          selectedItemName=item['Name'].toString();
-          unit.text=item['Unit'];
-          rate.text=item['Rate'].toString();
-        });
-        await calculateRates();
-      },
 
-    );*/
 
   }
 
