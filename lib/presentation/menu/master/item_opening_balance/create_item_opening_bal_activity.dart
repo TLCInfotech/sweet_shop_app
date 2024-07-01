@@ -71,6 +71,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
+  TextEditingController _textController = TextEditingController();
+  FocusNode searchFocus = FocusNode() ; 
 
   bool isLoaderShow=false;
   bool showButton=false;
@@ -158,6 +160,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                   _arrList=data;
                   setState(() {
                     Item_list=_arrList;
+                    filterItemList=_arrList;
                   });
                   calculateTotalAmt();
                   if(Item_list.length>0){
@@ -387,7 +390,30 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
       ],
     );
   }
+  List filterItemList = [];
 
+  Future<List> fetchSimpleData(searchstring) async {
+    print(searchstring);
+    List<dynamic> _list = [];
+    List<dynamic> results = [];
+    if (searchstring.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = Item_list;
+    } else {
+
+      results = Item_list
+          .where((item) => item['Name'].toLowerCase().contains(searchstring.toLowerCase()))
+          .toList();
+      print("hjdhhdhfd  $filterItemList");
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      filterItemList = results;
+    });
+    return _list;
+  }
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return ListView(
@@ -419,7 +445,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                   //               editedItemIndex=null;
                   //               goToAddOrEditItem(null);
                   //
-                  //             }
+                  //             } 
                   //           }
                   //           else{
                   //             CommonWidget.errorDialog(context, "Select Franchisee !");
@@ -447,6 +473,47 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                   //     )
                   //   ],
                   // ),
+                  Container(
+                    width:(SizeConfig.screenWidth ),
+                    height: (SizeConfig.screenHeight) * .055,
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(bottom: 10),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color:widget.readOnly!=false?CommonColor.WHITE_COLOR:CommonColor.TexField_COLOR ,
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 5,
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ], 
+                    ),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.done,
+                      // autofillHints: const [AutofillHints.email],
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _textController,
+                      textAlignVertical: TextAlignVertical.center,
+                      focusNode: searchFocus,
+                      style: text_field_textStyle,
+                      decoration: InputDecoration(
+
+                        isDense: true,
+                        counterText: '',
+                        border: InputBorder.none,
+                        hintText: ApplicationLocalizations.of(context)!.translate("search")!,
+                        suffixIcon: FaIcon(FontAwesomeIcons.search,color: Colors.grey,),
+                        hintStyle: TextStyle(
+                            color: CommonColor.SEARCH_TEXT_COLOR,
+                            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+                            fontFamily: 'Inter_Medium_Font',
+                            fontWeight: FontWeight.w400),
+                      ),
+                      onChanged: fetchSimpleData,
+                    ),
+                  ),
                   Item_list.length>0? get_purchase_list_layout(parentHeight,parentWidth):Container(),
 
                   SizedBox(height: 10,),
@@ -466,7 +533,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: Item_list.length,
+      itemCount: filterItemList.length,
       itemBuilder: (BuildContext context, int index) {
         return  AnimationConfiguration.staggeredList(
           position: index,
@@ -485,7 +552,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
       }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
-                    goToAddOrEditItem(Item_list[index]);
+                    goToAddOrEditItem(filterItemList[index]);
                   }}
                 },
                 child: Card(
@@ -515,7 +582,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("${Item_list[index]['Name']}",style: item_heading_textStyle,),
+                                        Text("${filterItemList[index]['Name']}",style: item_heading_textStyle,),
 
                                         SizedBox(height: 5,),
                                         Container(
@@ -529,20 +596,20 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                                 width: SizeConfig.screenWidth/3-50,
                                                 child: Text(
                                                   CommonWidget.getCurrencyFormat(
-                                                      double.parse(Item_list[index]
+                                                      double.parse(filterItemList[index]
                                                       ['Quantity'].toString()))
-                                                      .toString() + "${Item_list[index]['Unit']}",
+                                                      .toString() + "${filterItemList[index]['Unit']}",
                                                   // "${(double.parse(Item_list[index]['Quantity'].toString())).toStringAsFixed(2)}${Item_list[index]['Unit']} ",
                                                   overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),),
                                               ),
                                             //  Text("${(Item_list[index]['Rate'])}/${Item_list[index]['Unit']} ",overflow: TextOverflow.clip,style: item_regular_textStyle,),
-                                              Item_list[index]['Amount']!=null?
+                                              filterItemList[index]['Amount']!=null?
                                               Expanded(
                                                 child: Container(
 
                                                     alignment: Alignment.centerRight,
                                                     width: SizeConfig.halfscreenWidth-70,
-                                                    child: Text(CommonWidget.getCurrencyFormat(double.parse(Item_list[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
+                                                    child: Text(CommonWidget.getCurrencyFormat(double.parse(filterItemList[index]['Amount'].toString())),overflow: TextOverflow.ellipsis,style: item_heading_textStyle.copyWith(color: Colors.blue),)),
                                               ):Container(),
                                             ],
                                           ),
@@ -567,8 +634,8 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                         showButton=true;
                                         if(Item_list[index]['Seq_No']!=0){
                                           var deletedItem=   {
-                                            "Seq_No": Item_list[index]['Seq_No'],
-                                            "Item_ID": Item_list[index]['Item_ID']
+                                            "Seq_No": filterItemList[index]['Seq_No'],
+                                            "Item_ID": filterItemList[index]['Item_ID']
                                           };
                                           Deleted_list.add(deletedItem);
                                           setState(() {
@@ -576,18 +643,30 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                           });
                                         }
                                         var contain = Inserted_list.indexWhere((element) => element['Item_ID']== Item_list[index]['Item_ID']);
+                                     
+                                        var itemindex=Item_list.indexOf(filterItemList[index]);
+                                        
+                                        print("################3");
                                         print(contain);
                                         if(contain>=0){
+
                                           print("REMOVE");
                                           Inserted_list.remove(Inserted_list[contain]);
+
                                         }
-                                        Item_list.remove(Item_list[index]);
+
+
+                                        Item_list.remove(Item_list[itemindex]);
+                                        filterItemList.remove(filterItemList[index]);
+
                                         setState(() {
                                           Item_list=Item_list;
+                                          filterItemList=filterItemList;
                                           Inserted_list=Inserted_list;
                                         });
                                         print(Inserted_list);
                                         await calculateTotalAmt();
+                                        await fetchSimpleData;
                                         setState(() {
                                           showButton=true;});
                                       },

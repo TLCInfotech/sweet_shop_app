@@ -82,75 +82,6 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
   var filteredItemsList = [];
 
 
-  fetchItems () async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    String baseurl=await AppPreferences.getDomainLink();
-    await AppPreferences.getDeviceId().then((deviceId) {
-      TokenRequestModel model = TokenRequestModel(
-        token: sessionToken,
-      );
-      String apiUrl = "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=null&Date=${widget.date}";
-      apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-          onSuccess:(data)async{
-            if(data!=null) {
-              var topShowsJson = (data) as List;
-              setState(() {
-                itemsList=  topShowsJson.map((show) => (show)).toList();
-                filteredItemsList=topShowsJson.map((show) => (show)).toList();
-              });
-            }
-          }, onFailure: (error) {
-            CommonWidget.errorDialog(context, error);
-            return [];
-            // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-            //  widget.mListener.loaderShow(false);
-            //  Navigator.of(context, rootNavigator: true).pop();
-          }, onException: (e) {
-            CommonWidget.errorDialog(context, e);
-            return [];
-
-          },sessionExpire: (e) {
-            CommonWidget.gotoLoginScreen(context);
-            return [];
-            // widget.mListener.loaderShow(false);
-          });
-
-    });
-  }
-
-  Future<List> fetchSimpleData(searchstring) async {
-    print(searchstring);
-    List<dynamic> _list = [];
-    List<dynamic> results = [];
-    if (searchstring.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = filteredItemsList;
-    } else {
-
-      results = filteredItemsList
-          .where((user) =>
-          user["Name"]
-              .toLowerCase()
-              .contains(searchstring.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-
-    // Refresh the UI
-    setState(() {
-      itemsList = results;
-    });
-
-    print(itemsList);
-    //  for (var ele in data) _list.add(ele['TestName'].toString());
-    for (var ele in filteredItemsList) {
-      _list.add(new TestItem.fromJson(
-          {'label': "${ele['Name']}", 'value': "${ele['ID']}","unit":ele['Unit'],"rate":ele['Rate'],'gst':ele['GST_Rate']}));
-    }
-    return _list;
-  }
-
 
 
   @override
@@ -181,7 +112,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
     });
     print("###########");
     print(insertedList);
-    await fetchItems();
+
 
   }
 
