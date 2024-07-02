@@ -659,16 +659,16 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
 
                                         Item_list.remove(Item_list[itemindex]);
-                                        filterItemList.remove(filterItemList[index]);
 
                                         setState(() {
                                           Item_list=Item_list;
-                                          filterItemList=filterItemList;
-                                          Inserted_list=Inserted_list;
+                                          filterItemList=Item_list;
+                                           Inserted_list=Inserted_list;
                                         });
                                         print(Inserted_list);
-                                        await calculateTotalAmt();
+
                                         await fetchSimpleData;
+                                        await calculateTotalAmt();
                                         setState(() {
                                           showButton=true;});
                                       },
