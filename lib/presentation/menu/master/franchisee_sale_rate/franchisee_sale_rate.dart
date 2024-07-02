@@ -47,8 +47,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
   String selectedProductCategory = "";
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String selectedCopyFranchiseeName = "";
-  String selectedCopyFranchiseeId = "";
+  String selectedranchiseeName = "";
+  String selectedFranchiseeId = "";
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   var singleRecord;
 /*  List<dynamic> Item_list=[
@@ -84,6 +84,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
 
   Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
 
+  List<dynamic> CopyItem_list = [];
+  String selectedCopyFranchiseeName = "";
+  String selectedCopyFranchiseeId = "";
+
   void _updateOffset(Offset newOffset) {
     setState(() {
       // Clamp the Offset values to stay within the defined constraints
@@ -101,7 +105,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     setVal();
     calculateTotalAmt();
     // _scrollController.addListener(_scrollListener);
-    if (selectedCopyFranchiseeId != "") {
+    if (selectedFranchiseeId != "") {
       callGetFrenchisee(page);
     }
   }
@@ -250,7 +254,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                     setState(() {
                       editedItemIndex = null;
                     });
-                    if (selectedCopyFranchiseeId != "") {
+                    if (selectedFranchiseeId != "") {
                       editedItemIndex = null;
                       goToAddOrEditProduct(null);
                     } else {
@@ -279,14 +283,14 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
             child: BackPageDialog(
               onCallBack: (value) async {
                 if(value=="yes"){
-                  if (selectedCopyFranchiseeId ==
+                  if (selectedFranchiseeId ==
                       "") {
                     var snackBar = SnackBar(
                         content: Text(
                             "Select Franchisee Name !"));
                     ScaffoldMessenger.of(context)
                         .showSnackBar(snackBar);
-                  } else if (selectedCopyFranchiseeId !=
+                  } else if (selectedFranchiseeId !=
                       "") {
                     if (mounted) {
                       setState(() {
@@ -356,11 +360,11 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   //   )));
                   // }
 
-                  if (selectedCopyFranchiseeId == "") {
+                  if (selectedFranchiseeId == "") {
                     var snackBar =
                         SnackBar(content: Text("Select Franchisee Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else if (selectedCopyFranchiseeId != "") {
+                  } else if (selectedFranchiseeId != "") {
                     if (mounted) {
                       setState(() {
                         showButton = false;
@@ -432,7 +436,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   //               setState(() {
                   //                 editedItemIndex = null;
                   //               });
-                  //               if (selectedCopyFranchiseeId != "") {
+                  //               if (selectedFranchiseeId != "") {
                   //                 editedItemIndex = null;
                   //                 goToAddOrEditProduct(null);
                   //               } else {
@@ -699,15 +703,15 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               title: ApplicationLocalizations.of(context)!
                   .translate("franchisee")!,
               callback: (name, id) {
-                // if(selectedCopyFranchiseeId==id){
+                // if(selectedFranchiseeId==id){
                 //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
                 //   ScaffoldMessenger.of(context).showSnackBar(snack);
                 // }
                 // else {
                 setState(() {
                   // showButton=true;
-                  selectedCopyFranchiseeName = name!;
-                  selectedCopyFranchiseeId = id!;
+                  selectedranchiseeName = name!;
+                  selectedFranchiseeId = id!;
 
                   Item_list = [];
                   Updated_list = [];
@@ -717,16 +721,37 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   callGetFrenchisee(1);
                 });
                 // }
+                print(selectedFranchiseeId);
+              },
+              ledgerName: selectedranchiseeName),
+
+          SearchableLedgerDropdown(
+              apiUrl: ApiConstants().getFilteredFranchisee + "?",
+              titleIndicator: true,
+              title: "Copy From",
+              callback: (name, id) {
+                // if(selectedFranchiseeId==id){
+                //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+                //   ScaffoldMessenger.of(context).showSnackBar(snack);
+                // }
+                // else {
+                setState(() {
+                  // showButton=true;
+                  selectedCopyFranchiseeName = name!;
+                  selectedCopyFranchiseeId = id!;
+                  callGetCopyFrenchisee(1);
+                });
+                // }
                 print(selectedCopyFranchiseeId);
               },
-              ledgerName: selectedCopyFranchiseeName),
+              ledgerName: selectedCopyFranchiseeId),
           /*  GetFranchiseeLayout(
               titleIndicator:false,
               title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
               callback: (name,id){
                 setState(() {
-                  selectedCopyFranchiseeName=name!;
-                  selectedCopyFranchiseeId=id!;
+                  selectedranchiseeName=name!;
+                  selectedFranchiseeId=id!;
                 });
                 setState(() {
                   Item_list=[];
@@ -735,7 +760,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   Deleted_list=[];
                 });    callGetFrenchisee(1);
               },
-              franchiseeName: selectedCopyFranchiseeName),*/
+              franchiseeName: selectedranchiseeName),*/
           Container(
             width: SizeConfig.screenWidth,
             child: getProductCategoryLayout(),
@@ -756,7 +781,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               opacity: a1.value,
               child: AddProductSaleRate(
                 mListener: this,
-                id: selectedCopyFranchiseeId,
+                id: selectedFranchiseeId,
                 editproduct: product,
                 exstingList: Item_list,
                 dateNew: DateFormat('yyyy-MM-dd').format(applicablefrom),
@@ -783,7 +808,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
             showButton = true;
             applicablefrom = name!;
           });
-          if (selectedCopyFranchiseeId != "") {
+          if (selectedFranchiseeId != "") {
             setState(() {
               Item_list = [];
               Updated_list = [];
@@ -921,7 +946,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
       });
       FranchiseeSaleRequest model = FranchiseeSaleRequest(
           companyID: companyId,
-          Franchisee_ID: selectedCopyFranchiseeId,
+          Franchisee_ID: selectedFranchiseeId,
           Txn_Type: "S",
           date: DateFormat('yyyy-MM-dd').format(applicablefrom),
           modifier: creatorName,
@@ -963,6 +988,79 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
   }
 
   bool isApiCall = false;
+
+  callGetCopyFrenchisee(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow = true;
+        });
+        TokenRequestModel model =
+        TokenRequestModel(token: sessionToken, page: "");
+        String apiUrl =
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+        // &PageNumber=$page&PageSize=10";
+        print("newwww  $apiUrl   $baseurl ");
+        //  "?pageNumber=$page&PageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess: (data) {
+              setState(() {
+                isLoaderShow = false;
+                disableColor = false;
+                if (data != null) {
+                  // Item_list=data;
+                  print("ledger opening data....  $data");
+
+                  List<dynamic> _arrList = [];
+                  //  _arrList.clear();
+                  _arrList = data;
+
+                  Item_list.addAll(_arrList);
+                  Inserted_list.addAll(_arrList);
+
+                } else {
+                  isApiCall = true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow = false;
+              });
+              var val = CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if (val == "yes") {
+                print("Retry");
+              }
+            }, sessionExpire: (e) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
   callGetFrenchisee(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -976,7 +1074,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
-            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
         // &PageNumber=$page&PageSize=10";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
