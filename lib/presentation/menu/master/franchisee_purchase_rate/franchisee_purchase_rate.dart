@@ -55,7 +55,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   String selectedFranchiseeName="";
   var selectedFranchiseeID=null;
 
-
+  bool displayLayout=true;
   String TotalAmount="0.00";
 
   List<dynamic> Updated_list=[];
@@ -141,6 +141,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
           isLoaderShow=true;
+          displayLayout=true;
         });
         TokenRequestModel model = TokenRequestModel(
             token: sessionToken,
@@ -175,7 +176,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                     position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.7);
                   }
                 }else{
-                  isApiCall=true;
+                  isApiCall=false;
                 }
               /*    setState(() {
                     Item_list=_arrList;
@@ -276,6 +277,11 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
                 } else {
                   isApiCall = true;
+                }
+                if(CopyItem_list.isEmpty){
+                position=  Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+                }else{
+
                 }
               });
               print("  LedgerLedger  $data ");
@@ -394,28 +400,37 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 ),
               ),
             ),
-            body:  Column(
+            body:  Stack(
+              alignment: Alignment.center,
               children: [
-                Expanded(
-                  child: Container(
-                    // color: CommonColor.DASHBOARD_BACKGROUND,
-                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                ),
-                Item_list.isEmpty && showButton==false?Container(): Container(
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.black.withOpacity(0.08),
-                          width: 1.0,
-                        ),
-                      ),
+                Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        // color: CommonColor.DASHBOARD_BACKGROUND,
+                          child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
                     ),
-                    height: SizeConfig.safeUsedHeight * .08,
-                    child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                CommonWidget.getCommonPadding(
-                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+                    Item_list.isEmpty && showButton==false?Container(): Container(
+                        decoration: BoxDecoration(
+                          color: CommonColor.WHITE_COLOR,
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.black.withOpacity(0.08),
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        height: SizeConfig.safeUsedHeight * .08,
+                        child: getSaveAndFinishButtonLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                    CommonWidget.getCommonPadding(
+                        SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+
+                  ],
+                ),
+                Visibility(
+                    visible: CopyItem_list.isEmpty && isApiCall==true  ? true : false,
+                    child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
 
               ],
             ),
@@ -457,6 +472,24 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
           Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
         ],
       ),
+    );
+  }
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
@@ -892,7 +925,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 print(selectedFranchiseeID);
               },
               ledgerName: selectedFranchiseeName),
-          SearchableLedgerDropdown(
+          displayLayout==false?Container(): SearchableLedgerDropdown(
               apiUrl: ApiConstants().getFilteredFranchisee + "?",
               titleIndicator: true,
               title: "Copy From",
@@ -906,7 +939,14 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   // showButton=true;
                   selectedCopyFranchiseeName = name!;
                   selectedCopyFranchiseeId = id!;
-                  callGetCopyFrenchisee(1);
+                  if(id==""){
+                    showButton = false;
+                    isApiCall=false;
+                    callGetFranchiseeItemOpeningList(1);
+                  }else{
+                    showButton = true;
+                    Item_list=[];
+                    callGetCopyFrenchisee(1);}
                 });
                 // }
                 print(selectedCopyFranchiseeId);
@@ -957,7 +997,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         title:      ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name){
           setState(() {
-            showButton=true;
+           // showButton=true;
             invoiceDate=name!;
           });
           if(selectedFranchiseeID!=null){
@@ -1074,6 +1114,7 @@ showButton=true;
     }
     setState(() {
       editedItemIndex=null;
+      isApiCall=false;
     });
     await calculateTotalAmt();
     // Sort itemDetails by Item_Name

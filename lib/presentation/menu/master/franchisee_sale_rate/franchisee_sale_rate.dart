@@ -204,29 +204,37 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 ),
               ),
             ),
-            body: Column(
+            body: Stack(
+              alignment: Alignment.center,
               children: [
-                Expanded(
-                  child: Container(
-                      // color: CommonColor.DASHBOARD_BACKGROUND,
-                      child: getAllFields(
-                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                ),
-                Item_list.isEmpty && showButton==false?Container():Container(
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.black.withOpacity(0.08),
-                          width: 1.0,
-                        ),
-                      ),
+                Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                          // color: CommonColor.DASHBOARD_BACKGROUND,
+                          child: getAllFields(
+                              SizeConfig.screenHeight, SizeConfig.screenWidth)),
                     ),
-                    height: SizeConfig.safeUsedHeight * .08,
-                    child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
-                CommonWidget.getCommonPadding(
-                    SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+                    Item_list.isEmpty && showButton==false?Container():Container(
+                        decoration: BoxDecoration(
+                          color: CommonColor.WHITE_COLOR,
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.black.withOpacity(0.08),
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        height: SizeConfig.safeUsedHeight * .08,
+                        child: getSaveAndFinishButtonLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                    CommonWidget.getCommonPadding(
+                        SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
+                  ],
+                ),
+                Visibility(
+                    visible: CopyItem_list.isEmpty && isApiCall==true  ? true : false,
+                    child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
               ],
             ),
           ),
@@ -270,7 +278,24 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     );
   }
 
-
+  /*widget for no data*/
+  Widget getNoData(double parentHeight,double parentWidth){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "No data available.",
+          style: TextStyle(
+            color: CommonColor.BLACK_COLOR,
+            fontSize: SizeConfig.blockSizeHorizontal * 4.2,
+            fontFamily: 'Inter_Medium_Font',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
   Future<void> showCustomDialog(BuildContext context, Function onYesCallback) async {
     await showGeneralDialog(
       barrierColor: Colors.black.withOpacity(0.5),
@@ -349,16 +374,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
             ? Container()
             : GestureDetector(
                 onTap: () {
-                  // if(widget.comeFrom=="clientInfoList"){
-                  //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-                  //   )));
-                  // }if(widget.comeFrom=="Projects"){
-                  //   Navigator.pop(context,false);
-                  // }
-                  // else if(widget.comeFrom=="edit"){
-                  //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-                  //   )));
-                  // }
+
 
                   if (selectedFranchiseeId == "") {
                     var snackBar =
@@ -367,7 +383,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   } else if (selectedFranchiseeId != "") {
                     if (mounted) {
                       setState(() {
-                        showButton = false;
+                        selectedCopyFranchiseeName="";
+                        selectedCopyFranchiseeId="";
+                        displayLayout = false;
                       });
                     }
                     callPostItemOpeningBal();
@@ -684,6 +702,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     );
   }
 
+  bool displayLayout=true;
   // String getFrenchiseeItemRateList="getFranchaiseeItemRateList";
   // String frenchiseeItemRate="franchiseeItemRate";
   Container InvoiceInfo() {
@@ -708,16 +727,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               title: ApplicationLocalizations.of(context)!
                   .translate("franchisee")!,
               callback: (name, id) {
-                // if(selectedFranchiseeId==id){
-                //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
-                //   ScaffoldMessenger.of(context).showSnackBar(snack);
-                // }
-                // else {
                 setState(() {
-                  // showButton=true;
                   selectedranchiseeName = name!;
                   selectedFranchiseeId = id!;
-
                   Item_list = [];
                   Updated_list = [];
                   Inserted_list = [];
@@ -730,7 +742,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               },
               ledgerName: selectedranchiseeName),
 
-          SearchableLedgerDropdown(
+          displayLayout==false?Container():  SearchableLedgerDropdown(
               apiUrl: ApiConstants().getFilteredFranchisee + "?",
               titleIndicator: true,
               title: "Copy From",
@@ -741,32 +753,22 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 // }
                 // else {
                 setState(() {
-                  // showButton=true;
                   selectedCopyFranchiseeName = name!;
                   selectedCopyFranchiseeId = id!;
-                  callGetCopyFrenchisee(1);
+                  print("kjjgjbg  $id");
+                  if(id==""){
+                    showButton = false;
+                    isApiCall=false;
+                    callGetFrenchisee(1);
+                  }else{
+                    showButton = true;
+                  Item_list=[];
+                  callGetCopyFrenchisee(1);}
                 });
                 // }
                 print(selectedCopyFranchiseeId);
               },
               ledgerName: selectedCopyFranchiseeId),
-          /*  GetFranchiseeLayout(
-              titleIndicator:false,
-              title:  ApplicationLocalizations.of(context)!.translate("franchisee")!,
-              callback: (name,id){
-                setState(() {
-                  selectedranchiseeName=name!;
-                  selectedFranchiseeId=id!;
-                });
-                setState(() {
-                  Item_list=[];
-                  Updated_list=[];
-                  Inserted_list=[];
-                  Deleted_list=[];
-                });    callGetFrenchisee(1);
-              },
-              franchiseeName: selectedranchiseeName),*/
-
         ],
       ),
     );
@@ -807,7 +809,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (name) {
           setState(() {
-            showButton = true;
+           // showButton = true;
             applicablefrom = name!;
           });
           if (selectedFranchiseeId != "") {
@@ -945,6 +947,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow = true;
+
       });
       FranchiseeSaleRequest model = FranchiseeSaleRequest(
           companyID: companyId,
@@ -1006,7 +1009,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         String apiUrl =
             "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
         // &PageNumber=$page&PageSize=10";
-        print("newwww  $apiUrl   $baseurl ");
+        print("newwww3333  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
@@ -1022,6 +1025,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   _arrList = data;
                   setState(() {
                     CopyItem_list=_arrList;
+                    print("fjkhjhjhg  $CopyItem_list");
                   });
                   var  itemlist= (Item_list).map((i) => i['Item_ID']).toList();
                   print("################## $itemlist");
@@ -1037,6 +1041,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
 
                 } else {
                   isApiCall = true;
+                  print("nkfngfngmnmg  $CopyItem_list");
+                }
+                if(CopyItem_list.isEmpty){
+                  position=  Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
                 }
               });
               print("  LedgerLedger  $data ");
@@ -1096,6 +1104,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
           setState(() {
             isLoaderShow = false;
             disableColor = false;
+            displayLayout=true;
             if (data != null) {
               // Item_list=data;
               print("ledger opening data....  $data");
@@ -1119,7 +1128,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.8);
               }
             } else {
-              isApiCall = true;
+              isApiCall = false;
             }
           });
           print("  LedgerLedger  $data ");
