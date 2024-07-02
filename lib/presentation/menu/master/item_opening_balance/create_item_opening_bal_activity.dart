@@ -546,8 +546,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               delay: Duration(microseconds: 1500),
               child: GestureDetector(
                 onTap: (){
+                  var itemindex=Item_list.indexOf(filterItemList[index]);
                   setState(() {
-                    editedItemIndex=index;
+                    editedItemIndex=itemindex;
                   });
         if(widget.readOnly==false){
       }else{
@@ -951,6 +952,7 @@ showButton=true;
         }
         setState(() {
           Updated_list = Updated_list;
+          filterItemList=Item_list;
           print("hvhfvbfbv   $Updated_list");
         });
       }
@@ -966,11 +968,15 @@ showButton=true;
 
       setState(() {
         Item_list = itemLlist;
+        filterItemList=Item_list;
+
       });
     }
     setState(() {
       editedItemIndex=null;
+      _textController.clear();
     });
+    fetchSimpleData(_textController.text);
     await calculateTotalAmt();
     print("Listrrrkfknfknngvf");
     // Sort itemDetails by Item_Name
