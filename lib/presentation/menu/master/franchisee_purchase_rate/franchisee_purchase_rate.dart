@@ -48,12 +48,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   var selectedCategoryID=null;
 
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-  String selectedCopyFranchiseeName="";
+
 
   List<dynamic> Item_list=[];
 
   String selectedFranchiseeName="";
   var selectedFranchiseeID=null;
+
 
   String TotalAmount="0.00";
 
@@ -70,6 +71,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
   var editedItemIndex=null;
   var  singleRecord;
+
+  List<dynamic> CopyItem_list = [];
+  String selectedCopyFranchiseeName = "";
+  String selectedCopyFranchiseeId = "";
 
   @override
   void initState() {
@@ -224,6 +229,89 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     }
   }
 
+  callGetCopyFrenchisee(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow = true;
+        });
+        TokenRequestModel model =
+        TokenRequestModel(token: sessionToken, page: "");
+        String apiUrl =
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+        // &PageNumber=$page&PageSize=10";
+        print("newwww  $apiUrl   $baseurl ");
+        //  "?pageNumber=$page&PageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess: (data) {
+              setState(() {
+                isLoaderShow = false;
+                disableColor = false;
+                if (data != null) {
+                  // Item_list=data;
+                  print("ledger opening data....  $data");
+
+                  List<dynamic> _arrList = [];
+                  //  _arrList.clear();
+                  _arrList = data;
+                  setState(() {
+                    CopyItem_list=_arrList;
+                  });
+
+                  var  itemlist= (Item_list).map((i) => i['Item_ID']).toList();
+                  print("################## $itemlist");
+                  for (var i in _arrList){
+                    print(i['Item_ID']);
+                    var contain=itemlist.contains(i['Item_ID']);
+                    print(contain);
+                    if(contain==false){
+                      Item_list.add(i);
+                      Inserted_list.add(i);
+                    }
+                  }
+
+                } else {
+                  isApiCall = true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow = false;
+              });
+              var val = CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if (val == "yes") {
+                print("Retry");
+              }
+            }, sessionExpire: (e) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 
   setDataToList(List<dynamic> _list) {
     if (Item_list.isNotEmpty) Item_list.clear();
@@ -511,6 +599,11 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
                   //  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
+                  Container(
+                    padding: EdgeInsets.only(left:8,right: 8),
+                    width: SizeConfig.screenWidth,
+                    child: getProductCategoryLayout(),
+                  ),
                   SizedBox(height: 10,),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.end,
@@ -785,7 +878,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 // else {
                   setState(() {
                     //showButton=true;
-                    selectedCopyFranchiseeName=name!;
+                    selectedFranchiseeName=name!;
                     selectedFranchiseeID=id!;
 
                     Item_list=[];
@@ -798,11 +891,28 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                 // }
                 print(selectedFranchiseeID);
               },
-              ledgerName: selectedCopyFranchiseeName),
-          Container(
-            width: SizeConfig.screenWidth,
-            child: getProductCategoryLayout(),
-          ),
+              ledgerName: selectedFranchiseeName),
+          SearchableLedgerDropdown(
+              apiUrl: ApiConstants().getFilteredFranchisee + "?",
+              titleIndicator: true,
+              title: "Copy From",
+              callback: (name, id) {
+                // if(selectedFranchiseeId==id){
+                //   var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+                //   ScaffoldMessenger.of(context).showSnackBar(snack);
+                // }
+                // else {
+                setState(() {
+                  // showButton=true;
+                  selectedCopyFranchiseeName = name!;
+                  selectedCopyFranchiseeId = id!;
+                  callGetCopyFrenchisee(1);
+                });
+                // }
+                print(selectedCopyFranchiseeId);
+              },
+              ledgerName: selectedCopyFranchiseeId),
+
           // getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
         ],

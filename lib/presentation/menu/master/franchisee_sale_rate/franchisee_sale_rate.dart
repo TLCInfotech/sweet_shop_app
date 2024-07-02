@@ -421,6 +421,11 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 children: [
                   //  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
+                  Container(
+                    padding: EdgeInsets.only(left:8,right: 8),
+                    width: SizeConfig.screenWidth,
+                    child: getProductCategoryLayout(),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -761,10 +766,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                 });    callGetFrenchisee(1);
               },
               franchiseeName: selectedranchiseeName),*/
-          Container(
-            width: SizeConfig.screenWidth,
-            child: getProductCategoryLayout(),
-          ),
+
         ],
       ),
     );
@@ -1018,9 +1020,20 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   List<dynamic> _arrList = [];
                   //  _arrList.clear();
                   _arrList = data;
-
-                  Item_list.addAll(_arrList);
-                  Inserted_list.addAll(_arrList);
+                  setState(() {
+                    CopyItem_list=_arrList;
+                  });
+                  var  itemlist= (Item_list).map((i) => i['Item_ID']).toList();
+                  print("################## $itemlist");
+                  for (var i in _arrList){
+                    print(i['Item_ID']);
+                    var contain=itemlist.contains(i['Item_ID']);
+                    print(contain);
+                     if(contain==false){
+                      Item_list.add(i);
+                      Inserted_list.add(i);
+                    }
+                  }
 
                 } else {
                   isApiCall = true;
