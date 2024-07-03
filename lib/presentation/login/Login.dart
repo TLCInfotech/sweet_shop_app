@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -51,29 +52,42 @@ class _LoginActivityState extends State<LoginActivity> {
               Container(
                 padding:  EdgeInsets.all(16.0),
                 child: Center(
-                  child: Form(
-                    key: _formkey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                         StringEn.SIGN_IN,
-                          style: big_title_style
-                        ),
-                      /*  const SizedBox(height: 5.0),
-                        const Text(
-                          StringEn.LOGIN_SUB_TEXT,
-                          style: subHeading_withBold
-                        ),*/
+                  child: Stack(
+                    children: [
 
-                        const SizedBox(height: 40.0),
-                        getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        const SizedBox(height: 10.0),
-                        getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                        const SizedBox(height: 20.0),
-                        getButtonLayout()
-                      ],
-                    ),
+                      Form(
+                        key: _formkey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                             StringEn.SIGN_IN,
+                              style: big_title_style
+                            ),
+                          /*  const SizedBox(height: 5.0),
+                            const Text(
+                              StringEn.LOGIN_SUB_TEXT,
+                              style: subHeading_withBold
+                            ),*/
+
+                            const SizedBox(height: 40.0),
+                            getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            const SizedBox(height: 10.0),
+                            getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            const SizedBox(height: 20.0),
+                            getButtonLayout()
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                          top: 30,
+                          right: 5 ,
+                          child: GestureDetector(
+                              onTap: (){
+                                Navigator.of(context).pushNamed('/domainLinkActivity');
+                              },
+                              child: Icon(Icons.settings,color: Colors.white,size: 25,)))
+                    ],
                   ),
                 ),
               ),
