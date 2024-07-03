@@ -81,7 +81,15 @@ class _MenuActivityState extends State<MenuActivity>
     // TODO: implement initState
     super.initState();
     getLocal();
-    // getAllForms();
+    setDataComm();
+  }
+  String logoImage="";
+  String companyName="";
+  setDataComm()async{
+    logoImage=await AppPreferences.getCompanyUrl();
+    companyName=await AppPreferences.getCompanyName();
+    setState(() {
+    });
   }
 
   List MasterMenu=[];
@@ -174,10 +182,26 @@ var dataArrM;
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image(
-                width: SizeConfig.screenHeight * .15,
-                image: const AssetImage('assets/images/Shop_Logo.png'),
-                // fit: BoxFit.contain,
+              child:        Row(
+                children: [
+                  logoImage!=""? Container(
+                    height:SizeConfig.screenHeight*.05,
+                    width:SizeConfig.screenHeight*.08,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        image: DecorationImage(
+                          image: FileImage(File(logoImage)),
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                  ):Container(),
+                  const SizedBox(width: 20.0),
+                  Text(
+                      companyName!,
+                      style: appbar_text_style
+                  ),
+                ],
               ),
             ),
             GestureDetector(

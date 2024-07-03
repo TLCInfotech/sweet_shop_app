@@ -47,11 +47,8 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
   void initState() {
     // TODO: implement initState
     super.initState();
- //   _scrollController.addListener(_scrollListener);
-    //newDate=widget.date;
     addDate();
     getExpense(page);
-    print("hghdghdghdgh  ${widget.comeFor}");
   }
 
   DateTime newDate= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));

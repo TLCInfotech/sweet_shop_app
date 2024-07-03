@@ -81,7 +81,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     String date=await AppPreferences.getDateLayout();
     String uid=await AppPreferences.getUId();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
-    print("objectgggg   $date  ");
+
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestModel model = TokenRequestModel(

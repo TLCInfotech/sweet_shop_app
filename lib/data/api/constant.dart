@@ -104,4 +104,5 @@ class ApiConstants {
   String getAcctVoucherBankwise="AcctVoucherBankwise";
   String reports="Reports";
   String dashboardProfitPartywise="DashboardProfitPartywise";
+  String companyImage="CompanyImage";
 }

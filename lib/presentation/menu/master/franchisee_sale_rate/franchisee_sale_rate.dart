@@ -21,10 +21,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/franchiseeSaleRate/franchisee_sale_rate_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/getFranchisee.dart';
-import '../../../common_widget/get_category_layout.dart';
 import '../../../common_widget/get_date_layout.dart';
-import '../../../dialog/exit_screen_dialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class FranchiseeSaleRate extends StatefulWidget {
@@ -437,7 +434,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               key: _formkey,
               child: Column(
                 children: [
-                  //  getFieldTitleLayout("Invoice Detail"),
                   InvoiceInfo(),
                   Container(
                     padding: EdgeInsets.only(left:8,right: 8),
@@ -447,54 +443,6 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   SizedBox(
                     height: 10,
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     singleRecord['Insert_Right'] == true ||
-                  //             singleRecord['Update_Right'] == true
-                  //         ? GestureDetector(
-                  //             onTap: () {
-                  //               FocusScope.of(context)
-                  //                   .requestFocus(FocusNode());
-                  //               setState(() {
-                  //                 editedItemIndex = null;
-                  //               });
-                  //               if (selectedFranchiseeId != "") {
-                  //                 editedItemIndex = null;
-                  //                 goToAddOrEditProduct(null);
-                  //               } else {
-                  //                 CommonWidget.errorDialog(
-                  //                     context, "Select franchisee first.");
-                  //               }
-                  //             },
-                  //             child: Container(
-                  //                 width: 140,
-                  //                 padding: EdgeInsets.only(
-                  //                     left: 10, right: 10, top: 5, bottom: 5),
-                  //                 margin: EdgeInsets.only(bottom: 10),
-                  //                 decoration: BoxDecoration(
-                  //                     color: CommonColor.THEME_COLOR,
-                  //                     border: Border.all(
-                  //                         color: Colors.grey.withOpacity(0.5))),
-                  //                 child: Row(
-                  //                   mainAxisAlignment:
-                  //                       MainAxisAlignment.spaceBetween,
-                  //                   children: [
-                  //                     Text(
-                  //                       ApplicationLocalizations.of(context)!
-                  //                           .translate("add_item")!,
-                  //                       style: item_heading_textStyle,
-                  //                     ),
-                  //                     FaIcon(
-                  //                       FontAwesomeIcons.plusCircle,
-                  //                       color: Colors.black87,
-                  //                       size: 20,
-                  //                     )
-                  //                   ],
-                  //                 )))
-                  //         : Container()
-                  //   ],
-                  // ),
                   Item_list.isNotEmpty
                       ? get_purchase_list_layout(parentHeight, parentWidth)
                       : Container(),
@@ -530,9 +478,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                       editedItemIndex = index;
                     });
                     FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
                       goToAddOrEditProduct(Item_list[index]);
-                    }
                   }
                 },
                 child: Card(

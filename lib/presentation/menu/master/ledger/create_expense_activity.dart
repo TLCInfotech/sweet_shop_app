@@ -31,7 +31,6 @@ import '../../../dialog/parent_ledger_group_dialoug.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_with_obj_for_tax.dart';
-import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 
 class CreateExpenseActivity extends StatefulWidget {

@@ -48,14 +48,13 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
    // newDate=widget.date;
     addDate();
     getOutstandings(page);
-    print("hghdghdghdgh  ${widget.comeFor}");
+
   }
 
   DateTime newDate= DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
   addDate() async {
     String dateString = await AppPreferences.getDateLayout(); // Example string date
     newDate = DateTime.parse(dateString);
-    print(newDate);
     setState(() {
 
     });

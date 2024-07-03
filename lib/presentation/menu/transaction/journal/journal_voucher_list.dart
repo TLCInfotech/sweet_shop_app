@@ -20,7 +20,6 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
-
 class JournalVoucherActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;

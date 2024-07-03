@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/api/request_helper.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import '../../../core/localss/application_localizations.dart';
 import '../../common_widget/signleLine_TexformField.dart';
@@ -285,8 +291,8 @@ Widget getCompanyId(double parentHeight, double parentWidth){
                         builder: (context) => DashboardActivity()));
                   }
                   else{
-                    Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context) => LoginActivity()));
+
+                    callGetCompany();
                   }
                 });
               }
@@ -322,9 +328,67 @@ Widget getCompanyId(double parentHeight, double parentWidth){
       ],
     );
   }
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  List<dynamic> _arrList = [];
+  File? picImage;
+  callGetCompany() async {
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
+        String apiUrl =
+            "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+        print("newwww  $apiUrl   $baseurl ");
+        //  "?pageNumber=$page&PageSize=12";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",
+            onSuccess: (data) {
+              _arrList = data;
+  print("hjfhjfhghg  $_arrList");
+              setData();
+
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              var val = CommonWidget.errorDialog(context, e);
+
+              print("YES");
+              if (val == "yes") {
+                print("Retry");
+              }
+            }, sessionExpire: (e) {
+
+              CommonWidget.gotoLoginScreen(context);
+
+      });
+    } else {
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setData()async{
+    File ?f;
+    if (_arrList[0]['Photo'] != null &&
+        _arrList[0]['Photo']['data'] != null &&
+        _arrList[0]['Photo']['data'].length > 10) {
+      f = await CommonWidget.convertBytesToFile(
+          _arrList[0]['Photo']['data']);
+    }
+    picImage=f ?? picImage;
+    print(" yuyuuij    ${picImage!.path}");
+    AppPreferences.setCompanyName(_arrList[0]['Name']);
+    if (picImage != null) {
+      AppPreferences.setCompanyUrl(picImage!.path);
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => LoginActivity()));
+    }
 
 
 }
 
-// abstract class DomainLinkActivityInterface {
-// }
+abstract class DomainLinkActivityInterface {
+  backToLogin();
+}

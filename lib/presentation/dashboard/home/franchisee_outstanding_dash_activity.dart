@@ -63,7 +63,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     addDate();
     callGetFranchiseeNot(0);
     getDashboardData();
-    print("hfshjffhfbh  $dateString");
+
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     getLocal();
   }

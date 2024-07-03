@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +43,16 @@ class _PaymentDashState extends State<PaymentDashActivity> {
     addDate();
     getSalePartyWise();
     getLocal();
+    setDataComm();
+  }
+  String logoImage="";
+  String companyName="";
+  setDataComm()async{
+    logoImage=await AppPreferences.getCompanyUrl();
+    companyName=await AppPreferences.getCompanyName();
+
+    setState(() {
+    });
   }
 
 
@@ -262,10 +273,26 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                 ),
               ),
               backgroundColor: Colors.white,
-              title: Image(
-                width: SizeConfig.screenHeight * .1,
-                image: const AssetImage('assets/images/Shop_Logo.png'),
-                // fit: BoxFit.contain,
+              title:Row(
+                children: [
+                  logoImage!=""? Container(
+                    height:SizeConfig.screenHeight*.05,
+                    width:SizeConfig.screenHeight*.08,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        image: DecorationImage(
+                          image: FileImage(File(logoImage)),
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                  ):Container(),
+                  const SizedBox(width: 20.0),
+                  Text(
+                      companyName,
+                      style: appbar_text_style
+                  ),
+                ],
               ),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -70,10 +71,20 @@ class _HomeFragmentState extends State<HomeFragment> {
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
+    callGetCompany();
     getDashboardData();
     print("hfshjffhfbh  $dateString");
      // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+    setDataComm();
  }
+  String logoImage="";
+  String companyName="";
+  setDataComm()async{
+    logoImage=await AppPreferences.getCompanyUrl();
+    companyName=await AppPreferences.getCompanyName();
+    setState(() {
+    });
+  }
   List MasterMenu=[];
   List TransactionMenu=[];
 
@@ -381,10 +392,26 @@ class _HomeFragmentState extends State<HomeFragment> {
                   ),
                 ),
                 backgroundColor: Colors.white,
-                title: Image(
-                  width: SizeConfig.screenHeight * .1,
-                  image: const AssetImage('assets/images/Shop_Logo.png'),
-                  // fit: BoxFit.contain,
+                title:Row(
+                  children: [
+                    logoImage!=""? Container(
+                      height:SizeConfig.screenHeight*.05,
+                      width:SizeConfig.screenHeight*.08,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          image: DecorationImage(
+                            image: FileImage(File(logoImage!)),
+                            fit: BoxFit.cover,
+                          )
+                      ),
+                    ):Container(),
+                    const SizedBox(width: 20.0),
+                    Text(
+                        companyName!,
+                        style: appbar_text_style
+                    ),
+                  ],
                 ),
                actions: [
                  IconButton(
@@ -1096,6 +1123,56 @@ class _HomeFragmentState extends State<HomeFragment> {
       ),
     );
   }
+
+  List<dynamic> _arrList = [];
+  File? picImage;
+  callGetCompany() async {
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
+      String apiUrl =
+          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+      print("newwww  $apiUrl   $baseurl ");
+      //  "?pageNumber=$page&PageSize=12";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",
+          onSuccess: (data) {
+            _arrList = data;
+            print("hjfhjfhghg  $_arrList");
+            setData();
+
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+          }, onException: (e) {
+            print("Here2=> $e");
+            print("YES");
+
+          }, sessionExpire: (e) {
+
+            CommonWidget.gotoLoginScreen(context);
+
+          });
+    } else {
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setData()async{
+    File ?f;
+    if (_arrList[0]['Photo'] != null &&
+        _arrList[0]['Photo']['data'] != null &&
+        _arrList[0]['Photo']['data'].length > 10) {
+      f = await CommonWidget.convertBytesToFile(
+          _arrList[0]['Photo']['data']);
+    }
+    picImage=f ?? picImage;
+    print(" yuyuuij    ${picImage!.path}");
+    AppPreferences.setCompanyName(_arrList[0]['Name']);
+    if (picImage != null) {
+      AppPreferences.setCompanyUrl(picImage!.path);
+    }
+  }
+
 
 }
 

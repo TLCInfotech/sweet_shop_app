@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +43,15 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     addDate();
     getSalePartyWise();
     getLocal();
+    setDataComm();
+  }
+  String logoImage="";
+  String companyName="";
+  setDataComm()async{
+    logoImage=await AppPreferences.getCompanyUrl();
+    companyName=await AppPreferences.getCompanyName();
+    setState(() {
+    });
   }
   List MasterMenu=[];
   List TransactionMenu=[];
@@ -73,150 +83,6 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     });
   }
   bool isShowSkeleton = true;
-  getSalePartyWise() async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-
-              setState(() {
-                _saleData=[];
-                isLoaderShow=false;
-                isShowSkeleton=false;
-                print("jejejnj   ${data['DashboardPartywise']}");
-                if(data['DashboardPartywise']!=[]){
-                  if (mounted) {
-                    for (var item in data['DashboardPartywise']) {
-                      _saleData.add(SalesDataDash(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Vendor_Name']));
-                    }
-                  }
-                  _saleData=_saleData;
-                }else{
-                  isApiCall=true;
-                }
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-  getSaleItemWise() async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-
-              setState(() {
-                _saleItem=[];
-                isLoaderShow=false;
-                isShowSkeleton=false;
-                if(data!=null){
-                  if (mounted) {
-                    for (var item in data['DashboardExpensewise']) {
-                      _saleItem.add(SalesItemWise(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Expense_Name']));
-                    }
-                  }
-                  _saleItem=_saleItem;
-
-                }else{
-                  isApiCall=true;
-                }
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-  final ScrollController _scrollController =  ScrollController();
-  Future<void> refreshList() async {
-    await Future.delayed(Duration(seconds: 2));
-    await  getSalePartyWise();
-  }
-  Future<void> refreshListItem() async {
-    await Future.delayed(Duration(seconds: 2));
-    await    getSaleItemWise();
-  }
 
 
   @override
@@ -254,10 +120,26 @@ class _LedgerDashState extends State<LedgerDashActivity> {
                 ),
               ),
               backgroundColor: Colors.white,
-              title: Image(
-                width: SizeConfig.screenHeight * .1,
-                image: const AssetImage('assets/images/Shop_Logo.png'),
-                // fit: BoxFit.contain,
+              title:Row(
+                children: [
+                  logoImage!=""? Container(
+                    height:SizeConfig.screenHeight*.05,
+                    width:SizeConfig.screenHeight*.08,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        image: DecorationImage(
+                          image: FileImage(File(logoImage)),
+                          fit: BoxFit.cover,
+                        )
+                    ),
+                  ):Container(),
+                  const SizedBox(width: 20.0),
+                  Text(
+                      companyName,
+                      style: appbar_text_style
+                  ),
+                ],
               ),
             ),
           ),
@@ -538,6 +420,150 @@ class _LedgerDashState extends State<LedgerDashActivity> {
         ),
       ),
     );
+  }
+  getSalePartyWise() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+
+              setState(() {
+                _saleData=[];
+                isLoaderShow=false;
+                isShowSkeleton=false;
+                print("jejejnj   ${data['DashboardPartywise']}");
+                if(data['DashboardPartywise']!=[]){
+                  if (mounted) {
+                    for (var item in data['DashboardPartywise']) {
+                      _saleData.add(SalesDataDash(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Vendor_Name']));
+                    }
+                  }
+                  _saleData=_saleData;
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  getSaleItemWise() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+
+              setState(() {
+                _saleItem=[];
+                isLoaderShow=false;
+                isShowSkeleton=false;
+                if(data!=null){
+                  if (mounted) {
+                    for (var item in data['DashboardExpensewise']) {
+                      _saleItem.add(SalesItemWise(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), item['Amount'],item['Expense_Name']));
+                    }
+                  }
+                  _saleItem=_saleItem;
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  final ScrollController _scrollController =  ScrollController();
+  Future<void> refreshList() async {
+    await Future.delayed(Duration(seconds: 2));
+    await  getSalePartyWise();
+  }
+  Future<void> refreshListItem() async {
+    await Future.delayed(Duration(seconds: 2));
+    await    getSaleItemWise();
   }
 
 }

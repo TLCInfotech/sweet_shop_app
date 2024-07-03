@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences {
@@ -136,9 +138,42 @@ class AppPreferences {
   }
 
 
+  /*set companyName value in SharedPreferences*/
+  static Future<String> getCompanyName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("companyName") ?? "";
+  }
 
+/*get companyName value form SharedPreferences*/
+  static setCompanyName(String companyName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("companyName", companyName);
+  }
 
+  /*set companyName value in SharedPreferences*/
+  static Future<String> getCompanyUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("companyUrl") ?? "";
+  }
 
+/*get companyName value form SharedPreferences*/
+  static setCompanyUrl(String companyUrl) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("companyUrl", companyUrl);
+  }
+
+/*get companyName value form SharedPreferences*//*
+
+     static setCompanyUrl(File file) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('file_path', file.path);
+  }
+
+ static getCompanyUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return   prefs.getString('file_path');
+
+  }*/
 
   static clearAppPreference() async {
     prefs = await getInstance();

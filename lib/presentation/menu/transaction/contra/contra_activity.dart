@@ -20,7 +20,6 @@ import '../../../common_widget/get_date_layout.dart';
 import 'create_contra_activity.dart';
 
 
-
 class ContraActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;

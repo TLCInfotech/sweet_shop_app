@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -29,11 +32,23 @@ class _LoginActivityState extends State<LoginActivity> {
   TextEditingController password = TextEditingController();
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isLoaderShow=false;
+//  File? picImage;
+
   @override
   void initState() {
     // TODO: implement initState
     CommonWidget.getPlayerId();
     super.initState();
+    setData();
+  }
+  String picImage="";
+  String companyName="";
+  setData()async{
+    picImage=await AppPreferences.getCompanyUrl();
+    companyName=await AppPreferences.getCompanyName();
+    print("bdbndbndbnd   $picImage");
+    setState(() {
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -69,8 +84,14 @@ class _LoginActivityState extends State<LoginActivity> {
                               StringEn.LOGIN_SUB_TEXT,
                               style: subHeading_withBold
                             ),*/
-
-                            const SizedBox(height: 40.0),
+                            const SizedBox(height: 20.0),
+                             Text(
+                                companyName!,
+                                style: big_title_style
+                            ),
+                            const SizedBox(height: 20.0),
+                            getImageLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            const SizedBox(height: 20.0),
                             getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                             const SizedBox(height: 10.0),
                             getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
@@ -99,6 +120,22 @@ class _LoginActivityState extends State<LoginActivity> {
     );
   }
 
+  /* widget for user name layout */
+  Widget getImageLayout(double parentHeight,double parentWidth){
+  return   picImage==""?Container():Container(
+    height:parentHeight*.1,
+    width:parentHeight*.1,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        image: DecorationImage(
+          image: FileImage(File(picImage!)),
+          fit: BoxFit.cover,
+        )
+    ),
+    // child: ImageMemory(bytes: bytes),
+  );
+  }
   /* widget for user name layout */
   Widget getUserNameLayout(double parentHeight,double parentWidth){
   return TextFormField(

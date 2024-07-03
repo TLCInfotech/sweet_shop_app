@@ -20,7 +20,6 @@ import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
-
 class LedgerActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;

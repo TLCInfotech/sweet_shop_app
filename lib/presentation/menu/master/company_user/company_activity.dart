@@ -228,7 +228,7 @@ print("hjthghh  $companyId");
                       child: getAllTextFormFieldLayout(
                           SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-             singleRecord['Update_Right']||singleRecord['Insert_Right']==false?Container():
+          //   singleRecord['Update_Right']||singleRecord['Insert_Right']==false?Container():
              Container(
                     decoration: BoxDecoration(
                       color: CommonColor.WHITE_COLOR,
@@ -1227,12 +1227,7 @@ readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
               }else{
                 callCompany();
               }
-              if (mounted) {
-                setState(() {
-                  disableColor = true;
-
-                });
-              }
+              callGetCompany();
             },
             onDoubleTap: () {},
             child: Container(
@@ -1498,4 +1493,56 @@ setState(() {
       defaultBankId=id.toString();
     });
   }
+
+
+  List<dynamic> _arrLists = [];
+  File? picImages;
+  callGetCompany() async {
+    String companyId = await AppPreferences.getCompanyId();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
+      String apiUrl =
+          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+      print("newwww  $apiUrl   $baseurl ");
+      //  "?pageNumber=$page&PageSize=12";
+      apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",
+          onSuccess: (data) {
+            _arrLists = data;
+            print("hjfhjfhghg  $_arrLists");
+            setDataCom();
+
+            print("  LedgerLedger  $data ");
+          }, onFailure: (error) {
+          }, onException: (e) {
+            print("Here2=> $e");
+            print("YES");
+
+          }, sessionExpire: (e) {
+
+            CommonWidget.gotoLoginScreen(context);
+
+          });
+    } else {
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  setDataCom()async{
+    File ?ff;
+    if (_arrLists[0]['Photo'] != null &&
+        _arrLists[0]['Photo']['data'] != null &&
+        _arrLists[0]['Photo']['data'].length > 10) {
+      ff = await CommonWidget.convertBytesToFile(
+          _arrLists[0]['Photo']['data']);
+    }
+    picImages=ff ?? picImages;
+    print(" yuyuuij    ${picImages!.path}");
+    AppPreferences.setCompanyName(_arrLists[0]['Name']);
+    if (picImages != null) {
+      AppPreferences.setCompanyUrl(picImages!.path);
+    }
+  }
+
+
 }
