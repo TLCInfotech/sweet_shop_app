@@ -63,9 +63,8 @@ class _HomeSkeletonState extends State<HomeSkeleton> {
                   ),
                 ),
                 backgroundColor: Colors.white,
-                title: Image(
+                title: Container(
                   width: SizeConfig.screenHeight * .1,
-                  image: const AssetImage('assets/images/Shop_Logo.png'),
                   // fit: BoxFit.contain,
                 ),
               ),

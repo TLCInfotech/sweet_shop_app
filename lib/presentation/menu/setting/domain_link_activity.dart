@@ -80,8 +80,18 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
+                            onTap: () async{
+                              String sessionToken =await AppPreferences.getSessionToken();
+                              setState(() {
+                                if(sessionToken!="") {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) => DashboardActivity()));
+                                }
+                                else{
+                                  Navigator.pushReplacement(context, MaterialPageRoute(
+                                      builder: (context) => LoginActivity()));
+                                }
+                              });
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
@@ -342,11 +352,16 @@ Widget getCompanyId(double parentHeight, double parentWidth){
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",
             onSuccess: (data) {
-              _arrList = data;
-  print("hjfhjfhghg  $_arrList");
-              setData();
+          if(data!=null){
+            _arrList = data;
+            print("hjfhjfhghg  $_arrList");
+            setData();
 
-              print("  LedgerLedger  $data ");
+            print("  LedgerLedger  $data ");
+          }else{
+            Navigator.pop(context);
+          }
+
             }, onFailure: (error) {
 
               CommonWidget.errorDialog(context, error.toString());

@@ -798,9 +798,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding:  EdgeInsets.only(left: 10,right: 10),
-                  child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
+                Expanded(
+                  child: Padding(
+                    padding:  EdgeInsets.only(left: 10,right: 5),
+                    child: Text(
+                        "${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
                 )
                   ],
             )
@@ -850,9 +855,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const FaIcon(
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: FaIcon(
                       FontAwesomeIcons.solidArrowAltCircleRight,
                       color:Colors.white,
                     ),
@@ -868,21 +873,24 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
    getAnimatedFunction(){
-   return  Padding(
-     padding:  EdgeInsets.only(left: 10,right: 10),
-     child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white))
-     // Countup(
-     //   locale: Locale('HI', 'IN'),
-     //   precision: 2,
-     //   begin: 0,
-     //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
-     //   end: double.parse((profit).toString()),
-     //   duration: const Duration(seconds: 2),
-     //   separator: ',',
-     //
-     //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-     //
-     // ),
+   return  Expanded(
+     child: Padding(
+       padding:  EdgeInsets.only(left: 10,right: 5),
+       child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+         overflow: TextOverflow.ellipsis,)
+       // Countup(
+       //   locale: Locale('HI', 'IN'),
+       //   precision: 2,
+       //   begin: 0,
+       //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+       //   end: double.parse((profit).toString()),
+       //   duration: const Duration(seconds: 2),
+       //   separator: ',',
+       //
+       //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+       //
+       // ),
+     ),
    );
   }
 
