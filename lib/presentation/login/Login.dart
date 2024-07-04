@@ -85,9 +85,11 @@ class _LoginActivityState extends State<LoginActivity> {
                               style: subHeading_withBold
                             ),*/
                             const SizedBox(height: 20.0),
-                             Text(
-                                companyName!,
-                                style: big_title_style
+                            Expanded(
+                              child: Text(
+                                  companyName!,
+                                  style: appbar_text_style
+                              ),
                             ),
                             const SizedBox(height: 20.0),
                             getImageLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),

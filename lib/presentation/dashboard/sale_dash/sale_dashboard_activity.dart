@@ -284,9 +284,11 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                     ),
                   ):Container(),
                   const SizedBox(width: 20.0),
-                  Text(
-                      companyName,
-                      style: appbar_text_style
+                  Expanded(
+                    child: Text(
+                        companyName,
+                        style: appbar_text_style
+                    ),
                   ),
                 ],
               ),

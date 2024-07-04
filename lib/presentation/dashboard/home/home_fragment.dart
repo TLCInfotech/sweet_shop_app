@@ -370,7 +370,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10),
              child: AppBar(
                   leadingWidth: 30,
                   automaticallyImplyLeading: false,
@@ -407,9 +407,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                       ),
                     ):Container(),
                     const SizedBox(width: 20.0),
-                    Text(
-                        companyName!,
-                        style: appbar_text_style
+                    Expanded(
+                      child: Text(
+                          companyName,
+                          style: appbar_text_style
+                      ),
                     ),
                   ],
                 ),
