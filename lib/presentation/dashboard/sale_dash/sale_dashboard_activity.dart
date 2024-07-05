@@ -287,7 +287,8 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
                   Expanded(
                     child: Text(
                         companyName,
-                        style: appbar_text_style
+                        style: appbar_text_style,
+                      maxLines: 2,
                     ),
                   ),
                 ],

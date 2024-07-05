@@ -55,10 +55,6 @@ class _HomeSkeletonState extends State<HomeSkeleton> {
                     color: Colors.transparent,
                     child: const Padding(
                       padding: EdgeInsets.all(5.0),
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.black,
-                      ),
                     ),
                   ),
                 ),

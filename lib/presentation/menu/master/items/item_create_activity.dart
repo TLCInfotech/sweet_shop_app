@@ -1552,12 +1552,9 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             Unit: measuringUnit,
         );
 
-        print("############55%%%%%%%% ${model.Photo}");
+
 
         String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
-
-        print(apiUrl);
-        print(model.toJson());
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(value)async{
               print("  Put Call :   $value ");

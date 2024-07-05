@@ -138,13 +138,13 @@ class _HomeFragmentState extends State<HomeFragment> {
               //  Navigator.of(context, rootNavigator: true).pop();
             }, onException: (e) {
 
-              print("Here2=> $e");
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
+              // print("Here2=> $e");
+              // var val= CommonWidget.errorDialog(context, e);
+              //
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
             },sessionExpire: (e) {
               CommonWidget.gotoLoginScreen(context);
               // widget.mListener.loaderShow(false);
@@ -204,11 +204,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                 isLoaderShow=false;
                 isShowSkeleton=false;
               });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
+              // var val= CommonWidget.errorDialog(context, e);
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
             },sessionExpire: (e) {
               setState(() {
                 isLoaderShow=false;
@@ -410,7 +410,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                     Expanded(
                       child: Text(
                           companyName,
-                          style: appbar_text_style
+                          style: appbar_text_style,
+                        maxLines: 2,
                       ),
                     ),
                   ],

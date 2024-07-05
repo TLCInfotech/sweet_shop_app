@@ -291,7 +291,8 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                   Expanded(
                     child: Text(
                         companyName,
-                        style: appbar_text_style
+                        style: appbar_text_style,
+                      maxLines: 2,
                     ),
                   ),
                 ],

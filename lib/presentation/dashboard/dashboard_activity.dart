@@ -106,12 +106,12 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             }, onFailure: (error) {
               CommonWidget.errorDialog(context, error.toString());
             }, onException: (e) {
-              print("Here2=> $e");
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
+              // print("Here2=> $e");
+              // var val= CommonWidget.errorDialog(context, e);
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
             },sessionExpire: (e) {
               CommonWidget.gotoLoginScreen(context);
             });
