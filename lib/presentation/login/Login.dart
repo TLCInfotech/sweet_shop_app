@@ -75,6 +75,13 @@ class _LoginActivityState extends State<LoginActivity> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            getImageLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
+                            const SizedBox(height: 20.0),
+                            Text(
+                                companyName,
+                                style: big_title_style
+                            ),
+                            const SizedBox(height: 20.0),
                             const Text(
                              StringEn.SIGN_IN,
                               style: big_title_style
@@ -84,16 +91,9 @@ class _LoginActivityState extends State<LoginActivity> {
                               StringEn.LOGIN_SUB_TEXT,
                               style: subHeading_withBold
                             ),*/
+
                             const SizedBox(height: 20.0),
-                            Expanded(
-                              child: Text(
-                                  companyName!,
-                                  style: appbar_text_style
-                              ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            getImageLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
-                            const SizedBox(height: 20.0),
+
                             getUserNameLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),
                             const SizedBox(height: 10.0),
                             getPasswordLayout(  SizeConfig.screenHeight, SizeConfig.screenWidth),

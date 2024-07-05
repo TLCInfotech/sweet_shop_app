@@ -180,30 +180,34 @@ var dataArrM;
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child:        Row(
-                children: [
-                  logoImage!=""? Container(
-                    height:SizeConfig.screenHeight*.05,
-                    width:SizeConfig.screenHeight*.08,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        image: DecorationImage(
-                          image: FileImage(File(logoImage)),
-                          fit: BoxFit.cover,
-                        )
-                    ),
-                  ):Container(),
-                  const SizedBox(width: 20.0),
-                  Expanded(
-                    child: Text(
-                        companyName!,
-                        style: appbar_text_style
-                    ),
-                  ),
-                ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:        Row(
+                  children: [
+                    logoImage!=""? Container(
+                      height:SizeConfig.screenHeight*.05,
+                      width:SizeConfig.screenHeight*.05,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          image: DecorationImage(
+                            image: FileImage(File(logoImage)),
+                            fit: BoxFit.cover,
+                          )
+                      ),
+                    ):Container(),
+                    const SizedBox(width: 10.0),
+                    Container(
+                      width:SizeConfig.screenWidth*.4,
+                      child:    Text(
+                          companyName,
+                          style: appbar_text_style
+                      ),
+                    )
+
+                  ],
+                ),
               ),
             ),
             GestureDetector(

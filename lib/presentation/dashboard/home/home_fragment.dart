@@ -71,7 +71,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
-    callGetCompany();
+   callGetCompany();
     getDashboardData();
     print("hfshjffhfbh  $dateString");
      // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
@@ -350,7 +350,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   Future<void> refreshList() async {
       await Future.delayed(Duration(seconds: 2));
-    await callGetFranchiseeNot(0);
+   await callGetFranchiseeNot(0);
    await  getDashboardData();
   }
 
@@ -370,7 +370,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   borderRadius: BorderRadius.circular(25)),
               color: Colors.transparent,
               // color: Colors.red,
-              margin: const EdgeInsets.only(top: 10, left: 10),
+              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
              child: AppBar(
                   leadingWidth: 30,
                   automaticallyImplyLeading: false,
@@ -396,17 +396,17 @@ class _HomeFragmentState extends State<HomeFragment> {
                   children: [
                     logoImage!=""? Container(
                       height:SizeConfig.screenHeight*.05,
-                      width:SizeConfig.screenHeight*.08,
+                      width:SizeConfig.screenHeight*.05,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7),
                           image: DecorationImage(
-                            image: FileImage(File(logoImage!)),
+                            image: FileImage(File(logoImage)),
                             fit: BoxFit.cover,
                           )
                       ),
                     ):Container(),
-                    const SizedBox(width: 20.0),
+                    const SizedBox(width: 10.0),
                     Expanded(
                       child: Text(
                           companyName,
@@ -753,7 +753,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding:  EdgeInsets.only(left: 10),
@@ -779,7 +779,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             ),
             Divider(height: 1,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding:  EdgeInsets.only(left: 10),
@@ -857,9 +857,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                   const SizedBox(
                     width: 10,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: FaIcon(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const FaIcon(
                       FontAwesomeIcons.solidArrowAltCircleRight,
                       color:Colors.white,
                     ),
@@ -877,7 +877,7 @@ class _HomeFragmentState extends State<HomeFragment> {
    getAnimatedFunction(){
    return  Expanded(
      child: Padding(
-       padding:  EdgeInsets.only(left: 10,right: 5),
+       padding:  EdgeInsets.only(left: 10,right: 10),
        child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
          overflow: TextOverflow.ellipsis,)
        // Countup(

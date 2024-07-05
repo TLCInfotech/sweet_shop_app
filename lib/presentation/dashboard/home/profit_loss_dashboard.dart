@@ -70,7 +70,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     }else {
       addDate();
     }
-    callGetFranchiseeNot(0);
+   callGetFranchiseeNot(0);
     getDashboardData();
 
     print("hfshjffhfbh  $dateString");
@@ -203,7 +203,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            come:"edit",
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
-                       await callGetFranchiseeNot(0);
+                      await callGetFranchiseeNot(0);
                        await getDashboardData();
                      },
                      child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),

@@ -272,7 +272,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
                 children: [
                   logoImage!=""? Container(
                     height:SizeConfig.screenHeight*.05,
-                    width:SizeConfig.screenHeight*.08,
+                    width:SizeConfig.screenHeight*.05,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
@@ -282,7 +282,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
                         )
                     ),
                   ):Container(),
-                  const SizedBox(width: 20.0),
+                  const SizedBox(width: 10.0),
                   Expanded(
                     child: Text(
                         companyName,

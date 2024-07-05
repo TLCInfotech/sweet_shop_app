@@ -61,7 +61,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     // TODO: implement initState
     super.initState();
     addDate();
-    callGetFranchiseeNot(0);
+   callGetFranchiseeNot(0);
     getDashboardData();
 
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
@@ -95,7 +95,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
 
-    await callGetFranchiseeNot(0);
+   await callGetFranchiseeNot(0);
     await getDashboardData();
   }
 
@@ -372,7 +372,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                             formId: "AT002",
                             arrData: dataArr,
                           )));
-                          await callGetFranchiseeNot(0);
+                         await callGetFranchiseeNot(0);
                           await getDashboardData();
                         },
                         child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
