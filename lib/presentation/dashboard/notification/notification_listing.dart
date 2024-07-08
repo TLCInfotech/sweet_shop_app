@@ -229,7 +229,7 @@ class _NotificationListingState extends State<NotificationListing> {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_heading_textStyle,):Container(),
+                                              notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
                                               notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
                                              ], 
                                           ),

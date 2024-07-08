@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/data/domain/user_rights/user_rigts_request_model.dart';
+import 'package:sweet_shop_app/presentation/dialog/Delete_Dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user_rights/add_or_edit_user_rights.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -21,43 +22,48 @@ import '../../../common_widget/deleteDialog.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class AssignRightsToUser extends StatefulWidget {
-  final  AssignRightsToUserInterface mListener;
+  final AssignRightsToUserInterface mListener;
   final editedItem;
   final come;
   final uId;
   final readOnly;
 
-  const AssignRightsToUser({super.key,required this.mListener, this.editedItem, this.come, this.uId, this.readOnly});
+  const AssignRightsToUser(
+      {super.key,
+      required this.mListener,
+      this.editedItem,
+      this.come,
+      this.uId,
+      this.readOnly});
 
   @override
   State<AssignRightsToUser> createState() => _AssignRightsToUserState();
 }
 
-class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTickerProviderStateMixin,AddOrEditUserScreenRightInterface{
+class _AssignRightsToUserState extends State<AssignRightsToUser>
+    with SingleTickerProviderStateMixin, AddOrEditUserScreenRightInterface {
   final ScrollController _scrollController = ScrollController();
   late AnimationController _Controller;
   bool disableColor = false;
 
-  String selectedFranchiseeName="";
-  String selectedFranchiseeId="";
+  String selectedFranchiseeName = "";
+  String selectedFranchiseeId = "";
 
+  List<dynamic> Item_list = [];
 
-  List<dynamic> Item_list=[];
-
-
-  List<dynamic> Deleted_list=[];
-  List<dynamic> OldData=[];
+  List<dynamic> Deleted_list = [];
+  List<dynamic> OldData = [];
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
-  var companyId="0";
-  bool isLoaderShow=false;
+  var companyId = "0";
+  bool isLoaderShow = false;
   final _formkey = GlobalKey<FormState>();
-  var editedItemIndex=null;
+  var editedItemIndex = null;
 
-  bool addAll=false;
+  bool addAll = false;
 
-  var copyFromFranchiseeName="";
+  var copyFromFranchiseeName = "";
 
   @override
   void initState() {
@@ -69,31 +75,29 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     );
 
     setData();
-    if(widget.editedItem!=null){
-      getUserRights(1,widget.editedItem['UID']);
+    if (widget.editedItem != null) {
+      getUserRights(1, widget.editedItem['UID']);
     }
   }
-  setData()async{
+
+  setData() async {
     await getCompanyId();
 
-    if(widget.come=="edit"){
-
+    if (widget.come == "edit") {
       // await gerSaleInvoice(1);
       print("#######################3 ${widget.editedItem}");
 
       setState(() {
-        selectedFranchiseeId=widget.editedItem['UID'].toString();
-        selectedFranchiseeName=widget.editedItem['UID'];
+        selectedFranchiseeId = widget.editedItem['UID'].toString();
+        selectedFranchiseeName = widget.editedItem['UID'];
       });
     }
-
-
   }
 
-  getCompanyId()async{
+  getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
     setState(() {
-      companyId=companyId1;
+      companyId = companyId1;
     });
   }
 
@@ -101,6 +105,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   Widget build(BuildContext context) {
     return contentBox(context);
   }
+
   Widget contentBox(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -122,15 +127,14 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                 child: Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  ),
+                      borderRadius: BorderRadius.circular(25)),
                   color: Colors.transparent,
                   // color: Colors.red,
                   margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
                     leadingWidth: 0,
                     automaticallyImplyLeading: false,
-                    title:  Container(
+                    title: Container(
                       width: SizeConfig.screenWidth,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,18 +148,18 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("user_right")!,
-                                style: appbar_text_style,),
+                                ApplicationLocalizations.of(context)!
+                                    .translate("user_right")!,
+                                style: appbar_text_style,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)
-                    ),
+                        borderRadius: BorderRadius.circular(25)),
                     backgroundColor: Colors.white,
-
                   ),
                 ),
               ),
@@ -165,25 +169,27 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
               children: [
                 Expanded(
                   child: Container(
-                    // color: CommonColor.DASHBOARD_BACKGROUND,
-                      child: getAllFields(SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                      // color: CommonColor.DASHBOARD_BACKGROUND,
+                      child: getAllFields(
+                          SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 ),
-                widget.readOnly==false?Container():  Container(
-                    decoration: BoxDecoration(
-                      color: CommonColor.WHITE_COLOR,
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.black.withOpacity(0.08),
-                          width: 1.0,
+                widget.readOnly == false
+                    ? Container()
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: CommonColor.WHITE_COLOR,
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.black.withOpacity(0.08),
+                              width: 1.0,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    height: SizeConfig.safeUsedHeight * .08,
-                    child: getSaveAndFinishButtonLayout(
-                        SizeConfig.screenHeight, SizeConfig.screenWidth)),
+                        height: SizeConfig.safeUsedHeight * .08,
+                        child: getSaveAndFinishButtonLayout(
+                            SizeConfig.screenHeight, SizeConfig.screenWidth)),
                 CommonWidget.getCommonPadding(
                     SizeConfig.screenBottom, CommonColor.WHITE_COLOR),
-
               ],
             ),
           ),
@@ -195,70 +201,96 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   /* Widget for navigate to next screen button  */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-       Item_list.length>0? GestureDetector(
-          onTap: () async{
-            setState(() {
-              Item_list=[];
-            });
-               await callDeleteUser(selectedFranchiseeId,0);
-          },
-          onDoubleTap: () {},
-          child: Container(
-            width: SizeConfig.halfscreenWidth,
-            height: 40,
-            decoration: BoxDecoration(
-              color: disableColor == true
-                  ? Colors.redAccent.withOpacity(.5)
-                  : Colors.redAccent,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child:  Text(
-                    "Delete All",
-                    style: page_heading_textStyle.copyWith(color: Colors.white),
+        Item_list.length > 0
+            ? GestureDetector(
+                onTap: () async {
+                  await showGeneralDialog(
+                      barrierColor: Colors.black.withOpacity(0.5),
+                      transitionBuilder: (context, a1, a2, widget) {
+                        final curvedValue =
+                            Curves.easeInOutBack.transform(a1.value) - 1.0;
+                        // return Transform(
+                        //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        return Transform.scale(
+                          scale: a1.value,
+                          child: Opacity(
+                            opacity: a1.value,
+                            child: DeleteDialog(onCallBack: (value) async {
+                              print("nfnnvbvb  $value");
+                              if (value == "yes") {
+                                setState(() {
+                                  Item_list = [];
+                                });
+                                await callDeleteUser(selectedFranchiseeId, 0);
+                              }
+                            }),
+                          ),
+                        );
+                      },
+                      transitionDuration: Duration(milliseconds: 200),
+                      barrierDismissible: true,
+                      barrierLabel: '',
+                      context: context,
+                      pageBuilder: (context, animation2, animation1) {
+                        return Container();
+                      });
+                },
+                onDoubleTap: () {},
+                child: Container(
+                  width: SizeConfig.halfscreenWidth,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: disableColor == true
+                        ? Colors.redAccent.withOpacity(.5)
+                        : Colors.redAccent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: parentWidth * .005),
+                        child: Text(
+                          "Delete All",
+                          style: page_heading_textStyle.copyWith(
+                              color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ):Container(),
-
+              )
+            : Container(),
         GestureDetector(
           onTap: () {
             getUserPermissions();
-             if(selectedFranchiseeId==""){
-              var snackBar=SnackBar(content: Text("Select Party Name !"));
+            if (selectedFranchiseeId == "") {
+              var snackBar = SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             // else if(Item_list.length==0){
             //   var snackBar=SnackBar(content: Text("Add atleast one Item!"));
             //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
             // }
-            else if( selectedFranchiseeId!= " " ){
+            else if (selectedFranchiseeId != " ") {
               if (mounted) {
                 setState(() {
                   disableColor = true;
                 });
               }
 
-              if(widget.editedItem==null) {
+              if (widget.editedItem == null) {
                 print("#######");
                 callPostUser();
-              }
-              else {
+              } else {
                 print("dfsdf");
                 callPostUser();
               }
             }
-
           },
           onDoubleTap: () {},
           child: Container(
@@ -276,7 +308,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child:  Text(
+                  child: Text(
                     ApplicationLocalizations.of(context)!.translate("save")!,
                     style: page_heading_textStyle,
                   ),
@@ -291,104 +323,124 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
 
   Widget getAllFields(double parentHeight, double parentWidth) {
     return Container(
-      height: parentHeight*0.6,
+      height: parentHeight * 0.6,
       child: ListView(
         shrinkWrap: true,
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-
         children: [
           Padding(
-            padding: EdgeInsets.only(top: parentHeight * .01 ),
+            padding: EdgeInsets.only(top: parentHeight * .01),
             child: Container(
               child: Form(
                 key: _formkey,
                 child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InvoiceInfo(),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        widget.readOnly==false?Container():
-                        GestureDetector(
-                            onTap: (){
-                              FocusScope.of(context).requestFocus(FocusNode());
+                        widget.readOnly == false
+                            ? Container()
+                            : GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
 
-                               if(addAll==false) {
-                                 setState(() {
-                                   addAll = !addAll;
-                                 });
-                                 getAllForms();
+                                  if (addAll == false) {
+                                    setState(() {
+                                      addAll = !addAll;
+                                    });
+                                    getAllForms();
+                                  }
+                                },
+                                child: Container(
+                                    width: SizeConfig.halfscreenWidth,
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10, top: 5, bottom: 5),
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                        color: addAll
+                                            ? CommonColor.THEME_COLOR
+                                            : Colors.transparent,
+                                        border: Border.all(
+                                            color:
+                                                Colors.grey.withOpacity(0.5))),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          ApplicationLocalizations.of(context)!
+                                              .translate("add_all")!,
+                                          style: item_heading_textStyle,
+                                        ),
+                                        FaIcon(
+                                          FontAwesomeIcons.plusCircle,
+                                          color: Colors.black87,
+                                          size: 20,
+                                        )
+                                      ],
+                                    ))),
+                        widget.readOnly == false
+                            ? Container()
+                            : GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  if (selectedFranchiseeId != "") {
+                                    if (context != null) {
+                                      editedItemIndex = null;
+                                      goToAddOrEditItem(null);
+                                    }
+                                  } else {
+                                    CommonWidget.errorDialog(
+                                        context, "Select User !");
+                                  }
+                                },
+                                child: Container(
+                                    width: SizeConfig.halfscreenWidth,
 
-                               }
-                             },
-                            child: Container(
-                                width: SizeConfig.halfscreenWidth,
-                                padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                                margin: EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                    color:addAll? CommonColor.THEME_COLOR:Colors.transparent,
-                                    border: Border.all(color: Colors.grey.withOpacity(0.5))
-                                ),
-                                child:  Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      ApplicationLocalizations.of(context)!.translate("add_all")!,
-                                      style: item_heading_textStyle,),
-                                    FaIcon(FontAwesomeIcons.plusCircle,
-                                      color: Colors.black87, size: 20,)
-                                  ],
-                                )
-                            )
-                        ),
-
-
-                        widget.readOnly==false?Container():
-                        GestureDetector(
-                            onTap: (){
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              if(selectedFranchiseeId!="") {
-                                if (context != null) {
-                                  editedItemIndex=null;
-                                  goToAddOrEditItem(null);
-                                }
-                              }
-                              else{
-                                CommonWidget.errorDialog(context, "Select User !");
-                              }
-                            },
-                            child: Container(
-                                width: SizeConfig.halfscreenWidth,
-
-                                // width: SizeConfig.halfscreenWidth,
-                                padding: EdgeInsets.only(left: 10, right: 10,top: 5,bottom: 5),
-                                margin: EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                    color: CommonColor.THEME_COLOR,
-                                    border: Border.all(color: Colors.grey.withOpacity(0.5))
-                                ),
-                                child:  Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      ApplicationLocalizations.of(context)!.translate("add_screen")!,
-                                      style: item_heading_textStyle,),
-                                    FaIcon(FontAwesomeIcons.plusCircle,
-                                      color: Colors.black87, size: 20,)
-                                  ],
-                                )
-                            )
-                        )
+                                    // width: SizeConfig.halfscreenWidth,
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10, top: 5, bottom: 5),
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                        color: CommonColor.THEME_COLOR,
+                                        border: Border.all(
+                                            color:
+                                                Colors.grey.withOpacity(0.5))),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          ApplicationLocalizations.of(context)!
+                                              .translate("add_screen")!,
+                                          style: item_heading_textStyle,
+                                        ),
+                                        FaIcon(
+                                          FontAwesomeIcons.plusCircle,
+                                          color: Colors.black87,
+                                          size: 20,
+                                        )
+                                      ],
+                                    )))
                       ],
                     ),
                     // SizedBox(height: 5,),
 
-                    widget.readOnly==false?Container():
-                    Item_list.length>0?get_Item_list_layout(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
+                    widget.readOnly == false
+                        ? Container()
+                        : Item_list.length > 0
+                            ? get_Item_list_layout(
+                                SizeConfig.screenHeight, SizeConfig.screenWidth)
+                            : Container()
                   ],
                 ),
               ),
@@ -397,20 +449,28 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
         ],
       ),
     );
-
   }
+
   Container InvoiceInfo() {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(bottom: 10,left: 5,right: 5,),
+      padding: EdgeInsets.only(
+        bottom: 10,
+        left: 5,
+        right: 5,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Colors.grey,width: 1),
+        border: Border.all(color: Colors.grey, width: 1),
       ),
       child: Column(
         children: [
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-          widget.readOnly==false?Container():  getCopyFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          getFranchiseeNameLayout(
+              SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+          widget.readOnly == false
+              ? Container()
+              : getCopyFranchiseeNameLayout(
+                  SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
         ],
       ),
@@ -418,30 +478,29 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   }
 
   Widget getCopyFranchiseeNameLayout(double parentHeight, double parentWidth) {
-    return  SearchableLedgerDropdown(
-      apiUrl: ApiConstants().userList+"?",
+    return SearchableLedgerDropdown(
+      apiUrl: ApiConstants().userList + "?",
       titleIndicator: true,
       ledgerName: copyFromFranchiseeName,
       franchisee: copyFromFranchiseeName,
       franchiseeName: copyFromFranchiseeName,
       title: "Copy Rights From ",
-      callback: (name,id)async{
-        if(copyFromFranchiseeName==""){
+      callback: (name, id) async {
+        if (copyFromFranchiseeName == "") {
           setState(() {
-            OldData=Item_list;
+            OldData = Item_list;
           });
         }
-        if(name==""){
+        if (name == "") {
           setState(() {
-            Item_list=OldData;
+            Item_list = OldData;
           });
           setState(() {
             copyFromFranchiseeName = name!;
           });
-        }
-        else {
+        } else {
           setState(() {
-            Item_list=[];
+            Item_list = [];
             copyFromFranchiseeName = name!;
           });
           await getUserRights(1, copyFromFranchiseeName);
@@ -450,34 +509,29 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           print(copyFromFranchiseeName + "\n" + copyFromFranchiseeName);
         }
       },
-
     );
-
   }
 
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return SearchableLedgerDropdown(
-      apiUrl: ApiConstants().userList+"?",
+      apiUrl: ApiConstants().userList + "?",
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: false,
-      come:"disable",
-      franchiseeName: widget.come=="edit"? widget.editedItem['UID']:"",
+      come: "disable",
+      franchiseeName: widget.come == "edit" ? widget.editedItem['UID'] : "",
       title: ApplicationLocalizations.of(context)!.translate("user")!,
-      callback: (name,id){
-
-          setState(() {
-            selectedFranchiseeName = name!;
-            selectedFranchiseeId = name;
-          });
+      callback: (name, id) {
+        setState(() {
+          selectedFranchiseeName = name!;
+          selectedFranchiseeId = name;
+        });
 
         print("############3");
-        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+        print(selectedFranchiseeId + "\n" + selectedFranchiseeName);
       },
-
     );
-
   }
 
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
@@ -487,69 +541,155 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       itemCount: Item_list.length,
       //padding: EdgeInsets.only(bottom: 500),
       itemBuilder: (BuildContext context, int index) {
-        return  AnimationConfiguration.staggeredList(
+        return AnimationConfiguration.staggeredList(
           position: index,
-          duration:
-          const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           child: SlideAnimation(
             verticalOffset: -44.0,
             child: FadeInAnimation(
               delay: Duration(microseconds: 1500),
               child: GestureDetector(
-                onTap: (){
-
+                onTap: () {
                   setState(() {
-                    editedItemIndex=index;
+                    editedItemIndex = index;
                   });
                   FocusScope.of(context).requestFocus(FocusNode());
-                  if(widget.readOnly==true){
-                  if (context != null) {
-                    goToAddOrEditItem(Item_list[index]);
-                  }}
+                  if (widget.readOnly == true) {
+                    if (context != null) {
+                      goToAddOrEditItem(Item_list[index]);
+                    }
+                  }
                 },
                 child: Card(
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
-                            margin: const EdgeInsets.only(top: 10,left: 10,right: 10 ,bottom: 10),
-                            child:Row(
+                            margin: const EdgeInsets.only(
+                                top: 10, left: 10, right: 10, bottom: 10),
+                            child: Row(
                               children: [
                                 Container(
-                                    width: parentWidth*.1,
-                                    height:parentWidth*.1,
+                                    width: parentWidth * .1,
+                                    height: parentWidth * .1,
                                     decoration: BoxDecoration(
                                         color: Colors.purple.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(15)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     alignment: Alignment.center,
-                                    child: Text("${index+1}",textAlign: TextAlign.center,style: item_heading_textStyle.copyWith(fontSize: 14),)
-                                ),
-
+                                    child: Text(
+                                      "${index + 1}",
+                                      textAlign: TextAlign.center,
+                                      style: item_heading_textStyle.copyWith(
+                                          fontSize: 14),
+                                    )),
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.only(left: 10),
-                                    width: parentWidth*.70,
+                                    width: parentWidth * .70,
                                     //  height: parentHeight*.1,
-                                    child:  Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("${Item_list[index]['Form']}",style: item_heading_textStyle,),
-
-                                        SizedBox(height: 5,),
+                                        Text(
+                                          "${Item_list[index]['Form']}",
+                                          style: item_heading_textStyle,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
-                                                alignment: Alignment.centerRight,
+                                                alignment:
+                                                    Alignment.centerRight,
                                                 child: Row(
                                                   children: [
-                                                    Item_list[index]['Insert_Right']==true?Text("Insert ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
-                                                    Item_list[index]['Update_Right']==true &&  Item_list[index]['Insert_Right']==true ?Text(", ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
-                                                    Item_list[index]['Update_Right']==true?Text("Update",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
-                                                    Item_list[index]['Delete_Right']==true && (   Item_list[index]['Insert_Right']==true ||Item_list[index]['Update_Right']==true )?Text(", ",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
-                                                    Item_list[index]['Delete_Right']==true?Text("Delete",overflow: TextOverflow.clip,style: item_heading_textStyle.copyWith(color: Colors.black87),):Container(),
+                                                    Item_list[index][
+                                                                'Insert_Right'] ==
+                                                            true
+                                                        ? Text(
+                                                            "Insert ",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            style: item_heading_textStyle
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black87),
+                                                          )
+                                                        : Container(),
+                                                    Item_list[index][
+                                                                    'Update_Right'] ==
+                                                                true &&
+                                                            Item_list[index][
+                                                                    'Insert_Right'] ==
+                                                                true
+                                                        ? Text(
+                                                            ", ",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            style: item_heading_textStyle
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black87),
+                                                          )
+                                                        : Container(),
+                                                    Item_list[index][
+                                                                'Update_Right'] ==
+                                                            true
+                                                        ? Text(
+                                                            "Update",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            style: item_heading_textStyle
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black87),
+                                                          )
+                                                        : Container(),
+                                                    Item_list[index][
+                                                                    'Delete_Right'] ==
+                                                                true &&
+                                                            (Item_list[index][
+                                                                        'Insert_Right'] ==
+                                                                    true ||
+                                                                Item_list[index]
+                                                                        [
+                                                                        'Update_Right'] ==
+                                                                    true)
+                                                        ? Text(
+                                                            ", ",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            style: item_heading_textStyle
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black87),
+                                                          )
+                                                        : Container(),
+                                                    Item_list[index][
+                                                                'Delete_Right'] ==
+                                                            true
+                                                        ? Text(
+                                                            "Delete",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            style: item_heading_textStyle
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black87),
+                                                          )
+                                                        : Container(),
                                                   ],
                                                 )),
                                           ],
@@ -558,15 +698,15 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                     ),
                                   ),
                                 ),
-                                widget.readOnly==false?Container():
-                                Container(
-                                    width: parentWidth*.1,
-                                    // height: parentHeight*.1,
-                                    color: Colors.transparent,
-                                    child:DeleteDialogLayout(
-                                        callback: (response ) async{
-                                          if(response=="yes"){
-
+                                widget.readOnly == false
+                                    ? Container()
+                                    : Container(
+                                        width: parentWidth * .1,
+                                        // height: parentHeight*.1,
+                                        color: Colors.transparent,
+                                        child: DeleteDialogLayout(
+                                            callback: (response) async {
+                                          if (response == "yes") {
                                             // print(Item_list);
                                             // print(Deleted_list);
                                             // var contain = Deleted_list.indexWhere((element) => element['Form_ID']== Item_list[index]['Form_ID']);
@@ -577,22 +717,19 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
                                             // }
                                             // else{
 
-                                              setState(() {
-                                                Item_list.remove(Item_list[index]);
-                                               //  Item_list.remove(Item_list);
-                                               //  Item_list=[];
-                                               // getUserRights(1,widget.editedItem['UID']);
-                                              });
+                                            setState(() {
+                                              Item_list.remove(
+                                                  Item_list[index]);
+                                              //  Item_list.remove(Item_list);
+                                              //  Item_list=[];
+                                              // getUserRights(1,widget.editedItem['UID']);
+                                            });
                                             // }
                                           }
-                                        })
-                                ),
+                                        })),
                               ],
-                            )
-
-                        ),
+                            )),
                       )
-
                     ],
                   ),
                 ),
@@ -610,7 +747,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   }
 
   /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth){
+  Widget getAddNewProductLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -623,18 +760,21 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
           padding: EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))
-          ),
+              border: Border.all(color: Colors.grey.withOpacity(0.5))),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Add Screen",
-                style: item_heading_textStyle,),
-              FaIcon(FontAwesomeIcons.plusCircle,
-                color: Colors.black87, size: 20,)
+              Text(
+                "Add Screen",
+                style: item_heading_textStyle,
+              ),
+              FaIcon(
+                FontAwesomeIcons.plusCircle,
+                color: Colors.black87,
+                size: 20,
+              )
             ],
-          )
-      ),
+          )),
     );
   }
 
@@ -642,18 +782,16 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
-          final curvedValue = Curves.easeInOutBack.transform(a1.value) -
-              1.0;
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
           return Transform(
-            transform:
-            Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
               child: AddOrEditUserRights(
                 mListener: this,
-                editproduct:product,
+                editproduct: product,
                 id: selectedFranchiseeId,
-                exstingList:Item_list,
+                exstingList: Item_list,
               ),
             ),
           );
@@ -664,41 +802,37 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
         context: context,
         pageBuilder: (context, animation2, animation1) {
           throw Exception('No widget to return in pageBuilder');
-        }
-    );
+        });
   }
 
   @override
   AddOrEditUserScreenRightDetail(item) {
     // TODO: implement AddOrEditUserScreenRightDetail
-    var itemLlist=Item_list;
-    if(editedItemIndex!=null){
-      var index=editedItemIndex;
+    var itemLlist = Item_list;
+    if (editedItemIndex != null) {
+      var index = editedItemIndex;
       setState(() {
-        Item_list[index]['Form_ID']=item['Form_ID'];
-        Item_list[index]['Form']=item['Form'];
-        Item_list[index]['Insert_Right']=item['Insert_Right'];
-        Item_list[index]['Update_Right']=item['Update_Right'];
-        Item_list[index]['Delete_Right']=item['Delete_Right'];
+        Item_list[index]['Form_ID'] = item['Form_ID'];
+        Item_list[index]['Form'] = item['Form'];
+        Item_list[index]['Insert_Right'] = item['Insert_Right'];
+        Item_list[index]['Update_Right'] = item['Update_Right'];
+        Item_list[index]['Delete_Right'] = item['Delete_Right'];
       });
 
-        // var contain = Item_list.indexWhere((element) => element['Form_ID']== item['Form_ID']);
-        // print(contain);
-        // if(contain>=0){
-        //   print("REMOVE");
-        //   Item_list.remove(Item_list[contain]);
-        //   Item_list.add(item);
-        // }else{
-        //   Item_list.add(item);
-        // }
-        setState(() {
-          Item_list = Item_list;
-          print("hvhfvbfbv   $Item_list");
-        });
-
-    }
-    else
-    {
+      // var contain = Item_list.indexWhere((element) => element['Form_ID']== item['Form_ID']);
+      // print(contain);
+      // if(contain>=0){
+      //   print("REMOVE");
+      //   Item_list.remove(Item_list[contain]);
+      //   Item_list.add(item);
+      // }else{
+      //   Item_list.add(item);
+      // }
+      setState(() {
+        Item_list = Item_list;
+        print("hvhfvbfbv   $Item_list");
+      });
+    } else {
       itemLlist.add(item);
       // Inserted_list.add(item);
       // setState(() {
@@ -711,85 +845,80 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       });
     }
     setState(() {
-      editedItemIndex=null;
+      editedItemIndex = null;
     });
     print("List");
     print(Item_list);
     // Sort itemDetails by Item_Name
     itemLlist.sort((a, b) => a['Form'].compareTo(b['Form']));
-
   }
-  
-  getUserRights(int page,UID) async {
+
+  getUserRights(int page, UID) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: page.toString()
-        );
-        String apiUrl = "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${UID}";
+        TokenRequestModel model =
+            TokenRequestModel(token: sessionToken, page: page.toString());
+        String apiUrl =
+            "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${UID}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              print(data);
-              setState(() {
-                isLoaderShow=false;
-                if(data!=null){
-                  List<dynamic> _arrList =data;
-
-                  setState(() {
-                    Item_list=data;
-                  });
-                  for(var ele in data){
-                    setState(() {
-                      Deleted_list.add(ele);
-                    });
-                  }
-                }
-
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  userLisstttttttt  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              print("Here2=> $e");
+            onSuccess: (data) {
+          print(data);
+          setState(() {
+            isLoaderShow = false;
+            if (data != null) {
+              List<dynamic> _arrList = data;
 
               setState(() {
-                isLoaderShow=false;
+                Item_list = data;
               });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
+              for (var ele in data) {
+                setState(() {
+                  Deleted_list.add(ele);
+                });
               }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+            }
+          });
+
+          // _arrListNew.addAll(data.map((arrData) =>
+          // new EmailPhoneRegistrationModel.fromJson(arrData)));
+          print("  userLisstttttttt  $data ");
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+
+          // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+          //  widget.mListener.loaderShow(false);
+          //  Navigator.of(context, rootNavigator: true).pop();
+        }, onException: (e) {
+          print("Here2=> $e");
+
+          setState(() {
+            isLoaderShow = false;
+          });
+          var val = CommonWidget.errorDialog(context, e);
+
+          print("YES");
+          if (val == "yes") {
+            print("Retry");
+          }
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
       });
-    }
-    else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -802,55 +931,51 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
   callPostUser() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
+    String baseurl = await AppPreferences.getDomainLink();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if(netStatus==InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
         UserRightsModel model = UserRightsModel(
-          UID:selectedFranchiseeId ,
-          companyID: companyId ,
+          UID: selectedFranchiseeId,
+          companyID: companyId,
           creater: creatorName,
           createrMachine: deviceId,
-          iNSERT:Item_list.length>0? Item_list.toList():[],
+          iNSERT: Item_list.length > 0 ? Item_list.toList() : [],
         );
         print("############33 ${model.toJson()}");
 
-        String apiUrl =baseurl + ApiConstants().userPermission;
+        String apiUrl = baseurl + ApiConstants().userPermission;
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
-            onSuccess:(data)async{
-              print("  userPermissionnnn  $data ");
-              setState(() {
-                isLoaderShow=true;
-                Item_list=[];
-                Deleted_list=[];
-              });
-              widget.mListener.backToUserList();
-
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-
-      }); }
-    else{
+            onSuccess: (data) async {
+          print("  userPermissionnnn  $data ");
+          setState(() {
+            isLoaderShow = true;
+            Item_list = [];
+            Deleted_list = [];
+          });
+          widget.mListener.backToUserList();
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, e.toString());
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
+      });
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -864,88 +989,82 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().formList}?Company_ID=$companyId";
+        TokenRequestModel model =
+            TokenRequestModel(token: sessionToken, page: "1");
+        String apiUrl =
+            "${baseurl}${ApiConstants().formList}?Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
-            onSuccess:(data){
-              print(data);
-              setState(() {
-                isLoaderShow=false;
-                if(data!=null){
-                  List<dynamic> _arrList = [];
-                  print("################# ${data.length}");
-                  for (var ele in data) {
-                    print("Available###############3");
-                    var i=Deleted_list.indexWhere((element) => element['Form_ID']==ele['Form_ID']);
-                    if(i<0) {
-                      _arrList.add({
-                        "Form_ID": ele['Form_ID'],
-                        "Form": ele['Form'],
-                        "Insert_Right": true,
-                        "Update_Right": true,
-                        "Delete_Right": true,
-                        "Seq_No": null
-                      });
-
-                    }
-                    else{
-                      _arrList.add(Deleted_list[i]);
-                    }
-
-                  }
-                  setState(() {
-                    Item_list=_arrList;
+            onSuccess: (data) {
+          print(data);
+          setState(() {
+            isLoaderShow = false;
+            if (data != null) {
+              List<dynamic> _arrList = [];
+              print("################# ${data.length}");
+              for (var ele in data) {
+                print("Available###############3");
+                var i = Deleted_list.indexWhere(
+                    (element) => element['Form_ID'] == ele['Form_ID']);
+                if (i < 0) {
+                  _arrList.add({
+                    "Form_ID": ele['Form_ID'],
+                    "Form": ele['Form'],
+                    "Insert_Right": true,
+                    "Update_Right": true,
+                    "Delete_Right": true,
+                    "Seq_No": null
                   });
-
+                } else {
+                  _arrList.add(Deleted_list[i]);
                 }
-                // Sort itemDetails by Item_Name
-                Item_list.sort((a, b) => a['Form'].compareTo(b['Form']));
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  userLisstttttttt  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              print("Here2=> $e");
-
-              setState(() {
-                isLoaderShow=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
               }
-            },sessionExpire: (e) {
               setState(() {
-                isLoaderShow=false;
+                Item_list = _arrList;
               });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+            }
+            // Sort itemDetails by Item_Name
+            Item_list.sort((a, b) => a['Form'].compareTo(b['Form']));
+          });
+
+          // _arrListNew.addAll(data.map((arrData) =>
+          // new EmailPhoneRegistrationModel.fromJson(arrData)));
+          print("  userLisstttttttt  $data ");
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+
+          // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+          //  widget.mListener.loaderShow(false);
+          //  Navigator.of(context, rootNavigator: true).pop();
+        }, onException: (e) {
+          print("Here2=> $e");
+
+          setState(() {
+            isLoaderShow = false;
+          });
+          var val = CommonWidget.errorDialog(context, e);
+
+          print("YES");
+          if (val == "yes") {
+            print("Retry");
+          }
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
       });
-    }
-    else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -955,53 +1074,54 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
     }
   }
 
-  callDeleteUser(String removeId,int index) async {
+  callDeleteUser(String removeId, int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    if (netStatus == InternetConnectionStatus.connected){
+    String baseurl = await AppPreferences.getDomainLink();
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow = true;
         });
-        var model= {
+        var model = {
           "UID": selectedFranchiseeId,
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().userPermission+"?Company_ID=$companyId";
+        String apiUrl =
+            baseurl + ApiConstants().userPermission + "?Company_ID=$companyId";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
-            onSuccess:(data){
-              setState(() {
-                isLoaderShow=false;
-                // users_list.removeAt(index);
-                // getUser(1);
-              });
-              print("  LedgerLedger  $data ");
-               widget.mListener.backToUserList();
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+            onSuccess: (data) {
+          setState(() {
+            isLoaderShow = false;
+            // users_list.removeAt(index);
+            // getUser(1);
+          });
+          print("  LedgerLedger  $data ");
+          widget.mListener.backToUserList();
+        }, onFailure: (error) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, error.toString());
+          // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+          //  widget.mListener.loaderShow(false);
+          //  Navigator.of(context, rootNavigator: true).pop();
+        }, onException: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.errorDialog(context, e.toString());
+        }, sessionExpire: (e) {
+          setState(() {
+            isLoaderShow = false;
+          });
+          CommonWidget.gotoLoginScreen(context);
+          // widget.mListener.loaderShow(false);
+        });
       });
-    }else{
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;
@@ -1010,57 +1130,52 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>  with SingleTic
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
 
   getUserPermissions() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    String date=await AppPreferences.getDateLayout();
-    String uid=await AppPreferences.getUId();
+    String baseurl = await AppPreferences.getDomainLink();
+    String date = await AppPreferences.getDateLayout();
+    String uid = await AppPreferences.getUId();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
-    if (netStatus == InternetConnectionStatus.connected){
+    if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        TokenRequestModel model =
+            TokenRequestModel(token: sessionToken, page: "1");
+        String apiUrl =
+            "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data){
-
-              setState(() {
-                if(data!=null){
-                  if (mounted) {
-                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
-                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
-                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
-                  }
-
-                }else{
-                }
-              });
-            }, onFailure: (error) {
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
+            onSuccess: (data) {
+          setState(() {
+            if (data != null) {
+              if (mounted) {
+                AppPreferences.setMasterMenuList(
+                    jsonEncode(data['MasterSub_ModuleList']));
+                AppPreferences.setTransactionMenuList(
+                    jsonEncode(data['TransactionSub_ModuleList']));
+                // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
               }
-            },sessionExpire: (e) {
-              CommonWidget.gotoLoginScreen(context);
-            });
+            } else {}
+          });
+        }, onFailure: (error) {
+          CommonWidget.errorDialog(context, error.toString());
+        }, onException: (e) {
+          print("Here2=> $e");
+          var val = CommonWidget.errorDialog(context, e);
+          print("YES");
+          if (val == "yes") {
+            print("Retry");
+          }
+        }, sessionExpire: (e) {
+          CommonWidget.gotoLoginScreen(context);
+        });
       });
-    }
-    else{
+    } else {
       CommonWidget.noInternetDialogNew(context);
     }
   }
-
 }
 
 abstract class AssignRightsToUserInterface {

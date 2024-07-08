@@ -754,7 +754,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding:  EdgeInsets.only(left: 10),
@@ -780,35 +780,33 @@ class _HomeFragmentState extends State<HomeFragment> {
             ),
             Divider(height: 1,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding:  EdgeInsets.only(left: 10),
+                  padding:  const EdgeInsets.only(left: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        profitLossShare>=0?"Profit Share":"Loss Share",
-                        style: item_heading_textStyle.copyWith(
-                            color:Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
+                      Container(
 
+                        child: Text(
+                          profitLossShare>=0?"Profit Share":"Loss Share",
+                          style: item_heading_textStyle.copyWith(
+                              color:Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                          ),
                         ),
-                      ),
-
-                    ],
+                      ),],
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding:  EdgeInsets.only(left: 10,right: 5),
-                    child: Text(
-                        "${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                    )
-                  ),
+                Padding(
+                  padding:  EdgeInsets.only(left: 5,right: 5),
+                  child: Text(
+                     "${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                  )
                 )
                   ],
             )
@@ -876,24 +874,22 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
    getAnimatedFunction(){
-   return  Expanded(
-     child: Padding(
-       padding:  EdgeInsets.only(left: 10,right: 10),
-       child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
-         overflow: TextOverflow.ellipsis,)
-       // Countup(
-       //   locale: Locale('HI', 'IN'),
-       //   precision: 2,
-       //   begin: 0,
-       //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
-       //   end: double.parse((profit).toString()),
-       //   duration: const Duration(seconds: 2),
-       //   separator: ',',
-       //
-       //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-       //
-       // ),
-     ),
+   return  Padding(
+     padding:  EdgeInsets.only(left: 10,right: 10),
+     child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+       overflow: TextOverflow.ellipsis,)
+     // Countup(
+     //   locale: Locale('HI', 'IN'),
+     //   precision: 2,
+     //   begin: 0,
+     //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+     //   end: double.parse((profit).toString()),
+     //   duration: const Duration(seconds: 2),
+     //   separator: ',',
+     //
+     //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+     //
+     // ),
    );
   }
 
