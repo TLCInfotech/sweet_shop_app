@@ -13,6 +13,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_category_layout.dart';
+import 'package:sweet_shop_app/presentation/dialog/Delete_Dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_purchase_rate/add_new_purchase_rate_product.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/serchable_branch_sale_and_purchase.dart';
@@ -539,77 +540,150 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
 
   /* Widget for navigate to next screen button layout */
   Widget getSaveAndFinishButtonLayout(double parentHeight, double parentWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-    Item_list.length==0?Container():Container(
-          width: SizeConfig.halfscreenWidth,
-          padding: EdgeInsets.only(top: 0,bottom:0),
-          decoration: BoxDecoration(
-            // color:  CommonColor.DARK_BLUE,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                ],
-          ),
-        ),
-        singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false  || Item_list.length==0?  Container():
-        GestureDetector(
-          onTap: () {
-            // if(widget.comeFrom=="clientInfoList"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
-            //   )));
-            // }if(widget.comeFrom=="Projects"){
-            //   Navigator.pop(context,false);
-            // }
-            // else if(widget.comeFrom=="edit"){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
-            //   )));
-            // }
-            if(selectedFranchiseeID==null){
-              var snackBar=SnackBar(content: Text("Select Franchisee Id !"));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-            else if(selectedFranchiseeID!=null) {
-              if (mounted) {
-                setState(() {
-                  showButton=false;
-                });
-              }
-              callPostIFranchiseetemOpeningBal();
-            }
-
-          },
-          onDoubleTap: () {},
-          child: Container(
+    return  Padding(
+      padding:  EdgeInsets.only(left:15,right: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+      Item_list.length==0?Container():Container(
             width: SizeConfig.halfscreenWidth,
-            height: 40,
+            padding: EdgeInsets.only(top: 0,bottom:0),
             decoration: BoxDecoration(
-              color: disableColor == true
-                  ? CommonColor.THEME_COLOR.withOpacity(.5)
-                  : CommonColor.THEME_COLOR,
+              // color:  CommonColor.DARK_BLUE,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: parentWidth * .005),
-                  child:  Text(
-                    ApplicationLocalizations.of(context)!.translate("save")!,
-                    style: page_heading_textStyle,
+                Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+                GestureDetector(
+                  onTap: () async {
+                    await showGeneralDialog(
+                        barrierColor: Colors.black.withOpacity(0.5),
+                        transitionBuilder: (context, a1, a2, widget) {
+                          final curvedValue =
+                              Curves.easeInOutBack.transform(a1.value) - 1.0;
+                          // return Transform(
+                          //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                          return Transform.scale(
+                            scale: a1.value,
+                            child: Opacity(
+                              opacity: a1.value,
+                              child: DeleteDialog(onCallBack: (value) async {
+                                print("nfnnvbvb  $value");
+                                if (value == "yes") {
+
+                                  List<Map<String, dynamic>> idAndItemIdList = Item_list.map((item) {
+                                    return {
+                                      'ID': item['ID'],
+                                      'Item_ID': item['Item_ID']
+                                    };
+                                  }).toList();
+                                  // Deleted_list.add(idAndItemIdList);
+                                  setState(() {
+                                    Item_list = [];
+                                    Deleted_list = idAndItemIdList;
+                                    print("objecttttttt   $idAndItemIdList");
+                                    print("godddddd  $Deleted_list");
+                                  });
+                                  await callPostIFranchiseetemOpeningBal();
+                                }
+                              }),
+                            ),
+                          );
+                        },
+                        transitionDuration: Duration(milliseconds: 200),
+                        barrierDismissible: true,
+                        barrierLabel: '',
+                        context: context,
+                        pageBuilder: (context, animation2, animation1) {
+                          return Container();
+                        });
+                  },
+                  onDoubleTap: () {},
+                  child: Container(
+                    width: SizeConfig.halfscreenWidth,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: disableColor == true
+                          ? Colors.redAccent.withOpacity(.5)
+                          : Colors.redAccent,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: parentWidth * .005),
+                          child: Text(
+                            "Delete All",
+                            style: page_heading_textStyle.copyWith(
+                                color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
+                  ],
             ),
           ),
-        ),
-      ],
+          singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false  || Item_list.length==0?  Container():
+          GestureDetector(
+            onTap: () {
+              // if(widget.comeFrom=="clientInfoList"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ClientInformationListingPage(
+              //   )));
+              // }if(widget.comeFrom=="Projects"){
+              //   Navigator.pop(context,false);
+              // }
+              // else if(widget.comeFrom=="edit"){
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const ClientInformationDetails(
+              //   )));
+              // }
+              if(selectedFranchiseeID==null){
+                var snackBar=SnackBar(content: Text("Select Franchisee Id !"));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              else if(selectedFranchiseeID!=null) {
+                if (mounted) {
+                  setState(() {
+                    showButton=false;
+                  });
+                }
+                callPostIFranchiseetemOpeningBal();
+              }
+
+            },
+            onDoubleTap: () {},
+            child: Container(
+              width: SizeConfig.halfscreenWidth,
+              height: 40,
+              decoration: BoxDecoration(
+                color: disableColor == true
+                    ? CommonColor.THEME_COLOR.withOpacity(.5)
+                    : CommonColor.THEME_COLOR,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: parentWidth * .005),
+                    child:  Text(
+                      ApplicationLocalizations.of(context)!.translate("save")!,
+                      style: page_heading_textStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
