@@ -344,38 +344,42 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                               ),
                             ),
                             Expanded(
-                                child: Stack(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                           Text(contraList[index]["Ledger_Name"],style: item_heading_textStyle,),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                               Expanded(child: Text("Voucher No: - ${contraList[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 5,),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                              const SizedBox(width: 10,),
-                                              Expanded(child: Text("${CommonWidget.getCurrencyFormat(contraList[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                            ],
-                                          ),
-
-                                        ],
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                             Text(contraList[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                 Expanded(child: Text("Voucher No: - ${contraList[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                const SizedBox(width: 10,),
+                                                Expanded(child: Text("${CommonWidget.getCurrencyFormat(contraList[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                              ],
+                                            ),
+                                      
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    singleRecord['Delete_Right']==true?     Positioned(
+                                    singleRecord['Delete_Right']==true?
+                                    Positioned(
                                         top: 0,
                                         right: 0,
                                         child: DeleteDialogLayout(
@@ -385,10 +389,10 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                                               await   callDeleteContra(contraList[index]['Voucher_No'].toString(),index);
                                             }
                                           },
-                                        ) ):Container()
+                                        ) )
+                                        :Container()
                                   ],
                                 )
-
                             )
                           ],
                         ),

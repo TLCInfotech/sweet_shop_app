@@ -28,7 +28,8 @@ class ItemOpeningBal extends StatefulWidget {
   final newDate;
   final  formId;
   final  arrData;
-  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData});
+  final String titleKey;
+  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
@@ -165,7 +166,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                         Expanded(
                           child: Center(
                             child: Text(
-                              ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                              widget.titleKey,
                               style: appbar_text_style,),
                           ),
                         ),

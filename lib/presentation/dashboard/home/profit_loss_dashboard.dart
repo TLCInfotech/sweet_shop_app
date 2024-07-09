@@ -279,7 +279,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                children: [
                  GestureDetector(
                      onTap: (){
-                     },child: getThreeLayout(additionalProfitLoss>=0?"Additional Profit ":"Additional Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
+                     },child: getThreeLayout(additionalProfitLoss>=0?"Purchase Profit ":"Purchase Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
                  GestureDetector(
                      onTap: (){
@@ -287,7 +287,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                        //   formId: "AT009",
                        //   arrData: dataArr,
                        // )));
-                     },child: getThreeLayout(additionalProfitLossShare>=0? "Additional Profit Share":"Additional Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
+                     },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                ],
              ),
              SizedBox(height: 10,),
@@ -530,7 +530,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profit>=0?"Profit ":"Loss",
+                          profit>=0?"Sale Profit ":"Sale Loss",
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
@@ -556,7 +556,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profitLossShare>=0?"Profit Share":"Loss Share",
+                          profitLossShare>=0?"Sale Profit Share":"Sale Loss Share",
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
@@ -801,7 +801,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                   // print("nessssss  $_saleData");
 
                   setState(() {
-                   profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
+                   profit=double.parse(data['DashboardMainData'][0]['Sale_Profit'].toString());
                 //     _profitPartywise=_profitPartywise;
                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
@@ -813,9 +813,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                     saleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     //
                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
-                    profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
-                    additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
-                     additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
+                    profitLossShare=data['DashboardMainData'][0]['Sale_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Sale_Profit_Share'].toString());
+                    additionalProfitLoss=data['DashboardMainData'][0]['Purchase_Profit']!=null?double.parse(data['DashboardMainData'][0]['Purchase_Profit'].toString()):0.0;
+                     additionalProfitLossShare=data['DashboardMainData'][0]['Purchase_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Purchase_Profit_Share'].toString());
                     print("############################### ${additionalProfitLoss}");
                   });
 

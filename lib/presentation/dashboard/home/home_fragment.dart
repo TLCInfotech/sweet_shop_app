@@ -111,242 +111,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 
 
-  callGetFranchiseeNot(int page) async {
-    String sessionToken = await AppPreferences.getSessionToken();
-    String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-            token: sessionToken,
-        );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data){
-              setState(() {
 
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  franchisee   $data ");
-            }, onFailure: (error) {
-              CommonWidget.errorDialog(context, error.toString());
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              // print("Here2=> $e");
-              // var val= CommonWidget.errorDialog(context, e);
-              //
-              // print("YES");
-              // if(val=="yes"){
-              //   print("Retry");
-              // }
-            },sessionExpire: (e) {
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-      });
-    }
-    else{
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-  getUserPermissions() async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    String date=await AppPreferences.getDateLayout();
-    String uid=await AppPreferences.getUId();
-    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
-    print("objectgggg   $date  ");
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data){
-
-              setState(() {
-
-                isLoaderShow=false;
-                if(data!=null){
-                  if (mounted) {
-                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
-                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
-                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
-                  }
-
-                }else{
-                  isApiCall=true;
-                }
-              });
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              // var val= CommonWidget.errorDialog(context, e);
-              // print("YES");
-              // if(val=="yes"){
-              //   print("Retry");
-              // }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
-
-  addDate() async {
-
-    String  dateString = await AppPreferences.getDateLayout(); // Example string date
-     dateTime = DateTime.parse(dateString);
-    if(dateString==""){
-      DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
-      AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
-      print("jdjfjfbf  $saleDate");
-    }else{
-
-    }
-    print(dateTime);
-    print("jdhbdcbhb  $dateTime  $dateString");
-    setState(() {
-
-    });
-  }
-  bool isShowSkeleton = true;
-
-
-  getDashboardData() async {
-    String companyId = await AppPreferences.getCompanyId();
-    String sessionToken = await AppPreferences.getSessionToken();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    String baseurl=await AppPreferences.getDomainLink();
-    String date=await AppPreferences.getDateLayout();
-    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
-    print("objectgggg   $date  ");
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          isLoaderShow=true;
-        });
-        TokenRequestModel model = TokenRequestModel(
-            token: sessionToken,
-            page: "1"
-        );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data){
-
-              setState(() {
-                _saleData=[];
-                _profitPartywise=[];
-                profit=0.0;
-                FranchiseeOutstanding=0.0;
-                isLoaderShow=false;
-                isShowSkeleton=false;
-                if(data!=null){
-                    if (mounted) {
-                      for (var item in data['DashboardSaleDateWise']) {
-                        _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
-                      }
-                      for (var item in data['DashboardProfitPartywise']) {
-                        _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
-                      }
-                    }
-                    // _saleData=_saleData;
-                    // print("nessssss  $_saleData");
-
-                   setState(() {
-                     profit=double.parse(data['DashboardMainData'][0]['Profit'].toString());
-                     _profitPartywise=_profitPartywise;
-                     franchiseesaleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
-                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
-                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
-                     receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
-                     saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
-
-                     itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
-
-                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
-                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
-
-                     profitLossShare=data['DashboardMainData'][0]['Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Profit_Share'].toString());
-                     additionalProfitLoss=data['DashboardMainData'][0]['Additional_Profit']!=null?double.parse(data['DashboardMainData'][0]['Additional_Profit'].toString()):0.0;
-                     additionalProfitLossShare=data['DashboardMainData'][0]['Additional_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Additional_Profit_Share'].toString());
-                   });
-
-                }else{
-                  isApiCall=true;
-                }
-              });
-              print("  LedgerLedger  $data ");
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            }, onException: (e) {
-              print("Here2=> $e");
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              var val= CommonWidget.errorDialog(context, e);
-              print("YES");
-              if(val=="yes"){
-                print("Retry");
-              }
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-                isShowSkeleton=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-            });
-      });
-    }
-    else{
-      if (mounted) {
-        setState(() {
-          isLoaderShow = false;
-        });
-      }
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
 
   Future<void> refreshList() async {
       await Future.delayed(Duration(seconds: 2));
@@ -457,6 +222,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
                                 formId: "RM005",
+                                titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
                               )));
                             },
@@ -467,6 +233,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 newDate: dateTime.add(Duration(days: 1)),
                                 formId: "RM005",
                                 arrData: dataArrM,
+                                titleKey: "Branch Item Closing Balance",
                               )));
                             }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
@@ -554,7 +321,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       children: [
                           GestureDetector(
                             onTap: (){
-                            },child: getThreeLayout(additionalProfitLoss>=0?"Additional Profit ":"Additional Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
+                            },child: getThreeLayout(additionalProfitLoss>=0?"Purchase Profit ":"Purchase Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
                       GestureDetector(
                             onTap: (){
@@ -562,7 +329,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               //   formId: "AT009",
                               //   arrData: dataArr,
                               // )));
-                            },child: getThreeLayout(additionalProfitLossShare>=0? "Additional Profit Share":"Additional Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
+                            },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                       ],
                     ),
                      SizedBox(height: 10,),
@@ -664,7 +431,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   width: 100,
                   padding:  EdgeInsets.only(left: 10),
                   child:  Text(
-                    additionalProfitLoss>=0?"Additional Profit ":" Additional Loss",
+                    additionalProfitLoss>=0?"Purchase Profit ":" Purchase Loss",
                     style: item_heading_textStyle.copyWith(
                         color:Colors.white,
                         fontSize: 20,
@@ -687,7 +454,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   width: 100,
                   padding:  EdgeInsets.only(left: 10),
                   child: Text(
-                    additionalProfitLossShare>=0?"Add. Profit Share":"Add. Loss Share",
+                    additionalProfitLossShare>=0?"Purchase Profit Share":"Purchase Loss Share",
                     style: item_heading_textStyle.copyWith(
                         color:Colors.white,
                         fontSize: 20,
@@ -735,7 +502,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-        comeFor: profit>=0?"Profit ":"Loss" ,
+        comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
           date:dateTime,
         )));
       },
@@ -763,7 +530,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profit>=0?"Profit ":"Loss",
+                        profit>=0?"Sale Profit ":"Sale Loss",
                         style: item_heading_textStyle.copyWith(
                             color:Colors.white,
                             fontSize: 20,
@@ -789,7 +556,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profitLossShare>=0?"Profit Share":"Loss Share",
+                        profitLossShare>=0?"Sale Profit Share":"Sale Loss Share",
                         style: item_heading_textStyle.copyWith(
                             color:Colors.white,
                             fontSize: 20,
@@ -1187,7 +954,242 @@ class _HomeFragmentState extends State<HomeFragment> {
     }
   }
 
+  callGetFranchiseeNot(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+              setState(() {
 
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  franchisee   $data ");
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              // print("Here2=> $e");
+              // var val= CommonWidget.errorDialog(context, e);
+              //
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  getUserPermissions() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    String uid=await AppPreferences.getUId();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+                  if (mounted) {
+                    AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
+                    AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
+                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
+                  }
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              // var val= CommonWidget.errorDialog(context, e);
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  addDate() async {
+
+    String  dateString = await AppPreferences.getDateLayout(); // Example string date
+    dateTime = DateTime.parse(dateString);
+    if(dateString==""){
+      DateTime saleDate =  DateTime.now().subtract(Duration(days:1,minutes: 30 - DateTime.now().minute % 30));
+      AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+      print("jdjfjfbf  $saleDate");
+    }else{
+
+    }
+    print(dateTime);
+    print("jdhbdcbhb  $dateTime  $dateString");
+    setState(() {
+
+    });
+  }
+  bool isShowSkeleton = true;
+
+
+  getDashboardData() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+                _saleData=[];
+                _profitPartywise=[];
+                profit=0.0;
+                FranchiseeOutstanding=0.0;
+                isLoaderShow=false;
+                isShowSkeleton=false;
+                if(data!=null){
+                  if (mounted) {
+                    for (var item in data['DashboardSaleDateWise']) {
+                      _saleData.add(SalesData(DateFormat("dd/MM").format(DateTime.parse(item['Date'])), (item['Amount'])));
+                    }
+                    for (var item in data['DashboardProfitPartywise']) {
+                      _profitPartywise.add(ProfitPartyWiseData(DateFormat("dd/MM/yyy").format(DateTime.parse(item['Date'])), double.parse(item['Profit'].toString()),item['Vendor_Name']));
+                    }
+                  }
+                  // _saleData=_saleData;
+                  // print("nessssss  $_saleData");
+
+                  setState(() {
+                    profit=double.parse(data['DashboardMainData'][0]['Sale_Profit'].toString());
+                    _profitPartywise=_profitPartywise;
+                    franchiseesaleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
+                    expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
+                    returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
+                    receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
+                    saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
+
+                    itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
+
+                    itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
+                    FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
+
+                    profitLossShare=data['DashboardMainData'][0]['Sale_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Sale_Profit_Share'].toString());
+                    additionalProfitLoss=data['DashboardMainData'][0]['Purchase_Profit']!=null?double.parse(data['DashboardMainData'][0]['Purchase_Profit'].toString()):0.0;
+                    additionalProfitLossShare=data['DashboardMainData'][0]['Purchase_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Purchase_Profit_Share'].toString());
+                  });
+
+                }else{
+                  isApiCall=true;
+                }
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              var val= CommonWidget.errorDialog(context, e);
+              print("YES");
+              if(val=="yes"){
+                print("Retry");
+              }
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+                isShowSkeleton=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
 }
 
 abstract class HomeFragmentInterface {

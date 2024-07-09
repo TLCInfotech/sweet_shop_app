@@ -756,6 +756,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemOpeningBal(
           newDate: null,
             formId: "RM005",
+            titleKey: "Branch Item Opening Balance",
             arrData: dataArrM
         )));
    /*     if(mounted){

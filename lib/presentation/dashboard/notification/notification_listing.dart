@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import '../../../core/app_preferance.dart';
 import '../../../core/colors.dart';
 import '../../../core/common.dart';
@@ -86,6 +89,26 @@ class _NotificationListingState extends State<NotificationListing> {
     super.initState();
     _scrollController.addListener(_scrollListener);
     callGetNotifications(page);
+    getLocal();
+  }
+  List MasterMenu=[];
+  List TransactionMenu=[];
+  var dataArr;
+  var dataArrM;
+  getLocal()async{
+    setState(() {
+    });
+    var menu =await (AppPreferences.getMasterMenuList());
+    var tr =await (AppPreferences.getTransactionMenuList());
+    var re =await (AppPreferences.getReportMenuList());
+    dataArr=tr;
+    dataArrM=menu;
+    setState(() {
+      MasterMenu=  (jsonDecode(menu)).map((i) => i['Form_ID']).toList();
+      TransactionMenu=  (jsonDecode(tr)).map((i) => i['Form_ID']).toList();
+    });
+
+    print("bnbedbdbnebnedbneebn    $menu");
   }
   Future<void> refreshList() async {
     print("Here");
@@ -197,15 +220,15 @@ class _NotificationListingState extends State<NotificationListing> {
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
-                        // await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(editItem: notification_list[index],)));
-                        // setState(() {
-                        //   page=1;
-                        // });
-                        // callGetItem(page);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                          newDate: DateTime.parse(notification_list[index]['Date']),
+                          formId: "RM005",
+                          titleKey: notification_list[index]['Title'],
+                          arrData: dataArrM,
+                        )));
                         await updatecallPostSaleInvoice(notification_list[index]['ID']);
                         await callGetNotifications(1);
-
-                      },
+                        },
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -224,7 +247,7 @@ class _NotificationListingState extends State<NotificationListing> {
                                     children: [
                                       Expanded(
                                         child: Container(
-                                          margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                          margin: const EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
