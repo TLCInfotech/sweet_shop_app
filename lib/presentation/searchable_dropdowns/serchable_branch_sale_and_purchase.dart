@@ -126,7 +126,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                         setState(() {
                           _controller.clear();
                         });
-                        widget.callback("");
+                        widget.callback(null);
                         searchFocus.unfocus();
                       }},
                     onTapOutside: (event) {
@@ -137,7 +137,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                         setState(() {
                           _controller.clear();
                         });
-                        widget.callback("");
+                        widget.callback(null);
                         searchFocus.unfocus();
                       }
                     },
@@ -159,7 +159,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                         setState(() {
                           _controller.clear();
                         });
-                        widget.callback("");
+                        widget.callback(null);
                       }, icon: Icon(Icons.clear)),
                       errorStyle: const TextStyle(
                           color: Colors.redAccent,

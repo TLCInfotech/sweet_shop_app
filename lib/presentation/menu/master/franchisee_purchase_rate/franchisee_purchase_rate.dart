@@ -1099,6 +1099,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       title: ApplicationLocalizations.of(context)!.translate("item")!,
       callback: (item) {
         print("fkjjjggg   $item");
+        if(item!=null){
         var indexx=Item_list.indexOf(item);
         setState(() {
             setState(() {
@@ -1106,9 +1107,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             });
             FocusScope.of(context).requestFocus(FocusNode());
             goToAddOrEditProduct(item, singleRecord['Update_Right']);
-
-
-        });
+        });}
       },);
   }
 

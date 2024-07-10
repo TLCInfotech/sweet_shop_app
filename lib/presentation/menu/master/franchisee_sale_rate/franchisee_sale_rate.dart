@@ -853,6 +853,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         title: ApplicationLocalizations.of(context)!.translate("item")!,
         callback: (item) {
           print("fkjjjggg   $item");
+          if(item!=null){
           var indexx=Item_list.indexOf(item);
           setState(() {
             if (singleRecord['Update_Right'] == true) {
@@ -861,9 +862,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               });
               FocusScope.of(context).requestFocus(FocusNode());
                 goToAddOrEditProduct(item);
-
             }
-          });
+          });}
         },);
   }
 
