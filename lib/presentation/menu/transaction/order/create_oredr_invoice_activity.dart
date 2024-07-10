@@ -302,18 +302,7 @@ var order_No;
                                 )
                             ),
                           ):Container(),
-                          widget.logoImage!=""? Container(
-                            height:SizeConfig.screenHeight*.05,
-                            width:SizeConfig.screenHeight*.05,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(7),
-                                image: DecorationImage(
-                                  image: FileImage(File(widget.logoImage)),
-                                  fit: BoxFit.cover,
-                                )
-                            ),
-                          ):Container(),
+
                           const SizedBox(width: 10.0),
                           Expanded(
                             child: Center(
