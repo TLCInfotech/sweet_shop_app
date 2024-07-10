@@ -346,10 +346,10 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                   _arrList.clear();
                   _arrList=data;
                   print("kjfhjfjhfhj  $users_list  $data");
-                  if (_arrList.length < 10) {
+                  if (_arrList.length > 12) {
                     if (mounted) {
                       setState(() {
-                        isPagination = false;
+                        isPagination = true;
                       });
                     }
                   }
@@ -400,7 +400,10 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
   backToUserList() {
     // TODO: implement backToUserList
   setState(() {
-    getUser(1);
+    page=1;
+    users_list=[];
+    isPagination = true;
+    getUser(page);
   });
   Navigator.pop(context);
   }
