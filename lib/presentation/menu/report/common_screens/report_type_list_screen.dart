@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,8 +36,8 @@ class ReportTypeList extends StatefulWidget {
   final  applicableTwofrom;
   final  url;
   final comeFrom;
-
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom, this.venderId, this.expenseId, this.expenseName});
+  final String logoImage;
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom, this.venderId, this.expenseId, this.expenseName, required this.logoImage});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
@@ -161,6 +162,18 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -408,6 +421,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                     onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                           DetailReportActivity(
+                              logoImage: widget.logoImage,
                             apiurl: ApiConstants().getMISFranchiseeProfitDatewise,
                             partId: array_list[index]['Party_ID'],
                             party:array_list[index]['Party_Name'],
@@ -552,6 +566,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                 venderName: array_list[index]['Vendor_Name'],
                 fromDate: applicablefrom,
                 come:"vendorName",
+                logoImage: widget.logoImage,
                 toDate: applicableTwofrom,
               )));
         }else if(widget.reportId=="EXSM"){
@@ -561,6 +576,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                 expense: array_list[index]['Expense_ID'],
                 expenseName: array_list[index]['Expense_Name'],
                 fromDate: applicablefrom,
+                logoImage: widget.logoImage,
                 come:"expanseName",
                 toDate: applicableTwofrom,
               )));
@@ -570,6 +586,7 @@ mainAxisAlignment: MainAxisAlignment.start,
                mListener: this,
                 dateNew:DateTime.parse(array_list[index]['Date']),
                 formId: "AT009",
+                logoImage: widget.logoImage,
                 arrData: dataArr,
               )));
         }

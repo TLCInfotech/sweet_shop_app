@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,8 +31,9 @@ class CreateDebitNote extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
+  final String logoImage;
   final  readOnly;
-  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly});
+  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage});
   @override
   _CreateDebitNoteState createState() => _CreateDebitNoteState();
 }
@@ -209,6 +212,18 @@ var invoice_No;
                               }},
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

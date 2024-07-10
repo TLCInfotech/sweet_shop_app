@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,7 +31,7 @@ class PurchaseReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
-
+  final String logoImage;
   const PurchaseReportTypeList(
       {super.key,
       this.reportName,
@@ -42,7 +43,7 @@ class PurchaseReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener});
+      this.mListener, required this.logoImage});
 
   @override
   State<PurchaseReportTypeList> createState() => _PurchaseReportTypeListState();
@@ -169,6 +170,18 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -290,6 +303,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                                         apiurl: ApiConstants().getPurchasePartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
+                                        logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
                                         fromDate: applicablefrom,
@@ -306,6 +320,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],
+                                        logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
@@ -319,6 +334,7 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "ST003",
+                                    logoImage: widget.logoImage,
                                         arrData: dataArr,
                                       )));
                         }

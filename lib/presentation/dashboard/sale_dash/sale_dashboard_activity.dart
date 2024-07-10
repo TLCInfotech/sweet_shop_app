@@ -319,6 +319,7 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: saleDate,
           formId: "ST003",
+          logoImage: logoImage,
           arrData: dataArr,
         )));
       },

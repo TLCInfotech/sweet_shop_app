@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -29,7 +30,8 @@ class FOutstandingDashActivity extends StatefulWidget {
   final fid;
   final vName;
   final date;
-  const FOutstandingDashActivity({Key? key, required this.mListener, this.fid, this.vName, this.date}) : super(key: key);
+  final String logoImage;
+  const FOutstandingDashActivity({Key? key, required this.mListener, this.fid, this.vName, this.date, required this.logoImage}) : super(key: key);
 
   @override
   State<FOutstandingDashActivity> createState() => _FOutstandingDashActivityState();
@@ -293,6 +295,18 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                         },
                         child: FaIcon(Icons.arrow_back),
                       ),
+                      widget.logoImage!=""? Container(
+                        height:SizeConfig.screenHeight*.05,
+                        width:SizeConfig.screenHeight*.05,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            image: DecorationImage(
+                              image: FileImage(File(widget.logoImage)),
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ):Container(),
                       Expanded(
                         child: Center(
                           child: Text(
@@ -338,7 +352,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                             onTap: ()async{
                               print("CLICKED");
                               await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                                dateNew: dateTime,
+                                dateNew: dateTime, logoImage: widget.logoImage,
                                 mListener: this,
                                 formId: "ST003",
                                 arrData: dataArr,
@@ -351,7 +365,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                             onTap: ()async{
                               print("CLICKED");
                               await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                                dateNew: dateTime,
+                                dateNew: dateTime, logoImage: widget.logoImage,
                                 mListener: this,
                                 formId: "ST003",
                                 arrData: dataArr,
@@ -368,7 +382,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                         onTap: ()async{
                           await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(
                             dateNew: dateTime,
-                            mListener: this,
+                            mListener: this, logoImage: widget.logoImage,
                             formId: "AT002",
                             arrData: dataArr,
                           )));

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -32,7 +33,7 @@ class ReceiptReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
-
+  final String logoImage;
   const ReceiptReportTypeList(
       {super.key,
       this.reportName,
@@ -44,7 +45,7 @@ class ReceiptReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener});
+      this.mListener, required this.logoImage});
 
   @override
   State<ReceiptReportTypeList> createState() => _ReceiptReportTypeListState();
@@ -171,6 +172,18 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -292,6 +305,7 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                         apiurl: ApiConstants().getAcctVoucherPartywise,
                                         venderId: array_list[index]
                                             ['Ledger_ID'],
+                                        logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Ledger_Name'],
                                         fromDate: applicablefrom,
@@ -307,7 +321,7 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                         apiurl: ApiConstants().getAcctVoucherBankwise,
                                         itemId: array_list[index]['Ledger_ID'],
                                         itemName: array_list[index]
-                                            ['Ledger_Name'],
+                                            ['Ledger_Name'],   logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
@@ -322,6 +336,7 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                             array_list[index]['Date']),
                                         formId: "AT002",
                                         arrData: dataArr,
+                                    logoImage: widget.logoImage,
                                       )));
                         }
                         array_list = [];

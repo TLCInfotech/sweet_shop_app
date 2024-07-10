@@ -33,8 +33,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 class CompanyCreate extends StatefulWidget {
   final companyId;
   final  formId;
-  final  arrData;
-  const CompanyCreate({super.key, this.companyId, this.formId, this.arrData});
+  final  arrData;final String logoImage;
+  const CompanyCreate({super.key, this.companyId, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<CompanyCreate> createState() => _CompanyCreateState();
@@ -203,6 +203,18 @@ print("hjthghh  $companyId");
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

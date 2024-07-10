@@ -184,7 +184,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                actions: [
                  IconButton(
                      onPressed: ()async{
-                       await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing()));
+                       await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
+                         logoImage: logoImage,
+                       )));
                      },
                      icon: FaIcon(FontAwesomeIcons.bell,))
                ],
@@ -222,6 +224,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
                                 formId: "RM005",
+                                logoImage: logoImage,
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
                               )));
@@ -232,6 +235,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
                                 newDate: dateTime.add(Duration(days: 1)),
                                 formId: "RM005",
+                                logoImage: logoImage,
                                 arrData: dataArrM,
                                 titleKey: "Branch Item Closing Balance",
                               )));
@@ -246,6 +250,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,
                                 formId: "ST003",
+                                logoImage: logoImage,
                                 arrData: dataArr,
                               )));
                             },
@@ -256,6 +261,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
+                                logoImage: logoImage,
                                 arrData: dataArr,
                               )));
                             },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
@@ -273,6 +279,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 dateNew: dateTime,
                                 formId: "AT006",
                                 arrData: dataArr,
+                                logoImage: logoImage,
                               )));
                             },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
                         :Container(),
@@ -281,6 +288,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
                                 formId: "AT009",
                                 arrData: dataArr,
+                                logoImage: logoImage,
                               )));
                             },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
                             :Container(),
@@ -300,6 +308,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
                                 formId: "AT009",
                                 arrData: dataArr,
+                                logoImage: logoImage,
                               )));
                             },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
                         :Container(),
@@ -504,6 +513,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
         comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
           date:dateTime,
+          logoImage: logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -592,6 +602,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
           comeFor: "Franchisee Outstanding",
+          logoImage: logoImage,
           profit:FranchiseeOutstanding ,
           date:dateTime,
         )));
@@ -842,6 +853,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
             comeFor: "Franchisee Outstanding",
             profit:FranchiseeOutstanding ,
+            logoImage: logoImage,
             date:dateTime,
           )));
         }
@@ -850,6 +862,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             dateNew: dateTime,
             formId: "AT002",
             arrData: dataArr,
+            logoImage: logoImage,
           )));
        //   widget.mListener.getAddLeder(title);
         }

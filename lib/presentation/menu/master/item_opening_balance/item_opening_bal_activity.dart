@@ -28,8 +28,8 @@ class ItemOpeningBal extends StatefulWidget {
   final newDate;
   final  formId;
   final  arrData;
-  final String titleKey;
-  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey});
+  final String titleKey;final String logoImage;
+  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey, required this.logoImage});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
@@ -106,7 +106,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
           };
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateItemOpeningBal(
             dateNew:invoiceDate,
-            editedItem:item,
+            editedItem:item,   logoImage: widget.logoImage,
             compId:companyId ,
             come:"edit",
             readOnly: singleRecord['Update_Right'],
@@ -163,6 +163,18 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -188,7 +200,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               onPressed: () async{
                 await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                   dateNew:invoiceDate,
-                  compId:companyId ,
+                  compId:companyId ,   logoImage: widget.logoImage,
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
                 )));
@@ -323,7 +335,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                           dateNew:invoiceDate,
                           editedItem:Franchisee_list[index],
-                          compId:companyId ,
+                          compId:companyId ,   logoImage: widget.logoImage,
                           come:"edit",
                           readOnly: singleRecord['Update_Right'],
                           //DateFormat('dd-MM-yyyy').format(invoiceDate),

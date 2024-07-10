@@ -20,7 +20,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 
 class RecieptReportActivity extends StatefulWidget {
-  const RecieptReportActivity({super.key});
+  final String logoImage;
+  const RecieptReportActivity({super.key, required this.logoImage});
   // final RecieptReportActivityInterface mListener;
   @override
   State<RecieptReportActivity> createState() => _RecieptReportActivityState();
@@ -86,6 +87,18 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                        },
                        child: const FaIcon(Icons.arrow_back),
                      ),
+                     widget.logoImage!=""? Container(
+                       height:SizeConfig.screenHeight*.05,
+                       width:SizeConfig.screenHeight*.05,
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(7),
+                           image: DecorationImage(
+                             image: FileImage(File(widget.logoImage)),
+                             fit: BoxFit.cover,
+                           )
+                       ),
+                     ):Container(),
                      const Expanded(
                        child: Center(
                          child: Text(
@@ -291,6 +304,7 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                         builder: (context) => ReceiptReportTypeList(
                           reportName: reportType,
                           reportId: reportId,
+                          logoImage: widget.logoImage,
                           mListener: this,
                           url: ApiConstants().reports,
                           vandorId: selectedFranchiseeId,

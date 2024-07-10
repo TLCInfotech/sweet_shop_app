@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,7 +26,8 @@ class ReceiptActivity extends StatefulWidget {
   final dateNew;
   final  formId;
   final  arrData;
-  const ReceiptActivity({super.key, required mListener,this.dateNew, this.formId, this.arrData});
+  final String logoImage;
+  const ReceiptActivity({super.key, required mListener,this.dateNew, this.formId, this.arrData, required this.logoImage});
   @override
   State<ReceiptActivity> createState() => _ReceiptActivityState();
 }
@@ -119,7 +121,18 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                   Navigator.pop(context);
                                 },
                                 child: FaIcon(Icons.arrow_back),
-                              ),
+                              ),         widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -193,6 +206,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                 onPressed: ()async {
                   await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
                     mListener: this,
+                    logoImage: widget.logoImage,
                     newDate: newDate,
                     voucherNo: null,
                     dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
@@ -346,6 +360,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                       onTap: ()async{
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
                           mListener: this,
+                          logoImage: widget.logoImage,
                           newDate: newDate,
                           readOnly: singleRecord['Update_Right'],
                           voucherNo: recipt_list[index]["Voucher_No"],

@@ -37,7 +37,8 @@ class CreateExpenseActivity extends StatefulWidget {
   final CreateExpenseActivityInterface mListener;
   final   ledgerList;
   final   readOnly;
-  const CreateExpenseActivity({super.key, required this.mListener,  this.ledgerList, this.readOnly});
+  final String logoImage;
+  const CreateExpenseActivity({super.key, required this.mListener,  this.ledgerList, this.readOnly, required this.logoImage});
 
 
   @override
@@ -330,6 +331,18 @@ var ledgerData=null;
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: widget.ledgerList!=null? Center(
                               child: Text(

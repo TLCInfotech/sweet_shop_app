@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,7 +27,8 @@ class PaymentActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
-  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData,this.dateNew});
+  final String logoImage;
+  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData,this.dateNew, required this.logoImage});
   @override
   State<PaymentActivity> createState() => _PaymentActivityState();
 }
@@ -130,7 +132,18 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                   Navigator.pop(context);
                                 },
                                 child: FaIcon(Icons.arrow_back),
-                              ),
+                              ),         widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -205,7 +218,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 ),
                 onPressed: ()async {
                   await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
-                    mListener: this,
+                    mListener: this,   logoImage: widget.logoImage,
                     dateNew:newDate,
                     voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                   )));
@@ -350,7 +363,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                       onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
-                          dateNew: newDate,
+                          dateNew: newDate,   logoImage: widget.logoImage,
                           readOnly: singleRecord['Update_Right'] ,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:payment_list[index],

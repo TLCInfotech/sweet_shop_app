@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,7 +19,8 @@ import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout
 import '../../../common_widget/signleLine_TexformField.dart';
 
 class ExpenseReportActivity extends StatefulWidget {
-  const ExpenseReportActivity({super.key});
+  final String logoImage;
+  const ExpenseReportActivity({super.key, required this.logoImage});
 
   @override
   State<ExpenseReportActivity> createState() => _ExpenseReportActivityState();
@@ -73,6 +76,18 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                        },
                        child: FaIcon(Icons.arrow_back),
                      ),
+                     widget.logoImage!=""? Container(
+                       height:SizeConfig.screenHeight*.05,
+                       width:SizeConfig.screenHeight*.05,
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(7),
+                           image: DecorationImage(
+                             image: FileImage(File(widget.logoImage)),
+                             fit: BoxFit.cover,
+                           )
+                       ),
+                     ):Container(),
                      Expanded(
                        child: Center(
                          child: Text(
@@ -294,7 +309,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                 //     )));
                 print("############3 $reportType");
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
-                  mListener: this,
+                  mListener: this,   logoImage: widget.logoImage,
                   reportName:reportType,
                   reportId:reportId,
                   url: ApiConstants().reports,

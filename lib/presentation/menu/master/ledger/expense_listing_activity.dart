@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class ExpenseListingActivity extends StatefulWidget {
   final  formId;
   final  arrData;
-  const ExpenseListingActivity({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const ExpenseListingActivity({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<ExpenseListingActivity> createState() => _ExpenseListingActivityState();
@@ -113,6 +115,18 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(
@@ -142,6 +156,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                 //   add_item_layout(context);
                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                   mListener: this,
+                 logoImage: widget.logoImage,
                 )));
                 setState(() {
                   page=1;
@@ -198,7 +213,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             "ID":id
           };
             await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
-              mListener: this,
+              mListener: this,   logoImage: widget.logoImage,
               ledgerList: item,
               readOnly:singleRecord['Update_Right'],
             )));
@@ -261,6 +276,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateExpenseActivity(
                           mListener: this,
                           ledgerList: ledgerList[index],
+                          logoImage: widget.logoImage,
                           readOnly:singleRecord['Update_Right'],
                         )));
                         setState(() {

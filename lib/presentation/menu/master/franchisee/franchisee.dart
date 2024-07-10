@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,8 +24,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class AddFranchiseeActivity extends StatefulWidget {
   final  formId;
   final  arrData;
-
-  const AddFranchiseeActivity({super.key, required mListener, this.formId, this.arrData});
+  final String logoImage;
+  const AddFranchiseeActivity({super.key, required mListener, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<AddFranchiseeActivity> createState() => _AddFranchiseeActivityState();
@@ -105,7 +106,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             "ID":id
           };
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateFranchisee(
-              editItem: item,
+              editItem: item,   logoImage: widget.logoImage,
               readOnly:singleRecord['Update_Right']
           )));
           setState(() {
@@ -155,6 +156,18 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child:Center(
                               child: Text(
@@ -181,7 +194,9 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                 color: Colors.black87,
               ),
               onPressed: () async{
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateFranchisee()));
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateFranchisee(
+                  logoImage: widget.logoImage,
+                )));
                 setState(() {
                   page=1;
                 });
@@ -240,7 +255,8 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                           await Navigator.push(context, MaterialPageRoute(
                               builder: (context) =>
                                   CreateFranchisee(editItem: franchiseeList[index],
-                                  readOnly: singleRecord['Update_Right']
+                                  readOnly: singleRecord['Update_Right'],
+                                    logoImage: widget.logoImage,
                                   )));
                           setState(() {
                             page = 1;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,7 +20,8 @@ import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class LedgerVouchersReport extends StatefulWidget {
-  const LedgerVouchersReport({super.key});
+  final String logoImage;
+  const LedgerVouchersReport({super.key, required this.logoImage});
 
   @override
   State<LedgerVouchersReport> createState() => _LedgerVouchersReportState();
@@ -114,6 +117,19 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                         },
                         child: FaIcon(Icons.arrow_back),
                       ),
+                      widget.logoImage!=""? Container(
+                        height:SizeConfig.screenHeight*.05,
+                        width:SizeConfig.screenHeight*.05,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            image: DecorationImage(
+
+                              image: FileImage(File(widget.logoImage)),
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ):Container(),
                       Expanded(
                         child: Center(
                           child: Text(

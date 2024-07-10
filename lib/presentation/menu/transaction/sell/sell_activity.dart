@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,8 +26,9 @@ final DateTime? dateNew;
 final franhiseeID;
 final  formId;
 final  arrData;
+final String logoImage;
 final franchiseeName;
-  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
@@ -156,6 +158,18 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                 },
                                 child: FaIcon(Icons.arrow_back),
                               ),
+                              widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -229,6 +243,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                 onPressed: () async{
                   await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                       CreateSellInvoice(
+                        logoImage: widget.logoImage,
                         dateNew:   invoiceDate,
                         Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
@@ -391,6 +406,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
 
                        await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateSellInvoice(
+                              logoImage: widget.logoImage,
                               dateNew: invoiceDate,
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,

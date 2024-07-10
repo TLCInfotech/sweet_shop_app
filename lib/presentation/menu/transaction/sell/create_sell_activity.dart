@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +31,7 @@ class CreateSellInvoice extends StatefulWidget {
   final editedItem;
   final come;
   final readOnly;
-
+  final String logoImage;
   const CreateSellInvoice(
       {super.key,
         required this.dateNew,
@@ -37,7 +39,7 @@ class CreateSellInvoice extends StatefulWidget {
         required this.Invoice_No,
         this.editedItem,
         this.come,
-        this.readOnly});
+        this.readOnly, required this.logoImage});
   @override
   _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
 }
@@ -297,6 +299,18 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

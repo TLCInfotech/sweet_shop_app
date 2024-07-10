@@ -317,6 +317,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
         dateNew: saleDate,
+            logoImage: logoImage,
             formId: "AT006",
             arrData: dataArr
         )));

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -31,7 +32,8 @@ class PaymentDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
-  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.ledgerId, this.ledgerName, this.fromDate, this.toDate, this.come});
+  final String logoImage;
+  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.ledgerId, this.ledgerName, this.fromDate, this.toDate, this.come, required this.logoImage});
 
   @override
   State<PaymentDetailReportActivity> createState() => _PaymentDetailReportActivityState();
@@ -138,6 +140,18 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child:widget.come=="ledgerName"? Text("Payment ${ApplicationLocalizations.of(context)!
@@ -257,7 +271,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                             CreatePayment(
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               voucherNo: reportDetailList[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
-                              mListener:this,
+                              mListener:this,   logoImage: widget.logoImage,
                               readOnly:singleRecord['Update_Right'] ,
                               // editedItem:reportDetailList[index],
                               come:"edit",

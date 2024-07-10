@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +28,8 @@ class CreditNoteActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final franchiseeName;
-  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
+  final String logoImage;
+  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
 
   @override
   State<CreditNoteActivity> createState() => _CreditNoteState();
@@ -165,6 +167,18 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                               },
                               child: FaIcon(Icons.arrow_back),
                             ),
+                            widget.logoImage!=""? Container(
+                              height:SizeConfig.screenHeight*.05,
+                              width:SizeConfig.screenHeight*.05,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  image: DecorationImage(
+                                    image: FileImage(File(widget.logoImage)),
+                                    fit: BoxFit.cover,
+                                  )
+                              ),
+                            ):Container(),
                             Expanded(
                               child: Center(
                                 child: Text(
@@ -235,7 +249,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                   await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                       CreateCreditNote(
                         dateNew:   invoiceDate,
-                        Invoice_No: null,
+                        Invoice_No: null,   logoImage: widget.logoImage,
                         companyId:companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
                       )));
@@ -396,7 +410,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                               dateNew: invoiceDate,
                               Invoice_No: debitNote_list[index]['Invoice_No'],
                                 debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
-                              mListener:this,
+                              mListener:this,   logoImage: widget.logoImage,
                                 companyId:companyId,
                               readOnly:  singleRecord['Update_Right'],
                               come:"edit"

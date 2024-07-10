@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,7 +27,8 @@ class PurchaseActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final  dateNew;
-  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, this.dateNew});
+  final String logoImage;
+  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, this.dateNew, required this.logoImage});
 
   @override
   State<PurchaseActivity> createState() => _PurchaseActivityState();
@@ -150,7 +152,18 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                                   Navigator.pop(context);
                                 },
                                 child: FaIcon(Icons.arrow_back),
-                              ),
+                              ),         widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -224,7 +237,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                 ),
                 onPressed: () async{
                   await Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                      CreatePurchaseInvoice(
+                      CreatePurchaseInvoice(   logoImage: widget.logoImage,
                         dateNew:invoiceDate,
                         Invoice_No: null,
                         mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
@@ -375,7 +388,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                     child: GestureDetector(
                       onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreatePurchaseInvoice(
+                            CreatePurchaseInvoice(   logoImage: widget.logoImage,
                               dateNew:invoiceDate,
                               readOnly: singleRecord['Update_Right'],
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],

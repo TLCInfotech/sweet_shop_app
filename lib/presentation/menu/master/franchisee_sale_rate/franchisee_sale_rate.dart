@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,9 @@ class FranchiseeSaleRate extends StatefulWidget {
   final String compId;
   final formId;
   final arrData;
+  final String logoImage;
   const FranchiseeSaleRate(
-      {super.key, required this.compId, this.formId, this.arrData});
+      {super.key, required this.compId, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
@@ -183,6 +185,18 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

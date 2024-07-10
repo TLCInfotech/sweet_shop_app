@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,9 +36,9 @@ class DetailReportActivity extends StatefulWidget {
   final  venderId;
   final  venderName;
   final  come;
-
+  final String logoImage;
   const DetailReportActivity(
-      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId, this.expenseName, this.expense, this.venderId, this.venderName, this.come,});
+      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId, this.expenseName, this.expense, this.venderId, this.venderName, this.come, required this.logoImage,});
 
   @override
   State<DetailReportActivity> createState() => _DetailReportActivityState();
@@ -150,6 +151,18 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: widget.come!="expanseName"?Text(
@@ -297,7 +310,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                       print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
 
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                        mListener: this,
+                        mListener: this,   logoImage: widget.logoImage,
                         voucherNo: reportDetailList[index]["Voucher_No"].toString(),
                         dateNew: DateTime.parse(reportDetailList[index]['Date']),
                         readOnly:singleRecord['Update_Right'],
@@ -312,6 +325,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                               ProfitLossDash(mListener: this,
                                 fid: widget.partId,
                                 vName: widget.party,
+                                logoImage: widget.logoImage,
                                 date: reportDetailList[index]['Date'],
                                 come: "report",
                               )));

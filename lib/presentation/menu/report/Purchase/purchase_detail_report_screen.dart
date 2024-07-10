@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ import '../../transaction/purchase/create_purchase_activity.dart';
 import '../../transaction/sell/create_sell_activity.dart';
 import '../../transaction/sell/sell_activity.dart';
 class PurchaseDetailReportActivity extends StatefulWidget {
-
+  final String logoImage;
   final apiurl;
   final venderId;
   final venderName;
@@ -31,7 +32,7 @@ class PurchaseDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
-  const PurchaseDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come});
+  const PurchaseDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
 
   @override
   State<PurchaseDetailReportActivity> createState() => _PurchaseDetailReportActivityState();
@@ -138,6 +139,18 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: widget.come=="itemName"? Text("Purchase ${ApplicationLocalizations.of(context)!
@@ -259,6 +272,7 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
+                              logoImage: widget.logoImage,
                               readOnly:singleRecord['Update_Right'] ,
                               editedItem:reportDetailList[index],
                               come:"edit",

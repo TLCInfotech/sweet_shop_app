@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -30,7 +31,8 @@ class DebitNoteDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
-  const DebitNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come});
+  final String logoImage;
+  const DebitNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
 
   @override
   State<DebitNoteDetailReportActivity> createState() => _DebitNoteDetailReportActivityState();
@@ -137,6 +139,18 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: widget.come=="itemName"? Text("Debit Note ${ApplicationLocalizations.of(context)!
@@ -254,6 +268,7 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateDebitNote(
+                              logoImage: widget.logoImage,
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,

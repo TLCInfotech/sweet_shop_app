@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -25,7 +26,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class ItemsActivity extends StatefulWidget {
   final  formId;
   final  arrData;
-  const ItemsActivity({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const ItemsActivity({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<ItemsActivity> createState() => _ItemsActivityState();
@@ -106,7 +108,7 @@ Future<void> refreshList() async {
             "ID":id
           };
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(
-              editItem: item,
+              editItem: item,   logoImage: widget.logoImage,
               readOnly:singleRecord['Update_Right']
           )));
           setState(() {
@@ -155,6 +157,18 @@ Future<void> refreshList() async {
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(
@@ -181,7 +195,9 @@ Future<void> refreshList() async {
                 color: Colors.black87,
               ),
               onPressed: () async{
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => const ItemCreateActivity()));
+                await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(
+                  logoImage: widget.logoImage,
+                )));
                 setState(() {
                   page=1;
                 });
@@ -266,6 +282,7 @@ Expanded get_items_list_layout() {
 
                         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCreateActivity(
                             editItem: itemList[index],
+                            logoImage: widget.logoImage,
                         readOnly:singleRecord['Update_Right']
                         )));
                         setState(() {

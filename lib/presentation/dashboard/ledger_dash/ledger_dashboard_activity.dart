@@ -231,6 +231,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
           formId: "AT009",
+          logoImage: logoImage,
           arrData: dataArr,)));
       },
       child: Container(

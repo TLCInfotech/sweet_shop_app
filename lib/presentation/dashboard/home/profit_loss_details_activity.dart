@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -21,8 +23,8 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;
   final date;
-
-  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date});
+  final String logoImage;
+  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date, required this.logoImage});
 
   @override
   State<ProfitLossDetailActivity> createState() => _ProfitLossDetailActivityState();
@@ -109,6 +111,18 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -373,6 +387,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(mListener: this,
                         fid: model.Vendor_ID,
+                          logoImage: widget.logoImage,
                         vName: model.Vendor_Name,
                         )));
 

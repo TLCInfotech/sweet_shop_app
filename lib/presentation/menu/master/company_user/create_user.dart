@@ -29,14 +29,14 @@ class UserCreate extends StatefulWidget {
   final come;
   final compId;
   final readOnly;
-
+  final String logoImage;
   const UserCreate(
       {super.key,
       required this.mListener,
       this.editUser,
       this.compId,
       this.come,
-      this.readOnly});
+      this.readOnly, required this.logoImage});
 
   final UserCreateInterface mListener;
 
@@ -226,6 +226,18 @@ class _UserCreateState extends State<UserCreate>
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

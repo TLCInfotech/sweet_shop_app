@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,8 +38,8 @@ class CreateItemOpeningBal extends StatefulWidget {
   final come;
   final franchiseeDetails;
   final readOnly;
-
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails, this.readOnly});
+  final String logoImage;
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails, this.readOnly, required this.logoImage});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -310,6 +312,18 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                              }},
                            child: FaIcon(Icons.arrow_back),
                          ),
+                         widget.logoImage!=""? Container(
+                           height:SizeConfig.screenHeight*.05,
+                           width:SizeConfig.screenHeight*.05,
+                           alignment: Alignment.center,
+                           decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(7),
+                               image: DecorationImage(
+                                 image: FileImage(File(widget.logoImage)),
+                                 fit: BoxFit.cover,
+                               )
+                           ),
+                         ):Container(),
                          Expanded(
                            child: Center(
                              child: Text(

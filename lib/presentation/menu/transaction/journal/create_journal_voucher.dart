@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +35,8 @@ class CreateJournals extends StatefulWidget {
   final  debitNote;
   final  companyId;
   final  readOnly;
-  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId, this.readOnly});
+  final String logoImage;
+  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage});
   @override
   _CreateJournalsState createState() => _CreateJournalsState();
 }
@@ -250,6 +253,18 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                               }},
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

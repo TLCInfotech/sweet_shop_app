@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,7 +24,8 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 class UserRightListActivity extends StatefulWidget {
   final  formId;
   final  arrData;
-  const UserRightListActivity({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const UserRightListActivity({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<UserRightListActivity> createState() => _UserRightListActivityState();
@@ -142,6 +144,18 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -244,7 +258,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                                 builder: (context) => AssignRightsToUser(
                                     editedItem: users_list[index],
                                     mListener: this,
-                                    come:"edit",
+                                    come:"edit",   logoImage: widget.logoImage,
                                   readOnly: singleRecord['Update_Right'],
                                 )));
                       },

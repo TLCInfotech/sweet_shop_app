@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +15,8 @@ import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 class DebitReportActivity extends StatefulWidget {
-  const DebitReportActivity({super.key});
+  final String logoImage;
+  const DebitReportActivity({super.key, required this.logoImage});
 
   @override
   State<DebitReportActivity> createState() => _ExpenseReportActivityState();
@@ -69,6 +72,18 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                         },
                         child: FaIcon(Icons.arrow_back),
                       ),
+                      widget.logoImage!=""? Container(
+                        height:SizeConfig.screenHeight*.05,
+                        width:SizeConfig.screenHeight*.05,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            image: DecorationImage(
+                              image: FileImage(File(widget.logoImage)),
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ):Container(),
                       Expanded(
                         child: Center(
                           child: Text(
@@ -267,6 +282,7 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                 print("############3 $reportType");
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    DebitNoteReportTypeList(
                   mListener: this,
+                  logoImage: widget.logoImage,
                   reportName:reportType,
                   reportId:reportId,
                   url: ApiConstants().reports,

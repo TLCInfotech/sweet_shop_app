@@ -36,7 +36,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 class CreateFranchisee extends StatefulWidget {
   final editItem;
   final readOnly;
-  const CreateFranchisee({super.key,this.editItem, this.readOnly});
+  final String logoImage;
+  const CreateFranchisee({super.key,this.editItem, this.readOnly, required this.logoImage});
 
   @override
   _CreateFranchiseeState createState() => _CreateFranchiseeState();
@@ -192,6 +193,18 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                                 },
                                 child: const FaIcon(Icons.arrow_back),
                               ),
+                              widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child:  Center(
                                   child: Text(

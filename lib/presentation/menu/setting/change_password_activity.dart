@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +18,8 @@ import '../../../data/domain/confirmPassword/create_login_user_upadte_request_mo
 import '../../dashboard/dashboard_activity.dart';
 
 class ChangePasswordActivity extends StatefulWidget {
-  const ChangePasswordActivity({super.key});
+  final String logoImage;
+  const ChangePasswordActivity({super.key, required this.logoImage});
 
   // final ChangePasswordActivityInterface mListener;
 
@@ -80,6 +83,18 @@ bool isLoaderShow=false;
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

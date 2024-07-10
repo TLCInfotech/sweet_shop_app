@@ -26,8 +26,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class ItemCreateActivity extends StatefulWidget {
   final editItem;
-  final readOnly;
-  const ItemCreateActivity({super.key,this.editItem, this.readOnly});
+  final readOnly;final String logoImage;
+  const ItemCreateActivity({super.key,this.editItem, this.readOnly, required this.logoImage});
 
   // final ItemCreateActivityInterface mListener;
 
@@ -274,6 +274,18 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: widget.editItem!=null?Center(
                           child: Text(

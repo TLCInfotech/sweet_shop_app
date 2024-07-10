@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -30,7 +31,8 @@ class ProfitLossDash extends StatefulWidget {
   final vName;
   final date;
   final come;
-  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date, this.come}) : super(key: key);
+  final String logoImage;
+  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date, this.come, required this.logoImage}) : super(key: key);
 
   @override
   State<ProfitLossDash> createState() => _ProfitLossDashState();
@@ -143,6 +145,18 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                         },
                         child: FaIcon(Icons.arrow_back),
                       ),
+                      widget.logoImage!=""? Container(
+                        height:SizeConfig.screenHeight*.05,
+                        width:SizeConfig.screenHeight*.05,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            image: DecorationImage(
+                              image: FileImage(File(widget.logoImage)),
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ):Container(),
                       Expanded(
                         child: Center(
                           child: Text(
@@ -187,6 +201,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      onTap: ()async{
                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                            dateNew: dateTime,
+                           logoImage: widget.logoImage,
                            mListener: this,
                            come:"edit",
                            franchiseeDetails:[widget.vName!,widget.fid!]
@@ -201,6 +216,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            dateNew: dateTime.add(Duration(days: 1)),
                            mListener: this,
                            come:"edit",
+                           logoImage: widget.logoImage,
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
                       await callGetFranchiseeNot(0);
@@ -217,7 +233,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                  GestureDetector(
                      onTap: (){
                        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-                           dateNew: dateTime,
+                           dateNew: dateTime, logoImage: widget.logoImage,
                            mListener: this,
                            formId: "ST003",
                            arrData: dataArr,
@@ -234,6 +250,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            mListener: this,
                            formId: "AT006",
                            arrData: dataArr,
+                         logoImage: widget.logoImage,
                          comeFor: "frDash",
                          franhiseeID:widget.fid!,
                          franchiseeName:widget.vName!,
@@ -255,6 +272,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            mListener: this,
                            formId: "AT009",
                            arrData: dataArr,
+                         logoImage: widget.logoImage,
                            comeFor: "frDash",
                            franhiseeID:widget.fid!,
                            franchiseeName:widget.vName!,

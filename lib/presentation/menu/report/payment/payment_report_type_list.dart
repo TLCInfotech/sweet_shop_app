@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -31,7 +32,7 @@ class PaymentReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
-
+  final String logoImage;
   const PaymentReportTypeList(
       {super.key,
       this.reportName,
@@ -43,7 +44,7 @@ class PaymentReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener});
+      this.mListener, required this.logoImage});
 
   @override
   State<PaymentReportTypeList> createState() => _PaymentReportTypeListState();
@@ -170,6 +171,18 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -291,6 +304,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                         apiurl: ApiConstants().getAcctVoucherPartywise,
                                         venderId: array_list[index]
                                             ['Ledger_ID'],
+                                        logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Ledger_Name'],
                                         fromDate: applicablefrom,
@@ -303,6 +317,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       PaymentDetailReportActivity(
+                                        logoImage: widget.logoImage,
                                         apiurl: ApiConstants().getAcctVoucherBankwise,
                                         ledgerId: array_list[index]['Ledger_ID'],
                                         ledgerName: array_list[index]['Ledger_Name'],
@@ -316,6 +331,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                               MaterialPageRoute(
                                   builder: (context) => PaymentActivity(
                                         mListener: this,
+                                    logoImage: widget.logoImage,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "AT001",

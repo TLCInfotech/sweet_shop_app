@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,7 +18,8 @@ import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout
 
 
 class MisReportActivity extends StatefulWidget {
-  const MisReportActivity({super.key});
+  final String logoImage;
+  const MisReportActivity({super.key, required this.logoImage});
   // final MisReportActivityInterface mListener;
   @override
   State<MisReportActivity> createState() => _MisReportActivityState();
@@ -81,6 +84,18 @@ class _MisReportActivityState extends State<MisReportActivity> {
                        },
                        child: FaIcon(Icons.arrow_back),
                      ),
+                     widget.logoImage!=""? Container(
+                       height:SizeConfig.screenHeight*.05,
+                       width:SizeConfig.screenHeight*.05,
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(7),
+                           image: DecorationImage(
+                             image: FileImage(File(widget.logoImage)),
+                             fit: BoxFit.cover,
+                           )
+                       ),
+                     ):Container(),
                      Expanded(
                        child: Center(
                          child: Text(
@@ -269,6 +284,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>    ReportTypeList(
                   mListener: this,
                   reportName:reportType,
+                  logoImage: widget.logoImage,
                   reportId:reportId,
                   url: ApiConstants().reports,
                   partId: selectedFranchiseeId,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +32,7 @@ class CreateOrderInvoice extends StatefulWidget {
   final come;
   final readOnly;
   final invoiceNo;
+  final String logoImage;
 
   const CreateOrderInvoice(
       {super.key,
@@ -38,7 +41,7 @@ class CreateOrderInvoice extends StatefulWidget {
       required this.order_No,
       this.editedItem,
       this.come,
-      this.readOnly, this.invoiceNo});
+      this.readOnly, this.invoiceNo, required this.logoImage});
   @override
   _CreateOrderInvoiceState createState() => _CreateOrderInvoiceState();
 }
@@ -287,7 +290,31 @@ var order_No;
                                 Navigator.pop(context);
                               }},
                             child: FaIcon(Icons.arrow_back),
-                          ),
+                          ),         widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
+                          const SizedBox(width: 10.0),
                           Expanded(
                             child: Center(
                               child: Text(

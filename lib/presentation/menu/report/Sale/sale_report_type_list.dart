@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,7 +31,7 @@ class SaleReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
-
+  final String logoImage;
   const SaleReportTypeList(
       {super.key,
       this.reportName,
@@ -42,7 +43,7 @@ class SaleReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener});
+      this.mListener, required this.logoImage});
 
   @override
   State<SaleReportTypeList> createState() => _SaleReportTypeListState();
@@ -169,6 +170,18 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -289,7 +302,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                       SaleDetailReportActivity(
                                         apiurl: ApiConstants().getSalePartywise,
                                         venderId: array_list[index]
-                                            ['Vendor_ID'],
+                                            ['Vendor_ID'],   logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
                                         fromDate: applicablefrom,
@@ -305,7 +318,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                         apiurl: ApiConstants().getSaleItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
-                                            ['Item_Name'],
+                                            ['Item_Name'],   logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
@@ -318,7 +331,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                         mListener: this,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
-                                        formId: "ST003",
+                                        formId: "ST003",   logoImage: widget.logoImage,
                                         arrData: dataArr,
                                       )));
                         }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,9 +20,9 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../transaction/sell/create_sell_activity.dart';
-import '../../transaction/sell/sell_activity.dart';
-class SaleDetailReportActivity extends StatefulWidget {
 
+class SaleDetailReportActivity extends StatefulWidget {
+  final String logoImage;
   final apiurl;
   final venderId;
   final venderName;
@@ -30,7 +31,7 @@ class SaleDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
-  const SaleDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come});
+  const SaleDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
 
   @override
   State<SaleDetailReportActivity> createState() => _SaleDetailReportActivityState();
@@ -137,6 +138,18 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: widget.come=="itemName"? Text("Sale ${ApplicationLocalizations.of(context)!
@@ -254,7 +267,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                         print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreateSellInvoice(
+                            CreateSellInvoice(   logoImage: widget.logoImage,
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,

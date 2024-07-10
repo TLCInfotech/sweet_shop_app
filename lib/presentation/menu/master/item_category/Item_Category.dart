@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -28,7 +29,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class ItemCategoryActivity extends StatefulWidget {
   final  formId;
   final  arrData;
-  const ItemCategoryActivity({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const ItemCategoryActivity({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<ItemCategoryActivity> createState() => _ItemCategoryActivityState();
@@ -158,6 +160,18 @@ bool isLoaderShow=false;
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

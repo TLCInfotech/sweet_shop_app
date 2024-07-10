@@ -105,4 +105,5 @@ class ApiConstants {
   String reports="Reports";
   String dashboardProfitPartywise="DashboardProfitPartywise";
   String companyImage="CompanyImage";
+  String deleteNotification="deleteNotification";
 }

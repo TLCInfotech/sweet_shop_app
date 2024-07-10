@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +31,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 class ExpenseGroup extends StatefulWidget {
   final  formId;
   final  arrData;
-  const ExpenseGroup({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const ExpenseGroup({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<ExpenseGroup> createState() => _ExpenseGroupState();
@@ -121,6 +123,18 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

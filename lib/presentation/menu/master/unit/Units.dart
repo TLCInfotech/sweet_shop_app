@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,8 +27,8 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class UnitsActivity extends StatefulWidget {
   final  formId;
-  final  arrData;
-  const UnitsActivity({super.key, this.formId, this.arrData});
+  final  arrData;final String logoImage;
+  const UnitsActivity({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<UnitsActivity> createState() => _UnitsActivityState();
@@ -141,6 +142,18 @@ class _UnitsActivityState extends State<UnitsActivity> {
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(

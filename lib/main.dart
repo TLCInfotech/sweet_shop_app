@@ -63,8 +63,6 @@ class MyApp extends StatelessWidget {
         );
       },
       routes: <String, WidgetBuilder>{
-        '/category': (BuildContext context) =>   ItemCategoryActivity(),
-        '/unit': (BuildContext context) =>   UnitsActivity(),
         '/loginActivity': (BuildContext context) =>   const LoginActivity(),
         '/domainLinkActivity': (BuildContext context) =>   const DomainLinkActivity(),
         '/dashboard': (BuildContext context) =>   DashboardActivity(),

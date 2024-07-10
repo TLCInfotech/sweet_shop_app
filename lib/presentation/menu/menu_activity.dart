@@ -396,6 +396,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
           compId: companyId,
             formId: "RM006",
+            logoImage:logoImage,
             arrData: dataArrM
         )));
       /*  if(mounted){
@@ -432,6 +433,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
           compId: companyId,
+            logoImage:logoImage,
             formId: "RM007",
             arrData: dataArrM
         )));
@@ -471,6 +473,7 @@ var dataArrM;
             builder: (BuildContext context){
               return AddFranchiseeActivity(mListener: this,
                   formId: "RM008",
+                  logoImage: logoImage,
                   arrData: dataArrM);
             }
         );
@@ -503,6 +506,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => UsersList(
           formId:"LM001" ,
+          logoImage:logoImage,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -539,6 +543,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => UserRightListActivity(
           arrData: dataArrM,
+          logoImage:logoImage,
           formId: "AM006",
         )));
 
@@ -575,6 +580,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity(
           formId:"RM004" ,
+          logoImage:logoImage,
           arrData: dataArrM,
         )));
    /*     if(mounted){
@@ -610,7 +616,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ExpenseListingActivity(
-          formId:"AM001" ,
+          formId:"AM001" , logoImage:logoImage,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -645,7 +651,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    ExpenseGroup(
-          formId:"AM002" ,
+          formId:"AM002" , logoImage:logoImage,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -681,7 +687,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
           companyId: companyId,
-          arrData: dataArrM,
+          arrData: dataArrM, logoImage:logoImage,
           formId: "AM007",
         )));
       /*  if(mounted){
@@ -717,7 +723,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>CreateItemOpeningBalForCompany(
             dateNew: DateTime.now().toString(),
-        formId:"RM003" ,
+        formId:"RM003" , logoImage:logoImage,
         arrData: dataArrM,
         )));
    /*     if(mounted){
@@ -754,7 +760,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemOpeningBal(
-          newDate: null,
+          newDate: null, logoImage:logoImage,
             formId: "RM005",
             titleKey: "Branch Item Opening Balance",
             arrData: dataArrM
@@ -794,7 +800,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerOpeningBal(
-          formId:"AM005" ,
+          formId:"AM005" , logoImage:logoImage,
           arrData: dataArrM,
         )));
        /* if(mounted){
@@ -830,7 +836,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCategoryActivity(
-          formId:"RM002" ,
+          formId:"RM002" , logoImage:logoImage,
           arrData: dataArrM,
         )));
        /* if(mounted){
@@ -866,7 +872,7 @@ var dataArrM;
     return GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemsActivity(
-          formId:"RM001" ,
+          formId:"RM001" , logoImage:logoImage,
           arrData: dataArrM,
         )));
      /*   if(mounted){
@@ -991,7 +997,9 @@ var dataArrM;
   Widget getLedgerVouchersReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const LedgerVouchersReport()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    LedgerVouchersReport(
+          logoImage:logoImage,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1019,7 +1027,9 @@ var dataArrM;
   Widget getSellReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const SaleReportActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    SaleReportActivity(
+          logoImage:logoImage,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1047,7 +1057,9 @@ var dataArrM;
   Widget getPurchaseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const PurchaseReportActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    PurchaseReportActivity(
+          logoImage:logoImage,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -1075,7 +1087,8 @@ var dataArrM;
   Widget getExpenseReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ExpenseReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    ExpenseReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1104,7 +1117,8 @@ var dataArrM;
   Widget getPaymentReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const PaymentReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    PaymentReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1133,7 +1147,8 @@ var dataArrM;
   Widget getReciptReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const RecieptReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    RecieptReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1162,7 +1177,8 @@ var dataArrM;
   Widget getCreditNoteReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const CreditReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreditReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1192,7 +1208,8 @@ var dataArrM;
   Widget getDebitNoteReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const DebitReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    DebitReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1222,7 +1239,8 @@ var dataArrM;
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const MisReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    MisReportActivity(
+          logoImage:logoImage,
         )));
       },
       onDoubleTap: (){},
@@ -1351,6 +1369,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
           mListener: this,
+          logoImage:logoImage,
           formId: "ST002",
           arrData: dataArr,
         )));
@@ -1392,6 +1411,7 @@ var dataArrM;
           mListener: this,
           formId: "ST001",
           arrData: dataArr,
+          logoImage:logoImage
         )));
 
 
@@ -1424,7 +1444,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
-          mListener: this,
+          mListener: this, logoImage:logoImage,
           formId: "ST003",
           arrData: dataArr,
         )));
@@ -1457,7 +1477,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,
-          formId: "PT005",
+          formId: "PT005", logoImage:logoImage,
           arrData: dataArr,
         )));
 
@@ -1490,7 +1510,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>
             PaymentActivity(mListener: this,
-              formId: "AT001",
+              formId: "AT001", logoImage:logoImage,
               arrData: dataArr,)));
 
       },
@@ -1521,7 +1541,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            ReceiptActivity(mListener: this,
+            ReceiptActivity(mListener: this, logoImage:logoImage,
               formId: "AT002",
               arrData: dataArr,)));
 
@@ -1553,7 +1573,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this,
-            formId: "AT005",
+            formId: "AT005", logoImage:logoImage,
             arrData: dataArr)));
 
       },
@@ -1583,7 +1603,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
-            formId: "AT006",
+            formId: "AT006", logoImage:logoImage,
             arrData: dataArr)));
 
       },
@@ -1614,7 +1634,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this,
-            formId: "AT004",
+            formId: "AT004", logoImage:logoImage,
             arrData: dataArr)));
 
       },
@@ -1645,7 +1665,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this,
-            formId: "AT003",
+            formId: "AT003", logoImage:logoImage,
             arrData: dataArr)));
 
       },
@@ -1676,7 +1696,7 @@ var dataArrM;
     return  GestureDetector(
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,
-          formId: "AT009",
+          formId: "AT009", logoImage:logoImage,
           arrData: dataArr,
         )));
        /* if(mounted){
@@ -1792,7 +1812,9 @@ var dataArrM;
   Widget getChangePassword(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>   const ChangePasswordActivity()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>    ChangePasswordActivity(
+          logoImage:logoImage,
+        )));
       },
       onDoubleTap: (){},
       child: Padding(

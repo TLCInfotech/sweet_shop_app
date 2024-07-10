@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import '../../../core/app_preferance.dart';
 import '../../../core/colors.dart';
@@ -17,7 +19,8 @@ import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 
 class NotificationListing extends StatefulWidget {
-  const NotificationListing({super.key});
+  final String logoImage;
+  const NotificationListing({super.key, required this.logoImage});
 
   @override
   State<NotificationListing> createState() => _NotificationListingState();
@@ -153,6 +156,18 @@ class _NotificationListingState extends State<NotificationListing> {
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -189,7 +204,7 @@ class _NotificationListingState extends State<NotificationListing> {
                 ),
               ),
               Visibility(
-                  visible: notification_list.isEmpty && isApiCall  ? true : false,
+                  visible: notification_list.isEmpty ? true : false,
                   child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
             ],
           ),
@@ -210,60 +225,85 @@ class _NotificationListingState extends State<NotificationListing> {
             itemCount: notification_list.length,
             controller: _scrollController,
             itemBuilder: (BuildContext context, int index) {
-              return  AnimationConfiguration.staggeredList(
-                position: index,
-                duration:
-                const Duration(milliseconds: 500),
-                child: SlideAnimation(
-                  verticalOffset: -44.0,
-                  child: FadeInAnimation(
-                    delay: const Duration(microseconds: 1500),
-                    child: GestureDetector(
-                      onTap: ()async{
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                          newDate: DateTime.parse(notification_list[index]['Date']),
-                          formId: "RM005",
-                          titleKey: notification_list[index]['Title'],
-                          arrData: dataArrM,
-                        )));
-                        await updatecallPostSaleInvoice(notification_list[index]['ID']);
-                        await callGetNotifications(1);
-                        },
-                      child: Card(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child:notification_list[index]['Status']=="Read"? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
-                              ),
-                              Expanded(
-                                  child:Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          margin: const EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
-                                              notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
-                                             ], 
+              return  Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  setState(() {
+                    callDeleteUser(notification_list[index]['ID'].toString(),index,notification_list[index]['Date']);
+                 //   notification_list.removeAt(index);
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${notification_list[index]['Title']} deleted'),
+                    ),
+                  );
+                },
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                child: AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration:
+                  const Duration(milliseconds: 500),
+                  child: SlideAnimation(
+                    verticalOffset: -44.0,
+                    child: FadeInAnimation(
+                      delay: const Duration(microseconds: 1500),
+                      child: GestureDetector(
+                        onTap: ()async{
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                            newDate: DateTime.parse(notification_list[index]['Date']),
+                            formId: "RM005",    logoImage: widget.logoImage,
+                            titleKey: notification_list[index]['Title'],
+                            arrData: dataArrM,
+                          )));
+                          await updatecallPostSaleInvoice(notification_list[index]['ID']);
+                          await callGetNotifications(1);
+                          },
+                        child: Card(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:notification_list[index]['Status']=="Read"? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
+                                ),
+                                Expanded(
+                                    child:Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
+                                                notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
+                                               ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                          
-                                    ],
-                                  )
-                          
-                              )
-                            ],
+
+                                      ],
+                                    )
+
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -300,6 +340,7 @@ class _NotificationListingState extends State<NotificationListing> {
     );
   }
 
+  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   callGetNotifications(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -316,7 +357,7 @@ class _NotificationListingState extends State<NotificationListing> {
             page: page.toString()
         );
 
-        DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+
 
 
         String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
@@ -457,6 +498,52 @@ class _NotificationListingState extends State<NotificationListing> {
 
       }); }
     else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  callDeleteUser(String removeId, int index, String indexDate) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String uid = await AppPreferences.getUId();
+    String baseurl=await AppPreferences.getDomainLink();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected) {
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow = true;
+        });
+//{DateFormat('yyyy-MM-dd').format(DateTime.parse(indexDate))}
+        String apiUrl = "$baseurl${ApiConstants().deleteNotification}?Company_ID=$companyId&ID=$removeId&Date=$invoiceDate";
+        apiRequestHelper.callAPIsForDeleteAPI(apiUrl,"", "",
+            onSuccess: (data) {
+              setState(() {
+                isLoaderShow = false;
+                notification_list.removeAt(index);
+              });
+              print("  LedgerLedger  $data ");
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+            }, sessionExpire: (e) {
+              setState(() {
+                isLoaderShow = false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    } else {
       if (mounted) {
         setState(() {
           isLoaderShow = false;

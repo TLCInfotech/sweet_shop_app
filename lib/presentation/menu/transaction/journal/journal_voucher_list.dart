@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +25,8 @@ class JournalVoucherActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
-  const JournalVoucherActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData});
+  final String logoImage;
+  const JournalVoucherActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, required this.logoImage});
   @override
   State<JournalVoucherActivity> createState() => _PaymentActivityState();
 }
@@ -131,6 +133,18 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                 },
                                 child: FaIcon(Icons.arrow_back),
                               ),
+                              widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -206,7 +220,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                   await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                     mListener: this,
                     dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
-                    voucherNo: null,
+                    voucherNo: null,   logoImage: widget.logoImage,
                     companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                   )));
                   selectedFranchiseeId="";
@@ -350,7 +364,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                       onTap: ()async{
 
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-                          mListener: this,
+                          mListener: this,   logoImage: widget.logoImage,
                           dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
                           voucherNo: payment_list[index]['Voucher_No'],
                           debitNote:payment_list[index] ,

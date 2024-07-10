@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -21,7 +22,8 @@ class ConstantOrderActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
-  const ConstantOrderActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData});
+  final  String logoImage;
+  const ConstantOrderActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<ConstantOrderActivity> createState() => _ConstantOrderActivityState();
@@ -110,6 +112,31 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
+                        const SizedBox(width: 10.0),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -360,6 +387,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                     MaterialPageRoute(
                       builder: (context) => CreateOrderInvoice(
                         dateNew: invoiceDate,
+                        logoImage: widget.logoImage,
                         order_No: saleInvoice_list[index]['Order_No'],
                         mListener: this,
                         editedItem: saleInvoice_list[index],

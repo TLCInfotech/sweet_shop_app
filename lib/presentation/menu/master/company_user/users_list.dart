@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,7 +24,8 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class UsersList extends StatefulWidget {
   final  formId;
   final  arrData;
-  const UsersList({super.key, this.formId, this.arrData});
+  final String logoImage;
+  const UsersList({super.key, this.formId, this.arrData, required this.logoImage});
 
   @override
   State<UsersList> createState() => _UsersListState();
@@ -96,6 +98,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
               MaterialPageRoute(
                   builder: (context) => UserCreate(
                       editUser: item,
+                      logoImage: widget.logoImage,
                       mListener: this,
                       readOnly:
                       singleRecord['Update_Right'],
@@ -186,6 +189,18 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(
@@ -216,6 +231,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                     MaterialPageRoute(
                         builder: (context) => UserCreate(
                               mListener: this,
+                          logoImage: widget.logoImage,
                           compId: companyId,
                             )));
               }):Container(),
@@ -296,6 +312,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                             builder: (context) => UserCreate(
                                   editUser: userList[index],
                                   mListener: this,
+                                logoImage: widget.logoImage,
                                 readOnly:
                                 singleRecord['Update_Right'],
                               compId: companyId,

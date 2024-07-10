@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,11 +24,12 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class LedgerActivity extends StatefulWidget {
   final String? comeFor;
   final dateNew;
+  final String logoImage;
   final franhiseeID;
   final franchiseeName;
   final  formId;
   final  arrData;
-  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData, this.franchiseeName});
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
@@ -137,7 +139,18 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                                   Navigator.pop(context);
                                 },
                                 child: FaIcon(Icons.arrow_back),
-                              ),
+                              ),         widget.logoImage!=""? Container(
+                                height:SizeConfig.screenHeight*.05,
+                                width:SizeConfig.screenHeight*.05,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7),
+                                    image: DecorationImage(
+                                      image: FileImage(File(widget.logoImage)),
+                                      fit: BoxFit.cover,
+                                    )
+                                ),
+                              ):Container(),
                               Expanded(
                                 child: Center(
                                   child: Text(
@@ -211,7 +224,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                 ),
                 onPressed: () async{
                   await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                    mListener: this,
+                    mListener: this,   logoImage: widget.logoImage,
                     voucherNo: null,
                     dateNew:    newDate,
                     // DateFormat('dd-MM-yyyy').format(newDate),
@@ -352,7 +365,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                     child: GestureDetector(
                       onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                          mListener: this,
+                          mListener: this,   logoImage: widget.logoImage,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
                           dateNew: newDate,
                           readOnly:singleRecord['Update_Right'],

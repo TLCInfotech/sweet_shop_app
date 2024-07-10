@@ -322,6 +322,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
           dateNew: saleDate,
           formId: "AT002",
+          logoImage: logoImage,
           arrData: dataArr,
         )));
       },

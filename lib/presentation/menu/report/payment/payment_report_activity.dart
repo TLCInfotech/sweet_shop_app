@@ -20,7 +20,8 @@ import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class PaymentReportActivity extends StatefulWidget {
-  const PaymentReportActivity({super.key});
+  final String logoImage;
+  const PaymentReportActivity({super.key, required this.logoImage});
   // final PaymentReportActivityInterface mListener;
   @override
   State<PaymentReportActivity> createState() => _PaymentReportActivityState();
@@ -91,6 +92,18 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                        },
                        child: FaIcon(Icons.arrow_back),
                      ),
+                     widget.logoImage!=""? Container(
+                       height:SizeConfig.screenHeight*.05,
+                       width:SizeConfig.screenHeight*.05,
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(7),
+                           image: DecorationImage(
+                             image: FileImage(File(widget.logoImage)),
+                             fit: BoxFit.cover,
+                           )
+                       ),
+                     ):Container(),
                      Expanded(
                        child: Center(
                          child: Text(
@@ -338,6 +351,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                       MaterialPageRoute(
                           builder: (context) => PaymentReportTypeList(
                             reportName: reportType,
+                            logoImage: widget.logoImage,
                             reportId: reportId,
                             mListener: this,
                             url: ApiConstants().reports,

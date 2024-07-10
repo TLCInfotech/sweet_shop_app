@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,6 +22,7 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class DebitNoteReportTypeList extends StatefulWidget {
   final mListener;
+  final String logoImage;
   final reportName;
   final reportId;
   final vendorName;
@@ -42,7 +44,7 @@ class DebitNoteReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener});
+      this.mListener, required this.logoImage});
 
   @override
   State<DebitNoteReportTypeList> createState() => _DebitNoteReportTypeListState();
@@ -169,6 +171,18 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                           },
                           child: FaIcon(Icons.arrow_back),
                         ),
+                        widget.logoImage!=""? Container(
+                          height:SizeConfig.screenHeight*.05,
+                          width:SizeConfig.screenHeight*.05,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              image: DecorationImage(
+                                image: FileImage(File(widget.logoImage)),
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ):Container(),
                         Expanded(
                           child: Center(
                             child: Text(
@@ -290,6 +304,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                         apiurl: ApiConstants().voucherPartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
+                                        logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
                                         fromDate: applicablefrom,
@@ -306,6 +321,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
                                             ['Item_Name'],
+                                        logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
@@ -320,6 +336,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                             array_list[index]['Date']),
                                         formId: "AT005",
                                         come: "report",
+                                    logoImage: widget.logoImage,
                                         arrData: dataArr,
                                       )));
                         }

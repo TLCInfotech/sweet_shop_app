@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,10 +31,11 @@ class CreateLedger extends StatefulWidget {
   final dateNew;
   final  voucherNo;
   final come;
+  final String logoImage;
   final editedItem;
   final franchiseeDetails;
   final readOnly;
-  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails, this.readOnly});
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails, this.readOnly, required this.logoImage});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -225,6 +228,18 @@ var voucherNo;
                               }},
                             child: FaIcon(Icons.arrow_back),
                           ),
+                          widget.logoImage!=""? Container(
+                            height:SizeConfig.screenHeight*.05,
+                            width:SizeConfig.screenHeight*.05,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: DecorationImage(
+                                  image: FileImage(File(widget.logoImage)),
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ):Container(),
                           Expanded(
                             child: Center(
                               child: Text(
