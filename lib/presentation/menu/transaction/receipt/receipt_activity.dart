@@ -40,6 +40,22 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   int page = 1;
   bool isPagination = true;
   final ScrollController _scrollController =  ScrollController();
+  double minX = 30;
+  double minY = 30;
+  double maxX = SizeConfig.screenWidth*0.78;
+  double maxY = SizeConfig.screenHeight*0.9;
+
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+
+  void _updateOffset(Offset newOffset) {
+    setState(() {
+      // Clamp the Offset values to stay within the defined constraints
+      double clampedX = newOffset.dx.clamp(minX, maxX);
+      double clampedY = newOffset.dy.clamp(minY, maxY);
+      position = Offset(clampedX, clampedY);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -73,104 +89,121 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
       children: [
-        Scaffold(
-          backgroundColor: Color(0xFFfffff5),
-          appBar: PreferredSize(
-            preferredSize: AppBar().preferredSize,
-            child: SafeArea(
-              child:  Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
-                color: Colors.transparent,
-                // color: Colors.red,
-                margin: EdgeInsets.only(top: 10,left: 10,right: 10),
-               child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
-                  title:  Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: FaIcon(Icons.arrow_back),
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("receipt_invoice")!,
-                                style: appbar_text_style,),
-                            ),
-                          ),
-                        ],
-                      ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Scaffold(
+              backgroundColor: Color(0xFFfffff5),
+              appBar: PreferredSize(
+                preferredSize: AppBar().preferredSize,
+                child: SafeArea(
+                  child:  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
                     ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
+                    color: Colors.transparent,
+                    // color: Colors.red,
+                    margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                   child: AppBar(
+                      leadingWidth: 0,
+                      automaticallyImplyLeading: false,
+                      title:  Container(
+                          width: SizeConfig.screenWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: FaIcon(Icons.arrow_back),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    ApplicationLocalizations.of(context)!.translate("receipt_invoice")!,
+                                    style: appbar_text_style,),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
                   ),
-                  backgroundColor: Colors.white,
                 ),
+              ),
+              body: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getPurchaseDateLayout(),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        recipt_list.isNotEmpty? getTotalCountAndAmount()
+                        :Container(),
+                        const SizedBox(
+                          height: .5,
+                        ),
+                        get_purchase_list_layout()
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                      visible: recipt_list.isEmpty && isApiCall  ? true : false,
+                      child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                ],
               ),
             ),
-          ),
-          floatingActionButton:singleRecord['Insert_Right']==true ?FloatingActionButton(
-              backgroundColor: Color(0xFFFBE404),
-              child: Icon(
-                Icons.add,
-                size: 30,
-                color: Colors.black87,
-              ),
-              onPressed: ()async {
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
-                  mListener: this,
-                  newDate: newDate,
-                  voucherNo: null,
-                  dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
-                )));
-                selectedFranchiseeId="";
-                partyBlank=false;
-                recipt_list=[];
-                await  getRecipt(1);
-              }):Container(),
-          body: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getPurchaseDateLayout(),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    recipt_list.isNotEmpty? getTotalCountAndAmount()
-                    :Container(),
-                    const SizedBox(
-                      height: .5,
-                    ),
-                    get_purchase_list_layout()
-                  ],
-                ),
-              ),
-              Visibility(
-                  visible: recipt_list.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-            ],
-          ),
+            Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+          ],
         ),
-        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+        singleRecord['Insert_Right']==true ?Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // setState(() {
+              //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              // });
+              _updateOffset(position + details.delta);
+
+            },
+            child: FloatingActionButton(
+                backgroundColor: Color(0xFFFBE404),
+                child: Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: ()async {
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
+                    mListener: this,
+                    newDate: newDate,
+                    voucherNo: null,
+                    dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
+                  )));
+                  selectedFranchiseeId="";
+                  partyBlank=false;
+                  recipt_list=[];
+                  await  getRecipt(1);
+                }),
+          ),
+        ):Container(),
       ],
     );
   }

@@ -697,7 +697,7 @@ String token=await AppPreferences.getSessionToken();
           ApiResponseForFetchDynamic apiResponse = ApiResponseForFetchDynamic();
           apiResponse =
               ApiResponseForFetchDynamic.fromJson(json.decode(response.body));
-          print("@@@@@@@@@@@@@@@ ${apiResponse.data}");
+          print("@@@@@@@@@@@@@@@ ${apiResponse.msg}");
           onException(apiResponse.msg);
           break;
         case 400:

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_dropdown_for_user.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -75,7 +76,39 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
   String selectedUserId="";
 /* Widget to get sale ledger Name Layout */
   Widget getUserSearchLayout(double parentHeight, double parentWidth) {
-    return isLoaderShow?Container():
+    return isLoaderShow?Container():SearchableLedgerDropdownUser(
+        apiUrl: "${ApiConstants().getuserFilteredList}?",
+        titleIndicator: false,
+        title: ApplicationLocalizations.of(context)!.translate("user")!,
+        franchiseeName: selectedUSer!=""? selectedUSer:"",
+        franchisee:selectedUSer,
+        callback: (name,id)async{
+          setState(() {
+            selectedUSer = name!;
+            selectedUserId = id!;
+          });
+          print(selectedUSer);
+          var item={
+            "UID":name,
+          };
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserCreate(
+                      editUser: item,
+                      mListener: this,
+                      readOnly:
+                      singleRecord['Update_Right'],
+                      compId: companyId,
+                      come:"edit"
+                  )));
+          setState(() {
+            page=1;
+          });
+          await       callGetUser(page);
+        },
+        ledgerName: selectedUSer);
+    /*return isLoaderShow?Container():
     SearchableLedgerDropdown(
         apiUrl: "${ApiConstants().getuserFilteredList}?",
         titleIndicator: false,
@@ -119,7 +152,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
           // )));
           // await callGetLedger(0);
         },
-        ledgerName: selectedUSer);
+        ledgerName: selectedUSer);*/
   }
 
   @override

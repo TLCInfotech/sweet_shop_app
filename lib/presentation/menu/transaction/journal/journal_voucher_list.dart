@@ -55,6 +55,22 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
     singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == widget.formId);
     print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
   }
+  double minX = 30;
+  double minY = 30;
+  double maxX = SizeConfig.screenWidth*0.78;
+  double maxY = SizeConfig.screenHeight*0.9;
+
+  Offset position = Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+
+  void _updateOffset(Offset newOffset) {
+    setState(() {
+      // Clamp the Offset values to stay within the defined constraints
+      double clampedX = newOffset.dx.clamp(minX, maxX);
+      double clampedY = newOffset.dy.clamp(minY, maxY);
+      position = Offset(clampedX, clampedY);
+    });
+  }
+
   String companyId='';
   setData()async{
     companyId=await AppPreferences.getCompanyId();
@@ -84,105 +100,122 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
       children: [
-        Scaffold(
-          backgroundColor: const Color(0xFFfffff5),
-          appBar: PreferredSize(
-            preferredSize: AppBar().preferredSize,
-            child: SafeArea(
-              child:  Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)
-                ),
-                color: Colors.transparent,
-                // color: Colors.red,
-                margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-               child: AppBar(
-                  leadingWidth: 0,
-                  automaticallyImplyLeading: false,
-                  title:  Container(
-                      width: SizeConfig.screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: FaIcon(Icons.arrow_back),
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
-                                style: appbar_text_style,),
-                            ),
-                          ),
-                        ],
-                      ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Scaffold(
+              backgroundColor: const Color(0xFFfffff5),
+              appBar: PreferredSize(
+                preferredSize: AppBar().preferredSize,
+                child: SafeArea(
+                  child:  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
                     ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)
-                  ),
+                    color: Colors.transparent,
+                    // color: Colors.red,
+                    margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+                   child: AppBar(
+                      leadingWidth: 0,
+                      automaticallyImplyLeading: false,
+                      title:  Container(
+                          width: SizeConfig.screenWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: FaIcon(Icons.arrow_back),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    ApplicationLocalizations.of(context)!.translate("journal_voucher")!,
+                                    style: appbar_text_style,),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)
+                      ),
 
-                  backgroundColor: Colors.white,
+                      backgroundColor: Colors.white,
+                    ),
+                  ),
                 ),
+              ),
+              body: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getPurchaseDateLayout(),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
+                        const SizedBox(
+                          height: .5,
+                        ),
+                        get_payment_list_layout()
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                      visible: payment_list.isEmpty && isApiCall  ? true : false,
+                      child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+
+                ],
               ),
             ),
-          ),
-          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
-              backgroundColor: const Color(0xFFFBE404),
-              child: const Icon(
-                Icons.add,
-                size: 30,
-                color: Colors.black87,
-              ),
-              onPressed: ()async {
-              await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
-                  mListener: this,
-                  dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
-                  voucherNo: null,
-                  companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
-                )));
-                selectedFranchiseeId="";
-                partyBlank=false;
-                payment_list=[];
-                await  getJournals(1);
-              }):Container(),
-          body: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 4,left: 15,right: 15,bottom: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getPurchaseDateLayout(),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    payment_list.isNotEmpty?getTotalCountAndAmount():Container(),
-                    const SizedBox(
-                      height: .5,
-                    ),
-                    get_payment_list_layout()
-                  ],
-                ),
-              ),
-              Visibility(
-                  visible: payment_list.isEmpty && isApiCall  ? true : false,
-                  child: getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
-
-            ],
-          ),
+            Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+          ],
         ),
-        Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
+        singleRecord['Insert_Right']==true? Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              // setState(() {
+              //   position = Offset(position.dx + details.delta.dx, position.dy + details.delta.dy);
+              // });
+              _updateOffset(position + details.delta);
+
+            },
+            child: FloatingActionButton(
+                backgroundColor: const Color(0xFFFBE404),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.black87,
+                ),
+                onPressed: ()async {
+                  await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
+                    mListener: this,
+                    dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
+                    voucherNo: null,
+                    companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
+                  )));
+                  selectedFranchiseeId="";
+                  partyBlank=false;
+                  payment_list=[];
+                  await  getJournals(1);
+                }),
+          ),
+        ):Container(),
       ],
     );
   }
