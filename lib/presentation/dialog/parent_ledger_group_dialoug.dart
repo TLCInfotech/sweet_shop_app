@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../core/internet_check.dart';
@@ -293,7 +294,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&PageSize=12&Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&${StringEn.pageSize}&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

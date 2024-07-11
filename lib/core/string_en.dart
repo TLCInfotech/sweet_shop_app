@@ -274,4 +274,5 @@ class StringEn{
   static const SALE = "Sale";
   static const PURCHASE = "Purchase";
   static const frnachisee_id = "Franchisee_ID";
+  static const pageSize="PageSize=50";
 }

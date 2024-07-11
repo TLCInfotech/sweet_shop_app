@@ -471,7 +471,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                           displayLayout = false;
                         });
                       }
-                      callPostItemOpeningBal();
+                      print("jjkgjgjjg  $Item_list");
+                     callPostItemOpeningBal();
                     }
                   },
                   onDoubleTap: () {},
@@ -989,9 +990,10 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
           date: DateFormat('yyyy-MM-dd').format(applicablefrom),
           modifier: creatorName,
           modifierMachine: deviceId,
-          iNSERT: Inserted_list.toList(),
-          uPDATE: Updated_list.toList(),
-          dELETE: Deleted_list.toList());
+          iNSERT: Item_list.toList(),
+          // uPDATE: Updated_list.toList(),
+          // dELETE: Deleted_list.toList()
+          );
       print("mosdeemmm  ${model.toJson()}");
       String apiUrl = baseurl + ApiConstants().franchisee_item_rate;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
@@ -1041,7 +1043,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
             "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
-        // &PageNumber=$page&PageSize=10";
+        // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww3333  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
@@ -1129,7 +1131,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
             TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
             "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
-        // &PageNumber=$page&PageSize=10";
+        // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",

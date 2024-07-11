@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -466,7 +467,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&PageSize=10";
+        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
           print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",

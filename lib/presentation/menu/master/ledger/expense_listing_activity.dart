@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/create_expense_activity.dart';
 
 import '../../../../core/app_preferance.dart';
@@ -375,7 +376,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getFilteredLedger}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredLedger}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

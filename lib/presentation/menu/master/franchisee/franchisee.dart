@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee/franchisee_create_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -371,7 +372,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getFilteredFranchisee}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredFranchisee}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

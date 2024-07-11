@@ -150,7 +150,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         );
         // &Category_ID=$selectedCategoryID
         String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
-        // &PageNumber=$page&PageSize=10";
+        // &PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
                setState(() {
@@ -245,7 +245,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
             "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
-        // &PageNumber=$page&PageSize=10";
+        // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
@@ -1246,9 +1246,9 @@ showButton=true;
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,
-          iNSERT: Inserted_list.toList(),
-          uPDATE: Updated_list.toList(),
-          dELETE: Deleted_list.toList()
+          iNSERT: Item_list.toList(),
+          // uPDATE: Updated_list.toList(),
+          // dELETE: Deleted_list.toList()
       );
       String apiUrl =baseurl + ApiConstants().franchisee_item_rate;
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",

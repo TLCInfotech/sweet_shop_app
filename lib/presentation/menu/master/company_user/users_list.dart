@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/create_user.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_dropdown_for_user.dart';
 import '../../../../core/app_preferance.dart';
@@ -395,7 +396,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
-        String apiUrl = "$baseurl${ApiConstants().getuserFilteredList}?PageNumber=$page&PageSize=10&Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().getuserFilteredList}?PageNumber=$page&${StringEn.pageSize}&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {

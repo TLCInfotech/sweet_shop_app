@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -487,7 +488,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             page: page.toString()
         );
         String apiUrl;
-          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&PageSize=12";
+          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&${StringEn.pageSize}";
      print("njnjfjfvnjn  $apiUrl");
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){

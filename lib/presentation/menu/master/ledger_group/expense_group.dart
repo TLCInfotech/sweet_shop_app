@@ -10,6 +10,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/group_nature_dialog.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
@@ -697,7 +698,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user_rights/assign_rights_to_user.dart';
 
@@ -350,7 +351,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
             page: page.toString()
         );
         String apiUrl;
-        apiUrl = "${baseurl}${ApiConstants().users}?Company_ID=$companyId&PageNumber=$page&PageSize=12";
+        apiUrl = "${baseurl}${ApiConstants().users}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
