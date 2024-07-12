@@ -225,85 +225,60 @@ class _NotificationListingState extends State<NotificationListing> {
             itemCount: notification_list.length,
             controller: _scrollController,
             itemBuilder: (BuildContext context, int index) {
-              return  Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                onDismissed: (direction) {
-                  setState(() {
-                    callDeleteUser(notification_list[index]['ID'].toString(),index,notification_list[index]['Date']);
-                 //   notification_list.removeAt(index);
-                  });
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${notification_list[index]['Title']} deleted'),
-                    ),
-                  );
-                },
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                ),
-                child: AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration:
-                  const Duration(milliseconds: 500),
-                  child: SlideAnimation(
-                    verticalOffset: -44.0,
-                    child: FadeInAnimation(
-                      delay: const Duration(microseconds: 1500),
-                      child: GestureDetector(
-                        onTap: ()async{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                            newDate: DateTime.parse(notification_list[index]['Date']),
-                            formId: "RM005",    logoImage: widget.logoImage,
-                            titleKey: notification_list[index]['Title'],
-                            arrData: dataArrM,
-                          )));
-                          await updatecallPostSaleInvoice(notification_list[index]['ID']);
-                          await callGetNotifications(1);
-                          },
-                        child: Card(
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child:notification_list[index]['Status']=="Read"? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
-                                ),
-                                Expanded(
-                                    child:Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            margin: const EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
-                                                notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
-                                               ],
-                                            ),
+              return  AnimationConfiguration.staggeredList(
+                position: index,
+                duration:
+                const Duration(milliseconds: 500),
+                child: SlideAnimation(
+                  verticalOffset: -44.0,
+                  child: FadeInAnimation(
+                    delay: const Duration(microseconds: 1500),
+                    child: GestureDetector(
+                      onTap: ()async{
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                          newDate: DateTime.parse(notification_list[index]['Date']),
+                          formId: "RM005",    logoImage: widget.logoImage,
+                          titleKey: notification_list[index]['Title'],
+                          arrData: dataArrM,
+                        )));
+                        await updatecallPostSaleInvoice(notification_list[index]['ID']);
+                        await callGetNotifications(1);
+                        },
+                      child: Card(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child:notification_list[index]['Status']=="Read"? FaIcon(FontAwesomeIcons.bell): FaIcon(FontAwesomeIcons.solidBell),
+                              ),
+                              Expanded(
+                                  child:Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top: 10,left: 10,right: 5,bottom: 10),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
+                                              notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
+                                             ],
                                           ),
                                         ),
+                                      ),
 
-                                      ],
-                                    )
+                                    ],
+                                  )
 
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         ),
                       ),

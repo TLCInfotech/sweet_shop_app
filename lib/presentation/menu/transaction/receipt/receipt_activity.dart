@@ -310,7 +310,6 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
       },
 
     );
-
   }
 
   Widget getTotalCountAndAmount() {

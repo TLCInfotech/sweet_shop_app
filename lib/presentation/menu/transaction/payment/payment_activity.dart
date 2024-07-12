@@ -176,6 +176,11 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                         const SizedBox(
                           height: 2,
                         ),
+                        getBankCashLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+
+                        const SizedBox(
+                          height: 2,
+                        ),
                         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                         const SizedBox(
@@ -268,17 +273,43 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         applicablefrom: newDate
     );
   }
-  String selectedFranchiseeName="";
-  String selectedFranchiseeId="";
+
+  String selectedBankCashName="";
+  String selectedBankCashId="";
   bool partyBlank=true;
   /* Widget to get Franchisee Name Layout */
-  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+  Widget getBankCashLayout(double parentHeight, double parentWidth) {
     return partyBlank==false?Container():SearchableLedgerDropdown(
       apiUrl: ApiConstants().getBankCashLedger+"?",
       titleIndicator: false,
-      ledgerName: selectedFranchiseeName,
+      ledgerName: selectedBankCashName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
       title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+      callback: (name,id){
+        setState(() {
+          selectedBankCashName = name!;
+          selectedBankCashId = id.toString()!;
+          payment_list=[];
+          getPayment(1);
+        });
+
+        print("############3");
+        print(selectedBankCashId+"\n"+selectedBankCashName);
+      },
+
+    );
+
+  }
+  String selectedFranchiseeName="";
+  String selectedFranchiseeId="";
+  /* Widget to get Franchisee Name Layout */
+  Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?",
+      titleIndicator: false,
+      ledgerName: selectedFranchiseeName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name,id){
         setState(() {
           selectedFranchiseeName = name!;
@@ -288,12 +319,13 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         });
 
         print("############3");
-        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+        print(selectedBankCashId+"\n"+selectedBankCashName);
       },
 
     );
-
   }
+
+
   /* Widget to get total count and amount Layout */
   Widget getTotalCountAndAmount() {
     return Container(
@@ -482,7 +514,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedBankCashId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
