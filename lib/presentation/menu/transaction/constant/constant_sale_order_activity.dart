@@ -451,7 +451,7 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                   _arrList.clear();
                   _arrList=data;
                   print("orderDate    $data");
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;

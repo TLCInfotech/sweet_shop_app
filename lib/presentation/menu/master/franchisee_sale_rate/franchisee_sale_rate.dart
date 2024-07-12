@@ -468,6 +468,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                         setState(() {
                           selectedCopyFranchiseeName="";
                           selectedCopyFranchiseeId="";
+                          showButton=false;
                           displayLayout = false;
                         });
                       }
@@ -1147,7 +1148,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               List<dynamic> _arrList = [];
               //  _arrList.clear();
               _arrList = data;
-              if (_arrList.length < 10) {
+              if (_arrList.length < 50) {
                 if (mounted) {
                   setState(() {
                     isPagination = false;

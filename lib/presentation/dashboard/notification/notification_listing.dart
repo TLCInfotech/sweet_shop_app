@@ -369,7 +369,7 @@ class _NotificationListingState extends State<NotificationListing> {
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data['Notifications'];
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;

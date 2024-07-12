@@ -164,6 +164,10 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                         const SizedBox(
                           height: 2,
                         ),
+                        getBankCashLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                        const SizedBox(
+                          height: 2,
+                        ),
                         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                         const SizedBox(
                           height: 10,
@@ -212,7 +216,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                     voucherNo: null,
                     dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                   )));
-                  selectedFranchiseeId="";
+                  selectedBankCashId="";
                   partyBlank=false;
                   recipt_list=[];
                   await  getRecipt(1);
@@ -258,16 +262,41 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     );
   }
 
-  String selectedFranchiseeName="";
+  String selectedBankCashName="";
+  String selectedBankCashId="";
+  /* Widget to get Franchisee Name Layout */
+  Widget getBankCashLayout(double parentHeight, double parentWidth) {
+    return partyBlank==false?Container():SearchableLedgerDropdown(
+      apiUrl: ApiConstants().getBankCashLedger+"?",
+      titleIndicator: false,
+      ledgerName: selectedBankCashName,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+      callback: (name,id){
+        setState(() {
+          selectedBankCashName = name!;
+          selectedBankCashId = id.toString()!;
+          recipt_list=[];
+          getRecipt(1);
+        });
+
+        print("############3");
+        print(selectedBankCashId+"\n"+selectedBankCashName);
+      },
+
+    );
+
+  }
+ String selectedFranchiseeName="";
   String selectedFranchiseeId="";
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return partyBlank==false?Container():SearchableLedgerDropdown(
-      apiUrl: ApiConstants().getBankCashLedger+"?",
+      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
-      title: ApplicationLocalizations.of(context)!.translate("bank_cash_ledger")!,
+      title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name,id){
         setState(() {
           selectedFranchiseeName = name!;
@@ -277,7 +306,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
         });
 
         print("############3");
-        print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
+        print(selectedBankCashId+"\n"+selectedBankCashName);
       },
 
     );
@@ -370,7 +399,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                           come:"edit",
                         )));
 
-                        selectedFranchiseeId="";
+                        selectedBankCashId="";
                         partyBlank=false;
                         recipt_list=[];
                         await  getRecipt(1);
@@ -484,7 +513,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedBankCashId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -494,7 +523,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                   List<dynamic> _arrList = [];
                   _arrList.clear();
                   _arrList=data;
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;

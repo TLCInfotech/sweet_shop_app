@@ -142,7 +142,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
           isLoaderShow=true;
-          displayLayout=true;
+
         });
         TokenRequestModel model = TokenRequestModel(
             token: sessionToken,
@@ -156,12 +156,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                setState(() {
                  isLoaderShow=false;
                 disableColor = false;
+                 displayLayout=true;
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
 
 
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;
@@ -662,7 +663,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               else if(selectedFranchiseeID!=null) {
                 if (mounted) {
                   setState(() {
+                    selectedCopyFranchiseeName="";
+                    selectedCopyFranchiseeId="";
                     showButton=false;
+                    displayLayout = false;
                   });
                 }
                 callPostIFranchiseetemOpeningBal();

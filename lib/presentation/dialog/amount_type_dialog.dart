@@ -347,7 +347,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
                   List<dynamic> _arrList = [];
                   amount_type=data;
                   filteredStates=amount_type;
-                  // if (_arrList.length < 10) {    }
+                  // if (_arrList.length < 50) {    }
                   // if (page == 1) {
                   //   setDataToList(_arrList);
                   // } else {

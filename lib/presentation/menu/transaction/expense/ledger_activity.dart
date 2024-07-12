@@ -500,7 +500,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                   _arrList.clear();
                   _arrList=data;
                   partyBlank=true;
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;

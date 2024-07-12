@@ -329,7 +329,7 @@ class _LedegerGroupDialogState extends State<DefaultBankDialog>{
                   List<dynamic> _arrList = [];
                   default_bank=data;
                   filteredStates=default_bank;
-                  // if (_arrList.length < 10) {
+                  // if (_arrList.length < 50) {
                   //   if (mounted) {
                   //     setState(() {
                   //       isPagination = false;

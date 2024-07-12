@@ -405,7 +405,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
               List<dynamic> _arrList = [];
              // userList.clear();
               _arrList = data;
-              if (_arrList.length < 10) {
+              if (_arrList.length < 50) {
                 if (mounted) {
                   setState(() {
                     isPagination = false;

@@ -707,7 +707,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
                   print("responseeee   $data");
                   List<dynamic> _arrList = [];
                   _arrList=data;
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;

@@ -361,7 +361,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
                   _arrList.clear();
                   _arrList=data;
                   print("kjfhjfjhfhj  $users_list  $data");
-                  if (_arrList.length > 12) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = true;

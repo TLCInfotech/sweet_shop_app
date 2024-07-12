@@ -330,7 +330,7 @@ class _LedegerGroupDialogState extends State<GroupNatureDialog>{
                   List<dynamic> _arrList = [];
                   group_nature=data;
                 filteredStates=  group_nature;
-                  // if (_arrList.length < 10) {
+                  // if (_arrList.length < 50) {
                   //   if (mounted) {
                   //     setState(() {
                   //       isPagination = false;

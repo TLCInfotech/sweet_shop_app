@@ -497,7 +497,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                   List<dynamic> _arrList = [];
                   _arrList.clear();
                   _arrList=data;
-                  if (_arrList.length < 10) {
+                  if (_arrList.length < 50) {
                     if (mounted) {
                       setState(() {
                         isPagination = false;
