@@ -128,7 +128,7 @@ class ApiRequestHelper {
 
     print("sessionToken    ${sessionToken}");
 
-    try {
+  //  try {
       String token =await AppPreferences.getSessionToken();
       Response response = await http.post(
         Uri.parse(apiUrl),
@@ -191,14 +191,14 @@ class ApiRequestHelper {
           break;
       //    }
       }
-    } catch(e){
+    /*} catch(e){
       if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
         onException("Server Not Reachable!Please contact to Admin.");
       }
       else
         onException(e.toString().substring(0,e.toString().indexOf(":")));
 
-    }
+    }*/
   }
 
 
@@ -733,6 +733,109 @@ String token=await AppPreferences.getSessionToken();
     }*/
     }
     catch(e){
+      if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
+        onException("Server Not Reachable!Please contact to Admin.");
+      }
+      else
+        onException(e.toString().substring(0,e.toString().indexOf(":")));
+
+    }
+  }
+
+
+
+  void callAPIsForPostDownlodPDfAPI(
+      String apiUrl, dynamic requestBody, String sessionToken,
+      {required Function(dynamic data) onSuccess,
+        required Function(dynamic error) onFailure,
+        required Function(dynamic error) onException,
+        required Function(dynamic error) sessionExpire}) async {
+    //  try {
+    //  headers.addAll({'session-token': sessionToken});
+    print("apiUrl    $apiUrl");
+    print("requestBody    $requestBody");
+
+    print("sessionToken    ${sessionToken}");
+
+    try{
+      String token=await AppPreferences.getSessionToken();
+    /*  Response response = await http.post(
+          Uri.parse(apiUrl),
+          body: requestBody,
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
+      );*/
+
+      Response response = await http.get(
+          Uri.parse(apiUrl),
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
+      );
+      switch (response.statusCode) {
+      /*response of api status id zero when something is wrong*/
+        case 400:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+
+          apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+
+          onFailure(apiResponse.msg!);
+          print("response.data  0 400 ${apiResponse.msg}");
+
+          // CommonWidget.showInformationDialog(context, msg);
+          break;
+      /*response of api status id one when get api data Successfully */
+        case 200:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse = ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          print("ggjgfngngjn  ${apiResponse.data!}");
+          if(apiResponse.data!=""){
+            onSuccess(apiResponse.data!);
+          }else{
+           onSuccess(apiResponse.msg!);
+          }
+
+
+          break;
+      /*response of api status id Two when session has expired */
+        case 500:
+        //  AppPreferences.clearAppPreference();
+        // sessionExpire("errere");
+        //  CommonWidget.gotoLoginPage(buildContext);
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onException(apiResponse.msg);
+          break;
+        case 400:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          break;
+        case 401:
+          ApiResponseForFetchStringDynamic apiResponse = ApiResponseForFetchStringDynamic();
+          apiResponse =
+              ApiResponseForFetchStringDynamic.fromJson(json.decode(response.body));
+          onFailure(apiResponse.msg);
+          break;
+      /*    case 403:
+          ApiResponseForFetch apiResponse = ApiResponseForFetch();
+          apiResponse =
+              ApiResponseForFetch.fromJson(json.decode(response.body));
+
+          onFailure(apiResponse.message);
+          // AppPreferences.clearAppPreference();
+          // sessionExpire("gdgdgd");
+          break;*/
+        case 403:
+          AppPreferences.clearAppPreference();
+          sessionExpire("jhhh");
+          break;
+      //    }
+      }
+    } catch(e){
       if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
         onException("Server Not Reachable!Please contact to Admin.");
       }

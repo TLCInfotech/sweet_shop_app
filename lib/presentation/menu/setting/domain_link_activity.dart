@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -401,7 +401,17 @@ Widget getCompanyId(double parentHeight, double parentWidth){
         builder: (context) => LoginActivity()));
     }
 
+  var _openResult = 'Unknown';
 
+  Future<void> openFile() async {
+
+    final filePath = 'http://61.2.227.173:3000/excels/order_20349.xlsx';
+    final result = await OpenFile.open(filePath);
+
+    setState(() {
+      _openResult = "type=${result.type}  message=${result.message}";
+    });
+  }
 }
 
 abstract class DomainLinkActivityInterface {

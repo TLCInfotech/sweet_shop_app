@@ -107,4 +107,24 @@ class ApiConstants {
   String companyImage="CompanyImage";
   String deleteNotification="deleteNotification";
 
+  String saleOrderPdf="saleOrderPdf";
+  //String saleOrderPdf="saleOrderExcel";
+  String saleInvoicePdf="saleInvoicePdf";
+  String contraVoucherPdf="contraVoucherPdf";
+  String expenseVoucherPdf="expenseVoucherPdf";
+  String paymentVoucherePdf="paymentVoucherePdf";
+  String receiptVoucherPdf="receiptVoucherPdf";
+  String journalVoucherPdf="journalVoucherPdf";
+  String convertSaleOrderPdf="convertSaleOrderPdf";
+  String debitNotePdf="debitNotePdf";
+  String creditNotePdf="creditNotePdf";
+  String purchaseInvoicePdf="purchaseInvoicePdf";
+  String reportCreditNotePdf="reportCreditNotePdf";
+  String reportDebitNotePdf="reportDebitNotePdf";
+  String reportExpensePdf="reportExpensePdf";
+  String reportLedgerBalancePdf="reportLedgerBalancePdf";
+  String reportMISPdf="reportMISPdf";
+  String reportPurchasePdf="reportPurchasePdf";
+  String reportSalePdf="reportSalePdf";
+
 }

@@ -243,6 +243,7 @@ class _NotificationListingState extends State<NotificationListing> {
                         )));
                         await updatecallPostSaleInvoice(notification_list[index]['ID']);
                         await callGetNotifications(1);
+                        callDeleteNotifi(notification_list[index]['ID'].toString(),index);
                         },
                       child: Card(
                         child: Container(
@@ -437,7 +438,14 @@ class _NotificationListingState extends State<NotificationListing> {
         });
 
         String apiUrl =baseurl + ApiConstants().updateNotificationStatus+"?Company_ID=$companyId";
+     /*   get   http://61.2.227.173:3000/DownloadPdf
 
+            {
+          "Company_ID": 74,
+        "Order_No": 48,
+        "Modifier": "1",
+        "Modifier_Machine": "myMachine"
+        }*/
         var model={
           "ID": id,
           "Status": "Read"
@@ -482,7 +490,7 @@ class _NotificationListingState extends State<NotificationListing> {
     }
   }
 
-  callDeleteUser(String removeId, int index, String indexDate) async {
+  callDeleteNotifi(String removeId, int index) async {
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
@@ -492,13 +500,14 @@ class _NotificationListingState extends State<NotificationListing> {
         setState(() {
           isLoaderShow = true;
         });
-//{DateFormat('yyyy-MM-dd').format(DateTime.parse(indexDate))}
+        //{DateFormat('yyyy-MM-dd').format(DateTime.parse(indexDate))}
         String apiUrl = "$baseurl${ApiConstants().deleteNotification}?Company_ID=$companyId&ID=$removeId&Date=$invoiceDate";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl,"", "",
             onSuccess: (data) {
               setState(() {
                 isLoaderShow = false;
                 notification_list.removeAt(index);
+                callGetNotifications(page);
               });
               print("  LedgerLedger  $data ");
             }, onFailure: (error) {
@@ -527,5 +536,8 @@ class _NotificationListingState extends State<NotificationListing> {
       CommonWidget.noInternetDialogNew(context);
     }
   }
-  
+
+
+
+
 }

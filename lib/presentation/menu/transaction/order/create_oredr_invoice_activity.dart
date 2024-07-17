@@ -1,5 +1,8 @@
 import 'dart:io';
-
+import 'package:open_file_plus/open_file_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +10,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
@@ -101,6 +106,7 @@ var order_No;
   String finInvoiceNo = "";
   setData() async {
     await getCompanyId();
+    //pdfDownloadCall();
     invoiceDate = widget.dateNew;
     if (widget.come == "edit") {
       // await calculateTotalAmt();
@@ -183,6 +189,8 @@ var order_No;
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return  WillPopScope(
@@ -211,11 +219,11 @@ var order_No;
                 if (value == "yes") {
                   if (selectedFranchiseeId == "") {
                     var snackBar =
-                    SnackBar(content: Text("Select Party Name !"));
+                    const SnackBar(content: Text("Select Party Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   } else if (Item_list.length == 0) {
                     var snackBar =
-                    SnackBar(content: Text("Add atleast one Item!"));
+                    const SnackBar(content: Text("Add atleast one Item!"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   } else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId !=
                       " " &&
@@ -239,7 +247,7 @@ var order_No;
           ),
         );
       },
-      transitionDuration: Duration(milliseconds: 200),
+      transitionDuration: const Duration(milliseconds: 200),
       barrierDismissible: true,
       barrierLabel: '',
       context: context,
@@ -256,14 +264,14 @@ var order_No;
         Container(
           height: SizeConfig.safeUsedHeight,
           width: SizeConfig.screenWidth,
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           decoration: const BoxDecoration(
             shape: BoxShape.rectangle,
             color: Color(0xFFfffff5),
             // borderRadius: BorderRadius.circular(16.0),
           ),
           child: Scaffold(
-            backgroundColor: Color(0xFFfffff5),
+            backgroundColor: const Color(0xFFfffff5),
             appBar: PreferredSize(
               preferredSize: AppBar().preferredSize,
               child: SafeArea(
@@ -273,7 +281,7 @@ var order_No;
                       borderRadius: BorderRadius.circular(25)),
                   color: Colors.transparent,
                   // color: Colors.red,
-                  margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: AppBar(
                     leadingWidth: 0,
                     automaticallyImplyLeading: false,
@@ -289,7 +297,7 @@ var order_No;
                             }else{
                                 Navigator.pop(context);
                               }},
-                            child: FaIcon(Icons.arrow_back),
+                            child: const FaIcon(Icons.arrow_back),
                           ),         widget.logoImage!=""? Container(
                             height:SizeConfig.screenHeight*.05,
                             width:SizeConfig.screenHeight*.05,
@@ -313,6 +321,48 @@ var order_No;
                               ),
                             ),
                           ),
+                          widget.order_No == null?Container():
+                          PopupMenuButton(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Container(
+                                color: Colors.transparent,
+                                child: const FaIcon(Icons.download_sharp),
+                              ),
+                            ),
+                            onSelected: (value) {
+                             if(value == "PDF"){
+                                // add desired output
+                               pdfDownloadCall("PDF");
+                              }else if(value == "XLS"){
+                                // add desired output
+                               pdfDownloadCall("XLS");
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                              const PopupMenuItem(
+                                value: "PDF",
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.picture_as_pdf, color: Colors.red),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: "XLS",
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage('assets/images/xls.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -362,7 +412,7 @@ var order_No;
               _updateOffset(position + details.delta);
             },
             child: FloatingActionButton(
-                backgroundColor: Color(0xFFFBE404),
+                backgroundColor: const Color(0xFFFBE404),
                 child: const Icon(
                   Icons.add,
                   size: 30,
@@ -397,7 +447,7 @@ var order_No;
         TotalAmount != "0.00"
             ? Container(
                 width: SizeConfig.halfscreenWidth,
-                padding: EdgeInsets.only(top: 0, bottom: 0),
+                padding: const EdgeInsets.only(top: 0, bottom: 0),
                 decoration: BoxDecoration(
                   // color:  CommonColor.DARK_BLUE,
                   borderRadius: BorderRadius.circular(8),
@@ -415,7 +465,7 @@ var order_No;
                       "Round off: $roundoff",
                       style: item_regular_textStyle.copyWith(fontSize: 17),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Text(
@@ -435,11 +485,11 @@ var order_No;
                   } else {
                     if (selectedFranchiseeId == "") {
                       var snackBar =
-                          SnackBar(content: Text("Select Party Name !"));
+                          const SnackBar(content: Text("Select Party Name !"));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else if (Item_list.length == 0) {
                       var snackBar =
-                          SnackBar(content: Text("Add atleast one Item!"));
+                          const SnackBar(content: Text("Add atleast one Item!"));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else if (/*selectedLedgerId!="" &&*/ selectedFranchiseeId !=
                             " " &&
@@ -506,7 +556,7 @@ var order_No;
               child: Column(
                 children: [
                   InvoiceInfo(),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   // Row(
@@ -573,7 +623,7 @@ var order_No;
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return ListView.separated(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: Item_list.length,
       itemBuilder: (BuildContext context, int index) {
         return AnimationConfiguration.staggeredList(
@@ -582,7 +632,7 @@ var order_No;
           child: SlideAnimation(
             verticalOffset: -44.0,
             child: FadeInAnimation(
-              delay: Duration(microseconds: 1500),
+              delay: const Duration(microseconds: 1500),
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -621,7 +671,7 @@ var order_No;
                                     )),
                                 Expanded(
                                   child: Container(
-                                    padding: EdgeInsets.only(left: 10),
+                                    padding: const EdgeInsets.only(left: 10),
                                     width: parentWidth * .70,
                                     //  height: parentHeight*.1,
                                     child: Column(
@@ -634,7 +684,7 @@ var order_No;
                                           "${Item_list[index]['Item_Name']}",
                                           style: item_heading_textStyle,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Row(
@@ -735,7 +785,7 @@ var order_No;
         );
       },
       separatorBuilder: (BuildContext context, int index) {
-        return SizedBox(
+        return const SizedBox(
           height: 5,
         );
       },
@@ -753,7 +803,7 @@ var order_No;
       },
       child: Container(
           height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: CommonColor.THEME_COLOR,
               border: Border.all(color: Colors.grey.withOpacity(0.5))),
@@ -794,7 +844,7 @@ var order_No;
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: context,
@@ -805,8 +855,8 @@ var order_No;
 
   Container InvoiceInfo() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(
         bottom: 10,
         left: 5,
         right: 5,
@@ -826,7 +876,7 @@ var order_No;
                             ? SizeConfig.halfscreenWidth
                             : (SizeConfig.screenWidth) * .32,
                         child: getPurchaseDateLayout()),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Expanded(
@@ -845,8 +895,8 @@ var order_No;
 
   Widget getInvoiceNo(double parentHeight, double parentWidth) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(left: 10),
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(left: 10),
       width: parentWidth,
       height: (SizeConfig.screenHeight) * .055,
       alignment: Alignment.centerLeft,
@@ -855,7 +905,7 @@ var order_No;
         borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
             blurRadius: 5,
             color: Colors.black.withOpacity(0.1),
           ),
@@ -924,7 +974,7 @@ var order_No;
       callback: (name, id) {
         if (selectedLedgerId == id) {
           var snack =
-              SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+              const SnackBar(content: Text("Sale Ledger and Party can not be same!"));
           ScaffoldMessenger.of(context).showSnackBar(snack);
         } else {
           setState(() {
@@ -950,7 +1000,7 @@ var order_No;
         franchisee: widget.come,
         callback: (name, id) {
           if (selectedFranchiseeId == id) {
-            var snack = SnackBar(
+            var snack = const SnackBar(
                 content: Text("Sale Ledger and Party can not be same!"));
             ScaffoldMessenger.of(context).showSnackBar(snack);
           } else {
@@ -1255,6 +1305,136 @@ var order_No;
     }else{
       position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
     }
+  }
+
+  pdfDownloadCall(String urlType) async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String sessionToken=await AppPreferences.getSessionToken();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&Order_No=${widget.order_No.toString()}&Type=$urlType";
+        print(apiUrl);
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data)async{
+
+              setState(() {
+                isLoaderShow=false;
+                print("  dataaaaaaaa  ${data['data']} ");
+                downloadFile(data['data'],data['fileName']);
+                //downloadExcelFile(data['data'],"example.xlsx");
+              });
+              }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  Future<void> downloadFile( String url, String fileName) async {
+    // Check for storage permission
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Get the application directory
+      var dir = await getExternalStorageDirectory();
+      if (dir != null) {
+       // String url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+      //  String fileName = "example.pdf";
+        String savePath = "${dir.path}/$fileName";
+
+        try {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+            File file = File(savePath);
+            await file.writeAsBytes(response.bodyBytes);
+            print("File is saved to download folder: $savePath");
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Downloaded: $fileName"),
+              ),
+            );
+            // Show a notification
+            NotificationService.showNotification(
+                'Download Complete',
+                'The file has been downloaded successfully.',
+                savePath
+            );
+            // Open the downloaded file
+               OpenFile.open(savePath);
+          } else {
+            print("Error: ${response.statusCode}");
+          }
+        } catch (e) {
+          print("Error: $e");
+        }
+      }
+    } else {
+      print("Permission Denied");
+    }
+  }
+
+
+  Future<void> downloadExcelFile(String url, String fileName) async {
+   // try {
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final String filePath = '${directory.path}/$fileName';
+      print("fnbgbg   $filePath");
+      final http.Response response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final File file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Show a notification
+        NotificationService.showNotification(
+            'Download Complete',
+            'The file has been downloaded successfully.',
+            filePath
+        );
+print("fnbgbg   $filePath");
+        // Optionally, open the file automatically
+        OpenFile.open(filePath);
+      } else {
+        throw Exception('Failed to download file');
+      }
+    // } catch (e) {
+    //   // Notify user of error
+    //   print('Error: $e');
+    // }
   }
 }
 

@@ -5,10 +5,15 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file_plus/open_file_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/order/create_oredr_invoice_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
@@ -20,7 +25,7 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
-
+import 'package:http/http.dart' as http;
 
 class OrderInvoiceActivity extends StatefulWidget {
   final String? comeFor;
@@ -362,123 +367,234 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
 
   Expanded get_purchase_list_layout() {
     return Expanded(
-        child: RefreshIndicator(
-          color: CommonColor.THEME_COLOR,
-          onRefresh: () {
-            return refreshList();
-          },
-          child: ListView.separated(
-            controller: _scrollController,
-            physics: AlwaysScrollableScrollPhysics(),
-            itemCount: saleInvoice_list.length,
-            itemBuilder: (BuildContext context, int index) {
-              return  AnimationConfiguration.staggeredList(
-                position: index,
-                duration:
-                const Duration(milliseconds: 500),
-                child: SlideAnimation(
-                  verticalOffset: -44.0,
-                  child: FadeInAnimation(
-                    delay: Duration(microseconds: 1500),
-                    child: GestureDetector(
-                      onTap: ()async{
-
-                      await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        CreateOrderInvoice(
-                          logoImage: widget.logoImage,
-                        dateNew: invoiceDate,
-                        order_No: saleInvoice_list[index]['Order_No'],//DateFormat('dd-MM-yyyy').format(newDate),
-                        mListener:this,
-                        readOnly:  singleRecord['Update_Right'],
-                        editedItem:saleInvoice_list[index],
-                        invoiceNo: saleInvoice_list[index]['Invoice_No'],
-                        come:"edit",
-                        )));
-                        selectedFranchiseeId="";
-                        partyBlank=false;
-                        saleInvoice_list=[];
-                        await  getSaleOrder(1);
-                      },
-                      child: Card(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
+      child: RefreshIndicator(
+        color: CommonColor.THEME_COLOR,
+        onRefresh: () {
+          return refreshList();
+        },
+        child: ListView.separated(
+          controller: _scrollController,
+          physics: AlwaysScrollableScrollPhysics(),
+          itemCount: saleInvoice_list.length,
+          itemBuilder: (BuildContext context, int index) {
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 500),
+              child: SlideAnimation(
+                verticalOffset: -44.0,
+                child: FadeInAnimation(
+                  delay: Duration(microseconds: 1500),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateOrderInvoice(
+                            logoImage: widget.logoImage,
+                            dateNew: invoiceDate,
+                            order_No: saleInvoice_list[index]['Order_No'],
+                            mListener: this,
+                            readOnly: singleRecord['Update_Right'],
+                            editedItem: saleInvoice_list[index],
+                            invoiceNo: saleInvoice_list[index]['Invoice_No'],
+                            come: "edit",
+                          ),
+                        ),
+                      );
+                      selectedFranchiseeId = "";
+                      partyBlank = false;
+                      saleInvoice_list = [];
+                      await getSaleOrder(1);
+                    },
+                    child: Stack(
+                      children: [
+                        Card(
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                      borderRadius: BorderRadius.circular(5)
+                                    color: (index) % 2 == 0
+                                        ? Colors.green
+                                        : Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  child:  const FaIcon(
+                                  child: const FaIcon(
                                     FontAwesomeIcons.moneyCheck,
                                     color: Colors.white,
-                                  )
-                                // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+                                  ),
+                                ),
                               ),
-                            ),
-                            Expanded(
+                              Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                        margin: const EdgeInsets.only(
+                                            top: 10,
+                                            left: 10,
+                                            right: 40,
+                                            bottom: 10),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                           children: [
-                                            Text("${saleInvoice_list[index]['Vendor_Name']}",style: item_heading_textStyle,),
-                                            SizedBox(height: 5,),
+                                            Text(
+                                              "${saleInvoice_list[index]['Vendor_Name']}",
+                                              style: item_heading_textStyle,
+                                            ),
+                                            SizedBox(height: 5),
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                               children: [
-                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                SizedBox(width: 10,),
-                                                Expanded(child: Text("Order No. - ${saleInvoice_list[index]['Fin_Order_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                FaIcon(
+                                                  FontAwesomeIcons.fileInvoice,
+                                                  size: 15,
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Text(
+                                                    "Order No. - ${saleInvoice_list[index]['Fin_Order_No']}",
+                                                    overflow: TextOverflow.clip,
+                                                    style: item_regular_textStyle,
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                            SizedBox(height: 5,),
+                                            SizedBox(height: 5),
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                               children: [
-                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                SizedBox(width: 10,),
-                                                Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                FaIcon(
+                                                  FontAwesomeIcons
+                                                      .moneyBill1Wave,
+                                                  size: 15,
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Text(
+                                                    CommonWidget.getCurrencyFormat(
+                                                        saleInvoice_list[index]
+                                                        ['Total_Amount']),
+                                                    overflow: TextOverflow.clip,
+                                                    style: item_regular_textStyle,
+                                                  ),
+                                                ),
                                               ],
                                             ),
-
                                           ],
                                         ),
                                       ),
                                     ),
-                                    singleRecord['Delete_Right']==false?Container(): saleInvoice_list[index]['Invoice_No']!=null?Container():    DeleteDialogLayout(
-                                      callback: (response ) async{
-                                        if(response=="yes"){
-                                          print("##############$response");
-                                          await   callDeleteSaleInvoice(saleInvoice_list[index]['Order_No'].toString(),saleInvoice_list[index]['Seq_No'].toString(),index);
-                                        }
-                                      },
-                                    )
+                                    Container(
+                                      width: 10,
+                                      color: Colors.transparent,
+                                    ),
                                   ],
-                                )
-
-                            )
-                          ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          top: 10,
+                          right: 20,
+                          child:    PopupMenuButton(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Container(
+                                color: Colors.transparent,
+                                child: const FaIcon(Icons.download_sharp),
+                              ),
+                            ),
+                            onSelected: (value) {
+                              if(value == "PDF"){
+                                // add desired output
+                                pdfDownloadCall(saleInvoice_list[index]['Order_No'].toString(),"PDF");
+                              }else if(value == "XLS"){
+                                // add desired output
+                                pdfDownloadCall(saleInvoice_list[index]['Order_No'].toString(),"XLS");
+                              }
+                            },
+                            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                              const PopupMenuItem(
+                                value: "PDF",
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.picture_as_pdf, color: Colors.red),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: "XLS",
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage('assets/images/xls.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )/*IconButton(
+                            icon: FaIcon(
+                              Icons.download_sharp,
+                            ), onPressed: () {
+                            pdfDownloadCall(saleInvoice_list[index]['Order_No'].toString());
+                          },
+                          ),*/
+                        ),
+                        Positioned(
+                          bottom: 5,
+                          right: 10,
+                          child: singleRecord['Delete_Right'] == false ||
+                              saleInvoice_list[index]['Invoice_No'] != null
+                              ? Container()
+                              : DeleteDialogLayout(
+                            callback: (response) async {
+                              if (response == "yes") {
+                                print("##############$response");
+                                await callDeleteSaleInvoice(
+                                  saleInvoice_list[index]['Order_No']
+                                      .toString(),
+                                  saleInvoice_list[index]['Seq_No']
+                                      .toString(),
+                                  index,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 5,
-              );
-            },
-          ),
-        ));
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return SizedBox(
+              height: 5,
+            );
+          },
+        ),
+      ),
+    );
+
   }
 
 
@@ -631,4 +747,105 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     getSaleOrder(1);
     Navigator.pop(context);
   }
+
+  pdfDownloadCall(String orderNo,String urlType) async {
+    String creatorName = await AppPreferences.getUId();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String sessionToken=await AppPreferences.getSessionToken();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&Order_No=$orderNo&Type=$urlType";
+        print(apiUrl);
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data)async{
+          setState(() {
+                isLoaderShow=false;
+                print("  dataaaaaaaa  ${data['data']} ");
+                downloadFile(data['data'],data['fileName']);
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  Future<void> downloadFile( String url, String fileName)  async {
+    // Check for storage permission
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Get the application directory
+      var dir = await getExternalStorageDirectory();
+      if (dir != null) {
+        // String url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+       // String fileName = "example.pdf";
+        String savePath = "${dir.path}/$fileName";
+
+        try {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+            File file = File(savePath);
+            await file.writeAsBytes(response.bodyBytes);
+            print("File is saved to download folder: $savePath");
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Downloaded: $fileName"),
+              ),
+            );
+            // Show a notification
+            NotificationService.showNotification(
+                'Download Complete',
+                'The file has been downloaded successfully.',
+                savePath
+            );
+            // Open the downloaded file
+            OpenFile.open(savePath);
+          } else {
+            print("Error: ${response.statusCode}");
+          }
+        } catch (e) {
+          print("Error: $e");
+        }
+      }
+    } else {
+      print("Permission Denied");
+    }
+  }
+
 }

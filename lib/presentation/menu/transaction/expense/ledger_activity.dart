@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/create_ledger_activity.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -20,6 +21,11 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/deleteDialog.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
+import 'package:open_file_plus/open_file_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 
 
 class LedgerActivity extends StatefulWidget {
@@ -379,73 +385,129 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                         expense_list=[];
                         await  getExpense(1);
                       },
-                      child: Card(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: (index)%2==0?Colors.green:Colors.blueAccent,
-                                      borderRadius: BorderRadius.circular(5)
+                      child: Stack(
+                        children: [
+                          Card(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: (index)%2==0?Colors.green:Colors.blueAccent,
+                                          borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child:  const FaIcon(
+                                        FontAwesomeIcons.moneyCheck,
+                                        color: Colors.white,
+                                      )
+                                    // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
                                   ),
-                                  child:  const FaIcon(
-                                    FontAwesomeIcons.moneyCheck,
-                                    color: Colors.white,
-                                  )
-                                // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
-                              ),
-                            ),
-                            Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                             Text(expense_list[index]["Ledger_Name"],style: item_heading_textStyle,),
-                                            const SizedBox(height: 5,),
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                const SizedBox(width: 10,),
-                                                 Expanded(child: Text("Voucher No. - ${expense_list[index]["Fin_Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 5,),
-                                            Row(
+                                ),
+                                Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                const SizedBox(width: 10,),
-                                                Expanded(child: Text("${CommonWidget.getCurrencyFormat(expense_list[index]["Total_Amount"])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                                 Text(expense_list[index]["Ledger_Name"],style: item_heading_textStyle,),
+                                                const SizedBox(height: 5,),
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                    const SizedBox(width: 10,),
+                                                     Expanded(child: Text("Voucher No. - ${expense_list[index]["Fin_Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 5,),
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                    const SizedBox(width: 10,),
+                                                    Expanded(child: Text("${CommonWidget.getCurrencyFormat(expense_list[index]["Total_Amount"])}",overflow: TextOverflow.clip,style: item_heading_textStyle,)),
+                                                  ],
+                                                ),
+
                                               ],
                                             ),
-
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                        Container(
+                                          width: 10,
+                                          color: Colors.transparent,
+                                        ),
+                                      ],
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                              top: 10,
+                              right: 20,
+                              child:    PopupMenuButton(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    child: const FaIcon(Icons.download_sharp),
+                                  ),
+                                ),
+                                onSelected: (value) {
+                                  if(value == "PDF"){
+                                    // add desired output
+                                    pdfDownloadCall(expense_list[index]['Voucher_No'].toString(),"PDF");
+                                  }else if(value == "XLS"){
+                                    // add desired output
+                                    pdfDownloadCall(expense_list[index]['Voucher_No'].toString(),"XLS");
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                                  const PopupMenuItem(
+                                    value: "PDF",
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.picture_as_pdf, color: Colors.red),
+                                      ],
                                     ),
-                                    singleRecord['Delete_Right']==true?   DeleteDialogLayout(
-                                      callback: (response ) async{
-                                        if(response=="yes"){
-                                          print("##############$response");
-                                          await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
-                                        }
-                                      },
-                                    ):Container()
-                                  ],
-                                )
-
-                            )
-                          ],
-                        ),
+                                  ),
+                                  const PopupMenuItem(
+                                    value: "XLS",
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Image(
+                                          image: AssetImage('assets/images/xls.png'),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                          ),
+                          Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child:singleRecord['Delete_Right']==true?   DeleteDialogLayout(
+                                callback: (response ) async{
+                                  if(response=="yes"){
+                                    print("##############$response");
+                                    await   callDeleteExpense(expense_list[index]['Voucher_No'].toString(),index);
+                                  }
+                                },
+                              ):Container()
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -633,5 +695,105 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     });
     getExpense(1);
     Navigator.pop(context);
+  }
+
+  pdfDownloadCall(String orderNo,String urlType) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=$orderNo&Type=$urlType";
+
+        print(apiUrl);
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data)async{
+
+              setState(() {
+                isLoaderShow=false;
+                print("  dataaaaaaaa  ${data['data']} ");
+                 downloadFile(data['data'],data['fileName']);
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+    Future<void> downloadFile( String url, String fileName) async {
+    // Check for storage permission
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Get the application directory
+      var dir = await getExternalStorageDirectory();
+      if (dir != null) {
+       // String url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+      //  String fileName = "example.pdf";
+        String savePath = "${dir.path}/$fileName";
+
+        try {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+            File file = File(savePath);
+            await file.writeAsBytes(response.bodyBytes);
+            print("File is saved to download folder: $savePath");
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Downloaded: $fileName"),
+              ),
+            );
+            // Show a notification
+            NotificationService.showNotification(
+                'Download Complete',
+                'The file has been downloaded successfully.',
+                savePath
+            );
+            // Open the downloaded file
+               OpenFile.open(savePath);
+          } else {
+            print("Error: ${response.statusCode}");
+          }
+        } catch (e) {
+          print("Error: $e");
+        }
+      }
+    } else {
+      print("Permission Denied");
+    }
   }
 }

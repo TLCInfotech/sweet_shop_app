@@ -111,7 +111,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 
 
-
+int getGroupCountAndGroupCount=89;
 
   Future<void> refreshList() async {
       await Future.delayed(Duration(seconds: 2));
@@ -182,13 +182,51 @@ class _HomeFragmentState extends State<HomeFragment> {
                   ],
                 ),
                actions: [
-                 IconButton(
-                     onPressed: ()async{
-                       await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
-                         logoImage: logoImage,
-                       )));
-                     },
-                     icon: FaIcon(FontAwesomeIcons.bell,))
+                 Stack(
+                   children: [
+                     IconButton(
+                         onPressed: ()async{
+                           await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
+                             logoImage: logoImage,
+                           )));
+                         },
+                         icon: FaIcon(FontAwesomeIcons.bell,)),
+                     Padding(
+                       padding: EdgeInsets.only(
+                           left:  SizeConfig.screenWidth * 0.06,
+                           top:  SizeConfig.screenHeight * .005,
+
+                           ),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.end,
+                         children: [
+                           Container(
+                             decoration: BoxDecoration(
+                               shape: getGroupCountAndGroupCount <= 9
+                                   ? BoxShape.circle
+                                   : BoxShape.circle,
+                               color: CommonColor.RED_COLOR,
+                             ),
+                             child: Padding(
+                               padding:  const EdgeInsets.all(4.3),
+                               child: Text(
+                                 getGroupCountAndGroupCount <= 99
+                                     ? '$getGroupCountAndGroupCount'
+                                     : "99+",
+                                 style: TextStyle(
+                                     color: Colors.white,
+                                     fontWeight: FontWeight.bold,
+                                     fontSize: getGroupCountAndGroupCount <= 99
+                                         ? SizeConfig.blockSizeHorizontal * 3
+                                         : SizeConfig.blockSizeHorizontal * 3),
+                               ),
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
+                   ],
+                 )
                ],
               ),
             ),

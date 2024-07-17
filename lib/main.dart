@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file_plus/open_file_plus.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -11,14 +12,18 @@ import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sweet_shop_app/presentation/menu/setting/domain_link_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'core/app_preferance.dart';
-import 'presentation/menu/master/item_category/Item_Category.dart';
-import 'presentation/menu/master/unit/Units.dart';
 
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService.initialize((payload) {
+    if (payload != null) {
+      OpenFile.open(payload);
+    }
+  });
   runApp(MyApp());
 
   // Rest of your code remains the same...
