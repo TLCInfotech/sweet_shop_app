@@ -205,13 +205,13 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                             ),
                           ),
                           onSelected: (value) {
-                       /*    if(value == "PDF"){
+                           if(value == "PDF"){
                               // add desired output
                               pdfDownloadCall("PDF");
                             }else if(value == "XLS"){
                               // add desired output
                               pdfDownloadCall("XLS");
-                            }*/
+                            }
                           },
                           itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                             const PopupMenuItem(
@@ -733,7 +733,16 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
+        String apiUrl ="";
+        if (widget.reportId == "PTSM"){
+          apiUrl =
+              baseurl + ApiConstants().SaleReports+"/Download?Company_ID=$companyId&Report_ID=PTSM&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+        } else  {
+          apiUrl =
+              baseurl + ApiConstants().SaleReports+"/Download?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedItemId&Type=$urlType";
+        }
+
+
 
         print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

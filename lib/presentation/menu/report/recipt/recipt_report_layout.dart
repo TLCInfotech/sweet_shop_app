@@ -123,13 +123,13 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                          ),
                        ),
                        onSelected: (value) {
-                     /*    if(value == "PDF"){
+                         if(value == "PDF"){
                            // add desired output
                            pdfDownloadCall("PDF");
                          }else if(value == "XLS"){
                            // add desired output
                            pdfDownloadCall("XLS");
-                         }*/
+                         }
                        },
                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                          const PopupMenuItem(

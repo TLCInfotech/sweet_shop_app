@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
@@ -68,6 +69,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     // TODO: implement initState
     super.initState();
     getUserPermissions();
+    callGetNotifications(1);
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
@@ -76,7 +78,20 @@ class _HomeFragmentState extends State<HomeFragment> {
     print("hfshjffhfbh  $dateString");
      // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     setDataComm();
+
  }
+
+/*  void _initializeOneSignal() {
+    OneSignal.shared.setAppId('YOUR_ONESIGNAL_APP_ID');
+
+    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) {
+      event.complete(event.notification);
+    });
+
+    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      _handleNotification(result.notification);
+    });
+  }*/
   String logoImage="";
   String companyName="";
   setDataComm()async{
@@ -111,7 +126,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 
 
-int getGroupCountAndGroupCount=89;
+
 
   Future<void> refreshList() async {
       await Future.delayed(Duration(seconds: 2));
@@ -189,9 +204,10 @@ int getGroupCountAndGroupCount=89;
                            await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
                              logoImage: logoImage,
                            )));
+                           await callGetNotifications(1);
                          },
                          icon: FaIcon(FontAwesomeIcons.bell,)),
-                 /*    Padding(
+                     notficatcnt < 1? Container(): Padding(
                        padding: EdgeInsets.only(
                            left:  SizeConfig.screenWidth * 0.06,
                            top:  SizeConfig.screenHeight * .005,
@@ -202,7 +218,7 @@ int getGroupCountAndGroupCount=89;
                          children: [
                            Container(
                              decoration: BoxDecoration(
-                               shape: getGroupCountAndGroupCount <= 9
+                               shape: notficatcnt <= 9
                                    ? BoxShape.circle
                                    : BoxShape.circle,
                                color: CommonColor.RED_COLOR,
@@ -210,13 +226,13 @@ int getGroupCountAndGroupCount=89;
                              child: Padding(
                                padding:  const EdgeInsets.all(4.3),
                                child: Text(
-                                 getGroupCountAndGroupCount <= 99
-                                     ? '$getGroupCountAndGroupCount'
+                                 notficatcnt <= 99
+                                     ? '$notficatcnt'
                                      : "99+",
                                  style: TextStyle(
                                      color: Colors.white,
                                      fontWeight: FontWeight.bold,
-                                     fontSize: getGroupCountAndGroupCount <= 99
+                                     fontSize: notficatcnt <= 99
                                          ? SizeConfig.blockSizeHorizontal * 3
                                          : SizeConfig.blockSizeHorizontal * 3),
                                ),
@@ -224,7 +240,7 @@ int getGroupCountAndGroupCount=89;
                            ),
                          ],
                        ),
-                     ),*/
+                     ),
                    ],
                  )
                ],
@@ -1244,6 +1260,77 @@ int getGroupCountAndGroupCount=89;
                 isShowSkeleton=false;
               });
               CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  int notficatcnt = 0;
+  callGetNotifications(int page) async {
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: page.toString()
+        );
+        DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+            onSuccess:(data){
+          print('gjgjjgjgjng  $data');
+              setState(() {
+
+                isLoaderShow=false;
+                if(data!=null){
+
+                  notficatcnt=data['NotificationCount'];
+                  print("  _noeeeee  $notficatcnt ");
+                }else{
+                  isApiCall=true;
+                }
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              print("Here2=> $e");
+
+              setState(() {
+                isLoaderShow=false;
+              });
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
             });
       });
     }
