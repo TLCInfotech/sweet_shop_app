@@ -74,8 +74,6 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   List<dynamic> Deleted_list=[];
 
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
-
-
   bool isLoaderShow=false;
   bool showButton=false;
 

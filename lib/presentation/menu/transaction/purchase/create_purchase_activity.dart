@@ -1325,10 +1325,10 @@ String finInvoiceNo="";
           isLoaderShow=false;
         });
 
-        String apiUrl =baseurl + ApiConstants().purchaseInvoicePdf;
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
+        String apiUrl =baseurl + ApiConstants().getPurchaseInvoiceDetails+"/Download?Company_ID=$companyId&Invoice_No=${widget.Invoice_No.toString()}&Type=$urlType";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data)async{
 

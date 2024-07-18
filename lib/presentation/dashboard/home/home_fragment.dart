@@ -191,7 +191,7 @@ int getGroupCountAndGroupCount=89;
                            )));
                          },
                          icon: FaIcon(FontAwesomeIcons.bell,)),
-                     Padding(
+                 /*    Padding(
                        padding: EdgeInsets.only(
                            left:  SizeConfig.screenWidth * 0.06,
                            top:  SizeConfig.screenHeight * .005,
@@ -224,7 +224,7 @@ int getGroupCountAndGroupCount=89;
                            ),
                          ],
                        ),
-                     ),
+                     ),*/
                    ],
                  )
                ],
@@ -265,7 +265,14 @@ int getGroupCountAndGroupCount=89;
                                 logoImage: logoImage,
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
-                              )));
+                              )));/*
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
+                                newDate: dateTime,
+                                formId: "RM005",
+                                logoImage: logoImage,
+                                titleKey: "Branch Item Opening Balance",
+                                arrData: dataArrM,
+                              )));*/
                             },
                             child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
@@ -353,13 +360,15 @@ int getGroupCountAndGroupCount=89;
                       ],
                     ):Container(),
                     const SizedBox(height: 10,),
-                    (TransactionMenu.contains("AT002"))?  Row(
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
-                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", "Outstanding"),
+                        (TransactionMenu.contains("AT002"))?    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"):Container(),
+                        (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                            (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"):Container(),
                       ],
-                    ):Container(),
+                    ),
 
                     const SizedBox(height: 10,),
                     // getAdditonalProfitLayout(),
@@ -384,9 +393,9 @@ int getGroupCountAndGroupCount=89;
                     // const SizedBox(height: 5,),
                     // getFieldTitleLayout("Payment-Outanding "),
                     // const SizedBox(height: 5,),
-                    (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+               /*     (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                         (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-                    getProfitLayout():Container(),
+                    getProfitLayout():Container(),*/
                   ],
                 ),
               ),
@@ -887,21 +896,27 @@ int getGroupCountAndGroupCount=89;
   Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
     return   GestureDetector(
       onTap: (){
-        if(title=="Outstanding"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
-            comeFor: "Franchisee Outstanding",
-            profit:FranchiseeOutstanding ,
-            logoImage: logoImage,
-            date:dateTime,
-          )));
-        }
-        else{
+        if(title=="Receipt"){
           Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
             dateNew: dateTime,
             formId: "AT002",
             arrData: dataArr,
             logoImage: logoImage,
           )));
+        /*  Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
+            comeFor: "Franchisee Outstanding",
+            profit:FranchiseeOutstanding ,
+            logoImage: logoImage,
+            date:dateTime,
+          )));*/
+        }
+        else{
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+            comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
+            date:dateTime,
+            logoImage: logoImage,
+          )));
+
        //   widget.mListener.getAddLeder(title);
         }
       },

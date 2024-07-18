@@ -282,14 +282,15 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                ],
              ),
              const SizedBox(height: 10,),
-             (TransactionMenu.contains("AT002"))?  Row(
+             Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-                 getThreeLayout( "Payment", "${CommonWidget.getCurrencyFormat((receiptAmt))}",Colors.deepPurple,),
-                 getThreeLayout("Outstanding", "${CommonWidget.getCurrencyFormat((FranchiseeOutstanding))}", Colors.deepOrange),
-
+                 (TransactionMenu.contains("AT002"))?    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"):Container(),
+                 (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                     (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
+                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"):Container(),
                ],
-             ):Container(),
+             ),
              const SizedBox(height: 10,),
              // getProfitLayout(),
              Row(
@@ -308,10 +309,10 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                ],
              ),
-             SizedBox(height: 10,),
+            /* SizedBox(height: 10,),
              (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                  (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-             getProfitLayout():Container(),
+             getProfitLayout():Container(),*/
            ],
          ),
        ),
@@ -325,7 +326,54 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
       onTap: (){
 
       },
-      child: Container(
+        child: Container(
+      height: 100,
+      width: (SizeConfig.screenWidth * 0.89) / 2,
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        // color: (Colors.orange).withOpacity(0.3),
+          border: Border.all(color: boxcolor),
+          borderRadius: BorderRadius.circular(5)),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            height: 40,
+            width: (SizeConfig.screenWidth * 0.89) / 2,
+            // margin: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              "$amount",
+              style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+
+          Expanded(
+            child: Container(
+              width: (SizeConfig.screenWidth * 0.89) / 2,
+              alignment: Alignment.center,
+              color: boxcolor,
+              padding: EdgeInsets.all(5),
+              child: Text(
+                "$title",
+                style: item_heading_textStyle.copyWith(
+                    color: (Colors.white),
+                    fontWeight: FontWeight.bold
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    ), /*Container(
         height: 120,
         width: (SizeConfig.screenWidth * 0.85) / 2,
         // margin: EdgeInsets.all(10),
@@ -373,47 +421,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
 
           ],
         ),
-      ),
+      ),*/
     );
 
-    //   Container(
-    //   height: 170,
-    //   width: (SizeConfig.screenWidth * 0.85) / 3,
-    //   // margin: EdgeInsets.all(10),
-    //   decoration: BoxDecoration(
-    //       color: boxcolor.withOpacity(0.3),
-    //       borderRadius: BorderRadius.circular(5)),
-    //   alignment: Alignment.center,
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         height: 60,
-    //         width: (SizeConfig.screenWidth * 0.85) / 3,
-    //         margin: const EdgeInsets.all(15),
-    //         decoration: BoxDecoration(
-    //             color: boxcolor, borderRadius: BorderRadius.circular(5)),
-    //         alignment: Alignment.center,
-    //         child: Text(
-    //           "$amount",
-    //           style: subHeading_withBold,
-    //         ),
-    //       ),
-    //       Text(
-    //         "$title",
-    //         style: item_heading_textStyle.copyWith(
-    //           color: boxcolor,
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 10,
-    //       ),
-    //       FaIcon(
-    //         FontAwesomeIcons.solidArrowAltCircleRight,
-    //         color: boxcolor,
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 
   Widget getThreeLayout(title,amount,boxcolor){

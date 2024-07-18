@@ -154,7 +154,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
 
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
-                      getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      //getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                       getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),

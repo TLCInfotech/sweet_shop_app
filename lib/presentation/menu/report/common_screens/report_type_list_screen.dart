@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/presentation/menu/report/common_screens/detail_report_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_purchase_activity.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
@@ -19,7 +20,11 @@ import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../common_widget/deleteDialog.dart';
+import 'package:open_file_plus/open_file_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import '../../../common_widget/get_date_layout.dart';
 
 
@@ -181,6 +186,47 @@ class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoi
                               style: appbar_text_style,),
                           ),
                         ),
+                        PopupMenuButton(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              color: Colors.transparent,
+                              child: const FaIcon(Icons.download_sharp),
+                            ),
+                          ),
+                          onSelected: (value) {
+                            if(value == "PDF"){
+                              // add desired output
+                              pdfDownloadCall("PDF");
+                            }else if(value == "XLS"){
+                              // add desired output
+                              pdfDownloadCall("XLS");
+                            }
+                          },
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                            const PopupMenuItem(
+                              value: "PDF",
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.picture_as_pdf, color: Colors.red),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: "XLS",
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image(
+                                    image: AssetImage('assets/images/xls.png'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -768,5 +814,117 @@ mainAxisAlignment: MainAxisAlignment.start,
     });
     getReportList(1);
     Navigator.pop(context);
+  }
+  pdfDownloadCall(String urlType) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+
+
+        String apiUrl="" ;
+        if(widget.comeFrom=="MIS"){
+
+            apiUrl =baseurl + ApiConstants().MISReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+        }else{
+          if(selectedFranchiseeId!=""){
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
+          }else
+          if(selectedLedgerId!=""){
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId";
+
+          }
+        }
+        print(apiUrl);
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data)async{
+
+              setState(() {
+                isLoaderShow=false;
+                print("  dataaaaaaaa  ${data['data']} ");
+                downloadFile(data['data'],data['fileName']);
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  Future<void> downloadFile( String url, String fileName) async {
+    // Check for storage permission
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Get the application directory
+      var dir = await getExternalStorageDirectory();
+      if (dir != null) {
+        // String url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+        //  String fileName = "example.pdf";
+        String savePath = "${dir.path}/$fileName";
+
+        try {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+            File file = File(savePath);
+            await file.writeAsBytes(response.bodyBytes);
+            print("File is saved to download folder: $savePath");
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Downloaded: $fileName"),
+              ),
+            );
+            // Show a notification
+            NotificationService.showNotification(
+                'Download Complete',
+                'The file has been downloaded successfully.',
+                savePath
+            );
+            // Open the downloaded file
+            OpenFile.open(savePath);
+          } else {
+            print("Error: ${response.statusCode}");
+          }
+        } catch (e) {
+          print("Error: $e");
+        }
+      }
+    } else {
+      print("Permission Denied");
+    }
   }
 }

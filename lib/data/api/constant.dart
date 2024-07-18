@@ -126,5 +126,6 @@ class ApiConstants {
   String reportMISPdf="reportMISPdf";
   String reportPurchasePdf="reportPurchasePdf";
   String reportSalePdf="reportSalePdf";
+  String MISReports="MISReports";
 
 }

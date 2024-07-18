@@ -52,7 +52,7 @@ class _UserCreateState extends State<UserCreate>
 
   final _workingdaysFocus = FocusNode();
   final workingdaysController = TextEditingController();
-  final _workingDayKey = GlobalKey<FormFieldState>();
+ // final _workingDayKey = GlobalKey<FormFieldState>();
 
   final _fnameKey = GlobalKey<FormFieldState>();
 
@@ -389,15 +389,7 @@ class _UserCreateState extends State<UserCreate>
 
   /* Widget for working days text from field layout */
   Widget getWorkingDaysLayout(double parentHeight, double parentWidth) {
-    return SingleLineEditableTextFormFieldWithoubleDouble(
-      mandatory: true,
-      txtkey: _workingDayKey,
-      validation: (value) {
-        if (value!.isEmpty) {
-          return "" ;
-        }
-        return null;
-      }, 
+    return SingleLineEditableTextFormField(
       readOnly: widget.readOnly,
       controller: workingdaysController,
       focuscontroller: _workingdaysFocus,
@@ -407,11 +399,16 @@ class _UserCreateState extends State<UserCreate>
         setState(() {
           workingdaysController.text = value;
         });
-        _workingDayKey.currentState!.validate();
       },
       textInput: TextInputType.number,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+      validation: (value) {
+        if (value!.isEmpty) {
+          return ApplicationLocalizations.of(context)!.translate("working_days")!;
+        }
+        return null;
+      },
     );
   }
 
@@ -682,9 +679,8 @@ class _UserCreateState extends State<UserCreate>
           child: GestureDetector(
             onTap: () {
               bool v = _userNameKey.currentState!.validate();
-              bool q = _workingDayKey.currentState!.validate();
               bool u = _fnameKey.currentState!.validate();
-              if (mounted && v && q && u) {
+              if (mounted && v  && u) {
                 if (widget.editUser != null) {
                   callUpdateItem();
                 } else {

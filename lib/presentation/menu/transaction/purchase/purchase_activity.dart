@@ -707,10 +707,11 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
           isLoaderShow=true;
         });
 
-        String apiUrl =baseurl + ApiConstants().purchaseInvoicePdf;
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
+        String apiUrl =baseurl + ApiConstants().getPurchaseInvoiceDetails+"/Download?Company_ID=$companyId&Invoice_No=$orderNo&Type=$urlType";
+
         print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data)async{

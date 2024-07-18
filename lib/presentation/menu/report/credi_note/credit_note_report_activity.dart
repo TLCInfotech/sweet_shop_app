@@ -1,10 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/presentation/menu/report/credi_note/credit_note_report_type_list.dart';
+import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_dropdown_with_object.dart';
 import '../../../../core/colors.dart';
@@ -12,6 +17,11 @@ import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/size_config.dart';
 import '../../../common_widget/get_date_layout.dart';
+import 'package:open_file_plus/open_file_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 
 class CreditReportActivity extends StatefulWidget {
   final String logoImage;
@@ -90,6 +100,47 @@ class _ExpenseReportActivityState extends State<CreditReportActivity> {
                             style: appbar_text_style,),
                         ),
                       ),
+                      PopupMenuButton(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            color: Colors.transparent,
+                            child: const FaIcon(Icons.download_sharp),
+                          ),
+                        ),
+                        onSelected: (value) {
+                      /*    if(value == "PDF"){
+                            // add desired output
+                            pdfDownloadCall("PDF");
+                          }else if(value == "XLS"){
+                            // add desired output
+                            pdfDownloadCall("XLS");
+                          }*/
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                          const PopupMenuItem(
+                            value: "PDF",
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.picture_as_pdf, color: Colors.red),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            value: "XLS",
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/images/xls.png'),
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -328,7 +379,110 @@ class _ExpenseReportActivityState extends State<CreditReportActivity> {
       ],
     );
   }
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  bool isLoaderShow=false;
 
+  pdfDownloadCall(String urlType) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        setState(() {
+        //  isLoaderShow=true;
+        });
+
+
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
+
+        print(apiUrl);
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data)async{
+
+              setState(() {
+                isLoaderShow=false;
+                print("  dataaaaaaaa  ${data['data']} ");
+                downloadFile(data['data'],data['fileName']);
+              });
+            }, onFailure: (error) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, error.toString());
+            },
+            onException: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.errorDialog(context, e.toString());
+
+            },sessionExpire: (e) {
+              setState(() {
+                isLoaderShow=false;
+              });
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
+  Future<void> downloadFile( String url, String fileName) async {
+    // Check for storage permission
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Get the application directory
+      var dir = await getExternalStorageDirectory();
+      if (dir != null) {
+        // String url = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+        //  String fileName = "example.pdf";
+        String savePath = "${dir.path}/$fileName";
+
+        try {
+          var response = await http.get(Uri.parse(url));
+
+          if (response.statusCode == 200) {
+            File file = File(savePath);
+            await file.writeAsBytes(response.bodyBytes);
+            print("File is saved to download folder: $savePath");
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Downloaded: $fileName"),
+              ),
+            );
+            // Show a notification
+            NotificationService.showNotification(
+                'Download Complete',
+                'The file has been downloaded successfully.',
+                savePath
+            );
+            // Open the downloaded file
+            OpenFile.open(savePath);
+          } else {
+            print("Error: ${response.statusCode}");
+          }
+        } catch (e) {
+          print("Error: $e");
+        }
+      }
+    } else {
+      print("Permission Denied");
+    }
+  }
 
 }
 

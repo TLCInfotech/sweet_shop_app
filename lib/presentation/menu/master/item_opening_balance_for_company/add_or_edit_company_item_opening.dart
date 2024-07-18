@@ -215,10 +215,9 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
                       ),
                       // getFieldTitleLayout(ApplicationLocalizations.of(context)!.translate("item_name")!),
                       getAddSearchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-                      getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                      //getBatchLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getItemQuantityLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
                       getRateAndAmount(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
                       SizedBox(height: 10,)
                     ],
                   ),
