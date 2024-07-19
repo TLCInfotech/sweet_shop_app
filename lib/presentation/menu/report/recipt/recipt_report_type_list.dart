@@ -206,13 +206,13 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                             ),
                           ),
                           onSelected: (value) {
-                        /*    if(value == "PDF"){
+                            if(value == "PDF"){
                               // add desired output
                               pdfDownloadCall("PDF");
                             }else if(value == "XLS"){
                               // add desired output
                               pdfDownloadCall("XLS");
-                            }*/
+                            }
                           },
                           itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                             const PopupMenuItem(
@@ -722,11 +722,17 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
           //  isLoaderShow=true;
         });
 
-
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
+        String apiUrl ="";
+        if (selectedFranchiseeId != "") {
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
+        } else if (selectedItemId != "") {
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&ID=$selectedItemId&Type=$urlType";
+        } else {
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&Type=$urlType";
+        }
 
         print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

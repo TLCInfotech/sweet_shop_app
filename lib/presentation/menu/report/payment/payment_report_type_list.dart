@@ -205,13 +205,13 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                             ),
                           ),
                           onSelected: (value) {
-                       /*    if(value == "PDF"){
+                           if(value == "PDF"){
                               // add desired output
                               pdfDownloadCall("PDF");
                             }else if(value == "XLS"){
                               // add desired output
                               pdfDownloadCall("XLS");
-                            }*/
+                            }
                           },
                           itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                             const PopupMenuItem(
@@ -722,7 +722,14 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
+        String apiUrl ="";
+        if (selectedFranchiseeId != "") {
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
+        } else if (selectedBankCashId != "") {
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&ID=$selectedBankCashId&Type=$urlType";
+        } else {
+              apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&Type=$urlType";
+        }
 
         print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
