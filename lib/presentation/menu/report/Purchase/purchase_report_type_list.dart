@@ -729,17 +729,17 @@ class _PurchaseReportTypeListState extends State<PurchaseReportTypeList> {
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
-        setState(() {
-          //  isLoaderShow=true;
-        });
-
-
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
-
-        print(apiUrl);
+        String apiUrl ="";
+        if (selectedFranchiseeId != "") {
+          apiUrl =baseurl + ApiConstants().getPurchaseReports+"/Download?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+        } else if (selectedItemId != "") {
+              apiUrl =baseurl + ApiConstants().getPurchaseReports+"/Download?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedItemId&Type=$urlType";
+        } else {
+          apiUrl =baseurl + ApiConstants().getPurchaseReports+"/Download?Company_ID=$companyId&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Type=$urlType";
+        }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data)async{
 

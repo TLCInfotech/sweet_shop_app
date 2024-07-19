@@ -629,9 +629,9 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
         );
         String apiUrl ="";
         if (widget.come=="partyName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Franchisee_ID=${widget.venderId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().voucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Credit Note&Franchisee_ID=${widget.venderId}&Type=$urlType";
         } else if (widget.come=="itemName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Item_ID=${widget.itemId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().voucherItemwise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Credit Note&Item_ID=${widget.itemId}&Type=$urlType";
         }
 
         print(apiUrl);

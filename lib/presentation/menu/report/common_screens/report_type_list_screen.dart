@@ -837,11 +837,9 @@ mainAxisAlignment: MainAxisAlignment.start,
             apiUrl =baseurl + ApiConstants().MISReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
         }else{
           if(selectedFranchiseeId!=""){
-            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
-          }else
-          if(selectedLedgerId!=""){
-            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId";
-
+            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+          }else {
+            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
           }
         }
         print(apiUrl);

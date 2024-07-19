@@ -800,16 +800,16 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
           token: sessionToken,
         );
         String apiUrl;
+
         if(widget.come=="vendorName"){
-          apiUrl =baseurl + ApiConstants().getMISFranchiseeProfitDatewise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getExpensePartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}&Type=$urlType";
         }else
         if(widget.come=="expanseName"){
-          apiUrl =baseurl + ApiConstants().getMISFranchiseeProfitDatewise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=${widget.expense}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getExpenseExpensewise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Expense_ID=${widget.expense}&Type=$urlType";
         }else{
-           apiUrl =baseurl + ApiConstants().getMISFranchiseeProfitDatewise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getMISFranchiseeProfitDatewise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId }&Type=$urlType";
         }
-
-        print(apiUrl);
+     print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data)async{
               setState(() {

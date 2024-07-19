@@ -128,6 +128,9 @@ class ApiConstants {
   String reportSalePdf="reportSalePdf";
   String MISReports="MISReports";
   String SaleReports="SaleReports";
+  String getExpenseReports="ExpenseReports";
+  String getPurchaseReports="PurchaseReports";
+  String getVoucherReports="VoucherReports";
   String getAcctVoucherReports="AcctVoucherReports";
 
 }

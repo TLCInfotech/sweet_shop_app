@@ -735,7 +735,17 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=&Type=$urlType";
+        String apiUrl = "";
+
+        if (selectedFranchiseeId != "") {
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&ID=$selectedFranchiseeId&Type=$urlType";
+
+        } else if (selectedItemId != "") {
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&Type=$urlType";
+
+        } else {
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&Type=$urlType";
+        }
 
         print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

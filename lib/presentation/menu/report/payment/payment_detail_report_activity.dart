@@ -629,7 +629,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
         );
         String apiUrl ="";
         if (widget.come=="ledgerName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherBankwise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}&Type=$urlType";
         } else if (widget.come=="partyName") {
           apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}&Type=$urlType";
         }

@@ -617,7 +617,7 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
         );
         String apiUrl ="";
         if (widget.come=="itemName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Bank_ID=${widget.itemId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherBankwise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Bank_ID=${widget.itemId}&Type=$urlType";
         } else if (widget.come=="partyName") {
           apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Party_ID=${widget.venderId}&Type=$urlType";
         }

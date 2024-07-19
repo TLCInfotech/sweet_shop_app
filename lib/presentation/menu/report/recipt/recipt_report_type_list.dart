@@ -727,11 +727,11 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
         );
         String apiUrl ="";
         if (selectedFranchiseeId != "") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Receipt&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
         } else if (selectedItemId != "") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&ID=$selectedItemId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Receipt&Report_ID=${widget.reportId}&ID=$selectedItemId&Type=$urlType";
         } else {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Receipt&Report_ID=${widget.reportId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Receipt&Report_ID=${widget.reportId}&Type=$urlType";
         }
 
         print(apiUrl);

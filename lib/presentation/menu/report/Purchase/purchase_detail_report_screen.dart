@@ -629,12 +629,11 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
         );
         String apiUrl ="";
         if (widget.come=="partyName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Franchisee_ID=${widget.venderId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getPurchasePartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}&Type=$urlType";
         } else if (widget.come=="itemName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Item_ID=${widget.itemId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getPurchaseItemwise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}&Type=$urlType";
         }
-
-        print(apiUrl);
+      print(apiUrl);
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data)async{
 

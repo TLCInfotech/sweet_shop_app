@@ -724,11 +724,11 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
         );
         String apiUrl ="";
         if (selectedFranchiseeId != "") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Payment&Report_ID=${widget.reportId}&ID=$selectedFranchiseeId&Type=$urlType";
         } else if (selectedBankCashId != "") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&ID=$selectedBankCashId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Payment&Report_ID=${widget.reportId}&ID=$selectedBankCashId&Type=$urlType";
         } else {
-              apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Report_ID=${widget.reportId}&Type=$urlType";
+              apiUrl =baseurl + ApiConstants().getAcctVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Form_Name=Payment&Report_ID=${widget.reportId}&Type=$urlType";
         }
 
         print(apiUrl);
