@@ -32,57 +32,7 @@ import '../../../common_widget/get_date_layout.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 
-class MobileDownloadService implements DownloadService {
-  MobileDownloadService(this.name,this.type,this.context);
-  final name,type,context;
 
-
-  @override
-  Future<void> download({required String url}) async {
-    print("Here");
-    // Requests permission for downloading the file
-    bool hasPermission = await _requestWritePermission();
-    if (!hasPermission) return;
-
-    // Gets the directory where we will download the file.
-    var dir;
-    if (Platform.isIOS) {
-      dir = await getTemporaryDirectory();
-    } else {
-      dir = await getExternalStorageDirectory();
-    }
-
-    // Define the file name
-    String fileName = name;
-
-    try {
-      // Make the HTTP request to download the file
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        // Save the file
-        final filePath = '${dir.path}/$fileName.$type';
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        print(filePath);
-        // Open the file
-        OpenFile.open(filePath);
-      } else {
-        throw Exception('Failed to download the file');
-      }
-    } catch (e) {
-      print("HTTP Error: $e");
-      // showAlertDialog(context: context, title: "Error", content: "$e");
-    }
-  }
-
-  // requests storage permission
-  Future<bool> _requestWritePermission() async {
-    await Permission.storage.request();
-    return await Permission.storage.request().isGranted;
-  }
-}
 
 class ReportTypeList extends StatefulWidget {
   final  reportName;
@@ -898,34 +848,6 @@ mainAxisAlignment: MainAxisAlignment.start,
             apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
           }
         }
-        // print(apiUrl);
-        // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-        //     onSuccess:(data)async{
-        //
-        //       setState(() {
-        //         isLoaderShow=false;
-        //         print("  dataaaaaaaa  ${data['data']} ");
-        //         downloadFile(data['data'],data['fileName']);
-        //       });
-        //     }, onFailure: (error) {
-        //       setState(() {
-        //         isLoaderShow=false;
-        //       });
-        //       CommonWidget.errorDialog(context, error.toString());
-        //     },
-        //     onException: (e) {
-        //       setState(() {
-        //         isLoaderShow=false;
-        //       });
-        //       CommonWidget.errorDialog(context, e.toString());
-        //
-        //     },sessionExpire: (e) {
-        //       setState(() {
-        //         isLoaderShow=false;
-        //       });
-        //       CommonWidget.gotoLoginScreen(context);
-        //       // widget.mListener.loaderShow(false);
-        //     });
         String type="pdf";
         if(urlType=="XLS")
           type="xlsx";
