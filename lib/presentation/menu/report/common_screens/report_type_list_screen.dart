@@ -33,17 +33,18 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 
 class MobileDownloadService implements DownloadService {
-  MobileDownloadService(this.name,this.context);
-  final name,context;
+  MobileDownloadService(this.name,this.type,this.context);
+  final name,type,context;
+
 
   @override
   Future<void> download({required String url}) async {
     print("Here");
-    // requests permission for downloading the file
+    // Requests permission for downloading the file
     bool hasPermission = await _requestWritePermission();
     if (!hasPermission) return;
 
-    // gets the directory where we will download the file.
+    // Gets the directory where we will download the file.
     var dir;
     if (Platform.isIOS) {
       dir = await getTemporaryDirectory();
@@ -51,144 +52,28 @@ class MobileDownloadService implements DownloadService {
       dir = await getExternalStorageDirectory();
     }
 
-    // You should put the name you want for the file here.
-    // Take in account the extension.
-    String fileName = '${name}';
-
-    // downloads the file
-    // Dio dio = new Dio();
-
-    //
-    // await dio.download(url, "${dir.path}/$fileName");
+    // Define the file name
+    String fileName = name;
 
     try {
-      final Dio dio = Dio();
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (HttpClient client) {
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
-        return client;
-      };
+      // Make the HTTP request to download the file
+      final response = await http.get(Uri.parse(url));
 
-      await dio.download(url, "${dir.path}/$fileName",
-          options: Options(headers: {
-            HttpHeaders.acceptEncodingHeader: "*",
-            HttpHeaders.accessControlAllowOriginHeader: "*",
-            HttpHeaders.accessControlAllowMethodsHeader: "*"
-          }));
+      if (response.statusCode == 200) {
+        // Save the file
+        final filePath = '${dir.path}/$fileName.$type';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
 
-      // opens the file
-      OpenFile.open(
-        "${dir.path}/$fileName",
-        type: 'application/pdf',
-      );
-    } on DioError catch (e) {
-      print("Dio Error + ${e.response?.statusCode}");
-      if (DioErrorType.connectionError == e.type ||
-          DioErrorType.connectionTimeout == e.type) {
-        throw TimeoutException(
-            "Server is not reachable. Please verify your internet connection and try again");
-      }
-      else if (DioErrorType.unknown == e.type) {
-
-        var msg = e.toString();
-        if (msg.contains('SocketException')) {
-          Widget continueButton = ElevatedButton(
-            child: Text("ok"),
-            onPressed: () {
-              // Navigator.pop(context);
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          );
-
-          // set up the AlertDialog
-          AlertDialog alert = AlertDialog(
-            title: Text("Error :"),
-            content: Text("Check Internet Connection "),
-            actions: [
-              continueButton,
-            ],
-          );
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            },
-          );
-        }
-        else {
-          Widget continueButton = ElevatedButton(
-            child: Text("ok"),
-            onPressed: () {
-              // Navigator.pop(context);
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          );
-
-          // set up the AlertDialog
-          AlertDialog alert = AlertDialog(
-            title: Text("Error  ${e.response?.statusCode } : "),
-            content: Text("${e.response?.data}"),
-            actions: [
-              continueButton,
-            ],
-          );
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alert;
-            },
-          );
-        }
-      }
-      else if(e.response?.statusCode.toString()=="500"){
-        Widget continueButton = ElevatedButton(
-          child: Text("ok"),
-          onPressed: () {
-            // Navigator.pop(context);
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        );
-
-        // set up the AlertDialog
-        AlertDialog alert = AlertDialog(
-          title: Text("Error :"),
-          content: Text("Somthing went wrong contact administrator."),
-          actions: [
-            continueButton,
-          ],
-        );
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
+        print(filePath);
+        // Open the file
+        OpenFile.open(filePath);
+      } else {
+        throw Exception('Failed to download the file');
       }
     } catch (e) {
-      print("Dio Catch");
-      Widget continueButton = ElevatedButton(
-        child: Text("ok"),
-        onPressed: () {
-          // Navigator.pop(context);
-          Navigator.of(context, rootNavigator: true).pop();
-        },
-      );
-
-      // set up the AlertDialog
-      AlertDialog alert = AlertDialog(
-        title: Text("Error :"),
-        content: Text("${e}"),
-        actions: [
-          continueButton,
-        ],
-      );
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
+      print("HTTP Error: $e");
+      // showAlertDialog(context: context, title: "Error", content: "$e");
     }
   }
 
@@ -1041,10 +926,16 @@ mainAxisAlignment: MainAxisAlignment.start,
         //       CommonWidget.gotoLoginScreen(context);
         //       // widget.mListener.loaderShow(false);
         //     });
+        String type="pdf";
+        if(urlType=="XLS")
+          type="xlsx";
 
-        DownloadService downloadService = MobileDownloadService(apiUrl.toString(),context);
+        DownloadService downloadService = MobileDownloadService(apiUrl.toString(),type,context);
         await downloadService.download(url: apiUrl);
 
+        setState(() {
+          isLoaderShow=false;
+        });
       }); }
     else{
       if (mounted) {
