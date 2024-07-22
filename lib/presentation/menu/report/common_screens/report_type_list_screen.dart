@@ -856,7 +856,7 @@ mainAxisAlignment: MainAxisAlignment.start,
         await downloadService.download(url: apiUrl);
 
         setState(() {
-          isLoaderShow=false;
+          isLoaderShow=false ;
         });
       }); }
     else{
