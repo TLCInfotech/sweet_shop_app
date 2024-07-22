@@ -20,6 +20,7 @@ import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_cred
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/add_or_edit_item.dart';
 import '../../../../core/app_preferance.dart';
+import '../../../../core/downloadservice.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
@@ -1264,7 +1265,7 @@ showButton=true;
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
+      AppPreferences.getDeviceId().then((deviceId) async{
         setState(() {
           isLoaderShow=true;
         });
@@ -1275,33 +1276,40 @@ showButton=true;
         String apiUrl =baseurl + ApiConstants().getVoucherNoteHeaderDetails+"/Download?Company_ID=$companyId&Invoice_No=${widget.Invoice_No.toString()}&Type=$urlType";
 
         print(apiUrl);
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data)async{
+        // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+        //     onSuccess:(data)async{
+        //
+        //       setState(() {
+        //         isLoaderShow=false;
+        //         print("  dataaaaaaaa  ${data['data']} ");
+        //          downloadFile(data['data'],data['fileName']);
+        //       });
+        //     }, onFailure: (error) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.errorDialog(context, error.toString());
+        //     },
+        //     onException: (e) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.errorDialog(context, e.toString());
+        //
+        //     },sessionExpire: (e) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.gotoLoginScreen(context);
+        //       // widget.mListener.loaderShow(false);
+        //     });
 
-              setState(() {
-                isLoaderShow=false;
-                print("  dataaaaaaaa  ${data['data']} ");
-                 downloadFile(data['data'],data['fileName']);
-              });
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
+        String type="pdf";
+        if(urlType=="XLS")
+          type="xlsx";
 
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+        DownloadService downloadService = MobileDownloadService(apiUrl.toString(),type,context);
+        await downloadService.download(url: apiUrl);
 
       }); }
     else{
