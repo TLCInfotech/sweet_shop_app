@@ -45,6 +45,8 @@ class SearchableLedgerDropdown extends StatefulWidget{
 }
 
 class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdown> with  SingleTickerProviderStateMixin {
+
+
   bool isLoaderShow = false;
   FocusNode searchFocus = FocusNode() ;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -135,6 +137,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
               ),
               child:    TypeAheadFormField(
                 key: widget.txtkey,
+                getImmediateSuggestions: true,
                 textFieldConfiguration: TextFieldConfiguration(
 
                   onChanged: (v)async{
@@ -186,10 +189,13 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableLedgerDropdo
                         _controller.clear();
                       });
                       widget.callback("","");
+                      searchFocus.requestFocus();
+                      // Optionally, trigger the suggestion box to show manually
+                      _controller.text = _controller.text; // Trigger a rebuild
                       }, icon: Icon(Icons.clear)),
                     errorStyle: TextStyle(
                         color: Colors.redAccent,
-                        fontSize: 16.0,
+                        fontSize: 16.0, 
                         height: 0
                     ),
                     errorBorder: OutlineInputBorder(

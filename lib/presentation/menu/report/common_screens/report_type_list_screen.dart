@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/purchase/create_pur
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
+import '../../../../core/downloadservice.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
@@ -27,7 +29,175 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import '../../../common_widget/get_date_layout.dart';
 
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
+class MobileDownloadService implements DownloadService {
+  MobileDownloadService(this.name,this.context);
+  final name,context;
+
+  @override
+  Future<void> download({required String url}) async {
+    print("Here");
+    // requests permission for downloading the file
+    bool hasPermission = await _requestWritePermission();
+    if (!hasPermission) return;
+
+    // gets the directory where we will download the file.
+    var dir;
+    if (Platform.isIOS) {
+      dir = await getTemporaryDirectory();
+    } else {
+      dir = await getExternalStorageDirectory();
+    }
+
+    // You should put the name you want for the file here.
+    // Take in account the extension.
+    String fileName = '${name}';
+
+    // downloads the file
+    // Dio dio = new Dio();
+
+    //
+    // await dio.download(url, "${dir.path}/$fileName");
+
+    try {
+      final Dio dio = Dio();
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (HttpClient client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      };
+
+      await dio.download(url, "${dir.path}/$fileName",
+          options: Options(headers: {
+            HttpHeaders.acceptEncodingHeader: "*",
+            HttpHeaders.accessControlAllowOriginHeader: "*",
+            HttpHeaders.accessControlAllowMethodsHeader: "*"
+          }));
+
+      // opens the file
+      OpenFile.open(
+        "${dir.path}/$fileName",
+        type: 'application/pdf',
+      );
+    } on DioError catch (e) {
+      print("Dio Error + ${e.response?.statusCode}");
+      if (DioErrorType.connectionError == e.type ||
+          DioErrorType.connectionTimeout == e.type) {
+        throw TimeoutException(
+            "Server is not reachable. Please verify your internet connection and try again");
+      }
+      else if (DioErrorType.unknown == e.type) {
+
+        var msg = e.toString();
+        if (msg.contains('SocketException')) {
+          Widget continueButton = ElevatedButton(
+            child: Text("ok"),
+            onPressed: () {
+              // Navigator.pop(context);
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          );
+
+          // set up the AlertDialog
+          AlertDialog alert = AlertDialog(
+            title: Text("Error :"),
+            content: Text("Check Internet Connection "),
+            actions: [
+              continueButton,
+            ],
+          );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        }
+        else {
+          Widget continueButton = ElevatedButton(
+            child: Text("ok"),
+            onPressed: () {
+              // Navigator.pop(context);
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          );
+
+          // set up the AlertDialog
+          AlertDialog alert = AlertDialog(
+            title: Text("Error  ${e.response?.statusCode } : "),
+            content: Text("${e.response?.data}"),
+            actions: [
+              continueButton,
+            ],
+          );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        }
+      }
+      else if(e.response?.statusCode.toString()=="500"){
+        Widget continueButton = ElevatedButton(
+          child: Text("ok"),
+          onPressed: () {
+            // Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        );
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Error :"),
+          content: Text("Somthing went wrong contact administrator."),
+          actions: [
+            continueButton,
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    } catch (e) {
+      print("Dio Catch");
+      Widget continueButton = ElevatedButton(
+        child: Text("ok"),
+        onPressed: () {
+          // Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text("Error :"),
+        content: Text("${e}"),
+        actions: [
+          continueButton,
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+  }
+
+  // requests storage permission
+  Future<bool> _requestWritePermission() async {
+    await Permission.storage.request();
+    return await Permission.storage.request().isGranted;
+  }
+}
 
 class ReportTypeList extends StatefulWidget {
   final  reportName;
@@ -815,6 +985,8 @@ mainAxisAlignment: MainAxisAlignment.start,
     getReportList(1);
     Navigator.pop(context);
   }
+
+
   pdfDownloadCall(String urlType) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
@@ -822,7 +994,7 @@ mainAxisAlignment: MainAxisAlignment.start,
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
+      AppPreferences.getDeviceId().then((deviceId)async {
         setState(() {
           isLoaderShow=true;
         });
@@ -833,7 +1005,6 @@ mainAxisAlignment: MainAxisAlignment.start,
 
         String apiUrl="" ;
         if(widget.comeFrom=="MIS"){
-
             apiUrl =baseurl + ApiConstants().MISReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
         }else{
           if(selectedFranchiseeId!=""){
@@ -842,34 +1013,37 @@ mainAxisAlignment: MainAxisAlignment.start,
             apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
           }
         }
-        print(apiUrl);
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data)async{
+        // print(apiUrl);
+        // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+        //     onSuccess:(data)async{
+        //
+        //       setState(() {
+        //         isLoaderShow=false;
+        //         print("  dataaaaaaaa  ${data['data']} ");
+        //         downloadFile(data['data'],data['fileName']);
+        //       });
+        //     }, onFailure: (error) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.errorDialog(context, error.toString());
+        //     },
+        //     onException: (e) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.errorDialog(context, e.toString());
+        //
+        //     },sessionExpire: (e) {
+        //       setState(() {
+        //         isLoaderShow=false;
+        //       });
+        //       CommonWidget.gotoLoginScreen(context);
+        //       // widget.mListener.loaderShow(false);
+        //     });
 
-              setState(() {
-                isLoaderShow=false;
-                print("  dataaaaaaaa  ${data['data']} ");
-                downloadFile(data['data'],data['fileName']);
-              });
-            }, onFailure: (error) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, error.toString());
-            },
-            onException: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.errorDialog(context, e.toString());
-
-            },sessionExpire: (e) {
-              setState(() {
-                isLoaderShow=false;
-              });
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
+        DownloadService downloadService = MobileDownloadService(apiUrl.toString(),context);
+        await downloadService.download(url: apiUrl);
 
       }); }
     else{
