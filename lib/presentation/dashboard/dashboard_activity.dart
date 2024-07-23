@@ -160,6 +160,12 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         drawer: MenuActivity(
           mListener: this,
         ),
+        onDrawerChanged: (v){
+          print(v);
+          if(v==false) {
+            Navigator.of(context).pushReplacementNamed('/dashboard');
+          }
+        },
         body: Stack(
           children: [
             Column(
