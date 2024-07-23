@@ -170,7 +170,7 @@ class _UserCreateState extends State<UserCreate>
         userController.text = userData[0]["UID"];
         oldUid = userData[0]["UID"];
         print("jhjfhjf  ${userData[0]["Active"]}  $oldUid");
-        workingdaysController.text = userData[0]["Working_Days"] != null
+        workingdaysController.text = userData[0]["Working_Days"] != "null"||userData[0]["Working_Days"] != null
             ? userData[0]["Working_Days"].toString()
             : workingdaysController.text;
         franchiseeId = userData[0]["Ledger_ID"].toString();
@@ -733,7 +733,7 @@ class _UserCreateState extends State<UserCreate>
           photo: picImageBytes.length == 0 ? null : picImageBytes,
           Company_ID: companyId,
           ledgerID: franchiseeId,
-          workingDays: workingDay,
+          workingDays: workingDay!=""?workingDay:null,
           // AppType: "F",
           active: true,
           resetPassword: true,
@@ -784,7 +784,7 @@ class _UserCreateState extends State<UserCreate>
           Company_ID: companyIds,
           ledgerID: franchiseeId,
           // AppType: "",
-          workingDays: workingDay,
+          workingDays: workingDay!=""?workingDay:null,
           active: checkActiveValue,
           resetPassword: checkPasswordValue,
           creator: creatorName,

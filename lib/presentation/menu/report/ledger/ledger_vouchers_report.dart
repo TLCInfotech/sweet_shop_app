@@ -13,9 +13,11 @@ import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart'
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
+import '../../../../core/downloadservice.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
+import '../../../../data/domain/commonRequest/get_token_without_page.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
@@ -137,6 +139,47 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
                             style: appbar_text_style,),
                         ),
                       ),
+                      PopupMenuButton(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            color: Colors.transparent,
+                            child: const FaIcon(Icons.download_sharp),
+                          ),
+                        ),
+                        onSelected: (value) {
+                          if(value == "PDF"){
+                            // add desired output
+                            pdfDownloadCall("PDF");
+                          }else if(value == "XLS"){
+                            // add desired output
+                            pdfDownloadCall("XLS");
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                          const PopupMenuItem(
+                            value: "PDF",
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.picture_as_pdf, color: Colors.red),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            value: "XLS",
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/images/xls.png'),
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -489,4 +532,52 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
       CommonWidget.noInternetDialogNew(context);
     }
   }
+
+  pdfDownloadCall(String urlType) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if(netStatus==InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId)async {
+        setState(() {
+          isLoaderShow=true;
+        });
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+
+
+        String apiUrl="" ;
+        // if(widget.comeFrom=="MIS"){
+          apiUrl =baseurl + ApiConstants().ledgerOpeningBalance+"/Download?Company_ID=$companyId&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}&Type=$urlType";
+        // }else{
+        //   if(selectedFranchiseeId!=""){
+        //     apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+        //   }else {
+        //     apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
+        //   }
+        // }
+        String type="pdf";
+        if(urlType=="XLS")
+          type="xlsx";
+
+        DownloadService downloadService = MobileDownloadService(apiUrl.toString(),type,context);
+        await downloadService.download(url: apiUrl);
+
+        setState(() {
+          isLoaderShow=false ;
+        });
+      }); }
+    else{
+      if (mounted) {
+        setState(() {
+          isLoaderShow = false;
+        });
+      }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+
 }

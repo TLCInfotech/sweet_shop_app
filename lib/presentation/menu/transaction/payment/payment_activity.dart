@@ -183,11 +183,11 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                         const SizedBox(
                           height: 2,
                         ),
-                        getBankCashLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
-
-                        const SizedBox(
-                          height: 2,
-                        ),
+                        // getBankCashLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
+                        //
+                        // const SizedBox(
+                        //   height: 2,
+                        // ),
                         getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
 
                         const SizedBox(
@@ -312,7 +312,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   /* Widget to get Franchisee Name Layout */
   Widget getFranchiseeNameLayout(double parentHeight, double parentWidth) {
     return partyBlank==false?Container():SearchableLedgerDropdown(
-      apiUrl: ApiConstants().getLedgerWithoutBankCash+"?",
+      apiUrl: ApiConstants().ledgerWithoutImage+"?",
       titleIndicator: false,
       ledgerName: selectedFranchiseeName,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
@@ -577,7 +577,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedBankCashId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedFranchiseeId&Ledger_ID=null&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

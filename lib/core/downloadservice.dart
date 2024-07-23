@@ -37,7 +37,7 @@ class MobileDownloadService implements DownloadService {
     }
 
     // Define the file name
-    String fileName = name;
+    String fileName = Uri.parse(url).pathSegments.last;
 
     try {
       // Make the HTTP request to download the file
