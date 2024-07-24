@@ -372,17 +372,18 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     isPagination = true;
     await getRecipt(page);
   }
+
   Expanded get_purchase_list_layout() {
     return Expanded(
-        child: RefreshIndicator(
+        child:RefreshIndicator(
           color: CommonColor.THEME_COLOR,
           onRefresh: () {
             return refreshList();
           },
           child: ListView.separated(
-            itemCount: recipt_list.length,
             controller: _scrollController,
             physics: AlwaysScrollableScrollPhysics(),
+            itemCount: recipt_list.length,
             itemBuilder: (BuildContext context, int index) {
               return  AnimationConfiguration.staggeredList(
                 position: index,
@@ -393,7 +394,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                   child: FadeInAnimation(
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
-                      onTap: ()async{
+                      onTap: () async{
+
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
                           mListener: this,
                           logoImage: widget.logoImage,
@@ -409,6 +411,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                         partyBlank=false;
                         recipt_list=[];
                         await  getRecipt(1);
+
                       },
                       child: Stack(
                         children: [
@@ -423,7 +426,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                           color: (index)%2==0?Colors.green:Colors.blueAccent,
                                           borderRadius: BorderRadius.circular(5)
                                       ),
-                                      child:  FaIcon(
+                                      child:  const FaIcon(
                                         FontAwesomeIcons.moneyCheck,
                                         color: Colors.white,
                                       )
@@ -431,37 +434,39 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                   ),
                                 ),
                                 Expanded(
-                                    child: Stack(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text("${recipt_list[index]["Ledger_Name"]}",style: item_heading_textStyle,),
-                                              SizedBox(height: 5,),
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                  SizedBox(width: 10,),
-                                                  Expanded(child: Text("Voucher No: - ${recipt_list[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                                ],
-                                              ),
-                                              SizedBox(height: 5,),
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                  SizedBox(width: 10,),
-                                                  Expanded(child: Text("${CommonWidget.getCurrencyFormat(recipt_list[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
-                                                ],
-                                              ),
-
-                                            ],
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("${recipt_list[index]["Ledger_Name"]}",style: item_heading_textStyle,),
+                                                SizedBox(height: 5,),
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                    SizedBox(width: 10,),
+                                                    Expanded(child: Text("Voucher No: - ${recipt_list[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 5,),
+                                                Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+                                                    SizedBox(width: 10,),
+                                                    Expanded(child: Text(CommonWidget.getCurrencyFormat(recipt_list[index]["Amount"]),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+                                                  ],
+                                                ),],
+                                            ),
                                           ),
                                         ),
+
                                         Container(
                                           width: 10,
                                           color: Colors.transparent,
@@ -518,19 +523,16 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                               )
                           ),
                           Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child:  singleRecord['Delete_Right']==true?   Positioned(
-                                top: 0,
-                                right: 0,
-                                child:    DeleteDialogLayout(
-                                  callback: (response ) async{
-                                    if(response=="yes"){
-                                      print("##############$response");
-                                      await   callDeleteRecipt(recipt_list[index]['Voucher_No'].toString(),index);
-                                    }
-                                  },
-                                ) ):Container(),
+                              bottom: 5,
+                              right: 5,
+                              child: singleRecord['Delete_Right']==true?      DeleteDialogLayout(
+                                callback: (response ) async{
+                                  if(response=="yes"){
+                                                                        print("##############$response");
+                                                                        await   callDeleteRecipt(recipt_list[index]['Voucher_No'].toString(),index);
+                                                                      }
+                                },
+                              ):Container()
                           ),
                         ],
                       ),
@@ -547,6 +549,182 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           ),
         ));
   }
+
+  // Expanded get_purchase_list_layout() {
+  //   return Expanded(
+  //       child: RefreshIndicator(
+  //         color: CommonColor.THEME_COLOR,
+  //         onRefresh: () {
+  //           return refreshList();
+  //         },
+  //         child: ListView.separated(
+  //           itemCount: recipt_list.length,
+  //           controller: _scrollController,
+  //           physics: AlwaysScrollableScrollPhysics(),
+  //           itemBuilder: (BuildContext context, int index) {
+  //             return  AnimationConfiguration.staggeredList(
+  //               position: index,
+  //               duration:
+  //               const Duration(milliseconds: 500),
+  //               child: SlideAnimation(
+  //                 verticalOffset: -44.0,
+  //                 child: FadeInAnimation(
+  //                   delay: Duration(microseconds: 1500),
+  //                   child: GestureDetector(
+  //                     onTap: ()async{
+  //                       await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateReceipt(
+  //                         mListener: this,
+  //                         logoImage: widget.logoImage,
+  //                         newDate: newDate,
+  //                         readOnly: singleRecord['Update_Right'],
+  //                         voucherNo: recipt_list[index]["Voucher_No"],
+  //                         dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
+  //                         editedItem:recipt_list[index],
+  //                         come:"edit",
+  //                       )));
+  //
+  //                       selectedBankCashId="";
+  //                       partyBlank=false;
+  //                       recipt_list=[];
+  //                       await  getRecipt(1);
+  //                     },
+  //                     child: Stack(
+  //                       children: [
+  //                         Card(
+  //                           child: Row(
+  //                             children: [
+  //                               Padding(
+  //                                 padding:  EdgeInsets.all(10.0),
+  //                                 child: Container(
+  //                                     padding: EdgeInsets.all(10),
+  //                                     decoration: BoxDecoration(
+  //                                         color: (index)%2==0?Colors.green:Colors.blueAccent,
+  //                                         borderRadius: BorderRadius.circular(5)
+  //                                     ),
+  //                                     child:  FaIcon(
+  //                                       FontAwesomeIcons.moneyCheck,
+  //                                       color: Colors.white,
+  //                                     )
+  //                                   // Text("A",style: kHeaderTextStyle.copyWith(color: Colors.white,fontSize: 16),),
+  //                                 ),
+  //                               ),
+  //                                Expanded(
+  //                                   child: Stack(
+  //                                     children: [
+  //                                       Container(
+  //                                         margin: const EdgeInsets.only(top: 10,left: 10,right: 40,bottom: 10),
+  //                                         child: Column(
+  //                                           mainAxisAlignment: MainAxisAlignment.start,
+  //                                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                                           children: [
+  //                                             Text("${recipt_list[index]["Ledger_Name"]}",style: item_heading_textStyle,),
+  //                                             SizedBox(height: 5,),
+  //                                             Row(
+  //                                               crossAxisAlignment: CrossAxisAlignment.center,
+  //                                               children: [
+  //                                                 FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
+  //                                                 SizedBox(width: 10,),
+  //                                                 Expanded(child: Text("Voucher No: - ${recipt_list[index]["Voucher_No"]}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+  //                                               ],
+  //                                             ),
+  //                                             SizedBox(height: 5,),
+  //                                             Row(
+  //                                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                                               children: [
+  //                                                 FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
+  //                                                 SizedBox(width: 10,),
+  //                                                 Expanded(child: Text("${CommonWidget.getCurrencyFormat(recipt_list[index]["Amount"])}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
+  //                                               ],
+  //                                             ),
+  //
+  //                                           ],
+  //                                         ),
+  //                                       ),
+  //                                       Container(
+  //                                         width: 10,
+  //                                         color: Colors.transparent,
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         Positioned(
+  //                             top: 10,
+  //                             right: 20,
+  //                             child:    PopupMenuButton(
+  //                               child: ClipRRect(
+  //                                 borderRadius: BorderRadius.circular(100),
+  //                                 child: Container(
+  //                                   color: Colors.transparent,
+  //                                   child: const FaIcon(Icons.download_sharp),
+  //                                 ),
+  //                               ),
+  //                               onSelected: (value) {
+  //                                 if(value == "PDF"){
+  //                                   // add desired output
+  //                                   pdfDownloadCall(recipt_list[index]['Voucher_No'].toString(),"PDF");
+  //                                 }else if(value == "XLS"){
+  //                                   // add desired output
+  //                                   pdfDownloadCall(recipt_list[index]['Voucher_No'].toString(),"XLS");
+  //                                 }
+  //                               },
+  //                               itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+  //                                 const PopupMenuItem(
+  //                                   value: "PDF",
+  //                                   child: Row(
+  //                                     mainAxisAlignment: MainAxisAlignment.center,
+  //                                     children: [
+  //                                       Icon(Icons.picture_as_pdf, color: Colors.red),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                                 const PopupMenuItem(
+  //                                   value: "XLS",
+  //                                   child: Row(
+  //                                     mainAxisAlignment: MainAxisAlignment.center,
+  //                                     children: [
+  //                                       Image(
+  //                                         image: AssetImage('assets/images/xls.png'),
+  //                                         fit: BoxFit.contain,
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             )
+  //                         ),
+  //                         Positioned(
+  //                           bottom: 5,
+  //                           right: 5,
+  //                           child:  singleRecord['Delete_Right']==true?   Positioned(
+  //                               top: 0,
+  //                               right: 0,
+  //                               child:    DeleteDialogLayout(
+  //                                 callback: (response ) async{
+  //                                   if(response=="yes"){
+  //                                     print("##############$response");
+  //                                     await   callDeleteRecipt(recipt_list[index]['Voucher_No'].toString(),index);
+  //                                   }
+  //                                 },
+  //                               ) ):Container(),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //           separatorBuilder: (BuildContext context, int index) {
+  //             return SizedBox(
+  //               height: 5,
+  //             );
+  //           },
+  //         ),
+  //       ));
+  // }
 
   String TotalAmount="0.00";
   calculateTotalAmt()async{
