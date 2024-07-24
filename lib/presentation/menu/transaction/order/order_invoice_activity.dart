@@ -759,7 +759,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId)async {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
 
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(

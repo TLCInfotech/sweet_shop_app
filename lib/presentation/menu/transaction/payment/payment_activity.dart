@@ -577,7 +577,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedFranchiseeId&Ledger_ID=null&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Payment&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -734,12 +734,9 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) async{
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
 
-        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-          token: sessionToken,
-        );
         String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&Voucher_Name=Payment&Voucher_No=$orderNo&Type=$urlType";
 
         print(apiUrl);

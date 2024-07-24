@@ -704,7 +704,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId)async {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
 
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(

@@ -1167,7 +1167,7 @@ print("newwwww   ${model.toJson()}");
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId)async {
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,

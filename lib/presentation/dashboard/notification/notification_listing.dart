@@ -249,7 +249,7 @@ class _NotificationListingState extends State<NotificationListing> {
                         child: Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
+                              color: notification_list[index]['Status']=="Read"?Colors.green.withOpacity(0.1):Colors.orange.withOpacity(0.1)
                           ),
                           child: Row(
                             children: [
@@ -268,9 +268,22 @@ class _NotificationListingState extends State<NotificationListing> {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
+                                              Row(
+                                                children: [
+                                                  Icon( Icons.calendar_month,
+                                                    color: Colors.black,),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(DateFormat('dd-MM-yyyy').format(DateTime.parse(notification_list[index]['Date'])),style: item_heading_textStyle,),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              //notification_list[index]['Title']!=null? Text(notification_list[index]['Title'],style: item_heading_textStyle,):Container(),
                                               notification_list[index]['Message']!=null? Text(notification_list[index]['Message'],style: item_regular_textStyle,):Container(),
-                                             ],
+                                            ],
                                           ),
                                         ),
                                       ),

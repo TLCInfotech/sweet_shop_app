@@ -753,7 +753,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Bank_Cash_Ledger_ID=$selectedFranchiseeId&Ledger_ID=null&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -909,7 +909,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) async{
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
 
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(

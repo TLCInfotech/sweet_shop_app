@@ -729,7 +729,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) async{
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
 
     TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(

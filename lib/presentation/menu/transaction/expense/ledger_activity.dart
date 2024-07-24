@@ -707,11 +707,9 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     if(netStatus==InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) async{
         setState(() {
-          isLoaderShow=true;
+          isLoaderShow=false;
         });
-        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-          token: sessionToken,
-        );
+
         String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=$orderNo&Type=$urlType";
 
         print(apiUrl);
