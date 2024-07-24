@@ -736,9 +736,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         setState(() {
           isLoaderShow=false;
         });
-
         String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&Voucher_Name=Payment&Voucher_No=$orderNo&Type=$urlType";
-
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{
