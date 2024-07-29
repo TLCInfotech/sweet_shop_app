@@ -25,6 +25,7 @@ import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_act
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
+import '../../../core/speech_to_text.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'home_skeleton.dart';
@@ -293,13 +294,15 @@ class _HomeFragmentState extends State<HomeFragment> {
                             child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                                newDate: dateTime.add(Duration(days: 1)),
-                                formId: "RM005",
-                                logoImage: logoImage,
-                                arrData: dataArrM,
-                                titleKey: "Branch Item Closing Balance",
-                              )));
+
+                              Navigator.push(context,MaterialPageRoute(builder: (context)=>SpeechSampleApp()));
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                              //   newDate: dateTime.add(Duration(days: 1)),
+                              //   formId: "RM005",
+                              //   logoImage: logoImage,
+                              //   arrData: dataArrM,
+                              //   titleKey: "Branch Item Closing Balance",
+                              // )));
                             }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
                     ):Container(),
