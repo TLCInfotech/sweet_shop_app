@@ -60,6 +60,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   var itemClosing=0.0;
   var profitLossShare=0.0;
 
+  var purchaseMRPAmt=0.0;
+  var returnMRPAmt=0.0;
+  var saleMRPAmt=0.0;
   var additionalProfitLoss=0.0;
   var additionalProfitLossShare=0.0;
 
@@ -242,26 +245,13 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          franchiseeName:widget.vName!,
                        )));
                      },
-                     child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
-                 GestureDetector(
-                     onTap: ()async{
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(
-                           dateNew: dateTime,
-                           mListener: this,
-                           formId: "AT006",
-                           arrData: dataArr,
-                         logoImage: widget.logoImage,
-                         comeFor: "frDash",
-                         franhiseeID:widget.fid!,
-                         franchiseeName:widget.vName!,
-                       )));
-                     },
-                     child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246))),
+                     child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
+                 getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)),
                ],
              ),
              const SizedBox(height: 10,),
 
-             Row(
+           /*  Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
                  getThreeLayout("Sale","${CommonWidget.getCurrencyFormat(saleAmt)}",Color(0xFF00A36C)),
@@ -281,14 +271,59 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
                ],
              ),
+             const SizedBox(height: 10,),*/
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 GestureDetector(
+                     onTap: ()async{
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(
+                         dateNew: dateTime,
+                         mListener: this,
+                         formId: "AT006",
+                         arrData: dataArr,
+                         logoImage: widget.logoImage,
+                         comeFor: "frDash",
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
+                       )));
+                     },
+                     child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFF00A36C))),
+                 getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange),
+               ],
+             ),
              const SizedBox(height: 10,),
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-                 (TransactionMenu.contains("AT002"))?    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"):Container(),
-                 (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
-                     (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"):Container(),
+                /* (TransactionMenu.contains("AT009"))?*/ GestureDetector(
+                     onTap: (){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(
+                         dateNew: dateTime,
+                         mListener: this,
+                         formId: "AT009",
+                         arrData: dataArr,
+                         logoImage: widget.logoImage,
+                         comeFor: "frDash",
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
+                       )));
+                     },child: getThreeLayout("Expense","${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379))),
+                     //:Container(),
+                 GestureDetector(
+                     onTap: (){
+                     },child: getThreeLayout( "Sale MRP", "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
+                 //   :Container(),
+               ],
+             ),
+             const SizedBox(height: 10,),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+             /*    (TransactionMenu.contains("AT002"))? */   getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
+                /* (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                     (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?*/
+                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"),
                ],
              ),
              const SizedBox(height: 10,),
@@ -830,11 +865,13 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
 
                   setState(() {
                    profit=double.parse(data['DashboardMainData'][0]['Sale_Profit'].toString());
-                //     _profitPartywise=_profitPartywise;
-                    itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
+                   purchaseAmt=double.parse(data['DashboardMainData'][0]['Purchase_Amount'].toString());
+                   purchaseMRPAmt=double.parse(data['DashboardMainData'][0]['Purchase_MRP_Amount'].toString());
+                   returnMRPAmt=double.parse(data['DashboardMainData'][0]['Return_MRP_Amount'].toString());
+                   saleMRPAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
+                   itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
                     itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
-
-                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
+                   // purchaseAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
                     receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());

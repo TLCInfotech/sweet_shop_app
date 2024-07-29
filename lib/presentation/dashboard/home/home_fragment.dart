@@ -15,6 +15,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/home/demoo_speskkk.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
@@ -25,7 +26,6 @@ import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_act
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:countup/countup.dart';
-import '../../../core/speech_to_text.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import 'home_skeleton.dart';
@@ -59,13 +59,17 @@ class _HomeFragmentState extends State<HomeFragment> {
   var franchiseesaleAmt=0.0;
   var itemOpening=0.0;
   var itemClosing=0.0;
+  var purchaseAmt=0.0;
+  var purchaseMRPAmt=0.0;
+  var returnMRPAmt=0.0;
+  var saleMRPAmt=0.0;
 
   var profitLossShare=0.0;
 
   var additionalProfitLoss=0.0;
   var additionalProfitLossShare=0.0;
 
- @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -74,13 +78,13 @@ class _HomeFragmentState extends State<HomeFragment> {
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
-   callGetCompany();
+    callGetCompany();
     getDashboardData();
     print("hfshjffhfbh  $dateString");
-     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
+    // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     setDataComm();
 
- }
+  }
 
 /*  void _initializeOneSignal() {
     OneSignal.shared.setAppId('YOUR_ONESIGNAL_APP_ID');
@@ -130,9 +134,9 @@ class _HomeFragmentState extends State<HomeFragment> {
 
 
   Future<void> refreshList() async {
-      await Future.delayed(Duration(seconds: 2));
-   await callGetFranchiseeNot(0);
-   await  getDashboardData();
+    await Future.delayed(Duration(seconds: 2));
+    await callGetFranchiseeNot(0);
+    await  getDashboardData();
   }
 
   @override
@@ -152,9 +156,9 @@ class _HomeFragmentState extends State<HomeFragment> {
               color: Colors.transparent,
               // color: Colors.red,
               margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-             child: AppBar(
-                  leadingWidth: 30,
-                  automaticallyImplyLeading: false,
+              child: AppBar(
+                leadingWidth: 30,
+                automaticallyImplyLeading: false,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25)),
                 leading: GestureDetector(
@@ -190,61 +194,61 @@ class _HomeFragmentState extends State<HomeFragment> {
                     const SizedBox(width: 10.0),
                     Expanded(
                       child: Text(
-                          companyName,
-                          style: appbar_text_style,
+                        companyName,
+                        style: appbar_text_style,
                         maxLines: 2,
                       ),
                     ),
                   ],
                 ),
-               actions: [
-                 Stack(
-                   children: [
-                     IconButton(
-                         onPressed: ()async{
-                           await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
-                             logoImage: logoImage,
-                           )));
-                           await callGetNotifications(1);
-                         },
-                         icon: FaIcon(FontAwesomeIcons.bell,)),
-                     notficatcnt < 1? Container(): Padding(
-                       padding: EdgeInsets.only(
-                           left:  SizeConfig.screenWidth * 0.06,
-                           top:  SizeConfig.screenHeight * .005,
+                actions: [
+                  Stack(
+                    children: [
+                      IconButton(
+                          onPressed: ()async{
+                            await Navigator.push(context,MaterialPageRoute(builder: (context)=>NotificationListing(
+                              logoImage: logoImage,
+                            )));
+                            await callGetNotifications(1);
+                          },
+                          icon: FaIcon(FontAwesomeIcons.bell,)),
+                      notficatcnt < 1? Container(): Padding(
+                        padding: EdgeInsets.only(
+                          left:  SizeConfig.screenWidth * 0.06,
+                          top:  SizeConfig.screenHeight * .005,
 
-                           ),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.end,
-                         children: [
-                           Container(
-                             decoration: BoxDecoration(
-                               shape: notficatcnt <= 9
-                                   ? BoxShape.circle
-                                   : BoxShape.circle,
-                               color: CommonColor.RED_COLOR,
-                             ),
-                             child: Padding(
-                               padding:  const EdgeInsets.all(4.3),
-                               child: Text(
-                                 notficatcnt <= 99
-                                     ? '$notficatcnt'
-                                     : "99+",
-                                 style: TextStyle(
-                                     color: Colors.white,
-                                     fontWeight: FontWeight.bold,
-                                     fontSize: notficatcnt <= 99
-                                         ? SizeConfig.blockSizeHorizontal * 3
-                                         : SizeConfig.blockSizeHorizontal * 3),
-                               ),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
-                   ],
-                 )
-               ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: notficatcnt <= 9
+                                    ? BoxShape.circle
+                                    : BoxShape.circle,
+                                color: CommonColor.RED_COLOR,
+                              ),
+                              child: Padding(
+                                padding:  const EdgeInsets.all(4.3),
+                                child: Text(
+                                  notficatcnt <= 99
+                                      ? '$notficatcnt'
+                                      : "99+",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: notficatcnt <= 99
+                                          ? SizeConfig.blockSizeHorizontal * 3
+                                          : SizeConfig.blockSizeHorizontal * 3),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
           ),
@@ -272,17 +276,12 @@ class _HomeFragmentState extends State<HomeFragment> {
                     // const SizedBox(height: 10,),
                     // getFranchiseeLayout(),
                     const SizedBox(height: 10,),
-                    (MasterMenu.contains("RM005"))?  Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [  GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
-                                newDate: dateTime,
-                                formId: "RM005",
-                                logoImage: logoImage,
-                                titleKey: "Branch Item Opening Balance",
-                                arrData: dataArrM,
-                              )));/*
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>   SpeechToTextExample(
+                            )));/*
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
                                 formId: "RM005",
@@ -290,27 +289,25 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
                               )));*/
-                            },
-                            child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
+                          },
+                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
                             onTap: (){
-
-                              Navigator.push(context,MaterialPageRoute(builder: (context)=>SpeechSampleApp()));
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
-                              //   newDate: dateTime.add(Duration(days: 1)),
-                              //   formId: "RM005",
-                              //   logoImage: logoImage,
-                              //   arrData: dataArrM,
-                              //   titleKey: "Branch Item Closing Balance",
-                              // )));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
+                                newDate: dateTime.add(Duration(days: 1)),
+                                formId: "RM005",
+                                logoImage: logoImage,
+                                arrData: dataArrM,
+                                titleKey: "Branch Item Closing Balance",
+                              )));
                             }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
-                    ):Container(),
+                    ),
                     const SizedBox(height: 10,),
-                    (TransactionMenu.contains("ST003"))?   Row(
+                    /*   (TransactionMenu.contains("ST003"))?*/   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        (TransactionMenu.contains("ST003"))? GestureDetector(
+                        /*(TransactionMenu.contains("ST003"))? */GestureDetector(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,
                                 formId: "ST003",
@@ -318,74 +315,81 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 arrData: dataArr,
                               )));
                             },
-                            child: getThreeLayout("Company Sale","${CommonWidget.getCurrencyFormat(saleCompanyAmt)}",Color(0xFF4CBB17)))
-                        :Container(),
-                        (TransactionMenu.contains("AT006"))? GestureDetector(
+                            child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17)))
+                        ,
+                        /* (TransactionMenu.contains("AT006"))?*/ GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+                              /*    Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
                                 logoImage: logoImage,
                                 arrData: dataArr,
-                              )));
-                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
-                        :Container(),
+                              )));*/
+                            },child: getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)))
+                        // :Container(),
                       ],
                     )
-                    :Container(),
-                    (TransactionMenu.contains("ST003"))?Container():
+                    ,
+
+                    const SizedBox(height: 10,),
+                    /* (TransactionMenu.contains("ST003"))?*/
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        (TransactionMenu.contains("AT006"))? GestureDetector(
+                        /*(TransactionMenu.contains("AT006"))&& (TransactionMenu.contains("AT006"))?*/   GestureDetector(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
-                                arrData: dataArr,
                                 logoImage: logoImage,
+                                arrData: dataArr,
                               )));
-                            },child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFFef1246)))
-                        :Container(),
-                        (TransactionMenu.contains("AT009"))? GestureDetector(
+                            },child: getThreeLayout("Return","${CommonWidget.getCurrencyFormat(returnAmt)}",Color(0xFF00A36C))),
+                        //  :Container(),
+                        GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
-                                formId: "AT009",
-                                arrData: dataArr,
-                                logoImage: logoImage,
-                              )));
-                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
-                            :Container(),
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                              //   formId: "AT009",
+                              //   arrData: dataArr,
+                              //   logoImage: logoImage,
+                              // )));
+                            },child: getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange))
+                        //   :Container(),
                       ],
                     ),
                     const SizedBox(height: 10,),
-                    (TransactionMenu.contains("ST003"))?
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        (TransactionMenu.contains("ST003"))&& (TransactionMenu.contains("AT006"))?   GestureDetector(
-                            onTap: (){
-                            },child: getThreeLayout("Franchisee Sale","${CommonWidget.getCurrencyFormat(franchiseesaleAmt)}",Color(0xFF00A36C)))
-                        :Container(),
                         (TransactionMenu.contains("AT009"))? GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,
+                                dateNew: dateTime,
                                 formId: "AT009",
-                                arrData: dataArr,
                                 logoImage: logoImage,
+                                arrData: dataArr,
                               )));
-                            },child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange))
-                        :Container(),
+                            },child: getThreeLayout("Expense","${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379)))
+                            :Container(),
+                        GestureDetector(
+                            onTap: (){
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+                              //   formId: "AT009",
+                              //   arrData: dataArr,
+                              //   logoImage: logoImage,
+                              // )));
+                            },child: getThreeLayout( "Sale MRP", "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
+                        //   :Container(),
                       ],
-                    ):Container(),
+                    ),
                     const SizedBox(height: 10,),
-                  Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        (TransactionMenu.contains("AT002"))?    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"):Container(),
-                        (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
-                            (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
-                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"):Container(),
+                        /*  (TransactionMenu.contains("AT002"))?*/    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                        /* (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                            (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?*/
+                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"),
                       ],
                     ),
 
@@ -394,11 +398,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                          GestureDetector(
+                        GestureDetector(
                             onTap: (){
                             },child: getThreeLayout(additionalProfitLoss>=0?"Purchase Profit ":"Purchase Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
-                      GestureDetector(
+                        GestureDetector(
                             onTap: (){
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
                               //   formId: "AT009",
@@ -407,12 +411,12 @@ class _HomeFragmentState extends State<HomeFragment> {
                             },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                       ],
                     ),
-                     SizedBox(height: 10,),
+                    SizedBox(height: 10,),
                     // getFieldTitleLayout("Profit/Loss "),
                     // const SizedBox(height: 5,),
                     // getFieldTitleLayout("Payment-Outanding "),
                     // const SizedBox(height: 5,),
-               /*     (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
+                    /*     (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                         (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?
                     getProfitLayout():Container(),*/
                   ],
@@ -552,114 +556,114 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   Widget getProfitLayout(){
     return
-    //   Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //   children: [
-    //     GestureDetector(
-    //         onTap: (){
-    //           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-    //             comeFor: profit>=0?"Profit ":"Loss" ,
-    //             profit:profit ,
-    //             date:dateTime,
-    //           )));
-    //         },child: getThreeLayout(profit>=0?"Profit ":"Loss","${CommonWidget.getCurrencyFormat(profit)}",profit<0?Colors.red:Colors.green)),
-    //
-    //     GestureDetector(
-    //         onTap: (){
-    //           // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
-    //           //   formId: "AT009",
-    //           //   arrData: dataArr,
-    //           // )));
-    //         },child: getThreeLayout(profitLossShare>=0?"Profit Share":"Loss Share","${CommonWidget.getCurrencyFormat(profitLossShare)}",profitLossShare<0?Colors.red:Colors.green))
-    //   ],
-    // );
+      //   Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //     GestureDetector(
+      //         onTap: (){
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+      //             comeFor: profit>=0?"Profit ":"Loss" ,
+      //             profit:profit ,
+      //             date:dateTime,
+      //           )));
+      //         },child: getThreeLayout(profit>=0?"Profit ":"Loss","${CommonWidget.getCurrencyFormat(profit)}",profit<0?Colors.red:Colors.green)),
+      //
+      //     GestureDetector(
+      //         onTap: (){
+      //           // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
+      //           //   formId: "AT009",
+      //           //   arrData: dataArr,
+      //           // )));
+      //         },child: getThreeLayout(profitLossShare>=0?"Profit Share":"Loss Share","${CommonWidget.getCurrencyFormat(profitLossShare)}",profitLossShare<0?Colors.red:Colors.green))
+      //   ],
+      // );
 
-    GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-        comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
-          date:dateTime,
-          logoImage: logoImage,
-        )));
-      },
-      onDoubleTap: (){},
-      child: Container(
-        height:80 ,
-        margin: const EdgeInsets.only(bottom: 10),
-        width: (SizeConfig.screenWidth),
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: profit<0?Colors.red:Colors.green,
-            borderRadius: BorderRadius.circular(5)),
-        alignment: Alignment.center,
-        child:  Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding:  EdgeInsets.only(left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profit>=0?"Sale Profit ":"Sale Loss",
-                        style: item_heading_textStyle.copyWith(
-                            color:Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
+      GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+            comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
+            date:dateTime,
+            logoImage: logoImage,
+          )));
+        },
+        onDoubleTap: (){},
+        child: Container(
+          height:80 ,
+          margin: const EdgeInsets.only(bottom: 10),
+          width: (SizeConfig.screenWidth),
+          // margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: profit<0?Colors.red:Colors.green,
+              borderRadius: BorderRadius.circular(5)),
+          alignment: Alignment.center,
+          child:  Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profit>=0?"Sale Profit ":"Sale Loss",
+                          style: item_heading_textStyle.copyWith(
+                              color:Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
 
+                          ),
                         ),
-                      ),
 
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                getAnimatedFunction(),
-              ],
-            ),
-            Divider(height: 1,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding:  EdgeInsets.only(left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profitLossShare>=0?"Sale Profit Share":"Sale Loss Share",
-                        style: item_heading_textStyle.copyWith(
-                            color:Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
+                  getAnimatedFunction(),
+                ],
+              ),
+              Divider(height: 1,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profitLossShare>=0?"Sale Profit Share":"Sale Loss Share",
+                          style: item_heading_textStyle.copyWith(
+                              color:Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
 
+                          ),
                         ),
-                      ),
 
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding:  EdgeInsets.only(left: 10,right: 5),
-                    child: Text(
-                        "${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
-                    )
-                  ),
-                )
-                  ],
-            )
-          ],
+                  Expanded(
+                    child: Padding(
+                        padding:  EdgeInsets.only(left: 10,right: 5),
+                        child: Text(
+                          "${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profitLossShare)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.right,
+                        )
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
 
@@ -720,28 +724,28 @@ class _HomeFragmentState extends State<HomeFragment> {
     );
   }
 
-   getAnimatedFunction(){
-   return  Expanded(
-     child: Padding(
-       padding:  EdgeInsets.only(left: 10,right: 10),
-       child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
-         overflow: TextOverflow.ellipsis,
-         textAlign: TextAlign.right,
-       )
-       // Countup(
-       //   locale: Locale('HI', 'IN'),
-       //   precision: 2,
-       //   begin: 0,
-       //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
-       //   end: double.parse((profit).toString()),
-       //   duration: const Duration(seconds: 2),
-       //   separator: ',',
-       //
-       //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
-       //
-       // ),
-     ),
-   );
+  getAnimatedFunction(){
+    return  Expanded(
+      child: Padding(
+          padding:  EdgeInsets.only(left: 10,right: 10),
+          child: Text("${NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(profit)}", style: big_title_style.copyWith(fontSize: 26,color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.right,
+          )
+        // Countup(
+        //   locale: Locale('HI', 'IN'),
+        //   precision: 2,
+        //   begin: 0,
+        //     // NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,).format(amount);
+        //   end: double.parse((profit).toString()),
+        //   duration: const Duration(seconds: 2),
+        //   separator: ',',
+        //
+        //     style: big_title_style.copyWith(fontSize: 26,color: Colors.white)
+        //
+        // ),
+      ),
+    );
   }
 
   getFranAnimatedFunction(){
@@ -922,7 +926,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             arrData: dataArr,
             logoImage: logoImage,
           )));
-        /*  Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
+          /*  Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
             comeFor: "Franchisee Outstanding",
             profit:FranchiseeOutstanding ,
             logoImage: logoImage,
@@ -936,7 +940,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             logoImage: logoImage,
           )));
 
-       //   widget.mListener.getAddLeder(title);
+          //   widget.mListener.getAddLeder(title);
         }
       },
       child: Container(
@@ -1196,7 +1200,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
-
+              print("hjhjghgh  $data");
               setState(() {
                 _saleData=[];
                 _profitPartywise=[];
@@ -1217,19 +1221,21 @@ class _HomeFragmentState extends State<HomeFragment> {
                   // print("nessssss  $_saleData");
 
                   setState(() {
+
+                    itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
+                    itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
+                    purchaseAmt=double.parse(data['DashboardMainData'][0]['Purchase_Amount'].toString());
+                    purchaseMRPAmt=double.parse(data['DashboardMainData'][0]['Purchase_MRP_Amount'].toString());
+                    returnMRPAmt=double.parse(data['DashboardMainData'][0]['Return_MRP_Amount'].toString());
+                    saleMRPAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     profit=double.parse(data['DashboardMainData'][0]['Sale_Profit'].toString());
                     _profitPartywise=_profitPartywise;
                     franchiseesaleAmt=double.parse(data['DashboardMainData'][0]['Franchisee_Sale_Amount'].toString());
                     expenseAmt=double.parse(data['DashboardMainData'][0]['Expense_Amount'].toString());
                     returnAmt=double.parse(data['DashboardMainData'][0]['Return_Amount'].toString());
                     receiptAmt=double.parse(data['DashboardMainData'][0]['Receipt_Amount'].toString());
-                    saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
-
-                    itemOpening=double.parse(data['DashboardMainData'][0]['Item_Opening_Amount'].toString());
-
-                    itemClosing=double.parse(data['DashboardMainData'][0]['Item_Closing_Amount'].toString());
+                    //saleCompanyAmt=double.parse(data['DashboardMainData'][0]['Company_Sale_Amount'].toString());
                     FranchiseeOutstanding=double.parse(data['DashboardMainData'][0]['Franchisee_Outstanding'].toString());
-
                     profitLossShare=data['DashboardMainData'][0]['Sale_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Sale_Profit_Share'].toString());
                     additionalProfitLoss=data['DashboardMainData'][0]['Purchase_Profit']!=null?double.parse(data['DashboardMainData'][0]['Purchase_Profit'].toString()):0.0;
                     additionalProfitLossShare=data['DashboardMainData'][0]['Purchase_Profit_Share']==null?0.0:double.parse(data['DashboardMainData'][0]['Purchase_Profit_Share'].toString());
@@ -1294,7 +1300,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
-          print('gjgjjgjgjng  $data');
+              print('gjgjjgjgjng  $data');
               setState(() {
 
                 isLoaderShow=false;
@@ -1349,7 +1355,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 }
 
 abstract class HomeFragmentInterface {
-getAddLeder(String comeScreen);
+  getAddLeder(String comeScreen);
 }
 
 class SalesData {
@@ -1373,3 +1379,4 @@ class ProfitPartyWiseData {
 
   ProfitPartyWiseData(this.Date, this.Profit, this.Vendor_Name);
 }
+
