@@ -16,6 +16,7 @@ import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:countup/countup.dart';
+import 'package:sweet_shop_app/presentation/dashboard/purchase_mrp/purchase_mrp_activity.dart';
 import '../../../data/api/request_helper.dart';
 import '../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../menu/master/item_opening_balance/create_item_opening_bal_activity.dart';
@@ -246,7 +247,20 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                        )));
                      },
                      child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
-                 getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)),
+                 GestureDetector(
+                     onTap: (){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
+                         dateNew: dateTime,
+                         formId: "AT006",
+                         logoImage: widget.logoImage,
+                         comeFor: "frDash",
+                         arrData: dataArr,
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
+                         apiUrl: ApiConstants().getSaleMRP,
+                       )));
+                     },
+                     child: getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246))),
                ],
              ),
              const SizedBox(height: 10,),
@@ -289,7 +303,20 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                        )));
                      },
                      child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFF00A36C))),
-                 getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange),
+                 GestureDetector(
+                     onTap: (){
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
+                         dateNew: dateTime,
+                         formId: "AT006",
+                         logoImage: widget.logoImage,
+                         arrData: dataArr,
+                         franhiseeID:widget.fid!,
+                         franchiseeName:widget.vName!,
+                         comeFor: "Return",
+                         apiUrl: ApiConstants().getReturnMRP,
+                       )));
+                     },
+                     child: getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange)),
                ],
              ),
              const SizedBox(height: 10,),

@@ -15,10 +15,10 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
-import 'package:sweet_shop_app/presentation/dashboard/home/demoo_speskkk.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
+import 'package:sweet_shop_app/presentation/dashboard/purchase_mrp/purchase_mrp_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
@@ -280,15 +280,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [  GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>   SpeechToTextExample(
-                            )));/*
+
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
                                 formId: "RM005",
                                 logoImage: logoImage,
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
-                              )));*/
+                              )));
                           },
                           child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
@@ -319,12 +318,13 @@ class _HomeFragmentState extends State<HomeFragment> {
                         ,
                         /* (TransactionMenu.contains("AT006"))?*/ GestureDetector(
                             onTap: (){
-                              /*    Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
                                 logoImage: logoImage,
                                 arrData: dataArr,
-                              )));*/
+                                    apiUrl: ApiConstants().getSaleMRP,
+                              )));
                             },child: getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)))
                         // :Container(),
                       ],
@@ -348,11 +348,14 @@ class _HomeFragmentState extends State<HomeFragment> {
                         //  :Container(),
                         GestureDetector(
                             onTap: (){
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
-                              //   formId: "AT009",
-                              //   arrData: dataArr,
-                              //   logoImage: logoImage,
-                              // )));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
+                                dateNew: dateTime,
+                                formId: "AT006",
+                                logoImage: logoImage,
+                                arrData: dataArr,
+                                comeFor: "Return",
+                                apiUrl: ApiConstants().getReturnMRP,
+                              )));
                             },child: getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange))
                         //   :Container(),
                       ],

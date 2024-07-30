@@ -370,6 +370,7 @@ class _UserCreateState extends State<UserCreate>
         }
         return null;
       },
+      //suffix: Icon(Icons.mic),
       readOnly: widget.editUser != null ? false : widget.readOnly,
       controller: userController,
       focuscontroller: _userFocus,

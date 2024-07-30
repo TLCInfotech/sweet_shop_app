@@ -1,27 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/presentation/dialog/ledger_dialog.dart';
-import 'package:textfield_search/textfield_search.dart';
-
 import '../../core/app_preferance.dart';
 import '../../core/colors.dart';
 import '../../core/common.dart';
 import '../../core/common_style.dart';
-import '../../core/imagePicker/image_picker_dialog.dart';
-import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
-import '../../core/imagePicker/image_picker_handler.dart';
-import '../../core/localss/application_localizations.dart';
-import '../../core/string_en.dart';
-import '../../data/api/constant.dart';
 import '../../data/api/request_helper.dart';
 import '../../data/domain/commonRequest/get_toakn_request.dart';
-import '../dialog/franchisee_dialog.dart';
 
 class TestItem {
   String label;
@@ -254,7 +241,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     }
                   },
                   textInputAction: TextInputAction.none,
-                //  enabled: widget.come=="disable"?false:true, // Change input action to "none"
+                 enabled: widget.come=="dis"?false:true, // Change input action to "none"
                   focusNode: searchFocus,
                   controller: _controller,
                   decoration: textfield_decoration.copyWith(

@@ -532,7 +532,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
       readOnly: false,
-      come: "disable",
+      //come: "disable",
       franchiseeName: widget.come == "edit" ? widget.editedItem['UID'] : "",
       title: ApplicationLocalizations.of(context)!.translate("user")!,
       callback: (name, id) {

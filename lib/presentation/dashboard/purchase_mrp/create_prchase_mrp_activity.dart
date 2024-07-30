@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
+import 'package:sweet_shop_app/presentation/common_widget/deleteDialog.dart';
+import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
+import 'package:sweet_shop_app/presentation/dashboard/purchase_mrp/add_or_edit_Item_purchase_mrp.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +22,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/domain/transaction/saleInvoice/sale_invoice_request_model.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/add_or_edit_Item.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/downloadservice.dart';
 import '../../../../core/internet_check.dart';
@@ -26,32 +30,31 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../common_widget/deleteDialog.dart';
-import '../../../common_widget/get_date_layout.dart';
-import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
-class CreateSellInvoice extends StatefulWidget {
-  final CreateSellInvoiceInterface mListener;
+class CreatePurchaseMrpActivity extends StatefulWidget {
+  final CreatePurchaseMrpActivityInterface mListener;
   final dateNew;
   final Invoice_No;
   final editedItem;
   final come;
+  final comeFor;
   final readOnly;
+  final apiUrl;
   final String logoImage;
-  const CreateSellInvoice(
+  const CreatePurchaseMrpActivity(
       {super.key,
         required this.dateNew,
         required this.mListener,
         required this.Invoice_No,
         this.editedItem,
         this.come,
-        this.readOnly, required this.logoImage});
+        this.readOnly, required this.logoImage, this.apiUrl, this.comeFor});
   @override
-  _CreateSellInvoiceState createState() => _CreateSellInvoiceState();
+  _CreatePurchaseMrpActivityState createState() => _CreatePurchaseMrpActivityState();
 }
 
-class _CreateSellInvoiceState extends State<CreateSellInvoice>
-    with SingleTickerProviderStateMixin, AddOrEditItemSellInterface {
+class _CreatePurchaseMrpActivityState extends State<CreatePurchaseMrpActivity>
+    with SingleTickerProviderStateMixin, AddOrEditIPurchaseMrpActivityInterface {
   final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
@@ -155,6 +158,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
       setState(() {
         roundoff = "0.00";
         TotalAmount = total1.toStringAsFixed(2);
+
+        print("gooodddddd  $TotalAmount");
       });
     } else {
       if ((amt) < 0.50) {
@@ -320,13 +325,12 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!
-                                    .translate("sale_invoice")!,
+                                widget.comeFor=="Return"?"Return MRP":  "Purchase MRP",
                                 style: appbar_text_style,
                               ),
                             ),
                           ),
-                          widget.Invoice_No == null?Container():
+                        /*  widget.Invoice_No == null?Container():
                           PopupMenuButton(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
@@ -367,7 +371,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                                 ),
                               ),
                             ],
-                          )
+                          )*/
                         ],
                       ),
                     ),
@@ -406,7 +410,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             ),
           ),
         ),
-        widget.readOnly == false
+     /*   widget.readOnly == false
             ? Container()
             :  Positioned(
           left: position.dx,
@@ -445,7 +449,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     }
                   })
           ),
-        ),
+        ),*/
         Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
       ],
     );
@@ -473,10 +477,10 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                 style:
                 item_regular_textStyle.copyWith(color: Colors.grey),
               ),
-              Text(
+            /*  Text(
                 "Round off: $roundoff",
                 style: item_regular_textStyle.copyWith(fontSize: 17),
-              ),
+              ),*/
               SizedBox(
                 height: 4,
               ),
@@ -488,7 +492,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
           ),
         )
             : Container(),
-        widget.readOnly == false || showButton == false
+    /*    widget.readOnly == false || showButton == false
             ? Container()
             : GestureDetector(
           onTap: () {
@@ -555,7 +559,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
               ],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -660,6 +664,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
                       goToAddOrEditItem(Item_list[index]);
+
+                      print("kjhfshjhjj  ${Item_list[index]}");
                     }
                   }
                 },
@@ -748,7 +754,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                                     ),
                                   ),
                                 ),
-                                widget.readOnly == false
+                               /* widget.readOnly == false
                                     ? Container()
                                     : Container(
                                     width: parentWidth * .1,
@@ -796,7 +802,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                                               showButton=true;});
                                           }
 
-                                        })),
+                                        })),*/
                               ],
                             )),
                       )
@@ -816,37 +822,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
     );
   }
 
-  /* Widget to get add Product Layout */
-  Widget getAddNewProductLayout(double parentHeight, double parentWidth) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        if (context != null) {
-          goToAddOrEditItem(null);
-        }
-      },
-      child: Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 10, right: 10),
-          decoration: BoxDecoration(
-              color: CommonColor.THEME_COLOR,
-              border: Border.all(color: Colors.grey.withOpacity(0.5))),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Add New Item",
-                style: item_heading_textStyle,
-              ),
-              FaIcon(
-                FontAwesomeIcons.plusCircle,
-                color: Colors.black87,
-                size: 20,
-              )
-            ],
-          )),
-    );
-  }
+
 
   Future<Object?> goToAddOrEditItem(product) {
     return showGeneralDialog(
@@ -857,7 +833,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
             child: Opacity(
               opacity: a1.value,
-              child: AddOrEditItemSell(
+              child: AddOrEditIPurchaseMrpActivity(
                 mListener: this,
                 editproduct: product,
                 date: invoiceDate.toString(),
@@ -911,8 +887,8 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
               : getPurchaseDateLayout(),
           getFranchiseeNameLayout(
               SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
-          getSaleLedgerLayout(
-              SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+          // getSaleLedgerLayout(
+          //     SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
         ],
       ),
     );
@@ -987,7 +963,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
       titleIndicator: true,
       ledgerName: selectedFranchiseeName,
       franchisee: widget.come,
-      readOnly: widget.readOnly,
+      readOnly: false,
       franchiseeName: widget.come == "edit" ? selectedFranchiseeName : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name, id) {
@@ -1037,76 +1013,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
         ledgerName: selectedLedgerName);
   }
 
-  @override
-  AddOrEditItemSellDetail(item) async {
-    // TODO: implement AddOrEditItemDetail
-    var itemLlist = Item_list;
-    showButton = true;
-    if (editedItemIndex != null) {
-      var index = editedItemIndex;
-      setState(() {
-        Item_list[index]['Item_Name'] = item['Item_Name'];
-        Item_list[index]['Item_ID'] = item['New_Item_ID'];
-        Item_list[index]['Quantity'] = item['Quantity'];
-        Item_list[index]['Unit'] = item['Unit'];
-        Item_list[index]['Rate'] = item['Rate'];
-        Item_list[index]['Amount'] = item['Amount'];
-        Item_list[index]['Disc_Percent'] = item['Disc_Percent'];
-        Item_list[index]['Disc_Amount'] = item['Disc_Amount'];
-        Item_list[index]['Taxable_Amount'] = item['Taxable_Amount'];
-        Item_list[index]['GST_Rate'] = item['GST_Rate'];
-        Item_list[index]['GST_Amount'] = item['GST_Amount'];
-        Item_list[index]['Net_Rate'] = item['Net_Rate'];
-        Item_list[index]['Net_Amount'] = item['Net_Amount'];
-      });
-      print("#############3");
-      print(item['Seq_No']);
-      if (item['New_Item_ID'] != null) {
-        Item_list[index]['New_Item_ID'] = item['New_Item_ID'];
-      }
-      if (item['Seq_No'] != null) {
-        var contain = Updated_list.indexWhere(
-                (element) => element['Item_ID'] == item['Item_ID']);
-        print(contain);
-        if (contain >= 0) {
-          print("REMOVE");
-          Updated_list.remove(Updated_list[contain]);
-          Updated_list.add(item);
-        } else {
-          Updated_list.add(item);
-        }
-        setState(() {
-          Updated_list = Updated_list;
-          print("hvhfvbfbv   $Updated_list");
-        });
-      }
-    } else {
-      itemLlist.add(item);
-      Inserted_list.add(item);
-      setState(() {
-        Inserted_list = Inserted_list;
-      });
-      print(itemLlist);
 
-      setState(() {
-        Item_list = itemLlist;
-      });
-    }
-    setState(() {
-      editedItemIndex = null;
-    });
-    await calculateTotalAmt();
-    print("List");
-    print(Inserted_list);
-    print(Updated_list);
-    if(Item_list.length>0){
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
-      // maxY=SizeConfig.screenHeight*0.63;
-    }else{
-      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
-      // maxY=SizeConfig.screenHeight*0.75;
-    }
-  }
 
   gerSaleInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
@@ -1121,7 +1028,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
         TokenRequestModel model =
         TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${baseurl}${ApiConstants().getSaleInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}";
+            "${baseurl}${widget.apiUrl}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
               print(data);
@@ -1131,17 +1038,17 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                   _arrList = (data['itemDetails']);
                   setState(() {
                     Item_list = _arrList;
+
                     selectedFranchiseeName = data['voucherDetails']['Vendor_Name'];
                     finInvoiceNo = data['voucherDetails']['Fin_Invoice_No'];
                     selectedFranchiseeId =
                         data['voucherDetails']['Vendor_ID'].toString();
-                    selectedLedgerName = data['voucherDetails']['Sale_Ledger_Name'];
-                    selectedLedgerId =
-                        data['voucherDetails']['Sale_Ledger'].toString();
+                   // selectedLedgerName = data['voucherDetails']['Sale_Ledger_Name'];
+                  //  selectedLedgerId =data['voucherDetails']['Sale_Ledger'].toString();
                     TotalAmount =  data['voucherDetails']['Total_Amount']==null?"0.00":
                         data['voucherDetails']['Total_Amount'].toStringAsFixed(2);
-                    roundoff = data['voucherDetails']['Round_Off']==null?"0.00":
-                        data['voucherDetails']['Round_Off'].toStringAsFixed(2);
+                    // roundoff = data['voucherDetails']['Round_Off']==null?"0.00":
+                    //     data['voucherDetails']['Round_Off'].toStringAsFixed(2);
                   });
                   if(Item_list.length>0){
                     position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.78);
@@ -1440,8 +1347,79 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
       print("Permission Denied");
     }
   }
+
+  @override
+  AddOrEditIPurchaseMrpActivityDetail(item) async{
+    // TODO: implement AddOrEditIPurchaseMrpActivityDetail
+    var itemLlist = Item_list;
+    showButton = true;
+    if (editedItemIndex != null) {
+      var index = editedItemIndex;
+      setState(() {
+        Item_list[index]['Item_Name'] = item['Item_Name'];
+        Item_list[index]['Item_ID'] = item['New_Item_ID'];
+        Item_list[index]['Quantity'] = item['Quantity'];
+        Item_list[index]['Unit'] = item['Unit'];
+        Item_list[index]['Rate'] = item['Rate'];
+        Item_list[index]['Amount'] = item['Amount'];
+        Item_list[index]['Disc_Percent'] = item['Disc_Percent'];
+        Item_list[index]['Disc_Amount'] = item['Disc_Amount'];
+        Item_list[index]['Taxable_Amount'] = item['Taxable_Amount'];
+        Item_list[index]['GST_Rate'] = item['GST_Rate'];
+        Item_list[index]['GST_Amount'] = item['GST_Amount'];
+        Item_list[index]['Net_Rate'] = item['Net_Rate'];
+        Item_list[index]['Net_Amount'] = item['Net_Amount'];
+      });
+      print("#############3");
+      print(item['Seq_No']);
+      if (item['New_Item_ID'] != null) {
+        Item_list[index]['New_Item_ID'] = item['New_Item_ID'];
+      }
+      if (item['Seq_No'] != null) {
+        var contain = Updated_list.indexWhere(
+                (element) => element['Item_ID'] == item['Item_ID']);
+        print(contain);
+        if (contain >= 0) {
+          print("REMOVE");
+          Updated_list.remove(Updated_list[contain]);
+          Updated_list.add(item);
+        } else {
+          Updated_list.add(item);
+        }
+        setState(() {
+          Updated_list = Updated_list;
+          print("hvhfvbfbv   $Updated_list");
+        });
+      }
+    } else {
+      itemLlist.add(item);
+      Inserted_list.add(item);
+      setState(() {
+        Inserted_list = Inserted_list;
+      });
+      print(itemLlist);
+
+      setState(() {
+        Item_list = itemLlist;
+      });
+    }
+    setState(() {
+      editedItemIndex = null;
+    });
+    await calculateTotalAmt();
+    print("List");
+    print(Inserted_list);
+    print(Updated_list);
+    if(Item_list.length>0){
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
+      // maxY=SizeConfig.screenHeight*0.63;
+    }else{
+      position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.9);
+      // maxY=SizeConfig.screenHeight*0.75;
+    }
+  }
 }
 
-abstract class CreateSellInvoiceInterface {
+abstract class CreatePurchaseMrpActivityInterface {
   backToList(DateTime updateDate);
 }

@@ -132,5 +132,9 @@ class ApiConstants {
   String getPurchaseReports="PurchaseReports";
   String getVoucherReports="VoucherReports";
   String getAcctVoucherReports="AcctVoucherReports";
+  String getSaleMRP="SaleMRP";
+  String getSaleMRPDetails="SaleMRPDetails";
+  String getReturnMRP="ReturnMRP";
+  String getReturnMRPDetails="ReturnMRPDetails";
 
 }
