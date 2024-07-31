@@ -73,13 +73,14 @@ class _HomeFragmentState extends State<HomeFragment> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getDashboardData();
     getUserPermissions();
     callGetNotifications(1);
     getLocal();
     addDate();
     callGetFranchiseeNot(0);
     callGetCompany();
-    getDashboardData();
+
     print("hfshjffhfbh  $dateString");
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     setDataComm();

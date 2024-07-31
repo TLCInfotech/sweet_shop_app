@@ -727,7 +727,7 @@ class _AddOrEditIPurchaseMrpActivityState extends State<AddOrEditIPurchaseMrpAct
           onDoubleTap: () {},
           child: Container(
             height: parentHeight * .05,
-            width: parentWidth * .45,
+            width: parentWidth * .90,
             // width: SizeConfig.blockSizeVertical * 20.0,
             decoration: const BoxDecoration(
               color: CommonColor.HINT_TEXT,
@@ -747,7 +747,7 @@ class _AddOrEditIPurchaseMrpActivityState extends State<AddOrEditIPurchaseMrpAct
             ),
           ),
         ),
-        GestureDetector(
+        /*GestureDetector(
           onTap: () {
             bool v=_itemKey.currentState!.validate();
             bool q=_quantityKey.currentState!.validate();
@@ -825,7 +825,7 @@ class _AddOrEditIPurchaseMrpActivityState extends State<AddOrEditIPurchaseMrpAct
               ],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

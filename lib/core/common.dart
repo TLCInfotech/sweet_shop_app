@@ -366,6 +366,7 @@ class CommonWidget {
     // We will update this once he logged in and goes to dashboard.
     ////updateUserProfile(osUserID);
     // Preferences.setOnesignalUserId(osUserID);
+
     if (osUserID != null) AppPreferences.setPushKey(osUserID);
     // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     await OneSignal.shared.promptUserForPushNotificationPermission(

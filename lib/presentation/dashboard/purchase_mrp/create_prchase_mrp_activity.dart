@@ -302,11 +302,12 @@ class _CreatePurchaseMrpActivityState extends State<CreatePurchaseMrpActivity>
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              if (showButton == true) {
+                              Navigator.pop(context);
+                            /*  if (showButton == true) {
                                 await showCustomDialog(context);
                               } else {
                                 Navigator.pop(context);
-                              }
+                              }*/
                             },
                             child: FaIcon(Icons.arrow_back),
                           ),

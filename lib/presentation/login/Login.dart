@@ -203,6 +203,11 @@ class _LoginActivityState extends State<LoginActivity> {
 
 
   callLogin() async {
+    if(mounted){
+      setState(() {
+        CommonWidget.getPlayerId();
+      });
+    }
     String baseurl=await AppPreferences.getDomainLink();
     String userName = username.text.trim();
     String passwordText = password.text.trim();
