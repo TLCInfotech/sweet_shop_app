@@ -292,6 +292,7 @@ Widget getCompanyId(double parentHeight, double parentWidth){
                 String sessionToken =await AppPreferences.getSessionToken();
                 setState(() {
                   disableColor = true;
+                  CommonWidget.getPlayerId();
                   AppPreferences.setDomainLink(domainLinkController.text);
                   AppPreferences.setCompanyId(companyId.text);
                   var snackBar = SnackBar(content: Text('Domain save succesfully!'));
