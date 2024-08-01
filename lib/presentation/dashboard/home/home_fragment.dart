@@ -78,7 +78,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     callGetNotifications(1);
     getLocal();
     addDate();
-    callGetFranchiseeNot(0);
+    //callGetFranchiseeNot(0);
     callGetCompany();
 
     print("hfshjffhfbh  $dateString");
@@ -136,7 +136,7 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
-    await callGetFranchiseeNot(0);
+   // await callGetFranchiseeNot(0);
     await  getDashboardData();
   }
 
@@ -1047,50 +1047,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     }
   }
 
-  callGetFranchiseeNot(int page) async {
-    String sessionToken = await AppPreferences.getSessionToken();
-    String companyId = await AppPreferences.getCompanyId();
-    String baseurl=await AppPreferences.getDomainLink();
-    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
-    if (netStatus == InternetConnectionStatus.connected){
-      AppPreferences.getDeviceId().then((deviceId) {
-        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
-          token: sessionToken,
-        );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId";
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
-            onSuccess:(data){
-              setState(() {
 
-              });
-
-              // _arrListNew.addAll(data.map((arrData) =>
-              // new EmailPhoneRegistrationModel.fromJson(arrData)));
-              print("  franchisee   $data ");
-            }, onFailure: (error) {
-              CommonWidget.errorDialog(context, error.toString());
-              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
-              //  widget.mListener.loaderShow(false);
-              //  Navigator.of(context, rootNavigator: true).pop();
-            }, onException: (e) {
-
-              // print("Here2=> $e");
-              // var val= CommonWidget.errorDialog(context, e);
-              //
-              // print("YES");
-              // if(val=="yes"){
-              //   print("Retry");
-              // }
-            },sessionExpire: (e) {
-              CommonWidget.gotoLoginScreen(context);
-              // widget.mListener.loaderShow(false);
-            });
-      });
-    }
-    else{
-      CommonWidget.noInternetDialogNew(context);
-    }
-  }
 
   getUserPermissions() async {
     String companyId = await AppPreferences.getCompanyId();

@@ -76,7 +76,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     }else {
       addDate();
     }
-   callGetFranchiseeNot(0);
+  // callGetFranchiseeNot(0);
     getDashboardData();
 
     print("hfshjffhfbh  $dateString");
@@ -113,7 +113,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
 
-    await callGetFranchiseeNot(0);
+ //   await callGetFranchiseeNot(0);
     await getDashboardData();
   }
   final ScrollController _scrollController =  ScrollController();
@@ -210,7 +210,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            come:"edit",
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
-                       await callGetFranchiseeNot(0);
+                     //  await callGetFranchiseeNot(0);
                        await getDashboardData();
                      },
                      child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
@@ -223,7 +223,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                            logoImage: widget.logoImage,
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
-                      await callGetFranchiseeNot(0);
+                    //  await callGetFranchiseeNot(0);
                        await getDashboardData();
                      },
                      child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
@@ -777,7 +777,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
             receiptAmt=0.0;
             FranchiseeOutstanding=0.0;
           });
-          await callGetFranchiseeNot(0);
+        //  await callGetFranchiseeNot(0);
           await getDashboardData();
         },
         applicablefrom: dateTime

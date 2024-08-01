@@ -505,7 +505,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 if(data!=null){
                   List<dynamic> _arrList = [];
                   _arrList=data;
-                  callGetFranchiseeNot(0);
+               //   callGetFranchiseeNot(0);
                   setState(() {
 
                     Franchisee_list=_arrList;
@@ -563,7 +563,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   backToList() {
     // TODO: implement backToList
     setState(() {
-      callGetFranchiseeNot(0);
+      //callGetFranchiseeNot(0);
     });
     Navigator.pop(context);
   }

@@ -63,7 +63,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     // TODO: implement initState
     super.initState();
     addDate();
-   callGetFranchiseeNot(0);
+  // callGetFranchiseeNot(0);
     getDashboardData();
 
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
@@ -97,11 +97,11 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
 
-   await callGetFranchiseeNot(0);
+  // await callGetFranchiseeNot(0);
     await getDashboardData();
   }
 
-  callGetFranchiseeNot(int page) async {
+/*  callGetFranchiseeNot(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
@@ -144,7 +144,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     else{
       CommonWidget.noInternetDialogNew(context);
     }
-  }
+  }*/
 
   addDate() async {
 
@@ -357,7 +357,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                                 formId: "ST003",
                                 arrData: dataArr,
                               )));
-                              await callGetFranchiseeNot(0);
+                          //    await callGetFranchiseeNot(0);
                               await getDashboardData();
                             },child: getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((saleAmt))}", "Sale")),
 
@@ -370,7 +370,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                                 formId: "ST003",
                                 arrData: dataArr,
                               )));
-                              await callGetFranchiseeNot(0);
+                             // await callGetFranchiseeNot(0);
                               await getDashboardData();
                             },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return")),
 
@@ -386,7 +386,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                             formId: "AT002",
                             arrData: dataArr,
                           )));
-                         await callGetFranchiseeNot(0);
+                      //   await callGetFranchiseeNot(0);
                           await getDashboardData();
                         },
                         child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
@@ -547,7 +547,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
             receiptAmt=0.0;
             FranchiseeOutstanding=0.0;
           });
-          await callGetFranchiseeNot(0);
+       //   await callGetFranchiseeNot(0);
           await getDashboardData();
         },
         applicablefrom: dateTime

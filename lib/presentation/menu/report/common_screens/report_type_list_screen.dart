@@ -29,8 +29,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import '../../../common_widget/get_date_layout.dart';
 
-import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 
 
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/ledger_dialog.dart';
 import 'package:textfield_search/textfield_search.dart';
@@ -74,7 +75,37 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       });
     }
     searchFocus.addListener(_onFocusChange);
+    _speech = stt.SpeechToText();
   }
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = "";
+  double _confidence = 1.0;
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+            _controller.text = _text;
+            setState(() => _isListening = false);
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
   FocusNode searchFocus = FocusNode() ;
   void _onFocusChange() {
     if (!searchFocus.hasFocus) {
@@ -245,13 +276,41 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                     // labelText: '${widget.title}',
                       hintText: "${widget.title}",
                       border: OutlineInputBorder(),
-                      suffixIcon:  widget.come=="disable"?null: _controller.text=="" ?Icon(Icons.search):IconButton(onPressed: (){
-                        setState(() {
-                          _controller.clear();
-                        });
-                        widget.callback("");
-                      }, icon: Icon(Icons.clear)),
-                  ),
+                    suffixIcon: widget.come=="disable"?null: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        //(_controller.text != "")?Container():
+                        IconButton(
+                          onPressed: (){
+                            setState(() {
+                              searchFocus.requestFocus();
+                              _listen();
+                              if(_isListening==false){
+                                _controller.clear();
+                              }
+                            });
+                          },
+                          icon: Icon(_isListening
+                              ? Icons.mic
+                              : Icons.mic_none),
+                        ),
+                        (_controller.text == "" ||
+                            _controller.text == null)
+                            ? const Icon(Icons.search)
+                            : IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _controller.clear();
+                            });
+                            widget.callback("");
+                            searchFocus.requestFocus();
+                            _controller.text =
+                                _controller.text; // Trigger a rebuild
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                      ],
+                    ),                      ),
                 ),
 
                 suggestionsCallback: (pattern) {
