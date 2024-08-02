@@ -338,12 +338,12 @@ var invoice_No;
                 ),
                 onPressed: () async{
                   FocusScope.of(context).requestFocus(FocusNode());
-                  if(selectedFranchiseeId!=""&&selectedLedgerId!="") {
+                  if(selectedFranchiseeId!=""/*&&selectedLedgerId!=""*/) {
 
-                  if(selectedFranchiseeId==selectedLedgerId){
+                 /* if(selectedFranchiseeId==selectedLedgerId){
                     CommonWidget.errorDialog(context,
                         "Party name and Account Ledger can't be same!");
-                  }else {
+                  }else*/ {
                     editedItemIndex = null;
                     goToAddOrEditItem(null, widget.companyId, "");
                   }
@@ -372,23 +372,23 @@ var invoice_No;
             child: BackPageDialog(
               onCallBack: (value) async {
                 if (value == "yes") {
-                  if(selectedLedgerId=="" ){
+               /*   if(selectedLedgerId=="" ){
                     var snackBar = SnackBar(content: Text('Select Account Ledger!'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                  else if(selectedFranchiseeId==""){
+                  else*/ if(selectedFranchiseeId==""){
                     var snackBar=SnackBar(content: Text("Select Party Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }else
+                  }/*else
                   if(selectedFranchiseeId==selectedLedgerId){
                     CommonWidget.errorDialog(context,
                         "Party name and Account Ledger can't be same!");
-                  }
+                  }*/
                   else if(Item_list.length==0){
                     var snackBar=SnackBar(content: Text("Add atleast one Item!"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                  else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+                  else if(/*selectedLedgerId!="" &&*/ selectedFranchiseeId!= " " && Item_list.length>0){
                     if (mounted) {
                       setState(() {
                         showButton = false;
@@ -445,23 +445,23 @@ var invoice_No;
         )/*:Container()*/,
         widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
-            if(selectedLedgerId=="" ){
+          /*  if(selectedLedgerId=="" ){
               var snackBar = SnackBar(content: Text('Select Account Ledger!'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(selectedFranchiseeId==""){
+            else*/ if(selectedFranchiseeId==""){
               var snackBar=SnackBar(content: Text("Select Party Name !"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }else
+            }/*else
             if(selectedFranchiseeId==selectedLedgerId){
               CommonWidget.errorDialog(context,
                   "Party name and Account Ledger can't be same!");
-            }
+            }*/
             else if(Item_list.length==0){
               var snackBar=SnackBar(content: Text("Add atleast one Item!"));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-            else if(selectedLedgerId!="" && selectedFranchiseeId!= " " && Item_list.length>0){
+            else if(/*selectedLedgerId!="" &&*/ selectedFranchiseeId!= " " && Item_list.length>0){
               if (mounted) {
                 setState(() {
                   showButton = false;
@@ -815,7 +815,7 @@ var invoice_No;
             ],
           ):getPurchaseDateLayout(),
           getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
-          getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
+          //getSaleLedgerLayout(SizeConfig.screenHeight,SizeConfig.halfscreenWidth),
           // SizedBox(width: 5,),
 
         ],
@@ -895,18 +895,18 @@ var invoice_No;
       franchiseeName:widget.come=="edit"?selectedFranchiseeName:"",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name,id){
-        if(selectedLedgerId==id){
+      /*  if(selectedLedgerId==id){
           var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
           ScaffoldMessenger.of(context).showSnackBar(snack);
         }
-        else {
+        else {*/
           setState(() {
             showButton=true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString()!;
             position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
           });
-        }
+        //}
         print("############3");
         print(selectedFranchiseeId+"\n"+selectedFranchiseeName);
       },

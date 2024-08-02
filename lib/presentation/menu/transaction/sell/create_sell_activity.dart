@@ -200,24 +200,24 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             child: BackPageDialog(
               onCallBack: (value) async {
                 if (value == "yes") {
-                  if (selectedLedgerId == "") {
+                /*  if (selectedLedgerId == "") {
                     var snackBar =
                     SnackBar(content: Text('Select Sale Ledger!'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else if (selectedFranchiseeId == "") {
+                  } else*/ if (selectedFranchiseeId == "") {
                     var snackBar =
                     SnackBar(content: Text("Select Party Name !"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else
+                  } /*else
                   if(selectedFranchiseeId==selectedLedgerId){
                     CommonWidget.errorDialog(context,
                         ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
-                  }
+                  }*/
                   else if (Item_list.length == 0) {
                     var snackBar =
                     SnackBar(content: Text("Add atleast one Item!"));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else if (selectedLedgerId != "" &&
+                  } else if (/*selectedLedgerId != "" &&*/
                       selectedFranchiseeId != " " &&
                       Item_list.length > 0) {
                     if (mounted) {
@@ -430,15 +430,15 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                     print("bhfbbgfvb  $selectedFranchiseeId  $selectedLedgerId");
                     FocusScope.of(context)
                         .requestFocus(FocusNode());
-                    if (selectedFranchiseeId != "" &&
-                        selectedLedgerId != "") {
-                      if(selectedFranchiseeId==selectedLedgerId){
+                    if (selectedFranchiseeId != ""/* &&
+                        selectedLedgerId != ""*/) {
+                     /* if(selectedFranchiseeId==selectedLedgerId){
                         CommonWidget.errorDialog(context,
                             ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
-                      }else{
+                      }else{*/
                           editedItemIndex = null;
                           goToAddOrEditItem(null);
-                        }
+                       // }
                     }else {
                       CommonWidget.errorDialog(context,
                           "Select Sale Ledger and Party !");
@@ -495,23 +495,23 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             if (widget.readOnly == false) {
               Navigator.pop(context);
             } else {
-              if (selectedLedgerId == "") {
+             /* if (selectedLedgerId == "") {
                 var snackBar =
                 SnackBar(content: Text('Select Sale Ledger!'));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else if (selectedFranchiseeId == "") {
+              } */ if (selectedFranchiseeId == "") {
                 var snackBar =
                 SnackBar(content: Text("Select Party Name !"));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }else
+              }/*else
               if(selectedFranchiseeId==selectedLedgerId){
                 CommonWidget.errorDialog(context,
                     ApplicationLocalizations.of(context)!.translate("different_ledger_party")!);
-              } else if (Item_list.length == 0) {
+              }*/ else if (Item_list.length == 0) {
                 var snackBar =
                 SnackBar(content: Text("Add atleast one Item!"));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else if (selectedLedgerId != "" &&
+              } else if (/*selectedLedgerId != "" &&*/
                   selectedFranchiseeId != " " &&
                   Item_list.length > 0) {
                 if (mounted) {
@@ -911,8 +911,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
               : getPurchaseDateLayout(),
           getFranchiseeNameLayout(
               SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
-          getSaleLedgerLayout(
-              SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
+         // getSaleLedgerLayout(SizeConfig.screenHeight, SizeConfig.halfscreenWidth),
         ],
       ),
     );
@@ -991,18 +990,18 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
       franchiseeName: widget.come == "edit" ? selectedFranchiseeName : "",
       title: ApplicationLocalizations.of(context)!.translate("party")!,
       callback: (name, id) {
-        if (selectedLedgerId == id) {
+     /*   if (selectedLedgerId == id) {
           var snack =
           SnackBar(content: Text("Sale Ledger and Party can not be same!"));
           ScaffoldMessenger.of(context).showSnackBar(snack);
-        } else {
+        } else {*/
           setState(() {
             showButton = true;
             selectedFranchiseeName = name!;
             selectedFranchiseeId = id.toString();
             position=Offset(SizeConfig.screenWidth*0.75, SizeConfig.screenHeight*0.75);
           });
-        }
+      //  }
         print("############3");
       },
     );
@@ -1018,14 +1017,14 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
         franchisee: widget.come,
         readOnly: widget.readOnly,
         callback: (name, id) {
-      /*    if (selectedFranchiseeId == id) {
+          if (selectedFranchiseeId == id) {
             selectedLedgerId="";
             selectedLedgerName="";
             var snack = SnackBar(
                 content: Text("Sale Ledger and Party can not be same!"));
             ScaffoldMessenger.of(context).showSnackBar(snack);
 
-          }*/
+          }
             setState(() {
               showButton = true;
               selectedLedgerName = name!;
