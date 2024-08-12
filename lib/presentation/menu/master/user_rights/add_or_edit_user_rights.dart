@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_form_list.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common_style.dart';
@@ -9,7 +8,6 @@ import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
-import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class AddOrEditUserRights extends StatefulWidget {
   final  mListener;

@@ -34,8 +34,10 @@ class ReceiptActivity extends StatefulWidget {
   final dateNew;
   final  formId;
   final  arrData;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const ReceiptActivity({super.key, required mListener,this.dateNew, this.formId, this.arrData, required this.logoImage});
+  const ReceiptActivity({super.key, required mListener,this.dateNew, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<ReceiptActivity> createState() => _ReceiptActivityState();
 }
@@ -44,6 +46,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   bool isLoaderShow=false;
+  bool viewWorkDVisible=true;
   bool partyBlank=true;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> recipt_list=[];
@@ -70,6 +73,9 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
 
     if(widget.dateNew!=null){
@@ -197,6 +203,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ?Positioned(
           left: position.dx,
           top: position.dy,
@@ -220,6 +227,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                     mListener: this,
                     logoImage: widget.logoImage,
                     newDate: newDate,
+                    viewWorkDVisible: viewWorkDVisible,
+                    viewWorkDDate: widget.viewWorkDDate,
                     voucherNo: null,
                     dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                   )));
@@ -260,6 +269,13 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  $viewWorkDVisible");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle  $viewWorkDVisible ");
+            }
             newDate=date!;
             recipt_list=[];
           });
@@ -404,6 +420,8 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                           voucherNo: recipt_list[index]["Voucher_No"],
                           dateNew: newDate,// DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:recipt_list[index],
+                          viewWorkDVisible: viewWorkDVisible,
+                          viewWorkDDate: widget.viewWorkDDate,
                           come:"edit",
                         )));
 
@@ -522,6 +540,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                           Positioned(
                               bottom: 5,
                               right: 5,

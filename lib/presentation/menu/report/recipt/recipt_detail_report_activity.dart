@@ -38,8 +38,10 @@ class ReciptDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const ReciptDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  const ReciptDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ReciptDetailReportActivity> createState() => _ReciptDetailReportActivityState();
@@ -51,7 +53,7 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
   bool isPagination = true;
-
+  bool viewWorkDVisible=true;
   TextEditingController franchiseeName = TextEditingController();
   DateTime applicablefrom =
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -305,7 +307,13 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                       onTap: () async {
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT002");
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
 
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateReceipt(
@@ -313,6 +321,8 @@ class _ReciptDetailReportActivityState extends State<ReciptDetailReportActivity>
                               newDate: DateTime.parse(reportDetailList[index]['Date']),
                               voucherNo: reportDetailList[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               logoImage: widget.logoImage,
                               readOnly:singleRecord['Update_Right'] ,
                               // editedItem:reportDetailList[index],

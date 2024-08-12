@@ -45,8 +45,10 @@ class DebitNoteDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const DebitNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  const DebitNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<DebitNoteDetailReportActivity> createState() => _DebitNoteDetailReportActivityState();
@@ -58,7 +60,7 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
   bool isPagination = true;
-
+  bool viewWorkDVisible=true;
   TextEditingController franchiseeName = TextEditingController();
   DateTime applicablefrom =
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -320,9 +322,17 @@ class _DebitNoteDetailReportActivityState extends State<DebitNoteDetailReportAct
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT006");
 
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateDebitNote(
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               logoImage: widget.logoImage,
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),

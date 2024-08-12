@@ -49,7 +49,6 @@ class AddOrEditItemSell extends StatefulWidget {
       this.readOnly,
       this.dateFinal,
       this.exstingList});
-
   @override
   State<AddOrEditItemSell> createState() => _AddOrEditItemSellState();
 }
@@ -312,7 +311,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       mandatory: true,
       txtkey: _itemKey,
       name: selectedItemName,
-      come: widget.editproduct!=null?"disable":"",
+      come: widget.readOnly==false?"dis":"",
       status: selectedItemName==""?"":"edit",
       focuscontroller: itemFocus,
       focusnext: quantityFocus,
@@ -321,11 +320,16 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
       title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       insertedList:insertedList,
       callback: (item) async {
+        if(item==""){
+
+        }else{
+        print("gfhjgjdjgn  $item");
         await calculateGstAmt();
         await calculateNetAmt();
         if(insertedList.contains(item['Name'])){
           CommonWidget.errorDialog(context,"Already Exist");
           setState(() {
+
             selectedItemName="";
             selectedItemID="";
           });
@@ -339,7 +343,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
             previousRate=item['Rate'] == null? "" : item['Rate'].toString();
             gst.text = item['GST_Rate'] != null ? item['GST_Rate'] : "";
           });
-        }
+        }}
         await calculateRates();
         _itemKey.currentState!.validate();
         _rateKey.currentState!.validate();
@@ -716,7 +720,33 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
 
   /* Widget for Buttons Layout */
   Widget getAddForButtonsLayout(double parentHeight, double parentWidth) {
-    return Row(
+    return widget.readOnly==false? GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      onDoubleTap: () {},
+      child: Container(
+        height: parentHeight * .05,
+        width: parentWidth * .90,
+        // width: SizeConfig.blockSizeVertical * 20.0,
+        decoration: const BoxDecoration(
+          color: CommonColor.HINT_TEXT,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("close")!,
+              textAlign: TextAlign.center,
+              style: text_field_textStyle,
+            ),
+          ],
+        ),
+      ),
+    ):  Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         GestureDetector(

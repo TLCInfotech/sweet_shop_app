@@ -13,7 +13,6 @@ import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
-import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -30,8 +29,9 @@ class FOutstandingDashActivity extends StatefulWidget {
   final fid;
   final vName;
   final date;
+  final viewWorkDDate;
   final String logoImage;
-  const FOutstandingDashActivity({Key? key, required this.mListener, this.fid, this.vName, this.date, required this.logoImage}) : super(key: key);
+  const FOutstandingDashActivity({Key? key, required this.mListener, this.fid, this.vName, this.date, required this.logoImage, this.viewWorkDDate}) : super(key: key);
 
   @override
   State<FOutstandingDashActivity> createState() => _FOutstandingDashActivityState();
@@ -41,7 +41,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
-
+  bool viewWorkDVisible=true;
   List<SalesData> _saleData = [];
 
   var statistics=[];
@@ -538,6 +538,13 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date)async{
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             dateTime=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(dateTime));
             profit=0.0;

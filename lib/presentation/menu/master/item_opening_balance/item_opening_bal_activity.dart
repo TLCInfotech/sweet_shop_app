@@ -28,19 +28,19 @@ class ItemOpeningBal extends StatefulWidget {
   final newDate;
   final  formId;
   final  arrData;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String titleKey;final String logoImage;
-  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey, required this.logoImage});
+  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
 }
 
 class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningBalInterface{
-
-
-
+  
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> Franchisee_list=[];
@@ -53,6 +53,9 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     // TODO: implement initState
     super.initState();
     callGetFranchiseeItemOpeningList(1);
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     if(widget.newDate!=null){
       invoiceDate=widget.newDate;
     }
@@ -104,10 +107,13 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
             "Name":name,
             "Franchisee_ID":id
           };
+          print("previousDateTitleeeeeee22222 $viewWorkDVisible ");
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateItemOpeningBal(
             dateNew:invoiceDate,
             editedItem:item,   logoImage: widget.logoImage,
             compId:companyId ,
+            viewWorkDDate: widget.viewWorkDDate,
+            viewWorkDVisible: viewWorkDVisible,
             come:"edit",
             readOnly: singleRecord['Update_Right'],
             //DateFormat('dd-MM-yyyy').format(invoiceDate),
@@ -190,7 +196,9 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               ),
             ),
           ),
-          floatingActionButton:singleRecord['Insert_Right']==true? FloatingActionButton(
+          floatingActionButton:
+          viewWorkDVisible==false?Container():
+          singleRecord['Insert_Right']==true? FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -198,8 +206,11 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                 color: Colors.black87,
               ),
               onPressed: () async{
+                print("previousDateTitleeeeeee111333333  $viewWorkDVisible ");
                 await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                   dateNew:invoiceDate,
+                  viewWorkDDate: widget.viewWorkDDate,
+                  viewWorkDVisible: viewWorkDVisible,
                   compId:companyId ,   logoImage: widget.logoImage,
                   //DateFormat('dd-MM-yyyy').format(invoiceDate),
                   mListener: this,
@@ -282,6 +293,13 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle $viewWorkDVisible  ");
+            }
             invoiceDate=date!;
           });
           setState(() {
@@ -332,11 +350,14 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: ()async{
+                        print("previousDateTitleeeeeee11111  $viewWorkDVisible ");
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                           dateNew:invoiceDate,
                           editedItem:Franchisee_list[index],
                           compId:companyId ,   logoImage: widget.logoImage,
                           come:"edit",
+                          viewWorkDDate: widget.viewWorkDDate,
+                          viewWorkDVisible: viewWorkDVisible,
                           readOnly: singleRecord['Update_Right'],
                           //DateFormat('dd-MM-yyyy').format(invoiceDate),
                           mListener: this,
@@ -393,6 +414,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
                                         ],
                                       ),
                                     ),
+                                    viewWorkDVisible==false?Container():
                                     singleRecord['Delete_Right']==true?     Positioned(
                                         top: 0,
                                         right: 0,

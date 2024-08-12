@@ -9,7 +9,7 @@ import '../../core/common_style.dart';
 import '../../data/api/request_helper.dart';
 
 
-class SearchableSPDropdown extends StatefulWidget{
+class SearchableItemsDropdown extends StatefulWidget{
   final title;
   final ledgerName;
   final Function(dynamic?) callback;
@@ -24,16 +24,16 @@ class SearchableSPDropdown extends StatefulWidget{
   final focusnext;
   final listArrya;
   final mandatory;
-  SearchableSPDropdown({required this.title, required this.callback,  this.ledgerName,this.titleIndicator, this.franchisee, this.franchiseeName, this.come,this.suffixicon, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory, this.listArrya});
+  SearchableItemsDropdown({required this.title, required this.callback,  this.ledgerName,this.titleIndicator, this.franchisee, this.franchiseeName, this.come,this.suffixicon, this.readOnly,this.focuscontroller,this.txtkey,this.focusnext,this.mandatory, this.listArrya});
 
 
 
 
   @override
-  State<SearchableSPDropdown> createState() => _SingleLineEditableTextFormFieldState();
+  State<SearchableItemsDropdown> createState() => _SingleLineEditableTextFormFieldState();
 }
 
-class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> with  SingleTickerProviderStateMixin {
+class _SingleLineEditableTextFormFieldState extends State<SearchableItemsDropdown> with  SingleTickerProviderStateMixin {
   bool isLoaderShow = false;
   FocusNode searchFocus = FocusNode() ;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -171,7 +171,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                     onTap: (){
                       // _controller.clear();
                       setState(() {
-                       // callGetLedger();
+                        // callGetLedger();
                       });
                     },
                     textInputAction: TextInputAction.none, // Change input action to "none"
@@ -216,10 +216,10 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                           ),
                         ],
                       ),                          errorStyle: const TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 16.0,
-                          height: 0
-                      ),
+                        color: Colors.redAccent,
+                        fontSize: 16.0,
+                        height: 0
+                    ),
                       errorBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent),
                       ),
@@ -233,7 +233,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(
-                      title: Text(suggestion['Name']),
+                      title: Text(suggestion['Item_Name']),
                     );
                   },
                   validator: (value) {
@@ -245,9 +245,9 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
                   },
                   onSuggestionSelected: (suggestion) {
                     setState(() {
-                      selectedItem = suggestion['Name'];
+                      selectedItem = suggestion['Item_Name'];
                       //_controller.text=suggestion['Name'];
-               _controller.clear();
+                      _controller.clear();
                     });
                     widget.callback(suggestion);
                     if(widget.focuscontroller!=null) {
@@ -269,7 +269,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableSPDropdown> 
     List matches = [];
     matches.addAll(widget.listArrya);
 
-    matches.retainWhere((s) => s['Name'].toLowerCase().contains(query.toLowerCase()));
+    matches.retainWhere((s) => s['Item_Name'].toLowerCase().contains(query.toLowerCase()));
     return matches;
   }
 

@@ -38,6 +38,8 @@ class SaleReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
   const SaleReportTypeList(
       {super.key,
@@ -50,7 +52,7 @@ class SaleReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener, required this.logoImage});
+      this.mListener, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<SaleReportTypeList> createState() => _SaleReportTypeListState();
@@ -61,7 +63,7 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow = false;
   bool partyBlank = false;
 
@@ -353,6 +355,8 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                             ['Vendor_ID'],   logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         fromDate: applicablefrom,
                                         come: "partyName",
                                         toDate: applicableTwofrom,
@@ -368,10 +372,19 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                         itemName: array_list[index]
                                             ['Item_Name'],   logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
+                          setState(() {
+                            if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                              viewWorkDVisible=true;
+                            } else {
+                              viewWorkDVisible=false;
+                            }
+                          });
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -381,6 +394,8 @@ class _SaleReportTypeListState extends State<SaleReportTypeList> {
                                             array_list[index]['Date']),
                                         formId: "ST003",   logoImage: widget.logoImage,
                                         arrData: dataArr,
+                                    viewWorkDDate: widget.viewWorkDDate,
+                                    viewWorkDVisible: viewWorkDVisible,
                                       )));
                         }
                         array_list = [];

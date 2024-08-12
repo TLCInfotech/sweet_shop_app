@@ -31,8 +31,10 @@ class FranchiseeSaleRate extends StatefulWidget {
   final formId;
   final arrData;
   final String logoImage;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   const FranchiseeSaleRate(
-      {super.key, required this.compId, this.formId, this.arrData, required this.logoImage});
+      {super.key, required this.compId, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<FranchiseeSaleRate> createState() => _FranchiseeSaleRateState();
@@ -96,12 +98,15 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
       position = Offset(clampedX, clampedY);
     });
   }
-
+  bool viewWorkDVisible=true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // getCompanyId();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     setVal();
     calculateTotalAmt();
     // _scrollController.addListener(_scrollListener);
@@ -250,6 +255,8 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               ],
             ),
           ),
+
+          viewWorkDVisible==false?Container():
           singleRecord['Insert_Right'] == true ||
               singleRecord['Update_Right'] == true?  Positioned(
             left: position.dx,
@@ -378,6 +385,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                         "${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",
                         style: item_regular_textStyle.copyWith(color: Colors.grey),
                       ),
+                      viewWorkDVisible==false?Container():
                       GestureDetector(
                         onTap: () async {
                           await showGeneralDialog(
@@ -451,6 +459,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                     ],
                   ),
                 ),
+          viewWorkDVisible==false?Container():
           singleRecord['Insert_Right'] == false ||
                   singleRecord['Update_Right'] == false ||
                   showButton == false
@@ -562,6 +571,9 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
               delay: Duration(microseconds: 1500),
               child: GestureDetector(
                 onTap: () {
+                  if(viewWorkDVisible==false){
+
+                  }else{
                   if (singleRecord['Update_Right'] == true) {
                     setState(() {
                       editedItemIndex = index;
@@ -569,7 +581,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                     FocusScope.of(context).requestFocus(FocusNode());
                       goToAddOrEditProduct(Item_list[index]);
                   }
-                },
+                }},
                 child: Card(
                   child: Row(
                     children: [
@@ -673,6 +685,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 singleRecord['Delete_Right'] == true
                                     ? Container(
                                         width: parentWidth * .1,
@@ -847,6 +860,13 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
            // showButton = true;
             applicablefrom = name!;
           });
+          if (name!.isAfter(widget.viewWorkDDate)) {
+            viewWorkDVisible=true;
+            print("previousDateTitle  ");
+          } else {
+            viewWorkDVisible=false;
+            print("previousDateTitle   ");
+          }
           if (selectedFranchiseeId != "") {
             setState(() {
               Item_list = [];
@@ -872,13 +892,16 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
           if(item!=null){
           var indexx=Item_list.indexOf(item);
           setState(() {
+            if(viewWorkDVisible==false){
+
+            }else{
             if (singleRecord['Update_Right'] == true) {
               setState(() {
                 editedItemIndex = indexx;
               });
               FocusScope.of(context).requestFocus(FocusNode());
                 goToAddOrEditProduct(item);
-            }
+            }}
           });}
         },);
   }

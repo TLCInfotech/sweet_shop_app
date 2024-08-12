@@ -42,9 +42,11 @@ class DetailReportActivity extends StatefulWidget {
   final  venderId;
   final  venderName;
   final  come;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
   const DetailReportActivity(
-      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId, this.expenseName, this.expense, this.venderId, this.venderName, this.come, required this.logoImage,});
+      {super.key, this.apiurl, this.fromDate, this.toDate, this.party, this.partId, this.expenseName, this.expense, this.venderId, this.venderName, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible,});
 
   @override
   State<DetailReportActivity> createState() => _DetailReportActivityState();
@@ -56,7 +58,7 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
   bool isPagination = true;
-
+  bool viewWorkDVisible=true;
   TextEditingController franchiseeName = TextEditingController();
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -355,9 +357,16 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                       List<dynamic> jsonArray = jsonDecode(dataArr);
                       var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT009");
                       print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
-
+                      setState(() {
+                        if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                          viewWorkDVisible=true;
+                        } else {
+                          viewWorkDVisible=false;
+                        }
+                      });
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
-                        mListener: this,   logoImage: widget.logoImage,
+                        mListener: this,   logoImage: widget.logoImage, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                         voucherNo: reportDetailList[index]["Voucher_No"].toString(),
                         dateNew: DateTime.parse(reportDetailList[index]['Date']),
                         readOnly:singleRecord['Update_Right'],
@@ -367,11 +376,19 @@ class _DetailReportActivityState extends State<DetailReportActivity> with Profit
                       )));
                     }
                     else{
+                      setState(() {
+                        if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                          viewWorkDVisible=true;
+                        } else {
+                          viewWorkDVisible=false;
+                        }
+                      });
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) =>
                               ProfitLossDash(mListener: this,
                                 fid: widget.partId,
-                                vName: widget.party,
+                                vName: widget.party, viewWorkDDate: widget.viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 logoImage: widget.logoImage,
                                 date: reportDetailList[index]['Date'],
                                 come: "report",

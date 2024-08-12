@@ -23,8 +23,10 @@ class ConstantOrderActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final  String logoImage;
-  const ConstantOrderActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, required this.logoImage});
+  const ConstantOrderActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ConstantOrderActivity> createState() => _ConstantOrderActivityState();
@@ -32,7 +34,7 @@ class ConstantOrderActivity extends StatefulWidget {
 
 class _ConstantOrderActivityState extends State<ConstantOrderActivity>with CreateOrderInvoiceInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> saleInvoice_list=[];
@@ -327,6 +329,13 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleInvoice_list.clear();
           });
           setState(() {
@@ -376,7 +385,9 @@ class _ConstantOrderActivityState extends State<ConstantOrderActivity>with Creat
                     MaterialPageRoute(
                       builder: (context) => CreateOrderInvoice(
                         dateNew: invoiceDate,
-                        logoImage: widget.logoImage,
+                        readOnly:singleRecord['Update_Right'] ,
+                        logoImage: widget.logoImage, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                         order_No: saleInvoice_list[index]['Order_No'],
                         mListener: this,
                         editedItem: saleInvoice_list[index],

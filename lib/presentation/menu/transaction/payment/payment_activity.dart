@@ -35,16 +35,17 @@ class PaymentActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData,this.dateNew, required this.logoImage});
+  const PaymentActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData,this.dateNew, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<PaymentActivity> createState() => _PaymentActivityState();
 }
 
 class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInterface {
-
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -56,6 +57,9 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.dateNew!=null){
       setState(() {
@@ -211,6 +215,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ?  Positioned(
           left: position.dx,
           top: position.dy,
@@ -232,7 +237,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                 onPressed: ()async {
                   await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                     mListener: this,   logoImage: widget.logoImage,
-                    dateNew:newDate,
+                    dateNew:newDate, viewWorkDDate: widget.viewWorkDDate,
+                    viewWorkDVisible: viewWorkDVisible,
                     voucherNo: null,//DateFormat('dd-MM-yyyy').format(newDate),
                   )));
                   selectedFranchiseeId="";
@@ -272,6 +278,13 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             payment_list=[];
             newDate=date!;
           });
@@ -404,7 +417,8 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePayment(
                           mListener: this,
                           dateNew: newDate,   logoImage: widget.logoImage,
-                          readOnly: singleRecord['Update_Right'] ,
+                          readOnly: singleRecord['Update_Right'] , viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                           voucherNo: payment_list[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                           editedItem:payment_list[index],
                           come:"edit",
@@ -523,6 +537,7 @@ class _PaymentActivityState extends State<PaymentActivity>with CreatePaymentInte
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                           Positioned(
                               bottom: 5,
                               right: 5,

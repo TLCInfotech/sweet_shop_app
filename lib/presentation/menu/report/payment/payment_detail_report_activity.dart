@@ -39,8 +39,10 @@ class PaymentDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.ledgerId, this.ledgerName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  const PaymentDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.ledgerId, this.ledgerName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<PaymentDetailReportActivity> createState() => _PaymentDetailReportActivityState();
@@ -52,7 +54,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
   bool isPagination = true;
-
+  bool viewWorkDVisible=true;
   TextEditingController franchiseeName = TextEditingController();
   DateTime applicablefrom =
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -313,13 +315,20 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
                         //     )));
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT001");
-
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePayment(
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               voucherNo: reportDetailList[index]['Voucher_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,   logoImage: widget.logoImage,
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               readOnly:singleRecord['Update_Right'] ,
                               // editedItem:reportDetailList[index],
                               come:"edit",

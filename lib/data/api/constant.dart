@@ -72,6 +72,7 @@ class ApiConstants {
   String getAllNotifications="getAllNotifications";
   String updateNotificationStatus="updateNotificationStatus";
   String sendFranchiseeNotification="sendFranchiseeNotification";
+  String sendFNotification="sendFNotification";
   String franchiseeWithCompany="FranchiseeWithCompany";
   String voucherCreditNoteHeader="VoucherCreditNoteHeader";
   String formList="FormList";

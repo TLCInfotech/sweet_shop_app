@@ -29,7 +29,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class RecieptReportActivity extends StatefulWidget {
   final String logoImage;
-  const RecieptReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const RecieptReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   // final RecieptReportActivityInterface mListener;
   @override
   State<RecieptReportActivity> createState() => _RecieptReportActivityState();
@@ -38,9 +40,7 @@ class RecieptReportActivity extends StatefulWidget {
 class _RecieptReportActivityState extends State<RecieptReportActivity> {
   final _formkey = GlobalKey<FormState>();
   final _reportTypeKey = GlobalKey<FormFieldState>();
-
-
-
+  bool viewWorkDVisible=true;
   String reportType = "";
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
@@ -313,6 +313,8 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                           reportName: reportType,
                           reportId: reportId,
                           logoImage: widget.logoImage,
+                          viewWorkDVisible:viewWorkDVisible,
+                          viewWorkDDate: widget.viewWorkDDate,
                           mListener: this,
                           url: ApiConstants().reports,
                           vandorId: selectedFranchiseeId,

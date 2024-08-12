@@ -42,14 +42,15 @@ class CreateReceipt extends StatefulWidget {
   final editedItem;
   final readOnly;
   final String logoImage;
-
-  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate,this.editedItem,this.come, this.readOnly, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreateReceipt({super.key,required this.mListener, required this.dateNew,  this.voucherNo, this.newDate,this.editedItem,this.come, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   _CreateReceiptState createState() => _CreateReceiptState();
 }
 
 class _CreateReceiptState extends State<CreateReceipt> with SingleTickerProviderStateMixin,AddOrEditLedgerInterface {
-
+  bool viewWorkDVisible=true;
   final _formkey = GlobalKey<FormState>();
 
   final ScrollController _scrollController = ScrollController();
@@ -115,6 +116,9 @@ var voucherNo;
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
@@ -351,6 +355,7 @@ var voucherNo;
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -439,12 +444,13 @@ var voucherNo;
                   setState(() {
                     editedItemIndex=index;
                   });
+                  if(viewWorkDVisible==false){}else{
         if(widget.readOnly==false){
       }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
                     goToAddOrEditItem(Item_list[index],DateFormat("yyyy-MM-dd").format(widget.newDate));
-                  }}
+                  }}}
                 },
                 child: Card(
                   child: Row(
@@ -493,6 +499,7 @@ var voucherNo;
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -628,6 +635,13 @@ var voucherNo;
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             showButton=true;
             invoiceDate=date!;
           });
@@ -793,6 +807,7 @@ var voucherNo;
             ],
           ),
         ):Container(),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
             if(selectedBankLedgerID==null){

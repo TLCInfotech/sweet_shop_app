@@ -33,6 +33,7 @@ import 'package:sweet_shop_app/presentation/menu/report/credi_note/credit_note_r
 import 'package:sweet_shop_app/presentation/menu/report/debit_note/debit_note_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/expense/expense_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/ledger/ledger_vouchers_report.dart';
+import 'package:sweet_shop_app/presentation/menu/setting/language_select_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/constant_sale_order_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/contra/contra_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
@@ -44,8 +45,6 @@ import 'package:sweet_shop_app/presentation/menu/transaction/purchase/purchase_a
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/sell/sell_activity.dart';
 import '../../core/localss/application_localizations.dart';
-import '../dashboard/dashboard_activity.dart';
-import '../dashboard/home/home_fragment.dart';
 import 'master/user_rights/user_list_for_rights.dart';
 import 'report/MIS/mis_report_activity.dart';
 import 'report/payment/payment_report_activity.dart';
@@ -99,7 +98,21 @@ class _MenuActivityState extends State<MenuActivity>
 String companyId="";
 var dataArr;
 var dataArrM;
+  int workingDay=0;
+  DateTime viewWorkDDate=DateTime.now();
+  final DateTime today = DateTime.now();
   getLocal()async{
+    int workingDays = await AppPreferences.getWorkingDays();
+    print("workingDayyyyyy  $workingDays");
+    if(workingDays>-1) {
+      workingDay=workingDays+1;
+      print("NewworkingDayyyyyy  $workingDay");
+      viewWorkDDate = today.subtract(Duration(days: workingDay));
+      print("jgbjvbgvv   ${viewWorkDDate}");
+    }else{
+      viewWorkDDate = today.subtract(Duration(days: 50000));
+      print("kjgkjgkjgjkgj  $viewWorkDDate");
+    }
     companyId=await AppPreferences.getCompanyId();
     setState(() {
     });
@@ -255,6 +268,7 @@ var dataArrM;
             ? getSettingLayout(parentHeight, parentWidth)
             : getSettingSubLayout(parentHeight, parentWidth),
         getAddLogoutLayout(parentHeight, parentWidth),
+
       ],
     );
   }
@@ -284,9 +298,40 @@ var dataArrM;
         child: Padding(
           padding:  EdgeInsets.only(left: parentWidth*.05,right: parentWidth*.05),
           child:  Text(
-            ApplicationLocalizations.of(context)!.translate("log_out")!,
+            ApplicationLocalizations.of(context).translate("log_out"),
             style: page_heading_textStyle,
           ),
+        ),
+      ),
+    );
+  }
+
+
+  /* Widget for Logout Layout */
+  Widget getLanguageLayout(double parentHeight, double parentWidth) {
+    return GestureDetector(
+      onTap: () {
+         Navigator.push(context, MaterialPageRoute(builder: (context) =>LanguageSelectionPage(
+    logoImage: logoImage,
+        )));
+      },
+      onDoubleTap: () {},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+           "Language",
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
         ),
       ),
     );
@@ -318,7 +363,7 @@ var dataArrM;
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                ApplicationLocalizations.of(context)!.translate("master")!,
+                ApplicationLocalizations.of(context).translate("master"),
                 style:page_heading_textStyle,
               ),
                 const Icon(
@@ -358,7 +403,7 @@ var dataArrM;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ApplicationLocalizations.of(context)!.translate("master")!,
+                    ApplicationLocalizations.of(context).translate("master"),
                     style: page_heading_textStyle,
                   ),
                     const Icon(
@@ -396,6 +441,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseeSaleRate(
           compId: companyId,
             formId: "RM006",
+            viewWorkDDate:viewWorkDDate,
             logoImage:logoImage,
             arrData: dataArrM
         )));
@@ -416,7 +462,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("franchisee_sale_rate")!,
+              ApplicationLocalizations.of(context).translate("franchisee_sale_rate"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -433,6 +479,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    FranchiseePurchaseRate(
           compId: companyId,
+            viewWorkDDate:viewWorkDDate,
             logoImage:logoImage,
             formId: "RM007",
             arrData: dataArrM
@@ -454,7 +501,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("franchisee_purchase_rate")!,
+              ApplicationLocalizations.of(context).translate("franchisee_purchase_rate"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -489,7 +536,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("franchisee")!,
+              ApplicationLocalizations.of(context).translate("franchisee"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -507,6 +554,7 @@ var dataArrM;
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => UsersList(
           formId:"LM001" ,
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -526,7 +574,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("user")!,
+              ApplicationLocalizations.of(context).translate("user"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -544,6 +592,7 @@ var dataArrM;
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => UserRightListActivity(
           arrData: dataArrM,
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           formId: "AM006",
         )));
 
@@ -563,7 +612,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("user_right")!,
+              ApplicationLocalizations.of(context).translate("user_right"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -581,6 +630,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) => UnitsActivity(
           formId:"RM004" ,
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM,
         )));
    /*     if(mounted){
@@ -600,7 +650,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("measuring_unit")!,
+              ApplicationLocalizations.of(context).translate("measuring_unit"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -617,6 +667,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ExpenseListingActivity(
           formId:"AM001" , logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -635,7 +686,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("ledger")!,
+              ApplicationLocalizations.of(context).translate("ledger"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -652,6 +703,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>    ExpenseGroup(
           formId:"AM002" , logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM,
         )));
     /*    if(mounted){
@@ -670,7 +722,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("ledger_group")!,
+              ApplicationLocalizations.of(context).translate("ledger_group"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -687,6 +739,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CompanyCreate(
           companyId: companyId,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM, logoImage:logoImage,
           formId: "AM007",
         )));
@@ -706,7 +759,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("company_info")!,
+              ApplicationLocalizations.of(context).translate("company_info"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -723,6 +776,7 @@ var dataArrM;
       onTap: ()async{
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>CreateItemOpeningBalForCompany(
             dateNew: DateTime.now().toString(),
+          viewWorkDDate:viewWorkDDate,
         formId:"RM003" , logoImage:logoImage,
         arrData: dataArrM,
         )));
@@ -744,7 +798,7 @@ var dataArrM;
             ),
             Expanded(
               child: Text(
-                ApplicationLocalizations.of(context)!.translate("company_item_opening")!,
+                ApplicationLocalizations.of(context).translate("company_item_opening"),
                 style: page_heading_textStyle,
                 textAlign: TextAlign.start,
               ),
@@ -762,6 +816,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemOpeningBal(
           newDate: null, logoImage:logoImage,
             formId: "RM005",
+            viewWorkDDate:viewWorkDDate,
             titleKey: "Branch Item Opening Balance",
             arrData: dataArrM
         )));
@@ -783,7 +838,7 @@ var dataArrM;
             ),
             Expanded(
               child: Text(
-                ApplicationLocalizations.of(context)!.translate("item_opening_balance")!,
+                ApplicationLocalizations.of(context).translate("item_opening_balance"),
                 style: page_heading_textStyle,
                 textAlign: TextAlign.start,
               
@@ -801,6 +856,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerOpeningBal(
           formId:"AM005" , logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArrM,
         )));
        /* if(mounted){
@@ -820,7 +876,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("ledger_opening_balance")!,
+              ApplicationLocalizations.of(context).translate("ledger_opening_balance"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -838,6 +894,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemCategoryActivity(
           formId:"RM002" , logoImage:logoImage,
           arrData: dataArrM,
+          viewWorkDDate:viewWorkDDate,
         )));
        /* if(mounted){
           print("HERE BACK");
@@ -856,7 +913,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("item_category")!,
+              ApplicationLocalizations.of(context).translate("item_category"),
               style:  page_heading_textStyle,
               textAlign: TextAlign.center,
 
@@ -874,6 +931,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemsActivity(
           formId:"RM001" , logoImage:logoImage,
           arrData: dataArrM,
+          viewWorkDDate:viewWorkDDate,
         )));
      /*   if(mounted){
           print("HERE BACK");
@@ -892,7 +950,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("item")!,
+              ApplicationLocalizations.of(context).translate("item"),
               style: page_heading_textStyle,
               textAlign: TextAlign.center,
             ),
@@ -926,7 +984,7 @@ var dataArrM;
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                ApplicationLocalizations.of(context)!.translate("report")!,
+                ApplicationLocalizations.of(context).translate("report"),
                 style:page_heading_textStyle,
               ),
               const Icon(
@@ -968,7 +1026,7 @@ var dataArrM;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ApplicationLocalizations.of(context)!.translate("report")!,
+                    ApplicationLocalizations.of(context).translate("report"),
                     style: page_heading_textStyle,
                   ),
                   const Icon(
@@ -999,6 +1057,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    LedgerVouchersReport(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1012,7 +1071,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("ledger_voucher")!,
+              ApplicationLocalizations.of(context).translate("ledger_voucher"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1029,6 +1088,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    SaleReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1042,7 +1102,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("sale_report")!,
+              ApplicationLocalizations.of(context).translate("sale_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1059,6 +1119,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    PurchaseReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1072,7 +1133,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("purchase_report")!,
+              ApplicationLocalizations.of(context).translate("purchase_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1089,6 +1150,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    ExpenseReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1102,7 +1164,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("expense_report")!,
+              ApplicationLocalizations.of(context).translate("expense_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1119,6 +1181,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    PaymentReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1132,7 +1195,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("payment_report")!,
+              ApplicationLocalizations.of(context).translate("payment_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1149,6 +1212,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    RecieptReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1162,7 +1226,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("receipt_report")!,
+              ApplicationLocalizations.of(context).translate("receipt_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1179,6 +1243,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    CreditReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1192,7 +1257,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("credit_note_voucher")!,
+              ApplicationLocalizations.of(context).translate("credit_note_voucher"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1210,6 +1275,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    DebitReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1223,7 +1289,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
+              ApplicationLocalizations.of(context).translate("debit_note_voucher"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1239,8 +1305,9 @@ var dataArrM;
   Widget getMISReportLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>    MisReportActivity(
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>MisReportActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1254,7 +1321,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("mis_report")!,
+              ApplicationLocalizations.of(context).translate("mis_report"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1290,7 +1357,7 @@ var dataArrM;
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                ApplicationLocalizations.of(context)!.translate("transaction")!,
+                ApplicationLocalizations.of(context).translate("transaction"),
                 style:page_heading_textStyle,
               ),
               const Icon(
@@ -1334,7 +1401,7 @@ var dataArrM;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ApplicationLocalizations.of(context)!.translate("transaction")!,
+                    ApplicationLocalizations.of(context).translate("transaction"),
                     style: page_heading_textStyle,
                   ),
                   const Icon(
@@ -1370,6 +1437,7 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ConstantOrderActivity(
           mListener: this,
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           formId: "ST002",
           arrData: dataArr,
         )));
@@ -1389,7 +1457,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("constant_order_invoice")!,
+              ApplicationLocalizations.of(context).translate("constant_order_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1411,6 +1479,7 @@ var dataArrM;
           mListener: this,
           formId: "ST001",
           arrData: dataArr,
+          viewWorkDDate:viewWorkDDate,
           logoImage:logoImage
         )));
 
@@ -1427,7 +1496,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("order_invoice")!,
+              ApplicationLocalizations.of(context).translate("order_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1446,6 +1515,7 @@ var dataArrM;
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
           mListener: this, logoImage:logoImage,
           formId: "ST003",
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArr,
         )));
 
@@ -1461,7 +1531,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("sale_invoice")!,
+              ApplicationLocalizations.of(context).translate("sale_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1479,6 +1549,7 @@ var dataArrM;
         await  Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseActivity(mListener: this,
           formId: "PT005", logoImage:logoImage,
           arrData: dataArr,
+          viewWorkDDate:viewWorkDDate,
         )));
 
       },
@@ -1493,7 +1564,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("purchase_invoice")!,
+              ApplicationLocalizations.of(context).translate("purchase_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1510,6 +1581,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>
             PaymentActivity(mListener: this,
+              viewWorkDDate:viewWorkDDate,
               formId: "AT001", logoImage:logoImage,
               arrData: dataArr,)));
 
@@ -1525,7 +1597,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("payment_invoice")!,
+              ApplicationLocalizations.of(context).translate("payment_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1543,6 +1615,7 @@ var dataArrM;
         await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
             ReceiptActivity(mListener: this, logoImage:logoImage,
               formId: "AT002",
+              viewWorkDDate:viewWorkDDate,
               arrData: dataArr,)));
 
       },
@@ -1557,7 +1630,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("receipt_detail")!,
+              ApplicationLocalizations.of(context).translate("receipt_detail"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1574,6 +1647,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => DebitNoteActivity(mListener: this,
             formId: "AT005", logoImage:logoImage,
+            viewWorkDDate:viewWorkDDate,
             arrData: dataArr)));
 
       },
@@ -1588,7 +1662,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("debit_note_voucher")!,
+              ApplicationLocalizations.of(context).translate("debit_note_voucher"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1604,6 +1678,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
             formId: "AT006", logoImage:logoImage,
+            viewWorkDDate:viewWorkDDate,
             arrData: dataArr)));
 
       },
@@ -1618,7 +1693,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("credit_note_voucher")!,
+              ApplicationLocalizations.of(context).translate("credit_note_voucher"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1635,6 +1710,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => JournalVoucherActivity(mListener: this,
             formId: "AT004", logoImage:logoImage,
+            viewWorkDDate:viewWorkDDate,
             arrData: dataArr)));
 
       },
@@ -1649,7 +1725,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("journal")!,
+              ApplicationLocalizations.of(context).translate("journal"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1666,6 +1742,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ContraActivity(mListener: this,
             formId: "AT003", logoImage:logoImage,
+            viewWorkDDate:viewWorkDDate,
             arrData: dataArr)));
 
       },
@@ -1680,7 +1757,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("contra")!,
+              ApplicationLocalizations.of(context).translate("contra"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1697,6 +1774,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,
           formId: "AT009", logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
           arrData: dataArr,
         )));
        /* if(mounted){
@@ -1715,7 +1793,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("expense_invoice")!,
+              ApplicationLocalizations.of(context).translate("expense_invoice"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1750,7 +1828,7 @@ var dataArrM;
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                ApplicationLocalizations.of(context)!.translate("setting")!,
+                ApplicationLocalizations.of(context).translate("setting"),
                 style:page_heading_textStyle,
               ),
                 const Icon(
@@ -1768,7 +1846,7 @@ var dataArrM;
   Widget getSettingSubLayout(double parentHeight, double parentWidth) {
     return Container(
       alignment: Alignment.centerLeft,
-      height: parentHeight * .15,
+      height: parentHeight*.2,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -1790,7 +1868,7 @@ var dataArrM;
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    ApplicationLocalizations.of(context)!.translate("setting")!,
+                    ApplicationLocalizations.of(context).translate("setting"),
                     style: page_heading_textStyle,
                   ),
                   const Icon(
@@ -1802,6 +1880,7 @@ var dataArrM;
             ),
             getChangePassword(parentHeight,parentWidth),
             getDomainLink(parentHeight,parentWidth),
+            getLanguageLayout(parentHeight, parentWidth),
           ],
         ),
       ),
@@ -1814,6 +1893,7 @@ var dataArrM;
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>    ChangePasswordActivity(
           logoImage:logoImage,
+          viewWorkDDate:viewWorkDDate,
         )));
       },
       onDoubleTap: (){},
@@ -1827,7 +1907,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("change_password")!,
+              ApplicationLocalizations.of(context).translate("change_password"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -1855,7 +1935,7 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-              ApplicationLocalizations.of(context)!.translate("domain_link")!,
+              ApplicationLocalizations.of(context).translate("domain_link"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

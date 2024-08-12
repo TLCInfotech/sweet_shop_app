@@ -1,24 +1,12 @@
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:sweet_shop_app/presentation/common_widget/get_diable_textformfield.dart';
-import 'package:textfield_search/textfield_search.dart';
-
-import '../../../../core/app_preferance.dart';
-import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
-import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
-import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 import '../../../searchable_dropdowns/serchable_drop_down_for_existing_list.dart';
 
 class TestItem {
@@ -329,6 +317,10 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
       callback: (item) async {
 
           setState(() {
+            if(item==""){
+              insertedList=[];
+
+            }
             selectedItemID = item['ID'].toString();
             selectedItemName = item['Name'].toString();
             unit.text = item['Unit']!=null?item['Unit']:null;

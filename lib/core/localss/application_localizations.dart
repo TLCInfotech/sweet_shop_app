@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -34,4 +35,64 @@ class ApplicationLocalizations {
   String? translate(String jsonkey) {
     return _localizedStrings[jsonkey];
   }
+}*/
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sweet_shop_app/core/app_preferance.dart';
+
+
+class ApplicationLocalizations {
+  final Locale locale;
+
+  ApplicationLocalizations(this.locale);
+
+  static const LocalizationsDelegate<ApplicationLocalizations> delegate = _ApplicationLocalizationsDelegate();
+
+  late Map<String, String> _localizedStrings;
+
+  Future<bool> load() async {
+    Locale _locale = Locale('en');
+    String lang = await AppPreferences.getLang();
+    _locale = Locale(lang);
+    String jsonString = await rootBundle.loadString('assets/translations/${_locale.languageCode}.json');
+    print("translationstranslations  ${locale.languageCode} \n  $jsonString   ");
+    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    _localizedStrings = jsonMap.map((key, value) {
+      return MapEntry(key, value.toString());
+    });
+
+    return true;
+  }
+
+  String translate(String key) {
+    return _localizedStrings[key] ?? 'Translation not found';
+  }
+
+  static ApplicationLocalizations of(BuildContext context) {
+    final instance = Localizations.of<ApplicationLocalizations>(context, ApplicationLocalizations);
+    if (instance == null) {
+      throw Exception('No ApplicationLocalizations found in context');
+    }
+    return instance;
+  }
+}
+
+class _ApplicationLocalizationsDelegate extends LocalizationsDelegate<ApplicationLocalizations> {
+  const _ApplicationLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) {
+    return ['en', 'de', 'hi'].contains(locale.languageCode);
+  }
+
+  @override
+  Future<ApplicationLocalizations> load(Locale locale) async {
+    ApplicationLocalizations localizations = ApplicationLocalizations(locale);
+    await localizations.load();
+    return localizations;
+  }
+
+  @override
+  bool shouldReload(_ApplicationLocalizationsDelegate old) => false;
 }

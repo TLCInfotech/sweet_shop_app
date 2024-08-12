@@ -61,8 +61,7 @@ class _CreatePurchaseMrpActivityState extends State<CreatePurchaseMrpActivity>
   bool disableColor = false;
   late AnimationController _Controller;
 
-  DateTime invoiceDate =
-  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+  DateTime invoiceDate = DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   final _voucherNoFocus = FocusNode();
   final VoucherNoController = TextEditingController();

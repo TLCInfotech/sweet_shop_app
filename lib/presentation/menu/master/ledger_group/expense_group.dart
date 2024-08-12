@@ -33,7 +33,9 @@ class ExpenseGroup extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const ExpenseGroup({super.key, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ExpenseGroup({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ExpenseGroup> createState() => _ExpenseGroupState();

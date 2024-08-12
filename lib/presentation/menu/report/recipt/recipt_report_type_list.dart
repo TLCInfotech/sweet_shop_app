@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/presentation/menu/report/recipt/recipt_detail_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -38,6 +37,8 @@ class ReceiptReportTypeList extends StatefulWidget {
   final itemId;
   final applicablefrom;
   final applicableTwofrom;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final url;
   final String logoImage;
   const ReceiptReportTypeList(
@@ -51,7 +52,7 @@ class ReceiptReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener, required this.logoImage});
+      this.mListener, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ReceiptReportTypeList> createState() => _ReceiptReportTypeListState();
@@ -62,7 +63,7 @@ class _ReceiptReportTypeListState extends State<ReceiptReportTypeList> {
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow = false;
   bool partyBlank = false;
 
@@ -355,6 +356,8 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                         logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Ledger_Name'],
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         fromDate: applicablefrom,
                                         come: "partyName",
                                         toDate: applicableTwofrom,
@@ -371,9 +374,18 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                             ['Ledger_Name'],   logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
+                          setState(() {
+                            if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                              viewWorkDVisible=true;
+                            } else {
+                              viewWorkDVisible=false;
+                            }
+                          });
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -382,6 +394,8 @@ print("vgvbgb gv  ${widget.itemName}    ${widget.itemId}");
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "AT002",
+                                    viewWorkDDate: widget.viewWorkDDate,
+                                    viewWorkDVisible: viewWorkDVisible,
                                         arrData: dataArr,
                                     logoImage: widget.logoImage,
                                       )));

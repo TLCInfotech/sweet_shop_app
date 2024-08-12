@@ -25,7 +25,9 @@ class LedgerOpeningBal extends StatefulWidget {
   final  formId;
   final String logoImage;
   final  arrData;
-  const LedgerOpeningBal({super.key, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const LedgerOpeningBal({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<LedgerOpeningBal> createState() => _ItemOpeningBalState();
@@ -37,7 +39,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
   bool isApiCall = false;
   bool isLoaderShow = false;
   var editedItem=null;
-
+bool viewWorkDVisible=true;
   int page = 1;
   bool isPagination = true;
   ScrollController _scrollController = new ScrollController();
@@ -147,7 +149,9 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
               ),
             ),
           ),
-          floatingActionButton: singleRecord['Insert_Right']==true ?FloatingActionButton(
+          floatingActionButton:
+          viewWorkDVisible==false?Container():
+          singleRecord['Insert_Right']==true ?FloatingActionButton(
               backgroundColor: const Color(0xFFFBE404),
               child: const Icon(
                 Icons.add,
@@ -210,6 +214,13 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             invoiceDate=date!;
           });
           removeData();
@@ -290,9 +301,9 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-
+if(viewWorkDVisible==false){}else{
                         goToAddOrEditItem(ledgerList[index],"edit",companyId,singleRecord['Update_Right']);
-                      },
+                      }},
                       child: Card(
                         child: Row(
                           children: [
@@ -343,6 +354,7 @@ class _ItemOpeningBalState extends State<LedgerOpeningBal> with AddOrEditItemOpe
                                         ],
                                       ),
                                     ),
+                                    viewWorkDVisible==false?Container():
                                     singleRecord['Delete_Right']==true?    Positioned(
                                         top: 0,
                                         right: 0,

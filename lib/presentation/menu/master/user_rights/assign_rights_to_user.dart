@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,7 +9,6 @@ import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart'
 import 'package:sweet_shop_app/data/domain/user_rights/user_rigts_request_model.dart';
 import 'package:sweet_shop_app/presentation/dialog/Delete_Dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/user_rights/add_or_edit_user_rights.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';

@@ -25,7 +25,9 @@ import '../../../common_widget/get_date_layout.dart';
 
 class DebitReportActivity extends StatefulWidget {
   final String logoImage;
-  const DebitReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const DebitReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<DebitReportActivity> createState() => _ExpenseReportActivityState();
@@ -37,7 +39,7 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
@@ -295,6 +297,8 @@ class _ExpenseReportActivityState extends State<DebitReportActivity> {
                   reportName:reportType,
                   reportId:reportId,
                   url: ApiConstants().reports,
+                  viewWorkDDate: widget.viewWorkDDate,
+                  viewWorkDVisible: viewWorkDVisible,
                   vandorId: selectedFranchiseeId,
                   vendorName: selectedFranchiseeName,
                   itemId: selectedLedgerId,

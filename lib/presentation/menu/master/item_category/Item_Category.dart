@@ -31,7 +31,9 @@ class ItemCategoryActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const ItemCategoryActivity({super.key, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ItemCategoryActivity({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ItemCategoryActivity> createState() => _ItemCategoryActivityState();

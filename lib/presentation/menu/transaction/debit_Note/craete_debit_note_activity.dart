@@ -19,6 +19,7 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/data/domain/transaction/creditDebitNote/post_credit_debit_reuest_model.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/debit_Note/add_or_edit_item.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_down_for_items.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/downloadservice.dart';
 import '../../../../core/internet_check.dart';
@@ -37,9 +38,11 @@ class CreateDebitNote extends StatefulWidget {
   final  come;
   final  debitNote;
   final  companyId;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
   final  readOnly;
-  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage});
+  const CreateDebitNote({super.key, required this.dateNew, required this.mListener,required this.Invoice_No, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   _CreateDebitNoteState createState() => _CreateDebitNoteState();
 }
@@ -99,11 +102,14 @@ var invoice_No;
       position = Offset(clampedX, clampedY);
     });
   }
-
+  bool viewWorkDVisible=true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -318,6 +324,7 @@ var invoice_No;
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -345,7 +352,7 @@ var invoice_No;
                         "Party name and Account Ledger can't be same!");
                   }else*/ {
                     editedItemIndex = null;
-                    goToAddOrEditItem(null, widget.companyId, "");
+                    goToAddOrEditItem(null, widget.companyId, "",true);
                   }
                   }
                   else{
@@ -443,6 +450,7 @@ var invoice_No;
             ],
           ),
         )/*:Container()*/,
+        viewWorkDVisible==false?Container():
         widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
           /*  if(selectedLedgerId=="" ){
@@ -529,6 +537,10 @@ var invoice_No;
                 children: [
                   InvoiceInfo(),
                   SizedBox(height: 10,),
+                  getSearchLayout(parentHeight,parentWidth),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.end,
                   //   children: [
@@ -581,7 +593,113 @@ var invoice_No;
         ),
       ],
     );
+  }
 
+  /* Widget for taxt type layout */
+  Widget getSearchLayout(double parentHeight, double parentWidth) {
+    return SearchableItemsDropdown(
+        listArrya: Item_list,
+        titleIndicator: false,
+        readOnly: widget.readOnly,
+        title: ApplicationLocalizations.of(context)!.translate("item")!,
+        callback: (item) {
+          print("fkjjjggg   $item");
+          if(item!=null) {
+            var indexx = Item_list.indexOf(item);
+            setState(() {
+              editedItemIndex = indexx;
+            });
+            FocusScope.of(context).requestFocus(FocusNode());
+            if(viewWorkDVisible==false){
+              goToAddOrEditItem(item,widget.companyId,"edit",false);
+
+            }else{
+              if(widget.readOnly==false){
+              }else{
+                FocusScope.of(context).requestFocus(FocusNode());
+                if (context != null) {
+                  goToAddOrEditItem(item,widget.companyId,"edit",widget.readOnly);
+                }
+              }}
+
+          }});
+
+
+/*    Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("tax_type")!,
+              style: item_heading_textStyle,
+            ),
+            GestureDetector(
+              onTap: (){
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      return Transform(
+                        transform:
+                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: TaxDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception('No widget to return in pageBuilder');
+                    });
+              },
+              onDoubleTap: (){},
+              child: Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Container(
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  decoration: box_decoration,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          taxTypeName == "" ? "Select type" : taxTypeName,
+                          style: taxTypeName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: *//*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*//*
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );*/
   }
 
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
@@ -604,14 +722,15 @@ var invoice_No;
                   setState(() {
                     editedItemIndex=index;
                   });
-                  if(widget.readOnly==false){
-                  }else{
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    if (context != null) {
-                      goToAddOrEditItem(Item_list[index],widget.companyId,"edit");
+                  if(viewWorkDVisible==false) {}else{
+                    if (widget.readOnly == false) {} else {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      if (context != null) {
+                        goToAddOrEditItem(
+                            Item_list[index], widget.companyId, "edit",widget.readOnly);
+                      }
                     }
                   }
-
                 },
                 child: Card(
                   child: Row(
@@ -669,6 +788,7 @@ var invoice_No;
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -736,7 +856,7 @@ var invoice_No;
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null,widget.companyId,"");
+          goToAddOrEditItem(null,widget.companyId,"",widget.readOnly);
         }
       },
       child: Container(
@@ -759,7 +879,7 @@ var invoice_No;
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product,companyId,statuss) {
+  Future<Object?> goToAddOrEditItem(product,companyId,statuss,readOnly) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -774,6 +894,7 @@ var invoice_No;
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate,
+                readOnly: readOnly,
                 companyId: companyId,
                 partyId: selectedFranchiseeId,
                 status: statuss,
@@ -868,6 +989,13 @@ var invoice_No;
           title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
+              if (date!.isAfter(widget.viewWorkDDate)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle  ");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle   ");
+              }
               showButton=true;
               invoiceDate=date!;
               Item_list=[];

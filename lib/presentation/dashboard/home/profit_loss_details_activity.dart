@@ -23,8 +23,10 @@ import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 class ProfitLossDetailActivity extends StatefulWidget {
   final String? comeFor;
   final date;
+  final viewWorkDDate;
+  final viewWorkDVisible;
   final String logoImage;
-  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date, required this.logoImage});
+  const ProfitLossDetailActivity({super.key, required mListener, this.comeFor, this.date, required this.logoImage, this.viewWorkDDate,this.viewWorkDVisible});
 
   @override
   State<ProfitLossDetailActivity> createState() => _ProfitLossDetailActivityState();
@@ -36,7 +38,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
  // DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   TextEditingController serchvendor=TextEditingController();
-
+  bool viewWorkDVisible=true;
 
   bool isLoaderShow=false;
   bool isApiCall=false;
@@ -49,6 +51,9 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     addDate();
     getExpense(page);
   }
@@ -339,6 +344,13 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             newDate=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
             _profitPartywise=[];
@@ -385,8 +397,11 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
                     delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(mListener: this,
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDash(
+                          mListener: this,
                         fid: model.Vendor_ID,
+                          viewWorkDDate: widget.viewWorkDDate,
+                          viewWorkDVisible: viewWorkDVisible,
                           logoImage: widget.logoImage,
                         vName: model.Vendor_Name,
                         )));

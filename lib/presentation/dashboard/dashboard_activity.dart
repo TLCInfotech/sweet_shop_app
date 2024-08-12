@@ -43,21 +43,36 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     // TODO: implement initState
     super.initState();
 
-
+    getLocal();
     addNewScreen(
         HomeFragment(
           mListener: this,
+
         ),
         Constant.HOME_FRAGMENT);
     getUserPermissions();
-    getLocal();
+
   }
   List MasterMenu=[];
   List TransactionMenu=[];
   String companyId="";
   var dataArr;
   var dataArrM;
+  int workingDay=0;
+  DateTime viewWorkDDate=DateTime.now();
+  final DateTime today = DateTime.now();
   getLocal()async{
+    int workingDays = await AppPreferences.getWorkingDays();
+    print("workingDayyyyyy  $workingDays");
+    if(workingDays>-1) {
+      workingDay=workingDays+1;
+      print("NewworkingDayyyyyy  $workingDay");
+      viewWorkDDate = today.subtract(Duration(days: workingDay));
+      print("jgbjvbgvv   ${viewWorkDDate}");
+    }else{
+      viewWorkDDate = today.subtract(Duration(days: 50000));
+      print("kjgkjgkjgjkgj  $viewWorkDDate");
+    }
     companyId=await AppPreferences.getCompanyId();
     setState(() {
     });
@@ -206,16 +221,18 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
       GestureDetector(
         onTap: () {
           setState(() {
+
             getUserPermissions();
             getLocal();
          bottomBarItems = [];
        });
           Navigator.of(context).pushReplacementNamed('/dashboard');
-       /*  addNewScreen(
-              HomeFragment(
-                mListener: this,
-              ),
-              Constant.HOME_FRAGMENT);*/
+         // addNewScreen(
+         //      HomeFragment(
+         //        mListener: this,
+         //          viewWorkDDate:viewWorkDDate
+         //      ),
+         //      Constant.HOME_FRAGMENT);
         },
         onDoubleTap: () {},
         child: Container(
@@ -258,7 +275,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: () {
             addNewScreen(
-                SaleDashboardActivity(),
+                SaleDashboardActivity(
+                    viewWorkDDate:viewWorkDDate
+                ),
                 Constant.SELL);
             getUserPermissions();
           },
@@ -304,7 +323,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: () {
             addNewScreen(
-                LedgerDashActivity(),
+                LedgerDashActivity(
+                    viewWorkDDate:viewWorkDDate
+                ),
                 Constant.EXPENSE);
             getUserPermissions();
           },
@@ -350,7 +371,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: () {
             addNewScreen(
-                PurchaseDashActivity(),
+                PurchaseDashActivity(
+                    viewWorkDDate:viewWorkDDate
+                ),
                 Constant.RETURN);
             getUserPermissions();
           },
@@ -396,7 +419,9 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
         GestureDetector(
           onTap: () {
             addNewScreen(
-                PaymentDashActivity(),
+                PaymentDashActivity(
+                    viewWorkDDate:viewWorkDDate
+                ),
                 Constant.RECEIPT);
             getUserPermissions();
           },
@@ -678,22 +703,26 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     if(comeScreen=="Expense"){
       addNewScreen(
           LedgerDashActivity(
+              viewWorkDDate:viewWorkDDate
           ),
           Constant.EXPENSE);
     } else if(comeScreen=="Sale"){
       addNewScreen(
           SaleDashboardActivity(
+              viewWorkDDate:viewWorkDDate
           ),
           Constant.SELL);
 
     }else  if(comeScreen=="Return"){
       addNewScreen(
           PurchaseDashActivity(
+              viewWorkDDate:viewWorkDDate
           ),
           Constant.RETURN);
     } else if(comeScreen=="Receipt"){
       addNewScreen(
           PaymentDashActivity(
+              viewWorkDDate:viewWorkDDate
           ),
           Constant.RECEIPT);
     }else{

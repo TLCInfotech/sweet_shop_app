@@ -38,6 +38,8 @@ class DebitNoteReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
 
   const DebitNoteReportTypeList(
       {super.key,
@@ -50,7 +52,7 @@ class DebitNoteReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener, required this.logoImage});
+      this.mListener, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<DebitNoteReportTypeList> createState() => _DebitNoteReportTypeListState();
@@ -61,7 +63,7 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow = false;
   bool partyBlank = false;
 
@@ -351,7 +353,8 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                         apiurl: ApiConstants().voucherPartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
-                                        logoImage: widget.logoImage,
+                                        logoImage: widget.logoImage, viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
                                         fromDate: applicablefrom,
@@ -369,16 +372,27 @@ class _DebitNoteReportTypeListState extends State<DebitNoteReportTypeList> {
                                         itemName: array_list[index]
                                             ['Item_Name'],
                                         logoImage: widget.logoImage,
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
+                          setState(() {
+                            if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                              viewWorkDVisible=true;
+                            } else {
+                              viewWorkDVisible=false;
+                            }
+                          });
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DebitNoteActivity(
                                         mListener: this,
+                                    viewWorkDDate: widget.viewWorkDDate,
+                                    viewWorkDVisible: viewWorkDVisible,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "AT005",

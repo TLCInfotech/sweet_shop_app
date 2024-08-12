@@ -1,0 +1,116 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/presentation/dialog/category_dialog.dart';
+
+import '../../core/colors.dart';
+import '../../core/common.dart';
+import '../../core/common_style.dart';
+import '../../core/imagePicker/image_picker_dialog.dart';
+import '../../core/imagePicker/image_picker_dialog_for_profile.dart';
+import '../../core/imagePicker/image_picker_handler.dart';
+import '../../core/string_en.dart';
+import '../dialog/franchisee_dialog.dart';
+
+
+
+
+
+class NewDateLayout extends StatefulWidget{
+  final title;
+  final comeFor;
+  final applicablefrom;
+  final parentWidth;
+  final Function(DateTime?) callback;
+  final titleIndicator;
+
+  NewDateLayout({required this.title, required this.callback, required this.applicablefrom,   this.titleIndicator,  this.parentWidth, this.comeFor});
+
+  @override
+  State<NewDateLayout> createState() => _NewDateLayoutState();
+}
+
+class _NewDateLayoutState extends State<NewDateLayout> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.titleIndicator!=false? Text(
+            widget.title,
+            style: item_heading_textStyle,
+          ):Container(),
+          Padding(
+            padding: EdgeInsets.only(top: (SizeConfig.screenHeight) * .005),
+            child: GestureDetector(
+              onTap: ()async{
+                FocusScope.of(context).requestFocus(FocusNode());
+                if(widget.comeFor!="newOne"){
+                  if (Platform.isIOS) {
+                    var date= await CommonWidget.startDatee(context,widget.applicablefrom,4);
+                    widget.callback(date);
+                    // startDateIOS(context);
+                  } else if (Platform.isAndroid) {
+                    var date= await CommonWidget.startDatee(context,widget.applicablefrom,4) ;
+                    widget.callback(date);
+                  }
+                }else{
+                  print("Voucher Number blank???????");
+                }
+              },
+              child: Container(
+                width:  widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
+                height: (SizeConfig.screenHeight) * .055,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: CommonColor.WHITE_COLOR,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                child:  Container(
+                    height: 50,
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 5,
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          CommonWidget.getDateLayout(widget.applicablefrom),
+                          //DateFormat('dd-MM-yyyy').format(applicablefrom),
+                          style: item_regular_textStyle,),
+                        FaIcon(FontAwesomeIcons.calendar,
+                          color: Colors.black87, size: 16,)
+                      ],
+                    )
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/localss/application_localizations.dart';
-import '../../../../core/string_en.dart';
 import '../../../common_widget/getFranchisee.dart';
 
 

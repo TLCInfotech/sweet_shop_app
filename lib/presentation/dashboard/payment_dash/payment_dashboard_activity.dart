@@ -18,14 +18,15 @@ import '../../../data/api/request_helper.dart';
 import '../../common_widget/get_date_layout.dart';
 
 class PaymentDashActivity extends StatefulWidget {
-  const PaymentDashActivity({Key? key}) : super(key: key);
+  final viewWorkDDate;
+  const PaymentDashActivity({Key? key, this.viewWorkDDate}) : super(key: key);
 
   @override
   State<PaymentDashActivity> createState() => _PaymentDashState();
 }
 
 class _PaymentDashState extends State<PaymentDashActivity> {
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
@@ -319,9 +320,18 @@ class _PaymentDashState extends State<PaymentDashActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
+        setState(() {
+          if (saleDate.isAfter(widget.viewWorkDDate)) {
+            viewWorkDVisible=true;
+          } else {
+            viewWorkDVisible=false;
+          }
+        });
         await Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
           dateNew: saleDate,
           formId: "AT002",
+          viewWorkDDate: widget.viewWorkDDate,
+          viewWorkDVisible:viewWorkDVisible ,
           logoImage: logoImage,
           arrData: dataArr,
         )));
@@ -435,6 +445,13 @@ class _PaymentDashState extends State<PaymentDashActivity> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleDate=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
           });

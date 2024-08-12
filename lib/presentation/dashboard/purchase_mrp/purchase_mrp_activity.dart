@@ -37,8 +37,9 @@ final  formId;
 final  arrData;
 final String logoImage;
 final franchiseeName;
+final viewWorkDDate;
 final apiUrl;
-  const PurchaseMrpActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage, this.apiUrl});
+  const PurchaseMrpActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage, this.apiUrl, this.viewWorkDDate});
 
   @override
   State<PurchaseMrpActivity> createState() => _PurchaseMrpActivityState();
@@ -46,7 +47,7 @@ final apiUrl;
 
 class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePurchaseMrpActivityInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> saleInvoice_list=[];
@@ -126,7 +127,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
   bool partyBlank=true;
   //FUNC: REFRESH LIST
   Future<void> refreshList() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       page=1;
     });
@@ -142,7 +143,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
           alignment: Alignment.center,
           children: [
             Scaffold(
-              backgroundColor: Color(0xFFfffff5),
+              backgroundColor: const Color(0xFFfffff5),
               appBar: PreferredSize(
                 preferredSize: AppBar().preferredSize,
                 child: SafeArea(
@@ -153,7 +154,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                     ),
                     color: Colors.transparent,
                     // color: Colors.red,
-                    margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                    margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
                    child: AppBar(
                       leadingWidth: 0,
                       automaticallyImplyLeading: false,
@@ -166,7 +167,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                                 onTap: () {
                                   Navigator.pop(context);
                                 },
-                                child: FaIcon(Icons.arrow_back),
+                                child: const FaIcon(Icons.arrow_back),
                               ),
                               widget.logoImage!=""? Container(
                                 height:SizeConfig.screenHeight*.05,
@@ -290,19 +291,19 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
 
   Widget getTotalCountAndAmount() {
     return Container(
-      margin: EdgeInsets.only(left: 8,right: 8,bottom: 8),
+      margin: const EdgeInsets.only(left: 8,right: 8,bottom: 8),
       child: Container(
           height: 40,
           // width: SizeConfig.halfscreenWidth,
           width: SizeConfig.screenWidth*0.9,
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
               color: Colors.green,
               // border: Border.all(color: Colors.grey.withOpacity(0.5))
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 1),
+                  offset: const Offset(0, 1),
                   blurRadius: 5,
                   color: Colors.black.withOpacity(0.1),
                 ),]
@@ -352,6 +353,13 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleInvoice_list.clear();
           });
           setState(() {
@@ -400,7 +408,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
           },
           child: ListView.separated(
             controller: _scrollController,
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: saleInvoice_list.length,
             itemBuilder: (BuildContext context, int index) {
               return  AnimationConfiguration.staggeredList(
@@ -410,7 +418,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                 child: SlideAnimation(
                   verticalOffset: -44.0,
                   child: FadeInAnimation(
-                    delay: Duration(microseconds: 1500),
+                    delay: const Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: () async{
                       if(widget.comeFor=="Return"){
@@ -452,7 +460,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                           color: (index)%2==0?Colors.green:Colors.blueAccent,
                                           borderRadius: BorderRadius.circular(5)
@@ -476,21 +484,21 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text("${saleInvoice_list[index]['Name']}",style: item_heading_textStyle,),
-                                                SizedBox(height: 5,),
+                                                const SizedBox(height: 5,),
                                                 Row(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     FaIcon(FontAwesomeIcons.fileInvoice,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                    SizedBox(width: 10,),
+                                                    const SizedBox(width: 10,),
                                                     Expanded(child: Text("Invoice No. - ${saleInvoice_list[index]['Fin_Invoice_No']}",overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                                   ],
                                                 ),
-                                                SizedBox(height: 5,),
+                                                const SizedBox(height: 5,),
                                                 Row(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                    children: [
                                                     FaIcon(FontAwesomeIcons.moneyBill1Wave,size: 15,color: Colors.black.withOpacity(0.7),),
-                                                    SizedBox(width: 10,),
+                                                    const SizedBox(width: 10,),
                                                     Expanded(child: Text(CommonWidget.getCurrencyFormat(saleInvoice_list[index]['Total_Amount']),overflow: TextOverflow.clip,style: item_regular_textStyle,)),
                                                   ],
                                                 ),],
@@ -573,7 +581,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
               );
             },
             separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
+              return const SizedBox(
                 height: 5,
               );
             },
@@ -597,13 +605,10 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
             page: page.toString()
         );
         String apiUrl;
-
-          apiUrl = "${baseurl}${widget.apiUrl}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
-
-        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
+        apiUrl = "${baseurl}${widget.apiUrl}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+          apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
-
-              setState(() {
+            setState(() {
                 isLoaderShow=false;
                 partyBlank=true;
                 if(data!=null){

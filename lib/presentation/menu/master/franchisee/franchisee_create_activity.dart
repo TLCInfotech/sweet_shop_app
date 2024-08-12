@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,25 +9,19 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/data/domain/franchisee/post_franchisee_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
-
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../data/api/constant.dart';
 import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
-import '../../../common_widget/get_country_layout.dart';
-import '../../../common_widget/get_district_layout.dart';
 import '../../../common_widget/get_image_from_gallary_or_camera.dart';
-import '../../../common_widget/get_state_value.dart';
 import '../../../common_widget/signleLine_TexformField.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
 import '../../../dialog/amount_type_dialog.dart';
-import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart';
 
 

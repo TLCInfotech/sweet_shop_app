@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,13 +19,14 @@ import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../../data/domain/user/delete_user_request_model.dart';
 import '../../../common_widget/deleteDialog.dart';
-import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class UsersList extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const UsersList({super.key, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const UsersList({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<UsersList> createState() => _UsersListState();
@@ -90,7 +90,6 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
             selectedUSer = name!;
             selectedUserId = id!;
           });
-          print(selectedUSer);
           var item={
             "UID":name,
           };
@@ -101,15 +100,14 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
                       editUser: item,
                       logoImage: widget.logoImage,
                       mListener: this,
-                      readOnly:
-                      singleRecord['Update_Right'],
+                      readOnly: singleRecord['Update_Right'],
                       compId: companyId,
                       come:"edit"
                   )));
           setState(() {
             page=1;
           });
-          await       callGetUser(page);
+          await callGetUser(page);
         },
         ledgerName: selectedUSer);
     /*return isLoaderShow?Container():

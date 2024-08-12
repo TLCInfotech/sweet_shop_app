@@ -11,25 +11,18 @@ import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
-
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
-
-import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
 import '../../../../core/common_style.dart';
 import '../../../../core/downloadservice.dart';
-import '../../../../core/internet_check.dart';
 import '../../../../core/localss/application_localizations.dart';
 import '../../../../core/size_config.dart';
-import '../../../../data/api/request_helper.dart';
 import '../../../../data/domain/commonRequest/get_toakn_request.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/singleLine_TextformField_without_double.dart';
@@ -44,8 +37,10 @@ class SaleDetailReportActivity extends StatefulWidget {
   final itemName;
   final fromDate;
   final toDate;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final come;
-  const SaleDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  const SaleDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<SaleDetailReportActivity> createState() => _SaleDetailReportActivityState();
@@ -63,7 +58,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   List<dynamic> reportDetailList = [];
   ScrollController _scrollController = new ScrollController();
 
@@ -320,12 +315,20 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "ST003");
                         print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateSellInvoice(   logoImage: widget.logoImage,
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               readOnly:singleRecord['Update_Right'] ,
                               editedItem:reportDetailList[index],
                               come:"edit",

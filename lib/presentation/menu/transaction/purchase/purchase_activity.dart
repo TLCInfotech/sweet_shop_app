@@ -35,8 +35,10 @@ class PurchaseActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final  dateNew;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, this.dateNew, required this.logoImage});
+  const PurchaseActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, this.dateNew, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<PurchaseActivity> createState() => _PurchaseActivityState();
@@ -48,7 +50,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
 
   bool isLoaderShow=false;
   bool partyBlank=true;
-
+  bool viewWorkDVisible=true;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   List<dynamic> saleInvoice_list=[];
@@ -61,6 +63,9 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.dateNew!=null){
       setState(() {
@@ -225,6 +230,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ? Positioned(
           left: position.dx,
           top: position.dy,
@@ -247,7 +253,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                   await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                       CreatePurchaseInvoice(   logoImage: widget.logoImage,
                         dateNew:invoiceDate,
-                        Invoice_No: null,
+                        Invoice_No: null, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                         mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
                       )));
                   selectedFranchiseeId="";
@@ -366,6 +373,13 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             invoiceDate=date!;
           });
         },
@@ -397,7 +411,8 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                       onTap: ()async{
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePurchaseInvoice(   logoImage: widget.logoImage,
-                              dateNew:invoiceDate,
+                              dateNew:invoiceDate, viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               readOnly: singleRecord['Update_Right'],
                               Invoice_No: saleInvoice_list[index]['Invoice_No'],
                               mListener:this,// DateFormat('dd-MM-yyyy').format(newDate),
@@ -520,6 +535,7 @@ class _PurchaseActivityState extends State<PurchaseActivity>with CreatePurchaseI
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                 Positioned(
                   bottom: 5,
                   right: 5,

@@ -26,7 +26,8 @@ class MobileDownloadService implements DownloadService {
   Future<void> download({required String url}) async {
     print("Here");
     // Requests permission for downloading the file
-    bool hasPermission = await _requestWritePermission();
+    bool hasPermission = await _requestStoragePermission();
+    print("gkngnbgn  $hasPermission");
     if (!hasPermission) return;
 
     // Gets the directory where we will download the file.
@@ -114,10 +115,27 @@ class MobileDownloadService implements DownloadService {
     }
   }*/
 
-  // requests storage permission
+ /* // requests storage permission
   Future<bool> _requestWritePermission() async {
     await Permission.storage.request();
     return await Permission.storage.request().isGranted;
+  }*/
+
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid && Platform.operatingSystemVersion.contains("14")) {
+      return await Permission.manageExternalStorage.request().isGranted;
+    }
+    return true;
+  }
+
+  Future<bool> _requestWritePermissions() async {
+    // Check if the permission is already granted
+    if (await Permission.storage.isGranted) {
+      return true;
+    }
+    // Request permission if not granted
+    var status = await Permission.storage.request();
+    return status.isGranted;
   }
 
   void _showAlertDialog(String title, String content) {

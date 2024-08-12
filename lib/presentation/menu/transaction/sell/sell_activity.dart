@@ -34,17 +34,20 @@ final DateTime? dateNew;
 final franhiseeID;
 final  formId;
 final  arrData;
+final  viewWorkDDate;
+final  viewWorkDVisible;
 final String logoImage;
 final franchiseeName;
-  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
+  const SellActivity({super.key, required mListener,  this.comeFor,   this.dateNew, this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<SellActivity> createState() => _SellActivityState();
 }
 
 class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterface {
-  DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
+//
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> saleInvoice_list=[];
@@ -67,16 +70,21 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
       position = Offset(clampedX, clampedY);
     });
   }
-
+   DateTime firstSelectableDate=DateTime.now();
+  final DateTime today = DateTime.now();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.dateNew!=null){
       setState(() {
         invoiceDate=widget.dateNew!;
       });
+
     }
 
     if(widget.franhiseeID!=null){
@@ -230,6 +238,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ? Positioned(
           left: position.dx,
           top: position.dy,
@@ -249,10 +258,19 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                   color: Colors.black87,
                 ),
                 onPressed: () async{
+                  setState(() {
+                    if (invoiceDate.isAfter(widget.viewWorkDDate)) {
+                      viewWorkDVisible=true;
+                    } else {
+                      viewWorkDVisible=false;
+                    }
+                  });
                   await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                       CreateSellInvoice(
                         logoImage: widget.logoImage,
                         dateNew:   invoiceDate,
+                        viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                         Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
                       )));
@@ -350,11 +368,28 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleInvoice_list.clear();
           });
           setState(() {
             invoiceDate=date!;
           });
+          /* firstSelectableDate = today.subtract(Duration(days: 2));
+          print("jgbjvbgvv   ${firstSelectableDate}");
+          String title;
+          if (invoiceDate.isAfter(firstSelectableDate)) {
+            title = "newDateTitle";
+            print("newDateTitle  $invoiceDate ");
+          } else {
+            title = "previousDateTitle";
+            print("previousDateTitle  $invoiceDate ");
+          }*/
           gerSaleInvoice(1);
         },
         applicablefrom: invoiceDate
@@ -411,7 +446,13 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                     delay: Duration(microseconds: 1500),
                     child: GestureDetector(
                       onTap: () async{
-
+                        setState(() {
+                          if (invoiceDate.isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                        await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreateSellInvoice(
                               logoImage: widget.logoImage,
@@ -420,6 +461,8 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                               mListener:this,
                               readOnly:singleRecord['Update_Right'] ,
                               editedItem:saleInvoice_list[index],
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               come:"edit",
                             )));
                        selectedFranchiseeId="";
@@ -536,6 +579,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                           Positioned(
                               bottom: 5,
                               right: 5,

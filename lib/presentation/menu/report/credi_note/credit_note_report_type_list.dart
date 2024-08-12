@@ -39,6 +39,8 @@ class CreditNoteReportTypeList extends StatefulWidget {
   final applicablefrom;
   final applicableTwofrom;
   final url;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
   const CreditNoteReportTypeList(
       {super.key,
@@ -51,7 +53,7 @@ class CreditNoteReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener, required this.logoImage});
+      this.mListener, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<CreditNoteReportTypeList> createState() => _CreditNoteReportTypeListState();
@@ -62,7 +64,7 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+bool viewWorkDVisible=true;
   bool isLoaderShow = false;
   bool partyBlank = false;
 
@@ -352,6 +354,8 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                                         apiurl: ApiConstants().voucherPartywise,
                                         venderId: array_list[index]
                                             ['Vendor_ID'],
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Vendor_Name'],
@@ -368,13 +372,21 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                                         apiurl: ApiConstants().voucherItemwise,
                                         itemId: array_list[index]['Item_ID'],
                                         itemName: array_list[index]
-                                            ['Item_Name'],
+                                            ['Item_Name'], viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         logoImage: widget.logoImage,
                                         fromDate: applicablefrom,
                                         come: "itemName",
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
+                          setState(() {
+          if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+          viewWorkDVisible=true;
+          } else {
+          viewWorkDVisible=false;
+          }
+          });
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -383,6 +395,8 @@ class _CreditNoteReportTypeListState extends State<CreditNoteReportTypeList> {
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "AT006",
+                                    viewWorkDVisible: viewWorkDVisible,
+                                    viewWorkDDate: widget.viewWorkDDate,
                                     logoImage: widget.logoImage,
                                         arrData: dataArr,
                                       )));

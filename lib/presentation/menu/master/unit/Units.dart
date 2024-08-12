@@ -27,8 +27,10 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 
 class UnitsActivity extends StatefulWidget {
   final  formId;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final  arrData;final String logoImage;
-  const UnitsActivity({super.key, this.formId, this.arrData, required this.logoImage});
+  const UnitsActivity({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<UnitsActivity> createState() => _UnitsActivityState();

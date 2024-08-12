@@ -77,6 +77,20 @@ class AppPreferences {
     prefs.setString("deviceId", deviceId);
   }
 
+
+  /*set deviceId value in SharedPreferences*/
+  static Future<String> getLang() async {
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    return prefs.getString("en") ?? "en";
+  }
+
+  /*get deviceId value form SharedPreferences*/
+  static setLang(String en) async {
+    SharedPreferences   prefs = await SharedPreferences.getInstance();
+    print("en   $en");
+    prefs.setString("en", en);
+  }
+
   /*set deviceId value in SharedPreferences*/
   static Future<String> getUId() async {
     SharedPreferences  prefs = await SharedPreferences.getInstance();
@@ -162,26 +176,28 @@ class AppPreferences {
     prefs.setString("companyUrl", companyUrl);
   }
 
-/*get companyName value form SharedPreferences*//*
 
-     static setCompanyUrl(File file) async {
+  static Future<void> setWorkingDays(int workd) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('file_path', file.path);
+    print("workd: $workd");
+    await prefs.setInt("workd", workd);
   }
 
- static getCompanyUrl() async {
+  /* Get deviceId value from SharedPreferences */
+  static Future<int> getWorkingDays() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return   prefs.getString('file_path');
-
-  }*/
-
+    return prefs.getInt("workd") ?? -1;  // Return 0 if the value is not found
+  }
   static clearAppPreference() async {
     prefs = await getInstance();
     prefs!.remove("sessionToken");
+    prefs!.remove("workd");
   }
 
   static dateClear()async{
     prefs = await getInstance();
     prefs!.remove("date");
+    prefs!.remove("workd");
   }
+
 }

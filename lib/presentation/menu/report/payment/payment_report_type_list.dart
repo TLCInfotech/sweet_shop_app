@@ -37,6 +37,8 @@ class PaymentReportTypeList extends StatefulWidget {
   final ledgerId;
   final applicablefrom;
   final applicableTwofrom;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final url;
   final String logoImage;
   const PaymentReportTypeList(
@@ -50,7 +52,7 @@ class PaymentReportTypeList extends StatefulWidget {
       this.applicablefrom,
       this.applicableTwofrom,
       this.url,
-      this.mListener, required this.logoImage});
+      this.mListener, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<PaymentReportTypeList> createState() => _PaymentReportTypeListState();
@@ -64,7 +66,7 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
 
   bool isLoaderShow = false;
   bool partyBlank = false;
-
+  bool viewWorkDVisible=true;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
 
   List<dynamic> array_list = [];
@@ -351,6 +353,8 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                         apiurl: ApiConstants().getAcctVoucherPartywise,
                                         venderId: array_list[index]
                                             ['Ledger_ID'],
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         logoImage: widget.logoImage,
                                         venderName: array_list[index]
                                             ['Ledger_Name'],
@@ -369,16 +373,27 @@ class _PaymentReportTypeListState extends State<PaymentReportTypeList> {
                                         ledgerId: array_list[index]['Ledger_ID'],
                                         ledgerName: array_list[index]['Ledger_Name'],
                                         fromDate: applicablefrom,
+                                        viewWorkDDate: widget.viewWorkDDate,
+                                        viewWorkDVisible: viewWorkDVisible,
                                         come: "ledgerName",
                                         toDate: applicableTwofrom,
                                       )));
                         } else {
+                          setState(() {
+                            if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                              viewWorkDVisible=true;
+                            } else {
+                              viewWorkDVisible=false;
+                            }
+                          });
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => PaymentActivity(
                                         mListener: this,
                                     logoImage: widget.logoImage,
+                                    viewWorkDDate: widget.viewWorkDDate,
+                                    viewWorkDVisible: viewWorkDVisible,
                                         dateNew: DateTime.parse(
                                             array_list[index]['Date']),
                                         formId: "AT001",

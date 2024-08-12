@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +8,6 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/presentation/common_widget/getFranchisee.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -169,10 +167,14 @@ class _UserCreateState extends State<UserCreate>
       setState(() {
         userController.text = userData[0]["UID"];
         oldUid = userData[0]["UID"];
-        print("jhjfhjf  ${userData[0]["Active"]}  $oldUid");
-        workingdaysController.text = userData[0]["Working_Days"] != "null"||userData[0]["Working_Days"] != null
+        if(userData[0]["Working_Days"]!="null"){
+          workingdaysController.text =  userData[0]["Working_Days"].toString();
+        }else{
+          workingdaysController.text ="";
+        /*workingdaysController.text = userData[0]["Working_Days"] != "null"||userData[0]["Working_Days"] != null
             ? userData[0]["Working_Days"].toString()
-            : workingdaysController.text;
+            : "";*/
+        }
         franchiseeId = userData[0]["Ledger_ID"].toString();
         franchiseeName = userData[0]["Ledger_Name"];
         checkActiveValue = userData[0]["Active"];

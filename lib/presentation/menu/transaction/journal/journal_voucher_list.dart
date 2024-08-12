@@ -34,7 +34,9 @@ class JournalVoucherActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const JournalVoucherActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const JournalVoucherActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<JournalVoucherActivity> createState() => _PaymentActivityState();
 }
@@ -42,7 +44,7 @@ class JournalVoucherActivity extends StatefulWidget {
 class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJournalInterface {
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -54,6 +56,9 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     getJournals(page);
     setData();
@@ -206,6 +211,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true? Positioned(
           left: position.dx,
           top: position.dy,
@@ -227,7 +233,8 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                 onPressed: ()async {
                   await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateJournals(
                     mListener: this,
-                    dateNew:newDate,  // CommonWidget.getDateLayout(newDate),
+                    dateNew:newDate,   viewWorkDDate: widget.viewWorkDDate,
+                    viewWorkDVisible: viewWorkDVisible,// CommonWidget.getDateLayout(newDate),
                     voucherNo: null,   logoImage: widget.logoImage,
                     companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
                   )));
@@ -266,6 +273,13 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             newDate=date!;
             payment_list=[];
           });
@@ -376,7 +390,8 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                           dateNew: newDate,  //CommonWidget.getDateLayout(newDate),
                           voucherNo: payment_list[index]['Voucher_No'],
                           debitNote:payment_list[index] ,
-                          companyId: companyId,
+                          companyId: companyId, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                           readOnly: singleRecord['Update_Right'],
                           come: "edit",//DateFormat('dd-MM-yyyy').format(newDate),
                         )));
@@ -494,6 +509,7 @@ class _PaymentActivityState extends State<JournalVoucherActivity>with CreateJour
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                 Positioned(
                   bottom: 5,
                   right: 5,

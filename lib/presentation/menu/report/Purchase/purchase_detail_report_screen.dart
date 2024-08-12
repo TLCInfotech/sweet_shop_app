@@ -44,7 +44,9 @@ class PurchaseDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
-  const PurchaseDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const PurchaseDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<PurchaseDetailReportActivity> createState() => _PurchaseDetailReportActivityState();
@@ -56,7 +58,7 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
   bool isPagination = true;
-
+  bool viewWorkDVisible=true;
   TextEditingController franchiseeName = TextEditingController();
   DateTime applicablefrom =
   DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
@@ -319,13 +321,21 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "ST003");
                         print("singleRecorddddd11111   $singleRecord   ${singleRecord['Update_Right']}");
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
                             CreatePurchaseInvoice(
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,
                               logoImage: widget.logoImage,
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               readOnly:singleRecord['Update_Right'] ,
                               editedItem:reportDetailList[index],
                               come:"edit",

@@ -38,8 +38,10 @@ class CreateItemOpeningBal extends StatefulWidget {
   final come;
   final franchiseeDetails;
   final readOnly;
+  final viewWorkDDate;
+  final viewWorkDVisible;
   final String logoImage;
-  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails, this.readOnly, required this.logoImage});
+  const CreateItemOpeningBal({super.key, required this.dateNew, this.editedItem, required this.mListener, this.compId, this.come,   this.franchiseeDetails, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<CreateItemOpeningBal> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -60,7 +62,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
 
   String selectedFranchiseeName="";
   var selectedFranchiseeID=null;
-
+bool viewWorkDVisible=true;
   String TotalAmount="0.00";
 
   List<dynamic> Item_list=[];
@@ -103,6 +105,9 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
     // TODO: implement initState
     super.initState();
     invoiceDate=widget.dateNew;
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     if(widget.editedItem!=null) {
       setData();
     }
@@ -366,6 +371,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -564,12 +570,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                   setState(() {
                     editedItemIndex=itemindex;
                   });
+                  if(viewWorkDVisible==false){}else{
         if(widget.readOnly==false){
       }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
                     goToAddOrEditItem(filterItemList[index]);
-                  }}
+                  }}}
                 },
                 child: Card(
                   child: Row(
@@ -635,6 +642,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -818,6 +826,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
         callback: (date){
           if(date!=null) {
             setState(() {
+              if (date.isAfter(widget.viewWorkDDate)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle  ");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle   ");
+              }
               invoiceDate = date!;
               Item_list=[];
               Updated_list=[];
@@ -888,6 +903,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBal> w
               ],
             ),
           ),
+          viewWorkDVisible==false?Container():
           widget.readOnly==false||showButton==false?Container():  GestureDetector(
             onTap: ()async {
               if(selectedFranchiseeID==null){

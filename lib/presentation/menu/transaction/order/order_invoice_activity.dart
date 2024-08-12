@@ -32,8 +32,10 @@ class OrderInvoiceActivity extends StatefulWidget {
   final String? comeFor;
   final  formId;
   final  arrData;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const OrderInvoiceActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, required this.logoImage});
+  const OrderInvoiceActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<OrderInvoiceActivity> createState() => _OrderInvoiceActivityState();
@@ -41,7 +43,7 @@ class OrderInvoiceActivity extends StatefulWidget {
 
 class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateOrderInvoiceInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> saleInvoice_list=[];
@@ -69,6 +71,9 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     getSaleOrder(page);
     setVal();
@@ -212,6 +217,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ? Positioned(
           left: position.dx,
           top: position.dy,
@@ -234,7 +240,9 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                   await Navigator.push(context, MaterialPageRoute(builder: (context) =>
                       CreateOrderInvoice(
                         logoImage: widget.logoImage,
-                        dateNew:   invoiceDate,
+                        readOnly:  singleRecord['Insert_Right'],
+                        dateNew:   invoiceDate, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                         order_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,
                       )));
@@ -355,6 +363,13 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleInvoice_list.clear();
           });
           setState(() {
@@ -392,7 +407,8 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                         MaterialPageRoute(
                           builder: (context) => CreateOrderInvoice(
                             logoImage: widget.logoImage,
-                            dateNew: invoiceDate,
+                            dateNew: invoiceDate, viewWorkDDate: widget.viewWorkDDate,
+                            viewWorkDVisible: viewWorkDVisible,
                             order_No: saleInvoice_list[index]['Order_No'],
                             mListener: this,
                             readOnly: singleRecord['Update_Right'],
@@ -559,6 +575,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
                           },
                           ),*/
                         ),
+                        viewWorkDVisible==false?Container():
                         Positioned(
                           bottom: 5,
                           right: 10,

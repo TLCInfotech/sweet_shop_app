@@ -34,7 +34,9 @@ class ContraActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const ContraActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ContraActivity({super.key, required mListener, this.comeFor, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<ContraActivity> createState() => _ContraActivityState();
 }
@@ -42,7 +44,7 @@ class ContraActivity extends StatefulWidget {
 class _ContraActivityState extends State<ContraActivity>with CreateContraInterface {
 
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -54,6 +56,9 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     getContra(page);
     setData();
@@ -200,6 +205,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true?Positioned(
           left: position.dx,
           top: position.dy,
@@ -223,6 +229,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                     mListener: this,
                     newDate: newDate,   logoImage: widget.logoImage,
                     readOnly: true,
+                    viewWorkDDate: widget.viewWorkDDate,
+                    viewWorkDVisible: viewWorkDVisible,
                     voucherNo: null,
                     dateNew:newDate,
                     companyId: companyId,//DateFormat('dd-MM-yyyy').format(newDate),
@@ -264,6 +272,13 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             newDate=date!;
             contraList=[];
           });
@@ -372,6 +387,8 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                           voucherNo: contraList[index]["Voucher_No"],
                           dateNew:newDate,
                           companyId: companyId,
+                         viewWorkDDate: widget.viewWorkDDate,
+                         viewWorkDVisible: viewWorkDVisible,
                           come: "edit",
                           readOnly: singleRecord['Update_Right'],
                           debitNote:contraList[index] ,// DateFormat('dd-MM-yyyy').format(newDate),
@@ -490,7 +507,7 @@ class _ContraActivityState extends State<ContraActivity>with CreateContraInterfa
                                 ],
                               )
                           ),
-                Positioned(
+                          viewWorkDVisible==false?Container(): Positioned(
                   bottom: 5,
                   right: 5,
                    child: singleRecord['Delete_Right']==true?

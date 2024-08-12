@@ -44,8 +44,10 @@ class CreditNoteDetailReportActivity extends StatefulWidget {
   final fromDate;
   final toDate;
   final come;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const CreditNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage});
+  const CreditNoteDetailReportActivity({super.key, this.apiurl, this.venderId, this.venderName, this.itemId, this.itemName, this.fromDate, this.toDate, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<CreditNoteDetailReportActivity> createState() => _CreditNoteDetailReportActivityState();
@@ -56,6 +58,7 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
   bool isApiCall = false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   int page = 1;
+  bool viewWorkDVisible=true;
   bool isPagination = true;
 
   TextEditingController franchiseeName = TextEditingController();
@@ -319,9 +322,16 @@ class _CreditNoteDetailReportActivityState extends State<CreditNoteDetailReportA
                         List<dynamic> jsonArray = jsonDecode(dataArr);
                         var singleRecord = jsonArray.firstWhere((record) => record['Form_ID'] == "AT006");
 
-
+                        setState(() {
+                          if (DateTime.parse(reportDetailList[index]['Date']).isAfter(widget.viewWorkDDate)) {
+                            viewWorkDVisible=true;
+                          } else {
+                            viewWorkDVisible=false;
+                          }
+                        });
                         await   Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                            CreateCreditNote(
+                            CreateCreditNote( viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               logoImage: widget.logoImage,
                               dateNew: DateTime.parse(reportDetailList[index]['Date']),
                               Invoice_No: reportDetailList[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),

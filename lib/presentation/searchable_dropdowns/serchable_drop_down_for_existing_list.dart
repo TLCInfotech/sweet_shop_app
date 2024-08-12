@@ -53,8 +53,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
   void initState() {
     // TODO: implement initState
     super.initState();
-    callGetLedger();
-    _speech = stt.SpeechToText();
+    setData();
     print("gggggg ${widget.status}");
     if(widget.status=="edit"){
       print(":::::: ${widget.name}");
@@ -68,6 +67,18 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
     }
     searchFocus.addListener(_onFocusChange);
   }
+
+  List ext=[];
+  Future<void> setData() async {
+    setState(() {
+      ext=widget.insertedList;
+
+    });
+
+   await callGetLedger();
+    _speech = stt.SpeechToText();
+  }
+
   FocusNode searchFocus = FocusNode() ;
   void _onFocusChange() {
     if (!searchFocus.hasFocus) {
@@ -168,7 +179,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
 
               print(" FFFFFFFFFFFFFF ${data.length}");
               if(widget.insertedList!=null||widget.insertedList!=[]){
-                List ext=widget.insertedList;
+
                 List l =(data).map((e) =>e['Name'] ).toList();
 
                 for(var el in l)
@@ -258,6 +269,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                 textFieldConfiguration: TextFieldConfiguration(
                   onTap: (){
                     setState(() {
+                      print("hjdfhjdgjdg   ${widget.insertedList}");
                       callGetLedger();
                     });
                   },
@@ -301,7 +313,14 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
                             : IconButton(
                           onPressed: () {
                             setState(() {
+                              print("Removeeeee    $ext");
+                              widget.insertedList.remove(widget.name);
+                              setState(() {
+                                ext=widget.insertedList;
+                                print("fjjfdndgn  $ext");
+                              });
                               _controller.clear();
+                              callGetLedger();
                             });
                             widget.callback("");
                             searchFocus.requestFocus();

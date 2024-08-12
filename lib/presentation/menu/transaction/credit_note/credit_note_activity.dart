@@ -37,7 +37,9 @@ class CreditNoteActivity extends StatefulWidget {
   final  arrData;
   final franchiseeName;
   final String logoImage;
-  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreditNoteActivity({super.key, required mListener,  this.comeFor, this.dateNew,  this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<CreditNoteActivity> createState() => _CreditNoteState();
@@ -45,7 +47,7 @@ class CreditNoteActivity extends StatefulWidget {
 
 class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> debitNote_list=[];
@@ -58,6 +60,9 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.dateNew!=null){
       setState(() {
@@ -235,6 +240,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true? Positioned(
           left: position.dx,
           top: position.dy,
@@ -259,7 +265,8 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                         dateNew:   invoiceDate,
                         Invoice_No: null,   logoImage: widget.logoImage,
                         companyId:companyId,//DateFormat('dd-MM-yyyy').format(newDate),
-                        mListener:this,
+                        mListener:this, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                       )));
                   selectedFranchiseeId="";
                   partyBlank=false;
@@ -355,6 +362,13 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
         callback: (date){
           setState(() {
             debitNote_list.clear();
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
           });
           setState(() {
             invoiceDate=date!;
@@ -419,7 +433,8 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                               Invoice_No: debitNote_list[index]['Invoice_No'],
                                 debitNote:debitNote_list[index],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,   logoImage: widget.logoImage,
-                                companyId:companyId,
+                                companyId:companyId, viewWorkDDate: widget.viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                               readOnly:  singleRecord['Update_Right'],
                               come:"edit"
                             )));
@@ -537,6 +552,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                 Positioned(
                   bottom: 5,
                   right: 5,

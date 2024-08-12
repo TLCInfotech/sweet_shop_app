@@ -13,14 +13,7 @@ import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
-import 'package:open_file_plus/open_file_plus.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:sweet_shop_app/data/api/request_helper.dart';
-import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';import 'package:sweet_shop_app/presentation/menu/report/payment/payment_report_type_list.dart';
-import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
-
+import 'package:sweet_shop_app/presentation/menu/report/payment/payment_report_type_list.dart';
 import '../../../../data/api/constant.dart';
 import '../../../common_widget/get_date_layout.dart';
 import '../../../common_widget/get_report_type_layout.dart';
@@ -29,7 +22,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class PaymentReportActivity extends StatefulWidget {
   final String logoImage;
-  const PaymentReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const PaymentReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   // final PaymentReportActivityInterface mListener;
   @override
   State<PaymentReportActivity> createState() => _PaymentReportActivityState();
@@ -38,7 +33,7 @@ class PaymentReportActivity extends StatefulWidget {
 class _PaymentReportActivityState extends State<PaymentReportActivity> {
   final _formkey = GlobalKey<FormState>();
   final _reportTypeKey = GlobalKey<FormFieldState>();
-
+  bool viewWorkDVisible=true;
   String ledgerName="";
   String ledgerID = "";
 
@@ -354,6 +349,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
               if (mounted) {
                 bool v = _reportTypeKey.currentState!.validate();
                 if (v) {
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -361,6 +357,8 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
                             reportName: reportType,
                             logoImage: widget.logoImage,
                             reportId: reportId,
+                            viewWorkDDate: widget.viewWorkDDate,
+                            viewWorkDVisible: viewWorkDVisible,
                             mListener: this,
                             url: ApiConstants().reports,
                             vandorId: ledgerID,

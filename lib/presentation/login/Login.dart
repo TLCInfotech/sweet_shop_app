@@ -31,6 +31,12 @@ class _LoginActivityState extends State<LoginActivity> {
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isLoaderShow=false;
 //  File? picImage;
+  bool _obscureText = true;
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   @override
   void initState() {
@@ -154,10 +160,41 @@ class _LoginActivityState extends State<LoginActivity> {
   Widget getPasswordLayout(double parentHeight,double parentWidth){
   return  TextFormField(
     controller: password,
-    obscureText: true,
-    decoration: textfield_decoration.copyWith(
+    obscureText: _obscureText,
+
+    decoration:InputDecoration(
       hintText: 'Password',
-     ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      labelStyle: textfield_label_style,
+      fillColor:  Colors.white,
+      filled: true,
+      hintStyle: hint_textfield_Style,
+      floatingLabelStyle: const TextStyle(fontFamily: 'Inter_Medium_Font',fontSize: 20,color: Colors.indigo,fontWeight: FontWeight.w700),
+      suffixIcon: IconButton(
+        icon: Icon(
+          _obscureText ? Icons.visibility_off: Icons.visibility,
+        ),
+        onPressed: _togglePasswordVisibility,
+      ),
+      enabledBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent,width: 0.5),
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderSide:
+        BorderSide(color: Colors.transparent,width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      focusedErrorBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      errorBorder:  const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+
+    ),
     validator: (value){
       if(value!.isEmpty){
         return  StringEn.ENTER+"password";
@@ -239,7 +276,7 @@ class _LoginActivityState extends State<LoginActivity> {
             onSuccess:(token,uid){
               setState(() {
                 isLoaderShow=false;
-                callGetFranchiseeNot(0);
+              //  callGetFranchiseeNot(0);
               });
               AppPreferences.setSessionToken(token);
               AppPreferences.setCompanyId("74");
@@ -288,7 +325,7 @@ class _LoginActivityState extends State<LoginActivity> {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&PushKey=$pushKey";
+        String apiUrl = "${baseurl}${ApiConstants().sendFNotification}?Company_ID=$companyId&PushKey=$pushKey";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               setState(() {

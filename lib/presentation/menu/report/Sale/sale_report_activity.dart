@@ -17,7 +17,9 @@ import '../../../searchable_dropdowns/searchable_dropdown_with_object.dart';
 
 class SaleReportActivity extends StatefulWidget {
   final String logoImage;
-  const SaleReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const SaleReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<SaleReportActivity> createState() => _SaleReportActivityState();
 }
@@ -30,7 +32,7 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =
       DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTo =
@@ -314,6 +316,8 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
                               mListener: this,
                               url: ApiConstants().reports,
                               vandorId: selectedFranchiseeId,
+                              viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: widget.viewWorkDVisible,
                               vendorName: selectedFranchiseeName,
                               itemId: ItemID,
                               itemName: ItemName,

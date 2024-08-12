@@ -20,14 +20,16 @@ import '../../../common_widget/signleLine_TexformField.dart';
 
 class ExpenseReportActivity extends StatefulWidget {
   final String logoImage;
-  const ExpenseReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ExpenseReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ExpenseReportActivity> createState() => _ExpenseReportActivityState();
 }
 
 class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
-
+  bool viewWorkDVisible=true;
   String reportType = "";
   String reportId = "";
   final ScrollController _scrollController = ScrollController();

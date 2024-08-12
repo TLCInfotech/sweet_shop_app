@@ -17,6 +17,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
+import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_down_for_items.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/downloadservice.dart';
 import '../../../../core/internet_check.dart';
@@ -41,7 +42,9 @@ class CreatePurchaseInvoice extends StatefulWidget {
   final come;
   final readOnly;
   final String logoImage;
-  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come, this.readOnly, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreatePurchaseInvoice({super.key,required this.mListener, required this.dateNew,required this.Invoice_No, this.ledgerName, this.franchiseeName,this.editedItem,this.come, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   _CreatePurchaseInvoiceState createState() => _CreatePurchaseInvoiceState();
@@ -50,10 +53,8 @@ class CreatePurchaseInvoice extends StatefulWidget {
 
 
 class _CreatePurchaseInvoiceState extends State<CreatePurchaseInvoice> with SingleTickerProviderStateMixin,AddOrEditItemInterface {
-
-
   final _formkey = GlobalKey<FormState>();
-
+  bool viewWorkDVisible=true;
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
@@ -95,6 +96,9 @@ var invoice_No;
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     invoice_No=widget.Invoice_No;
     _Controller = AnimationController(
       vsync: this,
@@ -405,6 +409,7 @@ if(widget.come=="edit"){
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -430,7 +435,7 @@ if(widget.come=="edit"){
                           "Party name and Purchase Ledger can't be same!");
                     }else{
                       editedItemIndex = null;
-                      goToAddOrEditItem(null);
+                      goToAddOrEditItem(null,true);
                     }
                   }
                   else{
@@ -469,6 +474,7 @@ if(widget.come=="edit"){
             ],
           ),
         ):Container(),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false||showButton==false?Container():   GestureDetector(
           onTap: () {
             if(selectedLedgerId=="" ){
@@ -549,6 +555,10 @@ if(widget.come=="edit"){
                 children: [
                   InvoiceInfo(),
                   SizedBox(height: 10,),
+                  getSearchLayout(parentHeight,parentWidth),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.end,
                   //   children: [
@@ -605,6 +615,110 @@ if(widget.come=="edit"){
 
   }
 
+
+  /* Widget for taxt type layout */
+  Widget getSearchLayout(double parentHeight, double parentWidth) {
+    return SearchableItemsDropdown(
+        listArrya: Item_list,
+        titleIndicator: false,
+        readOnly: widget.readOnly,
+        title: ApplicationLocalizations.of(context)!.translate("item")!,
+        callback: (item) {
+          print("fkjjjggg   $item");
+          if(item!=null) {
+            var indexx = Item_list.indexOf(item);
+            setState(() {
+              editedItemIndex = indexx;
+            });
+            FocusScope.of(context).requestFocus(FocusNode());
+            if (viewWorkDVisible == false) {
+              goToAddOrEditItem(
+                  item, false);
+            } else {
+              if (widget.readOnly == false) {}  else {
+                goToAddOrEditItem(
+                    item, widget.readOnly);
+              }
+            }
+          }});
+
+
+/*    Padding(
+      padding: EdgeInsets.only(top: parentHeight * 0.02),
+      child: Container(
+        width: parentWidth * .4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("tax_type")!,
+              style: item_heading_textStyle,
+            ),
+            GestureDetector(
+              onTap: (){
+                showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+                      return Transform(
+                        transform:
+                        Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: TaxDialog(
+                            mListener: this,
+                          ),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation2, animation1) {
+                      throw Exception('No widget to return in pageBuilder');
+                    });
+              },
+              onDoubleTap: (){},
+              child: Padding(
+                padding: EdgeInsets.only(top: parentHeight * .005),
+                child: Container(
+                  height: parentHeight * .055,
+                  alignment: Alignment.center,
+                  decoration: box_decoration,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          taxTypeName == "" ? "Select type" : taxTypeName,
+                          style: taxTypeName == ""
+                              ? hint_textfield_Style
+                              : text_field_textStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          // textScaleFactor: 1.02,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: parentHeight * .03,
+                          color: *//*pollName == ""
+                                ? CommonColor.HINT_TEXT
+                                :*//*
+                          CommonColor.BLACK_COLOR,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );*/
+  }
   Widget get_Item_list_layout(double parentHeight, double parentWidth) {
     return ListView.separated(
       shrinkWrap: true,
@@ -625,12 +739,13 @@ if(widget.come=="edit"){
                   setState(() {
                     editedItemIndex=index;
                   });
+                  if( viewWorkDVisible==false){}else{
         if(widget.readOnly==false){
      }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
-                    goToAddOrEditItem(Item_list[index]);
-                  }}
+                    goToAddOrEditItem(Item_list[index],widget.readOnly);
+                  }}}
                 },
                 child: Card(
                   child: Row(
@@ -690,6 +805,7 @@ if(widget.come=="edit"){
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -758,7 +874,7 @@ if(widget.come=="edit"){
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
         if (context != null) {
-          goToAddOrEditItem(null);
+          goToAddOrEditItem(null,widget.readOnly);
         }
       },
       child: Container(
@@ -781,7 +897,7 @@ if(widget.come=="edit"){
     );
   }
 
-  Future<Object?> goToAddOrEditItem(product) {
+  Future<Object?> goToAddOrEditItem(product,readOnly) {
     return showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -796,6 +912,7 @@ if(widget.come=="edit"){
                 mListener: this,
                 editproduct:product,
                 date: invoiceDate.toString(),
+                readOnly: readOnly,
                 id: selectedFranchiseeId,
                 // exstingList: Item_list,
                 dateFinal: DateFormat('yyyy-MM-dd').format(invoiceDate),
@@ -889,6 +1006,13 @@ if(widget.come=="edit"){
           title: ApplicationLocalizations.of(context)!.translate("date")!,
           callback: (date){
             setState(() {
+              if (date!.isAfter(widget.viewWorkDDate)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle  ");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle   ");
+              }
               showButton=true;
               invoiceDate=date!;
               Item_list=[];

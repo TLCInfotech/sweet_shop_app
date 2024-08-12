@@ -78,10 +78,10 @@ class _HomeFragmentState extends State<HomeFragment> {
     callGetNotifications(1);
     getLocal();
     addDate();
-    //callGetFranchiseeNot(0);
+    callGetFranchiseeNot(0);
     callGetCompany();
 
-    print("hfshjffhfbh  $dateString");
+    print("hfshjffhfbh  ${viewWorkDDate}");
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     setDataComm();
 
@@ -111,7 +111,21 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   var dataArr;
   var dataArrM;
+  int workingDay=0;
+  DateTime viewWorkDDate=DateTime.now();
+  final DateTime today = DateTime.now();
   getLocal()async{
+    int workingDays = await AppPreferences.getWorkingDays();
+    print("workingDayyyyyy  $workingDays");
+    if(workingDays>-1) {
+      workingDay=workingDays+1;
+      print("NewworkingDayyyyyy  $workingDay");
+      viewWorkDDate = today.subtract(Duration(days: workingDay));
+      print("jgbjvbgvv   ${viewWorkDDate}");
+    }else{
+      viewWorkDDate = today.subtract(Duration(days: 50000));
+      print("kjgkjgkjgjkgj  $viewWorkDDate");
+    }
     setState(() {
     });
     var menu =await (AppPreferences.getMasterMenuList());
@@ -129,14 +143,11 @@ class _HomeFragmentState extends State<HomeFragment> {
 
   late DateTime dateTime;
   String dateString="";
-
-
-
-
+  bool viewWorkDVisible=true;
 
   Future<void> refreshList() async {
     await Future.delayed(Duration(seconds: 2));
-   // await callGetFranchiseeNot(0);
+    await callGetFranchiseeNot(0);
     await  getDashboardData();
   }
 
@@ -281,10 +292,18 @@ class _HomeFragmentState extends State<HomeFragment> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [  GestureDetector(
                           onTap: (){
-
+                            setState(() {
+                              if (dateTime.isAfter(viewWorkDDate)) {
+        viewWorkDVisible=true;
+        } else {
+        viewWorkDVisible=false;
+        }
+        });
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
                                 formId: "RM005",
+                                viewWorkDDate: viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 logoImage: logoImage,
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
@@ -293,10 +312,19 @@ class _HomeFragmentState extends State<HomeFragment> {
                           child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
                             onTap: (){
+                              setState(() {
+                                if (dateTime.isAfter(viewWorkDDate)) {
+                                  viewWorkDVisible=true;
+                                } else {
+                                  viewWorkDVisible=false;
+                                }
+                              });
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>    ItemOpeningBal(
                                 newDate: dateTime.add(Duration(days: 1)),
                                 formId: "RM005",
                                 logoImage: logoImage,
+                                viewWorkDDate: viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 arrData: dataArrM,
                                 titleKey: "Branch Item Closing Balance",
                               )));
@@ -309,9 +337,18 @@ class _HomeFragmentState extends State<HomeFragment> {
                       children: [
                         /*(TransactionMenu.contains("ST003"))? */GestureDetector(
                             onTap: (){
+                              setState(() {
+                                if (dateTime.isAfter(viewWorkDDate)) {
+                                  viewWorkDVisible=true;
+                                } else {
+                                  viewWorkDVisible=false;
+                                }
+                              });
                               Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: dateTime,
                                 formId: "ST003",
                                 logoImage: logoImage,
+                                viewWorkDDate: viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 arrData: dataArr,
                               )));
                             },
@@ -339,9 +376,18 @@ class _HomeFragmentState extends State<HomeFragment> {
                       children: [
                         /*(TransactionMenu.contains("AT006"))&& (TransactionMenu.contains("AT006"))?*/   GestureDetector(
                             onTap: (){
+                              setState(() {
+                                if (dateTime.isAfter(viewWorkDDate)) {
+                                  viewWorkDVisible=true;
+                                } else {
+                                  viewWorkDVisible=false;
+                                }
+                              });
                               Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
+                                viewWorkDDate: viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 logoImage: logoImage,
                                 arrData: dataArr,
                               )));
@@ -349,6 +395,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                         //  :Container(),
                         GestureDetector(
                             onTap: (){
+
                               Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT006",
@@ -365,16 +412,25 @@ class _HomeFragmentState extends State<HomeFragment> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        (TransactionMenu.contains("AT009"))? GestureDetector(
+                     GestureDetector(
                             onTap: (){
+                              setState(() {
+                                if (dateTime.isAfter(viewWorkDDate)) {
+                                  viewWorkDVisible=true;
+                                } else {
+                                  viewWorkDVisible=false;
+                                }
+                              });
                               Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,
                                 dateNew: dateTime,
                                 formId: "AT009",
                                 logoImage: logoImage,
+                                viewWorkDDate: viewWorkDDate,
+                                viewWorkDVisible: viewWorkDVisible,
                                 arrData: dataArr,
                               )));
                             },child: getThreeLayout("Expense","${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379)))
-                            :Container(),
+                    ,
                         GestureDetector(
                             onTap: (){
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
@@ -587,6 +643,8 @@ class _HomeFragmentState extends State<HomeFragment> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
             comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
             date:dateTime,
+            viewWorkDVisible: viewWorkDVisible,
+            viewWorkDDate: viewWorkDDate,
             logoImage: logoImage,
           )));
         },
@@ -774,6 +832,13 @@ class _HomeFragmentState extends State<HomeFragment> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             dateTime=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(dateTime));
           });
@@ -924,10 +989,19 @@ class _HomeFragmentState extends State<HomeFragment> {
     return   GestureDetector(
       onTap: (){
         if(title=="Receipt"){
+          setState(() {
+            if (dateTime.isAfter(viewWorkDDate)) {
+              viewWorkDVisible=true;
+            } else {
+              viewWorkDVisible=false;
+            }
+          });
           Navigator.push(context, MaterialPageRoute(builder: (context) => ReceiptActivity(mListener: this,
             dateNew: dateTime,
             formId: "AT002",
             arrData: dataArr,
+            viewWorkDDate: viewWorkDDate,
+            viewWorkDVisible: viewWorkDVisible,
             logoImage: logoImage,
           )));
           /*  Navigator.push(context, MaterialPageRoute(builder: (context) => FranchiseeOutstandingDetailActivity(mListener: this,
@@ -941,6 +1015,8 @@ class _HomeFragmentState extends State<HomeFragment> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
             comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
             date:dateTime,
+            viewWorkDVisible: viewWorkDVisible,
+            viewWorkDDate: viewWorkDDate,
             logoImage: logoImage,
           )));
 
@@ -1140,7 +1216,6 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
   bool isShowSkeleton = true;
 
-
   getDashboardData() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
@@ -1310,6 +1385,51 @@ class _HomeFragmentState extends State<HomeFragment> {
           isLoaderShow = false;
         });
       }
+      CommonWidget.noInternetDialogNew(context);
+    }
+  }
+  callGetFranchiseeNot(int page) async {
+    String sessionToken = await AppPreferences.getSessionToken();
+    String companyId = await AppPreferences.getCompanyId();
+    String baseurl=await AppPreferences.getDomainLink();
+    String pushKey=await AppPreferences.getPushKey();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
+          token: sessionToken,
+        );
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&PushKey=$pushKey";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+              setState(() {
+
+              });
+
+              // _arrListNew.addAll(data.map((arrData) =>
+              // new EmailPhoneRegistrationModel.fromJson(arrData)));
+              print("  franchisee   $data ");
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+              // CommonWidget.onbordingErrorDialog(context, "Signup Error",error.toString());
+              //  widget.mListener.loaderShow(false);
+              //  Navigator.of(context, rootNavigator: true).pop();
+            }, onException: (e) {
+
+              // print("Here2=> $e");
+              // var val= CommonWidget.errorDialog(context, e);
+              //
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+              // widget.mListener.loaderShow(false);
+            });
+      });
+    }
+    else{
       CommonWidget.noInternetDialogNew(context);
     }
   }

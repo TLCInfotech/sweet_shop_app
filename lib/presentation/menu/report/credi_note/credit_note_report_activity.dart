@@ -25,7 +25,9 @@ import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.
 
 class CreditReportActivity extends StatefulWidget {
   final String logoImage;
-  const CreditReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreditReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<CreditReportActivity> createState() => _ExpenseReportActivityState();
@@ -37,7 +39,7 @@ class _ExpenseReportActivityState extends State<CreditReportActivity> {
   String reportId = "";
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
@@ -300,7 +302,8 @@ class _ExpenseReportActivityState extends State<CreditReportActivity> {
                   mListener: this,
                   logoImage: widget.logoImage,
                   reportName:reportType,
-                  reportId:reportId,
+                  reportId:reportId, viewWorkDDate: widget.viewWorkDDate,
+                  viewWorkDVisible: viewWorkDVisible,
                   url: ApiConstants().report,
                   applicablefrom: applicablefrom,
                   applicableTwofrom: applicableTo,

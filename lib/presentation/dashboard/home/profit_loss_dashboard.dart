@@ -32,8 +32,10 @@ class ProfitLossDash extends StatefulWidget {
   final vName;
   final date;
   final come;
+  final viewWorkDDate;
+  final viewWorkDVisible;
   final String logoImage;
-  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date, this.come, required this.logoImage}) : super(key: key);
+  const ProfitLossDash({Key? key, required this.mListener, this.fid, this.vName, this.date, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible}) : super(key: key);
 
   @override
   State<ProfitLossDash> createState() => _ProfitLossDashState();
@@ -45,7 +47,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   bool isApiCall=false;
 
   List<SalesData> _saleData = [];
-
+  bool viewWorkDVisible=true;
   var statistics=[];
 
   List<ProfitPartyWiseData> _profitPartywise = [];
@@ -71,6 +73,9 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     if(widget.come=="report"){
       dateTime=DateTime.parse(widget.date);
     }else {
@@ -203,10 +208,19 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                children: [
                  GestureDetector(
                      onTap: ()async{
+                       setState(() {
+                         if (dateTime.isAfter(widget.viewWorkDDate)) {
+                           viewWorkDVisible=true;
+                         } else {
+                           viewWorkDVisible=false;
+                         }
+                       });
                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                            dateNew: dateTime,
                            logoImage: widget.logoImage,
                            mListener: this,
+                           viewWorkDDate: widget.viewWorkDDate,
+                           viewWorkDVisible: viewWorkDVisible,
                            come:"edit",
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
@@ -216,10 +230,13 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                  GestureDetector(
                      onTap: ()async{
+   print("tghjgthjgj");
                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                            dateNew: dateTime.add(Duration(days: 1)),
                            mListener: this,
                            come:"edit",
+                           viewWorkDDate: widget.viewWorkDDate,
+                           viewWorkDVisible: viewWorkDVisible,
                            logoImage: widget.logoImage,
                            franchiseeDetails:[widget.vName!,widget.fid!]
                        )));
@@ -233,14 +250,22 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-
                  GestureDetector(
                      onTap: (){
+                       setState(() {
+                         if (dateTime.isAfter(widget.viewWorkDDate)) {
+                           viewWorkDVisible=true;
+                         } else {
+                           viewWorkDVisible=false;
+                         }
+                       });
                        Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(
                            dateNew: dateTime, logoImage: widget.logoImage,
                            mListener: this,
                            formId: "ST003",
                            arrData: dataArr,
+                         viewWorkDDate: widget.viewWorkDDate,
+                         viewWorkDVisible: viewWorkDVisible,
                          comeFor: "frDash",
                          franhiseeID:widget.fid!,
                          franchiseeName:widget.vName!,
@@ -249,7 +274,8 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
                  GestureDetector(
                      onTap: (){
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(
+                         mListener: this,
                          dateNew: dateTime,
                          formId: "AT006",
                          logoImage: widget.logoImage,
@@ -291,11 +317,20 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                children: [
                  GestureDetector(
                      onTap: ()async{
+                       setState(() {
+                         if (dateTime.isAfter(widget.viewWorkDDate)) {
+                           viewWorkDVisible=true;
+                         } else {
+                           viewWorkDVisible=false;
+                         }
+                       });
                        Navigator.push(context, MaterialPageRoute(builder: (context) => CreditNoteActivity(
                          dateNew: dateTime,
                          mListener: this,
                          formId: "AT006",
                          arrData: dataArr,
+                         viewWorkDDate: widget.viewWorkDDate,
+                         viewWorkDVisible: viewWorkDVisible,
                          logoImage: widget.logoImage,
                          comeFor: "frDash",
                          franhiseeID:widget.fid!,
@@ -325,11 +360,20 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                children: [
                 /* (TransactionMenu.contains("AT009"))?*/ GestureDetector(
                      onTap: (){
+                       setState(() {
+                         if (dateTime.isAfter(widget.viewWorkDDate)) {
+                           viewWorkDVisible=true;
+                         } else {
+                           viewWorkDVisible=false;
+                         }
+                       });
                        Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(
                          dateNew: dateTime,
                          mListener: this,
                          formId: "AT009",
                          arrData: dataArr,
+                         viewWorkDDate: widget.viewWorkDDate,
+                         viewWorkDVisible: viewWorkDVisible,
                          logoImage: widget.logoImage,
                          comeFor: "frDash",
                          franhiseeID:widget.fid!,
@@ -505,8 +549,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
             width: (SizeConfig.screenWidth * 0.89) / 2,
             // margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
-
             ),
             alignment: Alignment.center,
             child: Text(
@@ -768,6 +810,13 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date)async{
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             dateTime=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(dateTime));
             profit=0.0;

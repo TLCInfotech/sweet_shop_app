@@ -19,7 +19,9 @@ import 'package:sweet_shop_app/presentation/common_widget/get_report_type_layout
 
 class MisReportActivity extends StatefulWidget {
   final String logoImage;
-  const MisReportActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const MisReportActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   // final MisReportActivityInterface mListener;
   @override
   State<MisReportActivity> createState() => _MisReportActivityState();
@@ -39,7 +41,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
 
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 

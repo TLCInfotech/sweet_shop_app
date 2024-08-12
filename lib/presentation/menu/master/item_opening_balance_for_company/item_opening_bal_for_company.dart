@@ -29,7 +29,9 @@ class CreateItemOpeningBalForCompany extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const CreateItemOpeningBalForCompany({super.key, required this.dateNew, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreateItemOpeningBalForCompany({super.key, required this.dateNew, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   State<CreateItemOpeningBalForCompany> createState() => _CreateItemOpeningBalForCompanyState();
 }
@@ -41,7 +43,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
-
+  bool viewWorkDVisible=true;
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   final _InvoiceNoFocus = FocusNode();
@@ -295,6 +297,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true ? Positioned(
           left: position.dx,
           top: position.dy,
@@ -450,10 +453,10 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                     editedItemIndex=index;
                   });
                   FocusScope.of(context).requestFocus(FocusNode());
-
+if(viewWorkDVisible==false){}else{
                   if (context != null) {
                     goToAddOrEditItem(Item_list[index],singleRecord['Update_Right']);
-                  }
+                  }}
                 },
                 child: Card(
                   child: Row(
@@ -519,7 +522,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
                                     ),
                                   ),
                                 ),
-
+                                viewWorkDVisible==false?Container():
                                 singleRecord['Delete_Right']==true?Container(
                                   width: parentWidth*.08,
                                   color: Colors.transparent,
@@ -609,6 +612,13 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
         callback: (date){
           if(date!=null) {
             setState(() {
+              if (date!.isAfter(widget.viewWorkDDate)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle  ");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle   ");
+              }
               invoiceDate = date!;
               Item_list=[];
               Updated_list=[];
@@ -679,6 +689,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
               ],
             ),
           ),
+          viewWorkDVisible==false?Container():
           singleRecord['Update_Right']==false&&singleRecord['Insert_Right']==false||showButton==false?Container():GestureDetector(
             onTap: ()async {
               if (mounted) {

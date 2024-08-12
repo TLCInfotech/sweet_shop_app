@@ -40,8 +40,10 @@ class CreateJournals extends StatefulWidget {
   final  debitNote;
   final  companyId;
   final  readOnly;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage});
+  const CreateJournals({super.key,required this.mListener, required this.dateNew,required this.voucherNo, this.come, this.debitNote, this.companyId, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   _CreateJournalsState createState() => _CreateJournalsState();
 }
@@ -51,7 +53,7 @@ class CreateJournals extends StatefulWidget {
 class _CreateJournalsState extends State<CreateJournals> with SingleTickerProviderStateMixin,AddOrEditLedgerForJournalsInterface {
 
   final _formkey = GlobalKey<FormState>();
-
+  bool viewWorkDVisible=true;
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
@@ -107,6 +109,9 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
@@ -349,6 +354,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -497,12 +503,13 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                   setState(() {
                     editedItemIndex=index;
                   });
+                  if(viewWorkDVisible==false){}else{
                   if(widget.readOnly==false){
                 }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
                     goToAddOrEditItem(Ledger_list[index],widget.companyId,"edit");
-                  }}
+                  }}}
                 },
                 child: Card(
                   child: Row(
@@ -553,6 +560,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -642,6 +650,13 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
         title:   ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             showButton=true;
             invoiceDate=date!;
           });
@@ -737,6 +752,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
             ],
           ):Container(),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false||showButton==false?Container():GestureDetector(
           onTap: () {
             if (mounted) {

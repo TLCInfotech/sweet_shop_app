@@ -23,7 +23,9 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 
 class LedgerVouchersReport extends StatefulWidget {
   final String logoImage;
-  const LedgerVouchersReport({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const LedgerVouchersReport({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<LedgerVouchersReport> createState() => _LedgerVouchersReportState();
@@ -38,7 +40,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> expense_list=[];
   bool disableColor = false;
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTo =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 

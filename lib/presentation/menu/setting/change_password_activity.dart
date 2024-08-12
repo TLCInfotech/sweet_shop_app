@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +18,9 @@ import '../../dashboard/dashboard_activity.dart';
 
 class ChangePasswordActivity extends StatefulWidget {
   final String logoImage;
-  const ChangePasswordActivity({super.key, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ChangePasswordActivity({super.key, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   // final ChangePasswordActivityInterface mListener;
 
@@ -305,7 +306,7 @@ bool isLoaderShow=false;
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
-                      hintText: ApplicationLocalizations.of(context)!.translate("confirm_password")!,
+                      hintText: ApplicationLocalizations.of(context).translate("confirm_password")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: confirmPasswordController,

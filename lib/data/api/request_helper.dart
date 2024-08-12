@@ -36,7 +36,7 @@ class ApiRequestHelper {
 
     print("sessionToken    ${sessionToken}");
 
-    try {
+   // try {
       String token=await AppPreferences.getSessionToken();
       Response response = await http.post(
         Uri.parse(apiUrl),
@@ -47,7 +47,6 @@ class ApiRequestHelper {
       );
       print("response    ${response.body}");
       print("response    ${response.statusCode}");
-
       switch (response.statusCode) {
       /*response of api status id zero when something is wrong*/
         case 400:
@@ -61,10 +60,18 @@ class ApiRequestHelper {
       /*response of api status id one when get api data Successfully */
         case 200:
           ApiResponseForFetch apiResponse = ApiResponseForFetch();
-          print("rfhjrjrfrjrfj   ${apiResponse.token}");
           apiResponse = ApiResponseForFetch.fromJson(json.decode(response.body));
           if (apiResponse.token!.isNotEmpty) {
             AppPreferences.setSessionToken(apiResponse.token!);
+          }
+          if(apiResponse.Working_Days!="null") {
+            // Step 1: Parse the string to a double
+            double workingDaysDouble = double.parse(apiResponse.Working_Days!);
+            // Step 2: Convert the double to an integer
+            int workingDaysInt = workingDaysDouble.toInt();
+            print("Double: $workingDaysDouble");
+            print("Integer: $workingDaysInt");
+            AppPreferences.setWorkingDays(workingDaysInt);
           }
           // print('apiResponse.session_token_key!    ${apiResponse.session_token_key!}');
           AppPreferences.setDeviceId(apiResponse.Machine_Name!);
@@ -104,15 +111,15 @@ class ApiRequestHelper {
           break;
       //    }
       }
-    }
-    catch(e){
+   // }
+    /*catch(e){
       if(e.toString().substring(0,e.toString().indexOf(":"))=="ClientException with SocketException"){
         onException("Server Not Reachable!Please contact to Admin.");
       }
       else
         onException(e.toString().substring(0,e.toString().indexOf(":")));
 
-    }
+    }*/
   }
 
   void callAPIsForPostAPI(

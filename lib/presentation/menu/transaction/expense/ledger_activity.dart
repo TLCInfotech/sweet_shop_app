@@ -37,14 +37,16 @@ class LedgerActivity extends StatefulWidget {
   final franchiseeName;
   final  formId;
   final  arrData;
-  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const LedgerActivity({super.key, required mListener, this.comeFor,this.dateNew,this.franhiseeID, this.formId, this.arrData, this.franchiseeName, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<LedgerActivity> createState() => _LedgerActivityState();
 }
 
 class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterface {
-
+  bool viewWorkDVisible=true;
   DateTime newDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   String selectedFranchiseeName="";
   String selectedFranchiseeId="";
@@ -60,6 +62,9 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.comeFor=="frDash"){
       selectedFranchiseeName=widget.franchiseeName;
@@ -212,6 +217,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true ? Positioned(
           left: position.dx,
           top: position.dy,
@@ -234,7 +240,8 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                   await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                     mListener: this,   logoImage: widget.logoImage,
                     voucherNo: null,
-                    dateNew:    newDate,
+                    dateNew:    newDate, viewWorkDDate: widget.viewWorkDDate,
+                    viewWorkDVisible: viewWorkDVisible,
                     // DateFormat('dd-MM-yyyy').format(newDate),
                   )));
                   selectedFranchiseeId="";
@@ -297,6 +304,13 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             newDate=date!;
             expense_list=[];
           });
@@ -375,7 +389,8 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                       await  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateLedger(
                           mListener: this,   logoImage: widget.logoImage,
                           voucherNo: expense_list[index]["Voucher_No"].toString(),
-                          dateNew: newDate,
+                          dateNew: newDate, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                           readOnly:singleRecord['Update_Right'],
                           editedItem:expense_list[index],
                           come:"edit",
@@ -496,6 +511,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
                                 ],
                               )
                           ),
+                          viewWorkDVisible==false?Container():
                           Positioned(
                               bottom: 5,
                               right: 5,

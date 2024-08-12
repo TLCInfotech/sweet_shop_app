@@ -312,7 +312,7 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
       txtkey: _itemKey,
       focusnext: quantityFocus,
       name: selectedItemName,
-      come: widget.editproduct!=null?"disable":"",
+      come: widget.readOnly==false?"dis":"",
       status: selectedItemName==""?"":"edit",
       apiUrl: "${ApiConstants().purchasePartyItem}?PartyID=${widget.id}&Date=${widget.dateFinal}&",
       titleIndicator: true,
@@ -709,7 +709,33 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
 
   /* Widget for Buttons Layout */
   Widget getAddForButtonsLayout(double parentHeight, double parentWidth) {
-    return Row(
+    return  widget.readOnly==false?  GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      onDoubleTap: () {},
+      child: Container(
+        height: parentHeight * .05,
+        width: parentWidth * .90,
+        // width: SizeConfig.blockSizeVertical * 20.0,
+        decoration: const BoxDecoration(
+          color: CommonColor.HINT_TEXT,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              ApplicationLocalizations.of(context)!.translate("close")!,
+              textAlign: TextAlign.center,
+              style: text_field_textStyle,
+            ),
+          ],
+        ),
+      ),
+    ): Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         GestureDetector(

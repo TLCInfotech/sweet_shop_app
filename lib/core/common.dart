@@ -42,6 +42,46 @@ class CommonWidget {
     ]);
   }
 
+  static Future<DateTime?> startDatee(BuildContext context, DateTime date, int days) async {
+    final DateTime today = DateTime.now();
+    final DateTime firstSelectableDate = today.subtract(Duration(days: days));
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: date,
+      firstDate: firstSelectableDate,
+      lastDate: today,
+      selectableDayPredicate: (DateTime day) {
+        return day.isAfter(firstSelectableDate.subtract(Duration(days: 1))) && day.isBefore(today.add(Duration(days: 1)));
+      },
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: CommonColor.THEME_COLOR, // <-- SEE HERE
+              onPrimary: CommonColor.WHITE_COLOR, // <-- SEE HERE
+              onSurface: CommonColor.BLACK_COLOR, // <-- SEE HERE
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: CommonColor.BLACK_COLOR, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
+      print(formattedDate);
+      return picked;
+    } else {
+      return null;
+    }
+  }
+
   static Widget getShowError(var topMargin,var rightMargin,var fontSize,bool isVis,String errorMsg){
     return Positioned(
       right: rightMargin,

@@ -18,14 +18,15 @@ import '../../../data/api/request_helper.dart';
 import '../../common_widget/get_date_layout.dart';
 
 class SaleDashboardActivity extends StatefulWidget {
-  const SaleDashboardActivity({Key? key}) : super(key: key);
+  final viewWorkDDate;
+  const SaleDashboardActivity({Key? key, this.viewWorkDDate}) : super(key: key);
 
   @override
   State<SaleDashboardActivity> createState() => _SaleDashboardState();
 }
 
 class _SaleDashboardState extends State<SaleDashboardActivity> {
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
@@ -317,9 +318,18 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
   goToTransactionPage(){
     return GestureDetector(
       onTap: ()async{
+        setState(() {
+          if (saleDate.isAfter(widget.viewWorkDDate)) {
+            viewWorkDVisible=true;
+          } else {
+            viewWorkDVisible=false;
+          }
+        });
         await Navigator.push(context, MaterialPageRoute(builder: (context) => SellActivity(mListener: this,dateNew: saleDate,
           formId: "ST003",
           logoImage: logoImage,
+          viewWorkDDate: widget.viewWorkDDate,
+          viewWorkDVisible: viewWorkDVisible,
           arrData: dataArr,
         )));
       },
@@ -451,6 +461,13 @@ class _SaleDashboardState extends State<SaleDashboardActivity> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             saleDate=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
           });

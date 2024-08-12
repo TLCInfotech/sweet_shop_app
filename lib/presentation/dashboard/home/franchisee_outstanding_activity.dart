@@ -24,8 +24,9 @@ class FranchiseeOutstandingDetailActivity extends StatefulWidget {
   final String? comeFor;
   final date;
   final profit;
+  final viewWorkDDate;
   final String logoImage;
-  const FranchiseeOutstandingDetailActivity({super.key, required mListener, this.comeFor, this.date, this.profit, required this.logoImage});
+  const FranchiseeOutstandingDetailActivity({super.key, required mListener, this.comeFor, this.date, this.profit, required this.logoImage, this.viewWorkDDate});
 
   @override
   State<FranchiseeOutstandingDetailActivity> createState() => _FranchiseeOutstandingDetailActivityState();
@@ -35,7 +36,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
 
   TextEditingController serchvendor=TextEditingController();
 
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   bool isApiCall=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
@@ -337,6 +338,13 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
         title:ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             newDate=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
             _outstandingPartywise=[];

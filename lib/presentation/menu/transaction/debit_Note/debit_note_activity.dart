@@ -36,7 +36,9 @@ class DebitNoteActivity extends StatefulWidget {
   final  come;
   final String logoImage;
   final  arrData;
-  const DebitNoteActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, this.dateNew, this.come, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const DebitNoteActivity({super.key, required mListener,  this.comeFor, this.formId, this.arrData, this.dateNew, this.come, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<DebitNoteActivity> createState() => _DebitNoteState();
@@ -44,7 +46,7 @@ class DebitNoteActivity extends StatefulWidget {
 
 class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterface {
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   List<dynamic> debitNote_list=[];
@@ -57,6 +59,9 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _scrollController.addListener(_scrollListener);
     if(widget.come=="report"){
     invoiceDate=widget.dateNew;
@@ -225,6 +230,7 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
             Positioned.fill(child: CommonWidget.isLoader(isLoaderShow)),
           ],
         ),
+        viewWorkDVisible==false?Container():
         singleRecord['Insert_Right']==true? Positioned(
           left: position.dx,
           top: position.dy,
@@ -249,7 +255,8 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                         dateNew:   invoiceDate,
                         Invoice_No: null,//DateFormat('dd-MM-yyyy').format(newDate),
                         mListener:this,   logoImage: widget.logoImage,
-                        companyId: companyId,
+                        companyId: companyId, viewWorkDDate: widget.viewWorkDDate,
+                        viewWorkDVisible: viewWorkDVisible,
                       )));
                   selectedFranchiseeId="";
                   partyBlank=false;
@@ -344,6 +351,13 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             debitNote_list.clear();
           });
           setState(() {
@@ -406,7 +420,8 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                               dateNew: invoiceDate,
                               Invoice_No: debitNote_list[index]['Invoice_No'],//DateFormat('dd-MM-yyyy').format(newDate),
                               mListener:this,   logoImage: widget.logoImage,
-                              come: "edit",
+                              come: "edit", viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                               readOnly: singleRecord['Update_Right'],
                               companyId: companyId,
                               debitNote: debitNote_list[index] ,
@@ -527,7 +542,8 @@ class _DebitNoteState extends State<DebitNoteActivity>with CreateDebitNoteInterf
                                 ],
                               )
                           ),
-                Positioned(
+                          viewWorkDVisible==false?Container():
+                          Positioned(
                   bottom: 5,
                   right: 5,
                   child:  singleRecord['Delete_Right']==true?    DeleteDialogLayout(

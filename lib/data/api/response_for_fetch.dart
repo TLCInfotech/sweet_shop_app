@@ -13,6 +13,7 @@ class ApiResponseForFetch {
     String? msg,
     String? token,
     String? Machine_Name,
+    String? Working_Days,
     int? code,
     String? UID,
   }) {
@@ -20,6 +21,7 @@ class ApiResponseForFetch {
     _masterMenu = masterMenu;
     _transactionMenu = transactionMenu;
     _reportMenu = reportMenu;
+    _Working_Days = Working_Days;
     _data=data;
     _msg = msg;
     _token = token;
@@ -35,6 +37,7 @@ class ApiResponseForFetch {
     _transactionMenu = json['TransactionSub_ModuleList'];
     _reportMenu = json['MasterSub_ModuleList'];
     _data=json['data'];
+    _Working_Days=json['Working_Days'];
     _msg = json['msg'];
     _token = json['token'];
     _Machine_Name = json['Modifier_Machine'];
@@ -51,6 +54,7 @@ class ApiResponseForFetch {
 
   String? _msg;
   String? _token;
+  String? _Working_Days;
   String? _Machine_Name;
   int? _code;
   String? _UID;
@@ -59,6 +63,7 @@ class ApiResponseForFetch {
   bool? get status => _status;
   String? get UID => _UID;
   String? get token => _token;
+  String? get Working_Days => _Working_Days;
   String? get Machine_Name => _Machine_Name;
 
   List<dynamic>? get masterMenu => _masterMenu;
@@ -87,6 +92,7 @@ class ApiResponseForFetch {
       map['data'] = _data;
     }
     map['msg'] = _msg;
+    map['Working_Days'] = _Working_Days;
     map['token'] = _token;
     map['Modifier_Machine'] = _Machine_Name;
     map['code'] = _code;

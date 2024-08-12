@@ -29,7 +29,9 @@ class ExpenseListingActivity extends StatefulWidget {
   final  formId;
   final  arrData;
   final String logoImage;
-  const ExpenseListingActivity({super.key, this.formId, this.arrData, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const ExpenseListingActivity({super.key, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ExpenseListingActivity> createState() => _ExpenseListingActivityState();

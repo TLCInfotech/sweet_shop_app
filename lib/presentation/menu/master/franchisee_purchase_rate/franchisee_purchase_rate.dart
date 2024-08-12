@@ -34,8 +34,10 @@ import '../../../searchable_dropdowns/ledger_searchable_dropdown.dart';
 class FranchiseePurchaseRate extends StatefulWidget {
   final String compId;
   final  formId;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final  arrData;final String logoImage;
-  const FranchiseePurchaseRate({super.key, required this.compId, this.formId, this.arrData, required this.logoImage});
+  const FranchiseePurchaseRate({super.key, required this.compId, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<FranchiseePurchaseRate> createState() => _FranchiseePurchaseRateState();
@@ -57,6 +59,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   var selectedFranchiseeID=null;
 
   bool displayLayout=true;
+  bool viewWorkDVisible=true;
   String TotalAmount="0.00";
 
   List<dynamic> Updated_list=[];
@@ -82,6 +85,9 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     // TODO: implement initState
     super.initState();
     // _scrollController.addListener(_scrollListener);
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     setVal();
   }
   setVal()async{
@@ -449,6 +455,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               ],
             ),
           ),
+          viewWorkDVisible==false?Container():
           singleRecord['Insert_Right']==true||singleRecord['Update_Right']==true? Positioned(
             left: position.dx,
             top: position.dy,
@@ -570,7 +577,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("${Item_list.length} ${ApplicationLocalizations.of(context)!.translate("items")!}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-                GestureDetector(
+                viewWorkDVisible==false?Container(): GestureDetector(
                   onTap: () async {
                     await showGeneralDialog(
                         barrierColor: Colors.black.withOpacity(0.5),
@@ -643,6 +650,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                   ],
             ),
           ),
+          viewWorkDVisible==false?Container():
           singleRecord['Insert_Right']==false || singleRecord['Update_Right']==false||showButton==false  || Item_list.length==0?  Container():
           GestureDetector(
             onTap: () {
@@ -796,6 +804,10 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               delay: Duration(microseconds: 1500),
               child: GestureDetector(
                 onTap: (){
+                  if(viewWorkDVisible==false){
+                    goToAddOrEditProduct(
+                        Item_list[index], false);
+                  }else{
         if(singleRecord['Update_Right']==true) {
           setState(() {
             editedItemIndex = index;
@@ -805,7 +817,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             goToAddOrEditProduct(
                 Item_list[index], singleRecord['Update_Right']);
           }
-        }
+        }}
                 },
                 child: Card(
                   child: Row(
@@ -880,7 +892,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
                                     ),
                                   ),
                                 ),
-
+                                viewWorkDVisible==false?Container():
                                 singleRecord['Delete_Right']==true? Container(
                                     width: parentWidth*.1,
                                     // height: parentHeight*.1,
@@ -1090,6 +1102,13 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
            // showButton=true;
             invoiceDate=name!;
           });
+          if (name!.isAfter(widget.viewWorkDDate)) {
+            viewWorkDVisible=true;
+            print("previousDateTitle  ");
+          } else {
+            viewWorkDVisible=false;
+            print("previousDateTitle   ");
+          }
           if(selectedFranchiseeID!=null){
             setState(() {
               Item_list=[];
@@ -1122,7 +1141,11 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
               editedItemIndex = indexx;
             });
             FocusScope.of(context).requestFocus(FocusNode());
-            goToAddOrEditProduct(item, singleRecord['Update_Right']);
+            if(viewWorkDVisible==false){
+              goToAddOrEditProduct(
+                  item, false);
+            }else{
+            goToAddOrEditProduct(item, singleRecord['Update_Right']);}
         });}
       },);
   }

@@ -41,7 +41,9 @@ class CreateLedger extends StatefulWidget {
   final editedItem;
   final franchiseeDetails;
   final readOnly;
-  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails, this.readOnly, required this.logoImage});
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
+  const CreateLedger({super.key, required this.mListener, required this.dateNew, required this.voucherNo,this.editedItem,this.come,this.franchiseeDetails, this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   _CreateLedgerState createState() => _CreateLedgerState();
 }
@@ -53,7 +55,7 @@ class _CreateLedgerState extends State<CreateLedger> with SingleTickerProviderSt
   final ScrollController _scrollController = ScrollController();
   bool disableColor = false;
   late AnimationController _Controller;
-
+  bool viewWorkDVisible=true;
   DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
   final _voucherNoFocus = FocusNode();
@@ -103,6 +105,9 @@ var voucherNo;
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     voucherNo=widget.voucherNo;
     _Controller = AnimationController(
       vsync: this,
@@ -330,6 +335,7 @@ var voucherNo;
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -547,6 +553,13 @@ var voucherNo;
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             showButton=true;
             invoiceDate=date!;
             Item_list=[];
@@ -664,12 +677,13 @@ var voucherNo;
                   setState(() {
                     editedItemIndex=index;
                   });
+                  if(viewWorkDVisible==false){}else{
                   if(widget.readOnly==false){
                 }else{
                   FocusScope.of(context).requestFocus(FocusNode());
                   if (context != null) {
                     goToAddOrEditItem(Item_list[index]);
-                  }}
+                  }}}
                 },
                 child: Card(
                   child: Row(
@@ -719,6 +733,7 @@ var voucherNo;
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly==false  ?Container():
                                 Container(
                                     width: parentWidth*.1,
@@ -803,6 +818,7 @@ var voucherNo;
             ],
           ),
         ):Container(),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false||showButton==false?Container():    GestureDetector(
           onTap: () {
             if(selectedFranchiseeId==""){

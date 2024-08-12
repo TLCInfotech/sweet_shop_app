@@ -18,14 +18,15 @@ import '../../common_widget/get_date_layout.dart';
 import '../../menu/transaction/expense/ledger_activity.dart';
 
 class LedgerDashActivity extends StatefulWidget {
-  const LedgerDashActivity({Key? key}) : super(key: key);
+  final viewWorkDDate;
+  const LedgerDashActivity({Key? key, this.viewWorkDDate}) : super(key: key);
 
   @override
   State<LedgerDashActivity> createState() => _LedgerDashState();
 }
 
 class _LedgerDashState extends State<LedgerDashActivity> {
-
+  bool viewWorkDVisible=true;
   bool isLoaderShow=false;
   ApiRequestHelper apiRequestHelper = ApiRequestHelper();
   bool isApiCall=false;
@@ -43,6 +44,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     addDate();
     getSalePartyWise();
     getLocal();
+    print("nheheheh   ${widget.viewWorkDDate}");
     setDataComm();
   }
   String logoImage="";
@@ -232,6 +234,8 @@ class _LedgerDashState extends State<LedgerDashActivity> {
         await Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
           formId: "AT009",
           logoImage: logoImage,
+          viewWorkDDate: widget.viewWorkDDate,
+          viewWorkDVisible: viewWorkDVisible,
           arrData: dataArr,)));
       },
       child: Container(
@@ -277,6 +281,13 @@ class _LedgerDashState extends State<LedgerDashActivity> {
         title:  ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date){
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             dateTime=date!;
             AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(date));
           });

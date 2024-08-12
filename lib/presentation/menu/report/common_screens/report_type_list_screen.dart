@@ -44,15 +44,17 @@ class ReportTypeList extends StatefulWidget {
   final  applicableTwofrom;
   final  url;
   final comeFrom;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
-  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom, this.venderId, this.expenseId, this.expenseName, required this.logoImage});
+  const ReportTypeList({super.key, required mListener,this.reportName, this.party, this.partId, this.applicablefrom, this.applicableTwofrom, this.reportId, this.url,this.comeFrom, this.venderId, this.expenseId, this.expenseName, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<ReportTypeList> createState() => _ReportTypeListState();
 }
 
 class _ReportTypeListState extends State<ReportTypeList>with CreatePurchaseInvoiceInterface {
-
+  bool viewWorkDVisible=true;
   DateTime applicablefrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
   DateTime applicableTwofrom =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
 
@@ -474,7 +476,8 @@ mainAxisAlignment: MainAxisAlignment.start,
                             apiurl: ApiConstants().getMISFranchiseeProfitDatewise,
                             partId: array_list[index]['Party_ID'],
                             party:array_list[index]['Party_Name'],
-                            fromDate: applicablefrom,
+                            fromDate: applicablefrom, viewWorkDDate: widget.viewWorkDDate,
+                              viewWorkDVisible: viewWorkDVisible,
                             toDate: applicableTwofrom,
                             come:"partyName"
                           )));
@@ -614,7 +617,8 @@ mainAxisAlignment: MainAxisAlignment.start,
                 venderId: array_list[index]['Vendor_ID'],
                 venderName: array_list[index]['Vendor_Name'],
                 fromDate: applicablefrom,
-                come:"vendorName",
+                come:"vendorName", viewWorkDDate: widget.viewWorkDDate,
+                viewWorkDVisible: viewWorkDVisible,
                 logoImage: widget.logoImage,
                 toDate: applicableTwofrom,
               )));
@@ -626,15 +630,24 @@ mainAxisAlignment: MainAxisAlignment.start,
                 expenseName: array_list[index]['Expense_Name'],
                 fromDate: applicablefrom,
                 logoImage: widget.logoImage,
-                come:"expanseName",
+                come:"expanseName", viewWorkDDate: widget.viewWorkDDate,
+                viewWorkDVisible: viewWorkDVisible,
                 toDate: applicableTwofrom,
               )));
         }else {
+          setState(() {
+            if (DateTime.parse(array_list[index]['Date']).isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+            } else {
+              viewWorkDVisible=false;
+            }
+          });
           await Navigator.push(context, MaterialPageRoute(builder: (context) =>
               LedgerActivity(
                mListener: this,
                 dateNew:DateTime.parse(array_list[index]['Date']),
-                formId: "AT009",
+                formId: "AT009", viewWorkDDate: widget.viewWorkDDate,
+                viewWorkDVisible: viewWorkDVisible,
                 logoImage: widget.logoImage,
                 arrData: dataArr,
               )));

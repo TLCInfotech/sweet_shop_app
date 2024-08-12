@@ -9,11 +9,9 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
-import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/company/put_company_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_country_layout.dart';
-import 'package:sweet_shop_app/presentation/common_widget/get_district_layout.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_state_value.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -33,8 +31,10 @@ import '../../../searchable_dropdowns/searchable_dropdown_for_string_array.dart'
 class CompanyCreate extends StatefulWidget {
   final companyId;
   final  formId;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final  arrData;final String logoImage;
-  const CompanyCreate({super.key, this.companyId, this.formId, this.arrData, required this.logoImage});
+  const CompanyCreate({super.key, this.companyId, this.formId, this.arrData, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
 
   @override
   State<CompanyCreate> createState() => _CompanyCreateState();

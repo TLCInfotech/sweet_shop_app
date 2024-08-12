@@ -41,6 +41,8 @@ class CreateContra extends StatefulWidget {
   final debitNote;
   final companyId;
   final readOnly;
+  final  viewWorkDDate;
+  final  viewWorkDVisible;
   final String logoImage;
   const CreateContra(
       {super.key,
@@ -51,7 +53,7 @@ class CreateContra extends StatefulWidget {
       this.come,
       this.debitNote,
       this.companyId,
-      this.readOnly, required this.logoImage});
+      this.readOnly, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
   @override
   _CreateContraState createState() => _CreateContraState();
 }
@@ -69,7 +71,7 @@ class _CreateContraState extends State<CreateContra>
 
   final _voucherNoFocus = FocusNode();
   final VoucherNoController = TextEditingController();
-
+ bool viewWorkDVisible=true;
   String selectedFranchiseeName = "";
   String TotalAmount = "0.00";
 
@@ -132,6 +134,9 @@ var voucherNo;
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(widget.viewWorkDVisible!=null){
+      viewWorkDVisible=widget.viewWorkDVisible;
+    }
     _Controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -308,6 +313,7 @@ var voucherNo;
             ),
           ),
         ),
+        viewWorkDVisible==false?Container():
         widget.readOnly==false?Container():  Positioned(
           left: position.dx,
           top: position.dy,
@@ -511,6 +517,7 @@ var voucherNo;
                   setState(() {
                     editedItemIndex = index;
                   });
+                  if( viewWorkDVisible==false){}else{
                   if (widget.readOnly == true) {
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (context != null) {
@@ -521,7 +528,7 @@ var voucherNo;
                           widget.companyId,
                           "edit");
                     }
-                  }
+                  }}
                 },
                 child: Card(
                   child: Row(
@@ -593,6 +600,7 @@ var voucherNo;
                                     ),
                                   ),
                                 ),
+                                viewWorkDVisible==false?Container():
                                 widget.readOnly == false
                                     ? Container()
                                     : Container(
@@ -706,6 +714,13 @@ var voucherNo;
         title: ApplicationLocalizations.of(context)!.translate("date")!,
         callback: (date) {
           setState(() {
+            if (date!.isAfter(widget.viewWorkDDate)) {
+              viewWorkDVisible=true;
+              print("previousDateTitle  ");
+            } else {
+              viewWorkDVisible=false;
+              print("previousDateTitle   ");
+            }
             showButton=true;
             invoiceDate = date!;
           });
@@ -894,6 +909,7 @@ var voucherNo;
                 ),
               )
             : Container(),
+        viewWorkDVisible==false?Container():
         widget.readOnly == false||showButton==false
             ? Container()
             : GestureDetector(
