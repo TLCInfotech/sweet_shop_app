@@ -478,7 +478,7 @@ class _CreatePurchaseMrpActivityState extends State<CreatePurchaseMrpActivity>
                 item_regular_textStyle.copyWith(color: Colors.grey),
               ),
             /*  Text(
-                "Round off: $roundoff",
+                " ${ApplicationLocalizations.of(context).translate("round_off")} $roundoff",
                 style: item_regular_textStyle.copyWith(fontSize: 17),
               ),*/
               SizedBox(
@@ -969,7 +969,7 @@ class _CreatePurchaseMrpActivityState extends State<CreatePurchaseMrpActivity>
       callback: (name, id) {
         if (selectedLedgerId == id) {
           var snack =
-          SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          SnackBar(content: Text(ApplicationLocalizations.of(context).translate("sale_ledger_party")));
           ScaffoldMessenger.of(context).showSnackBar(snack);
         } else {
           setState(() {

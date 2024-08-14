@@ -326,7 +326,8 @@ var dataArrM;
               child:  Text('●'),
             ),
             Text(
-           "Language",
+              ApplicationLocalizations.of(context).translate("language"),
+
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 
@@ -816,6 +817,8 @@ var dataArrM;
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  ItemOpeningBal(
           newDate: null, logoImage:logoImage,
             formId: "RM005",
+            menuuu: "menu",
+            come: "Opening",
             viewWorkDDate:viewWorkDDate,
             titleKey: "Branch Item Opening Balance",
             arrData: dataArrM
@@ -1880,7 +1883,7 @@ var dataArrM;
             ),
             getChangePassword(parentHeight,parentWidth),
             getDomainLink(parentHeight,parentWidth),
-            getLanguageLayout(parentHeight, parentWidth),
+           // getLanguageLayout(parentHeight, parentWidth),
           ],
         ),
       ),

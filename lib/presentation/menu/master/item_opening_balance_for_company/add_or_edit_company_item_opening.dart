@@ -364,7 +364,7 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
         parentWidth: (parentWidth),
         validation: (value) {
           if (value!.isEmpty) {
-            return StringEn.ENTER + StringEn.QUANTITY;
+            return ApplicationLocalizations.of(context).translate("enter") +  ApplicationLocalizations.of(context).translate("quantity") ;
           }
           return null;
         },

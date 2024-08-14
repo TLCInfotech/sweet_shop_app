@@ -114,7 +114,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
         children: [
           Flexible(
             child: Text(
-              ApplicationLocalizations.of(context)!.translate("log_out_sub_text")!,
+              ApplicationLocalizations.of(context)!.translate("log_out_sub_text"),
               style: TextStyle(
                 color: CommonColor.BLACK_COLOR,
                 fontSize: SizeConfig.blockSizeHorizontal * 4.0,
@@ -189,7 +189,7 @@ class _LogOutDialogState extends State<LogOutDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-              ApplicationLocalizations.of(context)!.translate("cancel")!,
+              ApplicationLocalizations.of(context).translate("cancel"),
                 style: TextStyle(
                   color: CommonColor.BLACK_COLOR,
                   fontSize: SizeConfig.blockSizeHorizontal * 4,

@@ -413,47 +413,6 @@ class _AddOrEditOrderState extends State<AddOrEditOrder> {
         format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
-    Container(
-      height: parentHeight * .055,
-      // width: (parentWidth*0.8)/2,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: CommonColor.WHITE_COLOR,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 1),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: quantity,
-        decoration: textfield_decoration.copyWith(
-          hintText: StringEn.QUANTITY,
-          suffix: Container(
-              width: 50,
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "${unit.text}",
-                style: item_regular_textStyle,
-              )),
-        ),
-        validator: ((value) {
-          if (value!.isEmpty) {
-            return "Enter Item Quantity";
-          }
-          return null;
-        }),
-        onChanged: (value) async {
-          await calculateRates();
-        },
-        onTapOutside: (event) {},
-      ),
-    );
   }
   var amountedited=false;
 

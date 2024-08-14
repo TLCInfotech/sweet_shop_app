@@ -811,8 +811,8 @@ var voucherNo;
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context).translate("save"),
                     style: page_heading_textStyle,
                   ),
                 ),

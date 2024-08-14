@@ -270,10 +270,10 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
         });
       },
     );
-    SingleLineEditableTextFormField(
+  /*  SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.LEDGER;
+          return ApplicationLocalizations.of(context).translate("enter")+StringEn.LEDGER;
         }
         return null;
       },
@@ -289,7 +289,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
       textInput: TextInputType.text,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
-    );
+    );*/
   }
 
   /* Widget for bank cash ledger layout */
@@ -308,10 +308,10 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
           });
         },
       );
-      SingleLineEditableTextFormField(
+    /*  SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.BANK_CASH_LEDGER;
+          return ApplicationLocalizations.of(context).translate("enter")+StringEn.BANK_CASH_LEDGER;
         }
         return null;
       },
@@ -327,7 +327,7 @@ class _PaymentReportActivityState extends State<PaymentReportActivity> {
       textInput: TextInputType.number,
       maxlines: 1,
       format: FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-    );
+    );*/
 
   }
 

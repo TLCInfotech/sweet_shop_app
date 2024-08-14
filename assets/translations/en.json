@@ -36,6 +36,9 @@
   "enter_item_name" : "Enter item name",
   "enter_description" : "Enter description",
   "item_description" : "Item Description",
+
+
+
   "measuring_unit" : "Measuring Unit",
   "create_unit" : "Create Unit",
   "enter_unit_measurment" : "Enter Unit Measurment",
@@ -72,6 +75,8 @@
   "pan_no" : "PAN No",
   "gst_no" : "GST No",
   "cin_no" : "CIN No",
+
+
   "address_two" : "Address 2",
   "default_bank" : "Default Bank",
   "ext_name" : "Ext. Name",
@@ -112,6 +117,8 @@
   "add_cess_percent" : "Add Cess %",
   "tsc_tds_applicable" : "TCS/TDS Applicable",
   "bank_name" : "Bank Name",
+
+
   "account_info" : "Account Info",
   "bank_branch" : "Bank Branch",
   "ifsc_branch" : "IFSC Code:",
@@ -200,7 +207,7 @@
   "enter_a_new_password": "Enter new password",
   "enter_a_confirm_password": "Enter confirm password",
   "enter_a_domain_link": "Enter domain link",
-  "round_off": "Round off",
+  "round_off": "Round off:",
   "ledgers": "Ledgers",
   "invoices": "Invoices",
   "items": "Items",
@@ -237,6 +244,7 @@
   "error_message":"Error Occured",
   "internet_msg": "Check your internet connection!",
   "delete_msg": "Do you want to delete record?",
+
   "fssai":"FSSAI No.",
   "company_id":"Company Id",
   "password":"Password",
@@ -268,7 +276,33 @@
   "add_screen": "Add Screen",
   "add_all": "Add All",
   "different_ledger_party": "Party name and Sale Ledger can't be same!",
-  "ledger_voucher": "Ledger Balance"
+  "ledger_voucher": "Ledger Balance",
+
+
+
+
+
+
+
+  "receipt_reports": "Receipt Report",
+  "sale_reports": "Sale Report",
+  "no_data":  "No data available.",
+  "sale_analysis":  "Sales analysis",
+  "profit_analysis":  "Profit Analysis",
+  "profit":  "Profit",
+  "match_total_cr":  "Match Total Credit and Debit!",
+  "add_atleast_ledger":  "Add atleast one ledger!",
+  "language":  "Language",
+  "select_fr":  "Select Franchisee Name!",
+  "sale_ledger_party":  "Sale Ledger and Party can not be same!",
+  "item_does_exist":  "Item does not exist!",
+  "wifi":  "Make sure wifi or cellular data is turned",
+  "on_try_again":  "on and then try again",
+  "no_internet":  "Opps, No Internet Connection",
+  "save_changes":  "Do you want to save the changes?",
+  "try_again":  "TRY AGAIN"
+
+
 
 }
 

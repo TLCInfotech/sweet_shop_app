@@ -444,7 +444,7 @@ var invoice_No;
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("${Item_list.length} Items",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: $roundoff",style: item_regular_textStyle.copyWith(fontSize: 17),),
+              Text(" ${ApplicationLocalizations.of(context).translate("round_off")} $roundoff",style: item_regular_textStyle.copyWith(fontSize: 17),),
               SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
@@ -1055,7 +1055,7 @@ var invoice_No;
       title: ApplicationLocalizations.of(context)!.translate("account_ledger")!,
       callback: (name,id){
         if(selectedLedgerId==id){
-          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          var snack=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("sale_ledger_party")));
           ScaffoldMessenger.of(context).showSnackBar(snack);
         }
         else {

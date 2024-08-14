@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
@@ -86,8 +87,8 @@ class _LoginActivityState extends State<LoginActivity> {
                                 style: big_title_style
                             ),
                             const SizedBox(height: 20.0),
-                            const Text(
-                             StringEn.SIGN_IN,
+                             Text(
+                              ApplicationLocalizations.of(context).translate("sign_in"),
                               style: big_title_style
                             ),
                           /*  const SizedBox(height: 5.0),
@@ -147,11 +148,11 @@ class _LoginActivityState extends State<LoginActivity> {
   return TextFormField(
       controller: username,
       decoration: textfield_decoration.copyWith(
-        hintText: StringEn.USER_NAME,
+        hintText:ApplicationLocalizations.of(context).translate("user_name"),
       ),
     validator: (value){
         if(value!.isEmpty){
-          return  StringEn.ENTER+StringEn.USER_NAME;
+          return  ApplicationLocalizations.of(context).translate("enter")+ApplicationLocalizations.of(context).translate("user_name");
         }
     },
     );
@@ -197,12 +198,13 @@ class _LoginActivityState extends State<LoginActivity> {
     ),
     validator: (value){
       if(value!.isEmpty){
-        return  StringEn.ENTER+"password";
+        return  ApplicationLocalizations.of(context).translate("enter")+ApplicationLocalizations.of(context).translate("password");
       }
 
     },
   );
   }
+
   /* widget for button layout */
   Widget getButtonLayout(){
   return Column(
@@ -219,7 +221,7 @@ class _LoginActivityState extends State<LoginActivity> {
             }
            //             Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
           },
-          child:  Text(StringEn.LOG_IN,
+          child:  Text(ApplicationLocalizations.of(context).translate("log_in"),
             style: button_text_style),
         ),
       ),

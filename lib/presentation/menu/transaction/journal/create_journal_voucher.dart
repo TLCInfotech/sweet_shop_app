@@ -181,7 +181,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
               onCallBack: (value) async {
                 if (value == "yes") {
                   if(Ledger_list.length==0){
-                    var snackBar=SnackBar(content: Text("Add atleast one ledger!"));
+                    var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("match_total_cr"),));
+
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     setState(() {
                       disableColor = false;
@@ -189,7 +190,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
                   }
                   else if(double.parse(TotalCr)!=double.parse(TotalDr)){
                     var snackBar = SnackBar(
-                        content: Text('Match Total Credit and Debit!'));
+                        content: Text(ApplicationLocalizations.of(context).translate("match_total_cr"),));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     setState(() {
                       showButton = false;
@@ -703,7 +704,7 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       title: ApplicationLocalizations.of(context)!.translate("ledger")!,
       callback: (name,id){
         if(selectedBankLedgerID==id){
-          var snack=SnackBar(content: Text("Sale Ledger and Party can not be same!"));
+          var snack=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("sale_ledger_party")));
           ScaffoldMessenger.of(context).showSnackBar(snack);
         }
         else {
@@ -806,8 +807,8 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: parentWidth * .005),
-                  child: const Text(
-                    StringEn.SAVE,
+                  child:  Text(
+                    ApplicationLocalizations.of(context).translate("save"),
                     style: page_heading_textStyle,
                   ),
                 ),

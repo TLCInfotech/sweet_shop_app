@@ -28,10 +28,12 @@ class ItemOpeningBal extends StatefulWidget {
   final newDate;
   final  formId;
   final  arrData;
+  final  come;
+  final  menuuu;
   final  viewWorkDDate;
   final  viewWorkDVisible;
   final String titleKey;final String logoImage;
-  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible});
+  const ItemOpeningBal({super.key, this.newDate, this.formId, this.arrData, required this.titleKey, required this.logoImage, this.viewWorkDDate, this.viewWorkDVisible, this.come, this.menuuu});
 
   @override
   State<ItemOpeningBal> createState() => _ItemOpeningBalState();
@@ -59,9 +61,11 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
     if(widget.newDate!=null){
       invoiceDate=widget.newDate;
     }
+    print("jfjkjngn   $invoiceDate   ${widget.viewWorkDDate}");
     getLocal();
     setVal();
   }
+  DateTime NewOne=DateTime.now();
   var  singleRecord;
   setVal()async{
     List<dynamic> jsonArray = jsonDecode(widget.arrData);
@@ -71,6 +75,28 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   String companyId="";
   getLocal()async{
     companyId=await AppPreferences.getCompanyId();
+    if(widget.come=="Opening"){
+      setState(() {
+        if(widget.menuuu=="menu"){
+          NewOne=  widget.viewWorkDDate.add(Duration(days: 2));
+          print("gjvngbjbgbgbg   $NewOne  ${widget.viewWorkDDate}");
+        }
+        else{
+          NewOne=  widget.viewWorkDDate.add(Duration(days: 1));
+          print("gjvngbjbgbgbg22   $NewOne  ${widget.viewWorkDDate}");
+        }
+        if (invoiceDate.isAfter(NewOne)) {
+          viewWorkDVisible=true;
+          print("previousDateTitleopppp $viewWorkDVisible");
+        } else {
+          viewWorkDVisible=false;
+          print("previousDateTitleoppp  $viewWorkDVisible ");
+        }
+      });
+
+    }else{
+
+    }
     setState(() {
 
     });
@@ -244,7 +270,7 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
               ),
               Visibility(
                   visible: Franchisee_list.isEmpty && isApiCall  ? true : false,
-                  child:CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth, ApplicationLocalizations.of(context).translate("no_data"))),
 
             ],
           ),
@@ -290,17 +316,27 @@ class _ItemOpeningBalState extends State<ItemOpeningBal> with CreateItemOpeningB
   Widget getPurchaseDateLayout(){
     return GetDateLayout(
         titleIndicator: false,
-        title:ApplicationLocalizations.of(context)!.translate("date")!,
+        title:ApplicationLocalizations.of(context).translate("date"),
         callback: (date){
           setState(() {
-            if (date!.isAfter(widget.viewWorkDDate)) {
-              viewWorkDVisible=true;
-
-            } else {
-              viewWorkDVisible=false;
-              print("previousDateTitle $viewWorkDVisible  ");
-            }
             invoiceDate=date!;
+            if(widget.come=="Opening"){
+              NewOne=  widget.viewWorkDDate.add(Duration(days: 1));
+              if (date.isAfter(NewOne)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle $viewWorkDVisible");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle  $viewWorkDVisible ");
+              }
+            }else{
+              if (date.isAfter(widget.viewWorkDDate)) {
+                viewWorkDVisible=true;
+                print("previousDateTitle $viewWorkDVisible");
+              } else {
+                viewWorkDVisible=false;
+                print("previousDateTitle  $viewWorkDVisible ");
+              }}
           });
           setState(() {
             Franchisee_list=[];

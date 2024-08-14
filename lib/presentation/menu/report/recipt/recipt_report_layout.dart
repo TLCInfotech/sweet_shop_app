@@ -107,10 +107,10 @@ class _RecieptReportActivityState extends State<RecieptReportActivity> {
                            )
                        ),
                      ):Container(),
-                     const Expanded(
+                      Expanded(
                        child: Center(
                          child: Text(
-                           StringEn.RECEIPT_REPORT,
+                             ApplicationLocalizations.of(context).translate("receipt_reports"),
                            style: appbar_text_style,),
                        ),
                      ),

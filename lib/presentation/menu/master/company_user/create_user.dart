@@ -458,7 +458,7 @@ class _UserCreateState extends State<UserCreate>
             if (franchiseeId == id) {
               var snack = SnackBar(
                   content:
-                      Text("Sale Ledger and Party can not be same!"));
+                      Text(ApplicationLocalizations.of(context).translate("sale_ledger_party")));
               ScaffoldMessenger.of(context).showSnackBar(snack);
             } else {
               setState(() {

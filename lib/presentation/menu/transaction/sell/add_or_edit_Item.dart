@@ -418,7 +418,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         maxlines: 1,
         format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
-
+/*
     Container(
       height: parentHeight * .055,
       // width: (parentWidth*0.8)/2,
@@ -459,7 +459,7 @@ class _AddOrEditItemSellState extends State<AddOrEditItemSell> {
         },
         onTapOutside: (event) {},
       ),
-    );
+    );*/
   }
   var amountedited=false;
 

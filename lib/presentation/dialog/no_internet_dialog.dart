@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 
 import '../../core/colors.dart';
 import '../../core/internet_check.dart';
@@ -70,7 +71,7 @@ class _NoInternetConformationDialogState extends State<NoInternetConformationDia
       child: Column(
         children: [
           Text(
-           "Make sure wifi or cellular data is turned",
+            ApplicationLocalizations.of(context).translate("wifi"),
             style: TextStyle(
               color: CommonColor.OTP_SUB_TEXT_COLOR,
               fontSize: SizeConfig.blockSizeHorizontal * 3.8,
@@ -80,7 +81,7 @@ class _NoInternetConformationDialogState extends State<NoInternetConformationDia
             textAlign: TextAlign.center,
           ),
           Text(
-            "on and then try again",
+            ApplicationLocalizations.of(context).translate("on_try_again"),
             style: TextStyle(
               color: CommonColor.OTP_SUB_TEXT_COLOR,
               fontSize: SizeConfig.blockSizeHorizontal * 3.8,
@@ -119,7 +120,7 @@ class _NoInternetConformationDialogState extends State<NoInternetConformationDia
     return Padding(
       padding: EdgeInsets.only(left:parentWidth* .0, right:parentWidth* .0,top:parentHeight* .07),
       child: Text(
-        "Opps, No Internet Connection",
+        ApplicationLocalizations.of(context).translate("no_internet"),
         style: TextStyle(
           color: CommonColor.COMMENTS_COUNTS,
           fontSize: SizeConfig.blockSizeHorizontal* 4.7,
@@ -149,7 +150,7 @@ class _NoInternetConformationDialogState extends State<NoInternetConformationDia
           ),
           child: Center(
             child: Text(
-              "TRY AGAIN",
+              ApplicationLocalizations.of(context).translate("try_again"),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfig.blockSizeHorizontal* 3.9,

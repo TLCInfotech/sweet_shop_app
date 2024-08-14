@@ -378,13 +378,13 @@ class CommonWidget {
 
   }
 
-  static getNoData(double parentHeight,double parentWidth){
+  static getNoData(double parentHeight,double parentWidth,String title){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+          title,
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,

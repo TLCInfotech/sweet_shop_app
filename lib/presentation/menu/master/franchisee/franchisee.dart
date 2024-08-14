@@ -221,7 +221,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
               ),
               Visibility(
                   visible: franchiseeList.isEmpty && isApiCall  ? true : false,
-                  child:CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child:CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth, ApplicationLocalizations.of(context).translate("no_data"))),
             ],
           )
         ),

@@ -252,7 +252,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               Padding(
                 padding: EdgeInsets.only(top: parentHeight * .005),
                 child: Text(
-                  StringEn.HOME,
+                    ApplicationLocalizations.of(context).translate("home"),
                   style: TextStyle(
                       color: currentScreen == Constant.HOME_FRAGMENT
                           ? CommonColor.THEME_COLOR
@@ -347,7 +347,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight * .005),
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("expense")!,
+                    ApplicationLocalizations.of(context).translate("expense"),
                     style: TextStyle(
                         color: currentScreen == Constant.EXPENSE
                             ? CommonColor.THEME_COLOR

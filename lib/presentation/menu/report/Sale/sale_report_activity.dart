@@ -95,15 +95,14 @@ class _SaleReportActivityState extends State<SaleReportActivity> {
                             )
                         ),
                       ):Container(),
-                      const Expanded(
+                       Expanded(
                         child: Center(
                           child: Text(
-                            StringEn.SALE_REPORT,
+                              ApplicationLocalizations.of(context).translate("sale_reports"),
                             style: appbar_text_style,
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),

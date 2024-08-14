@@ -160,7 +160,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
                   ],
                 ),
               ),
-              _outstandingPartywise.isEmpty?CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth):Container()
+              _outstandingPartywise.isEmpty?CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth, ApplicationLocalizations.of(context).translate("no_data")):Container()
 
             ],
           ),
@@ -319,7 +319,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+           ApplicationLocalizations.of(context).translate("no_data"),
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,

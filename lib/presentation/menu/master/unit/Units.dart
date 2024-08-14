@@ -76,7 +76,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
     SearchableDropdownForStringArray(
         apiUrl: "${ApiConstants().measuring_unit}?",
         titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("unit")!,
+        title: ApplicationLocalizations.of(context).translate("unit"),
         franchiseeName: selectedUnitName!=""? selectedUnitName:"",
         franchisee:selectedUnitName,
         callback: (name)async{
@@ -207,7 +207,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
               ),
               Visibility(
                   visible: measuring_unit.isEmpty && isApiCall  ? true : false,
-                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth, ApplicationLocalizations.of(context).translate("no_data"))),
             ],
           ),
         ),

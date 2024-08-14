@@ -389,7 +389,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
         format:  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,2})'))
     );
 
-    Container(
+  /*  Container(
       height: parentHeight * .055,
       // width: (parentWidth*0.8)/2,
       alignment: Alignment.center,
@@ -429,7 +429,7 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
         },
         onTapOutside: (event) {},
       ),
-    );
+    );*/
   }
   var amountedited=false;
 

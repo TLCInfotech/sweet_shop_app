@@ -387,7 +387,7 @@ var voucherNo;
               onCallBack: (value) async {
                 if (value == "yes") {
                   if(selectedFranchiseeId==""){
-                    var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                    var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                   else if(Item_list.length==0){
@@ -811,8 +811,8 @@ var voucherNo;
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${Item_list.length} ${StringEn.LEDGERS}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
-              Text("Round off: $roundoff",style:item_regular_textStyle.copyWith(fontSize: 17),),
+              Text("${Item_list.length} ${ApplicationLocalizations.of(context).translate("ledgers")}",style: item_regular_textStyle.copyWith(color: Colors.grey),),
+              Text(" ${ApplicationLocalizations.of(context).translate("round_off")} $roundoff",style:item_regular_textStyle.copyWith(fontSize: 17),),
               const SizedBox(height: 4,),
               Text("${CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble())}",style: item_heading_textStyle,),
             ],
@@ -822,7 +822,7 @@ var voucherNo;
         widget.readOnly==false||showButton==false?Container():    GestureDetector(
           onTap: () {
             if(selectedFranchiseeId==""){
-            var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+            var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             else if(Item_list.length==0){

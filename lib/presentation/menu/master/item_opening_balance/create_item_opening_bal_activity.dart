@@ -244,7 +244,7 @@ bool viewWorkDVisible=true;
               onCallBack: (value) async {
                 if (value == "yes") {
                   if(selectedFranchiseeID==null){
-                    var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                    var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                   else if(selectedFranchiseeID!=null) {
@@ -733,6 +733,7 @@ bool viewWorkDVisible=true;
         callback: (name,id){
           if(selectedFranchiseeID==id){
             var snack=SnackBar(content: Text(" Sale Ledger and Party can not be same!"));
+
             ScaffoldMessenger.of(context).showSnackBar(snack);
           }
           else {
@@ -907,7 +908,7 @@ bool viewWorkDVisible=true;
           widget.readOnly==false||showButton==false?Container():  GestureDetector(
             onTap: ()async {
               if(selectedFranchiseeID==null){
-                var snackBar=SnackBar(content: Text("Select Franchisee Name !"));
+                var snackBar=SnackBar(content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
               else if(selectedFranchiseeID!=null ) {

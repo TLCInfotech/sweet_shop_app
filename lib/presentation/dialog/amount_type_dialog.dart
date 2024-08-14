@@ -137,7 +137,7 @@ class _LedegerGroupDialogState extends State<AmountTypeDialog>{
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+           ApplicationLocalizations.of(context).translate("no_data"),
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,

@@ -74,7 +74,7 @@ class _ErrorOccuredDialogState extends State<BackPageDialog> {
       children: <Widget>[
         Expanded(
           child: Text(
-              "Do you want to save the changes?",
+              ApplicationLocalizations.of(context).translate("save_changes"),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: SizeConfig.blockSizeVertical * 2.3,

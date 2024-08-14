@@ -284,7 +284,7 @@ class _ItemDialogState extends State<ItemDialog>{
           ),
           child: Center(
             child: Text(
-              ApplicationLocalizations.of(context)!.translate("close")!,
+              ApplicationLocalizations.of(context)!.translate("close"),
               textAlign: TextAlign.center,
               style: text_field_textStyle,
             ),

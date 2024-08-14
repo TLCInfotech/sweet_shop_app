@@ -150,7 +150,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     await callGetFranchiseeNot(0);
     await  getDashboardData();
   }
-
+  DateTime newDate=DateTime.now();
   @override
   Widget build(BuildContext context) {
     return isShowSkeleton? SkeletonAnimation(
@@ -294,10 +294,10 @@ class _HomeFragmentState extends State<HomeFragment> {
                           onTap: (){
                             setState(() {
                               if (dateTime.isAfter(viewWorkDDate)) {
-        viewWorkDVisible=true;
-        } else {
-        viewWorkDVisible=false;
-        }
+                                viewWorkDVisible=true;
+                              } else {
+                                viewWorkDVisible=false;
+                              }
         });
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>   ItemOpeningBal(
                                 newDate: dateTime,
@@ -305,6 +305,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 viewWorkDDate: viewWorkDDate,
                                 viewWorkDVisible: viewWorkDVisible,
                                 logoImage: logoImage,
+                                come:"Opening",
                                 titleKey: "Branch Item Opening Balance",
                                 arrData: dataArrM,
                               )));
@@ -313,7 +314,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                         GestureDetector(
                             onTap: (){
                               setState(() {
-                                if (dateTime.isAfter(viewWorkDDate)) {
+                                DateTime newD=dateTime.add(Duration(days: 1));
+                                if (newD.isAfter(viewWorkDDate)) {
                                   viewWorkDVisible=true;
                                 } else {
                                   viewWorkDVisible=false;
@@ -940,7 +942,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       margin: const EdgeInsets.symmetric(vertical:5),
       width: SizeConfig.screenWidth,
       child: SfCartesianChart(
-        title: ChartTitle(text: 'Profit Analysis',
+        title: ChartTitle(text:  ApplicationLocalizations.of(context).translate("profit_analysis"),
             textStyle: item_heading_textStyle.copyWith(fontSize: 16),
             alignment: ChartAlignment.near),
         primaryXAxis: CategoryAxis(
@@ -949,7 +951,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             labelPlacement: LabelPlacement.betweenTicks),
         primaryYAxis: NumericAxis(
             numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 2,),
-            title: AxisTitle(text: "Profit ",textStyle: item_regular_textStyle, )
+            title: AxisTitle(text: ApplicationLocalizations.of(context).translate("profit"),textStyle: item_regular_textStyle, )
         ),
         series: <ChartSeries>[
           BarSeries<ProfitPartyWiseData, String>(

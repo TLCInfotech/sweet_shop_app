@@ -482,7 +482,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
               margin: const EdgeInsets.symmetric(vertical:5),
               width: SizeConfig.screenWidth,
               child: SfCartesianChart(
-                title: ChartTitle(text: 'Sales analysis',
+                title: ChartTitle(text:  ApplicationLocalizations.of(context).translate("sale_analysis"),
                     textStyle: TextStyle(
                         color: Colors.white,
                         fontSize: .1
@@ -495,7 +495,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                 primaryYAxis: NumericAxis(
 
                     numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-                    title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
+                    title: AxisTitle(text: ApplicationLocalizations.of(context).translate("amount"),textStyle: item_regular_textStyle, )
                 ),
                 series: <ChartSeries>[
                   BarSeries<SalesDataDash, String>(
@@ -530,7 +530,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+           ApplicationLocalizations.of(context).translate("no_data"),
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -558,7 +558,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                 margin: const EdgeInsets.symmetric(vertical:0),
                 width: SizeConfig.screenWidth,
                 child: SfCartesianChart(
-                  title: ChartTitle(text: 'Sales analysis',
+                  title: ChartTitle(text:  ApplicationLocalizations.of(context).translate("sale_analysis"),
                       textStyle: TextStyle(
                           color: Colors.white,
                           fontSize: .1
@@ -570,7 +570,7 @@ class _PaymentDashState extends State<PaymentDashActivity> {
                       labelPlacement: LabelPlacement.betweenTicks),
                   primaryYAxis: NumericAxis(
                       numberFormat:  NumberFormat.currency(locale: "HI", name: "", decimalDigits: 0,),
-                      title: AxisTitle(text: "Amount ",textStyle: item_regular_textStyle, )
+                      title: AxisTitle(text: ApplicationLocalizations.of(context).translate("amount"),textStyle: item_regular_textStyle, )
                   ),
                   series: <ChartSeries>[
                     BarSeries<SalesItemWise, String>(

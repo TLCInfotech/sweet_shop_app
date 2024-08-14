@@ -7,6 +7,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 
@@ -333,6 +334,7 @@ class _SearchableLedgerDropdownState extends State<SearchableLedgerDropdown>
   callGetLedger() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     String sessionToken = await AppPreferences.getSessionToken();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -341,7 +343,7 @@ class _SearchableLedgerDropdownState extends State<SearchableLedgerDropdown>
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + widget.apiUrl + "Company_ID=$companyId";
+      String apiUrl = baseurl + widget.apiUrl + "Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) {
             isLoaderShow = false;

@@ -188,7 +188,7 @@ bool viewWorkDVisible=true;
               ),
               Visibility(
                   visible: ledgerList.isEmpty && isApiCall  ? true : false,
-                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth)),
+                  child: CommonWidget.getNoData(SizeConfig.screenHeight,SizeConfig.screenWidth, ApplicationLocalizations.of(context).translate("no_data"))),
 
             ],
           ),

@@ -438,7 +438,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditItemOpeningBal> {
                   Navigator.pop(context);
                 }
               }else{
-              var snackBar=const SnackBar(content: Text("Item does not exist !"));
+              var snackBar= SnackBar(content: Text(ApplicationLocalizations.of(context).translate("item_does_exist")));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
 

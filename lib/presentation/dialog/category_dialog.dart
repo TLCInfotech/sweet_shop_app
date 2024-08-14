@@ -99,7 +99,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+           ApplicationLocalizations.of(context).translate("no_data"),
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -294,6 +294,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../core/app_preferance.dart';
 import '../../core/colors.dart';
 import '../../core/common.dart';
@@ -149,6 +150,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
   callGetLedger() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String sessionToken = await AppPreferences.getSessionToken();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -157,7 +159,7 @@ class _SingleLineEditableTextFormFieldState extends State<SearchableDropdownWith
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + widget.apiUrl+"Company_ID=$companyId";
+      String apiUrl = baseurl + widget.apiUrl+"Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             isLoaderShow=false;

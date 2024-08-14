@@ -481,7 +481,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
                 item_regular_textStyle.copyWith(color: Colors.grey),
               ),
               Text(
-                "Round off: $roundoff",
+                " ${ApplicationLocalizations.of(context).translate("round_off")} $roundoff",
                 style: item_regular_textStyle.copyWith(fontSize: 17),
               ),
               SizedBox(
@@ -1147,7 +1147,7 @@ class _CreateSellInvoiceState extends State<CreateSellInvoice>
             selectedLedgerId="";
             selectedLedgerName="";
             var snack = SnackBar(
-                content: Text("Sale Ledger and Party can not be same!"));
+                content: Text(ApplicationLocalizations.of(context).translate("sale_ledger_party")));
             ScaffoldMessenger.of(context).showSnackBar(snack);
 
           }

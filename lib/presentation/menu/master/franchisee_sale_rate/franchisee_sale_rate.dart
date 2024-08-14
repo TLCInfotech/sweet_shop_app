@@ -304,7 +304,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "No data available.",
+           ApplicationLocalizations.of(context).translate("no_data"),
           style: TextStyle(
             color: CommonColor.BLACK_COLOR,
             fontSize: SizeConfig.blockSizeHorizontal * 4.2,
@@ -330,8 +330,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
                   if (selectedFranchiseeId ==
                       "") {
                     var snackBar = SnackBar(
-                        content: Text(
-                            "Select Franchisee Name !"));
+                        content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
                     ScaffoldMessenger.of(context)
                         .showSnackBar(snackBar);
                   } else if (selectedFranchiseeId !=
@@ -470,7 +469,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
 
                     if (selectedFranchiseeId == "") {
                       var snackBar =
-                          SnackBar(content: Text("Select Franchisee Name !"));
+                          SnackBar(content: Text(ApplicationLocalizations.of(context).translate("select_fr")));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else if (selectedFranchiseeId != "") {
                       if (mounted) {

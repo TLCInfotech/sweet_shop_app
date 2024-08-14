@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ):Image(
               height: parentWidth,
               width: parentWidth * .6,
-              image:  AssetImage('assets/images/Shop_Logo.png'),),
+              image:  AssetImage('assets/images/tlc.jpg'),),
         ),
       ],
     );

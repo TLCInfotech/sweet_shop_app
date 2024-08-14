@@ -267,7 +267,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
   /*  return SingleLineEditableTextFormField(
       validation: (value) {
         if (value!.isEmpty) {
-          return StringEn.ENTER+StringEn.EXPENSES;
+          return ApplicationLocalizations.of(context).translate("enter")+StringEn.EXPENSES;
         }
         return null;
       },

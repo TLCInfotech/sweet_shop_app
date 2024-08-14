@@ -38,7 +38,18 @@ class _ChangePasswordActivityState extends State<ChangePasswordActivity>{
 
 bool isLoaderShow=false;
 
-
+  bool _obscureTextOne = true;
+  bool _obscureTextTwo = true;
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureTextOne = !_obscureTextOne;
+    });
+  }
+  void _togglePasswordTwoVisibility() {
+    setState(() {
+      _obscureTextTwo = !_obscureTextTwo;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -231,12 +242,20 @@ bool isLoaderShow=false;
                     textAlignVertical: TextAlignVertical.center,
                     textCapitalization: TextCapitalization.words,
                     focusNode: _newPasswordFocus,
+                    obscureText: _obscureTextOne,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
+
                     cursorColor: CommonColor.BLACK_COLOR,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: parentWidth * .04, right: parentWidth * .02),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureTextOne ? Icons.visibility_off: Icons.visibility,
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                      ),
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
@@ -299,10 +318,17 @@ bool isLoaderShow=false;
                     focusNode: _confirmPasswordFocus,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
+                    obscureText: _obscureTextTwo,
                     cursorColor: CommonColor.BLACK_COLOR,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
                           left: parentWidth * .04, right: parentWidth * .02),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureTextTwo ? Icons.visibility_off: Icons.visibility,
+                        ),
+                        onPressed: _togglePasswordTwoVisibility,
+                      ),
                       border: InputBorder.none,
                       counterText: '',
                       isDense: true,
