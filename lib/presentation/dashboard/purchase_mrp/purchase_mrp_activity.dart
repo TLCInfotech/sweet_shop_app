@@ -184,7 +184,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                  widget.comeFor=="Return"?"Return MRP":  "Purchase MRP",
+                                  widget.comeFor=="Return"?ApplicationLocalizations.of(context).translate("return_MRP"): ApplicationLocalizations.of(context).translate("purchase_MRP"),
                                     style: appbar_text_style,),
                                 ),
                               ),

@@ -230,7 +230,6 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout(ApplicationLocalizations.of(context).translate("opening_bal"),"${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                  GestureDetector(
                      onTap: ()async{
-   print("tghjgthjgj");
                        await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateItemOpeningBal(
                            dateNew: dateTime.add(Duration(days: 1)),
                            mListener: this,
@@ -246,7 +245,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout(ApplicationLocalizations.of(context).translate("closing_bal"),"${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
   ],
              ),
-             const SizedBox(height: 10,),
+             const SizedBox(height: 10),
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
@@ -289,29 +288,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      child: getThreeLayout(ApplicationLocalizations.of(context).translate("purchase_MRP"), "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246))),
                ],
              ),
-             const SizedBox(height: 10,),
-
-           /*  Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 getThreeLayout("Sale","${CommonWidget.getCurrencyFormat(saleAmt)}",Color(0xFF00A36C)),
-                 GestureDetector(
-                     onTap: (){
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(
-                           dateNew: dateTime,
-                           mListener: this,
-                           formId: "AT009",
-                           arrData: dataArr,
-                         logoImage: widget.logoImage,
-                           comeFor: "frDash",
-                           franhiseeID:widget.fid!,
-                           franchiseeName:widget.vName!,
-                       )));
-                     },
-                     child: getThreeLayout( "Expense", "${CommonWidget.getCurrencyFormat((expenseAmt))}",Colors.orange)),
-               ],
-             ),
-             const SizedBox(height: 10,),*/
+             const SizedBox(height: 10),
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
@@ -337,7 +314,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          franchiseeName:widget.vName!,
                        )));
                      },
-                     child: getThreeLayout( "Return", "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFF00A36C))),
+                     child: getThreeLayout( ApplicationLocalizations.of(context).translate("return"), "${CommonWidget.getCurrencyFormat((returnAmt))}",Color(0xFF00A36C))),
                  GestureDetector(
                      onTap: (){
                        Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(mListener: this,

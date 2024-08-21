@@ -449,7 +449,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /*  (TransactionMenu.contains("AT002"))?*/    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", ApplicationLocalizations.of(context).translate("receipt")),
+                        /*  (TransactionMenu.contains("AT002"))?*/    getReceiptLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", ApplicationLocalizations.of(context).translate("receipt")),
                         /* (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                             (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?*/
                         getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss")),
@@ -991,7 +991,73 @@ class _HomeFragmentState extends State<HomeFragment> {
   Widget getSellPurchaseExpenseLayout( MaterialColor boxcolor, String amount, String title) {
     return   GestureDetector(
       onTap: (){
-        if(title=="Receipt"){
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
+            comeFor: profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss") ,
+            date:dateTime,
+            viewWorkDVisible: viewWorkDVisible,
+            viewWorkDDate: viewWorkDDate,
+            logoImage: logoImage,
+          )));
+
+          //   widget.mListener.getAddLeder(title);
+
+      },
+      child: Container(
+        height: 100,
+        width: (SizeConfig.screenWidth * 0.89) / 2,
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          // color: (Colors.orange).withOpacity(0.3),
+            border: Border.all(color: boxcolor),
+            borderRadius: BorderRadius.circular(5)),
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Container(
+              height: 40,
+              width: (SizeConfig.screenWidth * 0.89) / 2,
+              // margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                // color: (Colors.orange), borderRadius: BorderRadius.circular(5)
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                "$amount",
+                style: subHeading_withBold.copyWith(fontSize:19,color: Colors.black87 ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Expanded(
+              child: Container(
+                width: (SizeConfig.screenWidth * 0.89) / 2,
+                alignment: Alignment.center,
+                color: boxcolor,
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "$title",
+                  style: item_heading_textStyle.copyWith(
+                      color: (Colors.white),
+                      fontWeight: FontWeight.bold
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget getReceiptLayout( MaterialColor boxcolor, String amount, String title) {
+    return   GestureDetector(
+      onTap: (){
           setState(() {
             if (dateTime.isAfter(viewWorkDDate)) {
               viewWorkDVisible=true;
@@ -1013,18 +1079,8 @@ class _HomeFragmentState extends State<HomeFragment> {
             logoImage: logoImage,
             date:dateTime,
           )));*/
-        }
-        else{
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-            comeFor: profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss") ,
-            date:dateTime,
-            viewWorkDVisible: viewWorkDVisible,
-            viewWorkDDate: viewWorkDDate,
-            logoImage: logoImage,
-          )));
 
-          //   widget.mListener.getAddLeder(title);
-        }
+
       },
       child: Container(
         height: 100,

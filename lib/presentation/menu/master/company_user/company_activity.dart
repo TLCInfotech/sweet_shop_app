@@ -339,7 +339,7 @@ print("hjthghh  $companyId");
                     child: Column(
                       children: [
                         getNameLayout(parentHeight, parentWidth),
-                       langu=="en_IN"?Container():getLangNameLayout(parentHeight, parentWidth),
+                       //langu=="en_IN"?Container():getLangNameLayout(parentHeight, parentWidth),
                         getContactPersonLayout(parentHeight, parentWidth),
                         getAddressLayout(parentHeight, parentWidth),
                         Row(
