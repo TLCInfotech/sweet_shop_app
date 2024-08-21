@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
@@ -98,7 +99,7 @@ class _DomainLinkActivityState extends State<DomainLinkActivity> {
                           Expanded(
                             child: Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("domain_link")!,
+                                ApplicationLocalizations.of(context).translate("domain_link"),
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -346,9 +347,10 @@ Widget getCompanyId(double parentHeight, double parentWidth){
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
         String apiUrl =
-            "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+            "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId&${StringEn.lang}=$lang";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",

@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/report/credi_note/credit_note_detail_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
@@ -659,6 +660,7 @@ bool viewWorkDVisible=true;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -670,13 +672,13 @@ bool viewWorkDVisible=true;
 
         if (selectedFranchiseeId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
         } else if (selectedItemId != "") {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedItemId";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedItemId";
         } else {
           apiUrl =
-              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+              "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Credit Note&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
@@ -737,6 +739,7 @@ bool viewWorkDVisible=true;
   pdfDownloadCall(String urlType) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     String baseurl=await AppPreferences.getDomainLink();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -753,13 +756,13 @@ bool viewWorkDVisible=true;
         String apiUrl = "";
 
         if (selectedFranchiseeId != "") {
-          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&ID=$selectedFranchiseeId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&ID=$selectedFranchiseeId&Type=$urlType";
 
         } else if (selectedItemId != "") {
-          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&ID=$selectedItemId&Type=$urlType";
 
         } else {
-          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getVoucherReports+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Report_ID=${widget.reportId}&Form_Name=Credit Note&Type=$urlType";
         }
 
         print(apiUrl);

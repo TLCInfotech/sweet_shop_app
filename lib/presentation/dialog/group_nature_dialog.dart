@@ -4,6 +4,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../core/internet_check.dart';
@@ -310,6 +311,7 @@ class _LedegerGroupDialogState extends State<GroupNatureDialog>{
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -320,7 +322,7 @@ class _LedegerGroupDialogState extends State<GroupNatureDialog>{
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().group_nature}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().group_nature}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

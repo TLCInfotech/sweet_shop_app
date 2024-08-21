@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'dart:io';
@@ -512,6 +513,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -524,10 +526,10 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}";
         }else
         if(widget.come=="ledgerName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}";
         }
 
 
@@ -625,6 +627,7 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -639,9 +642,9 @@ class _PaymentDetailReportActivityState extends State<PaymentDetailReportActivit
         );
         String apiUrl ="";
         if (widget.come=="ledgerName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherBankwise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherBankwise+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Bank_ID=${widget.ledgerId}&Type=$urlType";
         } else if (widget.come=="partyName") {
-          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().getAcctVoucherPartywise+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Vouchar_Type=Payment&Party_ID=${widget.venderId}&Type=$urlType";
         }
 
         print(apiUrl);

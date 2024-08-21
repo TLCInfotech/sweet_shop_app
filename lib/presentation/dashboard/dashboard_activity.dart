@@ -95,6 +95,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
     String uid=await AppPreferences.getUId();
+    String lang=await AppPreferences.getLang();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
 
     if (netStatus == InternetConnectionStatus.connected){
@@ -103,7 +104,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 
@@ -443,7 +444,7 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
                 Padding(
                   padding: EdgeInsets.only(top: parentHeight * .005),
                   child: Text(
-                    ApplicationLocalizations.of(context)!.translate("receipt")!,
+                    ApplicationLocalizations.of(context).translate("receipt"),
                     style: TextStyle(
                         color: currentScreen == Constant.RECEIPT
                             ? CommonColor.THEME_COLOR

@@ -1,6 +1,7 @@
 class postPaymentRecieptRequestModel {
   String? companyID;
   String? date;
+  String? lang;
   String? dateNew;
   String? ledgerID;
   String? voucherNo;
@@ -19,6 +20,7 @@ class postPaymentRecieptRequestModel {
   postPaymentRecieptRequestModel(
       {this.companyID,
         this.date,
+        this.lang,
         this.dateNew,
         this.ledgerID,
         this.voucherNo,
@@ -38,6 +40,7 @@ class postPaymentRecieptRequestModel {
     companyID = json['Company_ID'];
     date = json['Date'];
     dateNew = json['New_Date'];
+    lang = json['Lang'];
     ledgerID = json['Ledger_ID'];
     voucherNo = json['Voucher_No'];
     seqNo = json['Seq_No'];
@@ -72,6 +75,7 @@ class postPaymentRecieptRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['Lang'] = this.lang;
     data['New_Date'] = this.dateNew;
     data['Ledger_ID'] = this.ledgerID;
     data['Voucher_No'] = this.voucherNo;

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -132,12 +133,13 @@ class _AddProductPurchaseRateState extends State<AddProductPurchaseRate> {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
       String apiUrl =
-          "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.date}";
+          "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&${StringEn.lang}=$lang&PartyID=${widget.id}&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) async {
         if (data != null) {

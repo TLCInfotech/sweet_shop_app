@@ -3,6 +3,7 @@ import 'package:open_file_plus/open_file_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:flutter/cupertino.dart';
@@ -1215,6 +1216,7 @@ String finInvoiceNo="";
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1225,7 +1227,7 @@ String finInvoiceNo="";
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoiceDetails}?Company_ID=$companyId&Invoice_No=${widget.Invoice_No}";
+        String apiUrl = "${baseurl}${ApiConstants().getPurchaseInvoiceDetails}?Company_ID=$companyId&${StringEn.lang}=$lang&Invoice_No=${widget.Invoice_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -1293,6 +1295,7 @@ String finInvoiceNo="";
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -1305,6 +1308,7 @@ String finInvoiceNo="";
             purchaseLedger:selectedLedgerId ,
             vendorID:selectedFranchiseeId ,
             companyID: companyId ,
+            Lang: lang,
             voucherName: "Purchase",
             roundOff:double.parse(roundoff) ,
             totalAmount:TotalAmountInt,
@@ -1364,6 +1368,7 @@ String finInvoiceNo="";
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
     print("dfsdf    $matchDate");
     // double updatedamt= await calculateTotalInsertAmt();
@@ -1376,6 +1381,7 @@ String finInvoiceNo="";
         });
         postSaleInvoiceRequestModel model = postSaleInvoiceRequestModel(
             purchaseLedger:selectedLedgerId ,
+            Lang:lang,
             vendorID:selectedFranchiseeId ,
             invoiceNo:widget.Invoice_No.toString() ,
             companyID: companyId ,
@@ -1442,6 +1448,7 @@ String finInvoiceNo="";
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1453,7 +1460,7 @@ String finInvoiceNo="";
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getPurchaseInvoiceDetails+"/Download?Company_ID=$companyId&Invoice_No=${widget.Invoice_No.toString()}&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getPurchaseInvoiceDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Invoice_No=${widget.Invoice_No.toString()}&Type=$urlType";
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{
         //

@@ -172,6 +172,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
+    String lang=await AppPreferences.getLang();
 
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
@@ -184,7 +185,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.frnachisee_id}=${widget.fid}&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.lang}=$lang&${StringEn.frnachisee_id}=${widget.fid}&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 
@@ -372,7 +373,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                               )));
                              // await callGetFranchiseeNot(0);
                               await getDashboardData();
-                            },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}", "Return")),
+                            },child: getSellPurchaseExpenseLayout(Colors.blue, "${CommonWidget.getCurrencyFormat((returnAmt))}",ApplicationLocalizations.of(context)!.translate("return"))),
 
                       ],
                     ),
@@ -389,7 +390,7 @@ class _FOutstandingDashActivityState extends State<FOutstandingDashActivity> wit
                       //   await callGetFranchiseeNot(0);
                           await getDashboardData();
                         },
-                        child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt")),
+                        child: getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", ApplicationLocalizations.of(context).translate("receipt"))),
 
                     const SizedBox(height: 10,),
                     getProfitLayout(),

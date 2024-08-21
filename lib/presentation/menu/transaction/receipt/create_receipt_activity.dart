@@ -3,6 +3,7 @@ import 'package:open_file_plus/open_file_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:flutter/cupertino.dart';
@@ -957,6 +958,7 @@ showButton=true;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -966,7 +968,7 @@ showButton=true;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVoucherDetail}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(widget.newDate)}&Voucher_Name=Receipt&Voucher_No=${widget.voucherNo}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVoucherDetail}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(widget.newDate)}&Voucher_Name=Receipt&Voucher_No=${widget.voucherNo}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -1033,6 +1035,7 @@ showButton=true;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     double TotalAmountInt= double.parse(TotalAmount);
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1044,6 +1047,7 @@ showButton=true;
           ledgerID:selectedBankLedgerID ,
           companyID: companyId ,
           voucherName: "Receipt",
+          lang: lang,
           totalAmount:TotalAmountInt ,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
         creator: creatorName,
@@ -1104,6 +1108,7 @@ print("newwwww   ${model.toJson()}");
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
     print("newOne    $matchDate");
     double TotalAmountInt= double.parse(TotalAmount);
@@ -1116,6 +1121,7 @@ print("newwwww   ${model.toJson()}");
         postPaymentRecieptRequestModel model = postPaymentRecieptRequestModel(
           ledgerID:selectedBankLedgerID ,
           companyID: companyId ,
+          lang: lang,
           voucherNo: widget.voucherNo,
           voucherName: "Receipt",
           totalAmount:TotalAmountInt ,
@@ -1177,6 +1183,7 @@ print("newwwww   ${model.toJson()}");
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1187,7 +1194,7 @@ print("newwwww   ${model.toJson()}");
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&Voucher_Name=Receipt&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_Name=Receipt&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

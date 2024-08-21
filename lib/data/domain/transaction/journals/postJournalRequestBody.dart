@@ -9,6 +9,7 @@ class PostJournalRequestModel {
   String? voucherName;
   double? totalAmount;
   String? remark;
+  String? lang;
   String? creator;
   String? creatorMachine;
   String? modifier;
@@ -20,6 +21,7 @@ class PostJournalRequestModel {
   PostJournalRequestModel(
       {this.companyID,
         this.date,
+        this.lang,
         this.dateNew,
         this.voucherNo,
         this.seqNo,
@@ -38,6 +40,7 @@ class PostJournalRequestModel {
     companyID = json['Company_ID'];
     date = json['Date'];
     dateNew = json['New_Date'];
+    lang = json['Lang'];
 
     voucherNo = json['Voucher_No'];
     seqNo = json['Seq_No'];
@@ -72,6 +75,7 @@ class PostJournalRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['Lang'] = this.lang;
     data['New_Date'] = this.dateNew;
     data['Voucher_No'] = this.voucherNo;
     data['Seq_No'] = this.seqNo;

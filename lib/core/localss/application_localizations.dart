@@ -54,6 +54,13 @@ class ApplicationLocalizations {
   Future<bool> load() async {
     Locale _locale = Locale('en');
     String lang = await AppPreferences.getLang();
+    if(lang=="mr_IN"){
+      lang="mr";
+    }else if(lang=="hi_IN"){
+      lang="hi";
+    }else{
+      lang="en";
+    }
     _locale = Locale(lang);
     String jsonString = await rootBundle.loadString('assets/translations/${_locale.languageCode}.json');
     print("translationstranslations  ${locale.languageCode} \n  $jsonString   ");
@@ -83,7 +90,7 @@ class _ApplicationLocalizationsDelegate extends LocalizationsDelegate<Applicatio
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'de', 'hi'].contains(locale.languageCode);
+    return ['en', 'mr', 'hi'].contains(locale.languageCode);
   }
 
   @override

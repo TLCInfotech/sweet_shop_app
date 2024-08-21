@@ -92,6 +92,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -101,7 +102,7 @@ class _CreateItemOpeningBalForCompanyState extends State<CreateItemOpeningBalFor
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item_opening}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().item_opening}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -826,6 +827,7 @@ showButton=true;
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -833,6 +835,7 @@ showButton=true;
       });
       PostItemOpeningRequestModel model = PostItemOpeningRequestModel(
           companyID: companyId,
+          Lang:lang,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,

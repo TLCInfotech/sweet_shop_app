@@ -317,6 +317,7 @@ class _ExpenseReportActivityState extends State<ExpenseReportActivity> {
                   url: ApiConstants().reports,
                   venderId: selectedFranchiseeId,
                   expenseId:selectedLedgerId ,
+                  viewWorkDDate: widget.viewWorkDDate,
                   party:selectedFranchiseeName,
                   expenseName:selectedLedgerName,
                   applicablefrom: applicablefrom,

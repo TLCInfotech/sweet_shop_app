@@ -369,6 +369,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -378,7 +379,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getFilteredLedger}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredLedger}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -462,6 +463,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -474,7 +476,7 @@ class _ExpenseListingActivityState extends State<ExpenseListingActivity>with Cre
             modifierMachine: deviceId,
             companyId: companyId
         );
-        String apiUrl = baseurl + ApiConstants().ledger+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().ledger+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

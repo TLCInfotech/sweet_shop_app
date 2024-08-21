@@ -149,12 +149,13 @@ class _AddOrEditItemState extends State<AddOrEditItem> {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
       String apiUrl =
-          "${baseurl}${ApiConstants().purchasePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.dateFinal}";
+          "${baseurl}${ApiConstants().purchasePartyItem}?Company_ID=$companyId&${StringEn.lang}=$lang&PartyID=${widget.id}&Date=${widget.dateFinal}";
       print("neeeeeee    $apiUrl");
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) async {

@@ -631,6 +631,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal>
   callLedgerOpeningBal(item, editItem) async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     // DateTime date = DateTime.parse(widget.dateNew);
     //   print("hfhefhhfhef  $date   ");
     print('newlistttt...  ${Inserted_list.toList()}');
@@ -640,6 +641,7 @@ class _AddOrEditItemOpeningBalState extends State<AddOrEditLedgerOpeningBal>
       });
       PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
           companyID: companyId,
+          lang: lang,
           date: widget.dateApi,
           modifier: creatorName,
           modifierMachine: deviceId,

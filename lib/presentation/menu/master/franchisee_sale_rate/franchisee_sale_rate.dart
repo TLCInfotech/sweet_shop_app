@@ -11,6 +11,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/dialog/Delete_Dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/back_page_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/franchisee_sale_rate/add_new_sale_rate_product.dart';
@@ -1000,6 +1001,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
   callPostItemOpeningBal() async {
     String baseurl = await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     String companyId = await AppPreferences.getCompanyId();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -1008,6 +1010,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
       });
       FranchiseeSaleRequest model = FranchiseeSaleRequest(
           companyID: companyId,
+          lang: lang,
           Franchisee_ID: selectedFranchiseeId,
           Txn_Type: "S",
           date: DateFormat('yyyy-MM-dd').format(applicablefrom),
@@ -1057,6 +1060,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1065,7 +1069,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         TokenRequestModel model =
         TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
-            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&${StringEn.lang}=$lang&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
         // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww3333  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
@@ -1145,6 +1149,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1153,7 +1158,7 @@ class _FranchiseeSaleRateState extends State<FranchiseeSaleRate>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
-            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeId&${StringEn.lang}=$lang&Date=${DateFormat('yyyy-MM-dd').format(applicablefrom)}&Company_ID=$companyId&Txn_Type=S";
         // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";

@@ -286,6 +286,7 @@ class _LedgerDialogState extends State<LedgerDialog>{
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -293,7 +294,7 @@ class _LedgerDialogState extends State<LedgerDialog>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().ledgerWithoutImage+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             isLoaderShow=false;

@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/data/domain/user_rights/user_rigts_request_model.dart';
 import 'package:sweet_shop_app/presentation/dialog/Delete_Dialog.dart';
@@ -869,6 +870,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -877,7 +879,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&UID=${UID}";
+            "${baseurl}${ApiConstants().userPermission}?Company_ID=$companyId&${StringEn.lang}=$lang&UID=${UID}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           print(data);
@@ -943,6 +945,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -952,6 +955,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
         UserRightsModel model = UserRightsModel(
           UID: selectedFranchiseeId,
           companyID: companyId,
+          Lang: lang,
           creater: creatorName,
           createrMachine: deviceId,
           iNSERT: Item_list.length > 0 ? Item_list.toList() : [],
@@ -1001,6 +1005,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1009,7 +1014,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: "1");
         String apiUrl =
-            "${baseurl}${ApiConstants().formList}?Company_ID=$companyId";
+            "${baseurl}${ApiConstants().formList}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           print(data);
@@ -1090,6 +1095,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1101,7 +1107,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
           "Modifier_Machine": deviceId
         };
         String apiUrl =
-            baseurl + ApiConstants().userPermission + "?Company_ID=$companyId";
+            baseurl + ApiConstants().userPermission + "?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess: (data) {
           setState(() {
@@ -1149,6 +1155,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
     String baseurl = await AppPreferences.getDomainLink();
     String date = await AppPreferences.getDateLayout();
     String uid = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
     if (netStatus == InternetConnectionStatus.connected) {
@@ -1156,7 +1163,7 @@ class _AssignRightsToUserState extends State<AssignRightsToUser>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: "1");
         String apiUrl =
-            "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+            "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess: (data) {
           setState(() {

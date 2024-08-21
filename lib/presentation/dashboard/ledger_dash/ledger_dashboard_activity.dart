@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../core/app_preferance.dart';
@@ -262,7 +263,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Go To Expense Invoice",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text(ApplicationLocalizations.of(context).translate("go_to_expense_invoice"),style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],
@@ -441,6 +442,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -450,7 +452,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpensePartywise}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -509,6 +511,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -518,7 +521,7 @@ class _LedgerDashState extends State<LedgerDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardExpense}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 

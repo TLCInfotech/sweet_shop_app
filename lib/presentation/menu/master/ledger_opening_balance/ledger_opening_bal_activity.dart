@@ -470,6 +470,7 @@ if(viewWorkDVisible==false){}else{
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -479,7 +480,7 @@ if(viewWorkDVisible==false){}else{
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "$baseurl${ApiConstants().ledger_opening_bal}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
           print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
@@ -579,12 +580,14 @@ if(viewWorkDVisible==false){}else{
   callLedgerOpeningBal(itemDelete,index) async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
       });
       PostILedgerOpeningRequestModel model = PostILedgerOpeningRequestModel(
           companyID: companyId,
+          lang: lang,
           date:DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,

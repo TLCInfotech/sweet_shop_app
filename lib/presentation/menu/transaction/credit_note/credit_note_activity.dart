@@ -588,6 +588,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -599,7 +600,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
         );
         String apiUrl;
 
-          apiUrl = "${baseurl}${ApiConstants().voucherCreditNoteHeader}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
+          apiUrl = "${baseurl}${ApiConstants().voucherCreditNoteHeader}?Company_ID=$companyId&${StringEn.lang}=$lang&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
 
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -668,6 +669,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -678,7 +680,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().getVoucherNote+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getVoucherNote+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -740,6 +742,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -751,7 +754,7 @@ class _CreditNoteState extends State<CreditNoteActivity>with CreateCreditNoteInt
     TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getVoucherNoteHeaderDetails+"/Download?Company_ID=$companyId&Invoice_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getVoucherNoteHeaderDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Invoice_No=$orderNo&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

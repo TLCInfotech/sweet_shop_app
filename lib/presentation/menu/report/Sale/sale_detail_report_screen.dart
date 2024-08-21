@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
@@ -512,6 +513,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -524,10 +526,10 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
         );
         String apiUrl="";
         if(widget.come=="partyName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget.venderId}";
         }else
         if(widget.come=="itemName"){
-          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
+          apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget.itemId}";
         }
         // else{
         //   apiUrl= "${baseurl}${widget.apiurl}?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&Party_ID=${widget.partId}";
@@ -621,6 +623,7 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -636,13 +639,13 @@ class _SaleDetailReportActivityState extends State<SaleDetailReportActivity> wit
         String apiUrl ="";
         if(widget.come=="itemName") {
           apiUrl = baseurl + ApiConstants().getSaleItemwise +
-              "/Download?Company_ID=$companyId&From_Date=${DateFormat(
+              "/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat(
                   "yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat(
                   "yyyy-MM-dd").format(applicableTwofrom)}&Item_ID=${widget
                   .itemId}&Type=$urlType";
         }else{
           apiUrl = baseurl + ApiConstants().getSalePartywise +
-              "/Download?Company_ID=$companyId&From_Date=${DateFormat(
+              "/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat(
                   "yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat(
                   "yyyy-MM-dd").format(applicableTwofrom)}&Franchisee_ID=${widget
                   .venderId}&Type=$urlType";

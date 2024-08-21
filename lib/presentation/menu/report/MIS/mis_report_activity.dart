@@ -288,6 +288,7 @@ class _MisReportActivityState extends State<MisReportActivity> {
                   reportName:reportType,
                   logoImage: widget.logoImage,
                   reportId:reportId,
+                  viewWorkDDate: widget.viewWorkDDate,
                   url: ApiConstants().reports,
                   partId: selectedFranchiseeId,
                   party:selectedFranchiseeName,

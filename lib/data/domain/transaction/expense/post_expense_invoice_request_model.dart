@@ -7,6 +7,7 @@ class PostExpenseInvoiceRequestModel {
   double? Round_Off;
   String? date;
   String? dateNew;
+  String? lang;
   String? creater;
   String? createrMachine;
   String? modifier;
@@ -19,6 +20,7 @@ class PostExpenseInvoiceRequestModel {
       {this.companyID,
         this.Ledger_ID,
         this.voucher_No,
+        this.lang,
         this.Voucher_Name,
         this.Total_Amount,
         this.Round_Off,
@@ -35,6 +37,7 @@ class PostExpenseInvoiceRequestModel {
   PostExpenseInvoiceRequestModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     Ledger_ID = json['Ledger_ID'];
+    lang = json['Lang'];
     voucher_No = json['Voucher_No'];
     Voucher_Name = json['Voucher_Name'];
 Total_Amount = json['Total_Amount'];
@@ -69,6 +72,7 @@ Round_Off = json['Round_Off'];
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Ledger_ID'] = this.Ledger_ID;
+    data['Lang'] = this.lang;
     data['Voucher_No']=this.voucher_No;
     data['Voucher_Name'] = this.Voucher_Name;
     data['Total_Amount'] = this.Total_Amount;

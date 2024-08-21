@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/main.dart';
 
@@ -20,7 +21,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   void _changeLanguage(BuildContext context, String languageCode) {
     Locale newLocale = Locale(languageCode);
      MyApp.setLocale(context, newLocale);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp(
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp(
     )));
   }
 
@@ -65,7 +66,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     Expanded(
                       child: Center(
                         child: Text(
-                          "Select Language",
+                          ApplicationLocalizations.of(context).translate("select_language"),
                           style: appbar_text_style,
                         ),
                       ),
@@ -90,18 +91,21 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
               context,
               'English',
               'assets/images/en_logo.jpg',
+              'en_IN',
               'en',
             ),
             _buildLanguageOption(
               context,
               'मराठी',
               'assets/images/mr.jpg',
-              'de',
+              'mr_IN',
+              'mr',
             ),
             _buildLanguageOption(
               context,
               'हिंदी',
               'assets/images/hi.jpg',
+              'hi_IN',
               'hi',
             ),
           ],
@@ -110,12 +114,12 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, String languageName, String imagePath, String languageCode) {
+  Widget _buildLanguageOption(BuildContext context, String languageName, String imagePath, String languageCodeSet, String languageCode ) {
     return GestureDetector(
       onTap: () {
   setState(() {
     _changeLanguage(context, languageCode);
-    AppPreferences.setLang(languageCode);
+    AppPreferences.setLang(languageCodeSet);
     MyApp();
   });
 

@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
 import '../../../core/app_preferance.dart';
 import '../../../core/colors.dart';
@@ -335,6 +336,7 @@ class _NotificationListingState extends State<NotificationListing> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -345,11 +347,7 @@ class _NotificationListingState extends State<NotificationListing> {
             token: sessionToken,
             page: page.toString()
         );
-
-
-
-
-        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
+        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=$invoiceDate";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -442,6 +440,7 @@ class _NotificationListingState extends State<NotificationListing> {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -450,7 +449,7 @@ class _NotificationListingState extends State<NotificationListing> {
           isLoaderShow=true;
         });
 
-        String apiUrl =baseurl + ApiConstants().updateNotificationStatus+"?Company_ID=$companyId";
+        String apiUrl =baseurl + ApiConstants().updateNotificationStatus+"?Company_ID=$companyId&${StringEn.lang}=$lang";
      /*   get   http://61.2.227.173:3000/DownloadPdf
 
             {
@@ -507,6 +506,7 @@ class _NotificationListingState extends State<NotificationListing> {
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -514,7 +514,7 @@ class _NotificationListingState extends State<NotificationListing> {
           isLoaderShow = true;
         });
         //{DateFormat('yyyy-MM-dd').format(DateTime.parse(indexDate))}
-        String apiUrl = "$baseurl${ApiConstants().deleteNotification}?Company_ID=$companyId&ID=$removeId&Date=$invoiceDate";
+        String apiUrl = "$baseurl${ApiConstants().deleteNotification}?Company_ID=$companyId&${StringEn.lang}=$lang&ID=$removeId&Date=$invoiceDate";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl,"", "",
             onSuccess: (data) {
               setState(() {

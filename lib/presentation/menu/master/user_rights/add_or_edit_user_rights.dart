@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop_app/core/common.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/searchable_dropdowns/searchable_drop_form_list.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
@@ -36,10 +37,11 @@ class _AddOrEditUserRightsState extends State<AddOrEditUserRights> {
 
   getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     setState(() {
       companyId = companyId1;
       api =
-      "${ApiConstants().salePartyItem}?Company_ID=$companyId1&PartyID=${widget.id}";
+      "${ApiConstants().salePartyItem}?Company_ID=$companyId1&${StringEn.lang}=$lang&PartyID=${widget.id}";
     });
     print("CompanyID=> $companyId");
   }

@@ -286,6 +286,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
   callGetFranchisee() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String sessionToken = await AppPreferences.getSessionToken();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -294,7 +295,7 @@ class _FranchiseeDialogState extends State<FranchiseeDialog>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().franchisee+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().franchisee+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {

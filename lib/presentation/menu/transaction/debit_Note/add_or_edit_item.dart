@@ -150,13 +150,14 @@ class _AddOrEditItemDebitState extends State<AddOrEditItemDebit> {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
       String apiUrl = baseurl +
           ApiConstants().item_list +
-          "?Company_ID=$companyId&Date=${widget.date}";
+          "?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) async {
         if (data != null) {

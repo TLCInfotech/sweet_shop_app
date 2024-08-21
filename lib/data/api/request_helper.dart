@@ -64,7 +64,7 @@ class ApiRequestHelper {
           if (apiResponse.token!.isNotEmpty) {
             AppPreferences.setSessionToken(apiResponse.token!);
           }
-          if(apiResponse.Working_Days!="null") {
+          if(apiResponse.Working_Days!="null"&&apiResponse.Working_Days!=null) {
             // Step 1: Parse the string to a double
             double workingDaysDouble = double.parse(apiResponse.Working_Days!);
             // Step 2: Convert the double to an integer

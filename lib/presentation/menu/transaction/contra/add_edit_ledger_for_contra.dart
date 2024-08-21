@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/common.dart';
 import '../../../../core/localss/application_localizations.dart';
@@ -71,13 +72,14 @@ class _AddOrEditLedgerForContraState extends State<AddOrEditLedgerForContra> {
   fetchShows() async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
       String apiUrl = ApiConstants().baseUrl +
           ApiConstants().getBankCashLedger +
-          "?Company_ID=$companyId";
+          "?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) async {
         if (data != null) {

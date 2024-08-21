@@ -932,6 +932,7 @@ showButton=true;
   getExpInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -943,7 +944,7 @@ showButton=true;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getJournalVouchers}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Journal&Voucher_No=${widget.voucherNo}";
+        String apiUrl = "${baseurl}${ApiConstants().getJournalVouchers}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Voucher_Name=Journal&Voucher_No=${widget.voucherNo}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print(data);
@@ -1015,6 +1016,7 @@ showButton=true;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -1026,6 +1028,7 @@ showButton=true;
         PostJournalRequestModel model = PostJournalRequestModel(
           // ledgerID:selectedBankLedgerID ,
           companyID: companyId ,
+          lang: lang,
           voucherName: "Journal",
           // totalAmount: TotalAmountInt,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
@@ -1084,6 +1087,7 @@ showButton=true;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     double TotalAmountInt= double.parse(TotalAmount).ceilToDouble();
     var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
     print("dfsdf    $matchDate");
@@ -1097,6 +1101,7 @@ showButton=true;
             voucherNo: widget.voucherNo,
             companyID: companyId ,
             voucherName: "Journal",
+            lang: lang,
             dateNew:matchDate==0?null:DateFormat('yyyy-MM-dd').format(invoiceDate),
             date: DateFormat('yyyy-MM-dd').format(widget.dateNew),
             modifier: creatorName,
@@ -1154,6 +1159,7 @@ showButton=true;
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1166,7 +1172,7 @@ showButton=true;
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getJournalVouchers+"/Download?Company_ID=$companyId&Voucher_Name=Journal&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getJournalVouchers+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_Name=Journal&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

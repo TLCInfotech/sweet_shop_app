@@ -1,6 +1,7 @@
 class PostItemOpeningRequestModel {
   String? companyID;
   String? date;
+  String? Lang;
   String? modifier;
   String? modifierMachine;
   List<dynamic>? iNSERT;
@@ -11,6 +12,7 @@ class PostItemOpeningRequestModel {
       {this.companyID,
         this.date,
         this.modifier,
+        this.Lang,
         this.modifierMachine,
         this.iNSERT,
         this.uPDATE,
@@ -19,6 +21,7 @@ class PostItemOpeningRequestModel {
   PostItemOpeningRequestModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     date = json['Date'];
+    Lang = json['Lang'];
     modifier = json['Modifier'];
     modifierMachine = json['Modifier_Machine'];
     if (json['INSERT'] != null) {
@@ -45,6 +48,7 @@ class PostItemOpeningRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['Lang'] = this.Lang;
     data['Modifier'] = this.modifier;
     data['Modifier_Machine'] = this.modifierMachine;
     if (this.iNSERT != null) {

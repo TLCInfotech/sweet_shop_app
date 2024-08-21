@@ -7,6 +7,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 
@@ -439,7 +440,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Text("Opening Bal. : ${CommonWidget.getCurrencyFormat(double.parse(openingBal.toString()).ceilToDouble().abs())}",style: item_heading_textStyle,),
+              Text("${ApplicationLocalizations.of(context).translate("opening_bal")} : ${CommonWidget.getCurrencyFormat(double.parse(openingBal.toString()).ceilToDouble().abs())}",style: item_heading_textStyle,),
               closingBal==0?Container():(openingBal<0?Text(" CR",style: item_heading_textStyle,):Text(" DR",style: item_heading_textStyle,)),
             ],
           ),
@@ -471,6 +472,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -481,7 +483,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
             page: page.toString()
         );
         String apiUrl;
-        apiUrl = "${baseurl}${ApiConstants().ledgerOpeningBalance}?Company_ID=$companyId&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}";
+        apiUrl = "${baseurl}${ApiConstants().ledgerOpeningBalance}?Company_ID=$companyId&${StringEn.lang}=$lang&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -539,6 +541,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -553,7 +556,7 @@ class _LedgerVouchersReportState extends State<LedgerVouchersReport> {
 
         String apiUrl="" ;
         // if(widget.comeFrom=="MIS"){
-          apiUrl =baseurl + ApiConstants().ledgerOpeningBalance+"/Download?Company_ID=$companyId&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}&Type=$urlType";
+          apiUrl =baseurl + ApiConstants().ledgerOpeningBalance+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Ledger_ID=$selectedLedgerId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTo)}&Type=$urlType";
         // }else{
         //   if(selectedFranchiseeId!=""){
         //     apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";

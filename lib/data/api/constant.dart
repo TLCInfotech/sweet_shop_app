@@ -26,6 +26,12 @@ class ApiConstants {
   String updateuer = "UpdatePassword";
   String item_opening="ItemOpeningBalance";
   String franchisee_item_opening="FranchiseeItemOpeningBalance";
+  String getPaymentVouvher="AccountingVoucher";
+  String getPaymentVoucherDetail="AccountingVoucherDetails";
+  String getBankCashLedger="BankCashLedger";
+
+  String getLedgerWithoutBankCash="LedgerWithoutBankCash";
+  String getJournalVouchers="JournalVoucher";
   String item_list="ItemList";
   String ledger_opening_bal="LedgerOpeningBalance";
   String franchisee_item_opening_list="getAllFranchaiseeItemCount";
@@ -38,11 +44,6 @@ class ApiConstants {
   String franchisee_item_rate="franchiseeItemRate";
   String expense_voucher="ExpenseVoucher";
   String getExpenseVoucherDetails="getExpenseVoucherDetails";
-  String getPaymentVouvher="AccountingVoucher";
-  String getPaymentVoucherDetail="AccountingVoucherDetails";
-  String getBankCashLedger="BankCashLedger";
-  String getLedgerWithoutBankCash="LedgerWithoutBankCash";
-  String getJournalVouchers="JournalVoucher";
   String getSaleInvoice="SaleInvoice";
   String getSaleInvoiceDetails="getSaleInvoiceDetails";
   String getPurchaseInvoice="PurchaseInvoice";
@@ -50,10 +51,8 @@ class ApiConstants {
   String getVoucherNote="VoucherNoteHeader";
   String getVoucherNoteHeaderDetails="getVoucherNoteHeaderDetails";
   String ledgerWithoutImage="LedgerList";
- // String ledgerWithoutImage="LedgerWithoutImage";
   String purchasePartyItem="purchasePartyItem";
   String salePartyItem="salePartyItem";
-
   String getDashboardData="getDashboardAmount";
   String getDashboardExpense="getDashboardExpensewise";
   String getDashboardExpensePartywise="getDashboardExpensePartywise";
@@ -63,7 +62,6 @@ class ApiConstants {
   String getDashboardSalePartywise="getDashboardSalePartywise";
   String getDashboardSaleReturnItemwise="getDashboardSaleReturnItemwise";
   String getDashboardSaleReturnPartywise="getDashboardSaleReturnPartywise";
-  String getDashboardProfitDetailPartywise="getDashboardProfitDetailPartywise";
   String getDashboardOutstandingPartywise="getDashboardOutstandingPartywise";
   String saleOrder="SaleOrder";
   String getSaleOrderDetail="getSaleOrderDetails";
@@ -89,12 +87,8 @@ class ApiConstants {
   String ledgerOpeningBalance="LedgerOpenningBalance";
   String report="Report_Type";
   String getMISFranchiseeProfitDatewise="MISFranchiseeProfitDatewise";
-//  String misprofit="MISReport";
- // String expenseProfit="ExpenseReport";
   String getExpensePartywise="ExpensePartywise";
   String getExpenseExpensewise="ExpenseExpensewise";
- // String saleProfit="SaleReport";
- // String purchaseProfit="PurchaseReport";
   String getSaleItemwise="SaleItemwise";
   String voucherItemwise="VoucherItemwise";
   String voucherPartywise="VoucherPartywise";
@@ -107,26 +101,6 @@ class ApiConstants {
   String dashboardProfitPartywise="DashboardProfitPartywise";
   String companyImage="CompanyImage";
   String deleteNotification="deleteNotification";
-
-  String saleOrderPdf="saleOrderPdf";
-  //String saleOrderPdf="saleOrderExcel";
-  String saleInvoicePdf="saleInvoicePdf";
-  String contraVoucherPdf="contraVoucherPdf";
-  String expenseVoucherPdf="expenseVoucherPdf";
-  String paymentVoucherePdf="paymentVoucherePdf";
-  String receiptVoucherPdf="receiptVoucherPdf";
-  String journalVoucherPdf="journalVoucherPdf";
-  String convertSaleOrderPdf="convertSaleOrderPdf";
-  String debitNotePdf="debitNotePdf";
-  String creditNotePdf="creditNotePdf";
-  String purchaseInvoicePdf="purchaseInvoicePdf";
-  String reportCreditNotePdf="reportCreditNotePdf";
-  String reportDebitNotePdf="reportDebitNotePdf";
-  String reportExpensePdf="reportExpensePdf";
-  String reportLedgerBalancePdf="reportLedgerBalancePdf";
-  String reportMISPdf="reportMISPdf";
-  String reportPurchasePdf="reportPurchasePdf";
-  String reportSalePdf="reportSalePdf";
   String MISReports="MISReports";
   String SaleReports="SaleReports";
   String getExpenseReports="ExpenseReports";

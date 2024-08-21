@@ -321,13 +321,14 @@ class _LoginActivityState extends State<LoginActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String pushKey=await AppPreferences.getPushKey();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl = "${baseurl}${ApiConstants().sendFNotification}?Company_ID=$companyId&PushKey=$pushKey";
+        String apiUrl = "${baseurl}${ApiConstants().sendFNotification}?Company_ID=$companyId&${StringEn.lang}=$lang&PushKey=$pushKey";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               setState(() {

@@ -284,6 +284,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -294,7 +295,7 @@ class _LedegerGroupDialogState extends State<LedegerGroupDialog>{
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&${StringEn.pageSize}&Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?PageNumber=$page&${StringEn.pageSize}&Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

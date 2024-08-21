@@ -10,6 +10,7 @@ class postSaleInvoiceRequestModel {
   double? totalAmount;
   double? roundOff;
   String? remark;
+  String? Lang;
   String? creator;
   String? creatorMachine;
   String? modifier;
@@ -23,6 +24,7 @@ class postSaleInvoiceRequestModel {
       {this.companyID,
         this.date,
         this.dateNew,
+        this.Lang,
         this.vendorID,
         this.voucherName,
         this.Order_No,
@@ -43,6 +45,7 @@ class postSaleInvoiceRequestModel {
   postSaleInvoiceRequestModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     date = json['Date'];
+    Lang = json['Lang'];
     Order_No = json['Order_No'];
     dateNew = json['New_Date'];
     vendorID = json['Vendor_ID'];
@@ -82,6 +85,7 @@ class postSaleInvoiceRequestModel {
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
     data['New_Date'] = this.dateNew;
+    data['Lang'] = this.Lang;
     data['Vendor_ID'] = this.vendorID;
     data['Order_No'] = this.Order_No;
     data['Voucher_Name'] = this.voucherName;

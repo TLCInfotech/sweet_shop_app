@@ -4,6 +4,7 @@ class PostFranchiseeRequestModel {
   String? name;
   int? companyID;
   String? startDate;
+  String? Lang;
   String? contactPerson;
   String? address;
   String? district;
@@ -40,6 +41,7 @@ class PostFranchiseeRequestModel {
       {required this.name,
         required this.companyID,
         this.startDate,
+        this.Lang,
         this.contactPerson,
         required this.address,
         required this.district,
@@ -77,6 +79,7 @@ class PostFranchiseeRequestModel {
     name = json['Name'];
     companyID = json['Company_ID'];
     startDate = json['Start_Date'];
+    Lang = json['Name_Locale'];
     contactPerson = json['Contact_Person'];
     address = json['Address'];
     district = json['District'];
@@ -115,6 +118,7 @@ class PostFranchiseeRequestModel {
     data['Name'] = this.name;
     data['Company_ID'] = this.companyID;
     data['Start_Date'] = this.startDate;
+    data['Name_Locale'] = this.Lang;
     data['Contact_Person'] = this.contactPerson;
     data['Address'] = this.address;
     data['District'] = this.district;

@@ -227,7 +227,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                      //  await callGetFranchiseeNot(0);
                        await getDashboardData();
                      },
-                     child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
+                     child: getThreeLayout(ApplicationLocalizations.of(context).translate("opening_bal"),"${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                  GestureDetector(
                      onTap: ()async{
    print("tghjgthjgj");
@@ -243,7 +243,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                     //  await callGetFranchiseeNot(0);
                        await getDashboardData();
                      },
-                     child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
+                     child: getThreeLayout(ApplicationLocalizations.of(context).translate("closing_bal"),"${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
   ],
              ),
              const SizedBox(height: 10,),
@@ -271,7 +271,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          franchiseeName:widget.vName!,
                        )));
                      },
-                     child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
+                     child: getThreeLayout(ApplicationLocalizations.of(context)!.translate("purchase"),"${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17))),
                  GestureDetector(
                      onTap: (){
                        Navigator.push(context, MaterialPageRoute(builder: (context) => PurchaseMrpActivity(
@@ -286,7 +286,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          apiUrl: ApiConstants().getSaleMRP,
                        )));
                      },
-                     child: getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246))),
+                     child: getThreeLayout(ApplicationLocalizations.of(context).translate("purchase_MRP"), "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246))),
                ],
              ),
              const SizedBox(height: 10,),
@@ -351,7 +351,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          apiUrl: ApiConstants().getReturnMRP,
                        )));
                      },
-                     child: getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange)),
+                     child: getThreeLayout(ApplicationLocalizations.of(context).translate("return_MRP"), "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange)),
                ],
              ),
              const SizedBox(height: 10,),
@@ -379,11 +379,11 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                          franhiseeID:widget.fid!,
                          franchiseeName:widget.vName!,
                        )));
-                     },child: getThreeLayout("Expense","${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379))),
+                     },child: getThreeLayout(ApplicationLocalizations.of(context)!.translate("expense"),"${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379))),
                      //:Container(),
                  GestureDetector(
                      onTap: (){
-                     },child: getThreeLayout( "Sale MRP", "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
+                     },child: getThreeLayout(ApplicationLocalizations.of(context).translate("sale_MRP"), "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
                  //   :Container(),
                ],
              ),
@@ -391,10 +391,10 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
              Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-             /*    (TransactionMenu.contains("AT002"))? */   getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Payment"),
+             /*    (TransactionMenu.contains("AT002"))? */   getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}",  ApplicationLocalizations.of(context).translate("payment")),
                 /* (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                      (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?*/
-                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"),
+                 getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss")),
                ],
              ),
              const SizedBox(height: 10,),
@@ -404,15 +404,14 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                children: [
                  GestureDetector(
                      onTap: (){
-                     },child: getThreeLayout(additionalProfitLoss>=0?"Purchase Profit ":"Purchase Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
-
+                     },child: getThreeLayout(additionalProfitLoss>=0?ApplicationLocalizations.of(context).translate("purchase_profit"):ApplicationLocalizations.of(context).translate("purchase_loss"),"${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
                  GestureDetector(
                      onTap: (){
                        // Navigator.push(context, MaterialPageRoute(builder: (context) => LedgerActivity(mListener: this,dateNew: dateTime,
                        //   formId: "AT009",
                        //   arrData: dataArr,
                        // )));
-                     },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
+                     },child: getThreeLayout(additionalProfitLossShare>=0? ApplicationLocalizations.of(context).translate("purchase_profit_share"):ApplicationLocalizations.of(context).translate("purchase_loss_share"), "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                ],
              ),
             /* SizedBox(height: 10,),
@@ -662,7 +661,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profit>=0?"Sale Profit ":"Sale Loss",
+                          profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss"),
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
@@ -838,13 +837,14 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&${StringEn.frnachisee_id}=${widget.fid}";
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&${StringEn.lang}=$lang&${StringEn.frnachisee_id}=${widget.fid}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               setState(() {
@@ -905,6 +905,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
+    String lang=await AppPreferences.getLang();
 
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg444444   $date  ");
@@ -918,7 +919,7 @@ class _ProfitLossDashState extends State<ProfitLossDash> with CreateItemOpeningB
             page: "1"
         );
         print("meeeeeeee");
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.frnachisee_id}=${widget.fid}&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.lang}=$lang&${StringEn.frnachisee_id}=${widget.fid}&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 

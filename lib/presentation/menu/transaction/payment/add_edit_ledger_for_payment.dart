@@ -65,11 +65,12 @@ class _AddOrEditLedgerForPaymentState extends State<AddOrEditLedgerForPayment>{
   fetchShows () async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId";
+      String apiUrl = ApiConstants().baseUrl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {

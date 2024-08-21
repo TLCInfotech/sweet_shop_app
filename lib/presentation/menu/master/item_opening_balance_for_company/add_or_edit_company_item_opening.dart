@@ -80,11 +80,12 @@ class _AddOrEditItemOpeningBalForCompanyState extends State<AddOrEditItemOpening
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = "${baseurl}${ApiConstants().item_list}?Company_ID=$companyId&PartyID=null&Date=${widget.date}";
+      String apiUrl = "${baseurl}${ApiConstants().item_list}?Company_ID=$companyId&${StringEn.lang}=$lang&PartyID=null&Date=${widget.date}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {

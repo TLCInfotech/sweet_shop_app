@@ -376,6 +376,7 @@ Expanded get_items_list_layout() {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -386,7 +387,7 @@ Expanded get_items_list_layout() {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getFilteredItem}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredItem}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -478,6 +479,7 @@ Expanded get_items_list_layout() {
     String baseurl=await AppPreferences.getDomainLink();
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -490,7 +492,7 @@ Expanded get_items_list_layout() {
             modifierMachine: deviceId,
             companyId: companyId,
         );
-        String apiUrl = baseurl + ApiConstants().item+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().item+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

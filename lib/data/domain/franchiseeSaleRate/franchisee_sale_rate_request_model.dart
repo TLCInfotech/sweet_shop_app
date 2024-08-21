@@ -1,6 +1,7 @@
 class FranchiseeSaleRequest {
   String? companyID;
   String? Txn_Type;
+  String? lang;
   String? Franchisee_ID;
   String? date;
   String? modifier;
@@ -12,6 +13,7 @@ class FranchiseeSaleRequest {
   FranchiseeSaleRequest(
       {this.companyID,
         this.date,
+        this.lang,
         this.Txn_Type,
         this.Franchisee_ID,
         this.modifier,
@@ -23,6 +25,7 @@ class FranchiseeSaleRequest {
   FranchiseeSaleRequest.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     Txn_Type = json['Txn_Type'];
+    lang = json['Lang'];
     Franchisee_ID = json['Franchisee_ID'];
     date = json['Date'];
     modifier = json['Modifier'];
@@ -51,6 +54,7 @@ class FranchiseeSaleRequest {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = companyID;
     data['Txn_Type'] = Txn_Type;
+    data['Lang'] = lang;
     data['Franchisee_ID'] = Franchisee_ID;
     data['Date'] = date;
     data['Modifier'] = modifier;

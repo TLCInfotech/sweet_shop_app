@@ -6,6 +6,7 @@ class PostItemRequestModel {
     required this.CategoryID,
     required this.CompanyID,
      this.Unit,
+     this.Lang,
      this.Unit2,
      this.Unit2Factor,
      this.Unit2Base,
@@ -28,6 +29,7 @@ class PostItemRequestModel {
   late final String Name;
   late final String? CategoryID;
   late final String? CompanyID;
+  late final String? Lang;
   late final String? Unit;
   late final String? Unit2;
   late final String? Unit2Factor;
@@ -53,6 +55,7 @@ class PostItemRequestModel {
     CompanyID=json['Company_ID'];
     Unit = json['Unit'];
     Unit2 = json['Unit2'];
+    Lang = json['Name_Locale'];
     Unit2Factor = json['Unit2_Factor'];
     Unit2Base = json['Unit2_Base'];
     Unit3 = json['Unit3'];
@@ -77,6 +80,7 @@ class PostItemRequestModel {
     _data['Category_ID'] = CategoryID;
     _data['Company_ID']=CompanyID;
     _data['Unit'] = Unit;
+    _data['Name_Locale'] = Lang;
     _data['Unit2'] = Unit2;
     _data['Unit2_Factor'] = Unit2Factor;
     _data['Unit2_Base'] = Unit2Base;

@@ -150,7 +150,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    ApplicationLocalizations.of(context)!.translate("receipt_invoice")!,
+                                    ApplicationLocalizations.of(context).translate("receipt_invoice"),
                                     style: appbar_text_style,),
                                 ),
                               ),
@@ -763,6 +763,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -772,7 +773,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getPaymentVouvher}?Company_ID=$companyId&${StringEn.lang}=$lang&Ledger_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&Voucher_Name=Receipt&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -855,6 +856,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -867,7 +869,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
           "Modifier_Machine": deviceId,
           "Date":DateFormat("yyyy-MM-dd").format(newDate)
         };
-        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
+        String apiUrl = baseurl + ApiConstants().getPaymentVouvher+"?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(newDate)}";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -923,6 +925,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -934,7 +937,7 @@ class _ReceiptActivityState extends State<ReceiptActivity>with CreateReceiptInte
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&Voucher_Name=Receipt&Voucher_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getPaymentVoucherDetail+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_Name=Receipt&Voucher_No=$orderNo&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

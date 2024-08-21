@@ -7,6 +7,7 @@ class PutItemRequestModel {
     required this.CompanyId,
     this.Unit,
     this.Unit2,
+    this.Name_Locale,
     this.Unit2Factor,
     this.Unit2Base,
     this.Unit3,
@@ -33,6 +34,7 @@ class PutItemRequestModel {
   late final String? Unit2Factor;
   late final String? Unit2Base;
   late final String? Unit3;
+  late final String? Name_Locale;
   late final String? Unit3Factor;
   late final String? Unit3Base;
   late final String? PackSize;
@@ -50,6 +52,7 @@ class PutItemRequestModel {
   PutItemRequestModel.fromJson(Map<String, dynamic> json){
     CompanyId=json['Comapny_ID'];
     Name = json['Name'];
+    Name_Locale = json['Name_Locale'];
     CategoryID = json['Category_ID'];
     Unit = json['Unit'];
     Unit2 = json['Unit2'];
@@ -77,6 +80,7 @@ class PutItemRequestModel {
     _data['Category_ID'] = CategoryID;
     _data['Company_ID']=CompanyId;
     _data['Unit'] = Unit;
+    _data['Name_Locale'] = Name_Locale;
     _data['Unit2'] = Unit2;
     _data['Unit2_Factor'] = Unit2Factor;
     _data['Unit2_Base'] = Unit2Base;

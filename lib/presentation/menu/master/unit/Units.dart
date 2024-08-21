@@ -7,6 +7,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/colors.dart';
 import '../../../../core/common.dart';
@@ -489,6 +490,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -499,7 +501,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -562,6 +564,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
   postMeasuringUnit() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String unitMName=unitName.text.trim();
     String creatorName = await AppPreferences.getUId();
     AppPreferences.getDeviceId().then((deviceId) {
@@ -571,6 +574,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
       PostMeasuringUnitRequestModel model = PostMeasuringUnitRequestModel(
         code: unitMName,
           creatorMachine: deviceId,
+          Lang: lang,
           creator: creatorName,
           companyId: companyId
       );
@@ -611,6 +615,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -623,7 +628,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
           modifierMachine: deviceId
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
-      String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId";
+      String apiUrl = "${baseurl}${ApiConstants().measuring_unit}?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -661,6 +666,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String uid = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -673,7 +679,7 @@ class _UnitsActivityState extends State<UnitsActivity> {
             modifierMachine: deviceId,
             companyId: companyId
         );
-        String apiUrl = baseurl + ApiConstants().measuring_unit+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().measuring_unit+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

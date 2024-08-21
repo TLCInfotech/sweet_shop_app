@@ -557,6 +557,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -567,7 +568,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
             page: page.toString()
         );
         String apiUrl;
-          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&${StringEn.pageSize}";
+          apiUrl = "${baseurl}${ApiConstants().expense_voucher}?Company_ID=$companyId&${StringEn.lang}=$lang&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&PageNumber=$page&${StringEn.pageSize}";
      print("njnjfjfvnjn  $apiUrl");
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -652,6 +653,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -662,7 +664,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
        "Modifier": uid,
        "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().expense_voucher+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().expense_voucher+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -717,6 +719,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
   pdfDownloadCall(String orderNo,String urlType) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     String baseurl=await AppPreferences.getDomainLink();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
@@ -726,7 +729,7 @@ class _LedgerActivityState extends State<LedgerActivity>with CreateLedgerInterfa
           isLoaderShow=false;
         });
 
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_No=$orderNo&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

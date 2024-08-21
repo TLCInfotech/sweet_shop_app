@@ -411,11 +411,13 @@ bool disableColor=false;
     String creatorName = await AppPreferences.getUId();
     String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         LoginUserRequestModel model = LoginUserRequestModel(
           uid: creatorName,
+          Lang:lang,
           password: confirmPasswordController.text,
           modifier: creatorName,
           modifierMachine: deviceId,

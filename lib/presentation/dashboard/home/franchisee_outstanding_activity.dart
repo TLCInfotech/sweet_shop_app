@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_dash_activity.dart';
 import '../../../../core/app_preferance.dart';
@@ -448,6 +449,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
   getOutstandings(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -459,7 +461,7 @@ class _FranchiseeOutstandingDetailActivityState extends State<FranchiseeOutstand
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardOutstandingPartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardOutstandingPartywise}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

@@ -2,6 +2,7 @@
 class UserRightsModel {
   String? companyID;
   String? UID;
+  String? Lang;
   String? creater;
   String? createrMachine;
   String? modifier;
@@ -14,6 +15,7 @@ class UserRightsModel {
       {this.companyID,
         this.UID,
         this.creater,
+        this.Lang,
         this.createrMachine,
         this.modifier,
         this.modifierMachine,
@@ -24,6 +26,7 @@ class UserRightsModel {
   UserRightsModel.fromJson(Map<String, dynamic> json) {
     companyID = json['Company_ID'];
     UID = json['UID'];
+    Lang = json['Lang'];
     creater = json['Creator'];
     createrMachine = json['Creator_Machine'];
     modifier = json['Modifier'];
@@ -52,6 +55,7 @@ class UserRightsModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['UID'] = this.UID;
+    data['Lang'] = this.Lang;
     data['Creator'] = this.creater;
     data['Creator_Machine'] = this.createrMachine;
     data['Modifier'] = this.modifier;

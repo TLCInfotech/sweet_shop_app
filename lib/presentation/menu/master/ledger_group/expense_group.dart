@@ -689,6 +689,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callGetLedgerGroup(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -700,7 +701,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().ledger_group}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -774,6 +775,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
   callDeleteLedgerGroup(String removeId,int index) async {
     String uid = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -787,7 +789,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = baseurl + ApiConstants().ledger_group+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().ledger_group+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -833,6 +835,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -842,6 +845,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         PostLedgerGroupRequestModel model = PostLedgerGroupRequestModel(
           companyID:companyId,
           name: groupNameText,
+          Lang: lang,
           seqNo:seqNoText ,
           parentId:parentCategoryId==0?null:parentCategoryId.toString() ,
           groupNature: seqNatureText.substring(0,1),
@@ -903,6 +907,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
     String seqNatureText = selectedgroup.substring(0).trim();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -917,7 +922,7 @@ class _ExpenseGroupState extends State<ExpenseGroup> with LedegerGroupDialogInte
         );
         print("MODAL");
         print(model.toJson());
-        String apiUrl = baseurl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().ledger_group+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{

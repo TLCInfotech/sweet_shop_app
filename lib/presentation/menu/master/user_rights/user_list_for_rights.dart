@@ -341,6 +341,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
   getUser(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -353,7 +354,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
             page: page.toString()
         );
         String apiUrl;
-        apiUrl = "${baseurl}${ApiConstants().users}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        apiUrl = "${baseurl}${ApiConstants().users}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -430,6 +431,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -440,7 +442,7 @@ class _UserRightListActivityState extends State<UserRightListActivity>with Assig
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().userPermission+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().userPermission+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {

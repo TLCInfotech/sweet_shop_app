@@ -144,6 +144,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -155,7 +156,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
             page: page.toString()
         );
         // &Category_ID=$selectedCategoryID
-        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedFranchiseeID&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
         // &PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -241,6 +242,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
   callGetCopyFrenchisee(int page) async {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected) {
@@ -251,7 +253,7 @@ class _FranchiseePurchaseRateState extends State<FranchiseePurchaseRate> with Ad
         TokenRequestModel model =
         TokenRequestModel(token: sessionToken, page: "");
         String apiUrl =
-            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
+            "$baseurl${ApiConstants().franchisee_item_rate_list}?Franchisee_ID=$selectedCopyFranchiseeId&${StringEn.lang}=$lang&Date=${DateFormat('yyyy-MM-dd').format(invoiceDate)}&Company_ID=$companyId&Txn_Type=P";
         // &PageNumber=$page&${StringEn.pageSize}";
         print("newwww  $apiUrl   $baseurl ");
         //  "?pageNumber=$page&PageSize=12";
@@ -1261,6 +1263,7 @@ showButton=true;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -1268,6 +1271,7 @@ showButton=true;
       });
       FranchiseeSaleRequest model = FranchiseeSaleRequest(
           companyID: companyId,
+          lang:lang,
           Franchisee_ID:selectedFranchiseeID,
           Txn_Type: 'P',
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),

@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/item/post_item_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_unit_layout.dart';
@@ -40,6 +41,8 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
 
   final _itemNameFocus = FocusNode();
   final itemNameController = TextEditingController();
+  final _itemNameMrFocus = FocusNode();
+  final itemNameMrController = TextEditingController();
   final _itemNameKey = GlobalKey<FormFieldState>();
 
   final _unitFocus = FocusNode();
@@ -81,17 +84,26 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setVal();
     if(widget.editItem!=null)
     getData();
+
   }
   var itemData=null;
   bool isApiCall = false;
+  String langu = "en_IN";
+setVal()async{
+  langu=await AppPreferences.getLang();
+  setState(() {
 
+  });
+}
   getData()async{
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -101,7 +113,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().item}/${widget.editItem['ID']}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().item}/${widget.editItem['ID']}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               setState(()  {
@@ -167,6 +179,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       setState(()  {
         picImage=f;
         itemNameController.text=itemData[0]['Name'];
+        itemNameMrController.text=itemData[0]['Name_Locale']!=null?itemData[0]['Name_Locale']:itemNameMrController.text.trim();
         categoryName=itemData[0]['Category_Name']!=null?itemData[0]['Category_Name']:categoryName;
         categoryId=itemData[0]['Category_ID']!=null?itemData[0]['Category_ID']:categoryId;
          unitTwoId=itemData[0]['Unit2']!=null?itemData[0]['Unit2']:unitTwoId;
@@ -175,8 +188,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
            unitTwoBaseController.text=itemData[0]['Unit2_Base']!=null?(double.parse(itemData[0]['Unit2_Base'].toString())).toStringAsFixed(2):unitTwoBaseController.text;
           unitThreeId=itemData[0]['Unit3']!=null?itemData[0]['Unit3']:unitThreeId;
           unitThreeName=itemData[0]['Unit3']!=null?itemData[0]['Unit3']:"";
-
-        unitThreeBaseController.text=itemData[0]['Unit3_Base']!=null?(double.parse(itemData[0]['Unit3_Base'].toString())).toStringAsFixed(2):unitThreeBaseController.text;
+          unitThreeBaseController.text=itemData[0]['Unit3_Base']!=null?(double.parse(itemData[0]['Unit3_Base'].toString())).toStringAsFixed(2):unitThreeBaseController.text;
          unitThreefactorController.text=itemData[0]['Unit3_Factor']!=null?(double.parse(itemData[0]['Unit3_Factor'].toString())).toStringAsFixed(2):unitTwofactorController.text;
          packSizeController.text=itemData[0]['Pack_Size']!=null?(itemData[0]['Pack_Size']).toString():packSizeController.text;
         rateController.text=itemData[0]['Rate']!=null?double.parse((itemData[0]['Rate']).toString()).toStringAsFixed(2):rateController.text;
@@ -485,6 +497,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                       ),
                       child: Column(children: [
                         getNameLayout(parentHeight, parentWidth),
+                        langu=="en_IN"?Container():getNameMrLayout(parentHeight, parentWidth),
                         getAddCategoryLayout(parentHeight, parentWidth),
                         getMeasuringUnitLayout(parentHeight, parentWidth),
                         getUnitTwoLayout(parentHeight, parentWidth),
@@ -526,8 +539,9 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       controller: itemNameController,
       readOnly: widget.readOnly,
       focuscontroller: _itemNameFocus,
-      focusnext: _categoryFocus,
-      title: ApplicationLocalizations.of(context)!.translate("item_name")!,
+      focusnext: _itemNameMrFocus,
+      title: "Item Name(English)",
+    //  title: ApplicationLocalizations.of(context)!.translate("item_name")!,
       callbackOnchage: (value) {
         setState(() {
           itemNameController.text = value;
@@ -537,6 +551,32 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       textInput: TextInputType.text,
       maxlines: 1,
       format:FilteringTextInputFormatter.allow(RegExp(r'^[A-zÀ\s*&^%0-9,.-:)(]+')), 
+    );
+
+  }
+  /* Widget for name text from field layout */
+  Widget getNameMrLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      mandatory: false,
+      validation: (value) {
+        if (value!.isEmpty) {
+          return "";
+        }
+        return null;
+      },
+      controller: itemNameMrController,
+      readOnly: widget.readOnly,
+      focuscontroller: _itemNameMrFocus,
+      focusnext: _categoryFocus,
+      title: ApplicationLocalizations.of(context).translate("item_name")+ApplicationLocalizations.of(context).translate("langu"),
+      callbackOnchage: (value) {
+        setState(() {
+          itemNameMrController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'^[\u0900-\u097F\sA-Za-z0-9&^%*.,:)(-]+$')),
     );
 
   }
@@ -679,7 +719,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                     border: InputBorder.none,
                     counterText: '',
                     isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!+ " "+ApplicationLocalizations.of(context)!.translate("unit_two")!,
+                //    hintText: ApplicationLocalizations.of(context)!.translate("enter")!+ " "+ApplicationLocalizations.of(context)!.translate("unit_two")!,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller: unitTwofactorController,
@@ -763,7 +803,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                     counterText: '',
 
                     isDense: true,
-                    hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                   // hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                     hintStyle: hint_textfield_Style,
                   ),
                   controller: unitTwoBaseController,
@@ -876,7 +916,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                       suffix: unitThreeName==""?Text(""):Text(unitThreeName,style: item_regular_textStyle,),
                       counterText: '',
                       isDense: true,
-                      hintText: ApplicationLocalizations.of(context)!.translate("enter")!+" "+  ApplicationLocalizations.of(context)!.translate("unit_three")!,
+                    //  hintText: ApplicationLocalizations.of(context)!.translate("enter")!+" "+  ApplicationLocalizations.of(context)!.translate("unit_three")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     controller: unitThreefactorController,
@@ -963,7 +1003,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                       counterText: '',
                       suffix: measuringUnit==""?Text(""):Text(measuringUnit,style: item_regular_textStyle,),
                       isDense: true,
-                      hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
+                     // hintText: ApplicationLocalizations.of(context)!.translate("enter")!,
                       hintStyle: hint_textfield_Style,
                     ),
                     //controller: itemNameController,
@@ -1429,9 +1469,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
                 }
                 if(widget.editItem!=null){
                   await callUpdateItem();
+                  print("ijtgjgjh ");
                 }
                 else {
                   await callPostItem();
+                  print("ijtgjgjh333 ");
                 }
               }
             },
@@ -1467,6 +1509,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     //var model={};
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -1474,6 +1517,7 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
       });
       PostItemRequestModel model = PostItemRequestModel(
           CompanyID: companyId,
+          Lang: itemNameMrController.text.trim(),
           Name: itemNameController.text.trim(),
           CategoryID: categoryId.toString(),
           Creator: creatorName,
@@ -1498,9 +1542,9 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
         );
 
 
-      print("IMGE2 : ${(model.Photo)?.length}");
+      print("IMGE2 : ${model.toJson()}");
 
-      String apiUrl = baseurl + ApiConstants().item;
+      String apiUrl = baseurl + ApiConstants().item+"?${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -1537,11 +1581,13 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
     String baseurl=await AppPreferences.getDomainLink();
     String creatorName = await AppPreferences.getUId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemRequestModel model = PutItemRequestModel(
             CompanyId: companyId,
+            Name_Locale: itemNameMrController.text.trim(),
             Modifier: creatorName,
             Modifier_Machine: deviceId,
             Name: itemNameController.text.trim(),
@@ -1564,9 +1610,11 @@ class _ItemCreateActivityState extends State<ItemCreateActivity> {
             Unit: measuringUnit,
         );
 
+print("iugthjgtjhgt  ${ model.toJson()}");
 
+        String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId&${StringEn.lang}=$lang";
 
-        String apiUrl = baseurl + ApiConstants().item+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
+        print("jfkjgdjgd  $apiUrl");
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(value)async{
               print("  Put Call :   $value ");

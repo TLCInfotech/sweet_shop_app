@@ -642,7 +642,7 @@ bool isLoaderShow=false;
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().item_category}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().item_category}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -730,6 +730,7 @@ bool isLoaderShow=false;
     String uid = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -741,7 +742,7 @@ bool isLoaderShow=false;
             modifier: uid,
             modifierMachine: deviceId
         );
-        String apiUrl = baseurl + ApiConstants().item_category+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().item_category+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -788,6 +789,7 @@ bool isLoaderShow=false;
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -795,6 +797,7 @@ bool isLoaderShow=false;
         });
         PostItemCategoryRequestModel model = PostItemCategoryRequestModel(
             CompanyId: companyId,
+            Lang: lang,
             Name: catName,
             Parent_ID:parentCategoryId.toString(),
             Seq_No: seqNoText,
@@ -850,6 +853,7 @@ bool isLoaderShow=false;
     String creatorName = await AppPreferences.getUId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         PutItemCategoryRequestModel model = PutItemCategoryRequestModel(
@@ -869,7 +873,7 @@ bool isLoaderShow=false;
 
         print("MODAL");
         print(model.toJson());
-        String apiUrl =baseurl + ApiConstants().item_category+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId";
+        String apiUrl =baseurl + ApiConstants().item_category+"/"+editedItem['ID'].toString()+"?Company_ID=$companyId&${StringEn.lang}=$lang";
 
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",

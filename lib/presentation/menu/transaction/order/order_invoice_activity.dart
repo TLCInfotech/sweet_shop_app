@@ -621,6 +621,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -630,7 +631,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().saleOrder}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().saleOrder}?Company_ID=$companyId&${StringEn.lang}=$lang&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&pageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
           setState(() {
@@ -698,6 +699,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -708,7 +710,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().saleOrder+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().saleOrder+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -771,6 +773,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken=await AppPreferences.getSessionToken();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -782,7 +785,7 @@ class _OrderInvoiceActivityState extends State<OrderInvoiceActivity>with CreateO
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&Order_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Order_No=$orderNo&Type=$urlType";
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{

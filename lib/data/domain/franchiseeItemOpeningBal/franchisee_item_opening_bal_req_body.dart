@@ -2,6 +2,7 @@ class PostFranchiseeItemOpeningRequestModel {
   String? companyID;
   String? franchiseeID;
   String? date;
+  String? lang;
   String? modifier;
   String? modifierMachine;
   List<dynamic>? iNSERT;
@@ -12,6 +13,7 @@ class PostFranchiseeItemOpeningRequestModel {
       {this.companyID,
         this.franchiseeID,
         this.date,
+        this.lang,
         this.modifier,
         this.modifierMachine,
         this.iNSERT,
@@ -22,6 +24,7 @@ class PostFranchiseeItemOpeningRequestModel {
     companyID = json['Company_ID'];
     franchiseeID = json['Franchisee_ID'];
     date = json['Date'];
+    lang = json['Lang'];
     modifier = json['Modifier'];
     modifierMachine = json['Modifier_Machine'];
     if (json['INSERT'] != null) {
@@ -49,6 +52,7 @@ class PostFranchiseeItemOpeningRequestModel {
     data['Company_ID'] = this.companyID;
     data['Franchisee_ID'] = this.franchiseeID;
     data['Date'] = this.date;
+    data['Lang'] = this.lang;
     data['Modifier'] = this.modifier;
     data['Modifier_Machine'] = this.modifierMachine;
     if (this.iNSERT != null) {

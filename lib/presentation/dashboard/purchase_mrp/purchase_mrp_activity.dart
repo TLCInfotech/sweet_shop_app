@@ -595,6 +595,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -605,7 +606,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
             page: page.toString()
         );
         String apiUrl;
-        apiUrl = "${baseurl}${widget.apiUrl}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
+        apiUrl = "${baseurl}${widget.apiUrl}?Company_ID=$companyId&${StringEn.lang}=$lang&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}";
           apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
             setState(() {
@@ -672,6 +673,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -682,7 +684,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().getSaleInvoice+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getSaleInvoice+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -744,6 +746,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -754,7 +757,7 @@ class _PurchaseMrpActivityState extends State<PurchaseMrpActivity>with CreatePur
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getSaleInvoiceDetails+"/Download?Company_ID=$companyId&Invoice_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getSaleInvoiceDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Invoice_No=$orderNo&Type=$urlType";
 
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/colors.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../core/app_preferance.dart';
@@ -91,6 +92,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -100,7 +102,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleReturnPartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleReturnPartywise}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -162,6 +164,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -171,7 +174,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleReturnItemwise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardSaleReturnItemwise}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(saleDate)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
 
@@ -356,7 +359,7 @@ class _PurchaseDashState extends State<PurchaseDashActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Go To Credit Note Voucher",style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
+              Text( ApplicationLocalizations.of(context).translate("go_to_credit_note"),style: subHeading_withBold.copyWith(color: Colors.white,fontSize: 18),),
               // IconButton(onPressed: (){}, icon: Icon(Icons.double_arrow_outlined,color: Colors.white,))
               Icon(Icons.double_arrow_outlined,color: Colors.white,)
             ],

@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/core/util.dart';
 import 'package:sweet_shop_app/data/domain/franchisee/post_franchisee_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
@@ -134,12 +135,21 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   void initState() {
     // TODO: implement initState
     super.initState();
+    setVal();
     if(widget.editItem!=null)
       getData();
 
   }
 
+  final _langFocus = FocusNode();
+  final langController = TextEditingController();
+  String langu = "en_IN";
+  setVal()async{
+    langu=await AppPreferences.getLang();
+    setState(() {
 
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return contentBox(context);
@@ -200,7 +210,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                               Expanded(
                                 child:  Center(
                                   child: Text(
-                                    ApplicationLocalizations.of(context)!.translate("franchisee_new")!,
+                                    ApplicationLocalizations.of(context).translate("franchisee_new"),
                                     style: appbar_text_style,),
                                 ),
                               ),
@@ -273,16 +283,17 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
 
               if (mounted && v && q && u && r && s && t) {
                 String baseurl=await AppPreferences.getDomainLink();
+                String lang=await AppPreferences.getLang();
                 String companyId = await AppPreferences.getCompanyId();
                 setState(() {
                   disableColor = true;
 
                   if(widget.editItem!=null){
-                    String apiUrl = baseurl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId";
+                    String apiUrl = baseurl + ApiConstants().franchisee+"/"+widget.editItem['ID'].toString()+"?Company_ID=$companyId&${StringEn.lang}=$lang";
                     callPostFranchisee(apiRequestHelper.callAPIsForPutAPI,apiUrl);
                     // callUpdateFranchisee();
                   }else{
-                    String apiUrl = baseurl + ApiConstants().franchisee;
+                    String apiUrl = baseurl + ApiConstants().franchisee+"?${StringEn.lang}=$lang";
                     callPostFranchisee(apiRequestHelper.callAPIsForDynamicPI,apiUrl);
                   }
                 });
@@ -455,7 +466,8 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
                       border: Border.all(color: Colors.grey,width: 1),
                     ),
                     child: Column(children: [
-                      getFranchiseeNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
+                      getFranchiseeNameLayout(SizeConfig.screenHeight, SizeConfig.screenWidth),
+                     langu=="en_IN"?Container(): getLangNameLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
 
                       getContactPersonLayout(   SizeConfig.screenHeight, SizeConfig.screenWidth),
 
@@ -1084,9 +1096,10 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
       txtkey:_fnameKey,
       controller: franchiseeName,
       focuscontroller: _franchiseeNameFocus,
-      focusnext: _franchiseeContactPersonFocus,
+      focusnext: langController,
       readOnly: widget.readOnly,
-      title: ApplicationLocalizations.of(context)!.translate("franchisee_name")!,
+      title:"Branch Name (English)",
+     // title: ApplicationLocalizations.of(context).translate("franchisee_name"),
       callbackOnchage: (value) {
         setState(() {
           franchiseeName.text = value;
@@ -1105,16 +1118,45 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
     );
   }
 
+
+  /* widget for Franchisee name layout */
+  Widget getLangNameLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormFieldWithoubleDouble(
+      mandatory: false,
+      controller: langController,
+      focuscontroller: _langFocus,
+      focusnext: _franchiseeContactPersonFocus,
+      readOnly: widget.readOnly,
+      title: ApplicationLocalizations.of(context).translate("franchisee_name")+ApplicationLocalizations.of(context).translate("langu"),
+      callbackOnchage: (value) {
+        setState(() {
+          langController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow( RegExp(r'^[\u0900-\u097F\sA-Za-z0-9&^%*.,:)(-]+$')),
+      validation: ((value) {
+        if (value!.isEmpty) {
+          return "";
+        }
+        return null;
+      }),
+    );
+  }
+
   callPostFranchisee(callmethod,apiUrl) async {
 
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
       });
       PostFranchiseeRequestModel model = PostFranchiseeRequestModel(
             name: franchiseeName.text.trim(),
+            Lang: langController.text.trim(),
             companyID: int.parse(companyId),
             startDate: null,
             contactPerson: franchiseeContactPerson.text.trim(),
@@ -1199,6 +1241,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
   getData()async{
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -1210,7 +1253,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().franchisee}/${widget.editItem['ID']}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().franchisee}/${widget.editItem['ID']}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               setState(()  {
@@ -1296,6 +1339,7 @@ class _CreateFranchiseeState extends State<CreateFranchisee> with SingleTickerPr
         panNoController.text=itemData[0]['PAN_No']!=null?itemData[0]['PAN_No'].toString():panNoController.text;
         gstNoController.text=itemData[0]['GST_No']!=null?itemData[0]['GST_No'].toString():gstNoController.text;
         bankNameController.text=itemData[0]['Bank_Name']!=null?itemData[0]['Bank_Name'].toString():bankNameController.text;
+        langController.text=itemData[0]['Name_Locale']!=null?itemData[0]['Name_Locale'].toString():langController.text;
         bankBranchController.text=itemData[0]['Bank_Branch']!=null?itemData[0]['Bank_Branch'].toString():bankBranchController.text;
         IFSCCodeController.text=itemData[0]['IFSC_Code']!=null?itemData[0]['IFSC_Code'].toString():IFSCCodeController.text;
         accountNoController.text=itemData[0]['Account_No']!=null?itemData[0]['Account_No'].toString():accountNoController.text;

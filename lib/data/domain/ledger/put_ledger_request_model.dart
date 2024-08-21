@@ -3,6 +3,7 @@ class PutLedgerRequestModel {
   String? groupID;
   String? contactPerson;
   String? address;
+  String? Lang;
   String? district;
   String? state;
   String? pinCode;
@@ -45,6 +46,7 @@ class PutLedgerRequestModel {
     this.groupID,
     this.contactPerson,
     this.address,
+    this.Lang,
     this.district,
     this.state,
     this.pinCode,
@@ -87,6 +89,7 @@ class PutLedgerRequestModel {
     return {
       'Company_ID':companyId??'',
       'Name': name ?? '',
+      'Name_Locale': Lang ?? '',
       'Group_ID': groupID ?? '',
       'Contact_Person': contactPerson ?? '',
       'Address': address ?? '',

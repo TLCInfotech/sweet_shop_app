@@ -141,6 +141,7 @@ bool viewWorkDVisible=true;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -152,10 +153,10 @@ bool viewWorkDVisible=true;
         );
         String apiUrl;
         if(selectedFranchiseeID==null){
-          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
+          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
 
         }else{
-          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=$selectedFranchiseeID&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
+          apiUrl= "${baseurl}${ApiConstants().franchisee_items}?Franchisee_ID=$selectedFranchiseeID&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&Company_ID=$companyId";
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -1044,6 +1045,7 @@ showButton=true;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -1052,6 +1054,7 @@ showButton=true;
 
           franchiseeID:selectedFranchiseeID.toString() ,
           companyID: companyId ,
+          lang:lang,
           date: DateFormat('yyyy-MM-dd').format(invoiceDate),
           modifier: creatorName,
           modifierMachine: deviceId,

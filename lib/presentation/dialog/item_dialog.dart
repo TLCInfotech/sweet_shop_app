@@ -42,12 +42,13 @@ class _ItemDialogState extends State<ItemDialog>{
   fetchShows (searchstring) async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String sessionToken = await AppPreferences.getSessionToken();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&name=${searchstring}";
+      String apiUrl = baseurl + ApiConstants().item_list+"?Company_ID=$companyId&${StringEn.lang}=$lang&name=${searchstring}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data)async{
             if(data!=null) {

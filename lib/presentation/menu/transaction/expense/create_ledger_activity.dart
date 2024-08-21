@@ -1076,6 +1076,7 @@ String finVoucherNo="";
   getExpInvoice(int page) async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected){
@@ -1087,7 +1088,7 @@ String finVoucherNo="";
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getExpenseVoucherDetails}?Company_ID=$companyId&Voucher_No=${widget.voucherNo}";
+        String apiUrl = "${baseurl}${ApiConstants().getExpenseVoucherDetails}?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_No=${widget.voucherNo}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
           print(data);
@@ -1160,6 +1161,7 @@ String finVoucherNo="";
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     // String roundOffAmt =  calculateRoundOffAmt().toStringAsFixed(2);
     // double roundOffAmtInt = double.parse(roundOffAmt);
    // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
@@ -1174,6 +1176,7 @@ String finVoucherNo="";
       PostExpenseInvoiceRequestModel model = PostExpenseInvoiceRequestModel(
           Ledger_ID:selectedFranchiseeId ,
           companyID: companyId ,
+          lang: lang,
           Voucher_Name: "Expense",
         Round_Off:double.parse(roundoff) ,
           Total_Amount:TotalAmountInt ,
@@ -1230,6 +1233,7 @@ String finVoucherNo="";
   updatecallPostExpense() async {
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     String baseurl=await AppPreferences.getDomainLink();
     var matchDate=DateFormat('yyyy-MM-dd').format(invoiceDate).compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
     print("dfsdf    $matchDate");
@@ -1244,6 +1248,7 @@ String finVoucherNo="";
           Ledger_ID:selectedFranchiseeId ,
           voucher_No:widget.voucherNo ,
           companyID: companyId ,
+          lang:lang,
           Voucher_Name: "Expense",
           Round_Off:double.parse(roundoff) ,
           Total_Amount:TotalAmountInt ,
@@ -1305,6 +1310,7 @@ String finVoucherNo="";
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1317,7 +1323,7 @@ String finVoucherNo="";
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getExpenseVoucherDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Voucher_No=${widget.voucherNo.toString()}&Type=$urlType";
 
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,

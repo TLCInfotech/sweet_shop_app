@@ -12,6 +12,7 @@ import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
@@ -306,11 +307,11 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 viewWorkDVisible: viewWorkDVisible,
                                 logoImage: logoImage,
                                 come:"Opening",
-                                titleKey: "Branch Item Opening Balance",
+                                titleKey:ApplicationLocalizations.of(context).translate("item_opening_balance"),
                                 arrData: dataArrM,
                               )));
                           },
-                          child: getThreeLayout("Opening Bal.","${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
+                          child: getThreeLayout(ApplicationLocalizations.of(context).translate("opening_bal"),"${CommonWidget.getCurrencyFormat(itemOpening)}",Color(0xFF6495ED))),
                         GestureDetector(
                             onTap: (){
                               setState(() {
@@ -328,9 +329,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 viewWorkDDate: viewWorkDDate,
                                 viewWorkDVisible: viewWorkDVisible,
                                 arrData: dataArrM,
-                                titleKey: "Branch Item Closing Balance",
+                                titleKey:    ApplicationLocalizations.of(context).translate("item_closing_balance"),
                               )));
-                            }, child: getThreeLayout("Closing Bal.","${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
+                            }, child: getThreeLayout(ApplicationLocalizations.of(context).translate("closing_bal"),"${CommonWidget.getCurrencyFormat(itemClosing)}",Color(0xFF6082B6))),
                       ],
                     ),
                     const SizedBox(height: 10,),
@@ -354,7 +355,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 arrData: dataArr,
                               )));
                             },
-                            child: getThreeLayout("Purchase","${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17)))
+                            child: getThreeLayout(ApplicationLocalizations.of(context)!.translate("purchase"),"${CommonWidget.getCurrencyFormat(purchaseAmt)}",Color(0xFF4CBB17)))
                         ,
                         /* (TransactionMenu.contains("AT006"))?*/ GestureDetector(
                             onTap: (){
@@ -365,7 +366,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 arrData: dataArr,
                                     apiUrl: ApiConstants().getSaleMRP,
                               )));
-                            },child: getThreeLayout( "Purchase MRP", "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)))
+                            },child: getThreeLayout(ApplicationLocalizations.of(context).translate("purchase_MRP"), "${CommonWidget.getCurrencyFormat((purchaseMRPAmt))}",Color(0xFFef1246)))
                         // :Container(),
                       ],
                     )
@@ -393,7 +394,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 logoImage: logoImage,
                                 arrData: dataArr,
                               )));
-                            },child: getThreeLayout("Return","${CommonWidget.getCurrencyFormat(returnAmt)}",Color(0xFF00A36C))),
+                            },child: getThreeLayout(ApplicationLocalizations.of(context)!.translate("return"),"${CommonWidget.getCurrencyFormat(returnAmt)}",Color(0xFF00A36C))),
                         //  :Container(),
                         GestureDetector(
                             onTap: (){
@@ -406,7 +407,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 comeFor: "Return",
                                 apiUrl: ApiConstants().getReturnMRP,
                               )));
-                            },child: getThreeLayout( "Return MRP", "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange))
+                            },child: getThreeLayout( ApplicationLocalizations.of(context).translate("return_MRP"), "${CommonWidget.getCurrencyFormat((returnMRPAmt))}",Colors.orange))
                         //   :Container(),
                       ],
                     ),
@@ -431,7 +432,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                 viewWorkDVisible: viewWorkDVisible,
                                 arrData: dataArr,
                               )));
-                            },child: getThreeLayout("Expense","${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379)))
+                            },child: getThreeLayout(ApplicationLocalizations.of(context).translate("expense"),"${CommonWidget.getCurrencyFormat(expenseAmt)}",Color(0xFFf88379)))
                     ,
                         GestureDetector(
                             onTap: (){
@@ -440,7 +441,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               //   arrData: dataArr,
                               //   logoImage: logoImage,
                               // )));
-                            },child: getThreeLayout( "Sale MRP", "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
+                            },child: getThreeLayout(ApplicationLocalizations.of(context).translate("sale_MRP"), "${CommonWidget.getCurrencyFormat((saleMRPAmt))}",Color(0xFF913a74)  ))
                         //   :Container(),
                       ],
                     ),
@@ -448,10 +449,10 @@ class _HomeFragmentState extends State<HomeFragment> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /*  (TransactionMenu.contains("AT002"))?*/    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", "Receipt"),
+                        /*  (TransactionMenu.contains("AT002"))?*/    getSellPurchaseExpenseLayout(Colors.deepPurple, "${CommonWidget.getCurrencyFormat((receiptAmt))}", ApplicationLocalizations.of(context).translate("receipt")),
                         /* (MasterMenu.contains("RM005"))&&(TransactionMenu.contains("ST003"))&&
                             (TransactionMenu.contains("AT006"))&&(TransactionMenu.contains("AT009"))?*/
-                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?"Sale Profit ":"Sale Loss"),
+                        getSellPurchaseExpenseLayout(Colors.deepOrange, "${CommonWidget.getCurrencyFormat((profit))}",   profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss")),
                       ],
                     ),
 
@@ -462,7 +463,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       children: [
                         GestureDetector(
                             onTap: (){
-                            },child: getThreeLayout(additionalProfitLoss>=0?"Purchase Profit ":"Purchase Loss","${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
+                            },child: getThreeLayout(additionalProfitLoss>=0?ApplicationLocalizations.of(context).translate("purchase_profit"):ApplicationLocalizations.of(context).translate("purchase_loss"),"${CommonWidget.getCurrencyFormat(additionalProfitLoss)}",additionalProfitLoss<0?Colors.red:Colors.green)),
 
                         GestureDetector(
                             onTap: (){
@@ -470,7 +471,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                               //   formId: "AT009",
                               //   arrData: dataArr,
                               // )));
-                            },child: getThreeLayout(additionalProfitLossShare>=0? "Purchase Profit Share":"Purchase Loss Share", "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
+                            },child: getThreeLayout(additionalProfitLossShare>=0? ApplicationLocalizations.of(context).translate("purchase_profit_share"):ApplicationLocalizations.of(context).translate("purchase_loss_share"), "${CommonWidget.getCurrencyFormat((additionalProfitLossShare))}",additionalProfitLossShare<0?Colors.red:Colors.green))
                       ],
                     ),
                     SizedBox(height: 10,),
@@ -643,7 +644,7 @@ class _HomeFragmentState extends State<HomeFragment> {
       GestureDetector(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-            comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
+            comeFor: profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss"),
             date:dateTime,
             viewWorkDVisible: viewWorkDVisible,
             viewWorkDDate: viewWorkDDate,
@@ -674,7 +675,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profit>=0?"Sale Profit ":"Sale Loss",
+                          profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss"),
                           style: item_heading_textStyle.copyWith(
                               color:Colors.white,
                               fontSize: 20,
@@ -1015,7 +1016,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         }
         else{
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfitLossDetailActivity(mListener: this,
-            comeFor: profit>=0?"Sale Profit ":"Sale Loss" ,
+            comeFor: profit>=0?ApplicationLocalizations.of(context).translate("sale_profit"):ApplicationLocalizations.of(context).translate("sale_loss") ,
             date:dateTime,
             viewWorkDVisible: viewWorkDVisible,
             viewWorkDDate: viewWorkDDate,
@@ -1082,9 +1083,10 @@ class _HomeFragmentState extends State<HomeFragment> {
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       String apiUrl =
-          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId&${StringEn.lang}=$lang";
       print("newwww  $apiUrl   $baseurl ");
       //  "?pageNumber=$page&PageSize=12";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",
@@ -1134,6 +1136,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
     String uid=await AppPreferences.getUId();
+    String lang=await AppPreferences.getLang();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
     if (netStatus == InternetConnectionStatus.connected){
@@ -1145,7 +1148,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
 
@@ -1224,6 +1227,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
     String date=await AppPreferences.getDateLayout();
+    String lang=await AppPreferences.getLang();
     //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
     print("objectgggg   $date  ");
     if (netStatus == InternetConnectionStatus.connected){
@@ -1235,7 +1239,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
+        String apiUrl = "${baseurl}${ApiConstants().getDashboardData}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(dateTime)}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               print("hjhjghgh  $data");
@@ -1324,6 +1328,7 @@ class _HomeFragmentState extends State<HomeFragment> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1335,7 +1340,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             page: page.toString()
         );
         DateTime invoiceDate =  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30));
-        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&Date=$invoiceDate";
+        String apiUrl = "${baseurl}${ApiConstants().getAllNotifications}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=$invoiceDate";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               print('gjgjjgjgjng  $data');
@@ -1395,13 +1400,14 @@ class _HomeFragmentState extends State<HomeFragment> {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String pushKey=await AppPreferences.getPushKey();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&PushKey=$pushKey";
+        String apiUrl = "${baseurl}${ApiConstants().sendFranchiseeNotification}?Company_ID=$companyId&${StringEn.lang}=$lang&PushKey=$pushKey";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
             onSuccess:(data){
               setState(() {

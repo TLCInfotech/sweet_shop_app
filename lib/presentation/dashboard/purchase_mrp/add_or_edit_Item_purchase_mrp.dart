@@ -100,10 +100,11 @@ class _AddOrEditIPurchaseMrpActivityState extends State<AddOrEditIPurchaseMrpAct
 
   getCompanyId() async {
     String companyId1 = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     setState(() {
       companyId = companyId1;
       api =
-          "${ApiConstants().salePartyItem}?Company_ID=$companyId1&PartyID=${widget.id}&Date=${widget.dateFinal}";
+          "${ApiConstants().salePartyItem}?Company_ID=$companyId1&${StringEn.lang}=$lang&PartyID=${widget.id}&Date=${widget.dateFinal}";
     });
     print("CompanyID=> $companyId");
   }
@@ -167,13 +168,14 @@ class _AddOrEditIPurchaseMrpActivityState extends State<AddOrEditIPurchaseMrpAct
   fetchItems() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     String baseurl = await AppPreferences.getDomainLink();
     await AppPreferences.getDeviceId().then((deviceId) {
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
       String apiUrl =
-          "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&PartyID=${widget.id}&Date=${widget.dateFinal}";
+          "${baseurl}${ApiConstants().salePartyItem}?Company_ID=$companyId&${StringEn.lang}=$lang&PartyID=${widget.id}&Date=${widget.dateFinal}";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess: (data) async {
         if (data != null) {

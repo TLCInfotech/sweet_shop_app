@@ -7,6 +7,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 
 import '../../core/internet_check.dart';
 import '../../data/api/constant.dart';
@@ -211,7 +212,8 @@ class _LogOutDialogState extends State<LogOutDialog> {
     String creatorName = await AppPreferences.getUId();
     String tokenId = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
-    final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName&Company_ID=$companyId');
+    String lang = await AppPreferences.getLang();
+    final url = Uri.parse('${ApiConstants().baseUrl}${ApiConstants().logout}?UID=$creatorName&Company_ID=$companyId&${StringEn.lang}=$lang');
     try {
       final response = await http.post(url,headers: {
         'Authorization': 'Bearer $tokenId',

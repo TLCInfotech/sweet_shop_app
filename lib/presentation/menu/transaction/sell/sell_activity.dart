@@ -614,6 +614,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -625,7 +626,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         );
         String apiUrl;
 
-          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
+          apiUrl = "${baseurl}${ApiConstants().getSaleInvoice}?Company_ID=$companyId&${StringEn.lang}=$lang&Franchisee_ID=$selectedFranchiseeId&Date=${DateFormat("yyyy-MM-dd").format(invoiceDate)}&PageNumber=$page&${StringEn.pageSize}";
 
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -694,6 +695,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -704,7 +706,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
           "Modifier": uid,
           "Modifier_Machine": deviceId
         };
-        String apiUrl = baseurl + ApiConstants().getSaleInvoice+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().getSaleInvoice+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model, "",
             onSuccess:(data){
               setState(() {
@@ -766,6 +768,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -776,7 +779,7 @@ class _SellActivityState extends State<SellActivity>with CreateSellInvoiceInterf
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getSaleInvoiceDetails+"/Download?Company_ID=$companyId&Invoice_No=$orderNo&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getSaleInvoiceDetails+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Invoice_No=$orderNo&Type=$urlType";
 
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{

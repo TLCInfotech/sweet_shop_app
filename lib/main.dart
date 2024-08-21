@@ -47,6 +47,13 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> getData() async {
     String lang = await AppPreferences.getLang();
+    if(lang=="mr_IN"){
+      lang="mr";
+    }else if(lang=="hi_IN"){
+      lang="hi";
+    }else{
+      lang="en";
+    }
     print("jfjfhjfv   $lang");
     setState(() {
       _locale = Locale(lang);
@@ -56,7 +63,8 @@ class _MyAppState extends State<MyApp> {
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
-      AppPreferences.setLang(locale.languageCode); // Optionally save the new locale
+      print("jfjbvvbbgv   ${locale.languageCode}");
+      AppPreferences.setLang(locale.languageCode+"_IN"); // Optionally save the new locale
     });
   }
 
@@ -68,7 +76,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       supportedLocales: const [
         Locale('en', ''),
-        Locale('de', ''),
+        Locale('mr', ''),
         Locale('hi', ''),
       ],
       locale: _locale,

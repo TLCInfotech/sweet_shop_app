@@ -88,7 +88,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
     SearchableLedgerDropdown(
         apiUrl: "${ApiConstants().getFilteredFranchisee}?",
         titleIndicator: false,
-        title: ApplicationLocalizations.of(context)!.translate("franchisee")!,
+        title: ApplicationLocalizations.of(context).translate("franchisee"),
         franchiseeName: selectedFranchiseeName!=""? selectedFranchiseeName:"",
         franchisee:selectedFranchiseeName,
         callback: (name,id)async{
@@ -171,7 +171,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                           Expanded(
                             child:Center(
                               child: Text(
-                                ApplicationLocalizations.of(context)!.translate("franchisee")!,
+                                ApplicationLocalizations.of(context).translate("franchisee"),
                                 style: appbar_text_style,),
                             ),
                           ),
@@ -215,7 +215,6 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
                       height: 10,
                     ),
                     get_franchisee_list_layout()
-
                   ],
                 ),
               ),
@@ -361,6 +360,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -371,7 +371,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().getFilteredFranchisee}?Company_ID=$companyId&PageNumber=$page&${StringEn.pageSize}";
+        String apiUrl = "${baseurl}${ApiConstants().getFilteredFranchisee}?Company_ID=$companyId&${StringEn.lang}=$lang&PageNumber=$page&${StringEn.pageSize}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -462,6 +462,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -474,7 +475,7 @@ class _AddFranchiseeActivityState extends State<AddFranchiseeActivity> {
             modifierMachine: deviceId,
             companyId: companyId
         );
-        String apiUrl = baseurl + ApiConstants().franchisee+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().franchisee+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

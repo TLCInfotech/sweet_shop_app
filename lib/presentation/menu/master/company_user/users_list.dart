@@ -386,6 +386,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -394,7 +395,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         });
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
-        String apiUrl = "$baseurl${ApiConstants().getuserFilteredList}?PageNumber=$page&${StringEn.pageSize}&Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().getuserFilteredList}?PageNumber=$page&${StringEn.pageSize}&${StringEn.lang}=$lang&Company_ID=$companyId";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {
@@ -472,6 +473,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
     String companyId = await AppPreferences.getCompanyId();
     String uid = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
@@ -481,7 +483,7 @@ class _UsersListState extends State<UsersList> with UserCreateInterface {
         DeleteIUserRequestModel model = DeleteIUserRequestModel(
           companyId: companyId,
             id: removeId, modifier: uid, modifierMachine: deviceId);
-        String apiUrl = baseurl + ApiConstants().users+"?Company_ID=$companyId";
+        String apiUrl = baseurl + ApiConstants().users+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForDeleteAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) {
           setState(() {

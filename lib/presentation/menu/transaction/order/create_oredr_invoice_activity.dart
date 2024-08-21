@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:http/http.dart' as http;
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:flutter/cupertino.dart';
@@ -1154,6 +1155,7 @@ var order_No;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1162,7 +1164,7 @@ var order_No;
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: page.toString());
         String apiUrl =
-            "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&Order_No=${widget.order_No}";
+            "${baseurl}${ApiConstants().getSaleOrderDetail}?Company_ID=$companyId&${StringEn.lang}=$lang&Order_No=${widget.order_No}";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data)async {
           print(data);
@@ -1234,6 +1236,7 @@ var order_No;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
 
     // String totalAmount =CommonWidget.getCurrencyFormat(double.parse(TotalAmount).ceilToDouble());
     double TotalAmountInt = double.parse(TotalAmount).ceilToDouble();
@@ -1248,6 +1251,7 @@ var order_No;
             //  saleLedger:selectedLedgerId ,
             vendorID: selectedFranchiseeId,
             companyID: companyId,
+            Lang: lang,
             voucherName: "Sale Order",
             roundOff: double.parse(roundoff),
             totalAmount: TotalAmountInt,
@@ -1301,6 +1305,7 @@ var order_No;
     String creatorName = await AppPreferences.getUId();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     var matchDate = DateFormat('yyyy-MM-dd')
         .format(invoiceDate)
         .compareTo(DateFormat('yyyy-MM-dd').format(widget.dateNew));
@@ -1318,6 +1323,7 @@ var order_No;
             Order_No: widget.order_No.toString(),
             companyID: companyId,
             voucherName: "Sale Order",
+            Lang: lang,
             roundOff: double.parse(roundoff),
             totalAmount: TotalAmountInt,
             dateNew: matchDate != 0
@@ -1447,6 +1453,7 @@ var order_No;
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken=await AppPreferences.getSessionToken();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -1457,7 +1464,7 @@ var order_No;
         TokenRequestWithoutPageModel model = TokenRequestWithoutPageModel(
           token: sessionToken,
         );
-        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&Order_No=${widget.order_No.toString()}&Type=$urlType";
+        String apiUrl =baseurl + ApiConstants().getSaleOrderDetail+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Order_No=${widget.order_No.toString()}&Type=$urlType";
         print(apiUrl);
         // apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
         //     onSuccess:(data)async{

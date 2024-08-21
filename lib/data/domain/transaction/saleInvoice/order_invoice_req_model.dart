@@ -2,6 +2,7 @@ class PostOrderInvoiceReq {
   String? companyID;
   String? date;
   String? dateNew;
+  String? Lang;
   String? vendorID;
   String? Order_No;
   String? voucherName;
@@ -22,6 +23,7 @@ class PostOrderInvoiceReq {
       {this.companyID,
         this.date,
         this.dateNew,
+        this.Lang,
         this.vendorID,
         this.voucherName,
         this.Order_No,
@@ -42,6 +44,7 @@ class PostOrderInvoiceReq {
     companyID = json['Company_ID'];
     date = json['Date'];
     Order_No = json['Order_No'];
+    Lang = json['Lang'];
     dateNew = json['New_Date'];
     vendorID = json['Vendor_ID'];
     voucherName = json['Voucher_Name'];
@@ -78,6 +81,7 @@ class PostOrderInvoiceReq {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['Lang'] = this.Lang;
     data['New_Date'] = this.dateNew;
     data['Vendor_ID'] = this.vendorID;
     data['Order_No'] = this.Order_No;

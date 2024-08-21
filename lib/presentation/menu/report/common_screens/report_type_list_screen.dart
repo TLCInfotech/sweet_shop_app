@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/menu/report/common_screens/detail_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
@@ -740,6 +741,7 @@ mainAxisAlignment: MainAxisAlignment.start,
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -752,17 +754,17 @@ mainAxisAlignment: MainAxisAlignment.start,
         String apiUrl="" ;
         if(widget.comeFrom=="MIS"){
         if(selectedFranchiseeId!=""){
-          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
+          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
         }else{
-          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+          apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=MIS&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
         }}else{
           if(selectedFranchiseeId!=""){
-            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId";
           }else
           if(selectedLedgerId!=""){
-            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId";
           }else{
-            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
+            apiUrl= "${baseurl}${ApiConstants().reports}?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}";
           }
         }
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
@@ -837,6 +839,7 @@ mainAxisAlignment: MainAxisAlignment.start,
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
 
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if(netStatus==InternetConnectionStatus.connected){
@@ -851,12 +854,12 @@ mainAxisAlignment: MainAxisAlignment.start,
 
         String apiUrl="" ;
         if(widget.comeFrom=="MIS"){
-            apiUrl =baseurl + ApiConstants().MISReports+"/Download?Company_ID=$companyId&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+            apiUrl =baseurl + ApiConstants().MISReports+"/Download?Company_ID=$companyId&${StringEn.lang}=$lang&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
         }else{
           if(selectedFranchiseeId!=""){
-            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
+            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedFranchiseeId&Type=$urlType";
           }else {
-            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
+            apiUrl= "${baseurl}${ApiConstants().getExpenseReports}/Download?Company_ID=$companyId&${StringEn.lang}=$lang&Form_Name=Expense&Report_ID=${widget.reportId}&From_Date=${DateFormat("yyyy-MM-dd").format(applicablefrom)}&To_Date=${DateFormat("yyyy-MM-dd").format(applicableTwofrom)}&ID=$selectedLedgerId&Type=$urlType";
           }
         }
         String type="pdf";

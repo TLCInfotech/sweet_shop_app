@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/imagePicker/image_picker_handler.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/dialog/amount_type_dialog.dart';
 import 'package:sweet_shop_app/presentation/dialog/tax_category_dialog.dart';
@@ -86,6 +87,8 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
   final adharNoController = TextEditingController();
   final _leaderGroupFocus = FocusNode();
   final leaderGroupController = TextEditingController();
+  final _langFocus = FocusNode();
+  final langController = TextEditingController();
   final _contactPersonFocus = FocusNode();
   final contactPersonController = TextEditingController();
   final _outstandingLimitFocus = FocusNode();
@@ -153,6 +156,15 @@ class _CreateExpenseActivityState extends State<CreateExpenseActivity>
     if(widget.ledgerList!=null) {
       getData();
     }
+    setVal();
+  }
+
+  String langu = "en_IN";
+  setVal()async{
+    langu=await AppPreferences.getLang();
+    setState(() {
+
+    });
   }
   File? adharFile ;
   File? panFile ;
@@ -164,6 +176,7 @@ var ledgerData=null;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -173,7 +186,7 @@ var ledgerData=null;
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().getLedger}/${widget.ledgerList['ID']}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().getLedger}/${widget.ledgerList['ID']}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data)async{
               setState(()  {
@@ -252,6 +265,7 @@ var ledgerData=null;
     print(ledgerData[0]['District']);
       setState(()  {
       districtController.text=ledgerData[0]['District']!=null?ledgerData[0]['District'].toString():districtController.text;
+      langController.text=ledgerData[0]['Name_Locale']!=null?ledgerData[0]['Name_Locale'].toString():langController.text.trim();
       countryName=ledgerData[0]['Country']!=null?ledgerData[0]['Country'].toString():countryName;
 
       stateName=ledgerData[0]['State']!=null?ledgerData[0]['State']:stateName;
@@ -440,6 +454,7 @@ var ledgerData=null;
                       ),
                       child: Column(children: [
                         getNameLayout(parentHeight, parentWidth),
+                        langu=="en_IN"?Container():  getNameLangLayout(parentHeight, parentWidth),
                         getParentGroupLayout(parentHeight, parentWidth),
                         getContactPersonLayout(parentHeight, parentWidth),
                         getAddressLayout(parentHeight, parentWidth),
@@ -656,6 +671,34 @@ var ledgerData=null;
 
 
   /* Widget for name text from field layout */
+  Widget getNameLangLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormFieldWithoubleDouble(
+      validation: (value) {
+        if (value!.isEmpty) {
+          return     "";
+        }
+        return null;
+      },
+      mandatory: false,
+      controller: langController,
+      focuscontroller: _langFocus,
+      readOnly: widget.readOnly,
+      focusnext: _leaderGroupFocus,
+      title:     ApplicationLocalizations.of(context)!.translate("name")+ApplicationLocalizations.of(context).translate("langu")  ,
+      callbackOnchage: (value) {
+        setState(() {
+          langController.text = value;
+        });
+
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format:FilteringTextInputFormatter.allow(RegExp(r'^[\u0900-\u097F\sA-Za-z0-9&^%*.,:)(-]+$')),
+    );
+
+  }
+
+  /* Widget for name text from field layout */
   Widget getNameLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormFieldWithoubleDouble(
       validation: (value) {
@@ -669,8 +712,9 @@ var ledgerData=null;
       controller: nameController,
       focuscontroller: _nameFocus,
       readOnly: widget.readOnly,
-      focusnext: _leaderGroupFocus,
-      title:     ApplicationLocalizations.of(context)!.translate("name")! ,
+      focusnext: _langFocus,
+      title:"Ledger Name (English)",
+     // title:     ApplicationLocalizations.of(context)!.translate("name"),
       callbackOnchage: (value) {
         setState(() {
           nameController.text = value;
@@ -1945,6 +1989,7 @@ var ledgerData=null;
                   disableColor = true;
                   if(widget.ledgerList!=null){
                     callUpdateLadgerGroup();
+                    print("updateeeee");
                   }else{
                     callPostLedgerGroup();
                   }
@@ -2022,6 +2067,7 @@ var ledgerData=null;
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
@@ -2032,6 +2078,7 @@ var ledgerData=null;
         PostLedgerRequestModel model = PostLedgerRequestModel(
           companyId: companyId,
             name: name,
+          Lang: langController.text.trim(),
           groupID: parentCategoryId,
           contactPerson: contactPerson,
           address: address,
@@ -2072,7 +2119,11 @@ var ledgerData=null;
             creator: creatorName,
             creatorMachine: deviceId
         );
-        String apiUrl = baseurl + ApiConstants().ledger;
+
+        print("jjgjghjghj   ${model.toJson()}");
+        String apiUrl = baseurl + ApiConstants().ledger+"?${StringEn.lang}=$lang";
+
+
         apiRequestHelper.callAPIsForDynamicPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {
@@ -2137,6 +2188,7 @@ var ledgerData=null;
 
     String aCHName = aCHolderNameController.text.trim();
     String creatorName = await AppPreferences.getUId();
+    String lang = await AppPreferences.getLang();
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
@@ -2145,6 +2197,7 @@ var ledgerData=null;
         PutLedgerRequestModel model = PutLedgerRequestModel(
           companyId: companyId,
             name: name,
+            Lang: langController.text.trim(),
             groupID: parentCategoryId,
             contactPerson: contactPerson,
             address: address,
@@ -2184,8 +2237,8 @@ var ledgerData=null;
             modifier: creatorName,
             modifierMachine: deviceId
         );
-        print("MODAL ${model.Photo}");
-        String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString()+"?Company_ID=$companyId";
+        print("MODAL ${model.toJson()}");
+        String apiUrl = baseurl + ApiConstants().ledger+"/"+widget.ledgerList['ID'].toString()+"?Company_ID=$companyId&${StringEn.lang}=$lang";
         print(apiUrl);
         apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(), "",
             onSuccess:(value)async{

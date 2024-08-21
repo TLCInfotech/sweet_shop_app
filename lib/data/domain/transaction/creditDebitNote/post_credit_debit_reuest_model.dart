@@ -1,6 +1,7 @@
 class postCreditDebitNoterequestModel {
   String? invoiceNo;
   String? companyID;
+  String? Lang;
   String? date;
   String? dateNew;
   String? vendorID;
@@ -22,6 +23,7 @@ class postCreditDebitNoterequestModel {
         this.companyID,
         this.date,
         this.dateNew,
+        this.Lang,
         this.vendorID,
         this.voucherName,
         this.ledgerID,
@@ -39,6 +41,7 @@ class postCreditDebitNoterequestModel {
   postCreditDebitNoterequestModel.fromJson(Map<String, dynamic> json) {
     invoiceNo = json['Invoice_No'];
     companyID = json['Company_ID'];
+    Lang = json['Lang'];
     date = json['Date'];
     dateNew = json['New_Date'];
     vendorID = json['Vendor_ID'];
@@ -76,6 +79,7 @@ class postCreditDebitNoterequestModel {
     data['Invoice_No'] = this.invoiceNo;
     data['Company_ID'] = this.companyID;
     data['Date'] = this.date;
+    data['Lang'] = this.Lang;
     data['New_Date'] = this.dateNew;
     data['Vendor_ID'] = this.vendorID;
     data['Voucher_Name'] = this.voucherName;

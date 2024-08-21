@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_dashboard.dart';
 import '../../../../core/app_preferance.dart';
@@ -514,6 +515,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -523,7 +525,7 @@ class _ProfitLossDetailActivityState extends State<ProfitLossDetailActivity>with
             token: sessionToken,
             page: page.toString()
         );
-        String apiUrl = "${baseurl}${ApiConstants().dashboardProfitPartywise}?Company_ID=$companyId&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
+        String apiUrl = "${baseurl}${ApiConstants().dashboardProfitPartywise}?Company_ID=$companyId&${StringEn.lang}=$lang&Date=${DateFormat("yyyy-MM-dd").format(newDate)}&VendorName=${serchvendor.text}&SortBy=$selectedOption&SortOrder=$selectedOrder";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
               setState(() {

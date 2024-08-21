@@ -302,7 +302,7 @@ class _CategoryDialogState extends State<CategoryDialog>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().item_category+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().item_category+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {

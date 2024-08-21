@@ -286,6 +286,7 @@ class _BankCashLedgerDialogState extends State<BankCashLedgerDialog>{
   callGetBankCashLedger() async {
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     String sessionToken = await AppPreferences.getSessionToken();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
@@ -294,7 +295,7 @@ class _BankCashLedgerDialogState extends State<BankCashLedgerDialog>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().getBankCashLedger+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().getBankCashLedger+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             if(data!=null) {

@@ -8,6 +8,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_image_from_gallary_or_camera.dart';
 import '../../../../core/app_preferance.dart';
 import '../../../../core/internet_check.dart';
@@ -85,8 +86,17 @@ class _UserCreateState extends State<UserCreate>
     if (widget.editUser != null) getData();
 
     localData();
+    setVale();
   }
+  final _langFocus = FocusNode();
+  final langController = TextEditingController();
+  String langu = "en_IN";
+  setVale()async{
+    langu=await AppPreferences.getLang();
+    setState(() {
 
+    });
+  }
   String companyIds = "";
   localData() async {
     companyIds = await AppPreferences.getCompanyId();
@@ -96,6 +106,7 @@ class _UserCreateState extends State<UserCreate>
   getData() async {
     String companyId = await AppPreferences.getCompanyId();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
     if (netStatus == InternetConnectionStatus.connected) {
@@ -106,7 +117,7 @@ class _UserCreateState extends State<UserCreate>
         TokenRequestModel model =
             TokenRequestModel(token: sessionToken, page: "1");
         String apiUrl =
-            "${baseurl}${ApiConstants().users}/${widget.editUser['UID']}?Company_ID=$companyId";
+            "${baseurl}${ApiConstants().users}/${widget.editUser['UID']}?Company_ID=$companyId&${StringEn.lang}=$lang";
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess: (data) async {
           setState(() {
@@ -167,7 +178,7 @@ class _UserCreateState extends State<UserCreate>
       setState(() {
         userController.text = userData[0]["UID"];
         oldUid = userData[0]["UID"];
-        if(userData[0]["Working_Days"]!="null"){
+        if(userData[0]["Working_Days"]!="null"&&userData[0]["Working_Days"]!=null){
           workingdaysController.text =  userData[0]["Working_Days"].toString();
         }else{
           workingdaysController.text ="";
@@ -342,6 +353,7 @@ class _UserCreateState extends State<UserCreate>
                       children: [
                         getImageLayout(parentHeight, parentWidth),
                         getNameLayout(parentHeight, parentWidth),
+                     //   langu=="en_IN"?Container():getLangNameLayout(parentHeight, parentWidth),
                         getWorkingDaysLayout(parentHeight, parentWidth),
                         // widget.editUser!=null? getPasswordLayout(parentHeight, parentWidth):
                         //  Container(),
@@ -376,13 +388,40 @@ class _UserCreateState extends State<UserCreate>
       readOnly: widget.editUser != null ? false : widget.readOnly,
       controller: userController,
       focuscontroller: _userFocus,
-      focusnext: _workingdaysFocus,
+      focusnext: _langFocus,
       title: ApplicationLocalizations.of(context)!.translate("user_name")!,
       callbackOnchage: (value) {
         setState(() {
           userController.text = value;
         });
         _userNameKey.currentState!.validate();
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+  }
+
+  /* Widget for name text from field layout */
+  Widget getLangNameLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormFieldWithoubleDouble(
+      mandatory: false,
+      validation: (value) {
+        if (value!.isEmpty) {
+          return "";
+        }
+        return null;
+      },
+      //suffix: Icon(Icons.mic),
+      readOnly: widget.editUser != null ? false : widget.readOnly,
+      controller: langController,
+      focuscontroller: _langFocus,
+      focusnext: _workingdaysFocus,
+      title: ApplicationLocalizations.of(context).translate("user_name")+ApplicationLocalizations.of(context).translate("langu"),
+      callbackOnchage: (value) {
+        setState(() {
+          langController.text = value;
+        });
       },
       textInput: TextInputType.text,
       maxlines: 1,
@@ -587,8 +626,7 @@ class _UserCreateState extends State<UserCreate>
                 padding: EdgeInsets.only(
                     left: parentWidth * .02, top: parentHeight * .01),
                 child: Text(
-                  ApplicationLocalizations.of(context)!
-                      .translate("reset_password")!,
+                  ApplicationLocalizations.of(context).translate("reset_password"),
                   style: page_heading_textStyle,
                 )),
           ),

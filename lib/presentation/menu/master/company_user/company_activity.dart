@@ -9,6 +9,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/domain/company/put_company_request_model.dart';
 import 'package:sweet_shop_app/presentation/common_widget/document_picker.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_country_layout.dart';
@@ -110,7 +111,18 @@ bool isLoaderShow=false;
      super.initState();
      getApiCall();
      setVal();
+     setVale();
    }
+
+  final _langFocus = FocusNode();
+  final langController = TextEditingController();
+  String langu = "en_IN";
+  setVale()async{
+    langu=await AppPreferences.getLang();
+    setState(() {
+
+    });
+  }
   var  singleRecord;
   setVal()async{
     List<dynamic> jsonArray = jsonDecode(widget.arrData);
@@ -327,6 +339,7 @@ print("hjthghh  $companyId");
                     child: Column(
                       children: [
                         getNameLayout(parentHeight, parentWidth),
+                       langu=="en_IN"?Container():getLangNameLayout(parentHeight, parentWidth),
                         getContactPersonLayout(parentHeight, parentWidth),
                         getAddressLayout(parentHeight, parentWidth),
                         Row(
@@ -444,7 +457,7 @@ print("hjthghh  $companyId");
       controller: nameController,
       focuscontroller: _nameFocus,
       readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
-      focusnext: _contactPersonFocus,
+      focusnext: _langFocus,
       title: ApplicationLocalizations.of(context)!.translate("company_name")!,
       callbackOnchage: (value) {
         setState(() {
@@ -457,6 +470,30 @@ print("hjthghh  $companyId");
     );
   }
 
+
+  /* Widget for name text from field layout */
+  Widget getLangNameLayout(double parentHeight, double parentWidth) {
+    return SingleLineEditableTextFormField(
+      validation: (value) {
+        if (value!.isEmpty) {
+        }
+        return null;
+      },
+      controller: langController,
+      focuscontroller: _langFocus,
+      readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
+      focusnext: _contactPersonFocus,
+      title: ApplicationLocalizations.of(context)!.translate("company_name")+ApplicationLocalizations.of(context).translate("langu"),
+      callbackOnchage: (value) {
+        setState(() {
+          langController.text = value;
+        });
+      },
+      textInput: TextInputType.text,
+      maxlines: 1,
+      format: FilteringTextInputFormatter.allow(RegExp(r'[0-9 A-Z a-z]')),
+    );
+  }
   /* Widget for contact person text from field layout */
   Widget getContactPersonLayout(double parentHeight, double parentWidth) {
     return SingleLineEditableTextFormField(
@@ -1273,6 +1310,7 @@ readOnly: singleRecord['Update_Right']||singleRecord['Insert_Right'],
 getCompany()async{
     String sessionToken = await AppPreferences.getSessionToken();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
@@ -1283,7 +1321,7 @@ getCompany()async{
             token: sessionToken,
             page: ""
         );
-        String apiUrl = "$baseurl${ApiConstants().company}/$companyId?Company_ID=$companyId";
+        String apiUrl = "$baseurl${ApiConstants().company}/$companyId?Company_ID=$companyId&${StringEn.lang}=$lang";
 
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){
@@ -1348,12 +1386,14 @@ getCompany()async{
   callCompany() async {
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
       });
       CompanyRequestModel model = CompanyRequestModel(
         name:nameController.text,
+        Lang:lang,
         contactPerson: contactPersonController.text,
         address: addressController.text,
         address2: addTwoController.text,
@@ -1422,6 +1462,7 @@ getCompany()async{
     String companyId = await AppPreferences.getCompanyId();
     String creatorName = await AppPreferences.getUId();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -1455,7 +1496,7 @@ getCompany()async{
           creator: creatorName
       );
       //  print("IMGE2 : ${(model.Photo)?.length}");
-      String apiUrl = "${baseurl}${ApiConstants().company}/$companyId?Company_ID=$companyId"/*+"/"+_arrList[0]['ID'].toString()*/;
+      String apiUrl = "${baseurl}${ApiConstants().company}/$companyId?Company_ID=$companyId&${StringEn.lang}=$lang"/*+"/"+_arrList[0]['ID'].toString()*/;
       apiRequestHelper.callAPIsForPutAPI(apiUrl, model.toJson(),"",
           onSuccess:(data){
             print("  ITEM  $data ");
@@ -1513,9 +1554,10 @@ setState(() {
     String companyId = await AppPreferences.getCompanyId();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl = await AppPreferences.getDomainLink();
+    String lang = await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected) {
       String apiUrl =
-          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId";
+          "$baseurl${ApiConstants().companyImage}?Company_ID=$companyId&${StringEn.lang}=$lang";
       print("newwww  $apiUrl   $baseurl ");
       //  "?pageNumber=$page&PageSize=12";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, "", "",

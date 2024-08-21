@@ -3,6 +3,7 @@ class CompanyRequestModel {
   String? contactPerson;
   String address;
   String? address2;
+  String? Lang;
   String? district;
   String? state;
   String? pinCode;
@@ -31,6 +32,7 @@ class CompanyRequestModel {
     this.contactPerson,
     required this.address,
      this.address2,
+     this.Lang,
      this.district,
      this.state,
      this.pinCode,
@@ -60,6 +62,7 @@ class CompanyRequestModel {
       'Name': name,
       'Contact_Person': contactPerson ?? null,
       'Address': address,
+      'Lang': Lang,
       'Address2': address2,
       'District': district,
       'State': state,

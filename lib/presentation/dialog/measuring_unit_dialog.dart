@@ -3,6 +3,7 @@ import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
 import '../../core/app_preferance.dart';
 import '../../core/common.dart';
 import '../../data/api/constant.dart';
@@ -288,6 +289,7 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
     String companyId = await AppPreferences.getCompanyId();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -295,7 +297,7 @@ class _MeasuringUnitDialogState extends State<MeasuringUnitDialog>{
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().measuring_unit+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().measuring_unit+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             setState(() {

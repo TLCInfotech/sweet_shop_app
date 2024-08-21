@@ -81,14 +81,14 @@ class AppPreferences {
   /*set deviceId value in SharedPreferences*/
   static Future<String> getLang() async {
     SharedPreferences  prefs = await SharedPreferences.getInstance();
-    return prefs.getString("en") ?? "en";
+    return prefs.getString("en_IN") ?? "en_IN";
   }
 
   /*get deviceId value form SharedPreferences*/
-  static setLang(String en) async {
+  static setLang(String en_IN) async {
     SharedPreferences   prefs = await SharedPreferences.getInstance();
-    print("en   $en");
-    prefs.setString("en", en);
+    print("en_IN   $en_IN");
+    prefs.setString("en_IN", en_IN);
   }
 
   /*set deviceId value in SharedPreferences*/

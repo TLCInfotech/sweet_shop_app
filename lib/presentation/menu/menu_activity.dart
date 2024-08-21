@@ -516,15 +516,10 @@ var dataArrM;
   Widget getFranchiseeLayout(double parentHeight, double parentWidth){
     return  GestureDetector(
       onTap: ()async{
-        await showCupertinoDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AddFranchiseeActivity(mListener: this,
-                  formId: "RM008",
-                  logoImage: logoImage,
-                  arrData: dataArrM);
-            }
-        );
+        await  Navigator.push(context, MaterialPageRoute(builder: (context) =>  AddFranchiseeActivity(mListener: this,
+            formId: "RM008",
+            logoImage: logoImage,
+            arrData: dataArrM)));
       },
       onDoubleTap: (){},
       child: Padding(
@@ -820,7 +815,7 @@ var dataArrM;
             menuuu: "menu",
             come: "Opening",
             viewWorkDDate:viewWorkDDate,
-            titleKey: "Branch Item Opening Balance",
+            titleKey: ApplicationLocalizations.of(context).translate("item_opening_balance"),
             arrData: dataArrM
         )));
    /*     if(mounted){
@@ -1883,7 +1878,7 @@ var dataArrM;
             ),
             getChangePassword(parentHeight,parentWidth),
             getDomainLink(parentHeight,parentWidth),
-           // getLanguageLayout(parentHeight, parentWidth),
+           getLanguageLayout(parentHeight, parentWidth),
           ],
         ),
       ),
@@ -1976,6 +1971,7 @@ bool isLoaderShow=false;
     String sessionToken = await AppPreferences.getSessionToken();
     InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
     String baseurl=await AppPreferences.getDomainLink();
+    String lang=await AppPreferences.getLang();
     if (netStatus == InternetConnectionStatus.connected){
       AppPreferences.getDeviceId().then((deviceId) {
         setState(() {
@@ -1985,7 +1981,7 @@ bool isLoaderShow=false;
             token: sessionToken,
             page: "1"
         );
-        String apiUrl = "${baseurl}${ApiConstants().formList}?Company_ID=$companyId";
+        String apiUrl = "${baseurl}${ApiConstants().formList}?Company_ID=$companyId&${StringEn.lang}=$lang";
        print("nfnfnfnfvfv   $baseurl");
         apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
             onSuccess:(data){

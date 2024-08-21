@@ -1,6 +1,7 @@
 class PostLedgerRequestModel {
   String? name;
   String? groupID;
+  String? Lang;
   String? contactPerson;
   String? address;
   String? district;
@@ -46,6 +47,7 @@ class PostLedgerRequestModel {
         this.groupID,
         this.contactPerson,
         this.address,
+        this.Lang,
         this.district,
         this.state,
         this.pinCode,
@@ -88,6 +90,7 @@ class PostLedgerRequestModel {
   PostLedgerRequestModel.fromJson(Map<String, dynamic> json) {
     companyId=json['Company_ID'];
     name = json['Name'];
+    Lang = json['Name_Locale'];
     groupID = json['Group_ID'];
     contactPerson = json['Contact_Person'];
     address = json['Address'];
@@ -133,6 +136,7 @@ class PostLedgerRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['Company_ID'] = this.companyId;
     data['Name'] = this.name;
+    data['Name_Locale'] = this.Lang;
     data['Group_ID'] = this.groupID;
     data['Contact_Person'] = this.contactPerson;
     data['Address'] = this.address;

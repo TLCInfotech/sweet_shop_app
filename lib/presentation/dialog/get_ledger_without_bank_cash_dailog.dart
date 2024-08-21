@@ -287,6 +287,7 @@ class _LedgerWithoutBankCashDialogState extends State<LedgerWithoutBankCashDialo
     String companyId = await AppPreferences.getCompanyId();
     String baseurl=await AppPreferences.getDomainLink();
     String sessionToken = await AppPreferences.getSessionToken();
+    String lang = await AppPreferences.getLang();
     AppPreferences.getDeviceId().then((deviceId) {
       setState(() {
         isLoaderShow=true;
@@ -294,7 +295,7 @@ class _LedgerWithoutBankCashDialogState extends State<LedgerWithoutBankCashDialo
       TokenRequestModel model = TokenRequestModel(
         token: sessionToken,
       );
-      String apiUrl = baseurl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId";
+      String apiUrl = baseurl + ApiConstants().getLedgerWithoutBankCash+"?Company_ID=$companyId&${StringEn.lang}=$lang";
       apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), "",
           onSuccess:(data){
             if(data!=null) {
