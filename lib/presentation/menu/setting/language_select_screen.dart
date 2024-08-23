@@ -24,7 +24,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp(
     )));
   }
-
+  // ndkjsk
   @override
   Widget build(BuildContext context) {
     return Scaffold(
