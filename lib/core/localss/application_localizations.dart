@@ -52,7 +52,7 @@ class ApplicationLocalizations {
   late Map<String, String> _localizedStrings;
 
   Future<bool> load() async {
-    Locale _locale = Locale('en');
+   /* Locale _locale = Locale('en');
     String lang = await AppPreferences.getLang();
     if(lang=="mr_IN"){
       lang="mr";
@@ -61,8 +61,8 @@ class ApplicationLocalizations {
     }else{
       lang="en";
     }
-    _locale = Locale(lang);
-    String jsonString = await rootBundle.loadString('assets/translations/${_locale.languageCode}.json');
+    _locale = Locale(lang);*/
+    String jsonString = await rootBundle.loadString('assets/translations/${locale.languageCode}.json');
     print("translationstranslations  ${locale.languageCode} \n  $jsonString   ");
     Map<String, dynamic> jsonMap = json.decode(jsonString);
     _localizedStrings = jsonMap.map((key, value) {

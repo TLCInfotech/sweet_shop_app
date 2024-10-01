@@ -15,12 +15,14 @@ import 'package:sweet_shop_app/core/size_config.dart';
 import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_token_without_page.dart';
+import 'package:sweet_shop_app/main.dart';
 import 'package:sweet_shop_app/presentation/common_widget/get_date_layout.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/franchisee_outstanding_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/home/profit_loss_details_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/notification/notification_listing.dart';
 import 'package:sweet_shop_app/presentation/dashboard/purchase_mrp/purchase_mrp_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/item_opening_balance/item_opening_bal_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/setting/language_select_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/credit_note/credit_note_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/expense/ledger_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/receipt/receipt_activity.dart';
@@ -85,9 +87,38 @@ class _HomeFragmentState extends State<HomeFragment> {
     print("hfshjffhfbh  ${viewWorkDDate}");
     // AppPreferences.setDateLayout(DateFormat('yyyy-MM-dd').format(saleDate));
     setDataComm();
+    getLanguage();
+  }
+  getLanguage() async {
+    AppPreferences.getLang().then((value) {
+      print("value..$value");
+      setState(() {
+        if(value=="mr_IN"){
+          value="mr";
+        }else if(value=="hi_IN"){
+          value="hi";
+        }else{
+          value="en";
+        }
+      });
 
+      _locale(value);
+      changeLanguage(context, value);
+    });
   }
 
+  Locale _locale(String languageCode) {
+    print("languageCode    $languageCode");
+    return languageCode != null && languageCode.isNotEmpty
+        ? Locale(languageCode, '')
+        : Locale('en', '');
+  }
+
+  void changeLanguage(BuildContext context, String selectedLanguageCode) async {
+    var _locale = await setLocale(selectedLanguageCode);
+    print("_locale   $_locale");
+    MyApp.setLocale(context, _locale);
+  }
 /*  void _initializeOneSignal() {
     OneSignal.shared.setAppId('YOUR_ONESIGNAL_APP_ID');
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweet_shop_app/core/app_preferance.dart';
 import 'package:sweet_shop_app/core/common_style.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
@@ -18,11 +19,24 @@ class LanguageSelectionPage extends StatefulWidget {
 }
 
 class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
-  void _changeLanguage(BuildContext context, String languageCode) {
-    Locale newLocale = Locale(languageCode);
+
+
+
+
+  void changeLanguage(BuildContext context, String selectedLanguageCode) async {
+    var _locale = await setLocale(selectedLanguageCode);
+    print("_locale   $_locale");
+    MyApp.setLocale(context, _locale);
+  }
+  Future<void> _changeLanguage(BuildContext context, String languageCode) async {
+    var newLocale =await setLocale(languageCode);
      MyApp.setLocale(context, newLocale);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp(
-    )));
+    Navigator.of(context).pushReplacementNamed('/dashboard');
+ /*   Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => MyApp()),
+          (Route<dynamic> route) => false, // This removes all the routes
+    );*/
   }
   // ndkjsk
   @override
@@ -118,9 +132,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     return GestureDetector(
       onTap: () {
   setState(() {
+    changeLanguage(context,languageCode);
     _changeLanguage(context, languageCode);
     AppPreferences.setLang(languageCodeSet);
-    MyApp();
+  //  MyApp();
   });
 
         print("vnjvnfvn  $languageCode");
@@ -154,4 +169,23 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
       ),
     );
   }
+}
+String prefSelectedLanguageCode = "SelectedLanguageCode";
+Future<Locale> setLocale(String languageCode) async {
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  await _prefs.setString(prefSelectedLanguageCode, languageCode);
+  return _locale(languageCode);
+}
+
+Future<Locale> getLocale() async {
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  String languageCode = _prefs.getString(prefSelectedLanguageCode) ?? "en";
+  print("languageCode....    $languageCode");
+  return _locale(languageCode);
+}
+Locale _locale(String languageCode) {
+  print("languageCode    $languageCode");
+  return languageCode != null && languageCode.isNotEmpty
+      ? Locale(languageCode, '')
+      : Locale('en', '');
 }

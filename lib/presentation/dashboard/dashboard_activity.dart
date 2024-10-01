@@ -12,11 +12,13 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
+import 'package:sweet_shop_app/main.dart';
 import 'package:sweet_shop_app/presentation/dashboard/ledger_dash/ledger_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/payment_dash/payment_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/purchase_dash/purchase_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/dashboard/sale_dash/sale_dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/menu_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/setting/language_select_screen.dart';
 import '../../core/app_preferance.dart';
 import 'home/home_fragment.dart';
 
@@ -42,7 +44,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getUserPermissions();
+    getLanguage();
     getLocal();
     addNewScreen(
         HomeFragment(
@@ -50,7 +53,40 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
 
         ),
         Constant.HOME_FRAGMENT);
-    getUserPermissions();
+
+
+
+  }
+
+  getLanguage() async {
+    AppPreferences.getLang().then((value) {
+      print("value..$value");
+     setState(() {
+       if(value=="mr_IN"){
+         value="mr";
+       }else if(value=="hi_IN"){
+         value="hi";
+       }else{
+         value="en";
+       }
+     });
+
+      _locale(value);
+      changeLanguage(context, value);
+    });
+  }
+
+  Locale _locale(String languageCode) {
+    print("languageCode    $languageCode");
+    return languageCode != null && languageCode.isNotEmpty
+        ? Locale(languageCode, '')
+        : Locale('en', '');
+  }
+
+  void changeLanguage(BuildContext context, String selectedLanguageCode) async {
+    var _locale = await setLocale(selectedLanguageCode);
+    print("_locale   $_locale");
+    MyApp.setLocale(context, _locale);
 
   }
   List MasterMenu=[];
@@ -111,6 +147,8 @@ class _DashboardActivityState extends State<DashboardActivity>with HomeFragmentI
               setState(() {
                 if(data!=null){
                   if (mounted) {
+                    AppPreferences.setCompanyName(data['FranchiseeName']);
+                    AppPreferences.setCompanyId(data['Franchisee']);
                     AppPreferences.setMasterMenuList(jsonEncode(data['MasterSub_ModuleList']));
                     AppPreferences.setTransactionMenuList(jsonEncode(data['TransactionSub_ModuleList']));
                     // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));

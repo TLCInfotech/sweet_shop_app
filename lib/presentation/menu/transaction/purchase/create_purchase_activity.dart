@@ -115,11 +115,12 @@ if(widget.come=="edit"){
   setData()async{
     await getCompanyId();
     invoiceDate=widget.dateNew;
+    print("njfnnmgfngnmggnv   ${widget.editedItem}");
     if(widget.come=="edit"){
       // await calculateTotalAmt();
       setState(() {
-        selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
-        selectedFranchiseeName=widget.editedItem['Vendor_Name'];
+        // selectedFranchiseeId=widget.editedItem['Vendor_ID'].toString();
+        // selectedFranchiseeName=widget.editedItem['Vendor_Name'];
       });
     }
     print("pfkjlfjkfrj  $selectedLedgerName");

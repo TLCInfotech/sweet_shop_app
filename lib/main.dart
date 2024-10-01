@@ -2,16 +2,23 @@ import 'dart:async';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:sweet_shop_app/core/colors.dart';
 import 'package:sweet_shop_app/core/common.dart';
+import 'package:sweet_shop_app/core/internet_check.dart';
 import 'package:sweet_shop_app/core/localss/application_localizations.dart';
 import 'package:sweet_shop_app/core/size_config.dart';
+import 'package:sweet_shop_app/core/string_en.dart';
+import 'package:sweet_shop_app/data/api/constant.dart';
+import 'package:sweet_shop_app/data/api/request_helper.dart';
+import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
 import 'package:sweet_shop_app/presentation/dashboard/dashboard_activity.dart';
 import 'package:sweet_shop_app/presentation/login/Login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sweet_shop_app/presentation/menu/setting/domain_link_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/setting/language_select_screen.dart';
 import 'package:sweet_shop_app/presentation/menu/transaction/constant/local_notification.dart';
 import 'core/app_preferance.dart';
 
@@ -37,16 +44,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = Locale('en'); // Default locale
+ // Default locale
   // shkj
   @override
   void initState() {
     super.initState();
-    getData();
+    getUserPermissions();
+   // getData();
   }
 
-  Future<void> getData() async {
+  Locale? _locale;
+/*
+  Locale _locale = Locale('mr');
+   getData() async {
     String lang = await AppPreferences.getLang();
+    print("jkjggjgj  $lang");
     if(lang=="mr_IN"){
       lang="mr";
     }else if(lang=="hi_IN"){
@@ -60,6 +72,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+    Locale _locale(String languageCode) {
+    print("languageCode    $languageCode");
+    return languageCode != null && languageCode.isNotEmpty
+        ? Locale(languageCode, '')
+        : Locale('en', '');
+  }
+*/
+
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
@@ -69,21 +89,36 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void didChangeDependencies()   {
+    getLocale().then((locale) {
+      setState(() {
+        _locale = locale;
+        print("_locale111111111    $_locale");
+
+      });
+    });
+
+    super.didChangeDependencies();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+    print("gkmngnng  $_locale");
     return MaterialApp(
       title: 'SWEETSHOP',
-      home: MyHomePage(),
       debugShowCheckedModeBanner: false,
+        locale: _locale,
       supportedLocales: const [
         Locale('en', ''),
         Locale('mr', ''),
         Locale('hi', ''),
       ],
-      locale: _locale,
       localizationsDelegates: const [
         ApplicationLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales) {
@@ -100,12 +135,64 @@ class _MyAppState extends State<MyApp> {
           data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),
         );
       },
+      home: MyHomePage(),
       routes: <String, WidgetBuilder>{
         '/loginActivity': (BuildContext context) => const LoginActivity(),
         '/domainLinkActivity': (BuildContext context) => const DomainLinkActivity(),
         '/dashboard': (BuildContext context) => DashboardActivity(),
       },
     );
+  }
+
+  ApiRequestHelper apiRequestHelper = ApiRequestHelper();
+  getUserPermissions() async {
+    String companyId = await AppPreferences.getCompanyId();
+    String sessionToken = await AppPreferences.getSessionToken();
+    InternetConnectionStatus netStatus = await InternetChecker.checkInternet();
+    String baseurl=await AppPreferences.getDomainLink();
+    String date=await AppPreferences.getDateLayout();
+    String uid=await AppPreferences.getUId();
+    String lang=await AppPreferences.getLang();
+    //DateTime newDate=DateFormat("yyyy-MM-dd").format(DateTime.parse(date));
+    print("objectgggg   $date  ");
+    if (netStatus == InternetConnectionStatus.connected){
+      AppPreferences.getDeviceId().then((deviceId) {
+        TokenRequestModel model = TokenRequestModel(
+            token: sessionToken,
+            page: "1"
+        );
+        String apiUrl = "${baseurl}${ApiConstants().getUserPermission}?UID=$uid&Company_ID=$companyId&${StringEn.lang}=$lang";
+        apiRequestHelper.callAPIsForGetAPI(apiUrl, model.toJson(), sessionToken,
+            onSuccess:(data){
+
+              setState(() {
+                if(data!=null){
+                  if (mounted) {
+                    AppPreferences.setCompanyName(data['FranchiseeName']);
+                    AppPreferences.setCompanyId(data['Franchisee']);
+                    // AppPreferences.setReportMenuList(jsonEncode(apiResponse.reportMenu));
+                  }
+
+                }else{
+                }
+              });
+            }, onFailure: (error) {
+              CommonWidget.errorDialog(context, error.toString());
+            }, onException: (e) {
+              print("Here2=> $e");
+              // var val= CommonWidget.errorDialog(context, e);
+              // print("YES");
+              // if(val=="yes"){
+              //   print("Retry");
+              // }
+            },sessionExpire: (e) {
+              CommonWidget.gotoLoginScreen(context);
+            });
+      });
+    }
+    else{
+      CommonWidget.noInternetDialogNew(context);
+    }
   }
 }
 
@@ -116,6 +203,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Locale? _locale;
+  @override
+  void didChangeDependencies()   {
+    getLocale().then((locale) {
+      setState(() {
+        _locale = locale;
+        print("_locale111111111    $_locale");
+
+      });
+    });
+
+    super.didChangeDependencies();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -202,6 +303,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(domainLink);
       print(companyId);
       print("Session Token: $sessionToken");
+
       if (sessionToken != "") {
         return Timer(duration, navigateDashboard);
       } else {

@@ -341,16 +341,14 @@ class _PurchaseDetailReportActivityState extends State<PurchaseDetailReportActiv
                               editedItem:reportDetailList[index],
                               come:"edit",
                             )));
-
-                      },
+                        },
                       child: Card(
                         child: Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-
-                               Expanded(
+                              Expanded(
                                  child: Container(
                                   margin:  EdgeInsets.only(top: 10,left: 5,right: 0 ,bottom: 10),
                                   child: Row(

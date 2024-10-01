@@ -13,6 +13,7 @@ import 'package:sweet_shop_app/core/string_en.dart';
 import 'package:sweet_shop_app/data/api/constant.dart';
 import 'package:sweet_shop_app/data/api/request_helper.dart';
 import 'package:sweet_shop_app/data/domain/commonRequest/get_toakn_request.dart';
+import 'package:sweet_shop_app/main.dart';
 import 'package:sweet_shop_app/presentation/dialog/log_out_dialog.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/company_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/company_user/users_list.dart';
@@ -311,9 +312,27 @@ var dataArrM;
   Widget getLanguageLayout(double parentHeight, double parentWidth) {
     return GestureDetector(
       onTap: () {
+
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => LanguageSelectionPage(logoImage: logoImage),
+        //   ),
+        // ).then((value) async {
+        //   if (value == true) {
+        //     // Refresh the UI or do something to apply the language change
+        //     String lang = await AppPreferences.getLang();
+        //     setState(() {
+        //       // Update state if necessary
+        //
+        //       print("godddddd   $_locale");
+        //     });
+        //   }
+        // });
+
          Navigator.push(context, MaterialPageRoute(builder: (context) =>LanguageSelectionPage(
     logoImage: logoImage,
         )));
+        // Navigator.pop(context);
       },
       onDoubleTap: () {},
       child: Padding(

@@ -213,18 +213,59 @@ class CommonWidget {
 
 
   static showExitDialog(BuildContext context, String message, isDialogType) {
-    showCupertinoDialog(
+/*    showCupertinoDialog(
       context: context,
       useRootNavigator: true,
       barrierDismissible: true,
-      builder: (context) {
+      builder: (BuildContext context) {
         return ExitAppDialog(
-          isDialogType: isDialogType,
+          isDialogType: isDialogType, // Or whatever type you need
         );
       },
-    );
+    );*/
+    if (context != null) {
+      showGeneralDialog(
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionBuilder: (context, a1, a2, widget) {
+            final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
+            // return Transform(
+            //   transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            return Transform.scale(
+              scale: a1.value,
+              child: Opacity(
+                opacity: a1.value,
+                child: ExitAppDialog(
+                  isDialogType: isDialogType,
+                ),
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 200),
+          barrierDismissible: true,
+          barrierLabel: '',
+          context: context,
+          pageBuilder: (context, animation2, animation1) {
+            return Container();
+          });
     }
-
+     // Navigator.push(context, MaterialPageRoute(builder: (context) => ExitAppDialog(
+     //   isDialogType: isDialogType, // Or whatever type you need
+     // )));
+  /*  showCupertinoDialog(
+      context: context,
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return ExitAppDialog(
+              isDialogType: isDialogType, // Or whatever type you need
+            );
+          },
+        );
+      },
+    );*/
+    }
     static convertBytesToFile(data) async{
       List<int> img=[];
       img=(data).whereType<int>().toList();

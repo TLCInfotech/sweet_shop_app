@@ -148,7 +148,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
       }
     }
       setState(() {
-        // TotalAmount=total.isNegative?(-1*total).toStringAsFixed(2):total.toStringAsFixed(2) ;
         TotalCr=totalcr.toStringAsFixed(2);
         TotalDr=totaldr.toStringAsFixed(2);
       });
@@ -477,7 +476,6 @@ class _CreateJournalsState extends State<CreateJournals> with SingleTickerProvid
               getVoucherNoLayout(SizeConfig.screenHeight,SizeConfig.screenWidth)
             ],
           ),
-          getFranchiseeNameLayout(SizeConfig.screenHeight,SizeConfig.screenWidth),
         ],
       )
     );

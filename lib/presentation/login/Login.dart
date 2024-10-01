@@ -164,7 +164,7 @@ class _LoginActivityState extends State<LoginActivity> {
     obscureText: _obscureText,
 
     decoration:InputDecoration(
-      hintText: 'Password',
+      hintText:ApplicationLocalizations.of(context).translate("password"),
       contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
       labelStyle: textfield_label_style,
       fillColor:  Colors.white,
@@ -262,29 +262,24 @@ class _LoginActivityState extends State<LoginActivity> {
         setState(() {
           isLoaderShow=true;
         });
-
         LoginRequestModel model = LoginRequestModel(
             Password: passwordText,
             UID: userName,
             PushKey:pushKey ,
             AppType: "C",
             Machine_Name: deviceId,
-           // modifire: "myMachine",
         );
-
-        print("ejewjhjhrwhjr  ${model.toJson()}");
         String apiUrl = baseurl + ApiConstants().login+"?Company_ID=$companyId";
         apiRequestHelper.callAPIsForPostLoginAPI(apiUrl, model.toJson(), "",
             onSuccess:(token,uid){
               setState(() {
                 isLoaderShow=false;
-              //  callGetFranchiseeNot(0);
+               callGetFranchiseeNot(0);
               });
               AppPreferences.setSessionToken(token);
               AppPreferences.setCompanyId("74");
               AppPreferences.setDomainLink("http://61.2.227.173:3000/");
               AppPreferences.setUId(uid);
-
               Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardActivity()));
 
             }, onFailure: (error) {
@@ -304,7 +299,6 @@ class _LoginActivityState extends State<LoginActivity> {
               });
               CommonWidget.gotoLoginScreen(context);
             });
-
       });
     }else{
       if (mounted) {
