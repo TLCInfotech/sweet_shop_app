@@ -448,7 +448,7 @@ var dataArrM;
             (MasterMenu.contains("AM005"))?getLeaderOpeningLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM003"))?getOpeningBalanceForCompanyLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("AM007"))?  getCompanyInfoLayout(parentHeight,parentWidth):Container(),
-           /* (MasterMenu.contains("AM007"))?*/  getInvoiceAddition(parentHeight,parentWidth)/*:Container()*/
+            (MasterMenu.contains("RM009"))?  getInvoiceAddition(parentHeight,parentWidth):Container()
           ],
         ),
       ),
@@ -793,7 +793,7 @@ var dataArrM;
       onTap: ()async{
         await Navigator.push(context, MaterialPageRoute(builder: (context) =>  SaleInvoiceAdditionListActivity(
           arrData: dataArrM, logoImage:logoImage,
-          formId: "AM007", mListener: this,
+          formId: "RM009", mListener: this,
         )));
       /*  if(mounted){
           print("HERE BACK");
