@@ -35,7 +35,7 @@ class _GetDateLayoutState extends State<GetDateLayout> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.02):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
+      padding:  widget.titleIndicator!=false?EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01):EdgeInsets.only(top: (SizeConfig.screenHeight) * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

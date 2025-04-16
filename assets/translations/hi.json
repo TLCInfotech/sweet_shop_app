@@ -304,7 +304,8 @@
  "enter_a_confirm_password": "पासवर्ड की पुष्टि करें",
  "enter_a_domain_link": "डोमेन लिंक दर्ज करें",
  "no_data": "कोई डेटा उपलब्ध नहीं है।",
- "log_in_sub_text" : "ऐप के साथ जारी रखने के लिए लॉगिन करें"
+ "log_in_sub_text" : "ऐप के साथ जारी रखने के लिए लॉगिन करें",
+ "sale_invoice_addition": "Sale Invoice Addition"
 }
 
 

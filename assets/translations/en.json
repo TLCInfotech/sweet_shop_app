@@ -318,6 +318,7 @@
   "opening_bal":  "Opening Bal.",
   "item_closing_balance" : "Branch Item Closing Balance",
   "closing_bal":  "Closing Bal.",
-  "select_language": "Select Language"
+  "select_language": "Select Language",
+  "sale_invoice_addition": "Sale Invoice Addition"
 }
 

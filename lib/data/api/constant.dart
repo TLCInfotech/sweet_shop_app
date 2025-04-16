@@ -110,5 +110,7 @@ class ApiConstants {
   String getSaleMRPDetails="SaleMRPDetails";
   String getReturnMRP="ReturnMRP";
   String getReturnMRPDetails="ReturnMRPDetails";
+  String saleInvoiceAddition="SaleInvoiceAddition";
+  String saleInvoiceAdditionDetail="SaleInvoiceAdditionDetails";
 
 }

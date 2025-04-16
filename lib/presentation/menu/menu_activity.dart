@@ -27,6 +27,7 @@ import 'package:sweet_shop_app/presentation/menu/master/items/items.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger_group/expense_group.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger/expense_listing_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/ledger_opening_balance/ledger_opening_bal_activity.dart';
+import 'package:sweet_shop_app/presentation/menu/master/sale_invoice_addiction/sale_invoice_adiction_list_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/master/unit/Units.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Purchase/purchase_report_activity.dart';
 import 'package:sweet_shop_app/presentation/menu/report/Sale/sale_report_activity.dart';
@@ -446,7 +447,8 @@ var dataArrM;
             (MasterMenu.contains("AM002"))?getExpensceGroupLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("AM005"))?getLeaderOpeningLayout(parentHeight,parentWidth):Container(),
             (MasterMenu.contains("RM003"))?getOpeningBalanceForCompanyLayout(parentHeight,parentWidth):Container(),
-            (MasterMenu.contains("AM007"))?  getCompanyInfoLayout(parentHeight,parentWidth):Container()
+            (MasterMenu.contains("AM007"))?  getCompanyInfoLayout(parentHeight,parentWidth):Container(),
+           /* (MasterMenu.contains("AM007"))?*/  getInvoiceAddition(parentHeight,parentWidth)/*:Container()*/
           ],
         ),
       ),
@@ -775,6 +777,42 @@ var dataArrM;
             ),
             Text(
               ApplicationLocalizations.of(context).translate("company_info"),
+              style: page_heading_textStyle,
+              textAlign: TextAlign.start,
+
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* Widget for company info Layout */
+  Widget getInvoiceAddition(double parentHeight, double parentWidth){
+    return  GestureDetector(
+      onTap: ()async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context) =>  SaleInvoiceAdditionListActivity(
+          arrData: dataArrM, logoImage:logoImage,
+          formId: "AM007", mListener: this,
+        )));
+      /*  if(mounted){
+          print("HERE BACK");
+          Navigator.of(context).pushReplacementNamed('/dashboard');
+        }*/
+      },
+      onDoubleTap: (){},
+      child: Padding(
+        padding:  EdgeInsets.only(left: parentWidth*.04,right: parentWidth*.04,top: parentHeight*.01),
+        child:   Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(5.0),
+              child:  Text('●'),
+            ),
+            Text(
+                   "Sale Invoice Addition",
+            //  ApplicationLocalizations.of(context).translate("company_info"),
               style: page_heading_textStyle,
               textAlign: TextAlign.start,
 

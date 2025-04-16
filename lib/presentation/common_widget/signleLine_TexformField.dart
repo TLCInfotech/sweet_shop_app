@@ -68,7 +68,7 @@ class _SingleLineEditableTextFormFieldState extends State<SingleLineEditableText
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  width: widget.parentWidth ==null? (SizeConfig.screenWidth ):  widget.parentWidth *.4,
+                  width: widget.parentWidth ==null? (SizeConfig.screenWidth*.85 ):  widget.parentWidth *.4,
                   height: widget.maxlines>1? (SizeConfig.screenHeight) * .15:(SizeConfig.screenHeight) * .055,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(

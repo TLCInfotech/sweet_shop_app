@@ -275,5 +275,8 @@
 //   static const PURCHASE = "Purchase";
   static const frnachisee_id = "Franchisee_ID";
   static const lang = "Lang";
+  static const saleOrder = "Sale Order";
+  static const proformaInvoice = "Proforma Invoice";
+  static const purchaseOrder = "Purchase Order";
   static const pageSize="PageSize=50";
  }
